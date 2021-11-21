@@ -10,9 +10,6 @@ use File::Basename;
 require './settings.pl';
 require './utils.pl';
 
-
-
-
 # print &Utils::GetStringTime()."\n";
 &p(&Utils::GetStringTime());
 my %SETTING = &GetSetting();
@@ -34,10 +31,6 @@ foreach (@{$SETTING{'SEARCH_PATH'}}) {
 }
 
 exit;
-
-
-
-
 
 sub ProcFileRecursive {
 	my $root     = $_[0];
@@ -64,7 +57,6 @@ sub ProcFileRecursive {
 		}
  	}
 }
-
 
 sub ProcFile {
 	my $file = $_[0];
@@ -109,7 +101,6 @@ sub ProcFile {
 		}
 	}
 }
-
 
 sub ReadHeadLine {
 	my $file = $_[0];
@@ -196,4 +187,3 @@ sub p {
 	print $str, "\n";
 	return 1;
 }
-

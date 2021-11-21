@@ -17,7 +17,7 @@ sub GetSetting {
 	$SETTING{'SEARCH_PATH'} = [
 		'Applications',
 		'CmdTlm',
-		'Core',
+		# 'Core',
 		'Drivers',
 		'IfWrapper',
 		'Library',
@@ -31,10 +31,7 @@ sub GetSetting {
 		'utility.c',
 		'print.c',
 		'MRAM.c',
-		'WDTMW.c',			# 今はもうない
-		'watchdog_timer.c',
-		'wdt_issl6u_mobc.c',
-		'XACT_STT_IMG.c'
+		'watchdog_timer.c'
 	];
 
 	return %SETTING;
