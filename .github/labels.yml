@@ -49,3 +49,7 @@
 - name: "priority::medium"
   description: "priority medium"
   color: "fbca04"
+
+- name: "tools"
+  description: ""
+  color: "510f70"
