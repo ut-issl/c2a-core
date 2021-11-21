@@ -3,7 +3,6 @@
 
 #include <string.h> // for memcpy
 
-#include <src_user/Library/utility.h>
 #include "../CmdTlm/packet_handler.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
