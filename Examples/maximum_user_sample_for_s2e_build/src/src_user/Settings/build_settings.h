@@ -1,0 +1,13 @@
+#ifndef BUILD_SETTINGS_H_
+#define BUILD_SETTINGS_H_
+
+#include "sils_define.h"
+
+#ifndef SILS_FW
+// #define IS_LITTLE_ENDIAN // マイコン環境により変更する
+#endif
+
+// #define BUILD_SETTINGS_FAST_BUILD    //!< 高速ビルドオプション（検証時は必ずコメントアウトすること）
+#define BUILD_SETTINGS_AUTO_FPGA_RESET
+
+#endif
