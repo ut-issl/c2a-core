@@ -56,3 +56,6 @@ dkms.conf
 .AppleDouble
 .LSOverride
 ._*
+
+# for c2a user sample
+Examples/maximum_user_sample_for_s2e_build/src/src_core

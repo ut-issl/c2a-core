@@ -10,7 +10,7 @@
 - core 開発のための最小限の user 部は `Examples/` にあり，これを用いてビルドし，検証する (TBA)
 
 ### 開発のためのセットアップ
-1. clone 後， Windows の場合は， setup.bat を実行 (TBA)
+1. clone 後， Windows の場合は， setup.bat を実行
 
 ## ドキュメント
 - ドキュメント: TBW

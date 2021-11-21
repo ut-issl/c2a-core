@@ -17,24 +17,16 @@ sub GetSetting {
 	$SETTING{'SEARCH_PATH'} = [
 		'Applications',
 		'CmdTlm',
-		'Core',
 		'Drivers',
 		'IfWrapper',
 		'Library',
-		# 'Modes'
+		'System'
 	];
 
 	# スキップファイル
 	$SETTING{'IGNORE_FILE'} = [
-		# 'obc_time.c',
-		# 'time_manager.c'
-		'utility.c',
 		'print.c',
-		'MRAM.c',
-		'WDTMW.c',			# 今はもうない
-		'watchdog_timer.c',
-		'wdt_issl6u_mobc.c',
-		'XACT_STT_IMG.c'
+		'watchdog_timer.c'
 	];
 
 	return %SETTING;
