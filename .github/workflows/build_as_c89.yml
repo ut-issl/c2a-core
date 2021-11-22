@@ -1,0 +1,33 @@
+name: build as C89 using SILS Mockup
+
+on:
+  pull_request:
+    paths:
+      - 'c2a_core_main.c'
+      - 'c2a_core_main.h'
+      - 'Applications/**'
+      - 'CmdTlm/**'
+      - 'Drivers/**'
+      - 'IfWrapper/**'
+      - 'System/**'
+      - 'Examples/minimum_user_for_s2e/CMakeLists.txt'
+      - 'Examples/minimum_user_for_s2e/src/**'
+
+jobs:
+  build_minimum_user:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: clone core to src/src_core
+        run: git clone . ./Examples/minimum_user_for_s2e/src/src_core
+
+      - name: cmake
+        working-directory: ./Examples/minimum_user_for_s2e
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DUSE_SILS_MOCKUP=ON
+
+      - name: build
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: cmake --build .
