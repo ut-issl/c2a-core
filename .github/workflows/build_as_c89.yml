@@ -21,6 +21,10 @@ jobs:
       - name: clone core to src/src_core
         run: git clone . ./Examples/minimum_user_for_s2e/src/src_core
 
+      - name: install deps
+        run: |
+          sudo apt-get install -y libc6-dev-i386
+
       - name: cmake
         working-directory: ./Examples/minimum_user_for_s2e
         run: |
