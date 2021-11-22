@@ -1,4 +1,4 @@
-name: build
+name: build as C++ for S2E
 
 on:
   pull_request:
@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake .. -G "Visual Studio 16 2019" -A Win32  -DCMAKE_CONFIGURATION_TYPES:STRING="Debug"
 
       - name: build
         working-directory: ./Examples/minimum_user_for_s2e/build
