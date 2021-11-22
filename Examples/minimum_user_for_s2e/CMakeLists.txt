@@ -2,6 +2,10 @@
 
 cmake_minimum_required(VERSION 3.10)
 project(C2A)
+
+include_directories(src)
+add_definitions(-DSILS_FW)
+
 set(C2A_SOURCE_FILES
   # src/src_core/c2a_core_main.c
   src/src_core/Applications/anomaly_handler.c
