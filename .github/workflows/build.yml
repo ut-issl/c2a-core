@@ -1,0 +1,22 @@
+name: build
+
+on: push
+
+jobs:
+  build_minimum_user:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: clone core to src/src_core
+        run: git clone . ./Examples/minimum_user_for_s2e/src/src_core
+
+      - name: cmake
+        working-directory: ./Examples/minimum_user_for_s2e
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+
+      - name: build
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: cmake --build .
