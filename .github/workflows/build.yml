@@ -1,6 +1,17 @@
 name: build
 
-on: push
+on:
+  pull_request:
+    paths:
+      - 'c2a_core_main.c'
+      - 'c2a_core_main.h'
+      - 'Applications/**'
+      - 'CmdTlm/**'
+      - 'Drivers/**'
+      - 'IfWrapper/**'
+      - 'System/**'
+      - 'Examples/minimum_user_for_s2e/CMakeLists.txt'
+      - 'Examples/minimum_user_for_s2e/src/**'
 
 jobs:
   build_minimum_user:
