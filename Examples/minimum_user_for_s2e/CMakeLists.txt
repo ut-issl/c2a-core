@@ -171,5 +171,5 @@ if(MSVC)
 else()
   target_compile_options(${PROJECT_NAME} PUBLIC "${CMAKE_CXX_FLAGS}-Wall")
   set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g")  # SJIS, 32bit
-  set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g") # SJIS, 32bit
+  set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
 endif()
