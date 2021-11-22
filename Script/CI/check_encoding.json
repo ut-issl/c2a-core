@@ -7,6 +7,6 @@
     "IfWrapper/",
     "Library/",
     "System/",
-    "Examples/maximum_user_sample_for_s2e_build/src/src_user/"
+    "Examples/minimum_user_for_s2e/src/src_user/"
   ]
 }
