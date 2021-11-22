@@ -9,11 +9,11 @@ my $DEBUG = 0;
 my $err_flag = 0;
 
 my @Targets = (
-		"Examples/maximum_user_sample_for_s2e_build/src/src_user/Settings/CmdTlm/DataBase/CMD_DB/SAMPLE_MOBC_CMD_DB.xlsm",
-		"Examples/maximum_user_sample_for_s2e_build/src/src_user/Settings/CmdTlm/DataBase/TLM_DB/SAMPLE_MOBC_TLM_DB.xlsm",
-		"Examples/maximum_user_sample_for_s2e_build/src/src_user/Settings/sils_define.h",
-		"Examples/maximum_user_sample_for_s2e_build/src/src_user/Settings/build_settings.h",
-		"Examples/maximum_user_sample_for_s2e_build/src/src_user/Library/git_revision.c"
+		"Examples/minimum_user_for_s2e/src/src_user/Settings/CmdTlm/DataBase/CMD_DB/SAMPLE_MOBC_CMD_DB.xlsm",
+		"Examples/minimum_user_for_s2e/src/src_user/Settings/CmdTlm/DataBase/TLM_DB/SAMPLE_MOBC_TLM_DB.xlsm",
+		"Examples/minimum_user_for_s2e/src/src_user/Settings/sils_define.h",
+		"Examples/minimum_user_for_s2e/src/src_user/Settings/build_settings.h",
+		"Examples/minimum_user_for_s2e/src/src_user/Library/git_revision.c"
 	);
 
 print "[] pwd\n" if $DEBUG;
