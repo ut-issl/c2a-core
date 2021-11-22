@@ -76,9 +76,6 @@ set(C2A_SOURCE_FILES
   src/src_user/Drivers/Com/gs_validate.c
   src/src_user/Drivers/Etc/UART_TEST.c
   src/src_user/IfWrapper/if_list.c
-  src/src_user/IfWrapper/Sils/ccsds_sils.c
-  src/src_user/IfWrapper/Sils/uart_sils.c
-  src/src_user/IfWrapper/Sils/wdt_sils.c
   src/src_user/Library/git_revision.c
   src/src_user/Library/print.c
   src/src_user/Library/VT100.c
@@ -96,34 +93,48 @@ set(C2A_SOURCE_FILES
   src/src_user/Settings/System/event_logger_settings.c
 )
 
+# 通常，S2EではC++ビルドされるが，C2A core開発のため，C2A単体をC89でライブラリビルドする場合は，mockupをビルド対象にする
+if(USE_SILS_MOCKUP)
+  list(APPEND C2A_SOURCE_FILES
+    src/src_user/IfWrapper/SilsMockup/ccsds_sils.c
+    src/src_user/IfWrapper/SilsMockup/uart_sils.c
+    src/src_user/IfWrapper/SilsMockup/wdt_sils.c
+  )
+  message("USE SILS_MOCKUP")
+else()
+  list(APPEND C2A_SOURCE_FILES
+    src/src_user/IfWrapper/Sils/ccsds_sils.c
+    src/src_user/IfWrapper/Sils/uart_sils.c
+    src/src_user/IfWrapper/Sils/wdt_sils.c
+  )
+endif()
+
 # SCI COM for connection to WINGS TMTC IF
 # ！！！注意！！！
 # これをONにした状態で，SCIの受け口がない場合（TMTC IFが動いてない状態）
 # そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
-
 option(USE_SCI_COM_WINGS "Use SCI_COM_WINGS")
 set(USE_SCI_COM_WINGS ON)
-if(USE_SCI_COM_WINGS)
+if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_WINGS)
   list(APPEND C2A_SOURCE_FILES
     src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.c
   )
-  message("USE SCI_COM")
+  message("USE SCI_COM_WINGS")
 endif()
 
 # SCI COM for connection to PC UART
 # ！！！注意！！！
 # これをONにした状態で，SCIの受け口がない場合（受けてのTeratermが起動していない状態）
 # そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
-
 option(USE_SCI_COM_UART "Use SCI_COM_UART")
 set(USE_SCI_COM_UART OFF)
-if(USE_SCI_COM_UART)
+if(USE_SCI_COM_UART AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_UART)
   list(APPEND C2A_SOURCE_FILES
     src/src_user/IfWrapper/Sils/uart_sils_sci_if.c
   )
-  message("USE SCI_COM")
+  message("USE SCI_COM_UART")
 endif()
 
 # Output debug print to SILS console window
@@ -134,7 +145,11 @@ if(SHOW_DEBUG_PRINT_ON_SILS)
   message("Show debug print")
 endif()
 
-SET_SOURCE_FILES_PROPERTIES(${C2A_SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+if(USE_SILS_MOCKUP)
+  set_source_files_properties(${C2A_SOURCE_FILES} PROPERTIES C_STANDARD 90)  # C89/C90
+else()
+  set_source_files_properties(${C2A_SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+endif()
 add_library(${PROJECT_NAME} STATIC ${C2A_SOURCE_FILES})
 
 if(WIN32)
@@ -152,9 +167,9 @@ endif()
 # Compile option
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
-    target_compile_options(${PROJECT_NAME} PUBLIC "/TP") #Compile C codes as C++
+    target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
 else()
   target_compile_options(${PROJECT_NAME} PUBLIC "${CMAKE_CXX_FLAGS}-Wall")
-  set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g")  # SJIS, 32bit
-  set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g") # SJIS, 32bit
+  set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
+  set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
 endif()
