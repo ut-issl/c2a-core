@@ -12,6 +12,8 @@ on:
       - 'System/**'
       - 'Examples/minimum_user_for_s2e/CMakeLists.txt'
       - 'Examples/minimum_user_for_s2e/src/**'
+      - 'setup.bat'
+      - 'setup.sh'
 
 jobs:
   build_minimum_user:
