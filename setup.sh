@@ -15,6 +15,3 @@ ln -s '../../../' './Examples/minimum_user_for_s2e/src/src_core'
 echo done.
 echo
 echo The process has been completed.
-if [[ $EXEC_ENV != 'CI' ]]; then
-  read -p "Press enter key to exit..."
-fi

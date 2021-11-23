@@ -27,7 +27,7 @@ jobs:
 
       - name: setup
         shell: bash
-        run: EXEC_ENV=CI ./setup.sh
+        run: ./setup.sh
 
       - name: cmake
         working-directory: ./Examples/minimum_user_for_s2e
