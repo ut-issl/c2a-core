@@ -7,7 +7,7 @@ cp -f ./Script/Git/pre-commit.pl ./.git/hooks/pre-commit
 chmod 755 ./.git/hooks/pre-commit
 echo done.
 echo
-echo [SET UP DEVELOP ENVIRONMENT FOR MAXIMUM_USER_SAMPLE_FOR_S2E_BUILD]
+echo [SET UP DEVELOP ENVIRONMENT FOR C2A MINIMUM USER SAMPLE]
 if [ -e './Examples/minimum_user_for_s2e/src/src_core' ]; then
   rm -rf './Examples/minimum_user_for_s2e/src/src_core'
 fi

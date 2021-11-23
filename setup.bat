@@ -6,7 +6,7 @@ echo [SET USER HOOKS]
 copy /Y .\Script\Git\pre-commit.pl .\.git\hooks\pre-commit
 echo done.
 echo.
-echo [SET UP DEVELOP ENVIRONMENT FOR MAXIMUM_USER_SAMPLE_FOR_S2E_BUILD]
+echo [SET UP DEVELOP ENVIRONMENT FOR C2A MINIMUM USER SAMPLE]
 if exist ".\Examples\minimum_user_for_s2e\src\src_core" (
   rmdir /s /q ".\Examples\minimum_user_for_s2e\src\src_core"
 )
