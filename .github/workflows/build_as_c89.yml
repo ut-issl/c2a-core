@@ -26,7 +26,8 @@ jobs:
           sudo apt-get install -y libc6-dev-i386
 
       - name: setup
-        run: . ./setup.sh
+        shell: bash
+        run: ./setup.sh
 
       - name: cmake
         working-directory: ./Examples/minimum_user_for_s2e
