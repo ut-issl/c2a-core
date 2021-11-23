@@ -1,7 +1,7 @@
 name: check_encoding
 
 on:
-  push:
+  pull_request:
 
 jobs:
   check_encoding:
