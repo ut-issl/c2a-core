@@ -3,7 +3,7 @@ name: check_encoding
 on:
   pull_request:
 
-jobsssss:
+jobs:
   check_encoding:
     runs-on: ubuntu-latest
     steps:
