@@ -16,7 +16,7 @@ on:
       - 'setup.sh'
 
 jobs:
-  build_minimum_user:
+  build_minimum_user_as_cxx:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
