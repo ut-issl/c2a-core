@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(C2A)
+project(C2A_CORE)
 
-add_library(C2A_CORE STATIC
+add_library(${PROJECT_NAME} STATIC
   # src/src_core/c2a_core_main.c
   Applications/anomaly_handler.c
   Applications/divided_cmd_utility.c
@@ -52,7 +52,7 @@ add_library(C2A_CORE STATIC
   System/WatchdogTimer/watchdog_timer.c
 )
 
-set_target_properties(C2A_CORE PROPERTIES C_STANDARD 90) # C89
+set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
 
 # Compile option
 if(MSVC)
