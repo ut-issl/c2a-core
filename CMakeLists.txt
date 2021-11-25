@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.10)
 
 project(C2A_CORE)
 
+# user config
+option(USE_C2A_CORE_APPS    "use C2A-core Applications")
+option(USE_C2A_CORE_LIB     "use C2A-core Library")
+
+# default config
+set(USE_C2A_CORE_APPS ON)
+set(USE_C2A_CORE_LIB ON)
+
 add_library(${PROJECT_NAME} STATIC
   # src/src_core/c2a_core_main.c
   CmdTlm/block_command_loader.c
@@ -32,8 +40,13 @@ add_library(${PROJECT_NAME} STATIC
 add_subdirectory(Applications)
 add_subdirectory(Library)
 
-target_link_libraries(${PROJECT_NAME} C2A_CORE_APPS)
-target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
+if(USE_C2A_CORE_APPS)
+  target_link_libraries(${PROJECT_NAME} C2A_CORE_APPS)
+endif()
+
+if(USE_C2A_CORE_LIB)
+  target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
+endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
 
