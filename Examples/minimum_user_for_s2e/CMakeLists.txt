@@ -103,9 +103,9 @@ if(USE_SILS_MOCKUP)
   message("USE SILS_MOCKUP")
 else()
   list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/ccsds_sils.c
-    src/src_user/IfWrapper/Sils/uart_sils.c
-    src/src_user/IfWrapper/Sils/wdt_sils.c
+    src/src_user/IfWrapper/Sils/ccsds_sils.cpp
+    src/src_user/IfWrapper/Sils/uart_sils.cpp
+    src/src_user/IfWrapper/Sils/wdt_sils.cpp
   )
 endif()
 
@@ -118,7 +118,7 @@ set(USE_SCI_COM_WINGS ON)
 if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_WINGS)
   list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.c
+    src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.cpp
   )
   message("USE SCI_COM_WINGS")
 endif()
