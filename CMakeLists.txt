@@ -4,17 +4,6 @@ project(C2A_CORE)
 
 add_library(${PROJECT_NAME} STATIC
   # src/src_core/c2a_core_main.c
-  Applications/anomaly_handler.c
-  Applications/divided_cmd_utility.c
-  Applications/gs_command_dispatcher.c
-  Applications/event_utility.c
-  Applications/memory_dump.c
-  Applications/nop.c
-  Applications/realtime_command_dispatcher.c
-  Applications/timeline_command_dispatcher.c
-  Applications/utility_command.c
-  Applications/utility_counter.c
-  Applications/telemetry_manager.c
   CmdTlm/block_command_loader.c
   CmdTlm/block_command_table.c
   CmdTlm/block_command_executor.c
@@ -27,18 +16,6 @@ add_library(${PROJECT_NAME} STATIC
   CmdTlm/telemetry_generator.c
   Drivers/Super/driver_super.c
   Drivers/Super/driver_super_issl_format.c
-  Library/ascii_conv.c
-  Library/crc.c
-  Library/endian_conv.c
-  Library/endian_memcpy.c
-  Library/exor.c
-  Library/majority_vote_for3.c
-  Library/matrix.c
-  Library/print.c
-  Library/quaternion.c
-  Library/round.c
-  Library/sum.c
-  Library/vector.c
   System/AnomalyLogger/anomaly_logger.c
   System/ApplicationManager/app_info.c
   System/ApplicationManager/app_manager.c
@@ -51,6 +28,12 @@ add_library(${PROJECT_NAME} STATIC
   System/TimeManager/time_manager.c
   System/WatchdogTimer/watchdog_timer.c
 )
+
+add_subdirectory(Applications)
+add_subdirectory(Library)
+
+target_link_libraries(${PROJECT_NAME} C2A_CORE_APPS)
+target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
 
