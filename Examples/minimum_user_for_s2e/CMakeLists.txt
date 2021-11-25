@@ -6,54 +6,9 @@ project(C2A)
 include_directories(src)
 add_definitions(-DSILS_FW)
 
-set(C2A_SOURCE_FILES
-  # src/src_core/c2a_core_main.c
-  src/src_core/Applications/anomaly_handler.c
-  src/src_core/Applications/divided_cmd_utility.c
-  src/src_core/Applications/gs_command_dispatcher.c
-  src/src_core/Applications/event_utility.c
-  src/src_core/Applications/memory_dump.c
-  src/src_core/Applications/nop.c
-  src/src_core/Applications/realtime_command_dispatcher.c
-  src/src_core/Applications/timeline_command_dispatcher.c
-  src/src_core/Applications/utility_command.c
-  src/src_core/Applications/utility_counter.c
-  src/src_core/Applications/telemetry_manager.c
-  src/src_core/CmdTlm/block_command_loader.c
-  src/src_core/CmdTlm/block_command_table.c
-  src/src_core/CmdTlm/block_command_executor.c
-  src/src_core/CmdTlm/command_analyze.c
-  src/src_core/CmdTlm/command_dispatcher.c
-  src/src_core/CmdTlm/common_tlm_cmd_packet_util.c
-  src/src_core/CmdTlm/packet_handler.c
-  src/src_core/CmdTlm/packet_list.c
-  src/src_core/CmdTlm/telemetry_frame.c
-  src/src_core/CmdTlm/telemetry_generator.c
-  src/src_core/Drivers/Super/driver_super.c
-  src/src_core/Drivers/Super/driver_super_issl_format.c
-  src/src_core/Library/ascii_conv.c
-  src/src_core/Library/crc.c
-  src/src_core/Library/endian_conv.c
-  src/src_core/Library/endian_memcpy.c
-  src/src_core/Library/exor.c
-  src/src_core/Library/majority_vote_for3.c
-  src/src_core/Library/matrix.c
-  src/src_core/Library/print.c
-  src/src_core/Library/quaternion.c
-  src/src_core/Library/c2a_round.c
-  src/src_core/Library/sum.c
-  src/src_core/Library/vector.c
-  src/src_core/System/AnomalyLogger/anomaly_logger.c
-  src/src_core/System/ApplicationManager/app_info.c
-  src/src_core/System/ApplicationManager/app_manager.c
-  src/src_core/System/EventManager/event_manager.c
-  src/src_core/System/EventManager/event_logger.c
-  src/src_core/System/EventManager/event_handler.c
-  src/src_core/System/ModeManager/mode_manager.c
-  src/src_core/System/TaskManager/task_dispatcher.c
-  src/src_core/System/TimeManager/obc_time.c
-  src/src_core/System/TimeManager/time_manager.c
-  src/src_core/System/WatchdogTimer/watchdog_timer.c
+add_subdirectory(src/src_core)
+
+add_library(${PROJECT_NAME} STATIC
   # src/src_user/c2a_main.c
   src/src_user/Applications/app_registry.c
   src/src_user/Applications/DriverInstances/di_gs.c
@@ -95,20 +50,21 @@ set(C2A_SOURCE_FILES
   src/src_user/Settings/System/EventHandlerRules/event_handler_rules.c
   src/src_user/Settings/System/EventHandlerRules/event_handler_rule_test.c
 )
+target_link_libraries(${PROJECT_NAME} C2A_CORE)
 
 # 通常，S2EではC++ビルドされるが，C2A core開発のため，C2A単体をC89でライブラリビルドする場合は，mockupをビルド対象にする
 if(USE_SILS_MOCKUP)
-  list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/SilsMockup/ccsds_sils.c
-    src/src_user/IfWrapper/SilsMockup/uart_sils.c
-    src/src_user/IfWrapper/SilsMockup/wdt_sils.c
+  target_sources(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/SilsMockup/ccsds_sils.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/SilsMockup/uart_sils.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/SilsMockup/wdt_sils.c
   )
   message("USE SILS_MOCKUP")
 else()
-  list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/ccsds_sils.cpp
-    src/src_user/IfWrapper/Sils/uart_sils.cpp
-    src/src_user/IfWrapper/Sils/wdt_sils.cpp
+  target_sources(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/Sils/ccsds_sils.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/Sils/uart_sils.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/Sils/wdt_sils.cpp
   )
 endif()
 
@@ -120,8 +76,8 @@ option(USE_SCI_COM_WINGS "Use SCI_COM_WINGS")
 set(USE_SCI_COM_WINGS ON)
 if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_WINGS)
-  list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.cpp
+  target_sources(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.cpp
   )
   message("USE SCI_COM_WINGS")
 endif()
@@ -134,8 +90,8 @@ option(USE_SCI_COM_UART "Use SCI_COM_UART")
 set(USE_SCI_COM_UART OFF)
 if(USE_SCI_COM_UART AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_UART)
-  list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/uart_sils_sci_if.c
+  target_sources(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}src/src_user/IfWrapper/Sils/uart_sils_sci_if.cpp
   )
   message("USE SCI_COM_UART")
 endif()
@@ -153,7 +109,6 @@ if(USE_SILS_MOCKUP)
 else()
   set_source_files_properties(${C2A_SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 endif()
-add_library(${PROJECT_NAME} STATIC ${C2A_SOURCE_FILES})
 
 if(WIN32)
   add_custom_command(TARGET ${PROJECT_NAME}
