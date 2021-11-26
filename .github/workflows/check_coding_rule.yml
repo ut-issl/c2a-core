@@ -1,0 +1,20 @@
+name: check_coding_rule
+
+on:
+  pull_request:
+
+jobs:
+  check_coding_rule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: setup
+        shell: bash
+        run: ./setup.sh
+      - name: check_coding_rule
+        run: python check_coding_rule.py check_coding_rule.json
+        working-directory: ./Examples/minimum_user_for_s2e/src/src_core/Script/CI

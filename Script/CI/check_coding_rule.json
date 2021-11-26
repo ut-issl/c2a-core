@@ -1,0 +1,21 @@
+{
+  "c2a_root_dir" : "../../../",
+  "target_dirs" : [
+    "src_core/",
+    "src_user/"
+  ],
+  "ignore_dirs" : [
+    "src_core/Examples",
+    "src_core/Docs",
+    "src_core/Script"
+  ],
+  "ignore_files" : [
+    "src_user/CmdTlm/telemetry_definitions.c"
+  ],
+  "additional_type" : [
+    "PL_NodeTag"
+  ],
+  "comment_additional_type" : [
+    "現状， struct PL_NodeTag* next; は型として引っ掛けられない"
+  ]
+}
