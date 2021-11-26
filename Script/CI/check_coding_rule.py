@@ -10,13 +10,14 @@ import os.path
 import json
 import re
 
+# How to use
+# $python check_coding_rule.py check_coding_rule.json
 
 # 環境変数
 DEBUG = 0
 # 0 : Release
 # 1 : all
 IS_SHOW_CODE_AT_ERR = 1
-SETTING_FILE_PATH = "check_coding_rule.json"
 
 # コード中に現れた型
 # unsigned hoge, signed hoge を除く
@@ -24,9 +25,16 @@ g_type_set = set()
 
 
 def main():
-    # TODO: あとでスクリプトをcoreに移したいので，mainでは設定のロードのみ行い， check_coding_rule に投げる
+    if len(sys.argv) != 2:
+        print("Please give a setting file as an argumente.")
+        sys.exit(1)
 
-    with open(SETTING_FILE_PATH, mode='r') as fh:
+    setting_file_path = sys.argv[1]
+    if not os.path.isfile(setting_file_path):
+        print("Setting file not found.")
+        sys.exit(1)
+
+    with open(setting_file_path, encoding='utf-8', mode='r') as fh:
         settings = json.load(fh)
     if DEBUG:
         pprint.pprint(settings);
@@ -54,7 +62,7 @@ def check_coding_rule(settings: dict) -> int:
     for ignore_file in settings['ignore_files']:
         ignore_files.append(settings['c2a_root_dir'] + ignore_file)
 
-    preprocess_(target_dirs, ignore_dirs, ignore_files)
+    preprocess_(target_dirs, ignore_dirs, ignore_files, settings['additional_type'])
 
     for target_dir in target_dirs:
         for root, dirs, files in os.walk(target_dir):
@@ -91,7 +99,8 @@ def check_coding_rule(settings: dict) -> int:
     return flag;
 
 
-def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list):
+def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list, additional_type: list):
+    global g_type_set
     for target_dir in target_dirs:
         for root, dirs, files in os.walk(target_dir):
             for file in files:
@@ -110,10 +119,8 @@ def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list):
     for ignore_type in ignore_types:
         if ignore_type in g_type_set:
             g_type_set.remove(ignore_type)
-    g_type_set.add("PL_NodeTag")        # struct PL_NodeTag* next; とかは引っ掛けられない
-    g_type_set.add("TCP")               # userのみだとひっかからないので
-    g_type_set.add("BlockCmdTable")     # userのみだとひっかからないので
-    g_type_set.add("BlockComdExecutor") # userのみだとひっかからないので
+    # pprint.pprint(additional_type)
+    g_type_set |= set(additional_type)
     # pprint.pprint(g_type_set)
 
 
