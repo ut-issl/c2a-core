@@ -19,9 +19,6 @@ ope = wings_utils.get_wings_operation()
 
 @pytest.mark.sils
 def test_wdt_at_sils():
-    c2a_enum = c2a_enum_utils.get_c2a_enum()
-    ope = wings.Operation()
-
     tlm_HK = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
