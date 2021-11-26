@@ -23,7 +23,7 @@ jobs:
 
       - name: setup
         shell: cmd
-        run: .\setup.bat
+        run: ./setup.bat
 
       - name: cmake
         working-directory: ./Examples/minimum_user_for_s2e

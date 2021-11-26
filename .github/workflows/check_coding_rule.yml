@@ -12,7 +12,9 @@ jobs:
         with:
           python-version: '3.x'
           architecture: 'x64'
-      - run: pip install chardet
+      - name: setup
+        shell: bash
+        run: ./setup.sh
       - name: check_coding_rule
         run: python check_coding_rule.py check_coding_rule.json
         working-directory: ./Examples/minimum_user_for_s2e/src/src_core/Script/CI
