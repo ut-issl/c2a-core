@@ -4,7 +4,7 @@
 import os
 import sys
 import time
-
+import json
 import isslwings as wings
 import pytest
 
@@ -12,8 +12,10 @@ ROOT_PATH = "../"
 sys.path.append(os.path.dirname(__file__) + "/" + ROOT_PATH + "utils")
 import c2a_enum_utils
 
+with open(os.path.dirname(__file__) + "/" + ROOT_PATH + "authorization.json") as f:
+    authorization = json.load(f)
 c2a_enum = c2a_enum_utils.get_c2a_enum()
-ope = wings.Operation()
+ope = wings.Operation(authentication_info=authorization)
 
 
 @pytest.fixture(scope="session", autouse=True)
