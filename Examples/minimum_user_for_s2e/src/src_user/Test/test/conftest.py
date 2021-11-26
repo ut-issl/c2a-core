@@ -11,11 +11,10 @@ import pytest
 ROOT_PATH = "../"
 sys.path.append(os.path.dirname(__file__) + "/" + ROOT_PATH + "utils")
 import c2a_enum_utils
+import wings_utils
 
-with open(os.path.dirname(__file__) + "/" + ROOT_PATH + "authorization.json") as f:
-    authorization = json.load(f)
 c2a_enum = c2a_enum_utils.get_c2a_enum()
-ope = wings.Operation(authentication_info=authorization)
+ope = wings_utils.get_wings_operation()
 
 
 @pytest.fixture(scope="session", autouse=True)

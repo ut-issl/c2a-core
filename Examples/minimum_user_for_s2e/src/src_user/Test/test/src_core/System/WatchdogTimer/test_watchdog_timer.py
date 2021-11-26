@@ -11,6 +11,10 @@ import pytest
 ROOT_PATH = "../../../../"
 sys.path.append(os.path.dirname(__file__) + "/" + ROOT_PATH + "utils")
 import c2a_enum_utils
+import wings_utils
+
+c2a_enum = c2a_enum_utils.get_c2a_enum()
+ope = wings_utils.get_wings_operation()
 
 
 @pytest.mark.sils
