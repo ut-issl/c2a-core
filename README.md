@@ -12,9 +12,17 @@
 ### 開発のためのセットアップ
 1. clone 後， setup.bat or setup.sh を実行
 
+### ブランチ
+- `main`: リリース版
+- `develop`: 概ね検証された最新版（beta機能含む）
+- `feature/*` : 開発ブランチ
+- `hotfix/*` : 重大バグ修正用ブランチ
+
 ## ドキュメント
-- ドキュメント: TBW
-- リファレンス: TBW
+- ドキュメント:  https://github.com/ut-issl/c2a-core/tree/develop/Docs
+- リファレンス:  https://github.com/ut-issl/c2a-reference
 
 ## 関連リポジトリ
-- TBW
+- https://github.com/ut-issl/tlm-cmd-db
+- https://github.com/ut-issl/c2a-tlm-cmd-code-generator
+- https://github.com/ut-issl/python-wings-interface
