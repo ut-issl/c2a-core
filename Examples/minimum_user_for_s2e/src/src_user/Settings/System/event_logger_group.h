@@ -22,8 +22,11 @@ typedef enum
   EL_GROUP_UART_REOPEN,
 
   // TEST
-  EL_GROUP_TEST  = 0xf0,         // pytest用
-  EL_GROUP_TEST1 = 0xf1,         // pytest用
+  EL_GROUP_TEST             = 0xf0,        // pytest用
+  EL_GROUP_TEST1            = 0xf1,        // pytest用
+  EL_GROUP_TEST_AH          = 0xf2,        // pytest用 EH
+  EL_GROUP_TEST_AH_RESPOND  = 0xf3,        // pytest用 EHの対応検知用
+  EL_GROUP_TEST_AH1         = 0xf4,        // pytest用 EH
 
   // とりあえず最大値は0xffに！
   EL_GROUP_MAX = 0x100       // これはいじらない！
