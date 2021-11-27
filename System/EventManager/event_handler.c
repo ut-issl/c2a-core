@@ -794,7 +794,6 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
   uint16_t i;
   uint8_t j;
   uint16_t delete_idx;
-  uint8_t duplicate_id;
 
   EH_CHECK_RULE_ACK check_ack = EH_check_rule_id_(id);
   if (check_ack == EH_CHECK_RULE_ACK_INVALID_RULE_ID) return EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID;
@@ -805,14 +804,12 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
   delete_local = p_rule_table->rules[id].settings.event.local;
 
   delete_idx = EH_RULE_MAX;
-  duplicate_id = 0;
   for (i = 0; i < p_rule_table->registered_rule_num; ++i)
   {
     if (id == p_sorted_idxes[i].rule_id)
     {
       // Œ©‚Â‚©‚Á‚½
       delete_idx = i;
-      duplicate_id = p_sorted_idxes[i].duplicate_id;
       break;
     }
   }
