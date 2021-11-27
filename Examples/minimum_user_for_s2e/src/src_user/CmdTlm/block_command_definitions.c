@@ -39,6 +39,9 @@ void BC_load_defaults(void)
 
   // === CDH ===
   BCL_load_bc(BC_HK_CYCLIC_TLM,             BCL_load_start_hk_tlm);
+
+  // === TEST ===
+  BCL_load_bc(BC_TEST_EH_RESPOND,           BCL_load_respond_eh_for_test);
 }
 
 #pragma section
