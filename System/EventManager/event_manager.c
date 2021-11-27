@@ -11,6 +11,9 @@
 void EM_initialize(void)
 {
   EL_initialize();
+#ifdef EL_IS_ENABLE_TLOG
+  EH_initialize();
+#endif
 }
 
 #pragma section

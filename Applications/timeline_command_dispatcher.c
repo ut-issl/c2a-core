@@ -315,6 +315,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
+// FIXME: ELのイベント記録を追加する
 CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
 {
   int      line_no;
