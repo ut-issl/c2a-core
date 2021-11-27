@@ -43,8 +43,10 @@ uint32_t OBCT_get_total_cycle_in_msec(const ObcTime* time);  // 計算上はstepも考
 uint32_t OBCT_get_mode_cycle_in_msec(const ObcTime* time);   // 計算上はstepも考慮
 float    OBCT_get_total_cycle_in_sec(const ObcTime* time);   // 計算上はstepも考慮（オーバーフローに注意）
 float    OBCT_get_mode_cycle_in_sec(const ObcTime* time);    // 計算上はstepも考慮（オーバーフローに注意）
-cycle_t OBCT_sec2cycle(uint32_t sec);
-uint32_t OBCT_cycle2sec(cycle_t cycle);
+cycle_t  OBCT_sec2cycle(uint32_t sec);        // 適当に丸められることに注意
+uint32_t OBCT_cycle2sec(cycle_t cycle);       // 適当に丸められることに注意
+cycle_t  OBCT_msec2cycle(uint32_t msec);      // 適当に丸められることに注意
+uint32_t OBCT_cycle2msec(cycle_t cycle);      // 適当に丸められることに注意
 ObcTime OBCT_diff(const ObcTime* before,
                   const ObcTime* after);
 step_t OBCT_diff_in_step(const ObcTime* before,
@@ -53,6 +55,18 @@ uint32_t OBCT_diff_in_msec(const ObcTime* before,
                                const ObcTime* after);
 float OBCT_diff_in_sec(const ObcTime* before,
                        const ObcTime* after);
+
+/**
+ * @brief ObcTime の比較
+ * @note  mode_cycle はみない
+ * @param[in] t1: 比較対象
+ * @param[in] t2: 比較対象
+ * @return 1  : t1 < t2
+ * @return 0  : t1 == t2
+ * @return -1 : t2 > t1
+ */
+int OBCT_compare(const ObcTime* t1, const ObcTime* t2);
+
 void OBCT_print(const ObcTime* time);
 
 /**
