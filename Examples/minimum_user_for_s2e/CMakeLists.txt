@@ -66,6 +66,7 @@ set(C2A_SOURCE_FILES
   src/src_user/CmdTlm/telemetry_definitions.c
   src/src_user/CmdTlm/user_packet_handler.c
   src/src_user/CmdTlm/NormalBlockCommandDefinition/nbc_start_hk_tlm.c
+  src/src_user/CmdTlm/NormalBlockCommandDefinition/nbc_respond_eh_for_test.c
   src/src_user/CmdTlm/Ccsds/m_pdu.c
   src/src_user/CmdTlm/Ccsds/TCFrame.c
   src/src_user/CmdTlm/Ccsds/tcp_to_m_pdu.c
@@ -91,6 +92,8 @@ set(C2A_SOURCE_FILES
   src/src_user/Settings/Modes/Transitions/NopSL.c
   src/src_user/Settings/Modes/Transitions/SequenceItems.c
   src/src_user/Settings/System/event_logger_settings.c
+  src/src_user/Settings/System/EventHandlerRules/event_handler_rules.c
+  src/src_user/Settings/System/EventHandlerRules/event_handler_rule_test.c
 )
 
 # 通常，S2EではC++ビルドされるが，C2A core開発のため，C2A単体をC89でライブラリビルドする場合は，mockupをビルド対象にする
