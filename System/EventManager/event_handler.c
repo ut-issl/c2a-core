@@ -382,7 +382,7 @@ static EH_CKECK_AND_RESPOND_ACK EH_check_event_and_respond_(uint8_t* responded_n
     EH_CKECK_AND_RESPOND_ACK ack =  EH_check_rule_and_respond_(found_ids[i], event);
     if (ack == EH_CKECK_AND_RESPOND_ACK_RESPONDED)
     {
-      *responded_num++;
+      (*responded_num)++;
     }
   }
 
@@ -865,10 +865,10 @@ EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings)
   EH_RULE_SORTED_INDEX_ACK ack;
   EH_Rule rule;
 
-  if (settings->event.group >= EL_GROUP_MAX)           return EH_REGISTER_ACK_ILLEGAL_GROUP;
-  if (settings->event.group <= EL_CORE_GROUP_NULL)     return EH_REGISTER_ACK_ILLEGAL_GROUP;
-  if (settings->event.err_level < 0)                   return EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL;
-  if (settings->event.err_level >= EL_ERROR_LEVEL_MAX) return EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL;
+  if (settings->event.group >= EL_GROUP_MAX)                 return EH_REGISTER_ACK_ILLEGAL_GROUP;
+  if (settings->event.group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EH_REGISTER_ACK_ILLEGAL_GROUP;
+  if (settings->event.err_level < 0)                         return EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL;
+  if (settings->event.err_level >= EL_ERROR_LEVEL_MAX)       return EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL;
   if (settings->should_match_err_level != 0 && settings->should_match_err_level != 1)
   {
     return EH_REGISTER_ACK_ILLEGAL_MATCH_FLAG;
