@@ -43,16 +43,19 @@ typedef enum
   // ==== ’Ç‰Á—Ìˆæ ====
 
   // Telemetry Manager
-  BC_TLM_MGR0 = 370,
-  BC_TLM_MGR1 = 371,
-  BC_TLM_MGR2 = 372,
-  BC_TLM_MGR3 = 373,
-  BC_TLM_MGR4 = 374,
-  BC_TLM_MGR5 = 375,
-  BC_TLM_MGR6 = 376,
-  BC_TLM_MGR7 = 377,
-  BC_TLM_MGR8 = 378,
-  BC_TLM_MGR9 = 379,
+  BC_TLM_MGR0 = 350,
+  BC_TLM_MGR1 = 351,
+  BC_TLM_MGR2 = 352,
+  BC_TLM_MGR3 = 353,
+  BC_TLM_MGR4 = 354,
+  BC_TLM_MGR5 = 355,
+  BC_TLM_MGR6 = 356,
+  BC_TLM_MGR7 = 357,
+  BC_TLM_MGR8 = 358,
+  BC_TLM_MGR9 = 359,
+
+  // Test
+  BC_TEST_EH_RESPOND = 360,
 
   // BCT MAX : 382
 } BC_DEFAULT_ID;
