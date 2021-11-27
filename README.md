@@ -12,6 +12,10 @@
 ### 開発のためのセットアップ
 1. clone 後， setup.bat or setup.sh を実行
 
+### テスト
+- 特定のuserを仮定しないと，各種パラメタが確定しないため， `Examples/minimum_user_for_s2e` でテストする．
+- https://github.com/ut-issl/c2a-core/tree/develop/Examples/minimum_user_for_s2e/src/src_user/Test 参照．
+
 ### ブランチ
 - `main`: リリース版
 - `develop`: 概ね検証された最新版（beta機能含む）
@@ -26,3 +30,4 @@
 - https://github.com/ut-issl/tlm-cmd-db
 - https://github.com/ut-issl/c2a-tlm-cmd-code-generator
 - https://github.com/ut-issl/python-wings-interface
+- https://github.com/ut-issl/c2a-enum-loader
