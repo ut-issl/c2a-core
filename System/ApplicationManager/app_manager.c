@@ -106,7 +106,9 @@ CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CTCP* packet)
 
 static AM_ACK AM_initialize_app_(size_t id)
 {
+#ifndef SILS_FW
   ObcTime start, finish;
+#endif
 
   if (id >= AM_MAX_APPS)
   {
@@ -158,7 +160,9 @@ CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CTCP* packet)
 
 static AM_ACK AM_execute_app_(size_t id)
 {
+#ifndef SILS_FW
   ObcTime start, finish;
+#endif
 
   if (id >= AM_MAX_APPS)
   {

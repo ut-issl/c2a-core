@@ -1,4 +1,4 @@
-name: build as C89 using SILS Mockup
+name: build as C89 using SILS Mockup with Wextra
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ on:
       - 'setup.sh'
 
 jobs:
-  build_minimum_user_as_c89:
+  build_minimum_user_as_c89_with_wextra:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=ON
+          cmake .. -DUSE_SILS_MOCKUP=ON -DADD_WEXTRA_FLAGS=ON
 
       - name: build
         working-directory: ./Examples/minimum_user_for_s2e/build

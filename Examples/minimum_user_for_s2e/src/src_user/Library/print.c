@@ -25,13 +25,12 @@ char printf_buffer[512];
 
 void Printf(char* format, ...)
 {
-  int threshold = 0;
   va_list argptr;
 
   WDT_clear_wdt();         // 2019/03/10 追加
 
   va_start(argptr, format);
-  threshold = vsprintf(printf_buffer, format, argptr);
+  vsprintf(printf_buffer, format, argptr);
 
   tt_printf("%s", printf_buffer);
   // Printf_org("%s", printf_buffer);  // LVTTL UART ch1での出力．邪魔なので初期化とともに無効化 (2019-04-09)
@@ -46,13 +45,11 @@ void Printf(char* format, ...)
 {
 #ifdef SHOW_DEBUG_PRINT_ON_SILS
   char printf_buffer[512];   // バッファサイズよりでかい文字列が来ると死ぬ（が，これは実機環境でも同じか）
-  int ret = 0;
   va_list args;
   va_start(args, format);
-  ret = vsprintf(printf_buffer, format, args);
+  vsprintf(printf_buffer, format, args);
 
-  // printf(format, args);    // 可変引数をとってる場合，この書き方だとメモリでセグフォがでてしまう．
-  printf(printf_buffer);
+  printf("%s", printf_buffer);
 
   va_end(args);
 #else

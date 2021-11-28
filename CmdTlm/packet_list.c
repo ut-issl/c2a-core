@@ -53,19 +53,19 @@ void PL_clear_list(PacketList* pli)
   pli->active_list_tail_ = NULL;
 }
 
-const uint32_t PL_count_executed_nodes(const PacketList* pli)
+uint32_t PL_count_executed_nodes(const PacketList* pli)
 {
   return pli->executed_nodes_;
 }
 
-const uint16_t PL_count_active_nodes(const PacketList* pli)
+uint16_t PL_count_active_nodes(const PacketList* pli)
 {
   return pli->active_nodes_;
 }
 
-const uint16_t PL_count_inactive_nodes(const PacketList* pli)
+uint16_t PL_count_inactive_nodes(const PacketList* pli)
 {
-  return (const uint16_t)(pli->total_nodes_ - pli->active_nodes_);
+  return (uint16_t)(pli->total_nodes_ - pli->active_nodes_);
 }
 
 int PL_is_empty(const PacketList* pli)
