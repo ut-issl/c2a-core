@@ -660,7 +660,7 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
   }
   else
   {
-    if (p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER)
+    if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
     {
       // ˆø‚«Œp‚¬ƒf[ƒ^‚Í‚È‚µ
       p_stream_config->carry_over_buffer_size_ = 0;
