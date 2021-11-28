@@ -15,14 +15,14 @@
 typedef struct
 {
   ObcTime init_time;
-  uint8_t init_flag;
+  uint8_t initializing_flag;
 } TimeManager;
 
 extern const TimeManager* const time_manager;
 
 void TMGR_init(void);
 void TMGR_clear(void);
-void TMGR_lower_init_flag(void);
+void TMGR_lower_initializing_flag(void);
 void TMGR_clear_master_mode_cycle(void);
 void TMGR_count_up_master_clock(void);
 uint32_t TMGR_get_master_total_cycle_in_msec(void);  // 計算上はstepも考慮（オーバーフローに注意）

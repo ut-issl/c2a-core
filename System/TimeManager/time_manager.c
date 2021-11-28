@@ -21,7 +21,7 @@ static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 void TMGR_init(void)
 {
   OBCT_clear(&time_manager_.init_time);
-  time_manager_.init_flag = 1;
+  time_manager_.initializing_flag = 1;
   TMGR_clear();
 }
 
@@ -31,10 +31,12 @@ void TMGR_clear(void)
   OBCT_clear_unix_time_info(&OBCT_unix_time_info_);
 }
 
-void TMGR_lower_init_flag(void)
+void TMGR_lower_initializing_flag(void)
 {
   memcpy(&time_manager_.init_time, &master_clock_, sizeof(ObcTime));
-  time_manager_.init_flag = 0;
+  time_manager_.initializing_flag = 0;
+  
+  TMGR_clear();
 }
 
 void TMGR_clear_master_mode_cycle(void)
@@ -64,7 +66,7 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void)
 
 ObcTime TMGR_get_master_clock(void)
 {
-  if (time_manager_.init_flag)
+  if (time_manager_.initializing_flag)
   {
     return OBCT_create(0, 0, 0);
   }

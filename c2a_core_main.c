@@ -45,7 +45,8 @@ void C2A_core_init(void)
   Printf("C2A_init: TDSP_initialize done.\n");
   // DebugOutInit();             // Debug‚Ìinit          // LVTTL UART ch1‚Å‚Ìo—ÍD×–‚‚È‚Ì‚ÅPrintf‚Ì’†g‚Æ‚Æ‚à‚É–³Œø‰» (2019-04-09)
   // Printf("C2A_init: DebugOutInit done.\n");
-  TMGR_lower_init_flag(); // init ‚ğ‰º‚°‚é
+
+  TMGR_lower_initializing_flag();
 }
 
 void C2A_core_main(void)
