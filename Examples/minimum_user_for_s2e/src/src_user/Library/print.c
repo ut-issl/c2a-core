@@ -51,8 +51,7 @@ void Printf(char* format, ...)
   va_start(args, format);
   ret = vsprintf(printf_buffer, format, args);
 
-  // printf(format, args);    // 可変引数をとってる場合，この書き方だとメモリでセグフォがでてしまう．
-  printf(printf_buffer);
+  printf("%s", printf_buffer);
 
   va_end(args);
 #else
