@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file    ccsds_sils_sci_if.c
+ * @file    ccsds_sils_sci_if.cpp
  * @brief   ccsds_sils_sci_if
  * @details WINGS TMTC IF‚ÆCCSDS‚ÌTransfer Frame‚ğSCI COM‚Å‚â‚è‚Æ‚è‚·‚éIF
             Windowsã‚Åcom0com‚ğg‚¤‚±‚Æ‚ğ‘z’è

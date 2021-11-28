@@ -1,5 +1,5 @@
 /**
- * @file    uart_sils_sci_if.h
+ * @file    uart_sils_sci_if.hpp
  * @brief   uart_sils_sci_if
  * @details SILSでDriverのテストをするように作った
             ccsds_sils_sci_if.c/hのほぼコピー
