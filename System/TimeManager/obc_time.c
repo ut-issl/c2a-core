@@ -139,6 +139,21 @@ ObcTime OBCT_diff(const ObcTime* before,
   return diff;
 }
 
+ObcTime OBCT_add(const ObcTime* left, const ObcTime* right)
+{
+  ObcTime ret;
+
+  ret.total_cycle = left->total_cycle + right->total_cycle;
+  ret.mode_cycle = left->mode_cycle + right->mode_cycle;
+  ret.step = left->step + right->step;
+
+  ret.total_cycle += ret.step / OBCT_STEPS_PER_CYCLE;
+  ret.mode_cycle += ret.step / OBCT_STEPS_PER_CYCLE;
+  ret.step %= OBCT_STEPS_PER_CYCLE;
+
+  return ret;
+}
+
 step_t OBCT_diff_in_step(const ObcTime* before,
                          const ObcTime* after)
 {
