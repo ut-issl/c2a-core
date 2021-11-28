@@ -40,7 +40,7 @@ set(C2A_SOURCE_FILES
   src/src_core/Library/matrix.c
   src/src_core/Library/print.c
   src/src_core/Library/quaternion.c
-  src/src_core/Library/round.c
+  src/src_core/Library/c2a_round.c
   src/src_core/Library/sum.c
   src/src_core/Library/vector.c
   src/src_core/System/AnomalyLogger/anomaly_logger.c
