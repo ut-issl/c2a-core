@@ -7,7 +7,7 @@
             SCIComPort classは基本的にEQU ZEUSのコードを流用
  */
 
-#include "ccsds_sils_sci_if.h"
+#include "ccsds_sils_sci_if.hpp"
 
 
 // 最初だけ初期化して、プログラム終了時にポートを閉じるようにしたい

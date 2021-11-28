@@ -6,7 +6,7 @@
             ccsds_sils_sci_if.c/hのほぼコピー
  */
 
-#include "uart_sils_sci_if.h"
+#include "uart_sils_sci_if.hpp"
 
 
 // 最初だけ初期化して、プログラム終了時にポートを閉じるようにしたい

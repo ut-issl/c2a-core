@@ -14,7 +14,7 @@
 #include "../ccsds_user.h"
 
 #ifdef USE_SCI_COM_WINGS
-#include "ccsds_sils_sci_if.h"
+#include "ccsds_sils_sci_if.hpp"
 #endif
 
 #define CCSDS_TX_VALID_SIZE (444)
