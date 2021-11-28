@@ -40,7 +40,7 @@ set(C2A_SOURCE_FILES
   src/src_core/Library/matrix.c
   src/src_core/Library/print.c
   src/src_core/Library/quaternion.c
-  src/src_core/Library/round.c
+  src/src_core/Library/c2a_round.c
   src/src_core/Library/sum.c
   src/src_core/Library/vector.c
   src/src_core/System/AnomalyLogger/anomaly_logger.c
@@ -106,9 +106,9 @@ if(USE_SILS_MOCKUP)
   message("USE SILS_MOCKUP")
 else()
   list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/ccsds_sils.c
-    src/src_user/IfWrapper/Sils/uart_sils.c
-    src/src_user/IfWrapper/Sils/wdt_sils.c
+    src/src_user/IfWrapper/Sils/ccsds_sils.cpp
+    src/src_user/IfWrapper/Sils/uart_sils.cpp
+    src/src_user/IfWrapper/Sils/wdt_sils.cpp
   )
 endif()
 
@@ -121,7 +121,7 @@ set(USE_SCI_COM_WINGS ON)
 if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_WINGS)
   list(APPEND C2A_SOURCE_FILES
-    src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.c
+    src/src_user/IfWrapper/Sils/ccsds_sils_sci_if.cpp
   )
   message("USE SCI_COM_WINGS")
 endif()
@@ -169,10 +169,16 @@ endif()
 
 # Compile option
 if(MSVC)
-    target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
-    target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
+  target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
+  target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
 else()
   target_compile_options(${PROJECT_NAME} PUBLIC "${CMAKE_CXX_FLAGS}-Wall")
   set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
   set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
+  if(ADD_WERROR_FLAGS)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+  endif()
+  if(ADD_WEXTRA_FLAGS)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
+  endif()
 endif()

@@ -1,39 +1,38 @@
 #pragma section REPRO
 /**
- * @file    ccsds_sils_sci_if.c
- * @brief   ccsds_sils_sci_if
- * @details WINGS TMTC IFとCCSDSのTransfer FrameをSCI COMでやりとりするIF
-            Windows上でcom0comを使うことを想定
-            SCIComPort classは基本的にEQU ZEUSのコードを流用
+ * @file    uart_sils_sci_if.cpp
+ * @brief   uart_sils_sci_if
+ * @details SILSでDriverのテストをするように作った
+            ccsds_sils_sci_if.c/hのほぼコピー
  */
 
-#include "ccsds_sils_sci_if.h"
+#include "uart_sils_sci_if.hpp"
 
 
 // 最初だけ初期化して、プログラム終了時にポートを閉じるようにしたい
-static SCIComPort sci_com_;
+static SCIComPortUart sci_com_uart_;
 
-int SILS_SIC_IF_init(void)
+int SILS_SCI_UART_IF_init(void)
 {
   return 0;
 }
 
-int SILS_SIC_IF_TX(unsigned char* data_v, int count)
+int SILS_SCI_UART_IF_TX(unsigned char* data_v, int count)
 {
-  sci_com_.Send(data_v, 0, count);
+  sci_com_uart_.Send(data_v, 0, count);
   return 0;
 }
 
-int SILS_SIC_IF_RX(unsigned char* data_v, int count)
+int SILS_SCI_UART_IF_RX(unsigned char* data_v, int count)
 {
-  return sci_com_.Receive(data_v, 0, count);
+  return sci_com_uart_.Receive(data_v, 0, count);
 }
 
 
-SCIComPort::SCIComPort(void)
+SCIComPortUart::SCIComPortUart(void)
 {
   // ビルド通らなかったので，ZEUSからちょっと変えた
-  myHComPort_ = CreateFile("\\\\.\\COM11", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  myHComPort_ = CreateFile("\\\\.\\COM13", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
   if ((int)myHComPort_ == -1)
   {
@@ -56,7 +55,7 @@ SCIComPort::SCIComPort(void)
   SetCommState(myHComPort_, &config_);
 }
 
-SCIComPort::~SCIComPort(void)
+SCIComPortUart::~SCIComPortUart(void)
 {
   if (init_success == true)
   {
@@ -64,7 +63,7 @@ SCIComPort::~SCIComPort(void)
   }
 }
 
-int SCIComPort::Send(unsigned char* buffer, size_t offset, size_t count)
+int SCIComPortUart::Send(unsigned char* buffer, size_t offset, size_t count)
 {
   DWORD toWriteBytes = count; // 送信したいバイト数
   DWORD writeBytes;           // 実際に送信されたバイト数
@@ -81,7 +80,7 @@ int SCIComPort::Send(unsigned char* buffer, size_t offset, size_t count)
   }
 }
 
-int SCIComPort::Receive(unsigned char* buffer, size_t offset, size_t count)
+int SCIComPortUart::Receive(unsigned char* buffer, size_t offset, size_t count)
 {
   DWORD fromReadBytes = count; // 受信したいバイト数
   DWORD dwErrors;
