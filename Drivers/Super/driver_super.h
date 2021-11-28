@@ -23,7 +23,7 @@
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
-// (*load_init_setting)(struct DriverSuper* p_super); の DriverSuper が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
+// (*load_init_setting)(DriverSuper* p_super); の DriverSuper が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
 typedef struct DriverSuper DriverSuper;
 // (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver); の DS_StreamConfig が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
 typedef struct DS_StreamConfig DS_StreamConfig;
