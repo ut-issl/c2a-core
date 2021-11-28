@@ -1,24 +1,40 @@
 #pragma section REPRO
 #include "time_manager.h"
 
+#include <string.h>
+
 #include <src_user/CmdTlm/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
 #include "../../Library/endian_memcpy.h"
 
 static ObcTime master_clock_;
-const ObcTime* master_clock;
+const ObcTime* const master_clock = &master_clock_;
 
 static OBCT_UnixTimeInfo OBCT_unix_time_info_;
 const OBCT_UnixTimeInfo* const OBCT_unix_time_info = &OBCT_unix_time_info_;
+
+static TimeManager time_manager_;
+extern const TimeManager* const time_manager = &time_manager_;
 
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 void TMGR_init(void)
 {
-  OBCT_clear(&master_clock_);
-  master_clock = &master_clock_;
+  OBCT_clear(&time_manager_.init_time);
+  time_manager_.init_flag = 1;
+  TMGR_clear();
+}
 
+void TMGR_clear(void)
+{
+  OBCT_clear(&master_clock_);
   OBCT_clear_unix_time_info(&OBCT_unix_time_info_);
+}
+
+void TMGR_lower_init_flag(void)
+{
+  memcpy(&time_manager_.init_time, &master_clock_, sizeof(ObcTime));
+  time_manager_.init_flag = 0;
 }
 
 void TMGR_clear_master_mode_cycle(void)
@@ -46,8 +62,16 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void)
   return OBCT_get_mode_cycle_in_msec(&master_clock_);
 }
 
-ObcTime TMGR_get_master_clock(void) {
-  return *master_clock;     // わざと const を返している．けど意味ないか？ オブジェクトはコピーされるわけだし．
+ObcTime TMGR_get_master_clock(void)
+{
+  if (time_manager_.init_flag)
+  {
+    return OBCT_create(0, 0, 0);
+  }
+  else
+  {
+    return *master_clock;
+  }
 }
 
 cycle_t TMGR_get_master_total_cycle(void) {
@@ -140,6 +164,11 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   TMGR_modify_unix_time_criteria(unix_time, time);
 
   return CCP_EXEC_SUCCESS;
+}
+
+ObcTime TMGR_get_clock_from_boot(void)
+{
+  return OBCT_add(&time_manager_.init_time, master_clock);
 }
 
 #pragma section
