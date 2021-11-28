@@ -16,13 +16,18 @@
 #include "../../System/TimeManager/time_manager.h"
 // #include <src_user/CmdTlm/CCSDS/TCPacket.h>
 
-
 #define DS_STREAM_MAX          (3)         /*!< DS_StreamConfigの最大数
                                                 uint8_t を想定          */
 #define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< 受信データバッファの最大長
 #define DS_RX_FRAME_SIZE_MAX   (1024)      //!< 受信データフレームの最大長
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
+
+// (*load_init_setting)(struct DriverSuper* p_super); の DriverSuper が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
+typedef struct DriverSuper DriverSuper;
+// (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver); の DS_StreamConfig が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
+typedef struct DS_StreamConfig DS_StreamConfig;
+
 
 /**
  * @enum   DS_DRIVER_ERR_CODE
@@ -231,8 +236,7 @@ typedef struct
   // 【内部処理で用いる値】
   uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< データ受信バッファ
 
-  DS_ERR_CODE (*load_init_setting)(struct DriverSuper* p_super);
-                                                            /*!< DS_init でロードする，ドライバの初期設定の設定関数
+  DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init でロードする，ドライバの初期設定の設定関数
                                                                  DS_reset_config での設定をオーバーロードする
                                                                  返り値は DS_ERR_CODE */
 } DS_Config;
@@ -318,7 +322,7 @@ struct DS_StreamConfig
   uint8_t  should_monitor_for_tlm_disruption_;              //!< テレメ途絶判定をするか？
   uint32_t time_threshold_for_tlm_disruption_;              //!< テレメ途絶判定の閾値 [ms]
 
-  DS_ERR_CODE (*data_analyzer_)(struct DS_StreamConfig* p_stream_config, void* p_driver);
+  DS_ERR_CODE (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver);
                                                             /*!< 受信データの解析関数
                                                                  p_driver は継承先機器のドライバ構造体など
                                                                  返り値は DS_ERR_CODE */
@@ -341,8 +345,6 @@ struct DS_StreamConfig
                                                             /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
                                                                  次の受信時にまとめて処理させる */
 };
-typedef struct DS_StreamConfig DS_StreamConfig;
-// ↑ (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver); の DS_StreamConfig が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
 
 
 /**
@@ -364,8 +366,6 @@ struct DriverSuper
                                                                  使い方例：[0]を定期テレメと一般コマンドで使い，[1]以降を非定期や特殊コマンド・テレメトリで使う
                                                                  が，まあ自由に使ってもらえたら */
 };
-typedef struct DriverSuper DriverSuper;
-// ↑ (*load_init_setting)(struct DriverSuper* p_super); の DriverSuper が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
 
 
 // ###### DriverSuper基本関数 ######
