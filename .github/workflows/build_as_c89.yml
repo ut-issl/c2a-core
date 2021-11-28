@@ -34,7 +34,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DUSE_SILS_MOCKUP=ON -DCMAKE_CXX_FLAGS="-Werror"
+          cmake .. -DUSE_SILS_MOCKUP=ON -DCMAKE_C_FLAGS="-Werror"
 
       - name: build
         working-directory: ./Examples/minimum_user_for_s2e/build

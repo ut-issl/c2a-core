@@ -71,7 +71,6 @@ static void DCU_create_log_on_front_(CMD_CODE cmd_code);
 static DividedCmdUtility divided_cmd_utility_;
 const DividedCmdUtility* const divided_cmd_utility = &divided_cmd_utility_;
 
-static uint8_t DCU_exec_log_order_temp_[DCU_LOG_MAX];
 static CTCP DCU_packet_;
 
 
