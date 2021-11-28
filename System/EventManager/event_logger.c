@@ -270,11 +270,11 @@ static EL_ACK EL_record_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL er
   const EL_Event event = EL_init_event_(group, local, err_level, note);
   EL_ACK ack = EL_ACK_OK;
 
-  if (event.group >= EL_GROUP_MAX)           return EL_ACK_ILLEGAL_GROUP;
-  if (event.group <= EL_CORE_GROUP_NULL)     return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
-  if (event.err_level < 0)                   return EL_ACK_ILLEGAL_ERROR_LEVEL;
-  if (event.err_level >= EL_ERROR_LEVEL_MAX) return EL_ACK_ILLEGAL_ERROR_LEVEL;
-  if (!EL_is_logging_enable(event.group))    return EL_ACK_DISABLE_LOGGING;
+  if (event.group >= EL_GROUP_MAX)                 return EL_ACK_ILLEGAL_GROUP;
+  if (event.group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
+  if (event.err_level < 0)                         return EL_ACK_ILLEGAL_ERROR_LEVEL;
+  if (event.err_level >= EL_ERROR_LEVEL_MAX)       return EL_ACK_ILLEGAL_ERROR_LEVEL;
+  if (!EL_is_logging_enable(event.group))          return EL_ACK_DISABLE_LOGGING;
 
   event_logger_.latest_event = event;   // 再帰呼び出しの可能性があるので，別途コピーして持つ
   event_logger_.statistics.record_counter_total++;
@@ -596,8 +596,8 @@ EL_ACK EL_enable_logging(EL_GROUP group)
   uint8_t  info;
   uint8_t  mask;
 
-  if (group >= EL_GROUP_MAX)       return EL_ACK_ILLEGAL_GROUP;
-  if (group <= EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
+  if (group >= EL_GROUP_MAX) return EL_ACK_ILLEGAL_GROUP;
+  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
 
   info = event_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
@@ -616,8 +616,8 @@ EL_ACK EL_disable_logging(EL_GROUP group)
   uint8_t  info;
   uint8_t  mask;
 
-  if (group >= EL_GROUP_MAX)       return EL_ACK_ILLEGAL_GROUP;
-  if (group <= EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
+  if (group >= EL_GROUP_MAX) return EL_ACK_ILLEGAL_GROUP;
+  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
 
   info = event_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
