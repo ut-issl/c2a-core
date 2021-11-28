@@ -18,11 +18,12 @@ const UART_TEST_Driver* uart_test_instance;
 static void UART_TEST_init_by_AM_(void);
 static void UART_TEST_init_(void);
 static void UART_TEST_update_(void);
-static int  UART_TEST_fill_with_zero_(uint32_t no);
-static int  UART_TEST_abort_fill_nodata_(uint8_t err);
-static int  UART_TEST_set_rec_flag_(uint32_t no);
-static int  UART_TEST_unset_rec_flag_(uint32_t no);
-static int  UART_TEST_is_rec_flag_up_(uint32_t no);
+// TODO: é¿ëïÇ∑ÇÈ
+// static int  UART_TEST_fill_with_zero_(uint32_t no);
+// static int  UART_TEST_abort_fill_nodata_(uint8_t err);
+// static int  UART_TEST_set_rec_flag_(uint32_t no);
+// static int  UART_TEST_unset_rec_flag_(uint32_t no);
+// static int  UART_TEST_is_rec_flag_up_(uint32_t no);
 
 
 // !!!!!!!!!! íçà” !!!!!!!!!!
@@ -61,6 +62,9 @@ static void UART_TEST_update_(void)
   DS_REC_ERR_CODE ret;
 
   ret = UART_TEST_rec(&uart_test_instance_);
+
+  // TODO: ÉGÉâÅ[èàóù
+  (void)ret;
 }
 
 
