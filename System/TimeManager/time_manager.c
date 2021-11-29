@@ -14,7 +14,7 @@ static OBCT_UnixTimeInfo OBCT_unix_time_info_;
 const OBCT_UnixTimeInfo* const OBCT_unix_time_info = &OBCT_unix_time_info_;
 
 static TimeManager time_manager_;
-extern const TimeManager* const time_manager = &time_manager_;
+const TimeManager* const time_manager = &time_manager_;
 
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
