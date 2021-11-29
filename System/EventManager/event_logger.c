@@ -8,6 +8,7 @@
  * @note  詳細は event_logger.h を参照
  */
 #include "event_logger.h"
+#include "event_handler.h"
 #include <string.h>
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
@@ -233,6 +234,8 @@ void EL_initialize(void)
 
   // ユーザーデフォルト設定
   EL_load_default_settings();
+
+  EH_match_event_counter_to_el();
 }
 
 
@@ -586,6 +589,8 @@ static void EL_clear_statistics_(void)
   {
     event_logger_.statistics.record_counters[err_level] = 0;
   }
+
+  EH_match_event_counter_to_el();
 }
 
 

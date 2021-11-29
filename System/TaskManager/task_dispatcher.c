@@ -116,7 +116,7 @@ void TDSP_execute_pl_as_task_list(void)
         EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_TASK_EXEC_FAILED,
                       EL_ERROR_LEVEL_HIGH,
-                      (uint32_t)(TDSP_info_.tskd.prev.sts + 100));   // CCP_EXEC_STS が負数も含むので．．．なんとかしたい
+                      (uint32_t)(TDSP_info_.tskd.prev.sts + 100));   // FIXME: CCP_EXEC_STS が負数も含むので．．．なんとかしたい
       }
 
       break;

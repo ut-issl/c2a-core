@@ -9,8 +9,8 @@
 #include <src_core/System/ApplicationManager/app_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/ModeManager/mode_manager.h>
-#include <src_core/System/EventManager/event_manager.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/System/EventManager/event_handler.h>
 #include <src_core/System/WatchdogTimer/watchdog_timer.h>
 #include <src_core/CmdTlm/command_analyze.h>
 #include <src_core/CmdTlm/block_command_executor.h>

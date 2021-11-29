@@ -6,7 +6,6 @@
 #ifndef EVENT_MANAGER_H_
 #define EVENT_MANAGER_H_
 
-
 /**
  * @brief  event_manager ‚Ì‰Šú‰»
  * @note   event_logger ‚Æ event_handler ‚à‰Šú‰»‚³‚ê‚é
@@ -14,6 +13,5 @@
  * @return void
  */
 void EM_initialize(void);
-
 
 #endif

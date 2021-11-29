@@ -105,6 +105,15 @@ uint32_t OBCT_cycle2sec(cycle_t cycle) {
   return (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE * cycle) / 1000;
 }
 
+cycle_t OBCT_msec2cycle(uint32_t msec)
+{
+  return (msec) / (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE);
+}
+
+uint32_t OBCT_cycle2msec(cycle_t cycle) {
+  return (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE * cycle);
+}
+
 ObcTime OBCT_diff(const ObcTime* before,
                   const ObcTime* after)
 {
@@ -147,6 +156,17 @@ float OBCT_diff_in_sec(const ObcTime* before,
                        const ObcTime* after)
 {
   return 0.001f * OBCT_diff_in_msec(before, after);
+}
+
+int OBCT_compare(const ObcTime* t1, const ObcTime* t2)
+{
+  if (t1->total_cycle == t2->total_cycle)
+  {
+    if (t1->step == t2->step) return 0;
+    return (t1->step < t2->step) ? 1 : -1;
+  }
+
+  return (t1->total_cycle < t2->total_cycle) ? 1 : -1;
 }
 
 void OBCT_print(const ObcTime* time)
