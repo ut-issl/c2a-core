@@ -126,9 +126,9 @@ static AM_ACK AM_initialize_app_(size_t id)
 #ifdef SILS_FW
   app_manager_.ais[id].initializer();
 #else
-  start = TMGR_get_clock_from_boot();
+  start = TMGR_get_master_clock_from_boot();
   app_manager_.ais[id].initializer();
-  finish = TMGR_get_clock_from_boot();
+  finish = TMGR_get_master_clock_from_boot();
 
   // 処理時間情報アップデート
   app_manager_.ais[id].init_duration = OBCT_diff_in_step(&start, &finish);

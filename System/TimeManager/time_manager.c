@@ -18,7 +18,7 @@ static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 void TMGR_init(void)
 {
-  OBCT_clear(&time_manager_.init_time);
+  OBCT_clear(&time_manager_.initializing_time);
   time_manager_.initializing_flag = 1;
   TMGR_clear();
 }
@@ -31,7 +31,7 @@ void TMGR_clear(void)
 
 void TMGR_down_initializing_flag(void)
 {
-  memcpy(&time_manager_.init_time, &master_clock_, sizeof(ObcTime));
+  memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
   time_manager_.initializing_flag = 0;
   
   TMGR_clear();
@@ -166,9 +166,9 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-ObcTime TMGR_get_clock_from_boot(void)
+ObcTime TMGR_get_master_clock_from_boot(void)
 {
-  return OBCT_add(&time_manager_.init_time, &master_clock_);
+  return OBCT_add(&time_manager_.initializing_time, &master_clock_);
 }
 
 #pragma section

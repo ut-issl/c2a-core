@@ -14,7 +14,7 @@
 
 typedef struct
 {
-  ObcTime init_time;
+  ObcTime initializing_time;
   uint8_t initializing_flag;
 } TimeManager;
 
@@ -35,7 +35,7 @@ double TMGR_get_unix_time_from_ObcTime(const ObcTime* time);
 ObcTime TMGR_get_ObcTime_from_unix_time(const double unix_time);
 void TMGR_modify_unix_time_criteria(const double unix_time, const ObcTime time);
 OBCT_UnixTimeInfo TMGR_get_obct_unix_time_info(void);
-ObcTime TMGR_get_clock_from_boot(void);
+ObcTime TMGR_get_master_clock_from_boot(void);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);
