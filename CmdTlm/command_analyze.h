@@ -10,7 +10,7 @@
 
 #define CA_TLM_PAGE_SIZE  (64)                                   //!< コマンドテーブルの1テレメトリパケット(=1ページ)に格納されるコマンド数（ページネーション用）
 #define CA_TLM_PAGE_MAX   (24)                                   //!< コマンドテーブルページ数（ページネーション用）
-#define CMD_MAX_CMDS      (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)   //!< コマンドテーブルサイズ．すなわち登録できる最大コマンド数
+#define CA_MAX_CMDS       (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)   //!< コマンドテーブルサイズ．すなわち登録できる最大コマンド数
 
 #include <src_user/Settings/CmdTlm/command_analyze_params.h>
 
@@ -38,7 +38,7 @@ typedef enum
 } CA_CMD_PARAM_LEN_TYPE;
 
 /**
- * @struct CmdInfo
+ * @struct CA_CmdInfo
  * @brief  コマンドテーブルの要素となる構造体
  */
 typedef struct
@@ -46,10 +46,19 @@ typedef struct
   CCP_EXEC_STS (*cmd_func)(const CTCP*);  //!< コマンドとなる関数
   CA_CMD_PARAM_LEN_TYPE param_len_type;   //!< パラメタ長の種別
   uint16_t param_len;                     //!< パラメタ長
-} CmdInfo;
+} CA_CmdInfo;
 
-extern const CmdInfo* cmd_table;
-extern const int* CA_page_no;
+/**
+ * @struct CommandAnalyze
+ * @brief  CommandAnalyze の Info 構造体
+ */
+typedef struct
+{
+  CA_CmdInfo cmd_table[CA_MAX_CMDS];  //!< コマンドテーブル
+  uint8_t tlm_page_no;                //!< テレメで使うページ数
+} CommandAnalyze;
+
+extern const CommandAnalyze* const command_analyze;
 
 
 /**
@@ -80,7 +89,7 @@ CA_ACK CA_ckeck_cmd_param_len(CMD_CODE cmd_code, uint16_t param_len);
  * @param  cmd_table_: Cmd Tableの実体
  * @return void
  */
-void CA_load_cmd_table(CmdInfo cmd_table_[CMD_MAX_CMDS]);
+void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS]);
 
 CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet);
 
