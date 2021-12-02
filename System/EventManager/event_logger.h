@@ -376,7 +376,7 @@ typedef struct
 } EventLogger;
 
 
-const extern EventLogger* const event_logger;
+extern const EventLogger* const event_logger;
 
 
 /**

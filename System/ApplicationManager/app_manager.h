@@ -25,7 +25,7 @@ typedef enum
   AM_NOT_REGISTERED
 } AM_ACK;
 
-const extern AppManager* const app_manager;
+extern const AppManager* const app_manager;
 
 void AM_initialize(void);
 

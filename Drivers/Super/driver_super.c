@@ -1371,12 +1371,12 @@ const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
   return &p_super->config.rec_status_;
 }
 
-const uint32_t DSC_get_rx_count(const DriverSuper* p_super)
+uint32_t DSC_get_rx_count(const DriverSuper* p_super)
 {
   return p_super->config.rx_count_;
 }
 
-const uint32_t DSC_get_rx_call_count(const DriverSuper* p_super)
+uint32_t DSC_get_rx_call_count(const DriverSuper* p_super)
 {
   return p_super->config.rx_call_count_;
 }
@@ -1386,7 +1386,7 @@ const ObcTime* DSC_get_rx_time(const DriverSuper* p_super)
   return &p_super->config.rx_time_;
 }
 
-const uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
+uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
   return p_super->config.should_monitor_for_rx_disruption_;
 }
@@ -1401,7 +1401,7 @@ void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super)
   p_super->config.should_monitor_for_rx_disruption_ = 0;
 }
 
-const uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super)
+uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super)
 {
   return p_super->config.time_threshold_for_rx_disruption_;
 }
@@ -1418,7 +1418,7 @@ const DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSupe
 }
 
 // ###### DS_StreamConfig Getter/Setter ######
-const uint8_t DSSC_get_is_enable(const DS_StreamConfig* p_stream_config)
+uint8_t DSSC_get_is_enable(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->is_enabled_;
 }
@@ -1435,7 +1435,7 @@ void DSSC_disable(DS_StreamConfig* p_stream_config)
   p_stream_config->is_enabled_ = 0;
 }
 
-const uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config)
+uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->is_strict_frame_search_;
 }
@@ -1461,22 +1461,22 @@ const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_co
   return &p_stream_config->rec_status_;
 }
 
-const uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config)
+uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->general_cmd_tx_count_;
 }
 
-const uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config)
+uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->req_tlm_cmd_tx_count_;
 }
 
-const uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config)
+uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->req_tlm_cmd_tx_count_after_last_tx_;
 }
 
-const uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config)
+uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->rx_frame_fix_count_;
 }
@@ -1510,7 +1510,7 @@ void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
   p_stream_config->is_validation_needed_for_send_ = 1;
 }
 
-const uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config)
+uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->tx_frame_size_;
 }
@@ -1545,17 +1545,17 @@ void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
   p_stream_config->is_validation_needed_for_rec_ = 1;
 }
 
-const uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config)
+uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->rx_header_size_;
 }
 
-const uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config)
+uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->rx_footer_size_;
 }
 
-const int16_t DSSC_get_rx_frame_size(const DS_StreamConfig* p_stream_config)
+int16_t DSSC_get_rx_frame_size(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->rx_frame_size_;
 }
@@ -1581,7 +1581,7 @@ void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
   p_stream_config->is_validation_needed_for_rec_ = 1;
 }
 
-const uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
+uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->should_monitor_for_tlm_disruption_;
 }
@@ -1598,7 +1598,7 @@ void DSSC_disable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config)
   p_stream_config->is_validation_needed_for_rec_ = 1;
 }
 
-const uint32_t DSSC_get_time_threshold_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
+uint32_t DSSC_get_time_threshold_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->time_threshold_for_tlm_disruption_;
 }
@@ -1610,7 +1610,7 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
   p_stream_config->is_validation_needed_for_rec_ = 1;
 }
 
-const DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
+DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->rec_status_.tlm_disruption_status;
 }
@@ -1622,7 +1622,7 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
   p_stream_config->is_validation_needed_for_rec_ = 1;
 }
 
-const DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config)
+DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->ret_from_data_analyzer_;
 }
