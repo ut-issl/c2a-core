@@ -13,6 +13,7 @@
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
 #include <src_user/Settings/System/event_logger_settings.h>
+#include "../../CmdTlm/common_tlm_cmd_packet_util.h"
 #include "../../Library/endian_memcpy.h"
 
 
@@ -766,7 +767,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (err_level < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (err_level >= EL_ERROR_LEVEL_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -794,7 +795,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet)
 #ifdef EL_IS_ENABLE_TLOG
 CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (err_level < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (err_level >= EL_ERROR_LEVEL_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -809,7 +810,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
 #ifdef EL_IS_ENABLE_CLOG
 CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (err_level < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (err_level >= EL_ERROR_LEVEL_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -823,22 +824,12 @@ CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  EL_ACK ack;
-  EL_GROUP group;             // uint32_t ‚ð‘z’è
-  uint32_t local;
-  EL_ERROR_LEVEL err_level;   // uint8_t ‚ð‘z’è
-  uint32_t note;
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  uint32_t local = CCP_get_param_from_packet(packet, 1, uint32_t);
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 2, uint8_t);
+  uint32_t note = CCP_get_param_from_packet(packet, 3, uint32_t);
 
-  uint32_t temp;
-
-  endian_memcpy(&temp, &param[0], 4);
-  group = (EL_GROUP)temp;
-  endian_memcpy(&local, &param[4], 4);
-  err_level = (EL_ERROR_LEVEL)param[8];
-  endian_memcpy(&note, &param[9], 4);
-
-  ack = EL_record_event(group, local, err_level, note);
+  EL_ACK ack = EL_record_event(group, local, err_level, note);
 
   switch (ack)
   {
@@ -862,12 +853,8 @@ CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
 #ifdef EL_IS_ENABLE_TLOG
 CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t page_no;
-  EL_ERROR_LEVEL err_level;
-
-  page_no = param[0];
-  err_level = (EL_ERROR_LEVEL)param[1];
+  uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
 
   switch (err_level)
   {
@@ -903,12 +890,8 @@ CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 #ifdef EL_IS_ENABLE_CLOG
 CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t page_no;
-  EL_ERROR_LEVEL err_level;
-
-  page_no = param[0];
-  err_level = (EL_ERROR_LEVEL)param[1];
+  uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
 
   switch (err_level)
   {
@@ -952,16 +935,9 @@ CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  EL_ACK ack;
-  EL_GROUP group;
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
-  uint32_t temp;
-
-  endian_memcpy(&temp, param, 4);
-  group = (EL_GROUP)temp;
-
-  ack = EL_enable_logging(group);
+  EL_ACK ack = EL_enable_logging(group);
 
   switch (ack)
   {
@@ -977,16 +953,9 @@ CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  EL_ACK ack;
-  EL_GROUP group;
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
-  uint32_t temp;
-
-  endian_memcpy(&temp, param, 4);
-  group = (EL_GROUP)temp;
-
-  ack = EL_disable_logging(group);
+  EL_ACK ack = EL_disable_logging(group);
 
   switch (ack)
   {
@@ -1019,10 +988,9 @@ CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet)
 #ifdef EL_IS_ENABLE_TLOG
 CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
-  EL_ACK ack;
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  ack = EL_enable_tlog_overwrite(err_level);
+  EL_ACK ack = EL_enable_tlog_overwrite(err_level);
 
   switch (ack)
   {
@@ -1038,10 +1006,9 @@ CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
-  EL_ACK ack;
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  ack = EL_disable_tlog_overwrite(err_level);
+  EL_ACK ack = EL_disable_tlog_overwrite(err_level);
 
   switch (ack)
   {
