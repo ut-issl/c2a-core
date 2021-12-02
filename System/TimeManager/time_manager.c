@@ -33,7 +33,7 @@ void TMGR_down_initializing_flag(void)
 {
   memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
   time_manager_.initializing_flag = 0;
-  
+
   TMGR_clear();
 }
 
