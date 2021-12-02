@@ -1412,7 +1412,7 @@ void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
   p_super->config.time_threshold_for_rx_disruption_ = time_threshold_for_rx_disruption;
 }
 
-const DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
+DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
 {
   return p_super->config.rec_status_.rx_disruption_status;
 }

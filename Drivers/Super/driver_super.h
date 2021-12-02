@@ -480,7 +480,7 @@ void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super);
 uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super);
 void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
                                               const uint32_t time_threshold_for_rx_disruption);
-const DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super);
+DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super);
 
 // ###### DS_StreamConfig Getter/Setter ######
 uint8_t DSSC_get_is_enabled(const DS_StreamConfig* p_stream_config);
