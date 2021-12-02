@@ -23,4 +23,13 @@ int main(){
   MM_initialize();            //Mode Manager
   TDSP_initialize();          //Task Dispatcher
   WDT_init();                 // WDT
+
+  // OBC_C2A::MainRoutine()
+  for(;;){
+    TMGR_count_up_master_clock();
+    TDSP_execute_pl_as_task_list();
+  }
 }
+
+int OBC_C2A_SendFromObc(int port_id, unsigned char* buffer, int offset, int count){ return 0; }
+int OBC_C2A_ReceivedByObc(int port_id, unsigned char* buffer, int offset, int count){ return 0; }
