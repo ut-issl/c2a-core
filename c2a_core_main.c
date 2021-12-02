@@ -46,7 +46,7 @@ void C2A_core_init(void)
   // DebugOutInit();             // Debug‚Ìinit          // LVTTL UART ch1‚Å‚Ìo—ÍD×–‚‚È‚Ì‚ÅPrintf‚Ì’†g‚Æ‚Æ‚à‚É–³Œø‰» (2019-04-09)
   // Printf("C2A_init: DebugOutInit done.\n");
 
-  TMGR_lower_initializing_flag();
+  TMGR_down_initializing_flag();
 }
 
 void C2A_core_main(void)

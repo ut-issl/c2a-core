@@ -29,7 +29,7 @@ void TMGR_clear(void)
   OBCT_clear_unix_time_info(&OBCT_unix_time_info_);
 }
 
-void TMGR_lower_initializing_flag(void)
+void TMGR_down_initializing_flag(void)
 {
   memcpy(&time_manager_.init_time, &master_clock_, sizeof(ObcTime));
   time_manager_.initializing_flag = 0;
