@@ -90,4 +90,24 @@ void CCP_convert_rtc_to_tlc(CTCP* packet, cycle_t ti)
   CCP_set_ti(packet, ti);
 }
 
+uint8_t CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n)
+{
+  return 0;
+}
+
+uint16_t CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n)
+{
+  return 0;
+}
+
+uint32_t CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n)
+{
+  return 0;
+}
+
+double CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
+{
+  return 0;
+}
+
 #pragma section
