@@ -9,14 +9,14 @@
 
 #define TF_TLM_PAGE_SIZE (64)                                    //!< テレメテーブルの1テレメトリパケット(=1ページ)に格納されるテレメ数
 #define TF_TLM_PAGE_MAX  (4)                                     //!< テレメテーブルページ数（ページネーション用）
-#define TLM_MAX_TLMS     (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)    //!< テレメテーブルサイズ．すなわち登録できる最大テレメ数
+#define TF_MAX_TLMS      (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)    //!< テレメテーブルサイズ．すなわち登録できる最大テレメ数
 
 #include <src_user/Settings/CmdTlm/telemetry_frame_params.h>
 
 typedef struct
 {
   int (*tlm_func)(unsigned char*, int);
-} TlmInfo;
+} TF_TlmInfo;
 
 typedef enum
 {
@@ -26,8 +26,18 @@ typedef enum
   TLM_UNKNOWN = -3
 } TLM_ACK;
 
-extern const TlmInfo* tlm_table;
-extern const int* TF_page_no;
+/**
+ * @struct TelemetryFrame
+ * @brief  TelemetryFrame の Info 構造体
+ */
+typedef struct
+{
+  TF_TlmInfo tlm_table[TF_MAX_TLMS];  //!< テレメトリテーブル
+  uint8_t tlm_page_no;                //!< テレメで使うページ数
+} TelemetryFrame;
+
+extern const TelemetryFrame* const telemetry_frame;
+
 
 void TF_initialize(void);
 
@@ -38,10 +48,10 @@ int TF_generate_contents(int packet_id,
 /**
  * @brief  Tlm Tableのロード
  * @note   定義は /src_user/CmdTlm/TelemetryDefinitions.c にある
- * @param  tlm_table_: Tlm Tableの実体
+ * @param  tlm_table: Tlm Tableの実体
  * @return void
  */
-void TF_load_tlm_table(TlmInfo tlm_table_[TLM_MAX_TLMS]);
+void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS]);
 
 CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CTCP* packet);
 

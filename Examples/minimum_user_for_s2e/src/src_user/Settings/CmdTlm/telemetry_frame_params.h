@@ -7,13 +7,13 @@
 
 #undef TF_TLM_PAGE_SIZE
 #undef TF_TLM_PAGE_MAX
-#undef TLM_MAX_TLMS
+#undef TF_MAX_TLMS
 
 // 1テレメトリパケット(=1ページ)に格納されるテレメトリ数
 #define TF_TLM_PAGE_SIZE (64)
 // テレメトリテーブルページ数
 #define TF_TLM_PAGE_MAX (4)
 // コマンドテーブルサイズ
-#define TLM_MAX_TLMS (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)
+#define TF_MAX_TLMS (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)
 
 #endif
