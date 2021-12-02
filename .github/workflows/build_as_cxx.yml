@@ -35,3 +35,23 @@ jobs:
       - name: build
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cmake --build .
+
+  build_s2e_mockup:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup
+        shell: cmd
+        run: ./setup.bat
+
+      - name: cmake
+        working-directory: ./Examples/minimum_user_for_s2e/src/s2e_mockup
+        run: |
+          mkdir build
+          cd build
+          cmake .. -A Win32
+
+      - name: build
+        working-directory: ./Examples/minimum_user_for_s2e/src/s2e_mockup/build
+        run: cmake --build .
