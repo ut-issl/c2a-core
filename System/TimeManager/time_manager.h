@@ -4,14 +4,6 @@
 #include "obc_time.h"
 #include "../../CmdTlm/common_tlm_cmd_packet.h"
 
-// 2020-05-26
-// master_clock の公開を中止した．
-// 今後は，
-//   + ObcTime TMGR_get_master_clock();
-//   + cycle_t TMGR_get_master_cycle();
-// などを用いてアクセス（read only）する
-// extern const ObcTime* master_clock;
-
 typedef struct
 {
   ObcTime initializing_time;
@@ -40,4 +32,4 @@ ObcTime TMGR_get_master_clock_from_boot(void);
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);
 
-#endif // TIME_MANAGER_H_
+#endif

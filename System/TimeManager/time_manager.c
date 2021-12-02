@@ -1,8 +1,6 @@
 #pragma section REPRO
 #include "time_manager.h"
-
 #include <string.h>
-
 #include <src_user/CmdTlm/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
 #include "../../Library/endian_memcpy.h"
