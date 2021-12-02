@@ -62,7 +62,7 @@ extern const CommandAnalyze* const command_analyze;
 
 
 /**
- * @brief  CA‚Ì‰Šú‰»
+ * @brief  CA ‚Ì‰Šú‰»
  * @param  void
  * @return void
  */
@@ -86,7 +86,7 @@ CA_ACK CA_ckeck_cmd_param_len(CMD_CODE cmd_code, uint16_t param_len);
 /**
  * @brief  Cmd Table‚Ìƒ[ƒh
  * @note   ’è‹`‚Í /src_user/CmdTlm/CommandDefinitions.c ‚É‚ ‚é
- * @param  cmd_table_: Cmd Table‚ÌÀ‘Ì
+ * @param  cmd_table: Cmd Table‚ÌÀ‘Ì
  * @return void
  */
 void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS]);

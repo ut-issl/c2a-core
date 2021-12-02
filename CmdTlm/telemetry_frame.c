@@ -29,7 +29,7 @@ int TF_generate_contents(int packet_id,
   }
   else
   {
-    return TLM_NOT_DEFINED;
+    return TF_NOT_DEFINED;
   }
 }
 

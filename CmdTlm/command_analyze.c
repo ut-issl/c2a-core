@@ -8,11 +8,10 @@
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
 
+static void CA_initialize_cmd_table_(void);
+
 static CommandAnalyze command_analyze_;
 const CommandAnalyze* const command_analyze = &command_analyze_;
-
-
-static void CA_initialize_cmd_table_(void);
 
 
 void CA_initialize(void)

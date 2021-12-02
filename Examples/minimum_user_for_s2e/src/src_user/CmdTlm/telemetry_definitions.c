@@ -59,8 +59,7 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 
 static int Tlm_MOBC_(unsigned char* contents, int max_len)
 {
-
-  if (244 > max_len) return TLM_TOO_SHORT_LEN;
+  if (244 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], (uint32_t)(TMGR_get_master_clock().mode_cycle));
@@ -158,8 +157,7 @@ static int Tlm_MOBC_(unsigned char* contents, int max_len)
 
 static int Tlm_MEM_(unsigned char* contents, int max_len)
 {
-
-  if (23 > max_len) return TLM_TOO_SHORT_LEN;
+  if (23 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], memory_dump->begin);
@@ -176,8 +174,7 @@ static int Tlm_MEM_(unsigned char* contents, int max_len)
 
 static int Tlm_TLM_MGR_(unsigned char* contents, int max_len)
 {
-
-  if (111 > max_len) return TLM_TOO_SHORT_LEN;
+  if (111 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u16(&contents[0], telemetry_manager->master_bc_id);
@@ -287,8 +284,7 @@ static int Tlm_TLM_MGR_(unsigned char* contents, int max_len)
 
 static int Tlm_TL_(unsigned char* contents, int max_len)
 {
-
-  if (390 > max_len) return TLM_TOO_SHORT_LEN;
+  if (390 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], TLCD_update_tl_list_for_tlm((uint8_t)*TLCD_line_no_for_tlm));
@@ -557,8 +553,7 @@ static int Tlm_TL_(unsigned char* contents, int max_len)
 
 static int Tlm_BL_(unsigned char* contents, int max_len)
 {
-
-  if (400 > max_len) return TLM_TOO_SHORT_LEN;
+  if (400 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u16(&contents[0], block_command_table->pos.block);
@@ -835,8 +830,7 @@ static int Tlm_BL_(unsigned char* contents, int max_len)
 
 static int Tlm_CA_(unsigned char* contents, int max_len)
 {
-
-  if (257 > max_len) return TLM_TOO_SHORT_LEN;
+  if (257 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(command_analyze->tlm_page_no));
@@ -911,8 +905,7 @@ static int Tlm_CA_(unsigned char* contents, int max_len)
 
 static int Tlm_TF_(unsigned char* contents, int max_len)
 {
-
-  if (257 > max_len) return TLM_TOO_SHORT_LEN;
+  if (257 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(telemetry_frame->tlm_page_no));
@@ -987,8 +980,7 @@ static int Tlm_TF_(unsigned char* contents, int max_len)
 
 static int Tlm_DCU_(unsigned char* contents, int max_len)
 {
-
-  if (176 > max_len) return TLM_TOO_SHORT_LEN;
+  if (176 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], divided_cmd_utility->exec_log_order[0]);
@@ -1094,8 +1086,7 @@ static int Tlm_DCU_(unsigned char* contents, int max_len)
 
 static int Tlm_MM_(unsigned char* contents, int max_len)
 {
-
-  if (398 > max_len) return TLM_TOO_SHORT_LEN;
+  if (398 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(mode_manager->current_id));
@@ -1396,8 +1387,7 @@ static int Tlm_MM_(unsigned char* contents, int max_len)
 
 static int Tlm_AM_(unsigned char* contents, int max_len)
 {
-
-  if (385 > max_len) return TLM_TOO_SHORT_LEN;
+  if (385 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(app_manager->page_no));
@@ -1600,8 +1590,7 @@ static int Tlm_AM_(unsigned char* contents, int max_len)
 
 static int Tlm_APP_TIME_(unsigned char* contents, int max_len)
 {
-
-  if (400 > max_len) return TLM_TOO_SHORT_LEN;
+  if (400 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(app_manager->ais[0].init_duration));
@@ -2011,8 +2000,7 @@ static int Tlm_APP_TIME_(unsigned char* contents, int max_len)
 
 static int Tlm_EL_(unsigned char* contents, int max_len)
 {
-
-  if (382 > max_len) return TLM_TOO_SHORT_LEN;
+  if (382 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], event_logger->statistics.record_counter_total);
@@ -2179,8 +2167,7 @@ static int Tlm_EL_(unsigned char* contents, int max_len)
 
 static int Tlm_EL_TLOG_(unsigned char* contents, int max_len)
 {
-
-  if (410 > max_len) return TLM_TOO_SHORT_LEN;
+  if (410 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_logger->tlm_info.tlog.page_no);
@@ -2376,8 +2363,7 @@ static int Tlm_EL_TLOG_(unsigned char* contents, int max_len)
 
 static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
 {
-
-  if (408 > max_len) return TLM_TOO_SHORT_LEN;
+  if (408 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_logger->tlm_info.clog.page_no);
@@ -2568,8 +2554,7 @@ static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_(unsigned char* contents, int max_len)
 {
-
-  if (70 > max_len) return TLM_TOO_SHORT_LEN;
+  if (70 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_utility->is_enabled_eh_execution);
@@ -2609,8 +2594,7 @@ static int Tlm_EH_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_RULE_(unsigned char* contents, int max_len)
 {
-
-  if (403 > max_len) return TLM_TOO_SHORT_LEN;
+  if (403 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_handler->tlm_info.rule.page_no);
@@ -2782,8 +2766,7 @@ static int Tlm_EH_RULE_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_LOG_(unsigned char* contents, int max_len)
 {
-
-  if (391 > max_len) return TLM_TOO_SHORT_LEN;
+  if (391 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_handler->tlm_info.log.page_no);
@@ -2988,8 +2971,7 @@ static int Tlm_EH_LOG_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_INDEX_(unsigned char* contents, int max_len)
 {
-
-  if (141 > max_len) return TLM_TOO_SHORT_LEN;
+  if (141 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_handler->tlm_info.rule_sorted_index.page_no);
@@ -3080,8 +3062,7 @@ static int Tlm_EH_INDEX_(unsigned char* contents, int max_len)
 
 static int Tlm_GS_(unsigned char* contents, int max_len)
 {
-
-  if (111 > max_len) return TLM_TOO_SHORT_LEN;
+  if (111 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], gs_driver->driver_uart.uart_config.ch);
@@ -3139,8 +3120,7 @@ static int Tlm_GS_(unsigned char* contents, int max_len)
 
 static int Tlm_HK_(unsigned char* contents, int max_len)
 {
-
-  if (177 > max_len) return TLM_TOO_SHORT_LEN;
+  if (177 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], TMGR_get_master_clock().mode_cycle);
@@ -3224,8 +3204,7 @@ static int Tlm_HK_(unsigned char* contents, int max_len)
 
 static int Tlm_GIT_REV_(unsigned char* contents, int max_len)
 {
-
-  if (82 > max_len) return TLM_TOO_SHORT_LEN;
+  if (82 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)GIT_REV_CORE[0]);
@@ -3317,8 +3296,7 @@ static int Tlm_GIT_REV_(unsigned char* contents, int max_len)
 
 static int Tlm_UART_TEST_(unsigned char* contents, int max_len)
 {
-
-  if (25 > max_len) return TLM_TOO_SHORT_LEN;
+  if (25 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(uart_test_instance->driver.super.config.rec_status_.ret_from_if_rx));
