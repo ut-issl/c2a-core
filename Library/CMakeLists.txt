@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(C2A_CORE_LIB)
 
-add_library(${PROJECT_NAME} STATIC
+set(C2A_SRCS
   ascii_conv.c
   crc.c
   endian_conv.c
@@ -16,8 +16,7 @@ add_library(${PROJECT_NAME} STATIC
   sum.c
   vector.c
 )
-
-set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
+add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
 # Compile option
 if(MSVC)
@@ -28,3 +27,5 @@ else()
   set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
   set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
 endif()
+
+include(../common.cmake)

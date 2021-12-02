@@ -3,14 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 project(C2A_CORE)
 
 # user config
-option(USE_C2A_CORE_APPS    "use C2A-core Applications")
-option(USE_C2A_CORE_LIB     "use C2A-core Library")
+option(USE_C2A_CORE_APPS    "use C2A-core Applications" ON)
+option(USE_C2A_CORE_LIB     "use C2A-core Library" ON)
 
-# default config
-set(USE_C2A_CORE_APPS ON)
-set(USE_C2A_CORE_LIB ON)
-
-add_library(${PROJECT_NAME} STATIC
+set(C2A_SRCS
   # src/src_core/c2a_core_main.c
   CmdTlm/block_command_loader.c
   CmdTlm/block_command_table.c
@@ -36,6 +32,7 @@ add_library(${PROJECT_NAME} STATIC
   System/TimeManager/time_manager.c
   System/WatchdogTimer/watchdog_timer.c
 )
+add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
 add_subdirectory(Applications)
 add_subdirectory(Library)
@@ -48,8 +45,6 @@ if(USE_C2A_CORE_LIB)
   target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
 endif()
 
-set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
-
 # Compile option
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
@@ -59,3 +54,5 @@ else()
   set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
   set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
 endif()
+
+include(common.cmake)

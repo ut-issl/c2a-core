@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(C2A_CORE_APPS)
 
-add_library(${PROJECT_NAME} STATIC
+set(C2A_SRCS
   anomaly_handler.c
   divided_cmd_utility.c
   gs_command_dispatcher.c
@@ -15,6 +15,7 @@ add_library(${PROJECT_NAME} STATIC
   utility_counter.c
   telemetry_manager.c
 )
+add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
 
@@ -27,3 +28,5 @@ else()
   set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
   set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
 endif()
+
+include(../common.cmake)

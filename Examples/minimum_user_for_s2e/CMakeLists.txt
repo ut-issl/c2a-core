@@ -16,9 +16,20 @@ option(USE_SCI_COM_WINGS "Use SCI_COM_WINGS")
 # そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
 option(USE_SCI_COM_UART "Use SCI_COM_UART")
 
+
+option(USE_SILS_MOCKUP "Use SILS mockup for build C2A with minimal user in C89 only" OFF)
+
 # default config
 set(USE_SCI_COM_WINGS ON)
 set(USE_SCI_COM_UART OFF)
+
+if(USE_SILS_MOCKUP)
+  set(BUILD_C2A_AS_CXX OFF)
+endif()
+
+if(BUILD_C2A_AS_CXX)
+  message("build C2A as C++!")
+endif()
 
 include_directories(src)
 add_definitions(-DSILS_FW)
@@ -54,10 +65,12 @@ if(SHOW_DEBUG_PRINT_ON_SILS)
   message("Show debug print")
 endif()
 
-if(USE_SILS_MOCKUP)
-  set_source_files_properties(${C2A_SOURCE_FILES} PROPERTIES C_STANDARD 90)  # C89/C90
+if(BUILD_C2A_AS_CXX)
+  file(GLOB C2A_SRCS "src/src_user/*.c")
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+  set_target_properties(${PROJECT_NAME} PROPERTIES LANGUAGE CXX)  # C++
 else()
-  set_source_files_properties(${C2A_SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+  set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90)  # C89/90
 endif()
 
 if(WIN32)
