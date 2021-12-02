@@ -53,3 +53,11 @@
 - name: "tools"
   description: ""
   color: "510f70"
+
+- name: "S2E"
+  description: ""
+  color: "eef789"
+
+- name: "WINGS"
+  description: ""
+  color: "1503bb"
