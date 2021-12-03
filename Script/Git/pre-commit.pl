@@ -19,11 +19,6 @@ my @Targets = (
 print "[] pwd\n" if $DEBUG;
 print `pwd`, "\n" if $DEBUG;
 
-# hookを自動更新
-print "[] cp hook\n" if $DEBUG;
-my $cp_ret = `\\cp -f  ./Script/Git/pre-commit.pl ./.git/hooks/pre-commit`;
-print $cp_ret, "\n" if $DEBUG;
-
 # my $files = `git status|grep -e "modified" -e "new file"|sed "s/new file:\(.*\)/\1/g"|sed "s/modified:\(.*\)/\1/g"|cut -f 2`;
 # my $files = `git status|grep -e "modified" -e "new file"`;
 # ↑これだと，addされてないけど編集されたファイルがあるとコケてしまう...
