@@ -253,7 +253,8 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
     {
       // CCSDS 無効, 又は バッファー空きが無いで下の処理は端折る
       // FIXME: 一杯だった時の処理
-      if (!gs_driver->is_ccsds_tx_valid || !(gs_driver->ccsds_info.buffer_num == CCSDS_get_buffer_num())) continue;
+      gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
+      if (!gs_driver->is_ccsds_tx_valid || !gs_driver->ccsds_info.buffer_num) continue;
     }
 
     gs_driver->info[i].send_cycle = TMGR_get_master_total_cycle();
