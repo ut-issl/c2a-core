@@ -89,17 +89,14 @@ endif()
 include(../../common.cmake)
 
 # Compile option
-if(MSVC)
-  target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
-  target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
-else()
-  target_compile_options(${PROJECT_NAME} PUBLIC "${CMAKE_CXX_FLAGS}-Wall")
-  set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
-  set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
+if(NOT MSVC)
+  # disable warning to main()
+  target_compile_options(${PROJECT_NAME} PUBLIC "-Wno-main")
+
   if(ADD_WERROR_FLAGS)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+    target_compile_options(${PROJECT_NAME} PUBLIC "-Werror")
   endif()
   if(ADD_WEXTRA_FLAGS)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
+    target_compile_options(${PROJECT_NAME} PUBLIC "-Wextra")
   endif()
 endif()

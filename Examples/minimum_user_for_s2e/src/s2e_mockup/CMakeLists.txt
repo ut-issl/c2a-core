@@ -24,6 +24,7 @@ include_directories(${C2A_DIR}/src/src_user/Applications)
 
 include_directories(${C2A_DIR}/src)
 #add subdirectory
+set(BUILD_C2A_AS_CXX ON)    # Build C2A as C++
 add_subdirectory(${C2A_DIR} C2A)
 
 add_executable(${PROJECT_NAME} main.cpp)
