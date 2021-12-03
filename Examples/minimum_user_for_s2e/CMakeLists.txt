@@ -43,9 +43,18 @@ add_subdirectory(src/src_user/IfWrapper)
 add_subdirectory(src/src_user/Library)
 add_subdirectory(src/src_user/Settings)
 
-add_library(${PROJECT_NAME} STATIC
+set(C2A_SRCS
   src/src_user/c2a_main.c
 )
+
+if(BUILD_C2A_AS_CXX)
+  message("Build as C++!!!")
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+endif()
+
+add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+
+
 target_link_libraries(${PROJECT_NAME} C2A_CORE
   C2A_USER_APPS
   C2A_USER_CMD_TLM
@@ -65,14 +74,6 @@ if(SHOW_DEBUG_PRINT_ON_SILS)
   message("Show debug print")
 endif()
 
-if(BUILD_C2A_AS_CXX)
-  file(GLOB C2A_SRCS "src/src_user/*.c")
-  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
-  set_target_properties(${PROJECT_NAME} PROPERTIES LANGUAGE CXX)  # C++
-else()
-  set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90)  # C89/90
-endif()
-
 if(WIN32)
   add_custom_command(TARGET ${PROJECT_NAME}
     PRE_BUILD
@@ -84,6 +85,8 @@ else()
     COMMAND ./git_revision.sh
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/Script)
 endif()
+
+include(../../common.cmake)
 
 # Compile option
 if(MSVC)

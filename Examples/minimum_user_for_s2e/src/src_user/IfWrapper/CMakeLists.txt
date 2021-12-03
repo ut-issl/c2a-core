@@ -43,6 +43,9 @@ if(USE_SCI_COM_UART AND NOT USE_SILS_MOCKUP)
   message("USE SCI_COM_UART")
 endif()
 
+if(BUILD_C2A_AS_CXX)
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+endif()
 
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 

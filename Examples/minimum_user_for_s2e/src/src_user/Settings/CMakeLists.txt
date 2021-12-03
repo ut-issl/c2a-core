@@ -15,7 +15,14 @@ set(C2A_SRCS
   Modes/Transitions/NopSL.c
   Modes/Transitions/SequenceItems.c
   System/event_logger_settings.c
+  System/EventHandlerRules/event_handler_rules.c
+  System/EventHandlerRules/event_handler_rule_test.c
 )
+
+if(BUILD_C2A_AS_CXX)
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+endif()
+
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
 include(../../src_core/common.cmake)

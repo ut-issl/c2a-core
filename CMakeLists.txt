@@ -32,6 +32,11 @@ set(C2A_SRCS
   System/TimeManager/time_manager.c
   System/WatchdogTimer/watchdog_timer.c
 )
+
+if(BUILD_C2A_AS_CXX)
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+endif()
+
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
 add_subdirectory(Applications)
@@ -43,16 +48,6 @@ endif()
 
 if(USE_C2A_CORE_LIB)
   target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
-endif()
-
-# Compile option
-if(MSVC)
-    target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
-    target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
-else()
-  #target_compile_options(${PROJECT_NAME} PUBLIC "${CMAKE_CXX_FLAGS}-Wall")
-  set(CMAKE_CXX_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragma")  # SJIS, 32bit
-  set(CMAKE_C_FLAGS "-finput-charset=cp932 -m32 -rdynamic -Wall -g -Wno-unknown-pragmas") # SJIS, 32bit
 endif()
 
 include(common.cmake)

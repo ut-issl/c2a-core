@@ -10,6 +10,7 @@ set(C2A_SRCS
   telemetry_definitions.c
   user_packet_handler.c
   NormalBlockCommandDefinition/nbc_start_hk_tlm.c
+  NormalBlockCommandDefinition/nbc_respond_eh_for_test.c
   Ccsds/m_pdu.c
   Ccsds/TCFrame.c
   Ccsds/tcp_to_m_pdu.c
@@ -17,6 +18,11 @@ set(C2A_SRCS
   Ccsds/TCSegment.c
   Ccsds/vcdu.c
 )
+
+if(BUILD_C2A_AS_CXX)
+  set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
+endif()
+
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
 include(../../src_core/common.cmake)
