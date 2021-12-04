@@ -328,7 +328,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
                                (cycle_t)bc_cmd_pos,
                                Cmd_CODE_GENERATE_TLM,
                                param,
-                               command_analyze->cmd_table[Cmd_CODE_GENERATE_TLM].param_len);
+                               CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
   if (ctcp_util_ack != CTCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
 
   // すでに NOP で埋められており，かつ activate 済なので，直接 BCT にコマンドを挿入できる．

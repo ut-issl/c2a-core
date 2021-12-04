@@ -490,7 +490,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
   endian_memcpy(&cmd_id, param, sizeof(uint16_t));
   param += sizeof(uint16_t);
 
-  param_len = command_analyze->cmd_table[(CMD_CODE)cmd_id].param_len;
+  param_len = CA_get_cmd_param_min_len((CMD_CODE)cmd_id);     // FIXME: rawƒpƒ‰ƒƒ^‘Î‰
   if (CCP_get_param_len(packet) != sizeof(uint16_t) + sizeof(cycle_t) + SIZE_OF_BCT_ID_T + 1 + param_len) return CCP_EXEC_ILLEGAL_LENGTH;
 
   endian_memcpy(&ti, param, sizeof(cycle_t));

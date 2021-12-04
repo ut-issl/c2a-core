@@ -106,6 +106,16 @@ uint32_t CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n);
 uint64_t CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n);
 
 /**
+ * @brief  CCP packet から，RAW コマンド引数を取得する
+ * @note   RAW パラメタが存在しない場合は， 0 を返す
+ * @param[in]  packet: 取得する packet
+ * @param[out] dest: RAW パラメタコピー先
+ * @param[in]  max_copy_len : コピーする最大長． 0 の場合，無制限
+ * @return コピーした長さ
+ */
+uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t max_copy_len);
+
+/**
  * @def    CCP_get_param_from_packet(packet, n, type)
  * @brief  CCP packet から，n番目のコマンド引数を取得する
  * @note   セグメンテーション違反の場合は， 0 を返す
