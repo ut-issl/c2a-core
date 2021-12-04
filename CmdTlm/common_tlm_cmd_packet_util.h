@@ -103,7 +103,7 @@ uint32_t CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n);
  * @param[in] n: N番目の引数 （0起算）
  * @return パラメタ（型は意味をもってない）
  */
-double CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n);
+uint64_t CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n);
 
 /**
  * @def    CCP_get_param_from_packet(packet, n, type)

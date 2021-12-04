@@ -105,7 +105,7 @@ uint32_t CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n)
   return 0;
 }
 
-double CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
+uint64_t CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
   return 0;
 }
