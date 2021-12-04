@@ -32,22 +32,22 @@ if(BUILD_C2A_AS_CXX)
 endif()
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_core)
-set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user)
 
 include_directories(src)
 add_definitions(-DSILS_FW)
 
-add_subdirectory(src/src_core)
+add_subdirectory(${C2A_CORE_DIR})
 
-add_subdirectory(src/src_user/Applications)
-add_subdirectory(src/src_user/CmdTlm)
-add_subdirectory(src/src_user/Drivers)
-add_subdirectory(src/src_user/IfWrapper)
-add_subdirectory(src/src_user/Library)
-add_subdirectory(src/src_user/Settings)
+add_subdirectory(${C2A_USER_DIR}/Applications)
+add_subdirectory(${C2A_USER_DIR}/CmdTlm)
+add_subdirectory(${C2A_USER_DIR}/Drivers)
+add_subdirectory(${C2A_USER_DIR}/IfWrapper)
+add_subdirectory(${C2A_USER_DIR}/Library)
+add_subdirectory(${C2A_USER_DIR}/Settings)
 
 set(C2A_SRCS
-  src/src_user/c2a_main.c
+  ${C2A_USER_DIR}/c2a_main.c
 )
 
 if(BUILD_C2A_AS_CXX)
@@ -81,15 +81,15 @@ if(WIN32)
   add_custom_command(TARGET ${PROJECT_NAME}
     PRE_BUILD
     COMMAND git_revision.bat
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/Script)
+    WORKING_DIRECTORY ${C2A_USER_DIR}/Script)
 else()
   add_custom_command(TARGET ${PROJECT_NAME}
     PRE_BUILD
     COMMAND ./git_revision.sh
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/Script)
+    WORKING_DIRECTORY ${C2A_USER_DIR}/Script)
 endif()
 
-include(common.cmake)
+include(${C2A_USER_DIR}/common.cmake)
 
 # Compile option
 if(NOT MSVC)

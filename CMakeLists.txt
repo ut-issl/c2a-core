@@ -3,8 +3,10 @@ cmake_minimum_required(VERSION 3.13)
 project(C2A_CORE)
 
 # user config
-option(USE_C2A_CORE_APPS    "use C2A-core Applications" ON)
-option(USE_C2A_CORE_LIB     "use C2A-core Library" ON)
+option(USE_ALL_C2A_CORE_APPS    "use C2A-core all Applications" ON)
+option(USE_ALL_C2A_CORE_LIB     "use C2A-core all Library" ON)
+
+set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
   # src/src_core/c2a_core_main.c
@@ -42,11 +44,11 @@ add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 add_subdirectory(Applications)
 add_subdirectory(Library)
 
-if(USE_C2A_CORE_APPS)
+if(USE_ALL_C2A_CORE_APPS)
   target_link_libraries(${PROJECT_NAME} C2A_CORE_APPS)
 endif()
 
-if(USE_C2A_CORE_LIB)
+if(USE_ALL_C2A_CORE_LIB)
   target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
 endif()
 
