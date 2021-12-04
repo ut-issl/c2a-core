@@ -31,6 +31,9 @@ if(BUILD_C2A_AS_CXX)
   message("build C2A as C++!")
 endif()
 
+set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_core)
+set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 include_directories(src)
 add_definitions(-DSILS_FW)
 
@@ -86,7 +89,7 @@ else()
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user/Script)
 endif()
 
-include(../../common.cmake)
+include(common.cmake)
 
 # Compile option
 if(NOT MSVC)

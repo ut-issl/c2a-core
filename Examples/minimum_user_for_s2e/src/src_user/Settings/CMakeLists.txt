@@ -25,4 +25,4 @@ endif()
 
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
-include(../../src_core/common.cmake)
+include(${C2A_USER_DIR}/common.cmake)
