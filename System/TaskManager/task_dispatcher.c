@@ -46,7 +46,7 @@ void TDSP_initialize(void)
 
 TDSP_ACK TDSP_set_task_list_id(bct_id_t id)
 {
-  if (id < 0 || id >= BCT_MAX_BLOCKS) return TDSP_INVAILD_BCT_ID;
+  if (id >= BCT_MAX_BLOCKS) return TDSP_INVAILD_BCT_ID;
   if (!BCE_is_active(id)) return TDSP_INACTIVE_BCT_ID;
   if (BCT_get_bc_length(id) == 0) return TDSP_EMPTY_BC;
 

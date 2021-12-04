@@ -18,6 +18,7 @@ void BCUS_load_user_settings(BlockCommandTable* block_command_table, BlockComman
 
 int BCUS_bc_should_clear(const bct_id_t block)
 {
+  (void)block;
   return 1;
 }
 

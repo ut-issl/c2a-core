@@ -64,6 +64,7 @@ CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet)
 
 static PH_ACK PH_add_aobc_cmd_(const CTCP* packet)
 {
+  (void)packet;
 #if 0
   PL_ACK ack = PL_push_back(&PH_aobc_cmd_list, packet);
 
@@ -75,6 +76,7 @@ static PH_ACK PH_add_aobc_cmd_(const CTCP* packet)
 
 static PH_ACK PH_add_tobc_cmd_(const CTCP* packet)
 {
+  (void)packet;
 #if 0
   PL_ACK ack = PL_push_back(&PH_tobc_cmd_list, packet);
 

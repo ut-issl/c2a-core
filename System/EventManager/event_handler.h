@@ -242,7 +242,7 @@ typedef struct
   EH_TlmInfo         tlm_info;                  //!< tlm‚Ì‚½‚ß‚Ìî•ñ
 } EventHandler;
 
-const extern EventHandler* const event_handler;
+extern const EventHandler* const event_handler;
 
 
 /**
