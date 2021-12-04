@@ -7,4 +7,4 @@
 ## コマンド
 - ここで言う "コマンド" とは，単に地上局から衛星へ送信されるコマンド，という意味ではなく，処理の最小単位を指す．
 - つまり，C2A 内のアプリケーションから発行されるものもあれば，他のコンポーネントから発行されるものもある．
-- アプリケーションとコマンドの関係については，[Application Layer/Overview](../Application/Overview) を参照のこと．
+- アプリケーションとコマンドの関係については，[Application Layer/Overview](../Application/Overview.md) を参照のこと．
