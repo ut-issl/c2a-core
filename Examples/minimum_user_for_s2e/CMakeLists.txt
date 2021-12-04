@@ -1,6 +1,6 @@
 ## CMake file for S2E integration
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 project(C2A)
 
 # options
