@@ -42,7 +42,7 @@ C2Aでもっともメモリサイズを消費するであろう箇所．
 NOTE: おおよそと言っているのは，structのpaddingサイズはコンパイラ依存であるため．
 
 たとえば，以下の設定では，端数（a,b,c）を無視して，およそ200 KB．
-```
+```cpp
 #define BC_CMD_MAX_LENGTH (64) 
 #define BC_MAX_CMD_NUM    (32) 
 #define BCT_MAX_BLOCKS    (100)
@@ -91,7 +91,7 @@ NOTE: `sizeof(bct_id_t)` は `SIZE_OF_BCT_ID_T` にて設定可能である．
 NOTE: 構造体ポインタサイズは環境依存．
 
 たとえば，以下の設定，環境では，およそ6.8 KB．
-```
+```cpp
 #define HOGE_LIST_MAX    (16) 
 #define TCP_MAX_LEN      (432u)
 struct pointer size:     4 byte
@@ -120,7 +120,7 @@ DriverSuperのストリーム数とバッファ数を制御する．
 NOTE: この値が関わる部分を抽出しているため，Driverの他の機能のためのメモリは含まない．
 
 たとえば，以下の設定，環境では，およそ30 KB．
-```
+```cpp
 #define DRIVER_SUPER_STREAM_MAX          (3)
 #define DRIVER_SUPER_RX_BUFFER_SIZE_MAX  (1024)
 #define DRIVER_SUPER_RX_FRAME_SIZE_MAX   (1024)
@@ -250,7 +250,7 @@ AnomalyLoggerのログ保存テーブルサイズを制御する．
 NOTE: この値が関わる部分を抽出しているため，AnomalyLoggerの他の機能のためのメモリは含まない．
 
 たとえば，以下の設定，環境では，およそ0.8 KB．
-```
+```cpp
 #define AL_RECORD_MAX    (32)
 sizeof(size_t):          4
 ```
@@ -277,7 +277,7 @@ AnomalyHandler関連テーブルサイズを制御する．
 NOTE: この値が関わる部分を抽出しているため，AnomalyHandlerの他の機能のためのメモリは含まない．
 
 たとえば，以下の設定，環境では，およそ3.8 KB．
-```
+```cpp
 #define AH_MAX_RULES    (128)
 #define AH_LOG_MAX      (64)
 sizeof(size_t):          4

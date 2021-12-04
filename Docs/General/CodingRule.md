@@ -118,7 +118,7 @@ git blameを使うことで，該当ファイルの各行がいつ変更され�
 - インデントは空白2つを単位とする．
 	- いかなる場合もtabは許可しない．
 - スタイルは[Allman style](https://en.wikipedia.org/wiki/Indent_style#Allman_style)に倣う．
-```
+```cpp
 while (x == y)
 {
   something();
@@ -164,7 +164,7 @@ C言語は名前空間を切ることができず，各種命名がglobal空間�
 	- constexprあるいはconstとして宣言され，プログラムの始めから終わりまで値が変わらない変数のことで，関数のconstをつけた引数などは該当しない．
 
 例：
-```
+```cpp
 uint32_t head_block;
 static int FLASH_dump_region_rnd_(const CTCP* packet);
 int Cmd_APP_DR_SET_PARAMS(const CTCP* packet);
@@ -182,7 +182,7 @@ extern const uint32_t FLASH_kMeiseiBlockBegin;
 - 基本型に `typedef` を使用する場合は `snake_case_t`
 
 例：
-```
+```cpp
 typedef struct
 {
   uint32_t              adc_setting;                //!< ADCの設定値
@@ -214,7 +214,7 @@ typedef uint32_t flash_block_t;
 例：
 
 Applications/UserDefined/data_recorder.c
-```
+```cpp
 static DataRecorder data_recorder_;
 const DataRecorder* const data_recorder = &data_recorder_;
 
@@ -226,7 +226,7 @@ AppInfo APP_DR_create_app(void)
 ```
 
 Applications/UserDefined/data_recorder.h
-```
+```cpp
 #ifndef DATA_RECORDER_H_
 #define DATA_RECORDER_H_
 
@@ -255,7 +255,7 @@ int Cmd_APP_DR_SET_PARAMS(const CTCP* packet);
 - 接頭辞は `DI_${IFやデバイス名}`
 
 例：
-```
+```cpp
 ファイル名
 di_pcdu.c/h
 di_xtx.c/h
@@ -272,7 +272,7 @@ const XTX_Driver* const xtx_driver = &xtx_driver_;
 ```
 
 複数インスタンス例：
-```
+```cpp
 typedef enum
 {
   DI_RM3100_IDX_ON_AOBC = 0,
@@ -290,7 +290,7 @@ RM3100_Driver rm3100_driver[RM3100_IDX_MAX];
 - 接頭辞は `MW_${IFやデバイス名}`
 
 例：
-```
+```cpp
 ファイル名
 mw_ccsds.c/h
 mw_flash.c/h
@@ -412,20 +412,20 @@ CmdTlm/NormalBlockCommandDefinition
 ## 細かな記法 [M]
 ### 宣言
 複数変数の単一行宣言は，同じ型のみ許す．
-```
+```cpp
 uint8_t i, j, k;
 ```
 ただし，以下のような初期値あり宣言は禁止する．
-```
+```cpp
 uint8_t i, j, k = 0;
 ```
 なお，ポインタの複数宣言は誤解を招くのでいかなる時も禁止する．
-```
+```cpp
 uint8_t *p, i;
 ```
 
 ポインタの宣言は，`*` を型名につける．
-```
+```cpp
 uint8_t* p;    // OK
 uint8_t *p;    // NG
 ```
@@ -439,13 +439,13 @@ uint8_t *p;    // NG
 ただし，assertionなどで`if`が連続する場合などは，単一行の`if`を許可する．
 
 このとき，
-```
+```cpp
 if (hoge) fuga;
 ```
 と，`{}`はなくてよい．
 
 一方で
-```
+```cpp
 if (hoge)
       fugafuga;
 ```
@@ -456,7 +456,7 @@ if (hoge)
 
 #### switch [F]
 switchのインデントは以下の流派を採用する．
-```
+```cpp
 switch (ch)
 {
 case PORT_CH_RS422_MOBC_REPRO:
@@ -481,7 +481,7 @@ default:
 みやすさのために，１行は100文字（TBD）に制限する．
 
 また，改行に伴う演算子は後置とする．
-```
+```cpp
 if (hogehoge ||
     fugafuga ||
     piyopiyo)
@@ -505,7 +505,7 @@ if (hogehoge ||
 includeガードは `${ファイル名大文字SNAKE_CASE}_H_` とする．
 
 `hoge.c` の順番は，以下．[F]
-```
+```cpp
 hoge.h
 <空行>
 C システムヘッダ
@@ -578,7 +578,7 @@ HOGE_ID
 enumのメンバは，型名の末の単語を消し or 消さずに，内容を続ける．
 
 例：
-```
+```cpp
 typedef enum
 {
   FLASH_SUCCESS,
@@ -613,7 +613,7 @@ enumはintのように使ってはいけない．
 
 - enumをテレメで落とすときや，その他のエラーコードなどと共用する場合など，型サイズを想定する場合がありうる．
 - コメントで型サイズを明記すること．例えば以下．
-```
+```cpp
 /**
  * @enum   DRIVER_SUPER_ERR_CODE
  * @brief  DriverSuperの汎用エラーコード
@@ -629,7 +629,7 @@ typedef enum
 例外：
 
 コマンドとテレメトリのCODEは以下のようにする．
-```
+```cpp
 typedef enum
 {
   Cmd_CODE_NOP = 0x0000,
@@ -682,7 +682,7 @@ typedef enum
 		- ドライバなどで，バイト列をintやfloatに変換するところなどは要注意．
 	- エンディアンに依存しないコードを書くか，以下のような定義を適切に使うこと．また，`endian_memcpy` などといった共用関数を積極的に利用すること．
 - `SILS_FW` と `IS_LITTLE_ENDIAN` を混同して使わないこと
-```
+```cpp
 #ifndef SILS_FW
 // #define SILS_FW //ここでdefineする！
 #endif //SILS_FW
@@ -753,7 +753,7 @@ typedef enum
 
 例えば，以下のようなコメントは避けるべきである．
 このように関数名や返り値などを設定することで，コメントが不要になっている．
-```
+```cpp
 // Select port
 port = select_port_(ch);
 if (port == NULL) return ERR_CODE_CH_ERR;
@@ -764,7 +764,7 @@ if (ret != ERR_CODE_OK) return ret;
 ```
 
 同様の理由で，次のようなコードやコメントは避けるべきである．
-```
+```cpp
 // ADC生値をdegreeに変換
 temp_degc = ADC_get_value(PORT_CH_ADC_TEMPERATURE) / 2.0f - 273.0f;
 
@@ -774,13 +774,13 @@ ret = init(port);
 ```
 
 これらは以下のようにすると，コード自体が説明的になる．
-```
+```cpp
 temp = convert_adc_value_to_degree(ADC_get_value(PORT_CH_ADC_TEMPERATURE));
 
 ret = reopen_port(port);
 ```
 
-```
+```cpp
 float convert_adc_value_to_degree(uint16_t adc_val)
 {
   return adc_val / 2.0f - 273.0f;
@@ -828,7 +828,7 @@ memloadなどによる部分的な再プロをやりやすくするため．
 
 例えば，以下のように使う．
 
-```
+```cpp
   // [TODO] 現在は，シンプル化のためにヘッダサイズ0の場合は未実装（詳細はヘッダファイル参照）
   // FIXME: CRC未対応なので，追加する
 ```

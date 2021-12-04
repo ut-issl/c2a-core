@@ -19,7 +19,7 @@ Driver とは，各コンポーネントとの通信において， HW 依存部
 ### 推奨する Drivre 構造体の定義
 TOBC (TBA) を例にあげる．
 
-```
+```cpp
 /**
  * @struct  TOBC_Driver
  * @brief
@@ -46,7 +46,7 @@ typedef struct
 `DriverSuper` の最上位には特に重要な情報はないので， `DriverSuper` の使っているstreamの `stream_config` のメンバを下ろす．  
 具体的には以下．（ FIXME: 2021/12/04 現在，だいぶ情報が古い）
 
-```
+```cpp
 struct DriverSuperStreamConfig
 {
   uint8_t  is_enable;                                       //!< 有効か？  → ONOFFすることがあるのであれば
