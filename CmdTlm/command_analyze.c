@@ -8,12 +8,10 @@
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
 
-static CmdInfo cmd_table_[CMD_MAX_CMDS];
-const CmdInfo* cmd_table;
-static int CA_page_no_;
-const int* CA_page_no;
-
 static void CA_initialize_cmd_table_(void);
+
+static CommandAnalyze command_analyze_;
+const CommandAnalyze* const command_analyze = &command_analyze_;
 
 
 void CA_initialize(void)
@@ -21,30 +19,28 @@ void CA_initialize(void)
   // cmd_table_を初期化
   CA_initialize_cmd_table_();
 
-  if (CMD_MAX_CMDS <= Cmd_CODE_MAX)
+  if (CA_MAX_CMDS <= Cmd_CODE_MAX)
   {
     Printf("CA: init error!!!\n");
     return;
   }
 
-  CA_load_cmd_table(cmd_table_);
+  CA_load_cmd_table(command_analyze_.cmd_table);
 }
 
 static void CA_initialize_cmd_table_(void)
 {
   int i;
-  for (i = 0; i < CMD_MAX_CMDS; ++i)
+  for (i = 0; i < CA_MAX_CMDS; ++i)
   {
-    cmd_table_[i].cmd_func = NULL;
-    cmd_table_[i].param_len_type = CA_CMD_PARAM_LEN_TYPE_UNKNOWN;
-    cmd_table_[i].param_len = 0;
+    command_analyze_.cmd_table[i].cmd_func = NULL;
+    command_analyze_.cmd_table[i].param_len_type = CA_CMD_PARAM_LEN_TYPE_UNKNOWN;
+    command_analyze_.cmd_table[i].param_len = 0;
   }
 
-  cmd_table = cmd_table_;
 
   // ページ番号の初期値は0に設定
-  CA_page_no_ = 0;
-  CA_page_no = &CA_page_no_;
+  command_analyze_.tlm_page_no = 0;
 }
 
 CCP_EXEC_STS CA_execute_cmd(const CTCP* packet)
@@ -53,7 +49,7 @@ CCP_EXEC_STS CA_execute_cmd(const CTCP* packet)
   CCP_EXEC_STS (*cmd_func)(const CTCP*) = NULL;
 
   cmd_code = CCP_get_id(packet);
-  cmd_func = cmd_table_[cmd_code].cmd_func;
+  cmd_func = command_analyze->cmd_table[cmd_code].cmd_func;
 
   if (cmd_func != NULL)
   {
@@ -71,13 +67,13 @@ CCP_EXEC_STS CA_execute_cmd(const CTCP* packet)
 
 CA_ACK CA_ckeck_cmd_param_len(CMD_CODE cmd_code, uint16_t param_len)
 {
-  switch (cmd_table_[cmd_code].param_len_type)
+  switch (command_analyze->cmd_table[cmd_code].param_len_type)
   {
   case CA_CMD_PARAM_LEN_TYPE_FIXED:
-    if (param_len != cmd_table_[cmd_code].param_len) return CA_ACK_ERR;
+    if (param_len != command_analyze->cmd_table[cmd_code].param_len) return CA_ACK_ERR;
     break;
   case CA_CMD_PARAM_LEN_TYPE_LOWER_LIMIT:
-    if (param_len < cmd_table_[cmd_code].param_len || param_len > CCP_get_max_param_len())
+    if (param_len < command_analyze->cmd_table[cmd_code].param_len || param_len > CCP_get_max_param_len())
     {
       return CA_ACK_ERR;
     }
@@ -104,15 +100,15 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
   param_len_type = (CA_CMD_PARAM_LEN_TYPE)param[6];
   endian_memcpy(&param_len, &param[7], 2);
 
-  if (index >= CMD_MAX_CMDS)
+  if (index >= CA_MAX_CMDS)
   {
     // 登録指定位置がコマンド数上限を超えている場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  cmd_table_[index].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
-  cmd_table_[index].param_len_type = param_len_type;
-  cmd_table_[index].param_len = param_len;
+  command_analyze_.cmd_table[index].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
+  command_analyze_.cmd_table[index].param_len_type = param_len_type;
+  command_analyze_.cmd_table[index].param_len = param_len;
 
   return CCP_EXEC_SUCCESS;
 }
@@ -128,7 +124,7 @@ CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CTCP* packet)
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  CA_page_no_ = page;
+  command_analyze_.tlm_page_no = page;
   return CCP_EXEC_SUCCESS;
 }
 

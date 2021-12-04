@@ -31,36 +31,35 @@ static int Tlm_HK_(unsigned char* contents, int max_len);
 static int Tlm_GIT_REV_(unsigned char* contents, int max_len);
 static int Tlm_UART_TEST_(unsigned char* contents, int max_len);
 
-void TF_load_tlm_table(TlmInfo tlm_table_[TLM_MAX_TLMS])
+void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
-  tlm_table_[Tlm_CODE_MOBC].tlm_func = Tlm_MOBC_;
-  tlm_table_[Tlm_CODE_MEM].tlm_func = Tlm_MEM_;
-  tlm_table_[Tlm_CODE_TLM_MGR].tlm_func = Tlm_TLM_MGR_;
-  tlm_table_[Tlm_CODE_TL].tlm_func = Tlm_TL_;
-  tlm_table_[Tlm_CODE_BL].tlm_func = Tlm_BL_;
-  tlm_table_[Tlm_CODE_CA].tlm_func = Tlm_CA_;
-  tlm_table_[Tlm_CODE_TF].tlm_func = Tlm_TF_;
-  tlm_table_[Tlm_CODE_DCU].tlm_func = Tlm_DCU_;
-  tlm_table_[Tlm_CODE_MM].tlm_func = Tlm_MM_;
-  tlm_table_[Tlm_CODE_AM].tlm_func = Tlm_AM_;
-  tlm_table_[Tlm_CODE_APP_TIME].tlm_func = Tlm_APP_TIME_;
-  tlm_table_[Tlm_CODE_EL].tlm_func = Tlm_EL_;
-  tlm_table_[Tlm_CODE_EL_TLOG].tlm_func = Tlm_EL_TLOG_;
-  tlm_table_[Tlm_CODE_EL_CLOG].tlm_func = Tlm_EL_CLOG_;
-  tlm_table_[Tlm_CODE_EH].tlm_func = Tlm_EH_;
-  tlm_table_[Tlm_CODE_EH_RULE].tlm_func = Tlm_EH_RULE_;
-  tlm_table_[Tlm_CODE_EH_LOG].tlm_func = Tlm_EH_LOG_;
-  tlm_table_[Tlm_CODE_EH_INDEX].tlm_func = Tlm_EH_INDEX_;
-  tlm_table_[Tlm_CODE_GS].tlm_func = Tlm_GS_;
-  tlm_table_[Tlm_CODE_HK].tlm_func = Tlm_HK_;
-  tlm_table_[Tlm_CODE_GIT_REV].tlm_func = Tlm_GIT_REV_;
-  tlm_table_[Tlm_CODE_UART_TEST].tlm_func = Tlm_UART_TEST_;
+  tlm_table[Tlm_CODE_MOBC].tlm_func = Tlm_MOBC_;
+  tlm_table[Tlm_CODE_MEM].tlm_func = Tlm_MEM_;
+  tlm_table[Tlm_CODE_TLM_MGR].tlm_func = Tlm_TLM_MGR_;
+  tlm_table[Tlm_CODE_TL].tlm_func = Tlm_TL_;
+  tlm_table[Tlm_CODE_BL].tlm_func = Tlm_BL_;
+  tlm_table[Tlm_CODE_CA].tlm_func = Tlm_CA_;
+  tlm_table[Tlm_CODE_TF].tlm_func = Tlm_TF_;
+  tlm_table[Tlm_CODE_DCU].tlm_func = Tlm_DCU_;
+  tlm_table[Tlm_CODE_MM].tlm_func = Tlm_MM_;
+  tlm_table[Tlm_CODE_AM].tlm_func = Tlm_AM_;
+  tlm_table[Tlm_CODE_APP_TIME].tlm_func = Tlm_APP_TIME_;
+  tlm_table[Tlm_CODE_EL].tlm_func = Tlm_EL_;
+  tlm_table[Tlm_CODE_EL_TLOG].tlm_func = Tlm_EL_TLOG_;
+  tlm_table[Tlm_CODE_EL_CLOG].tlm_func = Tlm_EL_CLOG_;
+  tlm_table[Tlm_CODE_EH].tlm_func = Tlm_EH_;
+  tlm_table[Tlm_CODE_EH_RULE].tlm_func = Tlm_EH_RULE_;
+  tlm_table[Tlm_CODE_EH_LOG].tlm_func = Tlm_EH_LOG_;
+  tlm_table[Tlm_CODE_EH_INDEX].tlm_func = Tlm_EH_INDEX_;
+  tlm_table[Tlm_CODE_GS].tlm_func = Tlm_GS_;
+  tlm_table[Tlm_CODE_HK].tlm_func = Tlm_HK_;
+  tlm_table[Tlm_CODE_GIT_REV].tlm_func = Tlm_GIT_REV_;
+  tlm_table[Tlm_CODE_UART_TEST].tlm_func = Tlm_UART_TEST_;
 }
 
 static int Tlm_MOBC_(unsigned char* contents, int max_len)
 {
-
-  if (244 > max_len) return TLM_TOO_SHORT_LEN;
+  if (244 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], (uint32_t)(TMGR_get_master_clock().mode_cycle));
@@ -158,8 +157,7 @@ static int Tlm_MOBC_(unsigned char* contents, int max_len)
 
 static int Tlm_MEM_(unsigned char* contents, int max_len)
 {
-
-  if (23 > max_len) return TLM_TOO_SHORT_LEN;
+  if (23 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], memory_dump->begin);
@@ -176,8 +174,7 @@ static int Tlm_MEM_(unsigned char* contents, int max_len)
 
 static int Tlm_TLM_MGR_(unsigned char* contents, int max_len)
 {
-
-  if (111 > max_len) return TLM_TOO_SHORT_LEN;
+  if (111 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u16(&contents[0], telemetry_manager->master_bc_id);
@@ -287,8 +284,7 @@ static int Tlm_TLM_MGR_(unsigned char* contents, int max_len)
 
 static int Tlm_TL_(unsigned char* contents, int max_len)
 {
-
-  if (390 > max_len) return TLM_TOO_SHORT_LEN;
+  if (390 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], TLCD_update_tl_list_for_tlm((uint8_t)*TLCD_line_no_for_tlm));
@@ -557,8 +553,7 @@ static int Tlm_TL_(unsigned char* contents, int max_len)
 
 static int Tlm_BL_(unsigned char* contents, int max_len)
 {
-
-  if (400 > max_len) return TLM_TOO_SHORT_LEN;
+  if (400 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u16(&contents[0], block_command_table->pos.block);
@@ -835,75 +830,74 @@ static int Tlm_BL_(unsigned char* contents, int max_len)
 
 static int Tlm_CA_(unsigned char* contents, int max_len)
 {
-
-  if (257 > max_len) return TLM_TOO_SHORT_LEN;
+  if (257 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u8(&contents[0], (uint8_t)(*CA_page_no));
-  TF_copy_u32(&contents[1], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+0].cmd_func));
-  TF_copy_u32(&contents[5], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+1].cmd_func));
-  TF_copy_u32(&contents[9], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+2].cmd_func));
-  TF_copy_u32(&contents[13], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+3].cmd_func));
-  TF_copy_u32(&contents[17], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+4].cmd_func));
-  TF_copy_u32(&contents[21], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+5].cmd_func));
-  TF_copy_u32(&contents[25], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+6].cmd_func));
-  TF_copy_u32(&contents[29], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+7].cmd_func));
-  TF_copy_u32(&contents[33], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+8].cmd_func));
-  TF_copy_u32(&contents[37], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+9].cmd_func));
-  TF_copy_u32(&contents[41], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+10].cmd_func));
-  TF_copy_u32(&contents[45], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+11].cmd_func));
-  TF_copy_u32(&contents[49], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+12].cmd_func));
-  TF_copy_u32(&contents[53], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+13].cmd_func));
-  TF_copy_u32(&contents[57], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+14].cmd_func));
-  TF_copy_u32(&contents[61], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+15].cmd_func));
-  TF_copy_u32(&contents[65], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+16].cmd_func));
-  TF_copy_u32(&contents[69], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+17].cmd_func));
-  TF_copy_u32(&contents[73], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+18].cmd_func));
-  TF_copy_u32(&contents[77], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+19].cmd_func));
-  TF_copy_u32(&contents[81], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+20].cmd_func));
-  TF_copy_u32(&contents[85], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+21].cmd_func));
-  TF_copy_u32(&contents[89], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+22].cmd_func));
-  TF_copy_u32(&contents[93], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+23].cmd_func));
-  TF_copy_u32(&contents[97], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+24].cmd_func));
-  TF_copy_u32(&contents[101], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+25].cmd_func));
-  TF_copy_u32(&contents[105], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+26].cmd_func));
-  TF_copy_u32(&contents[109], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+27].cmd_func));
-  TF_copy_u32(&contents[113], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+28].cmd_func));
-  TF_copy_u32(&contents[117], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+29].cmd_func));
-  TF_copy_u32(&contents[121], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+30].cmd_func));
-  TF_copy_u32(&contents[125], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+31].cmd_func));
-  TF_copy_u32(&contents[129], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+32].cmd_func));
-  TF_copy_u32(&contents[133], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+33].cmd_func));
-  TF_copy_u32(&contents[137], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+34].cmd_func));
-  TF_copy_u32(&contents[141], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+35].cmd_func));
-  TF_copy_u32(&contents[145], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+36].cmd_func));
-  TF_copy_u32(&contents[149], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+37].cmd_func));
-  TF_copy_u32(&contents[153], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+38].cmd_func));
-  TF_copy_u32(&contents[157], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+39].cmd_func));
-  TF_copy_u32(&contents[161], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+40].cmd_func));
-  TF_copy_u32(&contents[165], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+41].cmd_func));
-  TF_copy_u32(&contents[169], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+42].cmd_func));
-  TF_copy_u32(&contents[173], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+43].cmd_func));
-  TF_copy_u32(&contents[177], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+44].cmd_func));
-  TF_copy_u32(&contents[181], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+45].cmd_func));
-  TF_copy_u32(&contents[185], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+46].cmd_func));
-  TF_copy_u32(&contents[189], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+47].cmd_func));
-  TF_copy_u32(&contents[193], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+48].cmd_func));
-  TF_copy_u32(&contents[197], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+49].cmd_func));
-  TF_copy_u32(&contents[201], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+50].cmd_func));
-  TF_copy_u32(&contents[205], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+51].cmd_func));
-  TF_copy_u32(&contents[209], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+52].cmd_func));
-  TF_copy_u32(&contents[213], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+53].cmd_func));
-  TF_copy_u32(&contents[217], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+54].cmd_func));
-  TF_copy_u32(&contents[221], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+55].cmd_func));
-  TF_copy_u32(&contents[225], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+56].cmd_func));
-  TF_copy_u32(&contents[229], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+57].cmd_func));
-  TF_copy_u32(&contents[233], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+58].cmd_func));
-  TF_copy_u32(&contents[237], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+59].cmd_func));
-  TF_copy_u32(&contents[241], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+60].cmd_func));
-  TF_copy_u32(&contents[245], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+61].cmd_func));
-  TF_copy_u32(&contents[249], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+62].cmd_func));
-  TF_copy_u32(&contents[253], (uint32_t)(cmd_table[CA_TLM_PAGE_SIZE*(*CA_page_no)+63].cmd_func));
+  TF_copy_u8(&contents[0], (uint8_t)(command_analyze->tlm_page_no));
+  TF_copy_u32(&contents[1], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+0].cmd_func));
+  TF_copy_u32(&contents[5], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+1].cmd_func));
+  TF_copy_u32(&contents[9], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+2].cmd_func));
+  TF_copy_u32(&contents[13], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+3].cmd_func));
+  TF_copy_u32(&contents[17], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+4].cmd_func));
+  TF_copy_u32(&contents[21], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+5].cmd_func));
+  TF_copy_u32(&contents[25], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+6].cmd_func));
+  TF_copy_u32(&contents[29], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+7].cmd_func));
+  TF_copy_u32(&contents[33], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+8].cmd_func));
+  TF_copy_u32(&contents[37], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+9].cmd_func));
+  TF_copy_u32(&contents[41], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+10].cmd_func));
+  TF_copy_u32(&contents[45], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+11].cmd_func));
+  TF_copy_u32(&contents[49], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+12].cmd_func));
+  TF_copy_u32(&contents[53], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+13].cmd_func));
+  TF_copy_u32(&contents[57], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+14].cmd_func));
+  TF_copy_u32(&contents[61], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+15].cmd_func));
+  TF_copy_u32(&contents[65], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+16].cmd_func));
+  TF_copy_u32(&contents[69], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+17].cmd_func));
+  TF_copy_u32(&contents[73], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+18].cmd_func));
+  TF_copy_u32(&contents[77], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+19].cmd_func));
+  TF_copy_u32(&contents[81], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+20].cmd_func));
+  TF_copy_u32(&contents[85], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+21].cmd_func));
+  TF_copy_u32(&contents[89], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+22].cmd_func));
+  TF_copy_u32(&contents[93], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+23].cmd_func));
+  TF_copy_u32(&contents[97], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+24].cmd_func));
+  TF_copy_u32(&contents[101], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+25].cmd_func));
+  TF_copy_u32(&contents[105], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+26].cmd_func));
+  TF_copy_u32(&contents[109], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+27].cmd_func));
+  TF_copy_u32(&contents[113], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+28].cmd_func));
+  TF_copy_u32(&contents[117], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+29].cmd_func));
+  TF_copy_u32(&contents[121], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+30].cmd_func));
+  TF_copy_u32(&contents[125], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+31].cmd_func));
+  TF_copy_u32(&contents[129], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+32].cmd_func));
+  TF_copy_u32(&contents[133], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+33].cmd_func));
+  TF_copy_u32(&contents[137], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+34].cmd_func));
+  TF_copy_u32(&contents[141], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+35].cmd_func));
+  TF_copy_u32(&contents[145], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+36].cmd_func));
+  TF_copy_u32(&contents[149], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+37].cmd_func));
+  TF_copy_u32(&contents[153], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+38].cmd_func));
+  TF_copy_u32(&contents[157], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+39].cmd_func));
+  TF_copy_u32(&contents[161], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+40].cmd_func));
+  TF_copy_u32(&contents[165], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+41].cmd_func));
+  TF_copy_u32(&contents[169], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+42].cmd_func));
+  TF_copy_u32(&contents[173], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+43].cmd_func));
+  TF_copy_u32(&contents[177], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+44].cmd_func));
+  TF_copy_u32(&contents[181], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+45].cmd_func));
+  TF_copy_u32(&contents[185], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+46].cmd_func));
+  TF_copy_u32(&contents[189], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+47].cmd_func));
+  TF_copy_u32(&contents[193], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+48].cmd_func));
+  TF_copy_u32(&contents[197], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+49].cmd_func));
+  TF_copy_u32(&contents[201], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+50].cmd_func));
+  TF_copy_u32(&contents[205], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+51].cmd_func));
+  TF_copy_u32(&contents[209], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+52].cmd_func));
+  TF_copy_u32(&contents[213], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+53].cmd_func));
+  TF_copy_u32(&contents[217], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+54].cmd_func));
+  TF_copy_u32(&contents[221], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+55].cmd_func));
+  TF_copy_u32(&contents[225], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+56].cmd_func));
+  TF_copy_u32(&contents[229], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+57].cmd_func));
+  TF_copy_u32(&contents[233], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+58].cmd_func));
+  TF_copy_u32(&contents[237], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+59].cmd_func));
+  TF_copy_u32(&contents[241], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+60].cmd_func));
+  TF_copy_u32(&contents[245], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+61].cmd_func));
+  TF_copy_u32(&contents[249], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+62].cmd_func));
+  TF_copy_u32(&contents[253], (uint32_t)(command_analyze->cmd_table[CA_TLM_PAGE_SIZE*(command_analyze->tlm_page_no)+63].cmd_func));
 #endif
 
   return 257;
@@ -911,75 +905,74 @@ static int Tlm_CA_(unsigned char* contents, int max_len)
 
 static int Tlm_TF_(unsigned char* contents, int max_len)
 {
-
-  if (257 > max_len) return TLM_TOO_SHORT_LEN;
+  if (257 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u8(&contents[0], (uint8_t)(*TF_page_no));
-  TF_copy_u32(&contents[1], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+0].tlm_func));
-  TF_copy_u32(&contents[5], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+1].tlm_func));
-  TF_copy_u32(&contents[9], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+2].tlm_func));
-  TF_copy_u32(&contents[13], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+3].tlm_func));
-  TF_copy_u32(&contents[17], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+4].tlm_func));
-  TF_copy_u32(&contents[21], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+5].tlm_func));
-  TF_copy_u32(&contents[25], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+6].tlm_func));
-  TF_copy_u32(&contents[29], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+7].tlm_func));
-  TF_copy_u32(&contents[33], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+8].tlm_func));
-  TF_copy_u32(&contents[37], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+9].tlm_func));
-  TF_copy_u32(&contents[41], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+10].tlm_func));
-  TF_copy_u32(&contents[45], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+11].tlm_func));
-  TF_copy_u32(&contents[49], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+12].tlm_func));
-  TF_copy_u32(&contents[53], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+13].tlm_func));
-  TF_copy_u32(&contents[57], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+14].tlm_func));
-  TF_copy_u32(&contents[61], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+15].tlm_func));
-  TF_copy_u32(&contents[65], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+16].tlm_func));
-  TF_copy_u32(&contents[69], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+17].tlm_func));
-  TF_copy_u32(&contents[73], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+18].tlm_func));
-  TF_copy_u32(&contents[77], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+19].tlm_func));
-  TF_copy_u32(&contents[81], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+20].tlm_func));
-  TF_copy_u32(&contents[85], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+21].tlm_func));
-  TF_copy_u32(&contents[89], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+22].tlm_func));
-  TF_copy_u32(&contents[93], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+23].tlm_func));
-  TF_copy_u32(&contents[97], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+24].tlm_func));
-  TF_copy_u32(&contents[101], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+25].tlm_func));
-  TF_copy_u32(&contents[105], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+26].tlm_func));
-  TF_copy_u32(&contents[109], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+27].tlm_func));
-  TF_copy_u32(&contents[113], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+28].tlm_func));
-  TF_copy_u32(&contents[117], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+29].tlm_func));
-  TF_copy_u32(&contents[121], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+30].tlm_func));
-  TF_copy_u32(&contents[125], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+31].tlm_func));
-  TF_copy_u32(&contents[129], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+32].tlm_func));
-  TF_copy_u32(&contents[133], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+33].tlm_func));
-  TF_copy_u32(&contents[137], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+34].tlm_func));
-  TF_copy_u32(&contents[141], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+35].tlm_func));
-  TF_copy_u32(&contents[145], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+36].tlm_func));
-  TF_copy_u32(&contents[149], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+37].tlm_func));
-  TF_copy_u32(&contents[153], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+38].tlm_func));
-  TF_copy_u32(&contents[157], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+39].tlm_func));
-  TF_copy_u32(&contents[161], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+40].tlm_func));
-  TF_copy_u32(&contents[165], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+41].tlm_func));
-  TF_copy_u32(&contents[169], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+42].tlm_func));
-  TF_copy_u32(&contents[173], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+43].tlm_func));
-  TF_copy_u32(&contents[177], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+44].tlm_func));
-  TF_copy_u32(&contents[181], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+45].tlm_func));
-  TF_copy_u32(&contents[185], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+46].tlm_func));
-  TF_copy_u32(&contents[189], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+47].tlm_func));
-  TF_copy_u32(&contents[193], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+48].tlm_func));
-  TF_copy_u32(&contents[197], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+49].tlm_func));
-  TF_copy_u32(&contents[201], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+50].tlm_func));
-  TF_copy_u32(&contents[205], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+51].tlm_func));
-  TF_copy_u32(&contents[209], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+52].tlm_func));
-  TF_copy_u32(&contents[213], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+53].tlm_func));
-  TF_copy_u32(&contents[217], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+54].tlm_func));
-  TF_copy_u32(&contents[221], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+55].tlm_func));
-  TF_copy_u32(&contents[225], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+56].tlm_func));
-  TF_copy_u32(&contents[229], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+57].tlm_func));
-  TF_copy_u32(&contents[233], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+58].tlm_func));
-  TF_copy_u32(&contents[237], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+59].tlm_func));
-  TF_copy_u32(&contents[241], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+60].tlm_func));
-  TF_copy_u32(&contents[245], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+61].tlm_func));
-  TF_copy_u32(&contents[249], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+62].tlm_func));
-  TF_copy_u32(&contents[253], (uint32_t)(tlm_table[TF_TLM_PAGE_SIZE*(*TF_page_no)+63].tlm_func));
+  TF_copy_u8(&contents[0], (uint8_t)(telemetry_frame->tlm_page_no));
+  TF_copy_u32(&contents[1], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+0].tlm_func));
+  TF_copy_u32(&contents[5], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+1].tlm_func));
+  TF_copy_u32(&contents[9], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+2].tlm_func));
+  TF_copy_u32(&contents[13], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+3].tlm_func));
+  TF_copy_u32(&contents[17], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+4].tlm_func));
+  TF_copy_u32(&contents[21], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+5].tlm_func));
+  TF_copy_u32(&contents[25], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+6].tlm_func));
+  TF_copy_u32(&contents[29], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+7].tlm_func));
+  TF_copy_u32(&contents[33], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+8].tlm_func));
+  TF_copy_u32(&contents[37], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+9].tlm_func));
+  TF_copy_u32(&contents[41], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+10].tlm_func));
+  TF_copy_u32(&contents[45], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+11].tlm_func));
+  TF_copy_u32(&contents[49], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+12].tlm_func));
+  TF_copy_u32(&contents[53], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+13].tlm_func));
+  TF_copy_u32(&contents[57], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+14].tlm_func));
+  TF_copy_u32(&contents[61], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+15].tlm_func));
+  TF_copy_u32(&contents[65], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+16].tlm_func));
+  TF_copy_u32(&contents[69], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+17].tlm_func));
+  TF_copy_u32(&contents[73], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+18].tlm_func));
+  TF_copy_u32(&contents[77], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+19].tlm_func));
+  TF_copy_u32(&contents[81], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+20].tlm_func));
+  TF_copy_u32(&contents[85], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+21].tlm_func));
+  TF_copy_u32(&contents[89], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+22].tlm_func));
+  TF_copy_u32(&contents[93], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+23].tlm_func));
+  TF_copy_u32(&contents[97], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+24].tlm_func));
+  TF_copy_u32(&contents[101], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+25].tlm_func));
+  TF_copy_u32(&contents[105], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+26].tlm_func));
+  TF_copy_u32(&contents[109], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+27].tlm_func));
+  TF_copy_u32(&contents[113], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+28].tlm_func));
+  TF_copy_u32(&contents[117], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+29].tlm_func));
+  TF_copy_u32(&contents[121], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+30].tlm_func));
+  TF_copy_u32(&contents[125], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+31].tlm_func));
+  TF_copy_u32(&contents[129], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+32].tlm_func));
+  TF_copy_u32(&contents[133], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+33].tlm_func));
+  TF_copy_u32(&contents[137], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+34].tlm_func));
+  TF_copy_u32(&contents[141], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+35].tlm_func));
+  TF_copy_u32(&contents[145], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+36].tlm_func));
+  TF_copy_u32(&contents[149], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+37].tlm_func));
+  TF_copy_u32(&contents[153], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+38].tlm_func));
+  TF_copy_u32(&contents[157], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+39].tlm_func));
+  TF_copy_u32(&contents[161], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+40].tlm_func));
+  TF_copy_u32(&contents[165], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+41].tlm_func));
+  TF_copy_u32(&contents[169], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+42].tlm_func));
+  TF_copy_u32(&contents[173], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+43].tlm_func));
+  TF_copy_u32(&contents[177], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+44].tlm_func));
+  TF_copy_u32(&contents[181], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+45].tlm_func));
+  TF_copy_u32(&contents[185], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+46].tlm_func));
+  TF_copy_u32(&contents[189], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+47].tlm_func));
+  TF_copy_u32(&contents[193], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+48].tlm_func));
+  TF_copy_u32(&contents[197], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+49].tlm_func));
+  TF_copy_u32(&contents[201], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+50].tlm_func));
+  TF_copy_u32(&contents[205], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+51].tlm_func));
+  TF_copy_u32(&contents[209], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+52].tlm_func));
+  TF_copy_u32(&contents[213], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+53].tlm_func));
+  TF_copy_u32(&contents[217], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+54].tlm_func));
+  TF_copy_u32(&contents[221], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+55].tlm_func));
+  TF_copy_u32(&contents[225], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+56].tlm_func));
+  TF_copy_u32(&contents[229], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+57].tlm_func));
+  TF_copy_u32(&contents[233], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+58].tlm_func));
+  TF_copy_u32(&contents[237], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+59].tlm_func));
+  TF_copy_u32(&contents[241], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+60].tlm_func));
+  TF_copy_u32(&contents[245], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+61].tlm_func));
+  TF_copy_u32(&contents[249], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+62].tlm_func));
+  TF_copy_u32(&contents[253], (uint32_t)(telemetry_frame->tlm_table[TF_TLM_PAGE_SIZE*(telemetry_frame->tlm_page_no)+63].tlm_func));
 #endif
 
   return 257;
@@ -987,8 +980,7 @@ static int Tlm_TF_(unsigned char* contents, int max_len)
 
 static int Tlm_DCU_(unsigned char* contents, int max_len)
 {
-
-  if (176 > max_len) return TLM_TOO_SHORT_LEN;
+  if (176 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], divided_cmd_utility->exec_log_order[0]);
@@ -1094,8 +1086,7 @@ static int Tlm_DCU_(unsigned char* contents, int max_len)
 
 static int Tlm_MM_(unsigned char* contents, int max_len)
 {
-
-  if (398 > max_len) return TLM_TOO_SHORT_LEN;
+  if (398 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(mode_manager->current_id));
@@ -1396,8 +1387,7 @@ static int Tlm_MM_(unsigned char* contents, int max_len)
 
 static int Tlm_AM_(unsigned char* contents, int max_len)
 {
-
-  if (385 > max_len) return TLM_TOO_SHORT_LEN;
+  if (385 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(app_manager->page_no));
@@ -1600,8 +1590,7 @@ static int Tlm_AM_(unsigned char* contents, int max_len)
 
 static int Tlm_APP_TIME_(unsigned char* contents, int max_len)
 {
-
-  if (400 > max_len) return TLM_TOO_SHORT_LEN;
+  if (400 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(app_manager->ais[0].init_duration));
@@ -2011,8 +2000,7 @@ static int Tlm_APP_TIME_(unsigned char* contents, int max_len)
 
 static int Tlm_EL_(unsigned char* contents, int max_len)
 {
-
-  if (382 > max_len) return TLM_TOO_SHORT_LEN;
+  if (382 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], event_logger->statistics.record_counter_total);
@@ -2179,8 +2167,7 @@ static int Tlm_EL_(unsigned char* contents, int max_len)
 
 static int Tlm_EL_TLOG_(unsigned char* contents, int max_len)
 {
-
-  if (410 > max_len) return TLM_TOO_SHORT_LEN;
+  if (410 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_logger->tlm_info.tlog.page_no);
@@ -2376,8 +2363,7 @@ static int Tlm_EL_TLOG_(unsigned char* contents, int max_len)
 
 static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
 {
-
-  if (408 > max_len) return TLM_TOO_SHORT_LEN;
+  if (408 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_logger->tlm_info.clog.page_no);
@@ -2568,8 +2554,7 @@ static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_(unsigned char* contents, int max_len)
 {
-
-  if (70 > max_len) return TLM_TOO_SHORT_LEN;
+  if (70 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_utility->is_enabled_eh_execution);
@@ -2609,8 +2594,7 @@ static int Tlm_EH_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_RULE_(unsigned char* contents, int max_len)
 {
-
-  if (403 > max_len) return TLM_TOO_SHORT_LEN;
+  if (403 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_handler->tlm_info.rule.page_no);
@@ -2782,8 +2766,7 @@ static int Tlm_EH_RULE_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_LOG_(unsigned char* contents, int max_len)
 {
-
-  if (391 > max_len) return TLM_TOO_SHORT_LEN;
+  if (391 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_handler->tlm_info.log.page_no);
@@ -2988,8 +2971,7 @@ static int Tlm_EH_LOG_(unsigned char* contents, int max_len)
 
 static int Tlm_EH_INDEX_(unsigned char* contents, int max_len)
 {
-
-  if (141 > max_len) return TLM_TOO_SHORT_LEN;
+  if (141 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_handler->tlm_info.rule_sorted_index.page_no);
@@ -3080,8 +3062,7 @@ static int Tlm_EH_INDEX_(unsigned char* contents, int max_len)
 
 static int Tlm_GS_(unsigned char* contents, int max_len)
 {
-
-  if (111 > max_len) return TLM_TOO_SHORT_LEN;
+  if (111 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], gs_driver->driver_uart.uart_config.ch);
@@ -3139,8 +3120,7 @@ static int Tlm_GS_(unsigned char* contents, int max_len)
 
 static int Tlm_HK_(unsigned char* contents, int max_len)
 {
-
-  if (177 > max_len) return TLM_TOO_SHORT_LEN;
+  if (177 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], TMGR_get_master_clock().mode_cycle);
@@ -3224,8 +3204,7 @@ static int Tlm_HK_(unsigned char* contents, int max_len)
 
 static int Tlm_GIT_REV_(unsigned char* contents, int max_len)
 {
-
-  if (82 > max_len) return TLM_TOO_SHORT_LEN;
+  if (82 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)GIT_REV_CORE[0]);
@@ -3317,8 +3296,7 @@ static int Tlm_GIT_REV_(unsigned char* contents, int max_len)
 
 static int Tlm_UART_TEST_(unsigned char* contents, int max_len)
 {
-
-  if (25 > max_len) return TLM_TOO_SHORT_LEN;
+  if (25 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], (uint8_t)(uart_test_instance->driver.super.config.rec_status_.ret_from_if_rx));

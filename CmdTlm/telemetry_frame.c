@@ -11,19 +11,17 @@
 #include "../Library/endian_memcpy.h"
 #include <src_user/Settings/build_settings.h>
 
-static TlmInfo tlm_table_[TLM_MAX_TLMS];
-const TlmInfo* tlm_table;
-static int TF_page_no_;
-const int* TF_page_no;
-
 static void initialize_tlm_table_(void);
+
+static TelemetryFrame telemetry_frame_;
+const TelemetryFrame* const telemetry_frame = &telemetry_frame_;
+
 
 int TF_generate_contents(int packet_id,
                          unsigned char* contents,
                          int max_len)
 {
-  int (*tlm_func)(unsigned char*, int)
-    = tlm_table_[packet_id].tlm_func;
+  int (*tlm_func)(unsigned char*, int) = telemetry_frame->tlm_table[packet_id].tlm_func;
 
   if (tlm_func != NULL)
   {
@@ -31,7 +29,7 @@ int TF_generate_contents(int packet_id,
   }
   else
   {
-    return TLM_NOT_DEFINED;
+    return TF_NOT_DEFINED;
   }
 }
 
@@ -40,28 +38,25 @@ void TF_initialize(void)
   // tlm_table_を初期化
   initialize_tlm_table_();
 
-  if (TLM_MAX_TLMS <= TLM_CODE_MAX)
+  if (TF_MAX_TLMS <= TLM_CODE_MAX)
   {
     Printf("TF: init error!!!\n");
     return;
   }
 
-  TF_load_tlm_table(tlm_table_);
+  TF_load_tlm_table(telemetry_frame_.tlm_table);
 }
 
 static void initialize_tlm_table_(void)
 {
   int i;
-  for (i = 0; i < TLM_MAX_TLMS; ++i)
+  for (i = 0; i < TF_MAX_TLMS; ++i)
   {
-    tlm_table_[i].tlm_func = NULL;
+    telemetry_frame_.tlm_table[i].tlm_func = NULL;
   }
 
-  tlm_table = tlm_table_;
-
   // ページ番号の初期値は0に設定
-  TF_page_no_ = 0;
-  TF_page_no = &TF_page_no_;
+  telemetry_frame_.tlm_page_no = 0;
 }
 
 void TF_copy_u8(uint8_t* ptr,
@@ -153,14 +148,13 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CTCP* packet)
   endian_memcpy(&index, param, 1);
   endian_memcpy(&tlm_func, param + 1, 4);
 
-  if (index >= TLM_MAX_TLMS)
+  if (index >= TF_MAX_TLMS)
   {
     // 登録指定位置がテレメトリ数上限を超えている場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  tlm_table_[index].tlm_func
-    = (int (*)(unsigned char*, int))tlm_func;
+  telemetry_frame_.tlm_table[index].tlm_func = (int (*)(unsigned char*, int))tlm_func;
 
   return CCP_EXEC_SUCCESS;
 }
@@ -176,7 +170,7 @@ CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CTCP* packet)
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  TF_page_no_ = page;
+  telemetry_frame_.tlm_page_no = page;
   return CCP_EXEC_SUCCESS;
 }
 
