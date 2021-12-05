@@ -1,24 +1,38 @@
 #pragma section REPRO
 #include "time_manager.h"
-
+#include <string.h>
 #include <src_user/CmdTlm/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
 #include "../../Library/endian_memcpy.h"
 
 static ObcTime master_clock_;
-const ObcTime* master_clock;
 
 static OBCT_UnixTimeInfo OBCT_unix_time_info_;
-const OBCT_UnixTimeInfo* const OBCT_unix_time_info = &OBCT_unix_time_info_;
+
+static TimeManager time_manager_;
+const TimeManager* const time_manager = &time_manager_;
 
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 void TMGR_init(void)
 {
-  OBCT_clear(&master_clock_);
-  master_clock = &master_clock_;
+  OBCT_clear(&time_manager_.initializing_time);
+  time_manager_.initializing_flag = 1;
+  TMGR_clear();
+}
 
+void TMGR_clear(void)
+{
+  OBCT_clear(&master_clock_);
   OBCT_clear_unix_time_info(&OBCT_unix_time_info_);
+}
+
+void TMGR_down_initializing_flag(void)
+{
+  memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
+  time_manager_.initializing_flag = 0;
+
+  TMGR_clear();
 }
 
 void TMGR_clear_master_mode_cycle(void)
@@ -46,8 +60,16 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void)
   return OBCT_get_mode_cycle_in_msec(&master_clock_);
 }
 
-ObcTime TMGR_get_master_clock(void) {
-  return *master_clock;     // わざと const を返している．けど意味ないか？ オブジェクトはコピーされるわけだし．
+ObcTime TMGR_get_master_clock(void)
+{
+  if (time_manager_.initializing_flag)
+  {
+    return OBCT_create(0, 0, 0);
+  }
+  else
+  {
+    return master_clock_;
+  }
 }
 
 cycle_t TMGR_get_master_total_cycle(void) {
@@ -89,12 +111,12 @@ static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
 double TMGR_get_unix_time_from_ObcTime(const ObcTime* time)
 {
   ObcTime ti0 = OBCT_create(0, 0, 0);
-  return OBCT_unix_time_info->unix_time_on_ti0 + OBCT_diff_in_sec(&ti0, time);
+  return OBCT_unix_time_info_.unix_time_on_ti0 + OBCT_diff_in_sec(&ti0, time);
 }
 
 ObcTime TMGR_get_ObcTime_from_unix_time(const double unix_time)
 {
-  double diff_double = unix_time - OBCT_unix_time_info->unix_time_on_ti0;
+  double diff_double = unix_time - OBCT_unix_time_info_.unix_time_on_ti0;
   ObcTime res;
   uint32_t diff;
   cycle_t cycle_diff;
@@ -123,7 +145,7 @@ void TMGR_modify_unix_time_criteria(const double unix_time, const ObcTime time)
 
 OBCT_UnixTimeInfo TMGR_get_obct_unix_time_info(void)
 {
-  return *OBCT_unix_time_info;
+  return OBCT_unix_time_info_;
 }
 
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
@@ -140,6 +162,11 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   TMGR_modify_unix_time_criteria(unix_time, time);
 
   return CCP_EXEC_SUCCESS;
+}
+
+ObcTime TMGR_get_master_clock_from_boot(void)
+{
+  return OBCT_add(&time_manager_.initializing_time, &master_clock_);
 }
 
 #pragma section

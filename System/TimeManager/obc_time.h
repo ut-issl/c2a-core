@@ -49,6 +49,7 @@ cycle_t  OBCT_msec2cycle(uint32_t msec);      // ìKìñÇ…ä€ÇﬂÇÁÇÍÇÈÇ±Ç∆Ç…íçà”
 uint32_t OBCT_cycle2msec(cycle_t cycle);      // ìKìñÇ…ä€ÇﬂÇÁÇÍÇÈÇ±Ç∆Ç…íçà”
 ObcTime OBCT_diff(const ObcTime* before,
                   const ObcTime* after);
+ObcTime OBCT_add(const ObcTime* left, const ObcTime* right);
 step_t OBCT_diff_in_step(const ObcTime* before,
                          const ObcTime* after);
 uint32_t OBCT_diff_in_msec(const ObcTime* before,

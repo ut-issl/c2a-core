@@ -60,7 +60,7 @@ static void C2A_init_(void)
   C2A_core_init();
 
   // TaskDispatcherでの大量のアノマリを避けるために、一度時刻を初期化する。
-  TMGR_init();
+  TMGR_clear();
   Printf("C2A_init: TMGR_init done.\n");
 }
 #pragma section
