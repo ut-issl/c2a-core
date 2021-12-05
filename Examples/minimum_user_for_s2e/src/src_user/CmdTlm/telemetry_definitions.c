@@ -3120,7 +3120,7 @@ static int Tlm_GS_(unsigned char* contents, int max_len)
 
 static int Tlm_HK_(unsigned char* contents, int max_len)
 {
-  if (177 > max_len) return TF_TOO_SHORT_LEN;
+  if (417 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], TMGR_get_master_clock().mode_cycle);
@@ -3197,9 +3197,69 @@ static int Tlm_HK_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[165], divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].last_exec_time.total_cycle);
   TF_copy_u32(&contents[169], GIT_REV_CORE_SHORT);
   TF_copy_u32(&contents[173], GIT_REV_USER_SHORT);
+  TF_copy_u32(&contents[177], 0);
+  TF_copy_u32(&contents[181], 0);
+  TF_copy_u32(&contents[185], 0);
+  TF_copy_u32(&contents[189], 0);
+  TF_copy_u32(&contents[193], 0);
+  TF_copy_u32(&contents[197], 0);
+  TF_copy_u32(&contents[201], 0);
+  TF_copy_u32(&contents[205], 0);
+  TF_copy_u32(&contents[209], 0);
+  TF_copy_u32(&contents[213], 0);
+  TF_copy_u32(&contents[217], 0);
+  TF_copy_u32(&contents[221], 0);
+  TF_copy_u32(&contents[225], 0);
+  TF_copy_u32(&contents[229], 0);
+  TF_copy_u32(&contents[233], 0);
+  TF_copy_u32(&contents[237], 0);
+  TF_copy_u32(&contents[241], 0);
+  TF_copy_u32(&contents[245], 0);
+  TF_copy_u32(&contents[249], 0);
+  TF_copy_u32(&contents[253], 0);
+  TF_copy_u32(&contents[257], 0);
+  TF_copy_u32(&contents[261], 0);
+  TF_copy_u32(&contents[265], 0);
+  TF_copy_u32(&contents[269], 0);
+  TF_copy_u32(&contents[273], 0);
+  TF_copy_u32(&contents[277], 0);
+  TF_copy_u32(&contents[281], 0);
+  TF_copy_u32(&contents[285], 0);
+  TF_copy_u32(&contents[289], 0);
+  TF_copy_u32(&contents[293], 0);
+  TF_copy_u32(&contents[297], 0);
+  TF_copy_u32(&contents[301], 0);
+  TF_copy_u32(&contents[305], 0);
+  TF_copy_u32(&contents[309], 0);
+  TF_copy_u32(&contents[313], 0);
+  TF_copy_u32(&contents[317], 0);
+  TF_copy_u32(&contents[321], 0);
+  TF_copy_u32(&contents[325], 0);
+  TF_copy_u32(&contents[329], 0);
+  TF_copy_u32(&contents[333], 0);
+  TF_copy_u32(&contents[337], 0);
+  TF_copy_u32(&contents[341], 0);
+  TF_copy_u32(&contents[345], 0);
+  TF_copy_u32(&contents[349], 0);
+  TF_copy_u32(&contents[353], 0);
+  TF_copy_u32(&contents[357], 0);
+  TF_copy_u32(&contents[361], 0);
+  TF_copy_u32(&contents[365], 0);
+  TF_copy_u32(&contents[369], 0);
+  TF_copy_u32(&contents[373], 0);
+  TF_copy_u32(&contents[377], 0);
+  TF_copy_u32(&contents[381], 0);
+  TF_copy_u32(&contents[385], 0);
+  TF_copy_u32(&contents[389], 0);
+  TF_copy_u32(&contents[393], 0);
+  TF_copy_u32(&contents[397], 0);
+  TF_copy_u32(&contents[401], 0);
+  TF_copy_u32(&contents[405], 0);
+  TF_copy_u32(&contents[409], 0);
+  TF_copy_u32(&contents[413], 0);
 #endif
 
-  return 177;
+  return 417;
 }
 
 static int Tlm_GIT_REV_(unsigned char* contents, int max_len)
