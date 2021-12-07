@@ -8,8 +8,8 @@
 #include "common_tlm_cmd_packet.h"
 #include <src_user/CmdTlm/command_definitions.h>
 
-#define CA_TLM_PAGE_SIZE      (64)                                  //!< コマンドテーブルの1テレメトリパケット(=1ページ)に格納されるコマンド数（ページネーション用）
-#define CA_TLM_PAGE_MAX       (24)                                  //!< コマンドテーブルページ数（ページネーション用）
+#define CA_TLM_PAGE_SIZE      (32)                                  //!< コマンドテーブルの1テレメトリパケット(=1ページ)に格納されるコマンド数（ページネーション用）
+#define CA_TLM_PAGE_MAX       (48)                                  //!< コマンドテーブルページ数（ページネーション用）
 #define CA_MAX_CMDS           (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)  //!< コマンドテーブルサイズ．すなわち登録できる最大コマンド数
 #define CA_MAX_CMD_PARAM_NUM  (6)                                   //!< コマンドパラメタ（引数）の最大数．現時点ではユーザー側で可変にすることを想定してはない
 
