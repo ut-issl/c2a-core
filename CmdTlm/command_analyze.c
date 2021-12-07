@@ -176,8 +176,8 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
+  // ローレベルコマンドなので，アサーションしない
   command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
-
   for (i = 0; i < sizeof(param_size_infos); ++i)
   {
     command_analyze_.cmd_table[cmd_code].param_size_infos[i].byte = param_size_infos[i];

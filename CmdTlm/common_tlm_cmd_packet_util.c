@@ -99,68 +99,80 @@ void CCP_convert_rtc_to_tlc(CTCP* packet, cycle_t ti)
   CCP_set_ti(packet, ti);
 }
 
-uint8_t CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n)
+uint8_t* CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
-  uint8_t ret;
+  static uint8_t ret;
   uint16_t offset = 0;
   CMD_CODE cmd_id = CCP_get_id(packet);
   uint8_t param_size = 1;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
-  if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+  ret = 0;
+
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
+  if (ack != CTCP_UTIL_ACK_OK) return &ret;
+
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
   endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
-  return ret;
+  return &ret;
 }
 
-uint16_t CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n)
+uint16_t* CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
-  uint16_t ret;
+  static uint16_t ret;
   uint16_t offset = 0;
   CMD_CODE cmd_id = CCP_get_id(packet);
   uint8_t param_size = 2;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
-  if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+  ret = 0;
+
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
+  if (ack != CTCP_UTIL_ACK_OK) return &ret;
+
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
   endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
-  return ret;
+  return &ret;
 }
 
-uint32_t CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n)
+uint32_t* CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
-  uint32_t ret;
+  static uint32_t ret;
   uint16_t offset = 0;
   CMD_CODE cmd_id = CCP_get_id(packet);
   uint8_t param_size = 4;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
-  if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+  ret = 0;
+
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
+  if (ack != CTCP_UTIL_ACK_OK) return &ret;
+
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
   endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
-  return ret;
+  return &ret;
 }
 
-uint64_t CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
+uint64_t* CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
-  uint64_t ret;
+  static uint64_t ret;
   uint16_t offset = 0;
   CMD_CODE cmd_id = CCP_get_id(packet);
   uint8_t param_size = 8;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
-  if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+  ret = 0;
+
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
+  if (ack != CTCP_UTIL_ACK_OK) return &ret;
+
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
   endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
-  return ret;
+  return &ret;
 }
 
 uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t max_copy_len)
