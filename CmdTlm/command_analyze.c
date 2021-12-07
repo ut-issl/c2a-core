@@ -180,7 +180,8 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
   command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
   for (i = 0; i < sizeof(param_size_infos); ++i)
   {
-    command_analyze_.cmd_table[cmd_code].param_size_infos[i].byte = param_size_infos[i];
+    command_analyze_.cmd_table[cmd_code].param_size_infos[i].bit.first = ( param_size_infos[i] & 0xf0 ) >> 4;
+    command_analyze_.cmd_table[cmd_code].param_size_infos[i].bit.second = param_size_infos[i] & 0x0f;
   }
 
   return CCP_EXEC_SUCCESS;
