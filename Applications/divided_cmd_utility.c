@@ -14,7 +14,6 @@
 #include "divided_cmd_utility.h"
 #include "../CmdTlm/packet_handler.h"
 #include "../CmdTlm/common_tlm_cmd_packet_util.h"
-#include "../Library/endian_memcpy.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
 

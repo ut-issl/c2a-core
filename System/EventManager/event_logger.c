@@ -14,7 +14,6 @@
 #include "../WatchdogTimer/watchdog_timer.h"
 #include <src_user/Settings/System/event_logger_settings.h>
 #include "../../CmdTlm/common_tlm_cmd_packet_util.h"
-#include "../../Library/endian_memcpy.h"
 
 
 #ifdef EL_IS_ENABLE_CLOG
