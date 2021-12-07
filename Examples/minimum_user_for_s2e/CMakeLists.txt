@@ -63,7 +63,11 @@ if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
 endif()
 
-add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+if(USE_SILS_MOCKUP)
+  add_executable(${PROJECT_NAME} ${C2A_SRCS})
+else()
+  add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+endif()
 
 target_link_libraries(${PROJECT_NAME} C2A_CORE
   C2A_USER_APPS
