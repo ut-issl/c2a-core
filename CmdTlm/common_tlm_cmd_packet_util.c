@@ -13,6 +13,13 @@
 #include <stddef.h>     // for NULL
 #include <string.h>
 
+/**
+ * @brief CTCP パラメタ開始位置に対する n 番目の引数の offset を計算する
+ * @param[in]  cmd_id: CMD_CODE
+ * @param[in]  n: N番目の引数 （0起算）
+ * @param[out] offset: offset
+ * @return CTCP_UTIL_ACK
+ */
 CTCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset);
 
 void CCP_form_app_cmd(CTCP* packet, cycle_t ti, AR_APP_ID id)
@@ -96,11 +103,15 @@ uint8_t CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
   uint8_t ret;
   uint16_t offset = 0;
+  CMD_CODE cmd_id = CCP_get_id(packet);
+  uint8_t param_size = 1;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(CCP_get_id(packet), n, &offset);
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
   if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, 1);
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
   return ret;
 }
 
@@ -108,11 +119,15 @@ uint16_t CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
   uint16_t ret;
   uint16_t offset = 0;
+  CMD_CODE cmd_id = CCP_get_id(packet);
+  uint8_t param_size = 2;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(CCP_get_id(packet), n, &offset);
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
   if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, 2);
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
   return ret;
 }
 
@@ -120,11 +135,15 @@ uint32_t CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
   uint32_t ret;
   uint16_t offset = 0;
+  CMD_CODE cmd_id = CCP_get_id(packet);
+  uint8_t param_size = 4;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(CCP_get_id(packet), n, &offset);
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
   if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, 4);
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
   return ret;
 }
 
@@ -132,42 +151,41 @@ uint64_t CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
 {
   uint64_t ret;
   uint16_t offset = 0;
+  CMD_CODE cmd_id = CCP_get_id(packet);
+  uint8_t param_size = 8;
   CTCP_UTIL_ACK ack;
-  ack = CCP_calc_param_offset_(CCP_get_id(packet), n, &offset);
+  ack = CCP_calc_param_offset_(cmd_id, n, &offset);
   if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, 8);
+  if (CA_get_cmd_param_size(cmd_id, n) != param_size) return 0;
+
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
   return ret;
 }
 
 uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t max_copy_len)
 {
-  CMD_CODE cmd_id = CCP_get_id(packet);
   uint16_t offset = 0;
+  CMD_CODE cmd_id = CCP_get_id(packet);
   CTCP_UTIL_ACK ack;
   int32_t copy_len;
-  int32_t raw_param_len;
 
   if (!CA_has_raw_param(cmd_id)) return 0;
 
   ack = CCP_calc_param_offset_(cmd_id, CA_get_cmd_param_num(cmd_id) - 1, &offset);
   if (ack != CTCP_UTIL_ACK_OK) return 0;
 
-  raw_param_len = CCP_get_param_len(packet) - offset;
-  if (raw_param_len < 0) return 0;
-  copy_len = (raw_param_len > max_copy_len) ? max_copy_len : raw_param_len;
+  copy_len = CCP_get_param_len(packet) - offset;
+  if (copy_len < 0) return 0;
+  if (max_copy_len != 0 && copy_len > max_copy_len)
+  {
+    copy_len = max_copy_len;
+  }
 
   memcpy(dest,  CCP_get_param_head(packet) + offset, copy_len);
   return (uint16_t)copy_len;
 }
 
-/**
- * @brief CTCP パラメタ開始位置に対する n 番目の引数の offset を計算する
- * @param[in]  cmd_id: CMD_CODE
- * @param[in]  n: N番目の引数 （0起算）
- * @param[out] offset: offset
- * @return CTCP_UTIL_ACK
- */
 CTCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset)
 {
   uint8_t i;
