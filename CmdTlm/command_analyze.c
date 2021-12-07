@@ -4,9 +4,9 @@
  * @brief  コマンドの実行・登録，コマンド関連処理
  */
 #include "command_analyze.h"
+#include "common_tlm_cmd_packet_util.h"
 #include <src_user/CmdTlm/command_definitions.h>
 #include "../Library/print.h"
-#include "../Library/endian_memcpy.h"
 #include <string.h>
 
 /**
@@ -158,37 +158,38 @@ static CA_PARAM_SIZE_TYPE CA_get_param_size_type_(CMD_CODE cmd_code, uint8_t n)
 
 CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
 {
-  // FIXME pytest, tlm更新
-  (void)packet;
-  // const uint8_t* param = CCP_get_param_head(packet);
-  // uint16_t index;
-  // uint32_t cmd_func;
-  // CA_CMD_PARAM_LEN_TYPE param_len_type;
-  // uint16_t param_len;
+  uint8_t param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];
+  CMD_CODE cmd_code = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
+  uint32_t cmd_func = CCP_get_param_from_packet(packet, 1, uint32_t);
+  uint8_t ret;
+  uint8_t i;
 
-  // endian_memcpy(&index, param, 2);
-  // endian_memcpy(&cmd_func, param + 2, 4);
-  // param_len_type = (CA_CMD_PARAM_LEN_TYPE)param[6];
-  // endian_memcpy(&param_len, &param[7], 2);
+  // raw パラメタなので，引数長チェック
+  if (CCP_get_param_len(packet) != 6 + sizeof(param_size_infos)) return CCP_EXEC_ILLEGAL_LENGTH;
 
-  // if (index >= CA_MAX_CMDS)
-  // {
-  //   // 登録指定位置がコマンド数上限を超えている場合は異常判定
-  //   return CCP_EXEC_ILLEGAL_PARAMETER;
-  // }
+  ret = CCP_get_raw_param_from_packet(packet, param_size_infos, sizeof(param_size_infos));
+  if (ret != sizeof(param_size_infos)) return CCP_EXEC_ILLEGAL_LENGTH;
 
-  // command_analyze_.cmd_table[index].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
-  // command_analyze_.cmd_table[index].param_len_type = param_len_type;
-  // command_analyze_.cmd_table[index].param_len = param_len;
+  if (cmd_code >= CA_MAX_CMDS)
+  {
+    // 登録指定位置がコマンド数上限を超えている場合は異常判定
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  }
+
+  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
+
+  for (i = 0; i < sizeof(param_size_infos); ++i)
+  {
+    command_analyze_.cmd_table[cmd_code].param_size_infos[i].byte = param_size_infos[i];
+  }
 
   return CCP_EXEC_SUCCESS;
 }
 
 CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CTCP* packet)
 {
-  uint8_t page;
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  page = CCP_get_param_head(packet)[0];
   if (page >= CA_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
