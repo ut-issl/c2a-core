@@ -50,6 +50,7 @@ void Printf(char* format, ...)
   vsprintf(printf_buffer, format, args);
 
   printf("%s", printf_buffer);
+  fflush(stdout);
 
   va_end(args);
 #else
