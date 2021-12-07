@@ -55,12 +55,14 @@ void PL_clear_list(PacketList* pli)
 
 uint32_t PL_count_executed_nodes(const PacketList* pli)
 {
-  return pli->executed_nodes_;
+  // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている
+  return (uint32_t)pli->executed_nodes_;
 }
 
 uint16_t PL_count_active_nodes(const PacketList* pli)
 {
-  return pli->active_nodes_;
+  // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている
+  return (uint16_t)pli->active_nodes_;
 }
 
 uint16_t PL_count_inactive_nodes(const PacketList* pli)
