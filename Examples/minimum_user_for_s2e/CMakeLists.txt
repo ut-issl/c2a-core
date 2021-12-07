@@ -37,6 +37,14 @@ set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user)
 include_directories(src)
 add_definitions(-DSILS_FW)
 
+# Output debug print to SILS console window
+option(SHOW_DEBUG_PRINT_ON_SILS "Show debug print")
+set(SHOW_DEBUG_PRINT_ON_SILS ON)
+if(SHOW_DEBUG_PRINT_ON_SILS)
+  add_definitions(-DSHOW_DEBUG_PRINT_ON_SILS)
+  message("Show debug print")
+endif()
+
 add_subdirectory(${C2A_CORE_DIR})
 
 add_subdirectory(${C2A_USER_DIR}/Applications)
@@ -57,7 +65,6 @@ endif()
 
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
-
 target_link_libraries(${PROJECT_NAME} C2A_CORE
   C2A_USER_APPS
   C2A_USER_CMD_TLM
@@ -67,15 +74,6 @@ target_link_libraries(${PROJECT_NAME} C2A_CORE
   C2A_USER_SETTINGS
 )
 
-
-
-# Output debug print to SILS console window
-option(SHOW_DEBUG_PRINT_ON_SILS "Show debug print")
-set(SHOW_DEBUG_PRINT_ON_SILS ON)
-if(SHOW_DEBUG_PRINT_ON_SILS)
-  add_definitions(-DSHOW_DEBUG_PRINT_ON_SILS)
-  message("Show debug print")
-endif()
 
 if(WIN32)
   add_custom_command(TARGET ${PROJECT_NAME}

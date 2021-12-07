@@ -10,7 +10,6 @@ set(C2A_SRCS
   exor.c
   majority_vote_for3.c
   matrix.c
-  print.c
   quaternion.c
   c2a_round.c
   sum.c
