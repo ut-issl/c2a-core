@@ -488,6 +488,10 @@ static EL_CLOG_LOG_ACK EL_search_clog_(const EL_Event* event, uint16_t* log_idx,
   for (i = 0; i < capacity; ++i)
   {
     uint16_t idx = p_clog->log_orders[i];
+    if (p_clog->logs[idx].event.group == (EL_GROUP)EL_CORE_GROUP_NULL)
+    {
+      return EL_CLOG_LOG_ACK_NOT_FOUND;
+    }
     if (p_clog->logs[idx].event.group == event->group &&
         p_clog->logs[idx].event.local == event->local)
     {
@@ -503,7 +507,6 @@ static EL_CLOG_LOG_ACK EL_search_clog_(const EL_Event* event, uint16_t* log_idx,
 
 static void EL_move_to_front_in_clog_(const EL_Event* event)
 {
-  uint16_t i;
   uint16_t log_idx;
   uint16_t order_idx;
   EL_CumulativeLog* p_clog = &event_logger_.clogs[event->err_level];
@@ -516,17 +519,13 @@ static void EL_move_to_front_in_clog_(const EL_Event* event)
     return;
   }
 
-  for (i = order_idx; i > 0; --i)
-  {
-    p_clog->log_orders[i] = p_clog->log_orders[i - 1];
-  }
+  memmove(&p_clog->log_orders[1], &p_clog->log_orders[0], sizeof(uint16_t) * order_idx);
   p_clog->log_orders[0] = log_idx;
 }
 
 
 static void EL_create_clog_on_front_(const EL_Event* event)
 {
-  uint16_t i;
   uint16_t log_idx;
   const EL_ERROR_LEVEL err_level = event->err_level;
   EL_CumulativeLog* p_clog = &event_logger_.clogs[err_level];
@@ -557,10 +556,7 @@ static void EL_create_clog_on_front_(const EL_Event* event)
   }
 #endif
 
-  for (i = (uint16_t)(capacity - 1); i > 0; --i)
-  {
-    p_clog->log_orders[i] = p_clog->log_orders[i - 1];
-  }
+  memmove(&p_clog->log_orders[1], &p_clog->log_orders[0], sizeof(uint16_t) * (capacity - 1));
   p_clog->log_orders[0] = log_idx;
 
   // ‚±‚±‚Å event ‚ð‚¢‚ê‚Ä‚µ‚Ü‚¤
@@ -581,15 +577,7 @@ static void EL_clear_latest_event_(void)
 
 static void EL_clear_statistics_(void)
 {
-  uint8_t err_level;
-
-  event_logger_.statistics.record_counter_total = 0;
-
-  for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
-  {
-    event_logger_.statistics.record_counters[err_level] = 0;
-  }
-
+  memset(&event_logger_.statistics, 0x00, sizeof(EL_EventStatistics));
   EH_match_event_counter_to_el();
 }
 
