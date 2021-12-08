@@ -1366,6 +1366,7 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 
 
 // ###### DS_Config Getter/Setter ######
+// FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
 const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
 {
   return &p_super->config.rec_status_;
@@ -1373,12 +1374,12 @@ const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
 
 uint32_t DSC_get_rx_count(const DriverSuper* p_super)
 {
-  return p_super->config.rx_count_;
+  return (uint32_t)p_super->config.rx_count_;
 }
 
 uint32_t DSC_get_rx_call_count(const DriverSuper* p_super)
 {
-  return p_super->config.rx_call_count_;
+  return (uint32_t)p_super->config.rx_call_count_;
 }
 
 const ObcTime* DSC_get_rx_time(const DriverSuper* p_super)
@@ -1388,7 +1389,7 @@ const ObcTime* DSC_get_rx_time(const DriverSuper* p_super)
 
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
-  return p_super->config.should_monitor_for_rx_disruption_;
+  return (uint8_t)p_super->config.should_monitor_for_rx_disruption_;
 }
 
 void DSC_enable_monitor_for_rx_disruption(DriverSuper* p_super)
@@ -1403,7 +1404,7 @@ void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super)
 
 uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super)
 {
-  return p_super->config.time_threshold_for_rx_disruption_;
+  return (uint32_t)p_super->config.time_threshold_for_rx_disruption_;
 }
 
 void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
@@ -1414,13 +1415,14 @@ void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
 
 DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
 {
-  return p_super->config.rec_status_.rx_disruption_status;
+  return (DS_RX_DISRUPTION_STATUS_CODE)p_super->config.rec_status_.rx_disruption_status;
 }
 
 // ###### DS_StreamConfig Getter/Setter ######
+// FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
 uint8_t DSSC_get_is_enable(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->is_enabled_;
+  return (uint8_t)p_stream_config->is_enabled_;
 }
 
 void DSSC_enable(DS_StreamConfig* p_stream_config)
@@ -1437,7 +1439,7 @@ void DSSC_disable(DS_StreamConfig* p_stream_config)
 
 uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->is_strict_frame_search_;
+  return (uint8_t)p_stream_config->is_strict_frame_search_;
 }
 
 void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config)
@@ -1463,22 +1465,22 @@ const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_co
 
 uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->general_cmd_tx_count_;
+  return (uint32_t)p_stream_config->general_cmd_tx_count_;
 }
 
 uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->req_tlm_cmd_tx_count_;
+  return (uint32_t)p_stream_config->req_tlm_cmd_tx_count_;
 }
 
 uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->req_tlm_cmd_tx_count_after_last_tx_;
+  return (uint32_t)p_stream_config->req_tlm_cmd_tx_count_after_last_tx_;
 }
 
 uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->rx_frame_fix_count_;
+  return (uint32_t)p_stream_config->rx_frame_fix_count_;
 }
 
 const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config)
@@ -1512,7 +1514,7 @@ void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
 
 uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->tx_frame_size_;
+  return (uint16_t)p_stream_config->tx_frame_size_;
 }
 
 const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
@@ -1547,17 +1549,17 @@ void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
 
 uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->rx_header_size_;
+  return (uint16_t)p_stream_config->rx_header_size_;
 }
 
 uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->rx_footer_size_;
+  return (uint16_t)p_stream_config->rx_footer_size_;
 }
 
 int16_t DSSC_get_rx_frame_size(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->rx_frame_size_;
+  return (int16_t)p_stream_config->rx_frame_size_;
 }
 
 void DSSC_set_rx_framelength_pos(DS_StreamConfig* p_stream_config,
@@ -1583,7 +1585,7 @@ void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
 
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->should_monitor_for_tlm_disruption_;
+  return (uint8_t)p_stream_config->should_monitor_for_tlm_disruption_;
 }
 
 void DSSC_enable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config)
@@ -1600,7 +1602,7 @@ void DSSC_disable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config)
 
 uint32_t DSSC_get_time_threshold_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->time_threshold_for_tlm_disruption_;
+  return (uint32_t)p_stream_config->time_threshold_for_tlm_disruption_;
 }
 
 void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config,
@@ -1612,7 +1614,7 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
 
 DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->rec_status_.tlm_disruption_status;
+  return (DS_STREAM_TLM_DISRUPTION_STATUS_CODE)p_stream_config->rec_status_.tlm_disruption_status;
 }
 
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
@@ -1624,7 +1626,7 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
 
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->ret_from_data_analyzer_;
+  return (DS_ERR_CODE)p_stream_config->ret_from_data_analyzer_;
 }
 
 
