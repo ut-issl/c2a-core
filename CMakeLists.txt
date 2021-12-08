@@ -9,7 +9,7 @@ option(USE_ALL_C2A_CORE_LIB     "use C2A-core all Library" ON)
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
-  # src/src_core/c2a_core_main.c
+  c2a_core_main.c
   CmdTlm/block_command_loader.c
   CmdTlm/block_command_table.c
   CmdTlm/block_command_executor.c

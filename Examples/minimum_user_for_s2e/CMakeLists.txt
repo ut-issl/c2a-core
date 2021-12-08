@@ -63,9 +63,13 @@ if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
 endif()
 
-add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+if(USE_SILS_MOCKUP)
+  add_executable(${PROJECT_NAME} ${C2A_SRCS})
+else()
+  add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+endif()
 
-target_link_libraries(${PROJECT_NAME} C2A_CORE
+set(C2A_USER_MODULES
   C2A_USER_APPS
   C2A_USER_CMD_TLM
   C2A_USER_DRIVERS
@@ -74,6 +78,21 @@ target_link_libraries(${PROJECT_NAME} C2A_CORE
   C2A_USER_SETTINGS
 )
 
+if(MSVC)
+  target_link_options(${PROJECT_NAME} PRIVATE "/WHOLEARCHIVE")
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    C2A_CORE
+    ${C2A_USER_MODULES}
+  )
+else()
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    -Wl,--whole-archive
+    C2A_CORE
+    -Wl,--no-whole-archive
+    ${C2A_USER_MODULES}
+    -lm
+  )
+endif()
 
 if(WIN32)
   add_custom_command(TARGET ${PROJECT_NAME}

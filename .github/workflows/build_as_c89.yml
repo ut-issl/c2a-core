@@ -39,3 +39,8 @@ jobs:
       - name: build
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cmake --build .
+
+      - name: run
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        shell: bash
+        run: timeout 3 ./C2A || exit 0
