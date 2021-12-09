@@ -14,7 +14,6 @@
 #include "divided_cmd_utility.h"
 #include "../CmdTlm/packet_handler.h"
 #include "../CmdTlm/common_tlm_cmd_packet_util.h"
-#include "../Library/endian_memcpy.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
 
@@ -287,15 +286,8 @@ DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec
 
 CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint16_t temp;
-  CMD_CODE target_cmd;
-
   // CMD_CODE ‚Í u16 ‚Æ‘z’è‚·‚é
-  if (CCP_get_param_len(packet) != 2) return CCP_EXEC_ILLEGAL_LENGTH;
-
-  endian_memcpy(&temp, param, 2);
-  target_cmd = (CMD_CODE)temp;
+  CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_abort_cmd(target_cmd);
 
@@ -305,15 +297,8 @@ CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint16_t temp;
-  CMD_CODE target_cmd;
-
   // CMD_CODE ‚Í u16 ‚Æ‘z’è‚·‚é
-  if (CCP_get_param_len(packet) != 2) return CCP_EXEC_ILLEGAL_LENGTH;
-
-  endian_memcpy(&temp, param, 2);
-  target_cmd = (CMD_CODE)temp;
+  CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_donw_abort_flag(target_cmd);
 
