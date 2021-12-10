@@ -1,5 +1,5 @@
 {
-  "c2a_root_dir" : "../../../",
+  "c2a_root_dir" : "./",
   "target_dirs" : [
     "src_core/",
     "src_user/"

@@ -16,5 +16,5 @@ jobs:
         shell: bash
         run: ./setup.sh
       - name: check_coding_rule
-        run: python check_coding_rule.py check_coding_rule.json
-        working-directory: ./Examples/minimum_user_for_s2e/src/src_core/Script/CI
+        run: python ./src_core/Script/CI/check_coding_rule.py ./src_core/Script/CI/check_coding_rule.json
+        working-directory: ./Examples/minimum_user_for_s2e/src
