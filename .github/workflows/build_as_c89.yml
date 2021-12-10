@@ -31,6 +31,9 @@ jobs:
         run: |
           sudo apt-get install -y libc6-dev-i386
 
+      - name: convert Shift-JIS to UTF-8
+        run: find . -type f \( -name '*.h' -or -name '*.c' \) -exec nkf --overwrite -S -w80 {} \;
+
       - name: setup
         shell: bash
         run: ./setup.sh
