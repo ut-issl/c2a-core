@@ -478,7 +478,6 @@ CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
 {
-  const unsigned char* param = CCP_get_param_head(packet);
   CMD_CODE cmd_id = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
   cycle_t  ti     = (cycle_t)CCP_get_param_from_packet(packet, 1, uint32_t);
   bct_id_t block  = (bct_id_t)CCP_get_param_from_packet(packet, 2, bct_id_t);
@@ -499,7 +498,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
   CCP_get_raw_param_from_packet(packet, &tmp_param, sizeof(BCT_CmdData));
 
   BCT_make_pos(&pos, block, cmd);
-  CCP_form_tlc((CTCP*)&bct_cmddata, ti, (CMD_CODE)cmd_id, &tmp_param, cmd_param_len);
+  CCP_form_tlc((CTCP*)&bct_cmddata, ti, (CMD_CODE)cmd_id, (const uint8_t*)&tmp_param, cmd_param_len);
   BCT_overwrite_cmd(&pos, (CTCP*)&bct_cmddata);
 
   return CCP_EXEC_SUCCESS;
