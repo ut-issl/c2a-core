@@ -1,5 +1,6 @@
 #pragma section REPRO
 #include "c2a_core_main.h"
+#include "git_revision.h"
 
 #include "./Library/print.h"
 #include "./System/TaskManager/task_dispatcher.h"
@@ -18,6 +19,7 @@
 void C2A_core_init(void)
 {
   CA_initialize();            // Cmd Analyze
+  Printf("C2A_init: core revision = %s\n", GIT_REV_CORE);
   Printf("C2A_init: CA_initialize done.\n");
   TF_initialize();            // TLM frame
   Printf("C2A_init: TF_initialize done.\n");
