@@ -487,7 +487,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
   BCT_CmdData bct_cmddata; // FIXME BCT_CmdData <-> CTCP
   BCT_CmdData tmp_param;   // Ç¢Ç¡ÇΩÇÒÇ±Ç±Ç…paramÇÉRÉsÅ[Ç∑ÇÈ
   uint16_t real_param_len = CCP_get_param_len(packet);
-  uint16_t min_cmd_param_len = sizeof(CMD_CODE) + sizeof(cycle_t) + sizeof(bct_id_t) + sizeof(uint8_t);
+  uint16_t min_cmd_param_len = sizeof(uint16_t) + sizeof(uint32_t) + sizeof(bct_id_t) + sizeof(uint8_t);
   uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(BCT_CmdData);
   uint16_t cmd_param_len;
 
