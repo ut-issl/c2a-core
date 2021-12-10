@@ -148,11 +148,11 @@ static CA_PARAM_SIZE_TYPE CA_get_param_size_type_(CMD_CODE cmd_code, uint8_t n)
   if (cmd_code >= CA_MAX_CMDS) return CA_PARAM_SIZE_TYPE_NONE;
   if (n % 2)
   {
-    return (CA_PARAM_SIZE_TYPE)command_analyze->cmd_table[cmd_code].param_size_infos[n / 2].bit.second;
+    return (CA_PARAM_SIZE_TYPE)command_analyze->cmd_table[cmd_code].param_size_infos[n / 2].packed_info.bit.second;
   }
   else
   {
-    return (CA_PARAM_SIZE_TYPE)command_analyze->cmd_table[cmd_code].param_size_infos[n / 2].bit.first;
+    return (CA_PARAM_SIZE_TYPE)command_analyze->cmd_table[cmd_code].param_size_infos[n / 2].packed_info.bit.first;
   }
 }
 
@@ -180,8 +180,8 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
   command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
   for (i = 0; i < sizeof(param_size_infos); ++i)
   {
-    command_analyze_.cmd_table[cmd_code].param_size_infos[i].bit.first = ( param_size_infos[i] & 0xf0 ) >> 4;
-    command_analyze_.cmd_table[cmd_code].param_size_infos[i].bit.second = param_size_infos[i] & 0x0f;
+    command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.first = ( param_size_infos[i] & 0xf0 ) >> 4;
+    command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.second = param_size_infos[i] & 0x0f;
   }
 
   return CCP_EXEC_SUCCESS;

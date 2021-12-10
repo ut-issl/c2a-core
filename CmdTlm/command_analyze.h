@@ -43,7 +43,7 @@ typedef struct
       unsigned first: 4;
       unsigned second: 4;
     } bit;
-  };
+  } packed_info;
 } CA_PackedParamSizeInfo;
 
 /**
