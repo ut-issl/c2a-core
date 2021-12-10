@@ -13,7 +13,9 @@ if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
 else()
   # SJIS
-  target_compile_options(${PROJECT_NAME} PUBLIC "-finput-charset=cp932")
+  if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(${PROJECT_NAME} PUBLIC "-finput-charset=cp932")
+  endif()
 
   # 32bit
   target_compile_options(${PROJECT_NAME} PUBLIC "-m32")
@@ -21,7 +23,9 @@ else()
 
   # debug
   target_compile_options(${PROJECT_NAME} PUBLIC "-g")
-  target_compile_options(${PROJECT_NAME} PUBLIC "-rdynamic")
+  if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(${PROJECT_NAME} PUBLIC "-rdynamic")
+  endif()
 
   # warning
   target_compile_options(${PROJECT_NAME} PUBLIC "-Wpedantic")
