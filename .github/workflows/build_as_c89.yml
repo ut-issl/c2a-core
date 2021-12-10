@@ -44,3 +44,27 @@ jobs:
         working-directory: ./Examples/minimum_user_for_s2e/build
         shell: bash
         run: timeout 3 ./C2A || exit 0
+
+  build_minimum_user_as_c89_with_wextra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install deps
+        run: |
+          sudo apt-get install -y libc6-dev-i386
+
+      - name: setup
+        shell: bash
+        run: ./setup.sh
+
+      - name: cmake
+        working-directory: ./Examples/minimum_user_for_s2e
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DUSE_SILS_MOCKUP=ON -DADD_WEXTRA_FLAGS=ON
+
+      - name: build
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: cmake --build .
