@@ -5,6 +5,7 @@ on:
     paths:
       - 'c2a_core_main.c'
       - 'c2a_core_main.h'
+      - 'common.cmake'
       - 'Applications/**'
       - 'CmdTlm/**'
       - 'Drivers/**'

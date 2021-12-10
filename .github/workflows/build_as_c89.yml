@@ -6,6 +6,7 @@ on:
       - '.github/workflows/build_as_c89.yml'
       - 'c2a_core_main.c'
       - 'c2a_core_main.h'
+      - 'common.cmake'
       - 'Applications/**'
       - 'CmdTlm/**'
       - 'Drivers/**'
