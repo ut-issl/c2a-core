@@ -23,6 +23,7 @@ else()
   target_compile_options(${PROJECT_NAME} PUBLIC "-rdynamic")
 
   # warning
+  target_compile_options(${PROJECT_NAME} PUBLIC "-Wpedantic")
   target_compile_options(${PROJECT_NAME} PUBLIC "-Wall")
   target_compile_options(${PROJECT_NAME} PUBLIC "-Wno-unknown-pragmas")
   if(ADD_WERROR_FLAGS)
