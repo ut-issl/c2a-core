@@ -3,6 +3,7 @@ name: build as C89 using SILS Mockup
 on:
   pull_request:
     paths:
+      - '.github/workflows/build_as_c89.yml'
       - 'c2a_core_main.c'
       - 'c2a_core_main.h'
       - 'Applications/**'
