@@ -4,6 +4,7 @@ if(BUILD_C2A_AS_CXX)
   set_target_properties(${PROJECT_NAME} PROPERTIES LANGUAGE CXX) # C++
 else()
   set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
+  set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
 endif()
 
 # Build option
