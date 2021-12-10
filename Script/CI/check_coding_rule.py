@@ -527,7 +527,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
 
     targets = ["<", ">", "=", "&", "|", "^", "~", "=", "?", ":", "!", "+", "-", "*", "/", "%"]
     for target in targets:
-        ptn_before = "(\w+)(" + "[" + re.escape("<>=&|^~=?:!+-*/&") + "]*" + re.escape(target) + "[" + re.escape("<>=&|^~=?:!+-*/&") + "]*)"
+        ptn_before = "(\w+)(" + "[" + re.escape("<>=&|^~=?:!+-*/&") + "]*" + re.escape(target) + "[" + re.escape("<>=&|^~=?:!+-*/&") + "]*)(.*)"
         reptn_before = re.compile(ptn_before)
         ptn_after = "(" + "[" + re.escape("<>=&|^~=?:!+-*/&") + "]*" + re.escape(target) + "[" + re.escape("<>=&|^~=?:!+-*/&") + "]*)(\w+)"
         reptn_after = re.compile(ptn_after)
@@ -558,6 +558,10 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                         continue
                 if match.group(2) in ["*", "&"] and match.group(1) in g_type_set:
                     continue
+                if match.group(2) == "*" and match.group(3) != "":
+                    if match.group(3)[0] == ")":
+                        continue
+                        # common_tlm_cmd_packet_util.h の `(*((type*)( \` が引っかからないように
                 # print(line)
                 # print(match)
                 # print("#" + match.group(1) + "#")
