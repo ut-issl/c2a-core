@@ -1,6 +1,7 @@
 #include <src_core/Library/print.h>
 #include <src_core/c2a_core_main.h>
 #include <src_core/System/TimeManager/time_manager.h>
+#include <src_core/System/WatchdogTimer/watchdog_timer.h>
 #include "./Settings/sils_define.h"
 
 void main(void);
@@ -51,6 +52,7 @@ static void C2A_main_(void)
 // Printf“à•”‚Å WDT_clear_wdt(); ‚ªŒÄ‚Î‚ê‚Ä‚é‚±‚Æ‚É’ˆÓI
 static void C2A_init_(void)
 {
+  WDT_init();
   TMGR_init();                // Time Manager
                               // AM_initialize_all_apps ‚Å‚ÌŠÔŒv‘ª‚Ì‚½‚ß‚É‚±‚±‚Å‰Šú‰»
   Printf("C2A_init: TMGR_init done.\n");
