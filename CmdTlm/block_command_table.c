@@ -485,20 +485,20 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
 
   BCT_Pos  pos;
   BCT_CmdData bct_cmddata; // FIXME BCT_CmdData <-> CTCP
-  BCT_CmdData tmp_param;   // いったんここにparamをコピーする
+  uint8_t tmp_param[sizeof(BCT_CmdData) - TCP_PRM_HDR_LEN - TCP_CMD_2ND_HDR_LEN - TCP_CMD_USER_HDR_LEN];   // いったんここにparamをコピーする
   uint16_t real_param_len = CCP_get_param_len(packet);
-  uint16_t min_cmd_param_len = sizeof(uint16_t) + sizeof(uint32_t) + sizeof(bct_id_t) + sizeof(uint8_t);
-  uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(BCT_CmdData);
+  uint16_t min_cmd_param_len = CA_get_cmd_param_min_len(Cmd_CODE_BCT_OVERWRITE_CMD);
+  uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(tmp_param);
   uint16_t cmd_param_len;
 
   // raw なので引数長チェック
   if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_EXEC_ILLEGAL_LENGTH;
 
   cmd_param_len = real_param_len - min_cmd_param_len;
-  CCP_get_raw_param_from_packet(packet, &tmp_param, sizeof(BCT_CmdData));
+  CCP_get_raw_param_from_packet(packet, tmp_param, sizeof(tmp_param));
 
   BCT_make_pos(&pos, block, cmd);
-  CCP_form_tlc((CTCP*)&bct_cmddata, ti, (CMD_CODE)cmd_id, (const uint8_t*)&tmp_param, cmd_param_len);
+  CCP_form_tlc((CTCP*)&bct_cmddata, ti, (CMD_CODE)cmd_id, (const uint8_t*)tmp_param, cmd_param_len);
   BCT_overwrite_cmd(&pos, (CTCP*)&bct_cmddata);
 
   return CCP_EXEC_SUCCESS;
