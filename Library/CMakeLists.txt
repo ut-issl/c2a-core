@@ -4,16 +4,11 @@ project(C2A_CORE_LIB)
 
 set(C2A_SRCS
   ascii_conv.c
+  c2a_round.c
   crc.c
   endian_conv.c
   endian_memcpy.c
-  exor.c
   majority_vote_for3.c
-  matrix.c
-  quaternion.c
-  c2a_round.c
-  sum.c
-  vector.c
 )
 
 if(BUILD_C2A_AS_CXX)
