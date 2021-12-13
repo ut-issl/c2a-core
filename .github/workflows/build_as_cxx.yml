@@ -3,6 +3,7 @@ name: build as C++ for S2E
 on:
   pull_request:
     paths:
+      - '.github/workflows/build_as_cxx.yml'
       - 'c2a_core_main.c'
       - 'c2a_core_main.h'
       - 'common.cmake'
@@ -10,6 +11,7 @@ on:
       - 'CmdTlm/**'
       - 'Drivers/**'
       - 'IfWrapper/**'
+      - 'Library/**'
       - 'System/**'
       - 'Examples/minimum_user_for_s2e/CMakeLists.txt'
       - 'Examples/minimum_user_for_s2e/src/**'
