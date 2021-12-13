@@ -4,15 +4,16 @@
 #include <src_core/System/WatchdogTimer/watchdog_timer.h>
 #include "./Settings/sils_define.h"
 
-void main(void);
+int main(void);
 static void address_fixed_main_(void);
 static void C2A_init_(void);
 static void C2A_main_(void);
 static void timer_setting_(void);
 
-void main(void)
+int main(void)
 {
   address_fixed_main_();
+  return 0;
 }
 
 
