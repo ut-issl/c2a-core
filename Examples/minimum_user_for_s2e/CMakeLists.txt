@@ -107,9 +107,3 @@ else()
 endif()
 
 include(${C2A_USER_DIR}/common.cmake)
-
-# Compile option
-if(NOT MSVC)
-  # disable warning to main()
-  target_compile_options(${PROJECT_NAME} PUBLIC "-Wno-main")
-endif()
