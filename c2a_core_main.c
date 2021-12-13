@@ -18,8 +18,9 @@
 
 void C2A_core_init(void)
 {
-  CA_initialize();            // Cmd Analyze
   Printf("C2A_init: core revision = %s\n", GIT_REV_CORE);
+
+  CA_initialize();            // Cmd Analyze
   Printf("C2A_init: CA_initialize done.\n");
   TF_initialize();            // TLM frame
   Printf("C2A_init: TF_initialize done.\n");
