@@ -20,7 +20,6 @@ set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
   c2a_core_main.c
-  git_revision.c
   Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.c
   Drivers/Protocol/eb90_frame_for_driver_super.c
   Drivers/Protocol/eb90_packet_for_driver_super.c

@@ -6,7 +6,7 @@
 #define TELEMETRY_SOURCE_H_
 
 #include "string.h" // for memcpy
-#include <src_core/git_revision.h>
+#include <src_core/Library/git_revision.h>
 #include <src_core/System/ApplicationManager/app_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/ModeManager/mode_manager.h>

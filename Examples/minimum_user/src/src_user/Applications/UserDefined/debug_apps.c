@@ -4,7 +4,7 @@
 #include <stddef.h> // for NULL
 #include <stdint.h>
 
-#include <src_core/git_revision.h>
+#include <src_core/Library/git_revision.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/ModeManager/mode_manager.h>

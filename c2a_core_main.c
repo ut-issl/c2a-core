@@ -1,7 +1,7 @@
 #pragma section REPRO
 #include "c2a_core_main.h"
-#include "git_revision.h"
 
+#include "./Library/git_revision.h"
 #include "./Library/print.h"
 #include "./System/TaskManager/task_dispatcher.h"
 #include "./System/ApplicationManager/app_manager.h"
@@ -16,10 +16,14 @@
 
 #include <src_user/Applications/app_registry.h>
 
+// git revisionをコードに埋め込む
+const char GIT_REV_CORE[41]         = GIT_REVISION_C2A_CORE;
+const uint32_t GIT_REV_CORE_SHORT   = GIT_REVISION_C2A_CORE_SHORT;
+const char GIT_REV_USER[41]         = GIT_REVISION_C2A_USER;
+const uint32_t GIT_REV_USER_SHORT   = GIT_REVISION_C2A_USER_SHORT;
+
 void C2A_core_init(void)
 {
-  Printf("C2A_init: core revision = %s\n", GIT_REV_CORE);
-
   CA_initialize();            // Cmd Analyze
   Printf("C2A_init: CA_initialize done.\n");
   TF_initialize();            // TLM frame
