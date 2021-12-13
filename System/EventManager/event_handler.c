@@ -26,7 +26,7 @@ typedef enum
   EH_EL_LOCAL_ID_FAIL_FORM_CTCP,            //!< BC 展開 Cmd の生成に失敗
   EH_EL_LOCAL_ID_LOG_TABLE_FULL,            //!< EH_LogTable が満杯になり， wp が 0 に戻った
   EH_EL_LOCAL_ID_SEARCH_ERR,                //!< EH_search_rule_table_index_ の返り値不正
-  EH_EL_LOCAL_ID_UNKNOWN_ERR,               //!< 不明なエラー
+  EH_EL_LOCAL_ID_UNKNOWN_ERR                //!< 不明なエラー
 } EH_EL_LOCAL_ID;
 
 /**

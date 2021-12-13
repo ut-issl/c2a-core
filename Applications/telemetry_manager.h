@@ -33,7 +33,7 @@ typedef enum
   TLM_MGR_ERR_CODE_MASTER_IS_ABSENT,       //!< BC 実行の masterとなる BC が存在しない
   TLM_MGR_ERR_CODE_REGISTER_INFO_BC_FULL,  //!< RegisterInfo にこれ以上 BC を登録できない
   TLM_MGR_ERR_CODE_CMD_FULL,               //!< これ以上テレメ生成コマンドを登録できない
-  TLM_MGR_ERR_CODE_OTHER_ERR,              //!< その他のエラー
+  TLM_MGR_ERR_CODE_OTHER_ERR               //!< その他のエラー
 } TLM_MGR_ERR_CODE;
 
 
@@ -49,7 +49,7 @@ typedef enum
   TLM_MGR_BC_TYPE_SYSTEM_TLM,
   TLM_MGR_BC_TYPE_HIGH_FREQ_TLM,
   TLM_MGR_BC_TYPE_LOW_FREQ_TLM,
-  TLM_MGR_BC_TYPE_RESERVE,
+  TLM_MGR_BC_TYPE_RESERVE
 } TLM_MGR_BC_TYPE;
 
 

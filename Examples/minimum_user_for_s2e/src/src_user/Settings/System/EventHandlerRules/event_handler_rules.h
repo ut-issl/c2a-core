@@ -20,7 +20,7 @@ typedef enum
   EH_RULE_TEST4 = 104,
   EH_RULE_TEST5 = 105,
   EH_RULE_TEST6 = 106,
-  EH_RULE_TEST7 = 107,
+  EH_RULE_TEST7 = 107
 } EH_RULE_ID;
 
 

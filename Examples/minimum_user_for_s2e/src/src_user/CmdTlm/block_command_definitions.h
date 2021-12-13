@@ -55,7 +55,7 @@ typedef enum
   BC_TLM_MGR9 = 359,
 
   // Test
-  BC_TEST_EH_RESPOND = 360,
+  BC_TEST_EH_RESPOND = 360
 
   // BCT MAX : 382
 } BC_DEFAULT_ID;

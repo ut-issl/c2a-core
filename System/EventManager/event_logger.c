@@ -25,7 +25,7 @@
 typedef enum
 {
   EL_CLOG_LOG_ACK_OK = 0,           //!< 正常終了
-  EL_CLOG_LOG_ACK_NOT_FOUND,        //!< 指定ログが見つからず
+  EL_CLOG_LOG_ACK_NOT_FOUND         //!< 指定ログが見つからず
 } EL_CLOG_LOG_ACK;
 #endif
 
