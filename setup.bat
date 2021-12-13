@@ -3,7 +3,7 @@ echo setup.bat
 echo setting for local environment...
 echo.
 echo [SET USER HOOKS]
-copy /Y .\Script\Git\pre-commit.pl .\.git\hooks\pre-commit
+git config --local core.hooksPath Script/Git
 echo done.
 echo.
 echo [SET UP DEVELOP ENVIRONMENT FOR C2A MINIMUM USER SAMPLE]
