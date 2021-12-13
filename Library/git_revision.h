@@ -21,7 +21,7 @@
 
 // commit hashを埋め込むはずなのにsrc_user/Library/git_revision.hで設定されていない
 #if !defined(C2A_GIT_REVISION_FROM_OPTION) && !defined(C2A_GIT_REVISION_GENERATED)
-#error please specify git revision config in src_user/Library/git_revision.h
+#error "please specify git revision config in src_user/Library/git_revision.h"
 #endif // error
 
 #endif // C2A_GIT_REVISION_IGNORE
