@@ -18,12 +18,45 @@ on:
       - 'setup.sh'
 
 jobs:
+  gen_build_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.gen-matrix.outputs.matrix }}
+    steps:
+      - name: generate matrix json
+        id: gen-matrix
+        shell: bash
+        run: |
+          compiler=(
+            "gcc"
+            "clang"
+          )
+          warning=(
+          "Werror"
+          "Wextra"
+          )
+          echo "[" > tmp
+          for c in "${compiler[@]}"; do
+            for w in "${warning[@]}"; do
+              if [ "$c" == "gcc" ] && [ "$w" == "Werror" ]; then
+                continue
+              fi
+              echo "{ \"compiler\": \"${c}\", \"warning\": \"${w}\" }" >> tmp
+              echo "," >> tmp
+            done
+          done
+          sed -i -e '$d' tmp # remove final comma
+          echo "]" >> tmp
+          sed -i -z 's/\n//g' tmp # remove newline
+          jq < tmp
+          echo "::set-output name=matrix::{\"include\": $(cat tmp) }"
+
   build_minimum_user_as_c89:
     runs-on: ubuntu-latest
+    needs: gen_build_matrix
     strategy:
-      matrix:
-        compiler: [gcc, clang]
-        warning: [Werror, Wextra]
+      fail-fast: false
+      matrix: ${{ fromJson(needs.gen_build_matrix.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v2
