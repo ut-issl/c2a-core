@@ -9,7 +9,11 @@ else()
     target_compile_options(${PROJECT_NAME} PUBLIC "-std=c90")
   else()
     set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
-    set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
+    # TODO: set always!
+    # GNU拡張を禁止すると1行コメントがエラーになる
+    if(NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
+      set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
+    endif()
   endif()
 endif()
 
