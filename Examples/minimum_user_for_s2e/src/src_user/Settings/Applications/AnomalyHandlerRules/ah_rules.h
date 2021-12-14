@@ -8,7 +8,7 @@
 // Œ»“_‚ÅCÅ‘å”‚Í128ŒÂI
 typedef enum
 {
-  AH_RULE_SAMPLE,
+  AH_RULE_SAMPLE
 } AH_RULE_NUM;
 
 enum

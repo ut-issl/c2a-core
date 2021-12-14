@@ -58,6 +58,8 @@ typedef enum
   BC_TEST_EH_RESPOND = 360,
 
   // BCT MAX : 382
+
+  BC_ID_MAX    // BCT Ž©‘Ì‚ÌƒTƒCƒY‚Í BCT_MAX_BLOCKS ‚Å‹K’è
 } BC_DEFAULT_ID;
 
 void BC_load_defaults(void);

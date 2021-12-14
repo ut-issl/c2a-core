@@ -23,7 +23,7 @@ typedef enum
   AR_APP_DBG_FLUSH_SCREEN,
   AR_APP_DBG_PRINT_TIMESTAMP,
   AR_APP_DBG_PRINT_CMD_STATUS,
-  AR_APP_DBG_PRINT_GIT_REV,
+  AR_APP_DBG_PRINT_GIT_REV
 } AR_APP_ID;
 
 void AR_load_initial_settings(void);

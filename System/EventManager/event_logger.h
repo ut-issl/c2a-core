@@ -261,7 +261,7 @@ typedef enum
   EL_ACK_ILLEGAL_ERROR_LEVEL,   //!< 不正な EL_Event.err_level
   EL_ACK_DISABLE_LOGGING,       //!< ロギングが無効により，棄却
   EL_ACK_TLOG_FULL,             //!< TLogの追記が不能のため，TLog記録ができず
-  EL_ACK_OTHER_ERR,             //!< その他のエラー
+  EL_ACK_OTHER_ERR              //!< その他のエラー
 } EL_ACK;
 
 
