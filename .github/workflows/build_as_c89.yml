@@ -147,6 +147,8 @@ jobs:
             -diff="git diff FETCH_HEAD" \
             -reporter=github-pr-check \
             -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
             -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
             -efm="%C%m" \
             < clang_tidy.log
