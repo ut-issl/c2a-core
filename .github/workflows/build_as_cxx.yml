@@ -1,6 +1,10 @@
 name: build as C++ for S2E
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   pull_request:
     paths:
       - '.github/workflows/build_as_cxx.yml'

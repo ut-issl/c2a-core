@@ -1,6 +1,10 @@
 name: build as C89 using SILS Mockup
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   pull_request:
     paths:
       - '.github/workflows/build_as_c89.yml'
