@@ -143,9 +143,9 @@ jobs:
           reviewdog \
             -name 'clang-tidy' \
             -level warning \
-            -filter-mode=nofilter \
+            -filter-mode=added \
             -diff="git diff FETCH_HEAD" \
-            -reporter=github-pr-check \
+            -reporter=github-pr-review \
             -efm="%-Gclang-tidy%s" \
             -efm="%-GError while processing%s" \
             -efm="%W%f:%l:%c: warning: %m" \
