@@ -74,7 +74,7 @@ void APP_DBG_print_cmd_status_(void)
   Printf("CMD: GS %3d, RT %3d, Ack %3d, Code 0x%02x, Sts %3d\n",
          (PL_count_executed_nodes(&PH_gs_cmd_list) & 0xff),
          (PL_count_executed_nodes(&PH_rt_cmd_list) & 0xff),
-         gs_driver->info[GS_PORT_TYPE_NUM].cmd_ack, gs_command_dispatcher->prev.code, gs_command_dispatcher->prev.sts);
+         gs_driver->info[gs_driver->tlm_tx_port_type].cmd_ack, gs_command_dispatcher->prev.code, gs_command_dispatcher->prev.sts);
 }
 
 void APP_DBG_print_git_rev_(void)
