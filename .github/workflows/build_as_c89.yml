@@ -124,7 +124,10 @@ jobs:
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: |
-          run-clang-tidy-11 > clang_tidy.log
+          run-clang-tidy-11 \
+            | sed 's/\/home\/runner\/work\/c2a-core\/c2a-core\///g' \
+            | sed 's/Examples\/minimum_user_for_s2e\/src\/src_core\///g' \
+            > clang_tidy.log
 
       - name: clang-tidy result
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
@@ -135,6 +138,6 @@ jobs:
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ./Examples/minimum_user_for_s2e/build
         run: |
+          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
           reviewdog -efm="%f:%l:%c: %tarning: %m" -diff="git diff FETCH_HEAD" -reporter=github-pr-check -name 'clang-tidy' -level warning < clang_tidy.log
