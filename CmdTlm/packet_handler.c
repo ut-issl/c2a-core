@@ -218,6 +218,18 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
   }
 }
 
+<<<<<<< HEAD
+=======
+static PH_ACK PH_add_utl_cmd_(const CTCP* packet)
+{
+  cycle_t unixtime_hdr = CCP_get_ti(packet); // 0.1•b‚Ý‚Ìunixtime * 10
+  double unixtime = (double)unixtime_hdr / 10;
+  cycle_t ti = TMGR_get_ObcTime_from_unix_time(unixtime).total_cycle; // obctime’¼‚·
+  CCP_set_ti(packet, ti);
+  PH_add_tl_cmd_(0, packet, (size_t)(TMGR_get_master_total_cycle()) );
+}
+
+>>>>>>> 113de02 (added utl_cmd)
 static PH_ACK PH_add_ms_tlm_(const CTCP* packet)
 {
   PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
