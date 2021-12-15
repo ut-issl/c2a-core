@@ -103,10 +103,13 @@ jobs:
           cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
 
       - name: build
+        id: build
+        continue-on-error: ${{ matrix.compiler == 'clang' && matrix.warning == 'Wextra' }}
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cmake --build .
 
       - name: run
+        if: steps.build.outcome == 'success'
         working-directory: ./Examples/minimum_user_for_s2e/build
         shell: bash
         run: timeout 3 ./C2A || exit 0
@@ -143,6 +146,7 @@ jobs:
           reviewdog \
             -name 'clang-tidy' \
             -level warning \
+            -fail-on-error=true \
             -filter-mode=added \
             -diff="git diff FETCH_HEAD" \
             -reporter=github-pr-review \
