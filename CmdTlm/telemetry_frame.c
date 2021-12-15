@@ -148,7 +148,7 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CTCP* packet)
   endian_memcpy(&index, param, 1);
   endian_memcpy(&tlm_func, param + 1, 4);
 
-  if (index >= TF_MAX_TLMS)
+  if ((int)index >= TF_MAX_TLMS)
   {
     // 登録指定位置がテレメトリ数上限を超えている場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
