@@ -100,7 +100,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
+          cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
 
       - name: build
         working-directory: ./Examples/minimum_user_for_s2e/build
@@ -110,3 +110,25 @@ jobs:
         working-directory: ./Examples/minimum_user_for_s2e/build
         shell: bash
         run: timeout 3 ./C2A || exit 0
+
+
+      - name: install reviewdog
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        uses: reviewdog/action-setup@v1.0.3
+
+      - name: clang-tidy
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: |
+          run-clang-tidy > clang_tidy.log
+
+      - name: clang-tidy result
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: cat clang_tidy.log
+
+      - name: reviewdog clang-tidy
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: |
+          cat clang_tidy.log | reviewdog -efm="%f:%l:%c: %tarning: %m" -diff="git diff FETCH_HEAD" -reporter=github-pr-check -name 'clang-tidy' -level warning
