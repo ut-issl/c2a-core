@@ -116,11 +116,15 @@ jobs:
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
         uses: reviewdog/action-setup@v1.0.3
 
+      - name: install clang-tidy
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        run: sudo apt-get install -y clang-tidy-11
+
       - name: clang-tidy
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: |
-          run-clang-tidy > clang_tidy.log
+          run-clang-tidy-11 > clang_tidy.log
 
       - name: clang-tidy result
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
@@ -131,4 +135,4 @@ jobs:
         if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: |
-          cat clang_tidy.log | reviewdog -efm="%f:%l:%c: %tarning: %m" -diff="git diff FETCH_HEAD" -reporter=github-pr-check -name 'clang-tidy' -level warning
+          reviewdog -efm="%f:%l:%c: %tarning: %m" -diff="git diff FETCH_HEAD" -reporter=github-pr-check -name 'clang-tidy' -level warning < clang_tidy.log
