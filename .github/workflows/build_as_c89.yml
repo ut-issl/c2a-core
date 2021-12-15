@@ -140,4 +140,13 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
-          reviewdog -efm="%f:%l:%c: %tarning: %m" -diff="git diff FETCH_HEAD" -reporter=github-pr-check -name 'clang-tidy' -level warning < clang_tidy.log
+          reviewdog \
+            -name 'clang-tidy' \
+            -level warning \
+            -filter-mode=nofilter \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-pr-check \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
