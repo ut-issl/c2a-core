@@ -104,7 +104,7 @@ jobs:
 
       - name: build
         id: build
-        continue-on-error: ${{ matrix.compiler == 'clang' && matrix.warning == 'Wextra' }}
+        continue-on-error: ${{ matrix.compiler == 'clang' }}
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cmake --build .
 
@@ -116,15 +116,15 @@ jobs:
 
 
       - name: install reviewdog
-        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        if: matrix.compiler == 'clang'
         uses: reviewdog/action-setup@v1.0.3
 
       - name: install clang-tidy
-        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        if: matrix.compiler == 'clang'
         run: sudo apt-get install -y clang-tidy-11
 
       - name: clang-tidy
-        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        if: matrix.compiler == 'clang'
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: |
           run-clang-tidy-11 \
@@ -133,18 +133,18 @@ jobs:
             > clang_tidy.log
 
       - name: clang-tidy result
-        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        if: matrix.compiler == 'clang'
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cat clang_tidy.log
 
       - name: reviewdog clang-tidy (github-pr-review)
-        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        if: matrix.compiler == 'clang' && matrix.warning == 'Werror'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
           reviewdog \
-            -name 'clang-tidy' \
+            -name 'clang-tidy(Werror)' \
             -level warning \
             -fail-on-error=true \
             -filter-mode=added \
@@ -164,7 +164,7 @@ jobs:
         run: |
           cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
           reviewdog \
-            -name 'clang-tidy' \
+            -name 'clang-tidy(Wextra)' \
             -level warning \
             -fail-on-error=true \
             -filter-mode=nofilter \
