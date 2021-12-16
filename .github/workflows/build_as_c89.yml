@@ -100,13 +100,79 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
+          cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
 
       - name: build
+        id: build
+        continue-on-error: ${{ matrix.compiler == 'clang' }}
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cmake --build .
 
       - name: run
+        if: steps.build.outcome == 'success'
         working-directory: ./Examples/minimum_user_for_s2e/build
         shell: bash
         run: timeout 3 ./C2A || exit 0
+
+
+      - name: install reviewdog
+        if: matrix.compiler == 'clang'
+        uses: reviewdog/action-setup@v1.0.3
+
+      - name: install clang-tidy
+        if: matrix.compiler == 'clang'
+        run: sudo apt-get install -y clang-tidy-11
+
+      - name: clang-tidy
+        if: matrix.compiler == 'clang'
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: |
+          run-clang-tidy-11 \
+            | sed 's/\/home\/runner\/work\/c2a-core\/c2a-core\///g' \
+            | sed 's/Examples\/minimum_user_for_s2e\/src\/src_core\///g' \
+            > clang_tidy.log
+
+      - name: clang-tidy result
+        if: matrix.compiler == 'clang'
+        working-directory: ./Examples/minimum_user_for_s2e/build
+        run: cat clang_tidy.log
+
+      - name: reviewdog clang-tidy (github-pr-review)
+        if: matrix.compiler == 'clang' && matrix.warning == 'Werror'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
+          reviewdog \
+            -name 'clang-tidy(Werror)' \
+            -level warning \
+            -fail-on-error=true \
+            -filter-mode=added \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-pr-review \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
+
+      - name: reviewdog clang-tidy (github-check)
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
+          reviewdog \
+            -name 'clang-tidy(Wextra)' \
+            -level warning \
+            -fail-on-error=true \
+            -filter-mode=nofilter \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-check \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
