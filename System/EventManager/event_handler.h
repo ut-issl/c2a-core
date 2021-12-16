@@ -341,6 +341,8 @@ CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CTCP* packet);
  */
 CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CTCP* packet);
 
+CCP_EXEC_STS Cmd_EH_TEMP_FOR_ISTS(const CTCP* packet);
+
 #endif  // EL_IS_ENABLE_TLOG
 
 #endif

@@ -1214,4 +1214,18 @@ CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CTCP* packet)
 
 #endif  // EL_IS_ENABLE_TLOG
 
+CCP_EXEC_STS Cmd_EH_TEMP_FOR_ISTS(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_Rule oldest_rule = event_handler->rule_table.rules[EH_RULE_MAX];
+
+  if (EH_check_rule_id_(rule_id) == EH_CHECK_RULE_ACK_INVALID_RULE_ID)
+  {
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  }
+
+  EH_insert_rule_table_(rule_id, &oldest_rule);
+  return CCP_EXEC_SUCCESS;
+}
+
 #pragma section
