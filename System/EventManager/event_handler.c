@@ -1224,7 +1224,10 @@ CCP_EXEC_STS Cmd_EH_TEMP_FOR_ISTS(const CTCP* packet)
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  EH_insert_rule_table_(rule_id, &oldest_rule);
+  if (EH_insert_rule_table_(rule_id, &oldest_rule) != EH_RULE_SORTED_INDEX_ACK_OK)
+  {
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
   return CCP_EXEC_SUCCESS;
 }
 
