@@ -127,7 +127,7 @@ typedef enum
 {
   TCP_CMD_EXEC_TYPE_GS = 0x00, // 00h: Ground Station Command
   TCP_CMD_EXEC_TYPE_TL = 0x01, // 01h: Timeline Command
-  TCP_CMD_EXEC_TYPE_UTL = 0x02,// 02h: Unixtime Timeline Command
+  TCP_CMD_EXEC_TYPE_UTL = 0x02, // 02h: Unixtime Timeline Command
   TCP_CMD_EXEC_TYPE_BC = 0x03, // 03h: Block Command
   TCP_CMD_EXEC_TYPE_RT = 0x04, // 04h: Realtime Command
   TCP_CMD_EXEC_TYPE_UNKNOWN
