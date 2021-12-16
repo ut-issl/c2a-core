@@ -139,7 +139,7 @@ int CA_has_raw_param(CMD_CODE cmd_code)
   uint8_t param_num = CA_get_cmd_param_num(cmd_code);
   if (param_num == 0) return 0;
 
-  return (CA_get_param_size_type_(cmd_code, param_num - 1) == CA_PARAM_SIZE_TYPE_RAW) ? 1 : 0;
+  return (CA_get_param_size_type_(cmd_code, (uint8_t)(param_num - 1)) == CA_PARAM_SIZE_TYPE_RAW) ? 1 : 0;
 }
 
 static CA_PARAM_SIZE_TYPE CA_get_param_size_type_(CMD_CODE cmd_code, uint8_t n)
@@ -161,7 +161,7 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
   uint8_t param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];
   CMD_CODE cmd_code = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
   uint32_t cmd_func = CCP_get_param_from_packet(packet, 1, uint32_t);
-  uint8_t ret;
+  uint16_t ret;
   uint8_t i;
 
   // raw パラメタなので，引数長チェック

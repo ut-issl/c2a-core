@@ -114,7 +114,7 @@ uint8_t* CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n)
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -133,7 +133,7 @@ uint16_t* CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n)
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -152,7 +152,7 @@ uint32_t* CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n)
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -171,7 +171,7 @@ uint64_t* CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n)
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, param_size);
+  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -184,7 +184,7 @@ uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t 
 
   if (!CA_has_raw_param(cmd_id)) return 0;
 
-  ack = CCP_calc_param_offset_(cmd_id, CA_get_cmd_param_num(cmd_id) - 1, &offset);
+  ack = CCP_calc_param_offset_(cmd_id, (uint8_t)(CA_get_cmd_param_num(cmd_id) - 1), &offset);
   if (ack != CTCP_UTIL_ACK_OK) return 0;
 
   copy_len = CCP_get_param_len(packet) - offset;
@@ -194,7 +194,7 @@ uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t 
     copy_len = max_copy_len;
   }
 
-  memcpy(dest,  CCP_get_param_head(packet) + offset, copy_len);
+  memcpy(dest,  CCP_get_param_head(packet) + offset, (size_t)copy_len);
   return (uint16_t)copy_len;
 }
 
