@@ -94,10 +94,7 @@ static PH_ACK PH_analyze_cmd_(const CTCP* packet)
     return PH_add_tl_cmd_(0, packet, (size_t)(TMGR_get_master_total_cycle()) );
 
   case CCP_EXEC_TYPE_UTL:
-    cycle_t unixtime = CCP_get_ti(packet); // UTL_cmd‚Ìê‡A0.1•b‚İ‚Ìunixtime*10‚ªhdr‚Ìti‚Ì•”•ª‚ÉŠi”[‚³‚ê‚Ä‚¢‚é
-    cycle_t ti; // ti‚É•ÏŠ·
-    CCP_set_ti(packet, ti);
-    return PH_add_tl_cmd_(0, packet, (size_t)(TMGR_get_master_total_cycle()) );
+    return PH_add_utl_cmd_(packet);
 
   case CCP_EXEC_TYPE_BC:
     return PH_analyze_block_cmd_(packet);
@@ -221,6 +218,15 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
   default:
     return PH_UNKNOWN;
   }
+}
+
+static PH_ACK PH_add_utl_cmd_(const CTCP* packet)
+{
+  cycle_t c2a_unixtime = CCP_get_ti(packet); // UTL_cmd‚Ìê‡A0.1•b‚İ‚Ìunixtime*10‚ªhdr‚Ìti‚Ì•”•ª‚ÉŠi”[‚³‚ê‚Ä‚¢‚é
+  cycle_t ti = TMGR_get_ti_from_c2a_unixtime(c2a_unixtime); // ti‚É•ÏŠ·
+  CCP_set_ti(packet, ti);
+
+  return PH_add_tl_cmd_(0, packet, (size_t)(TMGR_get_master_total_cycle()) );
 }
 
 static PH_ACK PH_add_ms_tlm_(const CTCP* packet)
