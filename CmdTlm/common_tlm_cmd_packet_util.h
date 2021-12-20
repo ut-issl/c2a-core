@@ -29,6 +29,7 @@ void CCP_form_app_cmd(CTCP* packet, cycle_t ti, AR_APP_ID id);
 
 /**
  * @brief  Realtime command を生成
+ * @note   引数が不正なとき， packet は NOP RTC を返す
  * @param[in,out] packet: CTCP
  * @param[in]     packet: CMD_CODE
  * @param[in]     *param: パラメタ
@@ -39,6 +40,7 @@ CTCP_UTIL_ACK CCP_form_rtc(CTCP* packet, CMD_CODE cmd_id, const uint8_t* param, 
 
 /**
  * @brief  Timeline command を生成
+ * @note   引数が不正なとき， packet は NOP TLC を返す
  * @param[in,out] packet: CTCP
  * @param[in]     ti:     TI
  * @param[in]     packet: CMD_CODE
@@ -50,6 +52,7 @@ CTCP_UTIL_ACK CCP_form_tlc(CTCP* packet, cycle_t ti, CMD_CODE cmd_id, const uint
 
 /**
  * @brief  BC展開 command を生成
+ * @note   引数が不正なとき， packet は NOP RTC を返す
  * @param[in,out] packet: CTCP
  * @param[in]     tl_no: Timeline no
  * @param[in]     block_no: BC ID
