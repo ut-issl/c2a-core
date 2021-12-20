@@ -3188,7 +3188,7 @@ static int Tlm_HK_(unsigned char* contents, int max_len)
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], TMGR_get_master_clock().mode_cycle);
-  TF_copy_double(&contents[4], TMGR_get_obct_unix_time_info().unix_time_on_ti0);
+  TF_copy_double(&contents[4], TMGR_get_obct_unixtime_info().unixtime_at_ti0);
   TF_copy_u8(&contents[12], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&contents[13], (uint8_t)( ((uint8_t)(mode_manager->stat) << 7 & 0x80) | ((uint8_t)(mode_manager->previous_id) & 0x7F) ));
   TF_copy_u16(&contents[14], TDSP_info->task_list_id);

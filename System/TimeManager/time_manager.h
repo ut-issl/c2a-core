@@ -23,10 +23,10 @@ ObcTime TMGR_get_master_clock(void);
 cycle_t TMGR_get_master_total_cycle(void);
 cycle_t TMGR_get_master_mode_cycle(void);
 step_t  TMGR_get_master_step(void);
-double TMGR_get_unix_time_from_ObcTime(const ObcTime* time);
-ObcTime TMGR_get_ObcTime_from_unix_time(const double unix_time);
-void TMGR_modify_unix_time_criteria(const double unix_time, const ObcTime time);
-OBCT_UnixTimeInfo TMGR_get_obct_unix_time_info(void);
+double TMGR_get_unixtime_from_ObcTime(const ObcTime* time);
+ObcTime TMGR_get_ObcTime_from_unixtime(const double unixtime);
+void TMGR_modify_unixtime_criteria(const double unixtime, const ObcTime time);
+OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void);
 ObcTime TMGR_get_master_clock_from_boot(void);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
