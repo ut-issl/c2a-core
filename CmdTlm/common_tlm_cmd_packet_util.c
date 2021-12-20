@@ -18,7 +18,7 @@
  * @param[in,out] packet: CTCP
  * @return void
  */
-void CCP_form_nop_rtc_cmd_(CTCP* packet);
+void CCP_form_nop_rtc_(CTCP* packet);
 
 /**
  * @brief CTCP パラメタ開始位置に対する n 番目の引数の offset を計算する
@@ -30,7 +30,7 @@ void CCP_form_nop_rtc_cmd_(CTCP* packet);
 CTCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset);
 
 
-void CCP_form_nop_rtc_cmd_(CTCP* packet)
+void CCP_form_nop_rtc_(CTCP* packet)
 {
   CCP_form_rtc(packet, Cmd_CODE_NOP, NULL, 0);
 }
@@ -51,13 +51,13 @@ CTCP_UTIL_ACK CCP_form_rtc(CTCP* packet, CMD_CODE cmd_id, const uint8_t* param, 
 {
   if (param == NULL && len != 0)
   {
-    CCP_form_nop_rtc_cmd_(packet);
+    CCP_form_nop_rtc_(packet);
     return CTCP_UTIL_ACK_PARAM_ERR;
   }
 
   if (CA_ckeck_cmd_param_len(cmd_id, len) != CA_ACK_OK)
   {
-    CCP_form_nop_rtc_cmd_(packet);
+    CCP_form_nop_rtc_(packet);
     return CTCP_UTIL_ACK_PARAM_ERR;
   }
 
@@ -75,14 +75,14 @@ CTCP_UTIL_ACK CCP_form_tlc(CTCP* packet, cycle_t ti, CMD_CODE cmd_id, const uint
 {
   if (param == NULL && len != 0)
   {
-    CCP_form_nop_rtc_cmd_(packet);
+    CCP_form_nop_rtc_(packet);
     CCP_convert_rtc_to_tlc(packet, ti);
     return CTCP_UTIL_ACK_PARAM_ERR;
   }
 
   if (CA_ckeck_cmd_param_len(cmd_id, len) != CA_ACK_OK)
   {
-    CCP_form_nop_rtc_cmd_(packet);
+    CCP_form_nop_rtc_(packet);
     CCP_convert_rtc_to_tlc(packet, ti);
     return CTCP_UTIL_ACK_PARAM_ERR;
   }
@@ -104,7 +104,7 @@ CTCP_UTIL_ACK CCP_form_block_deploy_cmd(CTCP* packet, uint8_t tl_no, bct_id_t bl
   if ((tl_no >= TL_ID_MAX) || (block_no >= BCT_MAX_BLOCKS))
   {
     // タイムラインのline番号、ブロックコマンド番号が範囲外の場合異常判定
-    CCP_form_nop_rtc_cmd_(packet);
+    CCP_form_nop_rtc_(packet);
     return CTCP_UTIL_ACK_PARAM_ERR;
   }
 
