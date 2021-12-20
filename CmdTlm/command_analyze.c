@@ -7,7 +7,19 @@
 #include "common_tlm_cmd_packet_util.h"
 #include <src_user/CmdTlm/command_definitions.h>
 #include "../Library/print.h"
+ #include "../System/EventManager/event_logger.h"
 #include <string.h>
+
+/**
+ * @enum   EH_EL_LOCAL_ID
+ * @brief  EL_CORE_GROUP_COMMAND_ANALYZE イベントの local id
+ * @note   uint8_t を想定
+ */
+typedef enum
+{
+  CA_EL_LOCAL_ID_ILLEGAL_CMD_CODE = 0,     //!< 不正な CMD_CODE を指定された場合
+  CA_EL_LOCAL_ID_NULL_CMD_CODE             //!< 未登録な CMD_CODE を指定された場合
+} CA_EL_LOCAL_ID;
 
 /**
  * @brief  コマンドパラメタのサイズ情報を取得
@@ -43,10 +55,18 @@ void CA_initialize(void)
 
 CCP_EXEC_STS CA_execute_cmd(const CTCP* packet)
 {
-  CMD_CODE cmd_code;
+  CMD_CODE cmd_code = CCP_get_id(packet);
   CCP_EXEC_STS (*cmd_func)(const CTCP*) = NULL;
 
-  cmd_code = CCP_get_id(packet);
+  if (cmd_code >= CA_MAX_CMDS)
+  {
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_ANALYZE,
+                    CA_EL_LOCAL_ID_ILLEGAL_CMD_CODE,
+                    EL_ERROR_LEVEL_LOW,
+                    (uint32_t)cmd_code);
+    return CCP_EXEC_CMD_NOT_DEFINED;
+  }
+
   cmd_func = command_analyze->cmd_table[cmd_code].cmd_func;
 
   if (cmd_func != NULL)
@@ -59,6 +79,10 @@ CCP_EXEC_STS CA_execute_cmd(const CTCP* packet)
   }
   else
   {
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_ANALYZE,
+                    CA_EL_LOCAL_ID_NULL_CMD_CODE,
+                    EL_ERROR_LEVEL_LOW,
+                    (uint32_t)cmd_code);
     return CCP_EXEC_CMD_NOT_DEFINED;
   }
 }

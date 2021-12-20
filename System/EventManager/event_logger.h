@@ -195,8 +195,8 @@ typedef enum
   EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
   EL_CORE_GROUP_DCU,
   EL_CORE_GROUP_EVENT_HANDLER,
+  EL_CORE_GROUP_COMMAND_ANALYZE,
   // TODO: Driver Super
-  // TODO: Cmd exec
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   EL_CORE_GROUP_EL_DROP_CLOG1,        //!< EL CLogs で古いエラーを上書きするとき (group, err_level を保存)
   EL_CORE_GROUP_EL_DROP_CLOG2,        //!< EL CLogs で古いエラーを上書きするとき (local, count を保存)
