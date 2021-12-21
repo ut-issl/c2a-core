@@ -54,7 +54,7 @@ def test_tmgr_set_unixtime():
     ret = wings.util.send_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TMGR_SET_UNIXTIME,
-        (current_unixtime, ti, 0, step),
+        (current_unixtime, ti, step),
         c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
@@ -68,7 +68,7 @@ def test_tmgr_set_unixtime():
     )
     assert (
         tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"]
-        < current_unixtime - (ti / 10) + (step / 1000) + 0.1
+        < current_unixtime - (ti / 10) - (step / 1000) + 0.1
     )
 
 
