@@ -12,18 +12,9 @@ add_definitions(-DUSE_C2A)
 add_definitions(-DSILS_FW)
 
 set(C2A_DIR ../..)
-#include_directories
-include_directories(${C2A_DIR}/src/src_core/System/AnomalyLogger)
-include_directories(${C2A_DIR}/src/src_core/System/ApplicationManager)
-include_directories(${C2A_DIR}/src/src_core/System/ModeManager)
-include_directories(${C2A_DIR}/src/src_core/System/TaskManager)
-include_directories(${C2A_DIR}/src/src_core/System/WatchdogTimer)
-include_directories(${C2A_DIR}/src/src_core/System/TimeManager)
-include_directories(${C2A_DIR}/src/src_core/CmdTlm)
-include_directories(${C2A_DIR}/src/src_user/Applications)
-
+# include_directories
 include_directories(${C2A_DIR}/src)
-#add subdirectory
+# add subdirectory
 set(BUILD_C2A_AS_CXX ON)    # Build C2A as C++
 add_subdirectory(${C2A_DIR} C2A)
 
