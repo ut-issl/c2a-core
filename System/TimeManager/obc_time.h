@@ -22,13 +22,13 @@ typedef struct
 } ObcTime;
 
 /**
- * @brief unix_timeとObcTimeを紐づける構造体
+ * @brief unixtimeとObcTimeを紐づける構造体
  */
 typedef struct
 {
-  double unix_time_on_ti0; //!< 観測情報から計算したmaster_clockが(0, 0)の時のunix_time
-  cycle_t last_update_ti;  //!< 最後に更新した時に使ったunix_timeの情報を(GPSなどから)観測した時のObcTime
-} OBCT_UnixTimeInfo;
+  double unixtime_at_ti0; //!< 観測情報から計算したmaster_clockが(0, 0)の時のunixtime
+  cycle_t ti_at_last_update;  //!< 最後に更新した時に使ったunixtimeの情報を(GPSなどから)観測した時のObcTime
+} OBCT_UnixtimeInfo;
 
 ObcTime OBCT_create(cycle_t total_cycle,
                     cycle_t mode_cycle,
@@ -71,25 +71,25 @@ int OBCT_compare(const ObcTime* t1, const ObcTime* t2);
 void OBCT_print(const ObcTime* time);
 
 /**
- * @brief OBCT_UnixTimeInfo 作成関数
+ * @brief OBCT_UnixtimeInfo 作成関数
  *
- *        観測した UnixTime とそれを観測した時の ObcTime を受け取り OBCT_UnixTimeInfo へ変える.
- * @param[in] time (GPS 等から) unix_time を観測した時の ObcTime
- * @param[in] unix_time (GPS 等から観測した) unix_time
- * @return OBCT_UnixTimeInfo 引数から計算した OBCT_UnixTimeInfo
+ *        観測した UnixTime とそれを観測した時の ObcTime を受け取り OBCT_UnixtimeInfo へ変える.
+ * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
+ * @param[in] unixtime (GPS 等から観測した) unixtime
+ * @return OBCT_UnixtimeInfo 引数から計算した OBCT_UnixtimeInfo
  */
-OBCT_UnixTimeInfo OBCT_create_unix_time_info(const double unix_time, const ObcTime* time);
+OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime* time);
 /**
- * @brief OBCT_UnixTimeInfo クリア関数, 全て0にする
- * @param[in] uti クリアする OBCT_UnixTimeInfo
+ * @brief OBCT_UnixtimeInfo クリア関数, 全て0にする
+ * @param[in] uti クリアする OBCT_UnixtimeInfo
  */
-void OBCT_clear_unix_time_info(OBCT_UnixTimeInfo* uti);
+void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti);
 /**
- * @brief OBCT_UnixTimeInfo 修正関数
- * @param[in] uti 修正する OBCT_UnixTimeInfo
- * @param[in] time (GPS 等から) unix_time を観測した時の ObcTime
- * @param[in] unix_time (GPS 等から観測した) unix_time
+ * @brief OBCT_UnixtimeInfo 修正関数
+ * @param[in] uti 修正する OBCT_UnixtimeInfo
+ * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
+ * @param[in] unixtime (GPS 等から観測した) unixtime
  */
-void OBCT_modify_unix_time_info(OBCT_UnixTimeInfo* uti, const double unix_time, const ObcTime time);
+void OBCT_modify_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time);
 
 #endif

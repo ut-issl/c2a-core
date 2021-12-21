@@ -47,14 +47,14 @@ def test_tmgr_set_time():
 @pytest.mark.real
 def test_tmgr_set_unixtime():
 
-    current_unix_time = time.time()
+    current_unixtime = time.time()
 
     ti = 100
     step = 10000
     ret = wings.util.send_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TMGR_SET_UNIXTIME,
-        (current_unix_time, ti, 0, step),
+        (current_unixtime, ti, step),
         c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
@@ -63,12 +63,12 @@ def test_tmgr_set_unixtime():
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
     assert (
-        tlm_HK["HK.OBC_TM_UNIX_TIME_ON_TI0"]
-        > current_unix_time - (ti / 10) - (step / 1000) - 0.1
+        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"]
+        > current_unixtime - (ti / 10) - (step / 1000) - 0.1
     )
     assert (
-        tlm_HK["HK.OBC_TM_UNIX_TIME_ON_TI0"]
-        < current_unix_time - (ti / 10) + (step / 1000) + 0.1
+        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"]
+        < current_unixtime - (ti / 10) - (step / 1000) + 0.1
     )
 
 
