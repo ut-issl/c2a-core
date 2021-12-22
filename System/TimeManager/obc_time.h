@@ -33,9 +33,9 @@ typedef struct
 ObcTime OBCT_create(cycle_t total_cycle,
                     cycle_t mode_cycle,
                     step_t step);
-ObcTime OBCT_get_max(void);
 void OBCT_clear(ObcTime* time);
 void OBCT_count_up(ObcTime* time);
+ObcTime OBCT_get_max(void);
 cycle_t OBCT_get_total_cycle(const ObcTime* time);
 cycle_t OBCT_get_mode_cycle(const ObcTime* time);
 step_t  OBCT_get_step(const ObcTime* time);
@@ -52,7 +52,7 @@ ObcTime OBCT_diff(const ObcTime* before,
 step_t OBCT_diff_in_step(const ObcTime* before,
                          const ObcTime* after);
 uint32_t OBCT_diff_in_msec(const ObcTime* before,
-                               const ObcTime* after);
+                           const ObcTime* after);
 float OBCT_diff_in_sec(const ObcTime* before,
                        const ObcTime* after);
 ObcTime OBCT_add(const ObcTime* left, const ObcTime* right);

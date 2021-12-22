@@ -27,14 +27,6 @@ void TMGR_clear(void)
   OBCT_clear_unixtime_info(&OBCT_unixtime_info_);
 }
 
-void TMGR_down_initializing_flag(void)
-{
-  memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
-  time_manager_.initializing_flag = 0;
-
-  TMGR_clear();
-}
-
 void TMGR_clear_master_mode_cycle(void)
 {
   master_clock_.mode_cycle = 0;
@@ -49,6 +41,14 @@ void TMGR_count_up_master_clock(void)
 }
 #pragma section
 #pragma section REPRO
+
+void TMGR_down_initializing_flag(void)
+{
+  memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
+  time_manager_.initializing_flag = 0;
+
+  TMGR_clear();
+}
 
 ObcTime TMGR_get_master_clock(void)
 {
@@ -99,13 +99,13 @@ OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
   return OBCT_unixtime_info_;
 }
 
-double TMGR_get_unixtime_from_ObcTime(const ObcTime* time)
+double TMGR_get_unixtime_from_obc_Time(const ObcTime* time)
 {
   ObcTime ti0 = OBCT_create(0, 0, 0);
   return OBCT_unixtime_info_.unixtime_at_ti0 + OBCT_diff_in_sec(&ti0, time);
 }
 
-ObcTime TMGR_get_ObcTime_from_unixtime(const double unixtime)
+ObcTime TMGR_get_obc_Time_from_unixtime(const double unixtime)
 {
   double diff_double = unixtime - OBCT_unixtime_info_.unixtime_at_ti0;
   ObcTime res;
