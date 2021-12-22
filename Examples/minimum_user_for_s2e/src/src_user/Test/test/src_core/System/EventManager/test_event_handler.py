@@ -21,25 +21,25 @@ ope = wings_utils.get_wings_operation()
 EH_RULE_MAX = 20 * 8
 EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES = 4
 
-EH_RULE_TEST0 = 100
-EH_RULE_TEST1 = 101
-EH_RULE_TEST2 = 102
-EH_RULE_TEST3 = 103
-EH_RULE_TEST4 = 104
-EH_RULE_TEST5 = 105
-EH_RULE_TEST6 = 106
-EH_RULE_TEST7 = 107
+EH_RULE_TEST0 = c2a_enum.EH_RULE_TEST0
+EH_RULE_TEST1 = c2a_enum.EH_RULE_TEST1
+EH_RULE_TEST2 = c2a_enum.EH_RULE_TEST2
+EH_RULE_TEST3 = c2a_enum.EH_RULE_TEST3
+EH_RULE_TEST4 = c2a_enum.EH_RULE_TEST4
+EH_RULE_TEST5 = c2a_enum.EH_RULE_TEST5
+EH_RULE_TEST6 = c2a_enum.EH_RULE_TEST6
+EH_RULE_TEST7 = c2a_enum.EH_RULE_TEST7
 
-EL_GROUP_TEST_AH = 0xf2
-EL_GROUP_TEST_AH_RESPOND = 0xf3
-EL_GROUP_TEST_AH1 = 0xf4
+EL_GROUP_TEST_EH = c2a_enum.EL_GROUP_TEST_EH
+EL_GROUP_TEST_EH_RESPOND = c2a_enum.EL_GROUP_TEST_EH_RESPOND
+EL_GROUP_TEST_EH1 = c2a_enum.EL_GROUP_TEST_EH1
 EL_LOCAL_TEST0 = 0
 EL_LOCAL_TEST1 = 1
 EL_LOCAL_TEST2 = 2
 EL_LOCAL_TEST3 = 3
 EL_LOCAL_TEST4 = 4
 
-BC_TEST_EH_RESPOND = 360
+BC_TEST_EH_RESPOND = c2a_enum.BC_TEST_EH_RESPOND
 TEST_EH_EL_LOCAL_ID_RESPOND = 0
 
 EL_ERROR_LEVEL_HIGH = 0
@@ -224,7 +224,7 @@ def test_event_handler_register_rule():
     # テンプレ
     settings = {
                     'event': {
-                        'group': EL_GROUP_TEST_AH,
+                        'group': EL_GROUP_TEST_EH,
                         'local': 0,
                         'err_level': EL_ERROR_LEVEL_LOW
                     },
@@ -294,7 +294,7 @@ def test_event_handler_register_rule():
 
     # 最大重複数チェック（後ろに登録なしあるバージョン）
     settings_later_group = copy.deepcopy(settings)
-    settings_later_group['event']['group'] = EL_GROUP_TEST_AH + 1
+    settings_later_group['event']['group'] = EL_GROUP_TEST_EH + 1
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES + 1, settings_later_group)
     check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES + 1, settings_later_group)
     (cmd_ret, reg_ack) = register_rule()
@@ -335,7 +335,7 @@ def test_event_handler_check_index():
     # テンプレ
     settings = {
                     'event': {
-                        'group': EL_GROUP_TEST_AH,
+                        'group': EL_GROUP_TEST_EH,
                         'local': 0,
                         'err_level': EL_ERROR_LEVEL_LOW
                     },
@@ -352,81 +352,81 @@ def test_event_handler_check_index():
     # 次の順番のindexを作れるか？
     # group, local, duplicate_id, rule_id
     # -----------------------------------
-    # EL_GROUP_TEST_AH,  0, 0, EH_RULE_TEST0
-    # EL_GROUP_TEST_AH,  1, 0, EH_RULE_TEST1
-    # EL_GROUP_TEST_AH,  1, 1, EH_RULE_TEST2
-    # EL_GROUP_TEST_AH,  1, 2, EH_RULE_TEST3
-    # EL_GROUP_TEST_AH,  2, 0, EH_RULE_TEST4
-    # EL_GROUP_TEST_AH1, 0, 0, EH_RULE_TEST5
-    # EL_GROUP_TEST_AH1, 0, 1, EH_RULE_TEST6
-    # EL_GROUP_TEST_AH1, 1, 0, EH_RULE_TEST7
+    # EL_GROUP_TEST_EH,  0, 0, EH_RULE_TEST0
+    # EL_GROUP_TEST_EH,  1, 0, EH_RULE_TEST1
+    # EL_GROUP_TEST_EH,  1, 1, EH_RULE_TEST2
+    # EL_GROUP_TEST_EH,  1, 2, EH_RULE_TEST3
+    # EL_GROUP_TEST_EH,  2, 0, EH_RULE_TEST4
+    # EL_GROUP_TEST_EH1, 0, 0, EH_RULE_TEST5
+    # EL_GROUP_TEST_EH1, 0, 1, EH_RULE_TEST6
+    # EL_GROUP_TEST_EH1, 1, 0, EH_RULE_TEST7
 
     # 順番はわざとバラバラ
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH
     settings_tmp['event']['local'] = 1
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST1, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH1
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH1
     settings_tmp['event']['local'] = 0
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST5, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH
     settings_tmp['event']['local'] = 1
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST2, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH
     settings_tmp['event']['local'] = 0
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH
     settings_tmp['event']['local'] = 2
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST4, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH1
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH1
     settings_tmp['event']['local'] = 1
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST7, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH
     settings_tmp['event']['local'] = 1
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST3, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     settings_tmp = copy.deepcopy(settings)
-    settings_tmp['event']['group'] = EL_GROUP_TEST_AH1
+    settings_tmp['event']['group'] = EL_GROUP_TEST_EH1
     settings_tmp['event']['local'] = 0
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST6, settings_tmp)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "SUC"
 
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_AH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
-    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
-    check_rule_index("TEST2", 2, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST2}, tlm_EH_INDEX)
-    check_rule_index("TEST3", 3, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 2, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST4", 4, {'group': EL_GROUP_TEST_AH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 5, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
-    check_rule_index("TEST6", 6, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
-    check_rule_index("TEST7", 7, {'group': EL_GROUP_TEST_AH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
+    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_EH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
+    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
+    check_rule_index("TEST2", 2, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST2}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 3, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 2, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 4, {'group': EL_GROUP_TEST_EH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 5, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST6", 6, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
+    check_rule_index("TEST7", 7, {'group': EL_GROUP_TEST_EH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
 
     # いい感じに消していく
     # 重複真ん中
@@ -435,68 +435,68 @@ def test_event_handler_check_index():
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST2, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_AH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
-    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
-    check_rule_index("TEST3", 2, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST4", 3, {'group': EL_GROUP_TEST_AH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 4, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
-    check_rule_index("TEST6", 5, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
-    check_rule_index("TEST7", 6, {'group': EL_GROUP_TEST_AH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
+    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_EH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
+    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 2, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 3, {'group': EL_GROUP_TEST_EH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 4, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST6", 5, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
+    check_rule_index("TEST7", 6, {'group': EL_GROUP_TEST_EH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
 
     # 重複先頭
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST1, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_AH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
-    check_rule_index("TEST3", 1, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST4", 2, {'group': EL_GROUP_TEST_AH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 3, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
-    check_rule_index("TEST6", 4, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
-    check_rule_index("TEST7", 5, {'group': EL_GROUP_TEST_AH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
+    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_EH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 1, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 2, {'group': EL_GROUP_TEST_EH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 3, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST6", 4, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
+    check_rule_index("TEST7", 5, {'group': EL_GROUP_TEST_EH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
 
     # 重複後ろ
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST6, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_AH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
-    check_rule_index("TEST3", 1, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST4", 2, {'group': EL_GROUP_TEST_AH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 3, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
-    check_rule_index("TEST7", 4, {'group': EL_GROUP_TEST_AH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
+    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_EH,  'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 1, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 2, {'group': EL_GROUP_TEST_EH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 3, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST7", 4, {'group': EL_GROUP_TEST_EH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
 
     # 先頭
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST0, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST3", 0, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST4", 1, {'group': EL_GROUP_TEST_AH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 2, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
-    check_rule_index("TEST7", 3, {'group': EL_GROUP_TEST_AH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 0, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 1, {'group': EL_GROUP_TEST_EH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 2, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST7", 3, {'group': EL_GROUP_TEST_EH1, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST7}, tlm_EH_INDEX)
 
     # 後ろ
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST7, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST3", 0, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST4", 1, {'group': EL_GROUP_TEST_AH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 2, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 0, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 1, {'group': EL_GROUP_TEST_EH,  'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 2, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST4, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST3", 0, {'group': EL_GROUP_TEST_AH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
-    check_rule_index("TEST5", 1, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 0, {'group': EL_GROUP_TEST_EH,  'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 1, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST3, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST5", 0, {'group': EL_GROUP_TEST_AH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 0, {'group': EL_GROUP_TEST_EH1, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST5, ), c2a_enum.Tlm_CODE_HK
@@ -516,42 +516,42 @@ def test_event_handler_respond_single():
 
     # should_match_err_level == 1 の
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 0, EL_ERROR_LEVEL_HIGH, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_HIGH, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "not_responded"
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "responded"
 
     # inactivateされてしまうので動かないはず
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "not_responded"
 
     # activate
-    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_AH, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
     print("Cmd_EH_ACTIVATE_RULE")
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
     )
-    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_AH, 'local': 0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
 
     # これで再度動く
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "responded"
 
     # should_match_err_level == 0 の
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 1, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 1, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "responded"
@@ -560,7 +560,7 @@ def test_event_handler_respond_single():
         ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST1,), c2a_enum.Tlm_CODE_HK
     )
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 1, EL_ERROR_LEVEL_HIGH, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 1, EL_ERROR_LEVEL_HIGH, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "responded"
@@ -569,15 +569,15 @@ def test_event_handler_respond_single():
     )
 
     # inactivate
-    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_AH, 'local': 1, 'is_active': "ACTIVE"})
+    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'is_active': "ACTIVE"})
     print("Cmd_EH_INACTIVATE_RULE")
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST1,), c2a_enum.Tlm_CODE_HK
     )
-    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_AH, 'local': 1, 'is_active': "INACTIVE"})
+    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'is_active': "INACTIVE"})
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 1, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 1, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "not_responded"
@@ -603,7 +603,7 @@ def test_event_handler_respond_continuous():
     for i in range(3):
         assert check_respend_eh() == "not_responded"
         assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-            ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 2, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+            ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 2, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
         )
         time.sleep(28)
     assert check_respend_eh() == "not_responded"
@@ -612,7 +612,7 @@ def test_event_handler_respond_continuous():
     for i in range(3):
         assert check_respend_eh() == "not_responded"
         assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-            ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 2, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+            ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 2, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
         )
     assert check_respend_eh() == "responded"
     download_eh_log_tlm()
@@ -638,7 +638,7 @@ def test_event_handler_respond_cumulative():
     for i in range(3):
         assert check_respend_eh() == "not_responded"
         assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-            ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 3, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+            ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 3, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
         )
     assert check_respend_eh() == "responded"
 
@@ -661,7 +661,7 @@ def test_event_handler_responded_log():
     check_log(2, EH_RULE_MAX, tlm_EH_LOG)
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "responded"
@@ -675,7 +675,7 @@ def test_event_handler_responded_log():
     check_log(2, EH_RULE_MAX, tlm_EH_LOG)
 
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_AH, 1, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 1, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
     )
     exec_eh()
     assert check_respend_eh() == "responded"
@@ -765,10 +765,10 @@ def check_rule(name, rule_id, settings):
 
 def check_default_rules():
     print("check_default_rules")
-    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_AH, 'local': 0, 'is_active': "ACTIVE"})
-    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_AH, 'local': 1, 'is_active': "ACTIVE"})
-    check_rule("TEST2", EH_RULE_TEST2, {'group': EL_GROUP_TEST_AH, 'local': 2, 'is_active': "ACTIVE"})
-    check_rule("TEST3", EH_RULE_TEST3, {'group': EL_GROUP_TEST_AH, 'local': 3, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'is_active': "ACTIVE"})
+    check_rule("TEST2", EH_RULE_TEST2, {'group': EL_GROUP_TEST_EH, 'local': 2, 'is_active': "ACTIVE"})
+    check_rule("TEST3", EH_RULE_TEST3, {'group': EL_GROUP_TEST_EH, 'local': 3, 'is_active': "ACTIVE"})
 
 
 def check_default_rules_cleared():
@@ -801,10 +801,10 @@ def check_default_rule_indexes():
         ope, c2a_enum.Cmd_CODE_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM, (0, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_AH, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
-    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_AH, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
-    check_rule_index("TEST2", 2, {'group': EL_GROUP_TEST_AH, 'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST2}, tlm_EH_INDEX)
-    check_rule_index("TEST3", 3, {'group': EL_GROUP_TEST_AH, 'local': 3, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
+    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
+    check_rule_index("TEST2", 2, {'group': EL_GROUP_TEST_EH, 'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST2}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 3, {'group': EL_GROUP_TEST_EH, 'local': 3, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
 
 
 def check_rule_indexes_cleared():
@@ -888,7 +888,7 @@ def check_respend_eh():
     download_eh_tlm()
 
     (group, local, err_level) = get_latest_event()
-    if (group == EL_GROUP_TEST_AH_RESPOND and local == 0 and err_level == "LOW"):
+    if (group == EL_GROUP_TEST_EH_RESPOND and local == 0 and err_level == "LOW"):
         return "responded"
     else:
         return "not_responded"
