@@ -9,7 +9,6 @@
 #include "../../CmdTlm/common_tlm_cmd_packet_util.h"
 #include "../../Applications/timeline_command_dispatcher.h"
 #include "../TimeManager/time_manager.h"
-#include "../../Library/endian_memcpy.h"
 
 #ifdef EL_IS_ENABLE_TLOG
 
@@ -994,29 +993,12 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CTCP* packet)
 {
   // 登録する瞬間にしかわからないので，ここでは値のアサーションはせず，
   // Cmd_EH_REGISTER_RULE でアサーションする
-  const uint8_t* param = CCP_get_param_head(packet);
-
-  uint16_t temp_u16;
-  uint32_t temp_u32;
-  bct_id_t bct_id;
-
-  if (CCP_get_param_len(packet) != (12 + SIZE_OF_BCT_ID_T))
-  {
-    return CCP_EXEC_ILLEGAL_LENGTH;
-  }
-
-  endian_memcpy(&temp_u16, &param[0], 2);
-  event_handler_.reg_from_cmd.rule_id = (EH_RULE_ID)temp_u16;
-  endian_memcpy(&temp_u32, &param[2], 4);
-  event_handler_.reg_from_cmd.settings.event.group = (EL_GROUP)temp_u32;
-  endian_memcpy(&temp_u32, &param[6], 4);
-  event_handler_.reg_from_cmd.settings.event.local = temp_u32;
-
-  event_handler_.reg_from_cmd.settings.event.err_level = (EL_ERROR_LEVEL)param[10];
-  event_handler_.reg_from_cmd.settings.should_match_err_level = param[11];
-
-  endian_memcpy(&bct_id, &param[12], SIZE_OF_BCT_ID_T);
-  event_handler_.reg_from_cmd.settings.deploy_bct_id = bct_id;
+  event_handler_.reg_from_cmd.rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  event_handler_.reg_from_cmd.settings.event.group = (EL_GROUP)CCP_get_param_from_packet(packet, 1, uint32_t);
+  event_handler_.reg_from_cmd.settings.event.local = CCP_get_param_from_packet(packet, 2, uint32_t);
+  event_handler_.reg_from_cmd.settings.event.err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 3, uint8_t);
+  event_handler_.reg_from_cmd.settings.should_match_err_level = CCP_get_param_from_packet(packet, 4, uint8_t);
+  event_handler_.reg_from_cmd.settings.deploy_bct_id = CCP_get_param_from_packet(packet, 5, bct_id_t);
 
   return CCP_EXEC_SUCCESS;
 }
@@ -1026,19 +1008,10 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CTCP* packet)
 {
   // 登録する瞬間にしかわからないので，ここでは値のアサーションはせず，
   // Cmd_EH_REGISTER_RULE でアサーションする
-  const uint8_t* param = CCP_get_param_head(packet);
-
-  uint16_t temp_u16;
-  uint32_t temp_u32;
-
-  event_handler_.reg_from_cmd.settings.condition.type = (EH_RESPONSE_CONDITION_TYPE)param[0];
-
-  endian_memcpy(&temp_u16, &param[1], 2);
-  event_handler_.reg_from_cmd.settings.condition.count_threshold = temp_u16;
-  endian_memcpy(&temp_u32, &param[3], 4);
-  event_handler_.reg_from_cmd.settings.condition.time_threshold_ms = temp_u32;
-
-  event_handler_.reg_from_cmd.settings.is_active = param[7];
+  event_handler_.reg_from_cmd.settings.condition.type = (EH_RESPONSE_CONDITION_TYPE)CCP_get_param_from_packet(packet, 0, uint8_t);
+  event_handler_.reg_from_cmd.settings.condition.count_threshold = CCP_get_param_from_packet(packet, 1, uint16_t);
+  event_handler_.reg_from_cmd.settings.condition.time_threshold_ms = CCP_get_param_from_packet(packet, 2, uint32_t);
+  event_handler_.reg_from_cmd.settings.is_active = CCP_get_param_from_packet(packet, 3, uint8_t);
 
   return CCP_EXEC_SUCCESS;
 }
@@ -1076,11 +1049,8 @@ CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet)
 {
-  uint16_t rule_id;
-  EH_RULE_SORTED_INDEX_ACK ack;
-
-  endian_memcpy(&rule_id, CCP_get_param_head(packet), 2);
-  ack = EH_delete_rule_table_((EH_RULE_ID)rule_id);
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_RULE_SORTED_INDEX_ACK ack = EH_delete_rule_table_(rule_id);
 
   switch (ack)
   {
@@ -1098,11 +1068,8 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet)
 {
-  uint16_t rule_id;
-  EH_CHECK_RULE_ACK ack;
-
-  endian_memcpy(&rule_id, CCP_get_param_head(packet), 2);
-  ack = EH_activate_rule((EH_RULE_ID)rule_id);
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_activate_rule(rule_id);
 
   switch (ack)
   {
@@ -1120,11 +1087,8 @@ CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet)
 {
-  uint16_t rule_id;
-  EH_CHECK_RULE_ACK ack;
-
-  endian_memcpy(&rule_id, CCP_get_param_head(packet), 2);
-  ack = EH_inactivate_rule((EH_RULE_ID)rule_id);
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_inactivate_rule(rule_id);
 
   switch (ack)
   {
@@ -1150,21 +1114,21 @@ CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CTCP* packet)
 {
-  event_handler_.max_response_num = CCP_get_param_head(packet)[0];
+  event_handler_.max_response_num = CCP_get_param_from_packet(packet, 0, uint8_t);
   return CCP_EXEC_SUCCESS;
 }
 
 
 CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CTCP* packet)
 {
-  endian_memcpy(&event_handler_.max_check_event_num, CCP_get_param_head(packet), 2);
+  event_handler_.max_check_event_num = CCP_get_param_from_packet(packet, 0, uint16_t);
   return CCP_EXEC_SUCCESS;
 }
 
 
 CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
 {
-  uint8_t page = CCP_get_param_head(packet)[0];
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
   event_handler_.tlm_info.rule.page_no = page;
   return CCP_EXEC_SUCCESS;
@@ -1173,7 +1137,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CTCP* packet)
 {
-  uint8_t page = CCP_get_param_head(packet)[0];
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
   event_handler_.tlm_info.rule_sorted_index.page_no = page;
   return CCP_EXEC_SUCCESS;
@@ -1182,7 +1146,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CTCP* packet)
 {
-  uint8_t page = CCP_get_param_head(packet)[0];
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (page >= EH_LOG_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
   event_handler_.tlm_info.log.page_no = page;
   return CCP_EXEC_SUCCESS;
@@ -1190,11 +1154,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
 {
-  uint16_t temp;
-  EH_RULE_ID rule_id;
-
-  endian_memcpy(&temp, CCP_get_param_head(packet), 2);
-  rule_id = (EH_RULE_ID)temp;
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   if (EH_check_rule_id_(rule_id) == EH_CHECK_RULE_ACK_INVALID_RULE_ID)
   {
