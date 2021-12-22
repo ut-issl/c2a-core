@@ -18,7 +18,7 @@ typedef enum
 
 void BCL_load_respond_eh_for_test(void)
 {
-  BCL_tool_prepare_param_uint32(EL_GROUP_TEST_AH_RESPOND);
+  BCL_tool_prepare_param_uint32(EL_GROUP_TEST_EH_RESPOND);
   BCL_tool_prepare_param_uint32(TEST_EH_EL_LOCAL_ID_RESPOND);
   BCL_tool_prepare_param_uint8(EL_ERROR_LEVEL_LOW);
   BCL_tool_prepare_param_uint32(0);

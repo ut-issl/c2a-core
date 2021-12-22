@@ -11,7 +11,7 @@ void EH_load_rule_test(void)
 {
   EH_RuleSettings settings;
 
-  settings.event.group = EL_GROUP_TEST_AH;
+  settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 0;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
@@ -24,7 +24,7 @@ void EH_load_rule_test(void)
   EH_register_rule(EH_RULE_TEST0, &settings);
 
 
-  settings.event.group = EL_GROUP_TEST_AH;
+  settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 1;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 0;
@@ -37,7 +37,7 @@ void EH_load_rule_test(void)
   EH_register_rule(EH_RULE_TEST1, &settings);
 
 
-  settings.event.group = EL_GROUP_TEST_AH;
+  settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 2;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
@@ -50,7 +50,7 @@ void EH_load_rule_test(void)
   EH_register_rule(EH_RULE_TEST2, &settings);
 
 
-  settings.event.group = EL_GROUP_TEST_AH;
+  settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 3;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
   settings.should_match_err_level = 1;
