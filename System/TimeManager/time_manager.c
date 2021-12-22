@@ -50,16 +50,6 @@ void TMGR_count_up_master_clock(void)
 #pragma section
 #pragma section REPRO
 
-uint32_t TMGR_get_master_total_cycle_in_msec(void)
-{
-  return OBCT_get_total_cycle_in_msec(&master_clock_);
-}
-
-uint32_t TMGR_get_master_mode_cycle_in_msec(void)
-{
-  return OBCT_get_mode_cycle_in_msec(&master_clock_);
-}
-
 ObcTime TMGR_get_master_clock(void)
 {
   if (time_manager_.initializing_flag)
@@ -70,6 +60,11 @@ ObcTime TMGR_get_master_clock(void)
   {
     return master_clock_;
   }
+}
+
+ObcTime TMGR_get_master_clock_from_boot(void)
+{
+  return OBCT_add(&time_manager_.initializing_time, &master_clock_);
 }
 
 cycle_t TMGR_get_master_total_cycle(void) {
@@ -84,28 +79,24 @@ step_t  TMGR_get_master_step(void) {
   return OBCT_get_step(&master_clock_);
 }
 
-
-CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
+uint32_t TMGR_get_master_total_cycle_in_msec(void)
 {
-  cycle_t set_value = 0;
+  return OBCT_get_total_cycle_in_msec(&master_clock_);
+}
 
-  endian_memcpy(&set_value, CCP_get_param_head(packet), 4);
-
-  if (set_value < OBCT_MAX_CYCLE)
-  {
-    TMGR_set_master_total_cycle_(set_value);
-    TDSP_resync_internal_counter();
-    return CCP_EXEC_SUCCESS;
-  }
-  else
-  {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
-  }
+uint32_t TMGR_get_master_mode_cycle_in_msec(void)
+{
+  return OBCT_get_mode_cycle_in_msec(&master_clock_);
 }
 
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
 {
   master_clock_.total_cycle = total_cycle;
+}
+
+OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
+{
+  return OBCT_unixtime_info_;
 }
 
 double TMGR_get_unixtime_from_ObcTime(const ObcTime* time)
@@ -143,9 +134,23 @@ void TMGR_modify_unixtime_criteria(const double unixtime, const ObcTime time)
   OBCT_modify_unixtime_info(&OBCT_unixtime_info_, unixtime, time);
 }
 
-OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
+
+CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
 {
-  return OBCT_unixtime_info_;
+  cycle_t set_value = 0;
+
+  endian_memcpy(&set_value, CCP_get_param_head(packet), 4);
+
+  if (set_value < OBCT_MAX_CYCLE)
+  {
+    TMGR_set_master_total_cycle_(set_value);
+    TDSP_resync_internal_counter();
+    return CCP_EXEC_SUCCESS;
+  }
+  else
+  {
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  }
 }
 
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
@@ -162,11 +167,6 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   TMGR_modify_unixtime_criteria(unixtime, time);
 
   return CCP_EXEC_SUCCESS;
-}
-
-ObcTime TMGR_get_master_clock_from_boot(void)
-{
-  return OBCT_add(&time_manager_.initializing_time, &master_clock_);
 }
 
 #pragma section

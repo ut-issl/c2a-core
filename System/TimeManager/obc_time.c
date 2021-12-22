@@ -96,15 +96,6 @@ float OBCT_get_mode_cycle_in_sec(const ObcTime* time)
   return cycle_in_sec + step_in_sec;
 }
 
-cycle_t OBCT_sec2cycle(uint32_t sec)
-{
-  return (1000 * sec) / (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE);
-}
-
-uint32_t OBCT_cycle2sec(cycle_t cycle) {
-  return (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE * cycle) / 1000;
-}
-
 cycle_t OBCT_msec2cycle(uint32_t msec)
 {
   return (msec) / (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE);
@@ -112,6 +103,15 @@ cycle_t OBCT_msec2cycle(uint32_t msec)
 
 uint32_t OBCT_cycle2msec(cycle_t cycle) {
   return (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE * cycle);
+}
+
+cycle_t OBCT_sec2cycle(uint32_t sec)
+{
+  return (1000 * sec) / (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE);
+}
+
+uint32_t OBCT_cycle2sec(cycle_t cycle) {
+  return (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE * cycle) / 1000;
 }
 
 ObcTime OBCT_diff(const ObcTime* before,
@@ -139,21 +139,6 @@ ObcTime OBCT_diff(const ObcTime* before,
   return diff;
 }
 
-ObcTime OBCT_add(const ObcTime* left, const ObcTime* right)
-{
-  ObcTime ret;
-
-  ret.total_cycle = left->total_cycle + right->total_cycle;
-  ret.mode_cycle = left->mode_cycle + right->mode_cycle;
-  ret.step = left->step + right->step;
-
-  ret.total_cycle += ret.step / OBCT_STEPS_PER_CYCLE;
-  ret.mode_cycle += ret.step / OBCT_STEPS_PER_CYCLE;
-  ret.step %= OBCT_STEPS_PER_CYCLE;
-
-  return ret;
-}
-
 step_t OBCT_diff_in_step(const ObcTime* before,
                          const ObcTime* after)
 {
@@ -171,6 +156,21 @@ float OBCT_diff_in_sec(const ObcTime* before,
                        const ObcTime* after)
 {
   return 0.001f * OBCT_diff_in_msec(before, after);
+}
+
+ObcTime OBCT_add(const ObcTime* left, const ObcTime* right)
+{
+  ObcTime ret;
+
+  ret.total_cycle = left->total_cycle + right->total_cycle;
+  ret.mode_cycle = left->mode_cycle + right->mode_cycle;
+  ret.step = left->step + right->step;
+
+  ret.total_cycle += ret.step / OBCT_STEPS_PER_CYCLE;
+  ret.mode_cycle += ret.step / OBCT_STEPS_PER_CYCLE;
+  ret.step %= OBCT_STEPS_PER_CYCLE;
+
+  return ret;
 }
 
 int OBCT_compare(const ObcTime* t1, const ObcTime* t2)
