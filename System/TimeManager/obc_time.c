@@ -147,7 +147,7 @@ step_t OBCT_diff_in_step(const ObcTime* before,
 }
 
 uint32_t OBCT_diff_in_msec(const ObcTime* before,
-                               const ObcTime* after)
+                           const ObcTime* after)
 {
   return OBCT_STEP_IN_MSEC * OBCT_diff_in_step(before, after);
 }

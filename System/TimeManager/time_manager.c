@@ -99,13 +99,13 @@ OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
   return OBCT_unixtime_info_;
 }
 
-double TMGR_get_unixtime_from_obc_Time(const ObcTime* time)
+double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
   ObcTime ti0 = OBCT_create(0, 0, 0);
   return OBCT_unixtime_info_.unixtime_at_ti0 + OBCT_diff_in_sec(&ti0, time);
 }
 
-ObcTime TMGR_get_obc_Time_from_unixtime(const double unixtime)
+ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 {
   double diff_double = unixtime - OBCT_unixtime_info_.unixtime_at_ti0;
   ObcTime res;
