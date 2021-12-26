@@ -29,7 +29,9 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void);   // 計算上はstepも考慮（オー
 OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void);
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time);
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
-void TMGR_modify_unixtime_criteria(const double unixtime, const ObcTime time);
+cycle_t TMGR_get_c2a_unixtime_from_unixtime(const double unixtime);
+cycle_t TMGR_get_ti_from_c2a_unixtime(const cycle_t c2a_unixtime);
+void TMGR_update_unixtime_info(const double unixtime, const ObcTime time);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);

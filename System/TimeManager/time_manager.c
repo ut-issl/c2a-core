@@ -129,9 +129,20 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
   return res;
 }
 
-void TMGR_modify_unixtime_criteria(const double unixtime, const ObcTime time)
+cycle_t TMGR_get_c2a_unixtime_from_unixtime(const double unixtime)
 {
-  OBCT_modify_unixtime_info(&OBCT_unixtime_info_, unixtime, time);
+  return OBCT_get_c2a_unixtime_from_unixtime(unixtime);
+}
+
+cycle_t TMGR_get_ti_from_c2a_unixtime(const cycle_t c2a_unixtime)
+{
+  cycle_t c2a_unixtime_at_ti0 = TMGR_get_c2a_unixtime_from_unixtime(OBCT_unixtime_info_.unixtime_at_ti0);
+  return c2a_unixtime - c2a_unixtime_at_ti0;
+}
+
+void TMGR_update_unixtime_info(const double unixtime, const ObcTime time)
+{
+  OBCT_update_unixtime_info(&OBCT_unixtime_info_, unixtime, time);
 }
 
 
@@ -164,7 +175,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   endian_memcpy(&time.step, param + 12, 4);
   time.mode_cycle = 0; // •K—v‚È‚¢‚Ì‚Å0‚Æ‚·‚é
 
-  TMGR_modify_unixtime_criteria(unixtime, time);
+  TMGR_update_unixtime_info(unixtime, time);
 
   return CCP_EXEC_SUCCESS;
 }

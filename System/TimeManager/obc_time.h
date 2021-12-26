@@ -8,6 +8,7 @@
 #define OBCT_STEPS_PER_CYCLE (100)                                               //!< 何stepで1cycleか
 #define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1sで何cycleか
 #define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< 最大cycle数．つまりTIがいくつでオーバーフローするか
+#define OBCT_C2A_UNIXTIME_BASE (1577836800.0) //!< 2020-1-1-00:00:00UTC の時のunixtimeを基準にする
 
 #include <src_user/Settings/System/obc_time_params.h>
 
@@ -84,12 +85,15 @@ OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime
  * @param[in] uti クリアする OBCT_UnixtimeInfo
  */
 void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti);
+
+cycle_t OBCT_get_c2a_unixtime_from_unixtime(const double unixtime);
+
 /**
  * @brief OBCT_UnixtimeInfo 修正関数
  * @param[in] uti 修正する OBCT_UnixtimeInfo
  * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
  * @param[in] unixtime (GPS 等から観測した) unixtime
  */
-void OBCT_modify_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time);
+void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time);
 
 #endif

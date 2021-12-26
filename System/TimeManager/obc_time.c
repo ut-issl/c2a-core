@@ -192,11 +192,8 @@ void OBCT_print(const ObcTime* time)
 OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime* time)
 {
   OBCT_UnixtimeInfo uti;
-  step_t diff_step = OBCT_STEPS_PER_CYCLE * time->total_cycle + time->step;
-  uint32_t diff_msec = OBCT_STEP_IN_MSEC * diff_step;
-  float diff_sec = 0.001f * diff_msec;
-
-  uti.unixtime_at_ti0 = unixtime - diff_sec;
+  float ti_sec = OBCT_get_total_cycle_in_sec(time);
+  uti.unixtime_at_ti0 = unixtime - ti_sec;
   uti.ti_at_last_update = time->total_cycle;
 
   return uti;
@@ -208,9 +205,17 @@ void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti)
   uti->ti_at_last_update = 0;
 }
 
-void OBCT_modify_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time)
+cycle_t OBCT_get_c2a_unixtime_from_unixtime(const double unixtime)
 {
-  *uti = OBCT_create_unixtime_info(unixtime, &time);
+  if (unixtime < OBCT_C2A_UNIXTIME_BASE) return (cycle_t) 0;
+  return (cycle_t) ((unixtime - OBCT_C2A_UNIXTIME_BASE) * 10); // cycle–¢–ž‚ÍØ‚èŽÌ‚Ä
+}
+
+void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time)
+{
+  double ti_sec = OBCT_get_total_cycle_in_sec(&time);
+  uti->unixtime_at_ti0 = unixtime - ti_sec;
+  uti->ti_at_last_update = time.total_cycle;
 }
 
 #pragma section
