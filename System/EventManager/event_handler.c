@@ -6,6 +6,7 @@
  */
 #include "event_handler.h"
 #include <string.h>
+#include <stdlib.h>
 #include "../../CmdTlm/common_tlm_cmd_packet_util.h"
 #include "../../Applications/timeline_command_dispatcher.h"
 #include "../TimeManager/time_manager.h"
@@ -51,8 +52,7 @@ typedef enum
   EH_RULE_SORTED_INDEX_ACK_NOT_FOUND,        //!< 見つからず
   EH_RULE_SORTED_INDEX_ACK_FULL,             //!< これ以上登録できない
   EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE,   //!< ルールの上書きになってしまう（すでに同じ ID にルールが登録されているため棄却）
-  EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL,   //!< 重複上限まで重複してしまっている
-  EH_RULE_SORTED_INDEX_ACK_UNKNOWN_ERR       //!< 不明なエラー
+  EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL    //!< 重複上限まで重複してしまっている
 } EH_RULE_SORTED_INDEX_ACK;
 
 /**
@@ -169,7 +169,6 @@ const EL_Event* EH_get_oldest_event_(void);
  * @param[out] found_sorted_idxes: 見つかった EH_RuleSortedIndex の index
  * @param[out] found_id_num: 見つかった idx の数
  * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: 見つからず
- * @retval EH_RULE_SORTED_INDEX_ACK_UNKNOWN_ERR: 不明なエラー
  * @retval EH_RULE_SORTED_INDEX_ACK_OK: 正常に探索完了
  */
 static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
@@ -177,6 +176,16 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
                                                             EH_RULE_ID found_ids[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES],
                                                             uint16_t found_sorted_idxes[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES],
                                                             uint8_t* found_id_num);
+
+/**
+ * @brief  bsearch 用の EH_RuleSortedIndex 比較関数
+ * @param[in]  key:  bsearch で検索する EH_RuleSortedIndex
+ * @param[in]  elem: bsearch 検索対象の EH_RuleSortedIndex 配列要素
+ * @retval 1:  key > elem
+ * @retval 0:  key == elem
+ * @retval -1: key < elem
+ */
+static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* elem);
 
 /**
  * @brief  EH_Rule を EH_RuleTable と EH_RuleSortedIndex に挿入する
@@ -602,10 +611,11 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
                                                             uint8_t* found_id_num)
 {
   // idx: 0 ~ rule_table.registered_rule_num の間で二分探索する
-  // 重複もあり得ることを考慮する
+  // 重複もあり得ることを考慮する (duplicate_id は異なる)
 
-  int32_t lower, upper;     // 計算の都合上，upper が -1 になることがあるので，符号付き整数
   uint16_t found_idx = EH_RULE_MAX;
+  EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
+  const EH_RuleSortedIndex target_sorted_idx = { group, local, 0, (EH_RULE_ID)0 };
   int i = 0;
 
   if (event_handler_.rule_table.registered_rule_num == 0)
@@ -613,56 +623,13 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
     return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   }
 
-  lower = 0;
-  upper = event_handler_.rule_table.registered_rule_num - 1;   // 非排他（包含）範囲
-
-  // 無限ループ回避のための while ではなく for
-  for (i = 0; i < EH_RULE_MAX; ++i)
-  {
-    int32_t mid = (lower + upper) / 2;
-    EH_RuleSortedIndex* p_mid = &event_handler_.sorted_idxes[mid];
-
-    if (lower > upper)
-    {
-      return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
-    }
-
-    if (p_mid->group == group)
-    {
-      if (p_mid->local == local)
-      {
-        if (p_mid->duplicate_id == 0)
-        {
-          // 見つかった！！（重複の場合は最も duplicate_id が小さいもの）
-          found_idx = (uint16_t)mid;
-          break;
-        }
-        else
-        {
-          // より若い duplicate_id があるはず
-          upper = mid - 1;
-        }
-      }
-      else if (p_mid->local < local)
-      {
-        lower = mid + 1;
-      }
-      else
-      {
-        upper = mid - 1;
-      }
-    }
-    else if (p_mid->group < group)
-    {
-      lower = mid + 1;
-    }
-    else
-    {
-      upper = mid - 1;
-    }
-  }
-
-  if (found_idx == EH_RULE_MAX) return EH_RULE_SORTED_INDEX_ACK_UNKNOWN_ERR;
+  p_searched_sorted_idx = (EH_RuleSortedIndex*)bsearch(&target_sorted_idx,
+                                               event_handler_.sorted_idxes,
+                                               EH_RULE_MAX,
+                                               sizeof(EH_RuleSortedIndex),
+                                               EH_compare_sorted_index_for_bsearch_);
+  if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
+  found_idx = (uint16_t)(p_searched_sorted_idx - (&event_handler_.sorted_idxes[0]));
 
   // 見つかった．後は，いくつあるか？
   *found_id_num = 0;
@@ -679,6 +646,46 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   }
 
   return EH_RULE_SORTED_INDEX_ACK_OK;
+}
+
+
+static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* elem)
+{
+  const EH_RuleSortedIndex* p_key  = (const EH_RuleSortedIndex*)key;
+  const EH_RuleSortedIndex* p_elem = (const EH_RuleSortedIndex*)elem;
+
+  if (p_elem->group == p_key->group)
+  {
+    if (p_elem->local == p_key->local)
+    {
+      if (p_elem->duplicate_id == 0)
+      {
+        // 探してたもの
+        return 0;
+      }
+      else
+      {
+        // もっと手前にあるはず
+        return -1;
+      }
+    }
+    else if (p_elem->local < p_key->local)
+    {
+      return 1;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+  else if (p_elem->group < p_key->group)
+  {
+    return 1;
+  }
+  else
+  {
+    return -1;
+  }
 }
 
 
