@@ -617,7 +617,8 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   uint16_t found_idx = EH_RULE_MAX;
   EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
   EH_RuleSortedIndex target_sorted_idx = { group, local, 0, (EH_RULE_ID)0 };
-  int i = 0;
+  uint16_t i;
+  uint16_t possible_num_of_id_duplicates;
 
   if (event_handler_.rule_table.registered_rule_num == 0)
   {
@@ -634,7 +635,12 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
 
   // å©Ç¬Ç©Ç¡ÇΩÅDå„ÇÕÅCÇ¢Ç≠Ç¬Ç†ÇÈÇ©ÅH
   *found_id_num = 0;
-  for (i = 0; i < EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES; ++i)
+  possible_num_of_id_duplicates = EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES;
+  if (possible_num_of_id_duplicates > EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - found_idx)
+  {
+    possible_num_of_id_duplicates = EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - found_idx;
+  }
+  for (i = 0; i < possible_num_of_id_duplicates; ++i)
   {
     EH_RuleSortedIndex* p_idx = &event_handler_.sorted_idxes[found_idx + i];
     if ( !(p_idx->group == group && p_idx->local == local) )
