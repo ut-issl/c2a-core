@@ -70,6 +70,8 @@ conv_to_match_flag = {0: "NO", 1: "YES"}
 conv_to_active = {0: "INACTIVE", 1: "ACTIVE"}
 conv_to_condition_type = {0: "SINGLE", 1: "CONTINUOUS", 2:"CUMULATIVE"}
 
+# TODO: カウンタのクリアを入れたら足す
+# TODO: EH対応EL発行を入れたら，色々変えないとダメ
 
 # 各種設定の確認など
 @pytest.mark.real
@@ -581,6 +583,9 @@ def test_event_handler_respond_single():
     )
     exec_eh()
     assert check_respend_eh() == "not_responded"
+
+
+# TODO: 複数同時発火のテストを入れる
 
 
 @pytest.mark.real
