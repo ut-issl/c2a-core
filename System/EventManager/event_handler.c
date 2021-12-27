@@ -616,7 +616,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
 
   uint16_t found_idx = EH_RULE_MAX;
   EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
-  EH_RuleSortedIndex target_sorted_idx = { group, local, 0, (EH_RULE_ID)0 };
+  EH_RuleSortedIndex target_sorted_idx;
   uint16_t i;
   uint16_t possible_num_of_id_duplicates;
 
@@ -625,6 +625,9 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
     return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   }
 
+  memset(&target_sorted_idx, 0x00, sizeof(EH_RuleSortedIndex));
+  target_sorted_idx.group = group;
+  target_sorted_idx.local = local;
   p_searched_sorted_idx = (EH_RuleSortedIndex*)bsearch(&target_sorted_idx,
                                                event_handler_.sorted_idxes,
                                                event_handler_.rule_table.registered_rule_num,
