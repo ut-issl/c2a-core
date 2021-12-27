@@ -179,6 +179,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
 
 /**
  * @brief  bsearch —p‚Ì EH_RuleSortedIndex ”äŠrŠÖ”
+ * @note   duplicate_id ‚ª 0 ‚Å‚ ‚é‚à‚Ì‚ðŒ©‚Â‚¯‚é‘z’è
  * @param[in]  key:  bsearch ‚ÅŒŸõ‚·‚é EH_RuleSortedIndex
  * @param[in]  elem: bsearch ŒŸõ‘ÎÛ‚Ì EH_RuleSortedIndex ”z—ñ—v‘f
  * @retval 1:  key > elem
@@ -615,7 +616,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
 
   uint16_t found_idx = EH_RULE_MAX;
   EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
-  const EH_RuleSortedIndex target_sorted_idx = { group, local, 0, (EH_RULE_ID)0 };
+  EH_RuleSortedIndex target_sorted_idx = { group, local, 0, (EH_RULE_ID)0 };
   int i = 0;
 
   if (event_handler_.rule_table.registered_rule_num == 0)
@@ -625,7 +626,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
 
   p_searched_sorted_idx = (EH_RuleSortedIndex*)bsearch(&target_sorted_idx,
                                                event_handler_.sorted_idxes,
-                                               EH_RULE_MAX,
+                                               event_handler_.rule_table.registered_rule_num,
                                                sizeof(EH_RuleSortedIndex),
                                                EH_compare_sorted_index_for_bsearch_);
   if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
