@@ -639,9 +639,9 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   // Œ©‚Â‚©‚Á‚½DŒã‚ÍC‚¢‚­‚Â‚ ‚é‚©H
   *found_id_num = 0;
   possible_num_of_id_duplicates = EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES;
-  if (possible_num_of_id_duplicates > EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - found_idx)
+  if (possible_num_of_id_duplicates > event_handler_.rule_table.registered_rule_num - found_idx)
   {
-    possible_num_of_id_duplicates = EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - found_idx;
+    possible_num_of_id_duplicates = event_handler_.rule_table.registered_rule_num - found_idx;
   }
   for (i = 0; i < possible_num_of_id_duplicates; ++i)
   {
