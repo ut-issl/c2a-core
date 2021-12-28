@@ -63,7 +63,7 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,EL.STATISTICS.RECORD_COUNTERS_EL,uint16_t,(uint16_t)event_logger->statistics.record_counters[3],PACKET,98,0,16,NONE,,,,,,,,,データサイズ減らすためにu16
 ,EL.LATEST_EVENT.GROUP,uint8_t,(uint8_t)event_logger->latest_event.group,PACKET,100,0,8,NONE,,,,,,,,,
 ,EL.LATEST_EVENT.LOCAL,uint32_t,event_logger->latest_event.local,PACKET,101,0,32,NONE,,,,,,,,,
-,EL.LATEST_EVENT.ERR_LEVEL,uint8_t,(uint8_t)event_logger->latest_event.err_level,PACKET,105,0,8,STATUS,,,,,,,0=HIGH@@ 1=MIDDLE@@ 2=LOW@@ 3=EL@@ *=N/A,,
+,EL.LATEST_EVENT.ERR_LEVEL,uint8_t,(uint8_t)event_logger->latest_event.err_level,PACKET,105,0,8,STATUS,,,,,,,0=HIGH@@ 1=MIDDLE@@ 2=LOW@@ 3=EL@@ 4=EH@@ *=N/A,,
 ,EL.LATEST_EVENT.TIME.TOTAL_CYCLE,uint32_t,event_logger->latest_event.time.total_cycle,PACKET,106,0,32,NONE,,,,,,,,,
 ,EL.LATEST_EVENT.TIME.STEP,uint8_t,(uint8_t)event_logger->latest_event.time.step,PACKET,110,0,8,NONE,,,,,,,,,
 ,EL.LATEST_EVENT.NOTE,uint16_t,(uint16_t)event_logger->latest_event.note,PACKET,111,0,16,NONE,,,,,,,,,u8にしてもよい

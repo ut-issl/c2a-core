@@ -163,6 +163,7 @@ static EL_Event EL_tlog_event_table_low_[EL_TLOG_LOG_SIZE_MAX_LOW];
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
 static EL_Event EL_tlog_event_table_el_[EL_TLOG_LOG_SIZE_MAX_EL];
 #endif
+static EL_Event EL_tlog_event_table_eh_[EL_TLOG_LOG_SIZE_MAX_EH];
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
@@ -178,6 +179,8 @@ static uint16_t EL_clog_log_order_table_low_[EL_CLOG_LOG_SIZE_MAX_LOW];
 static EL_CLogElement EL_clog_log_table_el_[EL_CLOG_LOG_SIZE_MAX_EL];
 static uint16_t EL_clog_log_order_table_el_[EL_CLOG_LOG_SIZE_MAX_EL];
 #endif
+static EL_CLogElement EL_clog_log_table_eh_[EL_CLOG_LOG_SIZE_MAX_EH];
+static uint16_t EL_clog_log_order_table_eh_[EL_CLOG_LOG_SIZE_MAX_EH];
 #endif
 
 
@@ -201,11 +204,14 @@ void EL_initialize(void)
   event_logger_.tlogs[EL_ERROR_LEVEL_EL].events           = EL_tlog_event_table_el_;
   event_logger_.tlogs[EL_ERROR_LEVEL_EL].log_capacity     = EL_TLOG_LOG_SIZE_MAX_EL;
 #endif
+  event_logger_.tlogs[EL_ERROR_LEVEL_EH].events           = EL_tlog_event_table_eh_;
+  event_logger_.tlogs[EL_ERROR_LEVEL_EH].log_capacity     = EL_TLOG_LOG_SIZE_MAX_EH;
 
   EL_clear_all_tlog_();
 
   // デフォルトでは TLog の上書きは有効
   EL_enable_tlog_overwrite_all();
+  EL_enable_tlog_overwrite(EL_ERROR_LEVEL_EH);
 #endif  // EL_IS_ENABLE_TLOG
 
 #ifdef EL_IS_ENABLE_CLOG
@@ -225,6 +231,9 @@ void EL_initialize(void)
   event_logger_.clogs[EL_ERROR_LEVEL_EL].log_orders       = EL_clog_log_order_table_el_;
   event_logger_.clogs[EL_ERROR_LEVEL_EL].log_capacity     = EL_CLOG_LOG_SIZE_MAX_EL;
 #endif
+  event_logger_.clogs[EL_ERROR_LEVEL_EH].logs             = EL_clog_log_table_eh_;
+  event_logger_.clogs[EL_ERROR_LEVEL_EH].log_orders       = EL_clog_log_order_table_eh_;
+  event_logger_.clogs[EL_ERROR_LEVEL_EH].log_capacity     = EL_CLOG_LOG_SIZE_MAX_EH;
 
   EL_clear_all_clog_();
 #endif  // EL_IS_ENABLE_CLOG
@@ -682,6 +691,7 @@ void EL_enable_tlog_overwrite_all(void)
 
   for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
   {
+    if ((EL_ERROR_LEVEL)err_level == EL_ERROR_LEVEL_EH) continue;
     EL_enable_tlog_overwrite((EL_ERROR_LEVEL)err_level);
   }
 }
@@ -693,6 +703,7 @@ void EL_disable_tlog_overwrite_all(void)
 
   for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
   {
+    if ((EL_ERROR_LEVEL)err_level == EL_ERROR_LEVEL_EH) continue;
     EL_disable_tlog_overwrite((EL_ERROR_LEVEL)err_level);
   }
 }
@@ -870,10 +881,12 @@ CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
     break;
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   case EL_ERROR_LEVEL_EL:
-    // TODO: これは要検討
-    if (page_no != 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (page_no > (EL_TLOG_LOG_SIZE_MAX_EL - 1) / EL_TLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
     break;
 #endif
+  case EL_ERROR_LEVEL_EH:
+    if (page_no > (EL_TLOG_LOG_SIZE_MAX_EH - 1) / EL_TLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    break;
   default:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
@@ -907,10 +920,12 @@ CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
     break;
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   case EL_ERROR_LEVEL_EL:
-    // TODO: これは要検討
-    if (page_no != 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (page_no > (EL_CLOG_LOG_SIZE_MAX_EL - 1) / EL_CLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
     break;
 #endif
+  case EL_ERROR_LEVEL_EH:
+    if (page_no > (EL_CLOG_LOG_SIZE_MAX_EH - 1) / EL_CLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    break;
   default:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
