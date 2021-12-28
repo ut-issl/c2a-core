@@ -7,30 +7,40 @@
  *        そうすると，上位のルールがマッチした場合，該当するルール対応は実行されなくなる
  *        例えば， UART 不通を考える
  *        設定として
- *          UART不通が発生したら EL_UART を発行する
- *          EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
- *          EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
- *          EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 3 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *          - UART不通が発生したら EL_UART を発行する
+ *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 3 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
  *        とした場合，
- *          EL_UART が 5 回発生したら， EH_Rule1 が発火
- *          EL_UART が 10 回発生したら， EH_Rule1 が発火
- *          EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
- *          EL_UART が 20 回発生したら， EH_Rule1 が発火
- *          ...
+ *          1. EL_UART が 5 回発生したら， EH_Rule1 が発火
+ *          2. EL_UART が 10 回発生したら， EH_Rule1 が発火
+ *          3. EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *          4. EL_UART が 20 回発生したら， EH_Rule1 が発火
+ *          5. ...
  *        というようになる
  *        このように， EL_CORE_GROUP_EH_MATCH_RULE で発火する EH_Rule は上位ルールとして解釈，実行され，
  *        上位ルールが実行されるときは，下位ルールは実行されなくなる．
  *        また，これは 2 段のみならず， 3 段以上も可能である．
  *        この手法を応用すると，ルールのオーバーライドできる．
  *        例えば，設定として
- *          UART不通が発生したら EL_UART を発行する
- *          EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
- *          EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
- *          EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 1 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *          - UART不通が発生したら EL_UART を発行する
+ *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 1 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
  *        とすると，
- *          EL_UART が 5 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *          - EL_UART が 5 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
  *        となるので，実質的に， EH_Rule2 で EH_Rule1 をオーバーライドすることができる．
  *        このように，下位のルールを，上位の発火条件を変えることで，柔軟にオーバーライドできる．
+ * @note  EH での Event 発行は以下
+ *          - EL_CORE_GROUP_EVENT_HANDLER
+ *            - EH に関する様々なエラー
+ *            - local id は EH_EL_LOCAL_ID
+ *          - EL_CORE_GROUP_EH_MATCH_RULE
+ *            - EH_Rule にマッチ
+ *            - local id は EH_RULE_ID
+ *          - EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
+ *            - EH_Rule にマッチしたが，さらに上位の EH_Rule のマッチ条件を満たしたため，発火はキャンセルされた（上位で発火される）
+ *            - local id は EH_RULE_ID
  */
 #ifndef EVENT_HANDLER_H_
 #define EVENT_HANDLER_H_
