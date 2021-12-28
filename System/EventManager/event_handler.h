@@ -2,6 +2,35 @@
  * @file
  * @brief イベント発火型処理を行う
  * @note  event_logger の情報を元に BC を展開する ( Event 発火に応じて対応を行う )
+ * @note  多段の EH 対応の組み方
+ *        多段の EH を組む場合， EH_RuleSettings.event.group は EL_CORE_GROUP_EH_MATCH_RULE を指定する．
+ *        そうすると，上位のルールがマッチした場合，該当するルール対応は実行されなくなる
+ *        例えば， UART 不通を考える
+ *        設定として
+ *          UART不通が発生したら EL_UART を発行する
+ *          EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 3 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *        とした場合，
+ *          EL_UART が 5 回発生したら， EH_Rule1 が発火
+ *          EL_UART が 10 回発生したら， EH_Rule1 が発火
+ *          EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *          EL_UART が 20 回発生したら， EH_Rule1 が発火
+ *          ...
+ *        というようになる
+ *        このように， EL_CORE_GROUP_EH_MATCH_RULE で発火する EH_Rule は上位ルールとして解釈，実行され，
+ *        上位ルールが実行されるときは，下位ルールは実行されなくなる．
+ *        また，これは 2 段のみならず， 3 段以上も可能である．
+ *        この手法を応用すると，ルールのオーバーライドできる．
+ *        例えば，設定として
+ *          UART不通が発生したら EL_UART を発行する
+ *          EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 1 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *        とすると，
+ *          EL_UART が 5 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *        となるので，実質的に， EH_Rule2 で EH_Rule1 をオーバーライドすることができる．
+ *        このように，下位のルールを，上位の発火条件を変えることで，柔軟にオーバーライドできる．
  */
 #ifndef EVENT_HANDLER_H_
 #define EVENT_HANDLER_H_
