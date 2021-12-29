@@ -686,8 +686,90 @@ def test_event_handler_respond_cumulative():
 
 @pytest.mark.real
 @pytest.mark.sils
+def test_event_handler_activate_and_inactivate_rulefor_multi_level():
+    print("")
+    print("test_event_handler_activate_and_inactivate_rulefor_multi_level")
+
+    # 初期化
+    init_el_and_eh()
+
+    # テスト用にアクティベーション
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST5", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+
+    # inactivate Lv.1 to Lv.3
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+
+    # activate Lv.1 to Lv.3
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+    # inactivate Lv.1 to Lv.2
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # activate Lv.1 to Lv.2
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # inactivate only Lv.1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # activate only Lv.1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+
+@pytest.mark.real
+@pytest.mark.sils
 def test_event_handler_respond_multi_level():
-    # FIXME: activate 方法が多段対応したら直す
     print("")
     print("test_event_handler_respond_multi_level")
 
@@ -746,10 +828,10 @@ def test_event_handler_respond_multi_level():
     assert tlm_EL["EL.TLOGS.EH.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
     assert tlm_EL["EL.TLOGS.EH.EVENTS3.LOCAL"] == EH_RULE_TEST0
 
-    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
     check_rule("TEST0", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
     )
 
     # Lv.1 発火
@@ -804,8 +886,8 @@ def test_event_handler_respond_multi_level():
     assert tlm_EL["EL.TLOGS.EH.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
     assert tlm_EL["EL.TLOGS.EH.EVENTS3.LOCAL"] == EH_RULE_TEST5
 
-    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
-    check_rule("TEST0", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
     check_rule("TEST0", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
 
 
