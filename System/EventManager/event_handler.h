@@ -76,7 +76,7 @@
 #define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< 一度の実行でチェックする event_logger の event log の最大値（初期値）
                                                            TL内での実行時間を調整するために設定する． */
 
-// いかのファイルにて，次のパラメタを上書き設定できる
+// 以下のファイルにて，次のパラメタを上書き設定できる
 // EH_RULE_TLM_PAGE_SIZE
 // EH_RULE_TLM_PAGE_MAX
 // EH_LOG_TLM_PAGE_SIZE
@@ -273,8 +273,7 @@ typedef struct
   EH_ElEventCounter  el_event_counter;          //!< EH_ElEventCounter
   uint8_t            max_response_num;          /*!< 一度の EH_execute の実行で対応する最大数
                                                      初期値は EH_MAX_RESPONSE_NUM_DEFAULT
-                                                     EL_Event のIDが重複した EH_Rule もあるので，
-                                                     最大で EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES だけこれを上回る可能性はある */
+                                                     EL_Event のIDが重複した EH_Rule もあるので，実際の対応数はこれを上回る可能性がある */
   uint16_t           max_check_event_num;       /*!< 一度の実行でチェックする event_logger の event log の最大値
                                                      初期値は EH_MAX_CHECK_EVENT_NUM_DEFAULT */
   EH_RegisterFromCmd reg_from_cmd;              //!< コマンド経由で EH_Rule を登録するときに使う内部状態変数
