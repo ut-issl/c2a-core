@@ -107,7 +107,7 @@ static uint8_t EH_check_event_and_respond_(const EL_Event* event);
 
 /**
  * @brief  EH の対応条件をチェックし， EL_Event に対応する
- * 
+ *
  *         対応条件にマッチした場合， EL_CORE_GROUP_EH_MATCH_RULE イベントを発行し，多段の EH 対応を問い合わせる
  * @note   引数はアサーション済みを仮定する
  * @note   再帰呼出しされる
@@ -492,7 +492,7 @@ static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id)
                     0);
     return 0;
   }
-  if (higher_level_trigger_event->group != event_handler->rule_table.rules[rule_id].settings.event.group)
+  if (higher_level_trigger_event->group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE || higher_level_trigger_event->local != rule_id)
   {
     // 何かがおかしい（ありえないが，安全のため入れている．問題なさそうなら消してよし）
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
