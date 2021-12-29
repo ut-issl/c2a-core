@@ -622,10 +622,7 @@ static void EH_respond_(EH_RULE_ID rule_id)
                     (uint32_t)(deploy_cmd_ack + 100));   // FIXME: CCP_EXEC_STS が負数も含むので．．．なんとかしたい
   }
 
-  // TODO: ここで inactivate するか， EH_check_rule_ でするか，要検討
-  //       多段の場合，ここですると，下位のルールは inactivate されない
-  // EH_inactivate_mulit_level_rule を用意すれば，ここで inactivateできるし， activateもやりやすい？
-  EH_inactivate_rule(rule_id);
+  EH_inactivate_rule_for_multi_level(rule_id);
 
   EH_record_responded_log_(rule_id, deploy_cmd_ack);
 }
@@ -1052,6 +1049,50 @@ EH_CHECK_RULE_ACK EH_inactivate_rule(EH_RULE_ID id)
 }
 
 
+EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id)
+{
+  int i;
+  EH_RULE_ID next_rule_id = id;
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  // 無限ループ回避のため for で
+  for (i = 0; i < EH_RULE_MAX; ++i)
+  {
+    if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
+    if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+    {
+      break;
+    }
+    next_rule_id = (EH_RULE_ID)event_handler_.rule_table.rules[next_rule_id].settings.event.local;
+  }
+
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
+EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
+{
+  int i;
+  EH_RULE_ID next_rule_id = id;
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  // 無限ループ回避のため for で
+  for (i = 0; i < EH_RULE_MAX; ++i)
+  {
+    if (EH_inactivate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
+    if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+    {
+      break;
+    }
+    next_rule_id = (EH_RULE_ID)event_handler_.rule_table.rules[next_rule_id].settings.event.local;
+  }
+
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
 void EH_match_event_counter_to_el(void)
 {
   uint8_t err_level;
@@ -1205,6 +1246,44 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_activate_rule_for_multi_level(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_inactivate_rule_for_multi_level(rule_id);
 
   switch (ack)
   {

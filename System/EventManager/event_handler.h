@@ -326,6 +326,24 @@ EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id);
 EH_CHECK_RULE_ACK EH_inactivate_rule(EH_RULE_ID id);
 
 /**
+ * @brief  ルールの有効化 (multi-level)
+ * @note   多段の場合，指定した EH_RULE_ID より下位のすべてのルールを有効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id);
+
+/**
+ * @brief  ルールの無効化 (multi-level)
+ * @note   多段の場合，指定した EH_RULE_ID より下位のすべてのルールを無効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id);
+
+/**
  * @brief  イベントカウンタを EL のそれに合わせる
  * @note   EL 側をリセットした際に呼び出さないと，不整合が発生する（まあ，勝手に解消されるけど）
  * @param  void
@@ -359,6 +377,10 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet);
 CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet);
 
