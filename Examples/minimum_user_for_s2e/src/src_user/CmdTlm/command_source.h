@@ -1,5 +1,5 @@
 /**
- * @file   command_source.h
+ * @file
  * @brief  コマンド定義に必要なヘッダー
  */
 #ifndef COMMAND_SOURCE_H_

@@ -1,5 +1,5 @@
 /**
- * @file git_revision.h
+ * @file
  * @brief git revision‚ğƒR[ƒh‚É–„‚ß‚Ş
  */
 #ifndef GIT_REVISION_H_

@@ -1,5 +1,5 @@
 /**
- * @file   obc_time_params.h
+ * @file
  * @brief  OBCTのCoreパラメタのオーバーライド用ヘッダー
  */
 #ifndef OBC_TIME_PARAMS_H_

@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  di_gs.c
+ * @file
  * @brief GS Driver のインスタンス化
  */
 

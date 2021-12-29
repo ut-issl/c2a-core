@@ -1,5 +1,5 @@
 /**
- * @file  gs_validate.h
+ * @file
  * @brief óM‚µ‚½ TC Frame ‚ÌŒŸØ‚ğs‚¤
  */
 #ifndef GS_VALIDATE_H_

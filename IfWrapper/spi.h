@@ -1,5 +1,5 @@
 /**
- * @file spi.h
+ * @file
  * @brief SPI通信(Master側)のラッパークラスです。
  * @note SPI通信ラッパーは、
  *       SPIのインターフェースを実現し、

@@ -1,5 +1,5 @@
 /**
- * @file   block_command_table_params.h
+ * @file
  * @brief  BCTのCoreTlmパラメタのオーバーライド用ヘッダー
  */
 #ifndef BLOCK_COMMAND_TABLE_PARAMS_H_

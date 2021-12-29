@@ -1,5 +1,5 @@
 /**
- * @file   common_tlm_cmd_packet_params.h
+ * @file
  * @brief  CTCP パラメタのオーバーライド用ヘッダー
  */
 #ifndef COMMON_TLM_CMD_PACKET_PARAMS_H_

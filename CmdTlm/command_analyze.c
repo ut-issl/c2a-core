@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file command_analyze.c
+ * @file
  * @brief  コマンドの実行・登録，コマンド関連処理
  */
 #include "command_analyze.h"

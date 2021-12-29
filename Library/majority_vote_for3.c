@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   majority_vote_for3.c
+ * @file
  * @brief  3dç’·—p”Ä—p‘½”ŒˆŠÖ”
  */
 #include "majority_vote_for3.h"

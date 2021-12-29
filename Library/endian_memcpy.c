@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file endian_memcpy.c
+ * @file
  * @brief  memcpyのエンディアン対策
  */
 

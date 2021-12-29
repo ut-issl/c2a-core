@@ -1,5 +1,5 @@
 /**
- * @file ccsds.h
+ * @file
  * @brief CCSDS通信ラッパーのクラスです。(MOBC用 バックグラウンド取り込みVer)
  *
  *        CCSDS通信ラッパーは、

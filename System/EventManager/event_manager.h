@@ -1,5 +1,5 @@
 /**
- * @file  event_manager.h
+ * @file
  * @brief C2A全体のイベントを管理する
  * @note  event_logger と event_handler を管理する
  */

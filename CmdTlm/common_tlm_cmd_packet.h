@@ -1,5 +1,5 @@
 /**
- * @file   common_tlm_cmd_packet.h
+ * @file
  * @brief  CTCP �̐錾
  * @note   CTCP: Common Tlm Cmd Packet
  * @note   CCP:  Common Cmd Packet

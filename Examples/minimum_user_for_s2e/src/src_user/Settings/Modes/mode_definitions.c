@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  mode_definitions.h
+ * @file
  * @brief モード定義とモード遷移定義
  */
 #include "mode_definitions.h"

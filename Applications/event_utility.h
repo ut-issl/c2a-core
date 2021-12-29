@@ -1,5 +1,5 @@
 /**
- * @file  event_utility.h
+ * @file
  * @brief イベント処理の定期実行のためのApp
  * @note  実質的には event_handler を定期実行するだけ
  */

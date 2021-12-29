@@ -1,5 +1,5 @@
 /**
- * @file  ccsds_user.h
+ * @file
  * @brief CCSDS API ˆË‘¶‚ÌŠÖ”‚ğéŒ¾
  */
 #ifndef CCSDS_USER_H_

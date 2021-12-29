@@ -1,5 +1,5 @@
 /**
- * @file   driver_super_params.h
+ * @file
  * @brief  DriverSuperパラメタのオーバーライド用ヘッダー
  */
 #ifndef DRIVER_SUPER_PARAMS_H_

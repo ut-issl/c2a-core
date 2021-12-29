@@ -1,5 +1,5 @@
 /**
- * @file   event_handler_rules.h
+ * @file
  * @brief  EH ‚Ì Rule ‹¤’Êƒwƒbƒ_
  */
 #ifndef EVENT_HANDLER_RULES_H_

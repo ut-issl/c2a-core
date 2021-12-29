@@ -1,5 +1,5 @@
 /**
- * @file   telemetry_source.h
+ * @file
  * @brief  テレメトリ定義に必要なヘッダー
  */
 #ifndef TELEMETRY_SOURCE_H_

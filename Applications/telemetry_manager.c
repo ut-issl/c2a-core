@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  telemetry_manager.c
+ * @file
  * @brief userがテレメトリ詰まりをやTL溢れを防ぎつつ，またCDHなどがテレメトリを管理しやすくするためのApp
  * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 や telemetry_manager.h の最下部を参照（FIXME: あとでdocumentに移す）
  */

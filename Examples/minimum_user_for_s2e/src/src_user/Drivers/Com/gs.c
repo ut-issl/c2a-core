@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  gs.c
+ * @file
  * @brief Ground station Ç∆ÇÃí êMÇÃ Driver
  */
 

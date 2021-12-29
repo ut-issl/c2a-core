@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file crc.h
+ * @file
  * @brief CRC—p‚Ìƒ‰ƒCƒuƒ‰ƒŠ
  */
 #include "crc.h"

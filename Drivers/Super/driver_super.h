@@ -1,5 +1,5 @@
 /**
- * @file   driver_super.h
+ * @file
  * @brief  各制御センサ・アクチュエータ等とのインターフェースドライバ群のスーパークラス
  *
  *         DriverSuper Class は

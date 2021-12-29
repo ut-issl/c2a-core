@@ -1,5 +1,5 @@
 /**
- * @file   common_tlm_cmd_packet_util.h
+ * @file
  * @brief  CTCP �̔ėpUtil
  */
 #ifndef COMMON_TLM_CMD_PACKET_UTIL_H_

@@ -1,5 +1,5 @@
 /**
- * @file uart.h
+ * @file
  * @brief UART通信ラッパーのクラスです。
  * @note UART，具体的にはUARTやLVTTLを想定している
  *       UART通信ラッパーは、

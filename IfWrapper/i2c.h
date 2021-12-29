@@ -1,5 +1,5 @@
 /**
- * @file i2c.h
+ * @file
  * @brief I2C通信(Master側)のラッパークラスです。
  * @note I2C通信ラッパーは、
  *       I2Cのインターフェースを実現し、

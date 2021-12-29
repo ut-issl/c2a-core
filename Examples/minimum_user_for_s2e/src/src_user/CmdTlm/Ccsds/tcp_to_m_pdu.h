@@ -1,5 +1,5 @@
 /**
- * @file  tcp_to_m_pdu.h
+ * @file
  * @brief PacketList ‚©‚ç TCPacket ‚ğæ‚Á‚Ä‚«‚Ä‚»‚ê‚ğ‘—M‰Â”\‚È M_PDU ‚Ö‚Æ•ÏŠ·‚·‚é
  */
 #ifndef TCP_TO_M_PDU_H_

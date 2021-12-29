@@ -1,5 +1,5 @@
 /**
- * @file  event_logger_settings.h
+ * @file
  * @brief event_logger ÇÃê›íË
  */
 #ifndef EVENT_LOGGER_SETTINGS_H_

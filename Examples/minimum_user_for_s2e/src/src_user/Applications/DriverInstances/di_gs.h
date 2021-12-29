@@ -1,5 +1,5 @@
 /**
- * @file di_gs.h
+ * @file
  * @brief GS Driver のインスタンス化
  */
 #ifndef DI_GS_H_

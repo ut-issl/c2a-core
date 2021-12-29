@@ -1,5 +1,5 @@
 /**
- * @file   anomaly_logger_params.h
+ * @file
  * @brief  ALのCoreパラメタのオーバーライド用ヘッダー
  */
 #ifndef ANOMALY_LOGGER_PARAMS_H_

@@ -1,5 +1,5 @@
 /**
- * @file   driver_super_issl_format.h
+ * @file
  * @brief  DriverのためのISSLフォーマット通信のための公開定義，関数など
  */
 #ifndef DRIVER_SUPER_ISSL_FORMAT_H_

@@ -1,5 +1,5 @@
 /**
- * @file  packet_list.h
+ * @file
  * @brief CTCPのリストとしてのデータ構造を定義. 片方向リストとして実装されている
  */
 #ifndef PACKET_LIST_H_

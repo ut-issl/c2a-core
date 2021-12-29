@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  block_command_table.c
+ * @file
  * @brief BCT‚Ì’è‹`, BCTü‚è‚ÌŠÖ”
  */
 

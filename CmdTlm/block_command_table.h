@@ -1,5 +1,5 @@
 /**
- * @file  block_command_table.h
+ * @file
  * @brief BCT‚Ì’è‹`, BCTü‚è‚ÌŠÖ”
  */
 #ifndef BLOCK_COMMAND_TABLE_H_

@@ -1,7 +1,7 @@
 #ifndef AH_RULES_H_
 #define AH_RULES_H_
 /**
- * @file   ah_rules.h
+ * @file
  * @brief  AHのユーザー定義部分をCoreから分離
  */
 

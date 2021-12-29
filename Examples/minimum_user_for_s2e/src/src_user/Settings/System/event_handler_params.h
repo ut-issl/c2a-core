@@ -1,5 +1,5 @@
 /**
- * @file  event_handler_params.h
+ * @file
  * @brief event_handler の各種設定
  *        各パラメタ類の詳細は event_handler.h を参照すること
  */

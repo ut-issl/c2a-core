@@ -1,5 +1,5 @@
 /**
- * @file  app_headers.h
+ * @file
  * @brief App‚Ìƒwƒbƒ_‚ð‚Ü‚Æ‚ß‚½ƒwƒbƒ_
  */
 #ifndef APP_HEADERS_H_

@@ -1,5 +1,5 @@
 /**
- * @file spwire.h
+ * @file
  * @brief SPWIRE(スペースワイヤ)通信ラッパーのクラスです。
  *
  * SPWIRE(スペースワイヤ)通信ラッパーは、

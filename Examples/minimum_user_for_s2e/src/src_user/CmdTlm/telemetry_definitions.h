@@ -1,5 +1,5 @@
 /**
- * @file   telemetry_definitions.h
+ * @file
  * @brief  テレメトリ定義
  * @note   このコードは自動生成されています！
  */

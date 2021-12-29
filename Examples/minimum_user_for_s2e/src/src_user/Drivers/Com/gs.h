@@ -1,5 +1,5 @@
 /**
- * @file gs.h
+ * @file
  * @brief Ground Station ‚Æ‚Ì’ÊM—p‚Ì Driver
  */
 #ifndef GS_H_

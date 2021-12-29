@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  packet_list.c
+ * @file
  * @brief CTCPのリストとしてのデータ構造を定義. 片方向リストとして実装されている
  */
 #include "packet_list.h"
