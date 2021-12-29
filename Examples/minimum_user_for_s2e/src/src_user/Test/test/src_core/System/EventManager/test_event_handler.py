@@ -686,9 +686,9 @@ def test_event_handler_respond_cumulative():
 
 @pytest.mark.real
 @pytest.mark.sils
-def test_event_handler_activate_and_inactivate_rulefor_multi_level():
+def test_event_handler_activate_and_inactivate_rule_for_multi_level():
     print("")
-    print("test_event_handler_activate_and_inactivate_rulefor_multi_level")
+    print("test_event_handler_activate_and_inactivate_rule_for_multi_level")
 
     # 初期化
     init_el_and_eh()
