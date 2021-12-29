@@ -63,7 +63,7 @@ void EH_load_rule_test(void)
   settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 0;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
-  settings.should_match_err_level;
+  settings.should_match_err_level = 1;
   settings.condition.type = EH_RESPONSE_CONDITION_SINGLE;
   settings.condition.count_threshold = 1;
   settings.condition.time_threshold_ms = 0;
