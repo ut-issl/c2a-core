@@ -102,6 +102,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL].cmd_func = Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL;
   cmd_table[Cmd_CODE_EH_SET_RULE_COUNTER].cmd_func = Cmd_EH_SET_RULE_COUNTER;
   cmd_table[Cmd_CODE_EH_CLEAR_RULE_COUNTER].cmd_func = Cmd_EH_CLEAR_RULE_COUNTER;
+  cmd_table[Cmd_CODE_EH_CLEAR_RULE_COUNTER_BY_EVENT].cmd_func = Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT;
   cmd_table[Cmd_CODE_EH_CLEAR_LOG].cmd_func = Cmd_EH_CLEAR_LOG;
   cmd_table[Cmd_CODE_EH_SET_MAX_RESPONSE_NUM].cmd_func = Cmd_EH_SET_MAX_RESPONSE_NUM;
   cmd_table[Cmd_CODE_EH_SET_MAX_CHECK_EVENT_NUM].cmd_func = Cmd_EH_SET_MAX_CHECK_EVENT_NUM;
@@ -271,6 +272,9 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EH_SET_RULE_COUNTER].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_EH_SET_RULE_COUNTER].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_EH_CLEAR_RULE_COUNTER].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_EH_CLEAR_RULE_COUNTER_BY_EVENT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_CLEAR_RULE_COUNTER_BY_EVENT].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_CLEAR_RULE_COUNTER_BY_EVENT].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EH_SET_MAX_RESPONSE_NUM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EH_SET_MAX_CHECK_EVENT_NUM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
