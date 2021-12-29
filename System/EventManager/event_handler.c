@@ -563,7 +563,7 @@ static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_
   if (delta_time_ms > rule->settings.condition.time_threshold_ms)
   {
     // òAë±Ç≈ÇÕÇ»Ç≠Ç»Ç¡ÇΩ
-    rule->counter = 0;
+    EH_clear_rule_counter(rule_id);
   }
 
   rule->counter++;
@@ -573,7 +573,7 @@ static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_
     return EH_CKECK_RULE_ACK_NOT_MATCH;
   }
 
-  rule->counter = 0;
+  EH_clear_rule_counter(rule_id);
   return EH_CKECK_RULE_ACK_MATCH;
 }
 
@@ -589,7 +589,7 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
     return EH_CKECK_RULE_ACK_NOT_MATCH;
   }
 
-  rule->counter = 0;
+  EH_clear_rule_counter(rule_id);
   return EH_CKECK_RULE_ACK_MATCH;
 }
 
@@ -1035,6 +1035,8 @@ EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id)
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   event_handler_.rule_table.rules[id].settings.is_active = 1;
+  // ã}Ç…î≠âŒÇµÇƒÇ‡ç¢ÇÈÇÃÇ≈
+  EH_clear_rule_counter(id);
   return EH_CHECK_RULE_ACK_OK;
 }
 
@@ -1090,6 +1092,22 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   }
 
   return EH_CHECK_RULE_ACK_OK;
+}
+
+
+EH_CHECK_RULE_ACK EH_set_rule_counter(EH_RULE_ID id, uint16_t counter)
+{
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  event_handler_.rule_table.rules[id].counter = counter;
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
+EH_CHECK_RULE_ACK EH_clear_rule_counter(EH_RULE_ID id)
+{
+  return EH_set_rule_counter(id, 0);
 }
 
 
@@ -1284,6 +1302,45 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule_for_multi_level(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  uint16_t counter = CCP_get_param_from_packet(packet, 1, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_set_rule_counter(rule_id, counter);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_clear_rule_counter(rule_id);
 
   switch (ack)
   {
