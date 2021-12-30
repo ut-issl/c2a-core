@@ -1,15 +1,32 @@
 #pragma section REPRO
-// 地上局からのコマンド実行用アプリ
+/**
+ * @file
+ * @brief 地上局から発行された RTC (Real Time Cmd) を実行する
+ */
 
 #include "gs_command_dispatcher.h"
-
 #include "../CmdTlm/packet_handler.h"
 
 static CommandDispatcher gs_command_dispatcher_;
 const CommandDispatcher* const gs_command_dispatcher = &gs_command_dispatcher_;
 
+/**
+ * @brief  GSCD App 初期化関数
+ * @param  void
+ * @return void
+ */
 static void GSCD_init_(void);
+
+/**
+ * @brief  GSCD App 実行関数
+ *
+ *         PH_add_gs_cmd_ にて， GS からの RTC が gs_command_dispatcher に紐付けられたコマンドキュー PH_gs_cmd_list に push back される．
+ *         そのキューから１つコマンドを取り出し実行する
+ * @param  void
+ * @return void
+ */
 static void GSCD_dispatch_(void);
+
 
 AppInfo GSCD_create_app(void)
 {
@@ -23,13 +40,6 @@ static void GSCD_init_(void)
 
 static void GSCD_dispatch_(void)
 {
-  // このgs_command_dispatcher_は外部で更新されている
-  // 2018/06/26 の時点における処理の流れを具体的に描くと、
-  // GSTOS_cmd_packet_handler_ > PH_analyze_packet > analyze_cmd_ > add_gs_cmd_
-  //
-  // AR_DI_GSTOS_CMD_PH というIDのアプリを起点にコマンドの解析が進み、
-  // 地上局からのコマンドと判定されるとadd_gs_cmd_関数内でgs_command_dispatcher_に反映される。
-
   CDIS_dispatch_command(&gs_command_dispatcher_);
 }
 
@@ -37,8 +47,9 @@ CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CTCP* packet)
 {
   (void)packet;
 
-  // 記録されたエラー情報を解除。
+  // 記録されたエラー情報をクリア
   CDIS_clear_error_status(&gs_command_dispatcher_);
   return CCP_EXEC_SUCCESS;
 }
+
 #pragma section
