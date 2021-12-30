@@ -30,22 +30,22 @@ void APP_DBG_print_git_rev_(void);
 
 AppInfo APP_DBG_flush_screen(void)
 {
-  return create_app_info("fscr", NULL, APP_DBG_flush_screen_);
+  return AI_create_app_info("fscr", NULL, APP_DBG_flush_screen_);
 }
 
 AppInfo APP_DBG_print_time_stamp(void)
 {
-  return create_app_info("tstm", NULL, APP_DBG_print_time_stamp_);
+  return AI_create_app_info("tstm", NULL, APP_DBG_print_time_stamp_);
 }
 
 AppInfo APP_DBG_print_cmd_status(void)
 {
-  return create_app_info("cmds", NULL, APP_DBG_print_cmd_status_);
+  return AI_create_app_info("cmds", NULL, APP_DBG_print_cmd_status_);
 }
 
 AppInfo APP_DBG_print_git_rev(void)
 {
-  return create_app_info("git_rev", NULL, APP_DBG_print_git_rev_);
+  return AI_create_app_info("git_rev", NULL, APP_DBG_print_git_rev_);
 }
 
 void APP_DBG_flush_screen_(void)

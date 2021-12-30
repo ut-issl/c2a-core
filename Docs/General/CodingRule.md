@@ -221,7 +221,7 @@ const DataRecorder* const data_recorder = &data_recorder_;
 
 AppInfo APP_DR_create_app(void)
 {
-  return create_app_info("data_recorder", NULL, APP_DR_update_);
+  return AI_create_app_info("data_recorder", NULL, APP_DR_update_);
 }
 ```
 

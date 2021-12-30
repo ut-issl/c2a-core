@@ -110,7 +110,7 @@ static CTCP TLM_MGR_packet_;
 
 AppInfo TLM_MGR_create_app(void)
 {
-  return create_app_info("telemetry_manager", TLM_MGR_init_by_am_, NULL);
+  return AI_create_app_info("telemetry_manager", TLM_MGR_init_by_am_, NULL);
 }
 
 

@@ -38,7 +38,7 @@ static void MEM_send_packet_(const CTCP* packet,
 
 AppInfo MEM_create_app(void)
 {
-  return create_app_info("mem", MEM_init_, NULL);
+  return AI_create_app_info("mem", MEM_init_, NULL);
 }
 
 static void MEM_init_(void)

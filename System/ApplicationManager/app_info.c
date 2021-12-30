@@ -6,9 +6,9 @@
 #include "app_info.h"
 #include <stddef.h>
 
-AppInfo create_app_info(const char* name,
-                        void (*initializer)(void),
-                        void (*entry_point)(void))
+AppInfo AI_create_app_info(const char* name,
+                           void (*initializer)(void),
+                           void (*entry_point)(void))
 {
   AppInfo ai;
 

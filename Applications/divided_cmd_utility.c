@@ -75,7 +75,7 @@ static CTCP DCU_packet_;
 
 AppInfo DCU_create_app(void)
 {
-  return create_app_info("divided_cmd_utility", DCU_init_, NULL);
+  return AI_create_app_info("divided_cmd_utility", DCU_init_, NULL);
 }
 
 

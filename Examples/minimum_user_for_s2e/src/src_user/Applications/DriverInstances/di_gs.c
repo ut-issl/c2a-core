@@ -32,17 +32,17 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
 
 AppInfo DI_GS_cmd_packet_handler(void)
 {
-  return create_app_info("GS_CMD", DI_GS_cmd_packet_handler_init_, DI_GS_cmd_packet_handler_);
+  return AI_create_app_info("GS_CMD", DI_GS_cmd_packet_handler_init_, DI_GS_cmd_packet_handler_);
 }
 
 AppInfo DI_GS_mst_packet_handler(void)
 {
-  return create_app_info("GS_MST", DI_GS_mst_packet_handler_init_, DI_GS_mst_packet_handler_);
+  return AI_create_app_info("GS_MST", DI_GS_mst_packet_handler_init_, DI_GS_mst_packet_handler_);
 }
 
 AppInfo DI_GS_rpt_packet_handler(void)
 {
-  return create_app_info("GS_RPT", DI_GS_rpt_packet_handler_init_, DI_GS_rpt_packet_handler_);
+  return AI_create_app_info("GS_RPT", DI_GS_rpt_packet_handler_init_, DI_GS_rpt_packet_handler_);
 }
 
 static void DI_GS_cmd_packet_handler_init_(void)
