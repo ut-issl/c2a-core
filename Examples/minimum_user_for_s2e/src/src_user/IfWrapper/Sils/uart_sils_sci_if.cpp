@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file    uart_sils_sci_if.cpp
+ * @file
  * @brief   uart_sils_sci_if
  * @details SILSでDriverのテストをするように作った
             ccsds_sils_sci_if.c/hのほぼコピー

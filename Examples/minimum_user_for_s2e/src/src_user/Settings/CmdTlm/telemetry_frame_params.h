@@ -1,5 +1,5 @@
 /**
- * @file   telemetry_frame_params.h
+ * @file
  * @brief  TFのCoreTlmパラメタのオーバーライド用ヘッダー
  */
 #ifndef TELEMETRY_FRAME_PARAMS_H_

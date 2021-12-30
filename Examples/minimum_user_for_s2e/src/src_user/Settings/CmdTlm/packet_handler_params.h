@@ -1,5 +1,5 @@
 /**
- * @file   packet_handler_params.h
+ * @file
  * @brief  PHのCoreTlmパラメタのオーバーライド用ヘッダー
  */
 #ifndef PACKET_HANDLER_PARAMS_H_

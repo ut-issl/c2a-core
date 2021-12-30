@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  event_logger_settings.c
+ * @file
  * @brief event_logger ‚Ìİ’è
  */
 

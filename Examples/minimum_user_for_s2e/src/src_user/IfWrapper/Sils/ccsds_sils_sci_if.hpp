@@ -1,5 +1,5 @@
 /**
- * @file    ccsds_sils_sci_if.hpp
+ * @file
  * @brief   ccsds_sils_sci_if
  * @details WINGS TMTC IF‚ÆCCSDS‚ÌTransfer Frame‚ğSCI COM‚Å‚â‚è‚Æ‚è‚·‚éIF
             Windowsã‚Åcom0com‚ğg‚¤‚±‚Æ‚ğ‘z’è

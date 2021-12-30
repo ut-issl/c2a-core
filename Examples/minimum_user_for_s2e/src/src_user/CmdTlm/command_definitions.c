@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   command_definitions.c
+ * @file
  * @brief  コマンド定義
  * @note   このコードは自動生成されています！
  */

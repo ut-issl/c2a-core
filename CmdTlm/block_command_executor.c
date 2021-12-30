@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  block_command_executor.c
+ * @file
  * @brief BCTの実行周りの関数, パラメーター
  * @note  Block Command ExeInfoは
  *        Block Command Table (BCT) の実行側のパラメーターである.

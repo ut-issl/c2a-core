@@ -1,5 +1,5 @@
 /**
- * @file  event_logger.h
+ * @file
  * @brief アノマリやエラーなどの各種イベントを記録する
  * @note  このイベントをもとに event_handler を発火させることができる
  * @note  ログは TLog (TimeSeriesLog) と CLog (EL_CumulativeLog) の二種類を準備し，必要なもののみを使う

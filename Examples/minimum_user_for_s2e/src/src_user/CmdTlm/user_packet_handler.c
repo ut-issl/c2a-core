@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   user_packet_handler.c
+ * @file
  * @brief  packet_handlerのコマンドルーター，コマンドアナライザのユーザー定義部分
  */
 #include "user_packet_handler.h"

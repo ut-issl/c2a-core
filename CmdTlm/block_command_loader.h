@@ -1,5 +1,5 @@
 /**
- * @file   block_command_loader.h
+ * @file
  * @brief  ブロックコマンド登録関連のユーティリティ
  *
  *         本機能はブロックコマンドの登録部をwrapし，userが簡潔かつ安全な形でブロック

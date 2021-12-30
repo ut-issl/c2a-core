@@ -1,5 +1,5 @@
 /**
- * @file endian_memcpy.h
+ * @file
  * @brief  memcpyのエンディアン対策
  */
 

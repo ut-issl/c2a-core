@@ -1,5 +1,5 @@
 /**
- * @file mode_manager.h
+ * @file
  * @brief ƒ‚[ƒh‘JˆÚ‚Ì§Œä‚Ì’è‹`
  */
 #ifndef MODE_MANAGER_H_

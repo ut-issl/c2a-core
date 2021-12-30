@@ -1,5 +1,5 @@
 /**
- * @file  event_logger_params.h
+ * @file
  * @brief event_logger の各種設定
  *        各パラメタ類の詳細は event_logger.h を参照すること
  */

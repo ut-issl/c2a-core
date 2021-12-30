@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file gs_validate.c
+ * @file
  * @brief óM‚µ‚½ TC Frame ‚ÌŒŸØ‚ğs‚¤
  */
 

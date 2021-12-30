@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   common_tlm_cmd_packet_util.c
+ * @file
  * @brief  CTCP �̔ėpUtil
  */
 

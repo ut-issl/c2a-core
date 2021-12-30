@@ -1,5 +1,5 @@
 /**
- * @file aa.h
+ * @file
  * @brief AA(ActiveAnalog)ラッパーのクラスです。
  *
  * AA(ActiveAnalog)ラッパーは、

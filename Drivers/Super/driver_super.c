@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   driver_super.c
+ * @file
  * @brief  各制御センサ・アクチュエータ等とのインターフェースドライバ群のスーパークラス
  *
  *         DriverSuper Class は

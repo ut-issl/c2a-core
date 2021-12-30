@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   event_handler_rules.c
+ * @file
  * @brief  EH ÇÃ Rule ã§í ÉRÅ[Éh
  */
 #include "event_handler_rules.h"

@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   event_handler_rule_test.c
+ * @file
  * @brief  EH の テスト用 Rule
  */
 #include "event_handler_rules.h"

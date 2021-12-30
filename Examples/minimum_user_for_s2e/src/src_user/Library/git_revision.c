@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file git_revision.c
+ * @file
  * @brief git revision‚ğƒR[ƒh‚É–„‚ß‚Ş
  */
 

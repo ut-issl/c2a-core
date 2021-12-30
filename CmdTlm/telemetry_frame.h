@@ -1,5 +1,5 @@
 /**
- * @file telemetry_frame.h
+ * @file
  * @brief  テレメトリの登録，テレメトリ関連処理
  */
 #ifndef TELEMETRY_FRAME_H_

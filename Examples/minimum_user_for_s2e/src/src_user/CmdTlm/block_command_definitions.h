@@ -1,5 +1,5 @@
 /**
- * @file   block_command_definitions.h
+ * @file
  * @brief  ブロックコマンド定義
  * @note   このコードは自動生成されています！
  */

@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   common_tlm_cmd_packet.c
+ * @file
  * @brief  CTCP ‚Ì’è‹`
  * @note   CTCP: common_tlm_cmd_packet
  * @note   CCP:  CommonCmdPacket

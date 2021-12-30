@@ -1,5 +1,5 @@
 /**
- * @file   command_definitions.h
+ * @file
  * @brief  コマンド定義
  * @note   このコードは自動生成されています！
  */

@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  nbc_respond_eh_for_test.c
+ * @file
  * @brief test用． EH のテストで EH が発火したことを検知する
  */
 #include "nbc_header.h"

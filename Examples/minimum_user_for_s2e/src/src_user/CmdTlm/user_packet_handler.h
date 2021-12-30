@@ -1,5 +1,5 @@
 /**
- * @file   user_packet_handler.h
+ * @file
  * @brief  packet_handlerのコマンドルーター，コマンドアナライザのユーザー定義部分
  */
 #ifndef USER_PACKET_HANDLER_H_

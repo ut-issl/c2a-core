@@ -1,5 +1,5 @@
 /**
- * @file   divided_cmd_utility_params.h
+ * @file
  * @brief  DCU の CoreApp パラメタのオーバーライド用ヘッダー
  */
 #ifndef DIVIDED_CMD_UTILITY_PARAMS_H_

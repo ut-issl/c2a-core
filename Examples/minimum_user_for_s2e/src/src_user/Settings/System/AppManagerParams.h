@@ -1,5 +1,5 @@
 /**
- * @file   AppManagerParams.h
+ * @file
  * @brief  AMのCoreパラメタのオーバーライド用ヘッダー
  */
 #ifndef APP_MANAGER_PARAMS_H_

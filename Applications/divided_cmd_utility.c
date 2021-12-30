@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  divided_cmd_utility.c
+ * @file
  * @brief コマンド分割をサポートするUtil
  * @note  HOW TO USE
  *        1. 各Cmdにて初めに DCU_check_in を実行し，現在の実行状況を取得する

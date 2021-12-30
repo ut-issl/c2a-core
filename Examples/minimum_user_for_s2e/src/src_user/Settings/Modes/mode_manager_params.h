@@ -1,5 +1,5 @@
 /**
- * @file mode_manager_params.h
+ * @file
  * @brief ModeMangaer のパラメーターオーバーライト
  */
 #ifndef MODE_MANAGER_PARAMS_H_

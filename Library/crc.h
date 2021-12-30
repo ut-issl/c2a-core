@@ -1,5 +1,5 @@
 /**
- * @file crc.h
+ * @file
  * @brief CRC—p‚Ìƒ‰ƒCƒuƒ‰ƒŠ
  */
 #ifndef CRC_H_

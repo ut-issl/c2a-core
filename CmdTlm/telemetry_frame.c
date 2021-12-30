@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file telemetry_frame.c
+ * @file
  * @brief  テレメトリの登録，テレメトリ関連処理
  */
 #include "telemetry_frame.h"

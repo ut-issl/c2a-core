@@ -1,5 +1,5 @@
 /**
- * @file  event_logger_group.h
+ * @file
  * @brief event_logger の イベント識別IDを定義
  * @note  前半は C2A core で使われるため，IDのかぶりに注意すること
  */

@@ -1,5 +1,5 @@
 /**
- * @file   majority_vote_for3.h
+ * @file
  * @brief  3dç’·—p”Ä—p‘½”ŒˆŠÖ”
  */
 #ifndef MAJORITY_VOTE_FOR3_

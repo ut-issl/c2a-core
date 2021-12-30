@@ -1,5 +1,5 @@
 /**
- * @file   dc.h
+ * @file
  * @brief  DC (Discrete, GPIO) ラッパーのクラス
  *
  *         DriverSuper Class は

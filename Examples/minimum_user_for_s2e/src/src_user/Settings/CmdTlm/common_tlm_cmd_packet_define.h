@@ -1,5 +1,5 @@
 /**
- * @file   common_tlm_cmd_packet_define.h
+ * @file
  * @brief  CTCPŒ^‚Ì’è‹`
  */
 #ifndef COMMON_TLM_CMD_PACKET_DEFINE_H_
