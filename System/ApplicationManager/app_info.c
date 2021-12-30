@@ -1,7 +1,10 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief App î•ñ\‘¢‘Ì’è‹`‚Æ App ì¬
+ */
 #include "app_info.h"
-
-#include <stddef.h> // for NULL
+#include <stddef.h>
 
 AppInfo create_app_info(const char* name,
                         void (*initializer)(void),
@@ -19,4 +22,5 @@ AppInfo create_app_info(const char* name,
 
   return ai;
 }
+
 #pragma section
