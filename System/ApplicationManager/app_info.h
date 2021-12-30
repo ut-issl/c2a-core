@@ -25,7 +25,7 @@ typedef struct
  * @param  entry_point: ƒAƒvƒŠÀsŠÖ”
  * @return ì¬‚³‚ê‚½ AppInfo
  */
-AppInfo AI_create_app_info(const char* name, 
+AppInfo AI_create_app_info(const char* name,
                            void (*initializer)(void),
                            void (*entry_point)(void));
 
