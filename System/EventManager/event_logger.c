@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  event_logger.c
+ * @file
  * @brief アノマリやエラーなどの各種イベントを記録する
  * @note  このイベントをもとに event_handler を発火させることができる
  * @note  ログは TLog (TimeSeriesLog) と CLog (EL_CumulativeLog) の二種類を準備し，必要なもののみを使う
@@ -8,11 +8,12 @@
  * @note  詳細は event_logger.h を参照
  */
 #include "event_logger.h"
+#include "event_handler.h"
 #include <string.h>
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
 #include <src_user/Settings/System/event_logger_settings.h>
-#include "../../Library/endian_memcpy.h"
+#include "../../CmdTlm/common_tlm_cmd_packet_util.h"
 
 
 #ifdef EL_IS_ENABLE_CLOG
@@ -24,7 +25,7 @@
 typedef enum
 {
   EL_CLOG_LOG_ACK_OK = 0,           //!< 正常終了
-  EL_CLOG_LOG_ACK_NOT_FOUND,        //!< 指定ログが見つからず
+  EL_CLOG_LOG_ACK_NOT_FOUND         //!< 指定ログが見つからず
 } EL_CLOG_LOG_ACK;
 #endif
 
@@ -162,6 +163,7 @@ static EL_Event EL_tlog_event_table_low_[EL_TLOG_LOG_SIZE_MAX_LOW];
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
 static EL_Event EL_tlog_event_table_el_[EL_TLOG_LOG_SIZE_MAX_EL];
 #endif
+static EL_Event EL_tlog_event_table_eh_[EL_TLOG_LOG_SIZE_MAX_EH];
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
@@ -177,6 +179,8 @@ static uint16_t EL_clog_log_order_table_low_[EL_CLOG_LOG_SIZE_MAX_LOW];
 static EL_CLogElement EL_clog_log_table_el_[EL_CLOG_LOG_SIZE_MAX_EL];
 static uint16_t EL_clog_log_order_table_el_[EL_CLOG_LOG_SIZE_MAX_EL];
 #endif
+static EL_CLogElement EL_clog_log_table_eh_[EL_CLOG_LOG_SIZE_MAX_EH];
+static uint16_t EL_clog_log_order_table_eh_[EL_CLOG_LOG_SIZE_MAX_EH];
 #endif
 
 
@@ -200,11 +204,14 @@ void EL_initialize(void)
   event_logger_.tlogs[EL_ERROR_LEVEL_EL].events           = EL_tlog_event_table_el_;
   event_logger_.tlogs[EL_ERROR_LEVEL_EL].log_capacity     = EL_TLOG_LOG_SIZE_MAX_EL;
 #endif
+  event_logger_.tlogs[EL_ERROR_LEVEL_EH].events           = EL_tlog_event_table_eh_;
+  event_logger_.tlogs[EL_ERROR_LEVEL_EH].log_capacity     = EL_TLOG_LOG_SIZE_MAX_EH;
 
   EL_clear_all_tlog_();
 
   // デフォルトでは TLog の上書きは有効
   EL_enable_tlog_overwrite_all();
+  EL_enable_tlog_overwrite(EL_ERROR_LEVEL_EH);
 #endif  // EL_IS_ENABLE_TLOG
 
 #ifdef EL_IS_ENABLE_CLOG
@@ -224,6 +231,9 @@ void EL_initialize(void)
   event_logger_.clogs[EL_ERROR_LEVEL_EL].log_orders       = EL_clog_log_order_table_el_;
   event_logger_.clogs[EL_ERROR_LEVEL_EL].log_capacity     = EL_CLOG_LOG_SIZE_MAX_EL;
 #endif
+  event_logger_.clogs[EL_ERROR_LEVEL_EH].logs             = EL_clog_log_table_eh_;
+  event_logger_.clogs[EL_ERROR_LEVEL_EH].log_orders       = EL_clog_log_order_table_eh_;
+  event_logger_.clogs[EL_ERROR_LEVEL_EH].log_capacity     = EL_CLOG_LOG_SIZE_MAX_EH;
 
   EL_clear_all_clog_();
 #endif  // EL_IS_ENABLE_CLOG
@@ -233,6 +243,8 @@ void EL_initialize(void)
 
   // ユーザーデフォルト設定
   EL_load_default_settings();
+
+  EH_match_event_counter_to_el();
 }
 
 
@@ -270,11 +282,11 @@ static EL_ACK EL_record_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL er
   const EL_Event event = EL_init_event_(group, local, err_level, note);
   EL_ACK ack = EL_ACK_OK;
 
-  if (event.group >= EL_GROUP_MAX)           return EL_ACK_ILLEGAL_GROUP;
-  if (event.group <= EL_CORE_GROUP_NULL)     return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
-  if (event.err_level < 0)                   return EL_ACK_ILLEGAL_ERROR_LEVEL;
-  if (event.err_level >= EL_ERROR_LEVEL_MAX) return EL_ACK_ILLEGAL_ERROR_LEVEL;
-  if (!EL_is_logging_enable(event.group))    return EL_ACK_DISABLE_LOGGING;
+  if (event.group >= EL_GROUP_MAX)                 return EL_ACK_ILLEGAL_GROUP;
+  if (event.group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
+  if (event.err_level < 0)                         return EL_ACK_ILLEGAL_ERROR_LEVEL;
+  if (event.err_level >= EL_ERROR_LEVEL_MAX)       return EL_ACK_ILLEGAL_ERROR_LEVEL;
+  if (!EL_is_logging_enable(event.group))          return EL_ACK_DISABLE_LOGGING;
 
   event_logger_.latest_event = event;   // 再帰呼び出しの可能性があるので，別途コピーして持つ
   event_logger_.statistics.record_counter_total++;
@@ -485,6 +497,10 @@ static EL_CLOG_LOG_ACK EL_search_clog_(const EL_Event* event, uint16_t* log_idx,
   for (i = 0; i < capacity; ++i)
   {
     uint16_t idx = p_clog->log_orders[i];
+    if (p_clog->logs[idx].event.group == (EL_GROUP)EL_CORE_GROUP_NULL)
+    {
+      return EL_CLOG_LOG_ACK_NOT_FOUND;
+    }
     if (p_clog->logs[idx].event.group == event->group &&
         p_clog->logs[idx].event.local == event->local)
     {
@@ -500,7 +516,6 @@ static EL_CLOG_LOG_ACK EL_search_clog_(const EL_Event* event, uint16_t* log_idx,
 
 static void EL_move_to_front_in_clog_(const EL_Event* event)
 {
-  uint16_t i;
   uint16_t log_idx;
   uint16_t order_idx;
   EL_CumulativeLog* p_clog = &event_logger_.clogs[event->err_level];
@@ -513,17 +528,13 @@ static void EL_move_to_front_in_clog_(const EL_Event* event)
     return;
   }
 
-  for (i = order_idx; i > 0; --i)
-  {
-    p_clog->log_orders[i] = p_clog->log_orders[i - 1];
-  }
+  memmove(&p_clog->log_orders[1], &p_clog->log_orders[0], sizeof(uint16_t) * order_idx);
   p_clog->log_orders[0] = log_idx;
 }
 
 
 static void EL_create_clog_on_front_(const EL_Event* event)
 {
-  uint16_t i;
   uint16_t log_idx;
   const EL_ERROR_LEVEL err_level = event->err_level;
   EL_CumulativeLog* p_clog = &event_logger_.clogs[err_level];
@@ -554,10 +565,7 @@ static void EL_create_clog_on_front_(const EL_Event* event)
   }
 #endif
 
-  for (i = (uint16_t)(capacity - 1); i > 0; --i)
-  {
-    p_clog->log_orders[i] = p_clog->log_orders[i - 1];
-  }
+  memmove(&p_clog->log_orders[1], &p_clog->log_orders[0], sizeof(uint16_t) * (capacity - 1));
   p_clog->log_orders[0] = log_idx;
 
   // ここで event をいれてしまう
@@ -578,14 +586,8 @@ static void EL_clear_latest_event_(void)
 
 static void EL_clear_statistics_(void)
 {
-  uint8_t err_level;
-
-  event_logger_.statistics.record_counter_total = 0;
-
-  for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
-  {
-    event_logger_.statistics.record_counters[err_level] = 0;
-  }
+  memset(&event_logger_.statistics, 0x00, sizeof(EL_EventStatistics));
+  EH_match_event_counter_to_el();
 }
 
 
@@ -596,8 +598,8 @@ EL_ACK EL_enable_logging(EL_GROUP group)
   uint8_t  info;
   uint8_t  mask;
 
-  if (group >= EL_GROUP_MAX)       return EL_ACK_ILLEGAL_GROUP;
-  if (group <= EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
+  if (group >= EL_GROUP_MAX) return EL_ACK_ILLEGAL_GROUP;
+  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
 
   info = event_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
@@ -616,8 +618,8 @@ EL_ACK EL_disable_logging(EL_GROUP group)
   uint8_t  info;
   uint8_t  mask;
 
-  if (group >= EL_GROUP_MAX)       return EL_ACK_ILLEGAL_GROUP;
-  if (group <= EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
+  if (group >= EL_GROUP_MAX) return EL_ACK_ILLEGAL_GROUP;
+  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // これは本当に入れてよいか要議論
 
   info = event_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
@@ -689,6 +691,7 @@ void EL_enable_tlog_overwrite_all(void)
 
   for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
   {
+    if ((EL_ERROR_LEVEL)err_level == EL_ERROR_LEVEL_EH) continue;
     EL_enable_tlog_overwrite((EL_ERROR_LEVEL)err_level);
   }
 }
@@ -700,6 +703,7 @@ void EL_disable_tlog_overwrite_all(void)
 
   for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
   {
+    if ((EL_ERROR_LEVEL)err_level == EL_ERROR_LEVEL_EH) continue;
     EL_disable_tlog_overwrite((EL_ERROR_LEVEL)err_level);
   }
 }
@@ -773,7 +777,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (err_level < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (err_level >= EL_ERROR_LEVEL_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -801,7 +805,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet)
 #ifdef EL_IS_ENABLE_TLOG
 CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (err_level < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (err_level >= EL_ERROR_LEVEL_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -816,7 +820,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
 #ifdef EL_IS_ENABLE_CLOG
 CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (err_level < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (err_level >= EL_ERROR_LEVEL_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -830,22 +834,12 @@ CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  EL_ACK ack;
-  EL_GROUP group;             // uint32_t を想定
-  uint32_t local;
-  EL_ERROR_LEVEL err_level;   // uint8_t を想定
-  uint32_t note;
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  uint32_t local = CCP_get_param_from_packet(packet, 1, uint32_t);
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 2, uint8_t);
+  uint32_t note = CCP_get_param_from_packet(packet, 3, uint32_t);
 
-  uint32_t temp;
-
-  endian_memcpy(&temp, &param[0], 4);
-  group = (EL_GROUP)temp;
-  endian_memcpy(&local, &param[4], 4);
-  err_level = (EL_ERROR_LEVEL)param[8];
-  endian_memcpy(&note, &param[9], 4);
-
-  ack = EL_record_event(group, local, err_level, note);
+  EL_ACK ack = EL_record_event(group, local, err_level, note);
 
   switch (ack)
   {
@@ -869,12 +863,8 @@ CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
 #ifdef EL_IS_ENABLE_TLOG
 CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t page_no;
-  EL_ERROR_LEVEL err_level;
-
-  page_no = param[0];
-  err_level = (EL_ERROR_LEVEL)param[1];
+  uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
 
   switch (err_level)
   {
@@ -891,10 +881,12 @@ CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
     break;
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   case EL_ERROR_LEVEL_EL:
-    // TODO: これは要検討
-    if (page_no != 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (page_no > (EL_TLOG_LOG_SIZE_MAX_EL - 1) / EL_TLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
     break;
 #endif
+  case EL_ERROR_LEVEL_EH:
+    if (page_no > (EL_TLOG_LOG_SIZE_MAX_EH - 1) / EL_TLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    break;
   default:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
@@ -910,12 +902,8 @@ CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 #ifdef EL_IS_ENABLE_CLOG
 CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t page_no;
-  EL_ERROR_LEVEL err_level;
-
-  page_no = param[0];
-  err_level = (EL_ERROR_LEVEL)param[1];
+  uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
 
   switch (err_level)
   {
@@ -932,10 +920,12 @@ CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
     break;
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   case EL_ERROR_LEVEL_EL:
-    // TODO: これは要検討
-    if (page_no != 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+    if (page_no > (EL_CLOG_LOG_SIZE_MAX_EL - 1) / EL_CLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
     break;
 #endif
+  case EL_ERROR_LEVEL_EH:
+    if (page_no > (EL_CLOG_LOG_SIZE_MAX_EH - 1) / EL_CLOG_TLM_PAGE_SIZE) return CCP_EXEC_ILLEGAL_PARAMETER;
+    break;
   default:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
@@ -959,16 +949,9 @@ CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  EL_ACK ack;
-  EL_GROUP group;
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
-  uint32_t temp;
-
-  endian_memcpy(&temp, param, 4);
-  group = (EL_GROUP)temp;
-
-  ack = EL_enable_logging(group);
+  EL_ACK ack = EL_enable_logging(group);
 
   switch (ack)
   {
@@ -984,16 +967,9 @@ CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  EL_ACK ack;
-  EL_GROUP group;
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
-  uint32_t temp;
-
-  endian_memcpy(&temp, param, 4);
-  group = (EL_GROUP)temp;
-
-  ack = EL_disable_logging(group);
+  EL_ACK ack = EL_disable_logging(group);
 
   switch (ack)
   {
@@ -1026,10 +1002,9 @@ CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet)
 #ifdef EL_IS_ENABLE_TLOG
 CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
-  EL_ACK ack;
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  ack = EL_enable_tlog_overwrite(err_level);
+  EL_ACK ack = EL_enable_tlog_overwrite(err_level);
 
   switch (ack)
   {
@@ -1045,10 +1020,9 @@ CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet)
 {
-  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_head(packet)[0];
-  EL_ACK ack;
+  EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  ack = EL_disable_tlog_overwrite(err_level);
+  EL_ACK ack = EL_disable_tlog_overwrite(err_level);
 
   switch (ack)
   {

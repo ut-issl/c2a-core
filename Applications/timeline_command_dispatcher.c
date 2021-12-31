@@ -3,7 +3,6 @@
 
 #include <string.h> // for memcpy
 
-#include <src_user/Library/utility.h>
 #include "../CmdTlm/packet_handler.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
@@ -33,9 +32,7 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time);
 
 AppInfo TLCD0_create_app(void)
 {
-  return create_app_info("tlc0d",
-                         TLCD0_init_,
-                         TLCD0_dispatch_);
+  return AI_create_app_info("tlc0d", TLCD0_init_, TLCD0_dispatch_);
 }
 
 static void TLCD0_init_(void)
@@ -63,9 +60,7 @@ static void TLCD0_dispatch_(void)
 
 AppInfo TLCD1_create_app(void)
 {
-  return create_app_info("tlc1d",
-                         TLCD1_init_,
-                         TLCD1_dispatch_);
+  return AI_create_app_info("tlc1d", TLCD1_init_, TLCD1_dispatch_);
 }
 
 static void TLCD1_init_(void)
@@ -80,9 +75,7 @@ static void TLCD1_dispatch_(void)
 
 AppInfo TLCD2_create_app(void)
 {
-  return create_app_info("tlc2d",
-                         TLCD2_init_,
-                         TLCD2_dispatch_);
+  return AI_create_app_info("tlc2d", TLCD2_init_, TLCD2_dispatch_);
 }
 
 static void TLCD2_init_(void)
@@ -316,6 +309,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
+// FIXME: ELのイベント記録を追加する
 CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
 {
   int      line_no;

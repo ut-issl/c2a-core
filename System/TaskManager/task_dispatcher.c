@@ -46,7 +46,7 @@ void TDSP_initialize(void)
 
 TDSP_ACK TDSP_set_task_list_id(bct_id_t id)
 {
-  if (id < 0 || id >= BCT_MAX_BLOCKS) return TDSP_INVAILD_BCT_ID;
+  if (id >= BCT_MAX_BLOCKS) return TDSP_INVAILD_BCT_ID;
   if (!BCE_is_active(id)) return TDSP_INACTIVE_BCT_ID;
   if (BCT_get_bc_length(id) == 0) return TDSP_EMPTY_BC;
 
@@ -116,7 +116,7 @@ void TDSP_execute_pl_as_task_list(void)
         EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_TASK_EXEC_FAILED,
                       EL_ERROR_LEVEL_HIGH,
-                      (uint32_t)(TDSP_info_.tskd.prev.sts + 100));   // CCP_EXEC_STS が負数も含むので．．．なんとかしたい
+                      (uint32_t)(TDSP_info_.tskd.prev.sts + 100));   // FIXME: CCP_EXEC_STS が負数も含むので．．．なんとかしたい
       }
 
       break;
@@ -203,7 +203,7 @@ CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CTCP* packet)
 
 AppInfo print_tdsp_status(void)
 {
-  return create_app_info("tstm", NULL, print_tdsp_status_);
+  return AI_create_app_info("tstm", NULL, print_tdsp_status_);
 }
 
 void print_tdsp_status_(void)

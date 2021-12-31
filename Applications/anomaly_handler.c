@@ -34,7 +34,7 @@ static size_t AH_prev_act_;
 
 AppInfo AH_create_app(void)
 {
-  return create_app_info("ah", AH_init_, AH_exec_);
+  return AI_create_app_info("ah", AH_init_, AH_exec_);
 }
 
 
@@ -225,7 +225,7 @@ static void AH_respond_to_anomaly_(size_t id)
 
 AppInfo print_ah_status(void)
 {
-  return create_app_info("ahs", NULL, AH_print_ah_status_);
+  return AI_create_app_info("ahs", NULL, AH_print_ah_status_);
 }
 
 

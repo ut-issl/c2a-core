@@ -1,5 +1,5 @@
 /**
- * @file  packet_list.h
+ * @file
  * @brief CTCPのリストとしてのデータ構造を定義. 片方向リストとして実装されている
  */
 #ifndef PACKET_LIST_H_
@@ -82,21 +82,21 @@ void PL_clear_list(PacketList* pli);
  * @param[in] pli: PacketList
  * @return uint32_t: 実行されたノード数
  */
-const uint32_t PL_count_executed_nodes(const PacketList* pli);
+uint32_t PL_count_executed_nodes(const PacketList* pli);
 
 /**
  * @brief PacketList で有効な(実行待ち)ノード数を返す
  * @param[in] pli: PacketList
  * @return uint16_t: 有効な(実行待ち)ノード数
  */
-const uint16_t PL_count_active_nodes(const PacketList* pli);
+uint16_t PL_count_active_nodes(const PacketList* pli);
 
 /**
  * @brief PacketList で使用されていないノード数を返す
  * @param[in] pli: PacketList
  * @return uint16_t: 使用されていないノード数
  */
-const uint16_t PL_count_inactive_nodes(const PacketList* pli);
+uint16_t PL_count_inactive_nodes(const PacketList* pli);
 
 /**
  * @brief PacketList が空かどうか

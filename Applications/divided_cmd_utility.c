@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  divided_cmd_utility.c
+ * @file
  * @brief コマンド分割をサポートするUtil
  * @note  HOW TO USE
  *        1. 各Cmdにて初めに DCU_check_in を実行し，現在の実行状況を取得する
@@ -14,7 +14,6 @@
 #include "divided_cmd_utility.h"
 #include "../CmdTlm/packet_handler.h"
 #include "../CmdTlm/common_tlm_cmd_packet_util.h"
-#include "../Library/endian_memcpy.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
 
@@ -71,13 +70,12 @@ static void DCU_create_log_on_front_(CMD_CODE cmd_code);
 static DividedCmdUtility divided_cmd_utility_;
 const DividedCmdUtility* const divided_cmd_utility = &divided_cmd_utility_;
 
-static uint8_t DCU_exec_log_order_temp_[DCU_LOG_MAX];
 static CTCP DCU_packet_;
 
 
 AppInfo DCU_create_app(void)
 {
-  return create_app_info("divided_cmd_utility", DCU_init_, NULL);
+  return AI_create_app_info("divided_cmd_utility", DCU_init_, NULL);
 }
 
 
@@ -288,15 +286,8 @@ DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec
 
 CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint16_t temp;
-  CMD_CODE target_cmd;
-
   // CMD_CODE は u16 と想定する
-  if (CCP_get_param_len(packet) != 2) return CCP_EXEC_ILLEGAL_LENGTH;
-
-  endian_memcpy(&temp, param, 2);
-  target_cmd = (CMD_CODE)temp;
+  CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_abort_cmd(target_cmd);
 
@@ -306,15 +297,8 @@ CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CTCP* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint16_t temp;
-  CMD_CODE target_cmd;
-
   // CMD_CODE は u16 と想定する
-  if (CCP_get_param_len(packet) != 2) return CCP_EXEC_ILLEGAL_LENGTH;
-
-  endian_memcpy(&temp, param, 2);
-  target_cmd = (CMD_CODE)temp;
+  CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_donw_abort_flag(target_cmd);
 

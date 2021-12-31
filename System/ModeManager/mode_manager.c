@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file mode_manager.c
+ * @file
  * @brief ƒ‚[ƒh‘JˆÚ‚Ì§Œä
  */
 #include "mode_manager.h"

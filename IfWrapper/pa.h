@@ -1,5 +1,5 @@
 /**
- * @file pa.h
+ * @file
  * @brief PA(PassiveAnalog)ラッパーのクラスです。(MOBC用)
  *
  * PA(PassiveAnalog)ラッパーは、

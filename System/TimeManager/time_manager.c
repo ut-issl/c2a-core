@@ -1,24 +1,30 @@
 #pragma section REPRO
 #include "time_manager.h"
-
+#include <string.h>
 #include <src_user/CmdTlm/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
 #include "../../Library/endian_memcpy.h"
 
 static ObcTime master_clock_;
-const ObcTime* master_clock;
 
-static OBCT_UnixTimeInfo OBCT_unix_time_info_;
-const OBCT_UnixTimeInfo* const OBCT_unix_time_info = &OBCT_unix_time_info_;
+static OBCT_UnixtimeInfo OBCT_unixtime_info_;
+
+static TimeManager time_manager_;
+const TimeManager* const time_manager = &time_manager_;
 
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 void TMGR_init(void)
 {
-  OBCT_clear(&master_clock_);
-  master_clock = &master_clock_;
+  OBCT_clear(&time_manager_.initializing_time);
+  time_manager_.initializing_flag = 1;
+  TMGR_clear();
+}
 
-  OBCT_clear_unix_time_info(&OBCT_unix_time_info_);
+void TMGR_clear(void)
+{
+  OBCT_clear(&master_clock_);
+  OBCT_clear_unixtime_info(&OBCT_unixtime_info_);
 }
 
 void TMGR_clear_master_mode_cycle(void)
@@ -36,18 +42,29 @@ void TMGR_count_up_master_clock(void)
 #pragma section
 #pragma section REPRO
 
-uint32_t TMGR_get_master_total_cycle_in_msec(void)
+void TMGR_down_initializing_flag(void)
 {
-  return OBCT_get_total_cycle_in_msec(&master_clock_);
+  memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
+  time_manager_.initializing_flag = 0;
+
+  TMGR_clear();
 }
 
-uint32_t TMGR_get_master_mode_cycle_in_msec(void)
+ObcTime TMGR_get_master_clock(void)
 {
-  return OBCT_get_mode_cycle_in_msec(&master_clock_);
+  if (time_manager_.initializing_flag)
+  {
+    return OBCT_create(0, 0, 0);
+  }
+  else
+  {
+    return master_clock_;
+  }
 }
 
-ObcTime TMGR_get_master_clock(void) {
-  return *master_clock;     // わざと const を返している．けど意味ないか？ オブジェクトはコピーされるわけだし．
+ObcTime TMGR_get_master_clock_from_boot(void)
+{
+  return OBCT_add(&time_manager_.initializing_time, &master_clock_);
 }
 
 cycle_t TMGR_get_master_total_cycle(void) {
@@ -62,23 +79,14 @@ step_t  TMGR_get_master_step(void) {
   return OBCT_get_step(&master_clock_);
 }
 
-
-CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
+uint32_t TMGR_get_master_total_cycle_in_msec(void)
 {
-  cycle_t set_value = 0;
+  return OBCT_get_total_cycle_in_msec(&master_clock_);
+}
 
-  endian_memcpy(&set_value, CCP_get_param_head(packet), 4);
-
-  if (set_value < OBCT_MAX_CYCLE)
-  {
-    TMGR_set_master_total_cycle_(set_value);
-    TDSP_resync_internal_counter();
-    return CCP_EXEC_SUCCESS;
-  }
-  else
-  {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
-  }
+uint32_t TMGR_get_master_mode_cycle_in_msec(void)
+{
+  return OBCT_get_mode_cycle_in_msec(&master_clock_);
 }
 
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
@@ -86,15 +94,20 @@ static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
   master_clock_.total_cycle = total_cycle;
 }
 
-double TMGR_get_unix_time_from_ObcTime(const ObcTime* time)
+OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
 {
-  ObcTime ti0 = OBCT_create(0, 0, 0);
-  return OBCT_unix_time_info->unix_time_on_ti0 + OBCT_diff_in_sec(&ti0, time);
+  return OBCT_unixtime_info_;
 }
 
-ObcTime TMGR_get_ObcTime_from_unix_time(const double unix_time)
+double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  double diff_double = unix_time - OBCT_unix_time_info->unix_time_on_ti0;
+  ObcTime ti0 = OBCT_create(0, 0, 0);
+  return OBCT_unixtime_info_.unixtime_at_ti0 + OBCT_diff_in_sec(&ti0, time);
+}
+
+ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
+{
+  double diff_double = unixtime - OBCT_unixtime_info_.unixtime_at_ti0;
   ObcTime res;
   uint32_t diff;
   cycle_t cycle_diff;
@@ -116,28 +129,42 @@ ObcTime TMGR_get_ObcTime_from_unix_time(const double unix_time)
   return res;
 }
 
-void TMGR_modify_unix_time_criteria(const double unix_time, const ObcTime time)
+void TMGR_modify_unixtime_criteria(const double unixtime, const ObcTime time)
 {
-  OBCT_modify_unix_time_info(&OBCT_unix_time_info_, unix_time, time);
+  OBCT_modify_unixtime_info(&OBCT_unixtime_info_, unixtime, time);
 }
 
-OBCT_UnixTimeInfo TMGR_get_obct_unix_time_info(void)
+
+CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
 {
-  return *OBCT_unix_time_info;
+  cycle_t set_value = 0;
+
+  endian_memcpy(&set_value, CCP_get_param_head(packet), 4);
+
+  if (set_value < OBCT_MAX_CYCLE)
+  {
+    TMGR_set_master_total_cycle_(set_value);
+    TDSP_resync_internal_counter();
+    return CCP_EXEC_SUCCESS;
+  }
+  else
+  {
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  }
 }
 
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
-  double unix_time;
+  double unixtime;
   ObcTime time;
 
-  endian_memcpy(&unix_time, param, 8);
+  endian_memcpy(&unixtime, param, 8);
   endian_memcpy(&time.total_cycle, param + 8, 4);
-  endian_memcpy(&time.mode_cycle, param + 12, 4);
-  endian_memcpy(&time.step, param + 16, 4);
+  endian_memcpy(&time.step, param + 12, 4);
+  time.mode_cycle = 0; // 必要ないので0とする
 
-  TMGR_modify_unix_time_criteria(unix_time, time);
+  TMGR_modify_unixtime_criteria(unixtime, time);
 
   return CCP_EXEC_SUCCESS;
 }

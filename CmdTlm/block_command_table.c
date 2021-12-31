@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  block_command_table.c
+ * @file
  * @brief BCTの定義, BCT周りの関数
  */
 
@@ -478,31 +478,28 @@ CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
 {
-  const unsigned char* param = CCP_get_param_head(packet);
-  uint16_t cmd_id;
-  cycle_t  ti;
-  bct_id_t block;
-  uint8_t  cmd;
+  CMD_CODE cmd_id = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
+  cycle_t  ti     = (cycle_t)CCP_get_param_from_packet(packet, 1, uint32_t);
+  bct_id_t block  = (bct_id_t)CCP_get_param_from_packet(packet, 2, bct_id_t);
+  uint8_t  cmd    = CCP_get_param_from_packet(packet, 3, uint8_t);
 
-  uint16_t param_len;
   BCT_Pos  pos;
-  BCT_CmdData bct_cmddta; // FIXME BCT_CmdData <-> CTCP
-  endian_memcpy(&cmd_id, param, sizeof(uint16_t));
-  param += sizeof(uint16_t);
+  BCT_CmdData new_bct_cmddata; // FIXME: BCT_CmdData <-> CTCP
+  uint8_t new_cmd_param[sizeof(BCT_CmdData) - TCP_PRM_HDR_LEN - TCP_CMD_2ND_HDR_LEN - TCP_CMD_USER_HDR_LEN];   // いったんここにparamをコピーする, FIXME: TCPに依存させないように
+  uint16_t real_param_len = CCP_get_param_len(packet);
+  uint16_t min_cmd_param_len = CA_get_cmd_param_min_len(Cmd_CODE_BCT_OVERWRITE_CMD);
+  uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(new_cmd_param);
+  uint16_t cmd_param_len;
 
-  param_len = cmd_table[(CMD_CODE)cmd_id].param_len;
-  if (CCP_get_param_len(packet) != sizeof(uint16_t) + sizeof(cycle_t) + SIZE_OF_BCT_ID_T + 1 + param_len) return CCP_EXEC_ILLEGAL_LENGTH;
+  // raw なので引数長チェック
+  if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_EXEC_ILLEGAL_LENGTH;
 
-  endian_memcpy(&ti, param, sizeof(cycle_t));
-  param += sizeof(cycle_t);
-  endian_memcpy(&block, param, SIZE_OF_BCT_ID_T);
-  param += SIZE_OF_BCT_ID_T;
-  endian_memcpy(&cmd, param, 1);
-  param += 1;
+  cmd_param_len = real_param_len - min_cmd_param_len;
+  CCP_get_raw_param_from_packet(packet, new_cmd_param, cmd_param_len);
 
   BCT_make_pos(&pos, block, cmd);
-  CCP_form_tlc((CTCP*)&bct_cmddta, ti, (CMD_CODE)cmd_id, param, param_len);
-  BCT_overwrite_cmd(&pos, (CTCP*)&bct_cmddta);
+  CCP_form_tlc((CTCP*)&new_bct_cmddata, ti, cmd_id, new_cmd_param, cmd_param_len);
+  BCT_overwrite_cmd(&pos, (CTCP*)&new_bct_cmddata);
 
   return CCP_EXEC_SUCCESS;
 }

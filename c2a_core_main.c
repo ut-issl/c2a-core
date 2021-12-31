@@ -6,6 +6,7 @@
 #include "./System/ApplicationManager/app_manager.h"
 #include "./System/EventManager/event_manager.h"
 #include "./System/AnomalyLogger/anomaly_logger.h"
+#include "./System/TimeManager/time_manager.h"
 #include "./System/ModeManager/mode_manager.h"
 #include "./System/WatchdogTimer/watchdog_timer.h"
 #include "./CmdTlm/packet_handler.h"
@@ -44,11 +45,12 @@ void C2A_core_init(void)
   Printf("C2A_init: TDSP_initialize done.\n");
   // DebugOutInit();             // Debugのinit          // LVTTL UART ch1での出力．邪魔なのでPrintfの中身とともに無効化 (2019-04-09)
   // Printf("C2A_init: DebugOutInit done.\n");
+
+  TMGR_down_initializing_flag();
 }
 
 void C2A_core_main(void)
 {
-  // 2018/09/09 コメント追記
   // ここでいうtask dispatcherは，TL0とかではなく，
   // task listのBlockCommandをdispatchしている．
   // TL0などのPLをdispatchしているのは，tlc_dispatcher @ App/timeline_command_dispatcher である．

@@ -1,5 +1,5 @@
 /**
- * @file   majority_vote_for3.h
+ * @file
  * @brief  3èdèÁí∑ópîƒópëΩêîåàä÷êî
  */
 #ifndef MAJORITY_VOTE_FOR3_
@@ -12,7 +12,7 @@ typedef enum
 {
   MAJORITY_VOTE_MATCH    =  0,
   MAJORITY_VOTE_MAJORITY =  1,
-  MAJORITY_VOTE_ERROR    =  2,
+  MAJORITY_VOTE_ERROR    =  2
 } MAJORITY_VOTE_FOR3_STATUS;
 
 /**

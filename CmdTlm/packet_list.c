@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  packet_list.c
+ * @file
  * @brief CTCPのリストとしてのデータ構造を定義. 片方向リストとして実装されている
  */
 #include "packet_list.h"
@@ -53,19 +53,21 @@ void PL_clear_list(PacketList* pli)
   pli->active_list_tail_ = NULL;
 }
 
-const uint32_t PL_count_executed_nodes(const PacketList* pli)
+uint32_t PL_count_executed_nodes(const PacketList* pli)
 {
-  return pli->executed_nodes_;
+  // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている
+  return (uint32_t)pli->executed_nodes_;
 }
 
-const uint16_t PL_count_active_nodes(const PacketList* pli)
+uint16_t PL_count_active_nodes(const PacketList* pli)
 {
-  return pli->active_nodes_;
+  // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている
+  return (uint16_t)pli->active_nodes_;
 }
 
-const uint16_t PL_count_inactive_nodes(const PacketList* pli)
+uint16_t PL_count_inactive_nodes(const PacketList* pli)
 {
-  return (const uint16_t)(pli->total_nodes_ - pli->active_nodes_);
+  return (uint16_t)(pli->total_nodes_ - pli->active_nodes_);
 }
 
 int PL_is_empty(const PacketList* pli)

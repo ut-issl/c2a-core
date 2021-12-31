@@ -1,5 +1,5 @@
 /**
- * @file uart.h
+ * @file
  * @brief UART通信ラッパーのクラスです。
  * @note UART，具体的にはUARTやLVTTLを想定している
  *       UART通信ラッパーは、
@@ -70,7 +70,7 @@ typedef enum
   UART_ALREADY_ERR     = -3,  //!< チャンネルオープン済み
   UART_BAUDRATE_ERR    = -2,  //!< ボーレート異常
   UART_CH_ERR          = -1,  //!< チャンネル異常 (Port_configに無い)
-  UART_OK              = 0,   //!< OKは0を踏襲
+  UART_OK              = 0    //!< OKは0を踏襲
 } UART_ERR_CODE;
 
 /**

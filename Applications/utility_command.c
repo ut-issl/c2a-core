@@ -17,7 +17,7 @@ static int UTIL_CMD_send_(unsigned char ch);
 // 汎用コマンドここから
 AppInfo UTIL_CMD_create_app(void)
 {
-  return create_app_info("util_cmd", UTIL_CMD_init_, NULL);
+  return AI_create_app_info("util_cmd", UTIL_CMD_init_, NULL);
 }
 
 static void UTIL_CMD_init_(void)

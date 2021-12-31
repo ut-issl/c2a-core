@@ -1,5 +1,5 @@
 /**
- * @file  wdt.h
+ * @file
  * @brief watchdog timer ‚Ì IF wapper
  */
 #ifndef WDT_H_

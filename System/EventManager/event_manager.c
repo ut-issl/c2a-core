@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  event_manager.c
+ * @file
  * @brief C2A全体のイベントを管理する
  * @note  event_logger と event_handler を管理する
  */
@@ -11,6 +11,9 @@
 void EM_initialize(void)
 {
   EL_initialize();
+#ifdef EL_IS_ENABLE_TLOG
+  EH_initialize();
+#endif
 }
 
 #pragma section

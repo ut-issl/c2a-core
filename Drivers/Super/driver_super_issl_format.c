@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file   driver_super_issl_format.c
+ * @file
  * @brief  DriverのためのISSLフォーマット通信のための公開定義，関数など
  */
 

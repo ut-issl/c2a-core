@@ -1,5 +1,5 @@
 /**
- * @file  watchdog_timer.c
+ * @file
  * @brief watchdog timer
  * @note  こいつもBootLoaderに配置するので，リプロ可能領域のものをincludeしないこと！！
  *        なお，CMDはリプロ対象内！！

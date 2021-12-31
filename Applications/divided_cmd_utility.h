@@ -1,5 +1,5 @@
 /**
- * @file  divided_cmd_utility.h
+ * @file
  * @brief コマンド分割をサポートするUtil
  * @note  HOW TO USE
  *        1. 各Cmdにて初めに DCU_check_in を実行し，現在の実行状況を取得する
@@ -35,7 +35,7 @@
 typedef enum
 {
   DCU_ACK_OK = 0,       //!< 正常終了
-  DCU_ACK_ERR,          //!< エラー
+  DCU_ACK_ERR           //!< エラー
 } DCU_ACK;
 
 
@@ -49,7 +49,7 @@ typedef enum
   DCU_STATUS_FINISHED = 0,        //!< 実行終了 or 未実行
   DCU_STATUS_PROGRESS,            //!< 実行中
   DCU_STATUS_ABORTED_BY_ERR,      //!< エラーにより中断
-  DCU_STATUS_ABORTED_BY_CMD,      //!< コマンドにより中断
+  DCU_STATUS_ABORTED_BY_CMD       //!< コマンドにより中断
 } DCU_STATUS;
 
 
@@ -61,7 +61,7 @@ typedef enum
 typedef enum
 {
   DCU_LOG_ACK_OK = 0,           //!< 正常終了
-  DCU_LOG_ACK_NOT_FOUND,        //!< 指定ログが見つからず
+  DCU_LOG_ACK_NOT_FOUND         //!< 指定ログが見つからず
 } DCU_LOG_ACK;
 
 

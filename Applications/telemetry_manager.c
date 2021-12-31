@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file  telemetry_manager.c
+ * @file
  * @brief userがテレメトリ詰まりをやTL溢れを防ぎつつ，またCDHなどがテレメトリを管理しやすくするためのApp
  * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 や telemetry_manager.h の最下部を参照（FIXME: あとでdocumentに移す）
  */
@@ -110,7 +110,7 @@ static CTCP TLM_MGR_packet_;
 
 AppInfo TLM_MGR_create_app(void)
 {
-  return create_app_info("telemetry_manager", TLM_MGR_init_by_am_, NULL);
+  return AI_create_app_info("telemetry_manager", TLM_MGR_init_by_am_, NULL);
 }
 
 
@@ -328,7 +328,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
                                (cycle_t)bc_cmd_pos,
                                Cmd_CODE_GENERATE_TLM,
                                param,
-                               cmd_table[Cmd_CODE_GENERATE_TLM].param_len);
+                               CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
   if (ctcp_util_ack != CTCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
 
   // すでに NOP で埋められており，かつ activate 済なので，直接 BCT にコマンドを挿入できる．
