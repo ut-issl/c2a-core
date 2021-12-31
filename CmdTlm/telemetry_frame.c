@@ -107,7 +107,7 @@ void TF_copy_float(uint8_t* ptr,
                    float data)
 {
   uint8_t* temp = (uint8_t*)&data;
-  int i;
+  size_t i;
 
   for (i = 0; i < sizeof(float); ++i)
   {
@@ -125,7 +125,7 @@ void TF_copy_double(uint8_t* ptr,
                     double data)
 {
   uint8_t* temp = (uint8_t*)&data;
-  int i;
+  size_t i;
 
   for (i = 0; i < sizeof(double); ++i)
   {
