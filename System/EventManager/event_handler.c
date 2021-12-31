@@ -100,7 +100,7 @@ static const EL_Event* EH_get_event_to_check_rule_(void);
 /**
  * @brief  EL_Event に対応する EH_Rule が存在するかチェックし，対応する
  * @note   多段の EH 対応のために，再帰呼出しの起点となる
- * @param  event[in] チェックする EL_Event
+ * @param[in] event: チェックする EL_Event
  * @return 対応した EH_Rule 数（多段対応も考慮）
  */
 static uint8_t EH_check_event_and_respond_(const EL_Event* event);
@@ -111,8 +111,8 @@ static uint8_t EH_check_event_and_respond_(const EL_Event* event);
  *         対応条件にマッチした場合， EL_CORE_GROUP_EH_MATCH_RULE イベントを発行し，多段の EH 対応を問い合わせる
  * @note   引数はアサーション済みを仮定する
  * @note   再帰呼出しされる
- * @param  rule_id[in] 対応条件をチェックし，対応する EH_RULE_ID
- * @param  event[in]   発生した EL_Event
+ * @param[in] rule_id: 対応条件をチェックし，対応する EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
  * @return 対応した EH_Rule 数（多段対応も考慮）
  */
 static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
@@ -121,7 +121,7 @@ static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* ev
  * @brief  上位の EH の対応条件をチェックし，対応する
  * @note   引数はアサーション済みを仮定する
  * @note   再帰呼出しされる
- * @param  rule_id[in] 下位となる可能性がある EH_RULE_ID
+ * @param[in] rule_id: 下位となる可能性がある EH_RULE_ID
  * @return 対応した EH_Rule 数（多段対応も考慮）
  */
 static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id);
@@ -129,8 +129,8 @@ static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id);
 /**
  * @brief  EH の対応条件をチェックする
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in] 対応条件をチェックする EH_RULE_ID
- * @param  event[in]   発生した EL_Event
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_rule_(EH_RULE_ID rule_id, const EL_Event* event);
@@ -139,8 +139,8 @@ static EH_CKECK_RULE_ACK EH_check_rule_(EH_RULE_ID rule_id, const EL_Event* even
  * @brief  EH の対応条件をチェックする (EH_RESPONSE_CONDITION_SINGLE)
  * @note   引数はアサーション済みを仮定する
  * @note   上位の EH_Rule についてはここではみない
- * @param  rule_id[in] 対応条件をチェックする EH_RULE_ID
- * @param  event[in]   発生した EL_Event
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_single_rule_(EH_RULE_ID rule_id, const EL_Event* event);
@@ -149,8 +149,8 @@ static EH_CKECK_RULE_ACK EH_check_single_rule_(EH_RULE_ID rule_id, const EL_Even
  * @brief  EH の対応条件をチェックする (EH_RESPONSE_CONDITION_CONTINUOUS)
  * @note   引数はアサーション済みを仮定する
  * @note   上位の EH_Rule についてはここではみない
- * @param  rule_id[in] 対応条件をチェックする EH_RULE_ID
- * @param  event[in]   発生した EL_Event
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_Event* event);
@@ -159,8 +159,8 @@ static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_
  * @brief  EH の対応条件をチェックする (EH_RESPONSE_CONDITION_CUMULATIVE)
  * @note   引数はアサーション済みを仮定する
  * @note   上位の EH_Rule についてはここではみない
- * @param  rule_id[in] 対応条件をチェックする EH_RULE_ID
- * @param  event[in]   発生した EL_Event
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_Event* event);
@@ -169,7 +169,7 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
  * @brief  EH 対応を実施
  * @note   引数はアサーション済みを仮定する
  * @note   is_active はこの関数ではみない（上流でチェックしてることを想定）
- * @param  rule_id[in] 対応する EH_RULE_ID
+ * @param[in] rule_id: 対応する EH_RULE_ID
  * @return void
  */
 static void EH_respond_(EH_RULE_ID rule_id);
@@ -177,8 +177,8 @@ static void EH_respond_(EH_RULE_ID rule_id);
 /**
  * @brief  EH 対応のログを残す
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in]        対応した EH_RULE_ID
- * @param  deploy_cmd_ack[in] 対応 BC 展開コマンドの実行結果
+ * @param[in] rule_id:        対応した EH_RULE_ID
+ * @param[in] deploy_cmd_ack: 対応 BC 展開コマンドの実行結果
  * @return void
  */
 static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd_ack);
@@ -223,8 +223,8 @@ static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* ele
  * @brief  EH_Rule を EH_RuleTable と EH_RuleSortedIndex に挿入する
  * @note   引数は rule に関してはアサーション済みを仮定する
  * @note   すでに登録された id に対しての上書き登録はエラー (EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE) を返す
- * @param[in]  id: 挿入する EH_Rule の EH_RULE_ID
- * @param[in]  rule: 挿入する EH_Rule
+ * @param[in] id: 挿入する EH_Rule の EH_RULE_ID
+ * @param[in] rule: 挿入する EH_Rule
  * @retval EH_RULE_SORTED_INDEX_ACK_FULL: ルール登録上限に到達済み
  * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: 不正な EH_RULE_ID
  * @retval EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE: すでに同じ ID にルールが登録されているため棄却
@@ -235,7 +235,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
 
 /**
  * @brief  EH_Rule を EH_RuleTable と EH_RuleSortedIndex から削除する
- * @param[in]  id: 削除する EH_Rule の EH_RULE_ID
+ * @param[in] id: 削除する EH_Rule の EH_RULE_ID
  * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: 不正な EH_RULE_ID
  * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: 削除対象が見つからず or 登録されてない
  * @retval EH_RULE_SORTED_INDEX_ACK_OK: 正常に削除完了
