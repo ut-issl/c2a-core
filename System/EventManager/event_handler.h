@@ -312,6 +312,7 @@ EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings)
 /**
  * @brief  ルールの有効化
  * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   内部で EH_clear_rule_counter も呼ばれる
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
@@ -342,6 +343,34 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id);
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id);
+
+/**
+ * @brief  EH_Rule の counter をセット
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @param  counter: セットする counter
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_set_rule_counter(EH_RULE_ID id, uint16_t counter);
+
+/**
+ * @brief  EH_Rule の counter を 0 クリア
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_clear_rule_counter(EH_RULE_ID id);
+
+/**
+ * @brief  EH_Rule の counter を EL_Event 指定で 0 クリア
+ * @note   もしアノマリが発生したら， EL_record_event, 正常なら EH_clear_rule_counter_by_event という使い方を想定している
+ * @note   そのため，EL_record_event とインターフェースをあわせている
+ * @param  group: EL_Event.group
+ * @param  local: EL_Event.local
+ * @param  err_level: EL_Event.err_level
+ * @return EH_CHECK_RULE_ACK
+ */
+void EH_clear_rule_counter_by_event(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL err_level);
 
 /**
  * @brief  イベントカウンタを EL のそれに合わせる
@@ -381,6 +410,12 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet);
 CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet);
 

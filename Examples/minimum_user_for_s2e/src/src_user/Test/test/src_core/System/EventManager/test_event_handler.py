@@ -510,6 +510,84 @@ def test_event_handler_check_index():
 
 @pytest.mark.real
 @pytest.mark.sils
+def test_event_handler_check_counter():
+    print("")
+    print("test_event_handler_check_counter")
+
+    # 初期化
+    init_el_and_eh()
+
+    # テレメ設定
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_CLEAR_RULE_COUNTER, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_SET_RULE_COUNTER, (EH_RULE_TEST0, 10), c2a_enum.Tlm_CODE_HK
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 10
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_CLEAR_RULE_COUNTER, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+
+
+@pytest.mark.real
+@pytest.mark.sils
+def test_event_handler_clear_counter_by_event():
+    print("")
+    print("test_event_handler_clear_counter_by_event")
+
+    # 初期化
+    init_el_and_eh()
+    enable_eh_exec()
+
+    # テレメ設定
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM, (EH_RULE_TEST3,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # +2
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 3, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 3, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 2
+
+    # エラーレベル違い
+    print("Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_CLEAR_RULE_COUNTER_BY_EVENT, (EL_GROUP_TEST_EH, 3, EL_ERROR_LEVEL_HIGH), c2a_enum.Tlm_CODE_HK
+    )
+
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 2
+
+    # クリアされるはず
+    print("Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_CLEAR_RULE_COUNTER_BY_EVENT, (EL_GROUP_TEST_EH, 3, EL_ERROR_LEVEL_LOW), c2a_enum.Tlm_CODE_HK
+    )
+
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+
+
+@pytest.mark.real
+@pytest.mark.sils
 def test_event_handler_respond_single():
     print("")
     print("test_event_handler_respond_single")
