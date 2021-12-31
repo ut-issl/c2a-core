@@ -34,7 +34,8 @@ EL_ERROR_LEVEL_HIGH    = 0
 EL_ERROR_LEVEL_MIDDLE  = 1
 EL_ERROR_LEVEL_LOW     = 2
 EL_ERROR_LEVEL_EL      = 3
-EL_ERROR_LEVEL_MAX     = 4
+EL_ERROR_LEVEL_EH      = 4
+EL_ERROR_LEVEL_MAX     = 5
 EL_ERROR_LEVEL_TLM_DICT = ["HIGH", "MIDDLE", "LOW", "EL"]
 
 EL_CORE_GROUP_NULL          = c2a_enum.EL_CORE_GROUP_NULL
@@ -115,6 +116,7 @@ def test_event_logger_init_check():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_set_params():
+    # TODO: 範囲外アクセスがある EL_ERROR_LEVEL_EL, EL_ERROR_LEVEL_EH のテレメもおろしておくこと
     assert change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH) == "SUC"
     assert check_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH) == 1
     assert change_tlog_tlm_page(1, EL_ERROR_LEVEL_MIDDLE) == "SUC"
@@ -781,7 +783,8 @@ def update_el_tlm():
                     el_tlm["EL.STATISTICS.RECORD_COUNTERS_HIGH"],
                     el_tlm["EL.STATISTICS.RECORD_COUNTERS_MIDDLE"],
                     el_tlm["EL.STATISTICS.RECORD_COUNTERS_LOW"],
-                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_EL"]
+                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_EL"],
+                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_EH"]
                 ]
     g_tlm_info = {
                     "tlog"  : {"page_no" : el_tlm["EL.TLM_INFO.TLOG.PAGE_NO"], "err_level" : el_tlm["EL.TLM_INFO.TLOG.ERR_LEVEL"]},

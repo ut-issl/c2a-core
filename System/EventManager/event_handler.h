@@ -2,6 +2,45 @@
  * @file
  * @brief イベント発火型処理を行う
  * @note  event_logger の情報を元に BC を展開する ( Event 発火に応じて対応を行う )
+ * @note  多段の EH 対応の組み方
+ *        多段の EH を組む場合， EH_RuleSettings.event.group は EL_CORE_GROUP_EH_MATCH_RULE を指定する．
+ *        そうすると，上位のルールがマッチした場合，該当するルール対応は実行されなくなる
+ *        例えば， UART 不通を考える
+ *        設定として
+ *          - UART不通が発生したら EL_UART を発行する
+ *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 3 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *        とした場合，
+ *          1. EL_UART が 5 回発生したら， EH_Rule1 が発火
+ *          2. EL_UART が 10 回発生したら， EH_Rule1 が発火
+ *          3. EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *          4. EL_UART が 20 回発生したら， EH_Rule1 が発火
+ *          5. ...
+ *        というようになる
+ *        このように， EL_CORE_GROUP_EH_MATCH_RULE で発火する EH_Rule は上位ルールとして解釈，実行され，
+ *        上位ルールが実行されるときは，下位ルールは実行されなくなる．
+ *        また，これは 2 段のみならず， 3 段以上も可能である．
+ *        この手法を応用すると，ルールのオーバーライドできる．
+ *        例えば，設定として
+ *          - UART不通が発生したら EL_UART を発行する
+ *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 1 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *        とすると，
+ *          - EL_UART が 5 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *        となるので，実質的に， EH_Rule2 で EH_Rule1 をオーバーライドすることができる．
+ *        このように，下位のルールを，上位の発火条件を変えることで，柔軟にオーバーライドできる．
+ * @note  EH での Event 発行は以下
+ *          - EL_CORE_GROUP_EVENT_HANDLER
+ *            - EH に関する様々なエラー
+ *            - local id は EH_EL_LOCAL_ID
+ *          - EL_CORE_GROUP_EH_MATCH_RULE
+ *            - EH_Rule にマッチ
+ *            - local id は EH_RULE_ID
+ *          - EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
+ *            - EH_Rule にマッチしたが，さらに上位の EH_Rule のマッチ条件を満たしたため，発火はキャンセルされた（上位で発火される）
+ *            - local id は EH_RULE_ID
  */
 #ifndef EVENT_HANDLER_H_
 #define EVENT_HANDLER_H_
@@ -37,7 +76,7 @@
 #define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< 一度の実行でチェックする event_logger の event log の最大値（初期値）
                                                            TL内での実行時間を調整するために設定する． */
 
-// いかのファイルにて，次のパラメタを上書き設定できる
+// 以下のファイルにて，次のパラメタを上書き設定できる
 // EH_RULE_TLM_PAGE_SIZE
 // EH_RULE_TLM_PAGE_MAX
 // EH_LOG_TLM_PAGE_SIZE
@@ -234,8 +273,7 @@ typedef struct
   EH_ElEventCounter  el_event_counter;          //!< EH_ElEventCounter
   uint8_t            max_response_num;          /*!< 一度の EH_execute の実行で対応する最大数
                                                      初期値は EH_MAX_RESPONSE_NUM_DEFAULT
-                                                     EL_Event のIDが重複した EH_Rule もあるので，
-                                                     最大で EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES だけこれを上回る可能性はある */
+                                                     EL_Event のIDが重複した EH_Rule もあるので，実際の対応数はこれを上回る可能性がある */
   uint16_t           max_check_event_num;       /*!< 一度の実行でチェックする event_logger の event log の最大値
                                                      初期値は EH_MAX_CHECK_EVENT_NUM_DEFAULT */
   EH_RegisterFromCmd reg_from_cmd;              //!< コマンド経由で EH_Rule を登録するときに使う内部状態変数
@@ -288,6 +326,24 @@ EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id);
 EH_CHECK_RULE_ACK EH_inactivate_rule(EH_RULE_ID id);
 
 /**
+ * @brief  ルールの有効化 (multi-level)
+ * @note   多段の場合，指定した EH_RULE_ID より下位のすべてのルールを有効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id);
+
+/**
+ * @brief  ルールの無効化 (multi-level)
+ * @note   多段の場合，指定した EH_RULE_ID より下位のすべてのルールを無効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id);
+
+/**
  * @brief  イベントカウンタを EL のそれに合わせる
  * @note   EL 側をリセットした際に呼び出さないと，不整合が発生する（まあ，勝手に解消されるけど）
  * @param  void
@@ -321,6 +377,10 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet);
 CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet);
 

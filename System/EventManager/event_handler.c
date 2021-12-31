@@ -56,17 +56,15 @@ typedef enum
 } EH_RULE_SORTED_INDEX_ACK;
 
 /**
- * @enum   EH_CKECK_AND_RESPOND_ACK
- * @brief  EH_check_{hoge}_and_respond_ の返り値
+ * @enum   EH_CKECK_RULE_ACK
+ * @brief  EH_check_rule 系関数の返り値
  * @note   uint8_t を想定
  */
 typedef enum
 {
-  EH_CKECK_AND_RESPOND_ACK_RESPONDED = 0,         //!< EH として対応した
-  EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED,         //!< 対応する EH_Rule なし or 対応条件満たさず
-  EH_CKECK_AND_RESPOND_ACK_NO_UNPROCESSED_EVENT,  //!< 未処理な EL_Event なし
-  EH_CKECK_AND_RESPOND_ACK_UNKNOWN_ERR            //!< 不明なエラー
-} EH_CKECK_AND_RESPOND_ACK;
+  EH_CKECK_RULE_ACK_MATCH = 0,          //!< 該当 EH_Rule にマッチした
+  EH_CKECK_RULE_ACK_NOT_MATCH           //!< 該当 EH_Rule にマッチしなかった
+} EH_CKECK_RULE_ACK;
 
 
 /**
@@ -92,53 +90,86 @@ static void EH_clear_log_(void);
 static EH_ACK EH_check_el_event_counter_(void);
 
 /**
- * @brief  最も古い EL_Event を１つ取得し， EL_Event に対応する EH_Rule が存在するかチェックし，対応する
- * @param  responded_num[out] 対応した EH_Rule 数
- * @return EH_CKECK_AND_RESPOND_ACK
+ * @brief  EH_Rule が存在するかチェックするための次の EL_Event (EL_ERROR_LEVEL_EH を除く) を返す
+ * @note   見つからなかった場合， NULL を返す
+ * @param  void
+ * @return 取得した EL_Event
  */
-static EH_CKECK_AND_RESPOND_ACK EH_check_event_and_respond_(uint8_t* responded_num);
+static const EL_Event* EH_get_event_to_check_rule_(void);
+
+/**
+ * @brief  EL_Event に対応する EH_Rule が存在するかチェックし，対応する
+ * @note   多段の EH 対応のために，再帰呼出しの起点となる
+ * @param[in] event: チェックする EL_Event
+ * @return 対応した EH_Rule 数（多段対応も考慮）
+ */
+static uint8_t EH_check_event_and_respond_(const EL_Event* event);
 
 /**
  * @brief  EH の対応条件をチェックし， EL_Event に対応する
+ *
+ *         対応条件にマッチした場合， EL_CORE_GROUP_EH_MATCH_RULE イベントを発行し，多段の EH 対応を問い合わせる
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in] 対応条件をチェックし，対応する EH_RULE_ID
- * @param  event[in]   発生した EL_Event
- * @return EH_CKECK_AND_RESPOND_ACK
+ * @note   再帰呼出しされる
+ * @param[in] rule_id: 対応条件をチェックし，対応する EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
+ * @return 対応した EH_Rule 数（多段対応も考慮）
  */
-static EH_CKECK_AND_RESPOND_ACK EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
+static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  EH の対応条件をチェックし， EL_Event に対応する (EH_RESPONSE_CONDITION_SINGLE)
+ * @brief  上位の EH の対応条件をチェックし，対応する
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in] 対応条件をチェックし，対応する EH_RULE_ID
- * @param  event[in]   発生した EL_Event
- * @return EH_CKECK_AND_RESPOND_ACK
+ * @note   再帰呼出しされる
+ * @param[in] rule_id: 下位となる可能性がある EH_RULE_ID
+ * @return 対応した EH_Rule 数（多段対応も考慮）
  */
-static EH_CKECK_AND_RESPOND_ACK EH_check_single_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
+static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id);
 
 /**
- * @brief  EH の対応条件をチェックし， EL_Event に対応する (EH_RESPONSE_CONDITION_CONTINUOUS)
+ * @brief  EH の対応条件をチェックする
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in] 対応条件をチェックし，対応する EH_RULE_ID
- * @param  event[in]   発生した EL_Event
- * @return EH_CKECK_AND_RESPOND_ACK
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
+ * @return EH_CKECK_RULE_ACK
  */
-static EH_CKECK_AND_RESPOND_ACK EH_check_continuous_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
+static EH_CKECK_RULE_ACK EH_check_rule_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  EH の対応条件をチェックし， EL_Event に対応する (EH_RESPONSE_CONDITION_CUMULATIVE)
+ * @brief  EH の対応条件をチェックする (EH_RESPONSE_CONDITION_SINGLE)
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in] 対応条件をチェックし，対応する EH_RULE_ID
- * @param  event[in]   発生した EL_Event
- * @return EH_CKECK_AND_RESPOND_ACK
+ * @note   上位の EH_Rule についてはここではみない
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
+ * @return EH_CKECK_RULE_ACK
  */
-static EH_CKECK_AND_RESPOND_ACK EH_check_cumulative_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
+static EH_CKECK_RULE_ACK EH_check_single_rule_(EH_RULE_ID rule_id, const EL_Event* event);
+
+/**
+ * @brief  EH の対応条件をチェックする (EH_RESPONSE_CONDITION_CONTINUOUS)
+ * @note   引数はアサーション済みを仮定する
+ * @note   上位の EH_Rule についてはここではみない
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
+ * @return EH_CKECK_RULE_ACK
+ */
+static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_Event* event);
+
+/**
+ * @brief  EH の対応条件をチェックする (EH_RESPONSE_CONDITION_CUMULATIVE)
+ * @note   引数はアサーション済みを仮定する
+ * @note   上位の EH_Rule についてはここではみない
+ * @param[in] rule_id: 対応条件をチェックする EH_RULE_ID
+ * @param[in] event:   発生した EL_Event
+ * @return EH_CKECK_RULE_ACK
+ */
+static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
  * @brief  EH 対応を実施
  * @note   引数はアサーション済みを仮定する
  * @note   is_active はこの関数ではみない（上流でチェックしてることを想定）
- * @param  rule_id[in] 対応する EH_RULE_ID
+ * @param[in] rule_id: 対応する EH_RULE_ID
  * @return void
  */
 static void EH_respond_(EH_RULE_ID rule_id);
@@ -146,19 +177,19 @@ static void EH_respond_(EH_RULE_ID rule_id);
 /**
  * @brief  EH 対応のログを残す
  * @note   引数はアサーション済みを仮定する
- * @param  rule_id[in]        対応した EH_RULE_ID
- * @param  deploy_cmd_ack[in] 対応 BC 展開コマンドの実行結果
+ * @param[in] rule_id:        対応した EH_RULE_ID
+ * @param[in] deploy_cmd_ack: 対応 BC 展開コマンドの実行結果
  * @return void
  */
 static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd_ack);
 
 /**
- * @brief  まだ処理していない最も古い EL_Event を返す
+ * @brief  まだ処理していない最も古い EL_Event (EL_ERROR_LEVEL_EH を除く) を返す
  * @note   見つからなかった場合， NULL を返す
  * @param  void
  * @return 見つけた EL_Event
  */
-const EL_Event* EH_get_oldest_event_(void);
+static const EL_Event* EH_get_oldest_event_excluding_eh_error_level_(void);
 
 /**
  * @brief  EH_RuleSortedIndex から，目的の EL_Event の idx を検索する
@@ -192,8 +223,8 @@ static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* ele
  * @brief  EH_Rule を EH_RuleTable と EH_RuleSortedIndex に挿入する
  * @note   引数は rule に関してはアサーション済みを仮定する
  * @note   すでに登録された id に対しての上書き登録はエラー (EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE) を返す
- * @param[in]  id: 挿入する EH_Rule の EH_RULE_ID
- * @param[in]  rule: 挿入する EH_Rule
+ * @param[in] id: 挿入する EH_Rule の EH_RULE_ID
+ * @param[in] rule: 挿入する EH_Rule
  * @retval EH_RULE_SORTED_INDEX_ACK_FULL: ルール登録上限に到達済み
  * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: 不正な EH_RULE_ID
  * @retval EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE: すでに同じ ID にルールが登録されているため棄却
@@ -204,7 +235,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
 
 /**
  * @brief  EH_Rule を EH_RuleTable と EH_RuleSortedIndex から削除する
- * @param[in]  id: 削除する EH_Rule の EH_RULE_ID
+ * @param[in] id: 削除する EH_Rule の EH_RULE_ID
  * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: 不正な EH_RULE_ID
  * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: 削除対象が見つからず or 登録されてない
  * @retval EH_RULE_SORTED_INDEX_ACK_OK: 正常に削除完了
@@ -282,10 +313,14 @@ void EH_execute(void)
 
   for (i = 0; i < event_handler_.max_check_event_num; ++i)
   {
-    uint8_t responded_num;
-    EH_CKECK_AND_RESPOND_ACK ack = EH_check_event_and_respond_(&responded_num);
-    if (ack == EH_CKECK_AND_RESPOND_ACK_NO_UNPROCESSED_EVENT) break;
-    responded_count += responded_num;
+    const EL_Event* event = EH_get_event_to_check_rule_();
+    if (event == NULL)
+    {
+      // もうチェックすべきイベントはなし
+      break;
+    }
+
+    responded_count += EH_check_event_and_respond_(event);
     if (responded_count >= event_handler_.max_response_num) break;
   }
 }
@@ -346,62 +381,61 @@ static EH_ACK EH_check_el_event_counter_(void)
 }
 
 
-static EH_CKECK_AND_RESPOND_ACK EH_check_event_and_respond_(uint8_t* responded_num)
+static const EL_Event* EH_get_event_to_check_rule_(void)
 {
-  const EL_Event* event = EH_get_oldest_event_();
-  EH_RULE_SORTED_INDEX_ACK ack;
-
-  EH_RULE_ID found_ids[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES];
-  uint16_t found_sorted_idxes[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES];
-  uint8_t found_id_num;
-  uint8_t i;
-
-  // エラーを返してもいいようにここで初期化
-  *responded_num = 0;
-
-  if (event == NULL) return EH_CKECK_AND_RESPOND_ACK_NO_UNPROCESSED_EVENT;
+  const EL_Event* event = EH_get_oldest_event_excluding_eh_error_level_();
+  if (event == NULL) return NULL;
 
   // 処理する EL_Event が見つかったので，カウントアップ
   event_handler_.el_event_counter.counter_total++;
   event_handler_.el_event_counter.counters[event->err_level]++;
 
-  ack = EH_search_rule_table_index_(event->group,
-                                    event->local,
-                                    found_ids,
-                                    found_sorted_idxes,
-                                    &found_id_num);
+  return event;
+}
 
-  if (ack == EH_RULE_SORTED_INDEX_ACK_NOT_FOUND)
+static uint8_t EH_check_event_and_respond_(const EL_Event* event)
+{
+  EH_RULE_SORTED_INDEX_ACK search_ack;
+  EH_RULE_ID found_ids[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES];
+  uint16_t found_sorted_idxes[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES];
+  uint8_t found_id_num;
+  uint8_t i;
+  uint8_t responded_num = 0;
+
+  search_ack = EH_search_rule_table_index_(event->group,
+                                           event->local,
+                                           found_ids,
+                                           found_sorted_idxes,
+                                           &found_id_num);
+
+  if (search_ack == EH_RULE_SORTED_INDEX_ACK_NOT_FOUND)
   {
     // 対応する EH_Rule なし
-    return EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED;
+    return 0;
   }
-  if (ack != EH_RULE_SORTED_INDEX_ACK_OK)
+  if (search_ack != EH_RULE_SORTED_INDEX_ACK_OK)
   {
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_SEARCH_ERR,
                     EL_ERROR_LEVEL_HIGH,
-                    (uint32_t)ack);
-    return EH_CKECK_AND_RESPOND_ACK_UNKNOWN_ERR;
+                    (uint32_t)search_ack);
+    return 0;
   }
 
   // ルールチェック & 対応
   for (i = 0; i < found_id_num; ++i)
   {
-    EH_CKECK_AND_RESPOND_ACK ack =  EH_check_rule_and_respond_(found_ids[i], event);
-    if (ack == EH_CKECK_AND_RESPOND_ACK_RESPONDED)
-    {
-      (*responded_num)++;
-    }
+    responded_num += EH_check_rule_and_respond_(found_ids[i], event);
   }
 
-  return (*responded_num == 0) ? EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED : EH_CKECK_AND_RESPOND_ACK_RESPONDED;
+  return responded_num;
 }
 
 
-static EH_CKECK_AND_RESPOND_ACK EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event)
+static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event)
 {
   EH_RuleSettings* rule_settings = &event_handler_.rule_table.rules[rule_id].settings;
+  uint8_t responded_num = 0;
 
   if (rule_settings->event.group != event->group || rule_settings->event.local != event->local)
   {
@@ -410,52 +444,117 @@ static EH_CKECK_AND_RESPOND_ACK EH_check_rule_and_respond_(EH_RULE_ID rule_id, c
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)rule_id);
-    return EH_CKECK_AND_RESPOND_ACK_UNKNOWN_ERR;
+    return 0;
   }
 
+  if (EH_check_rule_(rule_id, event) != EH_CKECK_RULE_ACK_MATCH)
+  {
+    return 0;
+  }
+
+  // ここまで来たら引数に取った EH_RULE_ID は EH_Rule にマッチした
+  EL_record_event((EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE,
+                  (uint32_t)rule_id,
+                  EL_ERROR_LEVEL_EH,
+                  (uint32_t)event->err_level);
+
+  // 上位の EH_Rule にマッチしないか問い合わせ
+  responded_num = EH_check_higher_level_rule_and_respond_(rule_id);
+
+  if (responded_num > 0)
+  {
+    // 上位で対応された
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,
+                    (uint32_t)rule_id,
+                    EL_ERROR_LEVEL_EH,
+                    (uint32_t)responded_num);
+    return responded_num;
+  }
+
+  // このルールで対応する
+  EH_respond_(rule_id);
+  return 1;
+}
+
+
+static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id)
+{
+  const EL_Event* higher_level_trigger_event = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 0);
+  int32_t delta_counter = event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH] -
+                          event_handler_.el_event_counter.counters[EL_ERROR_LEVEL_EH];
+
+  if (delta_counter < 1)
+  {
+    // 何かがおかしい（ありえないが，安全のため入れている．問題なさそうなら消してよし）
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                    EH_EL_LOCAL_ID_UNKNOWN_ERR,
+                    EL_ERROR_LEVEL_HIGH,
+                    0);
+    return 0;
+  }
+  if (higher_level_trigger_event->group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE || higher_level_trigger_event->local != rule_id)
+  {
+    // 何かがおかしい（ありえないが，安全のため入れている．問題なさそうなら消してよし）
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                    EH_EL_LOCAL_ID_UNKNOWN_ERR,
+                    EL_ERROR_LEVEL_HIGH,
+                    0);
+    return 0;
+  }
+
+  // EL_Event を処理したのでカウントアップ
+  event_handler_.el_event_counter.counter_total += delta_counter;
+  event_handler_.el_event_counter.counters[EL_ERROR_LEVEL_EH] += delta_counter;
+
+  // 上位の EH_Rule があるか検索して対応（再帰）
+  return EH_check_event_and_respond_(higher_level_trigger_event);
+}
+
+
+static EH_CKECK_RULE_ACK EH_check_rule_(EH_RULE_ID rule_id, const EL_Event* event)
+{
+  EH_RuleSettings* rule_settings = &event_handler_.rule_table.rules[rule_id].settings;
+
+  if (!(rule_settings->is_active))
+  {
+    return EH_CKECK_RULE_ACK_NOT_MATCH;
+  }
   if (rule_settings->should_match_err_level)
   {
     if (rule_settings->event.err_level != event->err_level)
     {
-      return EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED;
+      return EH_CKECK_RULE_ACK_NOT_MATCH;
     }
-  }
-
-  if (!(rule_settings->is_active))
-  {
-    return EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED;
   }
 
   switch (rule_settings->condition.type)
   {
   case EH_RESPONSE_CONDITION_SINGLE:
-    return EH_check_single_rule_and_respond_(rule_id, event);
+    return EH_check_single_rule_(rule_id, event);
   case EH_RESPONSE_CONDITION_CONTINUOUS:
-    return EH_check_continuous_rule_and_respond_(rule_id, event);
+    return EH_check_continuous_rule_(rule_id, event);
   case EH_RESPONSE_CONDITION_CUMULATIVE:
-    return EH_check_cumulative_rule_and_respond_(rule_id, event);
+    return EH_check_cumulative_rule_(rule_id, event);
   default:
     // 何かがおかしい（ありえないが，安全のため入れている．問題なさそうなら消してよし）
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)rule_id);
-    return EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED;
+    return EH_CKECK_RULE_ACK_NOT_MATCH;
   }
 }
 
 
-static EH_CKECK_AND_RESPOND_ACK EH_check_single_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event)
+static EH_CKECK_RULE_ACK EH_check_single_rule_(EH_RULE_ID rule_id, const EL_Event* event)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
   rule->last_event_time = event->time;
-
-  EH_respond_(rule_id);
-  return EH_CKECK_AND_RESPOND_ACK_RESPONDED;
+  return EH_CKECK_RULE_ACK_MATCH;
 }
 
 
-static EH_CKECK_AND_RESPOND_ACK EH_check_continuous_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event)
+static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_Event* event)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
   uint32_t delta_time_ms = OBCT_diff_in_msec(&rule->last_event_time, &event->time);
@@ -469,29 +568,29 @@ static EH_CKECK_AND_RESPOND_ACK EH_check_continuous_rule_and_respond_(EH_RULE_ID
 
   rule->counter++;
 
-  if (rule->counter >= rule->settings.condition.count_threshold)
+  if (rule->counter < rule->settings.condition.count_threshold)
   {
-    EH_respond_(rule_id);
-    return EH_CKECK_AND_RESPOND_ACK_RESPONDED;
+    return EH_CKECK_RULE_ACK_NOT_MATCH;
   }
 
-  return EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED;
+  rule->counter = 0;
+  return EH_CKECK_RULE_ACK_MATCH;
 }
 
 
-static EH_CKECK_AND_RESPOND_ACK EH_check_cumulative_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event)
+static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_Event* event)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
   rule->last_event_time = event->time;
   rule->counter++;
 
-  if (rule->counter >= rule->settings.condition.count_threshold)
+  if (rule->counter < rule->settings.condition.count_threshold)
   {
-    EH_respond_(rule_id);
-    return EH_CKECK_AND_RESPOND_ACK_RESPONDED;
+    return EH_CKECK_RULE_ACK_NOT_MATCH;
   }
 
-  return EH_CKECK_AND_RESPOND_ACK_NOT_RESPONDED;
+  rule->counter = 0;
+  return EH_CKECK_RULE_ACK_MATCH;
 }
 
 
@@ -523,8 +622,7 @@ static void EH_respond_(EH_RULE_ID rule_id)
                     (uint32_t)(deploy_cmd_ack + 100));   // FIXME: CCP_EXEC_STS が負数も含むので．．．なんとかしたい
   }
 
-  rule->counter = 0;
-  EH_inactivate_rule(rule_id);
+  EH_inactivate_rule_for_multi_level(rule_id);
 
   EH_record_responded_log_(rule_id, deploy_cmd_ack);
 }
@@ -552,7 +650,7 @@ static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd
 }
 
 
-const EL_Event* EH_get_oldest_event_(void)
+static const EL_Event* EH_get_oldest_event_excluding_eh_error_level_(void)
 {
   uint8_t err_level;      // for で回すので u8 で
   ObcTime oldest_time = OBCT_get_max();
@@ -565,10 +663,8 @@ const EL_Event* EH_get_oldest_event_(void)
     const uint16_t tlog_capacity = event_logger->tlogs[err_level].log_capacity;
     const EL_Event* event;
 
-    if (delta_counter <= 0)
-    {
-      continue;
-    }
+    if (err_level == EL_ERROR_LEVEL_EH) continue;
+    if (delta_counter <= 0) continue;
 
     // キャパを溢れていたら，諦めて情報を修正する
     if (delta_counter > tlog_capacity)
@@ -615,7 +711,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   // 重複もあり得ることを考慮する (duplicate_id は異なる)
 
   uint16_t found_idx = EH_RULE_MAX;
-  EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
+  const EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
   EH_RuleSortedIndex target_sorted_idx;
   uint16_t i;
   uint16_t possible_num_of_id_duplicates;
@@ -953,6 +1049,50 @@ EH_CHECK_RULE_ACK EH_inactivate_rule(EH_RULE_ID id)
 }
 
 
+EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id)
+{
+  int i;
+  EH_RULE_ID next_rule_id = id;
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  // 無限ループ回避のため for で
+  for (i = 0; i < EH_RULE_MAX; ++i)
+  {
+    if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
+    if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+    {
+      break;
+    }
+    next_rule_id = (EH_RULE_ID)event_handler_.rule_table.rules[next_rule_id].settings.event.local;
+  }
+
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
+EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
+{
+  int i;
+  EH_RULE_ID next_rule_id = id;
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  // 無限ループ回避のため for で
+  for (i = 0; i < EH_RULE_MAX; ++i)
+  {
+    if (EH_inactivate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
+    if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+    {
+      break;
+    }
+    next_rule_id = (EH_RULE_ID)event_handler_.rule_table.rules[next_rule_id].settings.event.local;
+  }
+
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
 void EH_match_event_counter_to_el(void)
 {
   uint8_t err_level;
@@ -1106,6 +1246,44 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_activate_rule_for_multi_level(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_inactivate_rule_for_multi_level(rule_id);
 
   switch (ack)
   {

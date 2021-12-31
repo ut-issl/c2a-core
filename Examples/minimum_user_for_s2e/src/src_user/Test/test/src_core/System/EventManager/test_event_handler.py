@@ -92,6 +92,7 @@ def test_event_handler_init_check():
     assert tlm_EH["EH.EL_EVENT_COUNTER.COUNTERS.EL_ERROR_LEVEL_MIDDLE"] == 0
     assert tlm_EH["EH.EL_EVENT_COUNTER.COUNTERS.EL_ERROR_LEVEL_LOW"] == 0
     assert tlm_EH["EH.EL_EVENT_COUNTER.COUNTERS.EL_ERROR_LEVEL_EL"] == 0
+    assert tlm_EH["EH.EL_EVENT_COUNTER.COUNTERS.EL_ERROR_LEVEL_EH"] == 0
     assert tlm_EH["EH.TLM_INFO.RULE.PAGE_NO"] == 0
     assert tlm_EH["EH.TLM_INFO.RULE.TARGET_RULE_ID"] == 0
     assert tlm_EH["EH.TLM_INFO.RULE_SORTED_INDEX.PAGE_NO"] == 0
@@ -171,7 +172,7 @@ def test_event_handler_load_rule():
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_CLEAR_ALL_RULE, (), c2a_enum.Tlm_CODE_HK
     )
-    check_default_rules_cleared()
+    check_rules_cleared()
     check_rule_indexes_cleared()
 
     # デフォルトルールのロード
@@ -585,7 +586,40 @@ def test_event_handler_respond_single():
     assert check_respend_eh() == "not_responded"
 
 
-# TODO: 複数同時発火のテストを入れる
+@pytest.mark.real
+@pytest.mark.sils
+def test_event_handler_respond_single_multiple():
+    print("")
+    print("test_event_handler_respond_single_multiple")
+
+    # 初期化
+    init_el_and_eh()
+
+    # 現在のカウンタを保存
+    tlm_EH = download_eh_tlm()
+    counter = tlm_EH["EH.LOG_TABLE.RESPOND_COUNTER"]
+
+    # テスト用にアクティベーション
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST4,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST4", EH_RULE_TEST4, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+    # 発火
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+    exec_eh()
+    assert check_respend_eh() == "responded"       # 少なくとも１つは動いた
+
+    # カウンタの増加が +2 であることを確認
+    tlm_EH = download_eh_tlm()
+    assert counter + 2 == tlm_EH["EH.LOG_TABLE.RESPOND_COUNTER"]
+
+    # ログもチェック
+    tlm_EH_LOG = download_eh_log_tlm()
+    check_log(0, EH_RULE_TEST4, tlm_EH_LOG)
+    check_log(1, EH_RULE_TEST0, tlm_EH_LOG)
 
 
 @pytest.mark.real
@@ -648,6 +682,213 @@ def test_event_handler_respond_cumulative():
     assert check_respend_eh() == "responded"
 
     disable_eh_exec()
+
+
+@pytest.mark.real
+@pytest.mark.sils
+def test_event_handler_activate_and_inactivate_rule_for_multi_level():
+    print("")
+    print("test_event_handler_activate_and_inactivate_rule_for_multi_level")
+
+    # 初期化
+    init_el_and_eh()
+
+    # テスト用にアクティベーション
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST5", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+
+    # inactivate Lv.1 to Lv.3
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+
+    # activate Lv.1 to Lv.3
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+    # inactivate Lv.1 to Lv.2
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # activate Lv.1 to Lv.2
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # inactivate only Lv.1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # activate only Lv.1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+
+
+@pytest.mark.real
+@pytest.mark.sils
+def test_event_handler_respond_multi_level():
+    print("")
+    print("test_event_handler_respond_multi_level")
+
+    # 初期化
+    init_el_and_eh()
+
+    # テスト用にアクティベーション
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST5", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "ACTIVE"})
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST6,), c2a_enum.Tlm_CODE_HK
+    )
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "ACTIVE"})
+
+    # Lv.1 発火
+    print("### Lv.1 ###")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+    exec_eh()
+    assert check_respend_eh() == "responded"
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.LOG_TABLE.RESPOND_COUNTER"] == 1
+    tlm_EH_LOG = download_eh_log_tlm()
+    check_log(0, EH_RULE_TEST0, tlm_EH_LOG)
+    tlm_EL = download_el_tlm()
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.LOCAL"] == EH_RULE_TEST0
+
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # Lv.2 発火 (Lv.1 はキャンセル)
+    print("### Lv.2 ###")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+    exec_eh()
+    assert check_respend_eh() == "responded"
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.LOG_TABLE.RESPOND_COUNTER"] == 2
+    tlm_EH_LOG = download_eh_log_tlm()
+    check_log(0, EH_RULE_TEST5, tlm_EH_LOG)
+    check_log(1, EH_RULE_TEST0, tlm_EH_LOG)
+    tlm_EL = download_el_tlm()
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.LOCAL"] == EH_RULE_TEST0
+    assert tlm_EL["EL.TLOGS.EH.EVENTS1.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS1.LOCAL"] == EH_RULE_TEST5
+    assert tlm_EL["EL.TLOGS.EH.EVENTS2.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS2.LOCAL"] == EH_RULE_TEST0
+    assert tlm_EL["EL.TLOGS.EH.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS3.LOCAL"] == EH_RULE_TEST0
+
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL, (EH_RULE_TEST5,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # Lv.1 発火
+    print("### Lv.1 ###")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+    exec_eh()
+    assert check_respend_eh() == "responded"
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.LOG_TABLE.RESPOND_COUNTER"] == 3
+    tlm_EH_LOG = download_eh_log_tlm()
+    check_log(0, EH_RULE_TEST0, tlm_EH_LOG)
+    check_log(1, EH_RULE_TEST5, tlm_EH_LOG)
+    check_log(2, EH_RULE_TEST0, tlm_EH_LOG)
+    tlm_EL = download_el_tlm()
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.LOCAL"] == EH_RULE_TEST0
+    assert tlm_EL["EL.TLOGS.EH.EVENTS1.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS1.LOCAL"] == EH_RULE_TEST0
+    assert tlm_EL["EL.TLOGS.EH.EVENTS2.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS2.LOCAL"] == EH_RULE_TEST5
+    assert tlm_EL["EL.TLOGS.EH.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS3.LOCAL"] == EH_RULE_TEST0
+
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+
+    # Lv.3 発火 (Lv.1,2 はキャンセル)
+    print("### Lv.3 ###")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0), c2a_enum.Tlm_CODE_HK
+    )
+    exec_eh()
+    assert check_respend_eh() == "responded"
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.LOG_TABLE.RESPOND_COUNTER"] == 4
+    tlm_EH_LOG = download_eh_log_tlm()
+    check_log(0, EH_RULE_TEST6, tlm_EH_LOG)
+    check_log(1, EH_RULE_TEST0, tlm_EH_LOG)
+    check_log(2, EH_RULE_TEST5, tlm_EH_LOG)
+    check_log(3, EH_RULE_TEST0, tlm_EH_LOG)
+    tlm_EL = download_el_tlm()
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS0.LOCAL"] == EH_RULE_TEST0
+    assert tlm_EL["EL.TLOGS.EH.EVENTS1.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS1.LOCAL"] == EH_RULE_TEST5
+    assert tlm_EL["EL.TLOGS.EH.EVENTS2.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS2.LOCAL"] == EH_RULE_TEST6
+    assert tlm_EL["EL.TLOGS.EH.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    assert tlm_EL["EL.TLOGS.EH.EVENTS3.LOCAL"] == EH_RULE_TEST5
+
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST0", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
 
 
 @pytest.mark.real
@@ -756,6 +997,12 @@ def download_eh_index_tlm():
     )
 
 
+def download_el_tlm():
+    return wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL
+    )
+
+
 def check_rule(name, rule_id, settings):
     print("check_rule: " + name)
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -766,22 +1013,6 @@ def check_rule(name, rule_id, settings):
     assert tlm_EH["EH.TARTGET_RULE.SETTINGS.EVENT.GROUP"] == settings['group']
     assert tlm_EH["EH.TARTGET_RULE.SETTINGS.EVENT.LOCAL"] == settings['local']
     assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == settings['is_active']
-
-
-def check_default_rules():
-    print("check_default_rules")
-    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
-    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'is_active': "ACTIVE"})
-    check_rule("TEST2", EH_RULE_TEST2, {'group': EL_GROUP_TEST_EH, 'local': 2, 'is_active': "ACTIVE"})
-    check_rule("TEST3", EH_RULE_TEST3, {'group': EL_GROUP_TEST_EH, 'local': 3, 'is_active': "ACTIVE"})
-
-
-def check_default_rules_cleared():
-    print("check_default_rule_cleared")
-    check_rule("TEST0", EH_RULE_TEST0, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
-    check_rule("TEST1", EH_RULE_TEST1, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
-    check_rule("TEST2", EH_RULE_TEST2, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
-    check_rule("TEST3", EH_RULE_TEST3, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
 
 
 def check_log(index, id, tlm_EH_LOG):
@@ -797,6 +1028,29 @@ def check_rule_index(name, id, settings, tlm_EH_INDEX):
     assert tlm_EH_INDEX["EH_INDEX.IDX" + str(id) + ".RULE_ID"] == settings['rule_id']
 
 
+def check_default_rules():
+    print("check_default_rules")
+    check_rule("TEST0", EH_RULE_TEST0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "ACTIVE"})
+    check_rule("TEST1", EH_RULE_TEST1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'is_active': "ACTIVE"})
+    check_rule("TEST2", EH_RULE_TEST2, {'group': EL_GROUP_TEST_EH, 'local': 2, 'is_active': "ACTIVE"})
+    check_rule("TEST3", EH_RULE_TEST3, {'group': EL_GROUP_TEST_EH, 'local': 3, 'is_active': "ACTIVE"})
+    check_rule("TEST4", EH_RULE_TEST4, {'group': EL_GROUP_TEST_EH, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST5", EH_RULE_TEST5, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST6, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'is_active': "INACTIVE"})
+
+
+def check_rules_cleared():
+    print("check_default_rule_cleared")
+    check_rule("TEST0", EH_RULE_TEST0, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST1", EH_RULE_TEST1, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST2", EH_RULE_TEST2, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST3", EH_RULE_TEST3, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST4", EH_RULE_TEST3, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST5", EH_RULE_TEST3, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST6", EH_RULE_TEST3, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+    check_rule("TEST7", EH_RULE_TEST3, {'group': 0, 'local': 0, 'is_active': "INACTIVE"})
+
+
 def check_default_rule_indexes():
     # FIXME: user側でルールが追加すると，テストが通らなくなる！
     print("check_default_rule_indexes")
@@ -806,10 +1060,13 @@ def check_default_rule_indexes():
         ope, c2a_enum.Cmd_CODE_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM, (0, ), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH_INDEX = download_eh_index_tlm()
-    check_rule_index("TEST0", 0, {'group': EL_GROUP_TEST_EH, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
-    check_rule_index("TEST1", 1, {'group': EL_GROUP_TEST_EH, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
-    check_rule_index("TEST2", 2, {'group': EL_GROUP_TEST_EH, 'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST2}, tlm_EH_INDEX)
-    check_rule_index("TEST3", 3, {'group': EL_GROUP_TEST_EH, 'local': 3, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST0", 2, {'group': EL_GROUP_TEST_EH, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST0}, tlm_EH_INDEX)
+    check_rule_index("TEST1", 4, {'group': EL_GROUP_TEST_EH, 'local': 1, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST1}, tlm_EH_INDEX)
+    check_rule_index("TEST2", 5, {'group': EL_GROUP_TEST_EH, 'local': 2, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST2}, tlm_EH_INDEX)
+    check_rule_index("TEST3", 6, {'group': EL_GROUP_TEST_EH, 'local': 3, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST3}, tlm_EH_INDEX)
+    check_rule_index("TEST4", 3, {'group': EL_GROUP_TEST_EH, 'local': 0, 'duplicate_id': 1, 'rule_id': EH_RULE_TEST4}, tlm_EH_INDEX)
+    check_rule_index("TEST5", 0, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST0, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST5}, tlm_EH_INDEX)
+    check_rule_index("TEST6", 1, {'group': c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE, 'local': EH_RULE_TEST5, 'duplicate_id': 0, 'rule_id': EH_RULE_TEST6}, tlm_EH_INDEX)
 
 
 def check_rule_indexes_cleared():
@@ -824,6 +1081,10 @@ def check_rule_indexes_cleared():
     check_rule_index("1", 1, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
     check_rule_index("2", 2, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
     check_rule_index("3", 3, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
+    check_rule_index("4", 4, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
+    check_rule_index("5", 5, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
+    check_rule_index("6", 6, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
+    check_rule_index("7", 7, {'group': 0, 'local': 0, 'duplicate_id': 0, 'rule_id': EH_RULE_MAX}, tlm_EH_INDEX)
 
 
 def set_param_of_reg_from_cmd_eh_rule(rule_id, settings):
@@ -889,8 +1150,8 @@ def check_respend_eh():
     print("check_respend_eh")
     time.sleep(1)
 
-    # WINGS で目視するため
-    download_eh_tlm()
+    # # WINGS で目視するため
+    # download_eh_tlm()
 
     (group, local, err_level) = get_latest_event()
     if (group == EL_GROUP_TEST_EH_RESPOND and local == 0 and err_level == "LOW"):

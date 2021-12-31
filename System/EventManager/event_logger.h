@@ -59,6 +59,8 @@
 
 #define EL_TLOG_LOG_SIZE_MAX_EL       (16)    //!< TLogにて保存するログ数 (EL_ERROR_LEVEL_EL)
 #define EL_CLOG_LOG_SIZE_MAX_EL       (8)     //!< CLogにて保存するログ数 (EL_ERROR_LEVEL_EL)
+#define EL_TLOG_LOG_SIZE_MAX_EH       (16)    //!< TLogにて保存するログ数 (EL_ERROR_LEVEL_EH) 小さめでOK． EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES x 多段EHの最大段数ぐらいあれば
+#define EL_CLOG_LOG_SIZE_MAX_EH       (8)     //!< CLogにて保存するログ数 (EL_ERROR_LEVEL_EH) これは EH では使われないので小さくて良い
 
 #define EL_IS_ENABLE_TLOG                     //!< TLog を有効にするか？ → これがないと event_handler は使えない
 #define EL_IS_ENABLE_CLOG                     //!< CLog を有効にするか？
@@ -81,6 +83,8 @@
 // SIZE_OF_EL_CLOG_COUNTER_T: el_clog_counter_t の型サイズ
 // 上部で定義されている，各種tableサイズ
 #include <src_user/Settings/System/event_logger_params.h>
+
+#include "event_logger.h"
 
 #define EL_LOG_MINIMUM_REQUIRED           (2)   //!< ログに求められる最小要素数
 #define EL_LOG_MINIMUM_REQUIRED_EL_LOG    (4)   //!< ELログに求められる最小要素数
@@ -116,6 +120,10 @@
 #undef EL_TLOG_LOG_SIZE_MAX_EL
 #endif  // EL_IS_ENABLE_EL_ERROR_LEVEL
 
+#if EL_TLOG_LOG_SIZE_MAX_EH <= EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
+#error EL_TLOG_LOG_SIZE_MAX_EH is too small
+#endif
+
 #else   // EL_IS_ENABLE_TLOG
 
 #undef EL_TLOG_TLM_PAGE_SIZE
@@ -123,6 +131,7 @@
 #undef EL_TLOG_TLM_PAGE_MAX_MIDDLE
 #undef EL_TLOG_TLM_PAGE_MAX_LOW
 #undef EL_TLOG_LOG_SIZE_MAX_EL
+#undef EL_TLOG_LOG_SIZE_MAX_EH
 
 #endif  // EL_IS_ENABLE_TLOG
 
@@ -158,6 +167,10 @@
 #undef EL_CLOG_LOG_SIZE_MAX_EL
 #endif  // EL_IS_ENABLE_EL_ERROR_LEVEL
 
+#if EL_CLOG_LOG_SIZE_MAX_EH <= 0
+#error EL_CLOG_LOG_SIZE_MAX_EH must be a positive number
+#endif
+
 #if SIZE_OF_EL_CLOG_COUNTER_T == 1
 typedef uint8_t el_clog_counter_t;
 #elif SIZE_OF_EL_CLOG_COUNTER_T == 2
@@ -175,6 +188,7 @@ typedef uint32_t el_clog_counter_t;
 #undef EL_CLOG_TLM_PAGE_MAX_MIDDLE
 #undef EL_CLOG_TLM_PAGE_MAX_LOW
 #undef EL_CLOG_LOG_SIZE_MAX_EL
+#undef EL_CLOG_LOG_SIZE_MAX_EH
 
 #endif  // EL_IS_ENABLE_CLOG
 
@@ -194,7 +208,9 @@ typedef enum
   EL_CORE_GROUP_TLCD_PAST_TIME,
   EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
   EL_CORE_GROUP_DCU,
-  EL_CORE_GROUP_EVENT_HANDLER,
+  EL_CORE_GROUP_EVENT_HANDLER,        //!< EH （詳細は event_handler.h 参照）
+  EL_CORE_GROUP_EH_MATCH_RULE,        //!< EH_Rule でマッチした（詳細は event_handler.h 参照）
+  EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,  //!< EH_Rule でマッチしたが，そのルールで対応せずに，上位のルールで対応させた（詳細は event_handler.h 参照）
   EL_CORE_GROUP_COMMAND_ANALYZE,
   // TODO: Driver Super
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
@@ -245,6 +261,8 @@ typedef enum
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   EL_ERROR_LEVEL_EL,
 #endif
+  EL_ERROR_LEVEL_EH,    /*!< 多段の EH 対応を実現するためのエラーレベル
+                             EL_CORE_GROUP_EH_MATCH_RULE, EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE が記録される */
   EL_ERROR_LEVEL_MAX
 } EL_ERROR_LEVEL;
 
@@ -454,6 +472,7 @@ EL_ACK EL_disable_tlog_overwrite(EL_ERROR_LEVEL err_level);
 
 /**
  * @brief  TLog のイベントテーブルの上書きをすべて有効化
+ * @note   EL_ERROR_LEVEL_EH は基本的にユーザーが操作するものではないので，ここでは有効化されない
  * @param  void
  * @return void
  */
@@ -461,6 +480,7 @@ void EL_enable_tlog_overwrite_all(void);
 
 /**
  * @brief  TLog のイベントテーブルの上書きをすべて無効化
+ * @note   EL_ERROR_LEVEL_EH は基本的にユーザーが操作するものではないので，ここでは無効化されない
  * @param  void
  * @return void
  */
