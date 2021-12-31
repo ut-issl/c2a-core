@@ -31,7 +31,7 @@ static void UART_TEST_update_(void);
 // initƒRƒ}ƒ“ƒh‚Å‰Šú‰»‚·‚é‚±‚Æ
 AppInfo UART_TEST_update(void)
 {
-  return create_app_info("update_uart_test", UART_TEST_init_by_AM_, UART_TEST_update_);
+  return AI_create_app_info("update_uart_test", UART_TEST_init_by_AM_, UART_TEST_update_);
 }
 
 

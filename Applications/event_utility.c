@@ -17,7 +17,7 @@ const EventUtility* const event_utility = &event_utility_;
 
 AppInfo EVENT_UTIL_create_app(void)
 {
-  return create_app_info("event_util", EVENT_UTIL_init_, EVENT_UTIL_update_);
+  return AI_create_app_info("event_util", EVENT_UTIL_init_, EVENT_UTIL_update_);
 }
 
 static void EVENT_UTIL_init_(void)

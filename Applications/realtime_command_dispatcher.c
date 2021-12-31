@@ -11,9 +11,7 @@ static void RTCD_dispatch_(void);
 
 AppInfo RTCD_create_app(void)
 {
-  return create_app_info("realtime_command_dispatcher",
-                         RTCD_init_,
-                         RTCD_dispatch_);
+  return AI_create_app_info("realtime_command_dispatcher", RTCD_init_, RTCD_dispatch_);
 }
 
 static void RTCD_init_(void)

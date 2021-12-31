@@ -203,7 +203,7 @@ CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CTCP* packet)
 
 AppInfo print_tdsp_status(void)
 {
-  return create_app_info("tstm", NULL, print_tdsp_status_);
+  return AI_create_app_info("tstm", NULL, print_tdsp_status_);
 }
 
 void print_tdsp_status_(void)

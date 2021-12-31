@@ -14,7 +14,7 @@ static void UTIL_COUNTER_incl_(UTIL_COUNTER_NAME num);
 // 汎用カウンタ関連ここから
 AppInfo UTIL_COUNTER_create_app(void)
 {
-  return create_app_info("utility_counter", UTIL_COUNTER_all_init_, NULL);
+  return AI_create_app_info("utility_counter", UTIL_COUNTER_all_init_, NULL);
 }
 
 static void UTIL_COUNTER_all_init_(void)

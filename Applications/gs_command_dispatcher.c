@@ -13,9 +13,7 @@ static void GSCD_dispatch_(void);
 
 AppInfo GSCD_create_app(void)
 {
-  return create_app_info("gs_command_dispatcher",
-                         GSCD_init_,
-                         GSCD_dispatch_);
+  return AI_create_app_info("gs_command_dispatcher", GSCD_init_, GSCD_dispatch_);
 }
 
 static void GSCD_init_(void)

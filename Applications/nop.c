@@ -12,7 +12,7 @@ static void NOP_nop_(void);
 
 AppInfo NOP_create_app(void)
 {
-  return create_app_info("nop", NULL, NOP_nop_);
+  return AI_create_app_info("nop", NULL, NOP_nop_);
 }
 
 static void NOP_nop_() {
