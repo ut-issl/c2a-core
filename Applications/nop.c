@@ -1,7 +1,12 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief NOP (No Operation) App
+ * @note  C2Aは NOP があることを前提としている
+ *        この App は必ず App 登録し， Cmd_NOP も必ずコマンド登録しておくこと
+ */
 #include "nop.h"
-
-#include <stddef.h> // for NULL
+#include <stddef.h>
 
 static void NOP_nop_(void);
 
