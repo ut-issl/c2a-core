@@ -363,7 +363,7 @@ EH_CHECK_RULE_ACK EH_clear_rule_counter(EH_RULE_ID id);
 
 /**
  * @brief  EH_Rule の counter を EL_Event 指定で 0 クリア
- * @note   もしアノマリが発生したら そのため，EL_record_event , 正常なら EH_clear_rule_counter_by_event という使い方を想定している
+ * @note   もしアノマリが発生したら， EL_record_event, 正常なら EH_clear_rule_counter_by_event という使い方を想定している
  * @note   そのため，EL_record_event とインターフェースをあわせている
  * @param  group: EL_Event.group
  * @param  local: EL_Event.local
