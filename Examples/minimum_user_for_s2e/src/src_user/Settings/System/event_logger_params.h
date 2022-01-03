@@ -40,8 +40,8 @@
 
 #define EL_TLOG_SIZE_MAX_EL           (16)
 #define EL_CLOG_SIZE_MAX_EL           (8)
-#define EL_TLOG_SIZE_MAX_EL           (16)
-#define EL_CLOG_SIZE_MAX_EL           (8)
+#define EL_TLOG_SIZE_MAX_EH           (16)
+#define EL_CLOG_SIZE_MAX_EH           (8)
 
 #define EL_IS_ENABLE_TLOG
 #define EL_IS_ENABLE_CLOG
