@@ -123,6 +123,9 @@
 // #if EL_TLOG_LOG_SIZE_MAX_EH <= EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
 // #error EL_TLOG_LOG_SIZE_MAX_EH is too small
 // #endif
+#if EL_TLOG_LOG_SIZE_MAX_EH <= 0
+#error EL_TLOG_LOG_SIZE_MAX_EH must be a positive number
+#endif
 
 #else   // EL_IS_ENABLE_TLOG
 
