@@ -140,7 +140,7 @@ sizeof(type) == 2 ? \
 sizeof(type) == 4 ? \
 (void*)CCP_get_4byte_param_from_packet(packet, n) : \
 sizeof(type) == 8 ? \
-(void*)CCP_get_4byte_param_from_packet(packet, n) : \
+(void*)CCP_get_8byte_param_from_packet(packet, n) : \
 0)))
 
 #endif

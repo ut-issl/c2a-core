@@ -49,8 +49,8 @@ def test_tmgr_set_unixtime():
 
     current_unixtime = time.time()
 
-    ti = 100
-    step = 10000
+    ti = 1000
+    step = 60
     ret = wings.util.send_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TMGR_SET_UNIXTIME,
@@ -59,16 +59,16 @@ def test_tmgr_set_unixtime():
     )
     assert ret == "SUC"
 
+    # 0.05秒の精度でunixtimeが正確に登録されているか確認
     tlm_HK = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
+    unixtime_at_ti0 = current_unixtime - (ti / 10) - (step / 1000)
     assert (
-        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"]
-        > current_unixtime - (ti / 10) - (step / 1000) - 0.1
+        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] > unixtime_at_ti0 - 0.05
     )
     assert (
-        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"]
-        < current_unixtime - (ti / 10) - (step / 1000) + 0.1
+        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] < unixtime_at_ti0 + 0.05
     )
 
 
