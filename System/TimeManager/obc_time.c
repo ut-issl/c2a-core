@@ -49,12 +49,7 @@ void OBCT_count_up(ObcTime* time)
 
 ObcTime OBCT_get_max(void)
 {
-  ObcTime max = {
-    OBCT_MAX_CYCLE - 1,
-    OBCT_MAX_CYCLE - 1,
-    OBCT_STEPS_PER_CYCLE - 1
-  };
-  return max;
+  return OBCT_create(OBCT_MAX_CYCLE - 1, OBCT_MAX_CYCLE - 1, OBCT_STEPS_PER_CYCLE - 1); 
 }
 
 cycle_t OBCT_get_total_cycle(const ObcTime* time)
