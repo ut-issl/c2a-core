@@ -84,8 +84,6 @@
 // 上部で定義されている，各種tableサイズ
 #include <src_user/Settings/System/event_logger_params.h>
 
-#include "event_logger.h"
-
 #define EL_LOG_MINIMUM_REQUIRED           (2)   //!< ログに求められる最小要素数
 #define EL_LOG_MINIMUM_REQUIRED_EL_LOG    (4)   //!< ELログに求められる最小要素数
 
@@ -120,8 +118,13 @@
 #undef EL_TLOG_LOG_SIZE_MAX_EL
 #endif  // EL_IS_ENABLE_EL_ERROR_LEVEL
 
-#if EL_TLOG_LOG_SIZE_MAX_EH <= EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
-#error EL_TLOG_LOG_SIZE_MAX_EH is too small
+// FIXME: event_logger.h と event_handler.h が相互 include になってしまいビルドできないので，一時的にこのアサーションを無効化
+// #include "event_handler.h"
+// #if EL_TLOG_LOG_SIZE_MAX_EH <= EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
+// #error EL_TLOG_LOG_SIZE_MAX_EH is too small
+// #endif
+#if EL_TLOG_LOG_SIZE_MAX_EH <= 0
+#error EL_TLOG_LOG_SIZE_MAX_EH must be a positive number
 #endif
 
 #else   // EL_IS_ENABLE_TLOG

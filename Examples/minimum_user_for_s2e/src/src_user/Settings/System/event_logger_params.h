@@ -15,10 +15,10 @@
 #undef EL_CLOG_TLM_PAGE_MAX_MIDDLE
 #undef EL_CLOG_TLM_PAGE_MAX_LOW
 
-#undef EL_TLOG_SIZE_MAX_EL
-#undef EL_CLOG_SIZE_MAX_EL
-#undef EL_TLOG_SIZE_MAX_EH
-#undef EL_CLOG_SIZE_MAX_EH
+#undef EL_TLOG_LOG_SIZE_MAX_EL
+#undef EL_CLOG_LOG_SIZE_MAX_EL
+#undef EL_TLOG_LOG_SIZE_MAX_EH
+#undef EL_CLOG_LOG_SIZE_MAX_EH
 
 #undef EL_IS_ENABLE_TLOG
 #undef EL_IS_ENABLE_CLOG
@@ -38,10 +38,10 @@
 #define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)
 #define EL_CLOG_TLM_PAGE_MAX_LOW      (4)
 
-#define EL_TLOG_SIZE_MAX_EL           (16)
-#define EL_CLOG_SIZE_MAX_EL           (8)
-#define EL_TLOG_SIZE_MAX_EL           (16)
-#define EL_CLOG_SIZE_MAX_EL           (8)
+#define EL_TLOG_LOG_SIZE_MAX_EL           (16)
+#define EL_CLOG_LOG_SIZE_MAX_EL           (8)
+#define EL_TLOG_LOG_SIZE_MAX_EH           (16)
+#define EL_CLOG_LOG_SIZE_MAX_EH           (8)
 
 #define EL_IS_ENABLE_TLOG
 #define EL_IS_ENABLE_CLOG
