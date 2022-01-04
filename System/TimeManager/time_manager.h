@@ -6,8 +6,13 @@
 
 typedef struct
 {
-  ObcTime initializing_time;
-  uint8_t initializing_flag;
+  ObcTime master_clock_;
+  OBCT_UnixtimeInfo unixtime_info_;
+  struct
+  {
+    ObcTime initializing_time;
+    uint8_t initializing_flag;
+  } init_info_;
 } TimeManager;
 
 extern const TimeManager* const time_manager;

@@ -8,7 +8,7 @@
 #define OBCT_STEPS_PER_CYCLE (100)                                               //!< 何stepで1cycleか
 #define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1sで何cycleか
 #define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< 最大cycle数．つまりTIがいくつでオーバーフローするか
-#define OBCT_C2A_UNIXTIME_BASE (1577836800.0) //!< 2020-1-1-00:00:00UTC の時のunixtimeを基準にする
+#define OBCT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0) //!< 2020-1-1-00:00:00UTC の時のunixtimeを基準にする
 
 #include <src_user/Settings/System/obc_time_params.h>
 

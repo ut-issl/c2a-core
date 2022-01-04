@@ -207,8 +207,8 @@ void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti)
 
 cycle_t OBCT_get_c2a_unixtime_from_unixtime(const double unixtime)
 {
-  if (unixtime < OBCT_C2A_UNIXTIME_BASE) return (cycle_t) 0;
-  return (cycle_t) ((unixtime - OBCT_C2A_UNIXTIME_BASE) * 10); // cycle–¢–ž‚ÍØ‚èŽÌ‚Ä
+  if (unixtime < OBCT_UNIXTIME_EPOCH_FOR_UTL) return (cycle_t) 0;
+  return (cycle_t) ((unixtime - OBCT_UNIXTIME_EPOCH_FOR_UTL) * 10); // cycle–¢–ž‚ÍØ‚èŽÌ‚Ä
 }
 
 void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time)
