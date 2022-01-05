@@ -72,6 +72,19 @@ def test_tmgr_set_unixtime():
     )
 
 
+@pytest.mark.sils
+@pytest.mark.real
+def test_tmgr_set_utl_unixtime_epoch():
+
+    epoch = 1583020800.0 # 2020-03-01T00:00:00Z
+
+    ret = wings.util.send_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_TMGR_SET_ULT_UNIXTIME_EPOCH, (epoch,), c2a_enum.Tlm_CODE_HK
+    )
+    assert ret == "SUC"
+
+    # ToDo: tlmで確認できるようにする or UTL_cmdを実際に打って確認する
+
 if __name__ == "__main__":
     pass
     # test_tmgr_set_time()

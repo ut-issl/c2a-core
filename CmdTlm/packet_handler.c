@@ -99,7 +99,7 @@ static PH_ACK PH_analyze_cmd_(const CTCP* packet)
 
   case CCP_EXEC_TYPE_RT:
     return PH_add_rt_cmd_(packet);
-  
+
   case CCP_EXEC_TYPE_UTL:
     return PH_add_utl_cmd_(packet);
 

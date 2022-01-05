@@ -169,4 +169,6 @@ CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);
 
+CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CTCP* packet);
+
 #endif
