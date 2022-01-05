@@ -213,7 +213,7 @@ void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, co
 {
   double ti_sec = OBCT_get_total_cycle_in_sec(time);
   uti->unixtime_at_ti0 = unixtime - ti_sec;
-  uti->ti_at_last_update = time->total_cycle;
+  uti->ti_at_last_update = OBCT_get_total_cycle(time);
 }
 
 #pragma section

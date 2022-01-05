@@ -158,7 +158,7 @@ cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
  * @param[in] unixtime (GPS “™‚©‚çŠÏ‘ª‚µ‚½) unixtime
  * @param[in] time (GPS “™‚©‚ç) unixtime ‚ðŠÏ‘ª‚µ‚½Žž‚Ì ObcTime
  */
-void TMGR_update_unixtime_info(const double unixtime, const ObcTime time);
+void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);
