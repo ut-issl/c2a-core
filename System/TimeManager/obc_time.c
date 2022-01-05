@@ -1,11 +1,9 @@
+#pragma section REPRO
 /**
   * @file
   * @brief OBCの時刻情報を初期化, 取得, 更新したり, 加減などの演算を行ったりする
   */
-
-#pragma section REPRO
 #include "obc_time.h"
-
 #include "../../Library/print.h"
 
 ObcTime OBCT_create(cycle_t total_cycle,
@@ -123,27 +121,25 @@ ObcTime OBCT_diff(const ObcTime* before,
   {
     return OBCT_create(0, 0, 0); // after < before の場合は結果がマイナスになってしまうため
   }
+
+  // まずcycleの差分を計算
+  diff.total_cycle = after->total_cycle - before->total_cycle;
+  diff.mode_cycle = after->mode_cycle - before->mode_cycle;
+
+  // stepのみで差分を考えればよい場合
+  if (after->step >= before->step)
+  {
+    diff.step = after->step - before->step;
+  }
+  // cycleからの桁借りが必要な場合
   else
   {
-    // まずcycleの差分を計算
-    diff.total_cycle = after->total_cycle - before->total_cycle;
-    diff.mode_cycle = after->mode_cycle - before->mode_cycle;
-
-    // stepのみで差分を考えればよい場合
-    if (after->step >= before->step)
-    {
-      diff.step = after->step - before->step;
-    }
-    // cycleからの桁借りが必要な場合
-    else
-    {
-      diff.step = OBCT_STEPS_PER_CYCLE - before->step + after->step;
-      --diff.total_cycle;
-      --diff.mode_cycle;
-    }
-
-    return diff;
+    diff.step = OBCT_STEPS_PER_CYCLE - before->step + after->step;
+    --diff.total_cycle;
+    --diff.mode_cycle;
   }
+
+  return diff;
 }
 
 step_t OBCT_diff_in_step(const ObcTime* before,

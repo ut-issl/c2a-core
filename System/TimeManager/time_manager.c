@@ -1,14 +1,12 @@
+#pragma section REPRO
 /**
   * @file
   * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
   */
-
-#pragma section REPRO
 #include "time_manager.h"
 #include <string.h>
 #include <src_user/CmdTlm/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
-#include "../../Library/endian_memcpy.h"
 #include "../../CmdTlm/common_tlm_cmd_packet_util.h"
 
 static TimeManager time_manager_;
@@ -109,7 +107,7 @@ OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
 
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  return time_manager_.unixtime_info_.unixtime_at_ti0 + OBCT_get_total_cycle_in_sec(time);
+  return TMGR_get_obct_unixtime_info().unixtime_at_ti0 + OBCT_get_total_cycle_in_sec(time);
 }
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
@@ -125,8 +123,8 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
     return OBCT_create(0, 0, 0);
   }
 
-  cycle_diff = (cycle_t) (diff * cycles_per_sec); // cycle未満は切り捨て
-  step_diff = (step_t) ((diff * cycles_per_sec  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
+  cycle_diff = (cycle_t)(diff * cycles_per_sec); // cycle未満は切り捨て
+  step_diff = (step_t)((diff * cycles_per_sec  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
 
   res.total_cycle = cycle_diff;
   res.mode_cycle = 0; // 取得出来ないので0とする
@@ -137,14 +135,11 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 
 cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime)
 {
-  if (unixtime < time_manager_.utl_unixtime_epoch_) // 紀元より昔なのはおかしい
-  {
-    return (cycle_t) 0;
-  }
-  else // cycle 未満は切り捨て
-  {
-    return (cycle_t) ((unixtime - time_manager_.utl_unixtime_epoch_) * OBCT_CYCLES_PER_SEC);
-  }
+  // 紀元より昔なのはおかしい
+  if (unixtime < time_manager_.utl_unixtime_epoch_) return 0;
+
+  // cycle 未満は切り捨て
+  return (cycle_t)((unixtime - time_manager_.utl_unixtime_epoch_) * OBCT_CYCLES_PER_SEC);
 }
 
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)

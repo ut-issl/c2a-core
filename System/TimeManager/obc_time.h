@@ -2,7 +2,6 @@
   * @file
   * @brief OBCの時刻情報を初期化, 取得, 更新したり, 加減などの演算を行ったりする
   */
-
 #ifndef OBC_TIME_H_
 #define OBC_TIME_H_
 
@@ -235,6 +234,7 @@ OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime
 /**
  * @brief OBCT_UnixtimeInfo をクリアして全て0にする
  * @param[in] uti クリアする OBCT_UnixtimeInfo
+ * @return void
  */
 void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti);
 
@@ -243,6 +243,7 @@ void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti);
  * @param[in] uti 更新する OBCT_UnixtimeInfo
  * @param[in] unixtime (GPS 等から観測した) unixtime
  * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
+ * @return void
  */
 void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime* time);
 

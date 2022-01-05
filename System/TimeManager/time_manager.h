@@ -2,17 +2,20 @@
   * @file
   * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
   */
-
 #ifndef TIME_MANAGER_H_
 #define TIME_MANAGER_H_
 
 #include "obc_time.h"
 #include "../../CmdTlm/common_tlm_cmd_packet.h"
 
-#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0) /*!< 2020-01-01T00:00:00Z 時点のunixtime
-                                                                これを時刻ゼロとして起算した0.1秒刻みの時刻をutl_unixtimeと定義し,
-                                                                UTL_cmdの実行時刻情報として用いる */
+#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0) /*!< 2020-01-01T00:00:00Z 時点の unixtime
+                                                           これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義し,
+                                                           UTL_cmd の実行時刻情報として用いる */
 
+/**
+ * @struct TimeManager
+ * @brief master_clock_ でOBC時刻情報を保持するとともに, unixtime との紐づけや初期化情報の記録を行う
+ */
 typedef struct
 {
   ObcTime master_clock_;
@@ -96,7 +99,7 @@ cycle_t TMGR_get_master_mode_cycle(void);
  * @param void
  * @return master_clock_ の step
  */
-step_t  TMGR_get_master_step(void);
+step_t TMGR_get_master_step(void);
 
 /**
  * @brief 現在の total_cycle をミリ秒単位で返す
@@ -108,10 +111,11 @@ step_t  TMGR_get_master_step(void);
 uint32_t TMGR_get_master_total_cycle_in_msec(void);
 
 /**
- * @brief 現在の total_cycle をミリ秒単位で返す
+ * @brief 現在の mode_cycle をミリ秒単位で返す
  * @note uint32_t がオーバーフローする可能性があるので注意
  * @note 計算上はstepも考慮
- * @return ミリ秒単位の total_cycle
+ * @param void
+ * @return ミリ秒単位の mode_cycle
  */
 uint32_t TMGR_get_master_mode_cycle_in_msec(void);
 
@@ -131,25 +135,25 @@ double TMGR_get_unixtime_from_obc_time(const ObcTime* time);
 
 /**
  * @brief unixtime を ObcTime に変換する
- * @note 引数の unixtime が unixtime_at_ti0 より小さい場合は {0, 0, 0} を返す
  * @param[in] unixtime
- * @return ObcTime
+ * @retval {0, 0, 0} : 引数の unixtime が unixtime_at_ti0 より小さいとき
+ * @retval ObcTime   : それ以外
  */
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
 
 /**
  * @brief 一般的なunixtimeを, UTL_cmdで用いる utl_unixtime に変換する
- * @note 引数の unixtime が utl_unixtime_epoch_ より小さい場合は 0 を返す
  * @param[in] unixtime 変換したい unixtime
- * @return utl_unixtime (デフォルトでは2020-01-01T00:00:00Z 起算, cycle刻み)
+ * @retval 0 : 引数の unixtime が utl_unixtime_epoch_ より小さい場合
+ * @retval utl_unixtime (デフォルトでは2020-01-01T00:00:00Z 起算, cycle刻み) : それ以外の場合
  */
 cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime);
 
 /**
- * @brief 引数で指定された utl_unixtime に対応する ti を返す
- * @note UTL_cmd で実行時刻情報を ti に変換する際に用いる
+ * @brief 引数で指定された utl_unixtime に対応する TI を返す
+ * @note UTL_cmd で実行時刻情報を TI に変換する際に用いる
  * @param[in] utl_unixtime
- * @return ti (total_cycleのこと)
+ * @return TI (total_cycleのこと)
  */
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
 
@@ -157,6 +161,7 @@ cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
  * @brief unixtime_info_ を観測情報を用いて更新する
  * @param[in] unixtime (GPS 等から観測した) unixtime
  * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
+ * @return void
  */
 void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
 
