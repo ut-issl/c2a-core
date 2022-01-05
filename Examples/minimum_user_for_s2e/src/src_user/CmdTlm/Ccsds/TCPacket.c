@@ -270,9 +270,9 @@ TCP_CMD_EXEC_TYPE TCP_CMD_get_exec_type(const TCP* tcp)
   {
   case TCP_CMD_EXEC_TYPE_GS: // FALL THROUGH
   case TCP_CMD_EXEC_TYPE_TL: // FALL THROUGH
-  case TCP_CMD_EXEC_TYPE_UTL: // FALL THROUGH
   case TCP_CMD_EXEC_TYPE_BC: // FALL THROUGH
-  case TCP_CMD_EXEC_TYPE_RT:
+  case TCP_CMD_EXEC_TYPE_RT: // FALL THROUGH
+  case TCP_CMD_EXEC_TYPE_UTL:
     return exec_type;
   default:
     return TCP_CMD_EXEC_TYPE_UNKNOWN;

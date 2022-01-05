@@ -94,14 +94,14 @@ static PH_ACK PH_analyze_cmd_(const CTCP* packet)
   case CCP_EXEC_TYPE_TL0:
     return PH_add_tl_cmd_(0, packet, (size_t)(TMGR_get_master_total_cycle()) );
 
-  case CCP_EXEC_TYPE_UTL:
-    return PH_add_utl_cmd_(packet);
-
   case CCP_EXEC_TYPE_BC:
     return PH_analyze_block_cmd_(packet);
 
   case CCP_EXEC_TYPE_RT:
     return PH_add_rt_cmd_(packet);
+  
+  case CCP_EXEC_TYPE_UTL:
+    return PH_add_utl_cmd_(packet);
 
   case CCP_EXEC_TYPE_TL1:
     return PH_add_tl_cmd_(1, packet, (size_t)(TMGR_get_master_total_cycle()) );
@@ -224,15 +224,18 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
 static PH_ACK PH_add_utl_cmd_(const CTCP* packet)
 {
   static CTCP temp_; // サイズが大きいため静的領域に確保
-  cycle_t c2a_unixtime = CCP_get_ti(packet); // UTL_cmdの場合、0.1秒刻みのunixtime*10がhdrのtiの部分に格納されている
-  cycle_t ti = TMGR_get_ti_from_c2a_unixtime(c2a_unixtime); // tiに変換
 
-  // コマンドを読みだし、TLCとして実行時刻を設定。
+  // utl_unixtime : (デフォルトでは) 2020-01-01T00:00:00Z を時刻ゼロとして起算した cycle 刻みのunixtime
+  // UTL_cmd では utl_unixtime が パケットヘッダーの ti の部分に格納されている
+  cycle_t utl_unixtime = CCP_get_ti(packet);
+  cycle_t ti = TMGR_get_ti_from_utl_unixtime(utl_unixtime);
+
+  // TL_cmd に変換して tl_cmd_list に追加する
   CTCP_copy_packet(&temp_, packet);
   CCP_set_ti(&temp_, ti);
   CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0
 
-  return PH_add_tl_cmd_(0, packet, (size_t)(TMGR_get_master_total_cycle()) );
+  return PH_add_tl_cmd_(0, &temp_, (size_t)(TMGR_get_master_total_cycle()) );
 }
 
 static PH_ACK PH_add_ms_tlm_(const CTCP* packet)
