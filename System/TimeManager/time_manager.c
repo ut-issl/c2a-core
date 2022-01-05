@@ -115,7 +115,6 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
   double diff = unixtime - TMGR_get_obct_unixtime_info().unixtime_at_ti0; // 秒単位
   cycle_t cycle_diff;
   step_t step_diff;
-  int cycles_per_sec = OBCT_CYCLES_PER_SEC; // 1000倍してオーバーフローが起きないようにこの時点で定数にしておく
   ObcTime res;
 
   if (diff < 0)  // あり得ない, おかしい
@@ -123,8 +122,8 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
     return OBCT_create(0, 0, 0);
   }
 
-  cycle_diff = (cycle_t)(diff * cycles_per_sec); // cycle未満は切り捨て
-  step_diff = (step_t)((diff * cycles_per_sec  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
+  cycle_diff = (cycle_t)(diff * OBCT_CYCLES_PER_SEC); // cycle未満は切り捨て
+  step_diff = (step_t)((diff * OBCT_CYCLES_PER_SEC  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
 
   res.total_cycle = cycle_diff;
   res.mode_cycle = 0; // 取得出来ないので0とする
