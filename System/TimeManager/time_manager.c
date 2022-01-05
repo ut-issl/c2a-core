@@ -126,7 +126,7 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
   }
 
   cycle_diff = (cycle_t) (diff * cycles_per_sec); // cycle–¢–‚ÍØ‚èÌ‚Ä
-  step_diff = (step_t) ((diff * cycles_per_sec  - cycle_diff) * OBCT_STEPS_PER_CYCLE); //step–¢–‚ÍØ‚èÌ‚Ä
+  step_diff = (step_t) ((diff * cycles_per_sec  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step–¢–‚ÍØ‚èÌ‚Ä
 
   res.total_cycle = cycle_diff;
   res.mode_cycle = 0; // æ“¾o—ˆ‚È‚¢‚Ì‚Å0‚Æ‚·‚é
