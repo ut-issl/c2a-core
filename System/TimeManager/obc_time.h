@@ -1,17 +1,17 @@
 /**
-  * @file
-  * @brief OBCの時刻情報を初期化, 取得, 更新したり, 加減などの演算を行ったりする
-  */
+ * @file
+ * @brief OBCの時刻情報の定義と演算
+ */
 #ifndef OBC_TIME_H_
 #define OBC_TIME_H_
 
 #include <src_user/Library/stdint.h>
 
 // step, cycleについてはTimeManagerを参照のこと
-#define OBCT_STEP_IN_MSEC (1)                                                    //!< 1stepで何msか
-#define OBCT_STEPS_PER_CYCLE (100)                                               //!< 何stepで1cycleか
-#define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1sで何cycleか
-#define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< 最大cycle数．つまりTIがいくつでオーバーフローするか
+#define OBCT_STEP_IN_MSEC (1)                                                    //!< 1 step で何 ms か
+#define OBCT_STEPS_PER_CYCLE (100)                                               //!< 何 step で 1 cycle か
+#define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1 s で何 cycle か
+#define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< 最大 cycle 数．つまり TI がいくつでオーバーフローするか
 
 #include <src_user/Settings/System/obc_time_params.h>
 
@@ -24,9 +24,9 @@ typedef uint32_t step_t;
  */
 typedef struct
 {
-  cycle_t total_cycle; //!< TIのこと. OBCが起動してから（正確には，構造体が初期化されてから）の経過時間
-  cycle_t mode_cycle;  //!< 最後にmodeを変えてからの経過時間
-  step_t  step;        //!< 内部step．TimeLineでの処理時間分割に使われる
+  cycle_t total_cycle; //!< TI のこと. OBC が起動してから（正確には，構造体が初期化されてから）の経過時間
+  cycle_t mode_cycle;  //!< 最後に mode を変えてからの経過時間
+  step_t  step;        //!< 内部 step.  TimeLine での処理時間分割に使われる
 } ObcTime;
 
 /**
@@ -36,7 +36,7 @@ typedef struct
 typedef struct
 {
   double unixtime_at_ti0;    //!< 観測情報から計算した, master_clock が {0, 0, 0} の時の unixtime
-  cycle_t ti_at_last_update; //!< UnixtimeInfo を最後に更新した時に使った(GPSなどの)情報を観測した時点のtotal_cycle
+  cycle_t ti_at_last_update; //!< UnixtimeInfo を最後に更新した時に使った (GPSなどの) 情報を観測した時点の total_cycle
 } OBCT_UnixtimeInfo;
 
 

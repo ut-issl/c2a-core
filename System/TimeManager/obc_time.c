@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
-  * @file
-  * @brief OBCの時刻情報を初期化, 取得, 更新したり, 加減などの演算を行ったりする
-  */
+ * @file
+ * @brief OBCの時刻情報の定義と演算
+ */
 #include "obc_time.h"
 #include "../../Library/print.h"
 

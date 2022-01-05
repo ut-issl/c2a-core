@@ -1,20 +1,20 @@
 /**
-  * @file
-  * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
-  */
+ * @file
+ * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
+ */
 #ifndef TIME_MANAGER_H_
 #define TIME_MANAGER_H_
 
 #include "obc_time.h"
 #include "../../CmdTlm/common_tlm_cmd_packet.h"
 
-#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0) /*!< 2020-01-01T00:00:00Z 時点の unixtime
-                                                           これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義し,
-                                                           UTL_cmd の実行時刻情報として用いる */
+#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z 時点の unixtime
+                                                                 これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義し,
+                                                                 UTL_cmd の実行時刻情報として用いる */
 
 /**
  * @struct TimeManager
- * @brief master_clock_ でOBC時刻情報を保持するとともに, unixtime との紐づけや初期化情報の記録を行う
+ * @brief master_clock_ で OBC 時刻情報を保持するとともに, unixtime との紐づけや初期化情報の記録を行う
  */
 typedef struct
 {
@@ -166,6 +166,7 @@ cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
 void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
+
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);
 
 #endif

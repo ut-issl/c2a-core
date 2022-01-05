@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
-  * @file
-  * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
-  */
+ * @file
+ * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
+ */
 #include "time_manager.h"
 #include <string.h>
 #include <src_user/CmdTlm/Ccsds/TCPacket.h>
