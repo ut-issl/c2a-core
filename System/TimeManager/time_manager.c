@@ -1,5 +1,5 @@
-/** 
-  * @file 
+/**
+  * @file
   * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
   */
 
@@ -109,7 +109,7 @@ OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
 
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  return time_manager_.unixtime_info_.unixtime_at_ti0 + OBCT_get_total_cycle_in_sec(time);;
+  return time_manager_.unixtime_info_.unixtime_at_ti0 + OBCT_get_total_cycle_in_sec(time);
 }
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)

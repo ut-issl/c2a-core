@@ -1,5 +1,5 @@
-/** 
-  * @file 
+/**
+  * @file
   * @brief OBC‚ÌŽžî•ñ‚ð‰Šú‰», Žæ“¾, XV‚µ‚½‚è, ‰ÁŒ¸‚È‚Ç‚Ì‰‰ŽZ‚ðs‚Á‚½‚è‚·‚é
   */
 
