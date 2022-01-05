@@ -1,3 +1,8 @@
+/** 
+  * @file 
+  * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
+  */
+
 #pragma section REPRO
 #include "time_manager.h"
 #include <string.h>
@@ -9,6 +14,11 @@
 static TimeManager time_manager_;
 const TimeManager* const time_manager = &time_manager_;
 
+/**
+ * @brief TI (master_clock_.total_cycle) の setter
+ * @param[in] total_cycle
+ * @return void
+ */
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 void TMGR_init(void)
@@ -16,6 +26,7 @@ void TMGR_init(void)
   OBCT_clear(&time_manager_.init_info_.initializing_time);
   time_manager_.init_info_.initializing_flag = 1;
   TMGR_clear();
+  time_manager_.utl_unixtime_epoch_ = TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL;
 }
 
 void TMGR_clear(void)
@@ -98,8 +109,7 @@ OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
 
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  ObcTime ti0 = OBCT_create(0, 0, 0);
-  return time_manager_.unixtime_info_.unixtime_at_ti0 + OBCT_diff_in_sec(&ti0, time);
+  return time_manager_.unixtime_info_.unixtime_at_ti0 + OBCT_get_total_cycle_in_sec(time);;
 }
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
@@ -112,7 +122,7 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 
   if (diff_double < 0)  // あり得ない, おかしい
   {
-    return res = OBCT_create(0, 0, 0);
+    return OBCT_create(0, 0, 0);
   }
 
   diff = (uint32_t)(diff_double * 1000.0 + 1e-4); // msオーダーだがそんなに大きくないことを想定, 1e-4は数値誤差対策（.999がj切り捨てられるのを防ぐ）
@@ -128,7 +138,14 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 
 cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime)
 {
-  return OBCT_get_utl_unixtime_from_unixtime(unixtime);
+  if (unixtime < time_manager_.utl_unixtime_epoch_) // 紀元より昔なのはおかしい
+  {
+    return (cycle_t) 0;
+  }
+  else // cycle 未満は切り捨て
+  {
+    return (cycle_t) ((unixtime - time_manager_.utl_unixtime_epoch_) * OBCT_CYCLES_PER_SEC);
+  }
 }
 
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
@@ -137,7 +154,7 @@ cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
   return utl_unixtime - utl_unixtime_at_ti0;
 }
 
-void TMGR_update_unixtime_info(const double unixtime, const ObcTime time)
+void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time)
 {
   OBCT_update_unixtime_info(&time_manager_.unixtime_info_, unixtime, time);
 }
@@ -168,7 +185,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   time.step = CCP_get_param_from_packet(packet, 2, step_t);
   time.mode_cycle = 0; // 必要ないので0とする
 
-  TMGR_update_unixtime_info(unixtime, time);
+  TMGR_update_unixtime_info(unixtime, &time);
 
   return CCP_EXEC_SUCCESS;
 }

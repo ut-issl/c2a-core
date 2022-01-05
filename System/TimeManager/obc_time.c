@@ -1,3 +1,8 @@
+/** 
+  * @file 
+  * @brief OBCの時刻情報を初期化, 取得, 更新したり, 加減などの演算を行ったりする
+  */
+
 #pragma section REPRO
 #include "obc_time.h"
 
@@ -114,24 +119,31 @@ ObcTime OBCT_diff(const ObcTime* before,
 {
   ObcTime diff;
 
-  // まずcycleの差分を計算
-  diff.total_cycle = after->total_cycle - before->total_cycle;
-  diff.mode_cycle = after->mode_cycle - before->mode_cycle;
-
-  // stepのみで差分を考えればよい場合
-  if (after->step >= before->step)
+  if (OBCT_compare(after, before) == 1)
   {
-    diff.step = after->step - before->step;
+    return OBCT_create(0, 0, 0); // after < before の場合は結果がマイナスになってしまうため
   }
-  // cycleからの桁借りが必要な場合
   else
   {
-    diff.step = OBCT_STEPS_PER_CYCLE - before->step + after->step;
-    --diff.total_cycle;
-    --diff.mode_cycle;
-  }
+    // まずcycleの差分を計算
+    diff.total_cycle = after->total_cycle - before->total_cycle;
+    diff.mode_cycle = after->mode_cycle - before->mode_cycle;
 
-  return diff;
+    // stepのみで差分を考えればよい場合
+    if (after->step >= before->step)
+    {
+      diff.step = after->step - before->step;
+    }
+    // cycleからの桁借りが必要な場合
+    else
+    {
+      diff.step = OBCT_STEPS_PER_CYCLE - before->step + after->step;
+      --diff.total_cycle;
+      --diff.mode_cycle;
+    }
+
+    return diff;
+  }
 }
 
 step_t OBCT_diff_in_step(const ObcTime* before,
@@ -187,10 +199,7 @@ void OBCT_print(const ObcTime* time)
 OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime* time)
 {
   OBCT_UnixtimeInfo uti;
-  float ti_sec = OBCT_get_total_cycle_in_sec(time);
-  uti.unixtime_at_ti0 = unixtime - ti_sec;
-  uti.ti_at_last_update = time->total_cycle;
-
+  OBCT_update_unixtime_info(&uti, unixtime, time);
   return uti;
 }
 
@@ -200,17 +209,11 @@ void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti)
   uti->ti_at_last_update = 0;
 }
 
-cycle_t OBCT_get_utl_unixtime_from_unixtime(const double unixtime)
+void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime* time)
 {
-  if (unixtime < OBCT_UNIXTIME_EPOCH_FOR_UTL) return (cycle_t) 0;
-  return (cycle_t) ((unixtime - OBCT_UNIXTIME_EPOCH_FOR_UTL) * 10); // cycle未満は切り捨て
-}
-
-void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime time)
-{
-  double ti_sec = OBCT_get_total_cycle_in_sec(&time);
+  double ti_sec = OBCT_get_total_cycle_in_sec(time);
   uti->unixtime_at_ti0 = unixtime - ti_sec;
-  uti->ti_at_last_update = time.total_cycle;
+  uti->ti_at_last_update = time->total_cycle;
 }
 
 #pragma section
