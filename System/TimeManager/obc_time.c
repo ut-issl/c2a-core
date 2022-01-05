@@ -82,17 +82,17 @@ uint32_t OBCT_get_mode_cycle_in_msec(const ObcTime* time)
   return OBCT_STEP_IN_MSEC * (OBCT_STEPS_PER_CYCLE * time->mode_cycle + time->step);
 }
 
-float OBCT_get_total_cycle_in_sec(const ObcTime* time)
+double OBCT_get_total_cycle_in_sec(const ObcTime* time)
 {
-  float cycle_in_sec = (float)(time->total_cycle) / OBCT_CYCLES_PER_SEC;
-  float step_in_sec = 0.001f * time->step * OBCT_STEP_IN_MSEC;
+  double cycle_in_sec = (double)(time->total_cycle) / OBCT_CYCLES_PER_SEC;
+  double step_in_sec = 0.001 * time->step * OBCT_STEP_IN_MSEC;
   return cycle_in_sec + step_in_sec;
 }
 
-float OBCT_get_mode_cycle_in_sec(const ObcTime* time)
+double OBCT_get_mode_cycle_in_sec(const ObcTime* time)
 {
-  float cycle_in_sec = (float)(time->mode_cycle) / OBCT_CYCLES_PER_SEC;
-  float step_in_sec = 0.001f * time->step * OBCT_STEP_IN_MSEC;
+  double cycle_in_sec = (double)(time->mode_cycle) / OBCT_CYCLES_PER_SEC;
+  double step_in_sec = 0.001 * time->step * OBCT_STEP_IN_MSEC;
   return cycle_in_sec + step_in_sec;
 }
 
@@ -159,10 +159,11 @@ uint32_t OBCT_diff_in_msec(const ObcTime* before,
   return OBCT_STEP_IN_MSEC * OBCT_diff_in_step(before, after);
 }
 
-float OBCT_diff_in_sec(const ObcTime* before,
+double OBCT_diff_in_sec(const ObcTime* before,
                        const ObcTime* after)
 {
-  return 0.001f * OBCT_diff_in_msec(before, after);
+  ObcTime diff = OBCT_diff(before, after);
+  return OBCT_get_total_cycle_in_sec(&diff);
 }
 
 ObcTime OBCT_add(const ObcTime* left, const ObcTime* right)

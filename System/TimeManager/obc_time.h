@@ -118,7 +118,7 @@ uint32_t OBCT_get_mode_cycle_in_msec(const ObcTime* time);
  * @param[in] time
  * @return 秒単位の total_cycle. 少数点以下も保持
  */
-float OBCT_get_total_cycle_in_sec(const ObcTime* time);
+double OBCT_get_total_cycle_in_sec(const ObcTime* time);
 
 /**
  * @brief 引数で指定した ObcTime の mode_cycle を秒単位で返す
@@ -126,7 +126,7 @@ float OBCT_get_total_cycle_in_sec(const ObcTime* time);
  * @param[in] time
  * @return 秒単位の mode_cycle. 少数点以下も保持
  */
-float OBCT_get_mode_cycle_in_sec(const ObcTime* time);
+double OBCT_get_mode_cycle_in_sec(const ObcTime* time);
 
 /**
  * @brief ミリ秒を cycle に変換する
@@ -168,6 +168,7 @@ ObcTime OBCT_diff(const ObcTime* before,
 
 /**
  * @brief ObcTime の引き算を step 単位で行う
+ * @note オーバーフローに注意
  * @param[in] before
  * @param[in] after
  * @retval after >= before の場合: after - before を step 単位に変換したもの
@@ -193,8 +194,8 @@ uint32_t OBCT_diff_in_msec(const ObcTime* before,
  * @retval after >= before の場合: after - before を秒単位に変換したもの
  * @retval after <  before の場合: 0
  */
-float OBCT_diff_in_sec(const ObcTime* before,
-                       const ObcTime* after);
+double OBCT_diff_in_sec(const ObcTime* before,
+                        const ObcTime* after);
 
 /**
  * @brief ObcTime の足し算を行う
