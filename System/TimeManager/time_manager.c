@@ -31,7 +31,7 @@ void TMGR_init(void)
   OBCT_clear(&time_manager_.init_info_.initializing_time);
   time_manager_.init_info_.initializing_flag = 1;
   TMGR_clear();
-  time_manager_.utl_unixtime_epoch_ = TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL;
+  TMGR_set_utl_unixtime_epoch_(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL);
 }
 
 void TMGR_clear(void)
