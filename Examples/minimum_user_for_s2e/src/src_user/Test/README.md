@@ -56,5 +56,5 @@ wings と通信するにあたりに対して認証情報を渡す必要があ�
 | client_id                   | WINGS_CLIENT_ID     | 
 | client_secret               | WINGS_CLIENT_SECRET | 
 | grant_type                  | WINGS_GRANT_TYPE    | 
-| username                    | WINGS_USER_NAME     | 
+| username                    | WINGS_USERNAME     | 
 | password                    | WINGS_PASSWORD      | 
