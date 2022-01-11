@@ -47,3 +47,14 @@ or
 cd ./test/src_user/Applications/UserDefined/
 pytest -m real -v test_tlm_mem_dump.py
 ```
+
+## 認証情報について
+wings と通信するにあたりに対して認証情報を渡す必要がある. `authorization.json.temp` と同じ key を持つ正しい `authorization.json` を誰かからもらうか，又はそれぞれの key に対応する環境変数を埋めること. 対応を下表に示す.
+
+| `authorization.json` の key | 環境変数             | 
+| :-------------------------- | :------------------ | 
+| client_id                   | WINGS_CLIENT_ID     | 
+| client_secret               | WINGS_CLIENT_SECRET | 
+| grant_type                  | WINGS_GRANT_TYPE    | 
+| username                    | WINGS_USERNAME      | 
+| password                    | WINGS_PASSWORD      | 
