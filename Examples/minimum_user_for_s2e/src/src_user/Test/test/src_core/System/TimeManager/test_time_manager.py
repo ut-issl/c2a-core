@@ -17,6 +17,10 @@ c2a_enum = c2a_enum_utils.get_c2a_enum()
 ope = wings_utils.get_wings_operation()
 
 
+# C2Aでのdefine値
+TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
+
+
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_set_time():
@@ -73,7 +77,6 @@ def test_tmgr_set_unixtime():
 def test_tmgr_set_utl_unixtime_epoch():
 
     epoch_set = time.time() # 現在のunixtimeをepochに設定する
-    epoch_default = 1577836800.0 # デフォルト: 2020-01-01T00:00:00Z
 
     ret = wings.util.send_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (epoch_set,), c2a_enum.Tlm_CODE_HK
@@ -87,14 +90,14 @@ def test_tmgr_set_utl_unixtime_epoch():
 
     # epochをデフォルトに戻す
     ret = wings.util.send_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (epoch_default,), c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,), c2a_enum.Tlm_CODE_HK
     )
     assert ret == "SUC"
 
     tlm_MOBC = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
     )
-    assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == epoch_default
+    assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL
 
 
 if __name__ == "__main__":

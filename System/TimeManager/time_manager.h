@@ -8,9 +8,8 @@
 #include "obc_time.h"
 #include "../../CmdTlm/common_tlm_cmd_packet.h"
 
-#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z 時点の unixtime
-                                                                 これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義し,
-                                                                 UTL_cmd の実行時刻情報として用いる */
+#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z 時点の unixtime.
+                                                                 utl_unixtime_epoch_ のデフォルト値 */
 
 /**
  * @struct TimeManager
@@ -20,7 +19,9 @@ typedef struct
 {
   ObcTime master_clock_;
   OBCT_UnixtimeInfo unixtime_info_;
-  double utl_unixtime_epoch_;
+  double utl_unixtime_epoch_; /*!< これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義する.
+                                   cycle 未満の精度は切り捨てられるので utl_unixtime は整数値となる.
+                                   UTL_cmd の実行時刻情報として用いる. */
   struct
   {
     ObcTime initializing_time;
@@ -145,7 +146,7 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
  * @brief 一般的なunixtimeを, UTL_cmdで用いる utl_unixtime に変換する
  * @param[in] unixtime 変換したい unixtime
  * @retval 0 : 引数の unixtime が utl_unixtime_epoch_ より小さい場合
- * @retval utl_unixtime (デフォルトでは2020-01-01T00:00:00Z 起算, cycle刻み) : それ以外の場合
+ * @retval utl_unixtime : それ以外の場合
  */
 cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime);
 
