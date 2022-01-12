@@ -5,6 +5,7 @@ project(C2A_CORE)
 # user config
 option(USE_ALL_C2A_CORE_APPS    "use C2A-core all Applications" ON)
 option(USE_ALL_C2A_CORE_LIB     "use C2A-core all Library" ON)
+option(USE_32BIT_COMPILER       "use 32bit compiler" OFF)
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 

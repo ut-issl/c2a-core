@@ -28,8 +28,10 @@ else()
   endif()
 
   # 32bit
-  target_compile_options(${PROJECT_NAME} PUBLIC "-m32")
-  target_link_options(${PROJECT_NAME} PRIVATE "-m32")
+  if(NOT USE_32BIT_COMPILER)
+    target_compile_options(${PROJECT_NAME} PUBLIC "-m32")
+    target_link_options(${PROJECT_NAME} PRIVATE "-m32")
+  endif()
 
   # debug
   target_compile_options(${PROJECT_NAME} PUBLIC "-g")
