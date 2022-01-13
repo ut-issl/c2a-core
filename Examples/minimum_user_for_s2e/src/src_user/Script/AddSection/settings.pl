@@ -19,7 +19,7 @@ sub GetSetting {
 		'Drivers',
 		'IfWrapper',
 		'Library',
-		'System',
+		'Settings',
 		'TlmCmd'
 	];
 
