@@ -31,3 +31,6 @@
 - https://github.com/ut-issl/c2a-tlm-cmd-code-generator
 - https://github.com/ut-issl/python-wings-interface
 - https://github.com/ut-issl/c2a-enum-loader
+
+## 質問，問い合わせ，その他なんでも
+お気軽に [Discussions](https://github.com/ut-issl/c2a-core/discussions) に投稿してください．
