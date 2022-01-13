@@ -403,7 +403,7 @@ Settings/AnomalyHandlerRules
 Settings/AnomalyLogger
 -> al_
 
-CmdTlm/NormalBlockCommandDefinition
+TlmCmd/NormalBlockCommandDefinition
 -> nbc_
 ```
 

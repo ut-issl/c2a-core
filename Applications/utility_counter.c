@@ -1,6 +1,6 @@
 #pragma section REPRO
 #include "utility_counter.h"
-#include "../CmdTlm/packet_handler.h"
+#include "../TlmCmd/packet_handler.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include <string.h>   // for memcpy
 

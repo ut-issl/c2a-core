@@ -2,7 +2,7 @@
 #define MEMORY_DUMP_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
 
 #define MEM_TLM_ID      (0xff)
 #define MEM_DUMP_WIDTH  (CTCP_MAX_LEN - 18)     // テレメパケット最大長 - ヘッダ長

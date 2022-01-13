@@ -12,8 +12,8 @@
  * @note  telemetry_manager ‚È‚Ç‚Åg‚Á‚Ä‚¢‚é‚Ì‚ÅC‚»‚ê‚ğQÆ‚Ì‚±‚Æ
  */
 #include "divided_cmd_utility.h"
-#include "../CmdTlm/packet_handler.h"
-#include "../CmdTlm/common_tlm_cmd_packet_util.h"
+#include "../TlmCmd/packet_handler.h"
+#include "../TlmCmd/common_tlm_cmd_packet_util.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
 

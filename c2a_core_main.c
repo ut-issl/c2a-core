@@ -9,10 +9,10 @@
 #include "./System/TimeManager/time_manager.h"
 #include "./System/ModeManager/mode_manager.h"
 #include "./System/WatchdogTimer/watchdog_timer.h"
-#include "./CmdTlm/packet_handler.h"
-#include "./CmdTlm/block_command_table.h"
-#include "./CmdTlm/command_analyze.h"
-#include "./CmdTlm/telemetry_frame.h"
+#include "./TlmCmd/packet_handler.h"
+#include "./TlmCmd/block_command_table.h"
+#include "./TlmCmd/command_analyze.h"
+#include "./TlmCmd/telemetry_frame.h"
 
 #include <src_user/Applications/app_registry.h>
 

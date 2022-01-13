@@ -9,7 +9,7 @@
 #include "../EventManager/event_logger.h"
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"   // for Printf
 #include "../../Library/endian_memcpy.h"
 

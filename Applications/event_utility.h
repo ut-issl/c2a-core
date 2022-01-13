@@ -7,7 +7,7 @@
 #define EVENT_UTILITY_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
 
 AppInfo EVENT_UTIL_create_app(void);
 

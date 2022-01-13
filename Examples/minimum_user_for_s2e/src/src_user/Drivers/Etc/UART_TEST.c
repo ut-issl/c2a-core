@@ -5,7 +5,7 @@
 */
 
 #include "UART_TEST.h"
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
 #include <src_core/Library/print.h>
 #include "../../Settings/sils_define.h"

@@ -5,7 +5,7 @@
 #ifndef GS_VALIDATE_H_
 #define GS_VALIDATE_H_
 
-#include "../../CmdTlm/Ccsds/TCFrame.h"
+#include "../../TlmCmd/Ccsds/TCFrame.h"
 #include "../../Library/stdint.h"
 
 /**

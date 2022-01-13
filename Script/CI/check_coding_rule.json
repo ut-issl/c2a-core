@@ -10,7 +10,7 @@
     "src_core/Script"
   ],
   "ignore_files" : [
-    "src_user/CmdTlm/telemetry_definitions.c"
+    "src_user/TlmCmd/telemetry_definitions.c"
   ],
   "additional_type" : [
     "PL_NodeTag"

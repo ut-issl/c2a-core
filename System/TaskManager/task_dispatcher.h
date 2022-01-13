@@ -1,8 +1,8 @@
 #ifndef TASK_DISPATCHER_H_
 #define TASK_DISPATCHER_H_
 
-#include "../../CmdTlm/block_command_table.h"
-#include "../../CmdTlm/command_dispatcher.h"
+#include "../../TlmCmd/block_command_table.h"
+#include "../../TlmCmd/command_dispatcher.h"
 #include "../ApplicationManager/app_info.h"
 
 #define TDSP_TASK_MAX BCT_MAX_CMD_NUM

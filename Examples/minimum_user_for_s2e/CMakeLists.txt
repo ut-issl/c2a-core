@@ -48,11 +48,11 @@ endif()
 add_subdirectory(${C2A_CORE_DIR})
 
 add_subdirectory(${C2A_USER_DIR}/Applications)
-add_subdirectory(${C2A_USER_DIR}/CmdTlm)
 add_subdirectory(${C2A_USER_DIR}/Drivers)
 add_subdirectory(${C2A_USER_DIR}/IfWrapper)
 add_subdirectory(${C2A_USER_DIR}/Library)
 add_subdirectory(${C2A_USER_DIR}/Settings)
+add_subdirectory(${C2A_USER_DIR}/TlmCmd)
 
 set(C2A_SRCS
   ${C2A_USER_DIR}/c2a_main.c

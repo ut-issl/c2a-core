@@ -2,11 +2,11 @@
   "root_dir" : "../../",
   "target_dirs" : [
     "Applications/",
-    "CmdTlm/",
     "Drivers/",
     "IfWrapper/",
     "Library/",
     "System/",
+    "TlmCmd/",
     "Examples/minimum_user_for_s2e/src/src_user/"
   ]
 }

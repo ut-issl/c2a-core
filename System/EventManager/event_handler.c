@@ -7,7 +7,7 @@
 #include "event_handler.h"
 #include <string.h>
 #include <stdlib.h>
-#include "../../CmdTlm/common_tlm_cmd_packet_util.h"
+#include "../../TlmCmd/common_tlm_cmd_packet_util.h"
 #include "../../Applications/timeline_command_dispatcher.h"
 #include "../TimeManager/time_manager.h"
 

@@ -1,9 +1,9 @@
 #ifndef SEQUENCE_ITEMS_H_
 #define SEQUENCE_ITEMS_H_
 
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
-#include "../../../CmdTlm/command_definitions.h"
-#include <src_core/CmdTlm/block_command_table.h>
+#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
+#include "../../../TlmCmd/command_definitions.h"
+#include <src_core/TlmCmd/block_command_table.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // SIを使うことはもう非推奨！！！

@@ -5,7 +5,7 @@
  */
 #include "event_handler_rules.h"
 #include <src_core/System/EventManager/event_handler.h>
-#include "../../../CmdTlm/block_command_definitions.h"
+#include "../../../TlmCmd/block_command_definitions.h"
 
 void EH_load_rule_test(void)
 {

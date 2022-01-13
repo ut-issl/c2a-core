@@ -8,9 +8,9 @@
 
 #include <string.h>
 #include "../../IfWrapper/ccsds_user.h"
-#include "../../CmdTlm/Ccsds/TCFrame.h"
+#include "../../TlmCmd/Ccsds/TCFrame.h"
 #include <src_core/Drivers/Super/driver_super.h>
-#include <src_core/CmdTlm/packet_handler.h>
+#include <src_core/TlmCmd/packet_handler.h>
 #include "../../Library/stdint.h"
 
 #define GS_RX_HEADER_SIZE (2)

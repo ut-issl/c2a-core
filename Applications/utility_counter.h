@@ -5,7 +5,7 @@
 
 #include "../System/ApplicationManager/app_info.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
 
 // 汎用カウンタ用構造体
 typedef enum

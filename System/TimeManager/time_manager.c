@@ -5,9 +5,9 @@
  */
 #include "time_manager.h"
 #include <string.h>
-#include <src_user/CmdTlm/Ccsds/TCPacket.h>
+#include <src_user/TlmCmd/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
-#include "../../CmdTlm/common_tlm_cmd_packet_util.h"
+#include "../../TlmCmd/common_tlm_cmd_packet_util.h"
 
 static TimeManager time_manager_;
 const TimeManager* const time_manager = &time_manager_;

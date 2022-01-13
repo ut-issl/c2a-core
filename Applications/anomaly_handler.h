@@ -5,9 +5,9 @@
 
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
-#include <src_user/CmdTlm/block_command_definitions.h>
-#include "../CmdTlm/block_command_table.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include "../TlmCmd/block_command_table.h"
 #include <src_user/Settings/AnomalyLogger/anomaly_group.h>
 #include <src_user/Settings/Applications/AnomalyHandlerRules/ah_rules.h>
 

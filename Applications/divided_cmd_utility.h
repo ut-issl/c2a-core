@@ -14,9 +14,9 @@
 #define DIVIDED_CMD_UTILITY_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
 #include "../System/TimeManager/obc_time.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 
 #define DCU_LOG_MAX    (16)    //!< •Û‘¶‚·‚éƒƒO‚ÌÅ‘å”
 

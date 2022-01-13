@@ -7,7 +7,7 @@
 
 #include <src_core/System/ModeManager/mode_manager.h>
 
-#include "../../CmdTlm/block_command_definitions.h"
+#include "../../TlmCmd/block_command_definitions.h"
 
 
 // ƒ‚[ƒh‚²‚Æ‚ÌTL‚ğw’è
