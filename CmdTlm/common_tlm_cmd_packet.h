@@ -62,14 +62,11 @@ typedef enum
  */
 typedef enum
 {
-// GS : Ground Station Command
-// TL : Timeline Command
-// MC : Macro Command, Block Line Command‚Æ‚à‚¢‚¤
-// RT : Realtime Command
-  CCP_EXEC_TYPE_GS,
-  CCP_EXEC_TYPE_TL0,
-  CCP_EXEC_TYPE_MC,
-  CCP_EXEC_TYPE_RT,
+  CCP_EXEC_TYPE_GS,  //!< GS : Ground Station Command
+  CCP_EXEC_TYPE_TL0, //!< TL : Timeline Command
+  CCP_EXEC_TYPE_BC,  //!< BC : Block Command
+  CCP_EXEC_TYPE_RT,  //!< RT : Realtime Command
+  CCP_EXEC_TYPE_UTL, //!< UTL: Unixtime Timeline Command
   CCP_EXEC_TYPE_TL1,
   CCP_EXEC_TYPE_TL2,
   CCP_EXEC_TYPE_UNKNOWN

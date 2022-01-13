@@ -19,12 +19,19 @@ const TimeManager* const time_manager = &time_manager_;
  */
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
+/**
+ * @brief utl_unixtime_epoch_ ‚Ì setter
+ * @param[in] utl_unixtime_epoch
+ * @return void
+ */
+static void TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch);
+
 void TMGR_init(void)
 {
   OBCT_clear(&time_manager_.init_info_.initializing_time);
   time_manager_.init_info_.initializing_flag = 1;
   TMGR_clear();
-  time_manager_.utl_unixtime_epoch_ = TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL;
+  TMGR_set_utl_unixtime_epoch_(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL);
 }
 
 void TMGR_clear(void)
@@ -98,6 +105,11 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void)
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
 {
   time_manager_.master_clock_.total_cycle = total_cycle;
+}
+
+static void TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch)
+{
+  time_manager_.utl_unixtime_epoch_ = utl_unixtime_epoch;
 }
 
 OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
@@ -179,6 +191,14 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   time.mode_cycle = 0; // •K—v‚È‚¢‚Ì‚Å0‚Æ‚·‚é
 
   TMGR_update_unixtime_info(unixtime, &time);
+
+  return CCP_EXEC_SUCCESS;
+}
+
+CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CTCP* packet)
+{
+  double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
+  TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);
 
   return CCP_EXEC_SUCCESS;
 }

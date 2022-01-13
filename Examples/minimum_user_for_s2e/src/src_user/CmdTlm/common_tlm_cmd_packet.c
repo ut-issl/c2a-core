@@ -64,7 +64,15 @@ void CCP_set_dest_id(CTCP* packet, CTCP_DEST_ID id)
 CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet)
 {
   // TCP_CMD_EXEC_TYPEとCCP_EXEC_TYPEの定義は合わせている．(正確には、前者は後者に含まれている．)
-  return (CCP_EXEC_TYPE)TCP_CMD_get_exec_type(packet);
+  TCP_CMD_EXEC_TYPE exec_type = TCP_CMD_get_exec_type(packet);
+  if (exec_type == TCP_CMD_EXEC_TYPE_UNKNOWN)
+  {
+    return CCP_EXEC_TYPE_UNKNOWN;
+  }
+  else
+  {
+    return (CCP_EXEC_TYPE)exec_type;
+  }
 }
 
 void CCP_set_exec_type(CTCP* packet, CCP_EXEC_TYPE type)

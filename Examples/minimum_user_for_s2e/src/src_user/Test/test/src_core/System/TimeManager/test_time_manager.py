@@ -17,6 +17,10 @@ c2a_enum = c2a_enum_utils.get_c2a_enum()
 ope = wings_utils.get_wings_operation()
 
 
+# C2Aでのdefine値
+TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
+
+
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_set_time():
@@ -64,15 +68,40 @@ def test_tmgr_set_unixtime():
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
     unixtime_at_ti0 = current_unixtime - (ti / 10) - (step / 1000)
-    assert (
-        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] > unixtime_at_ti0 - 0.05
+    assert tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] > unixtime_at_ti0 - 0.05
+    assert tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] < unixtime_at_ti0 + 0.05
+
+
+@pytest.mark.sils
+@pytest.mark.real
+def test_tmgr_set_utl_unixtime_epoch():
+
+    epoch_set = time.time() # 現在のunixtimeをepochに設定する
+
+    ret = wings.util.send_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (epoch_set,), c2a_enum.Tlm_CODE_HK
     )
-    assert (
-        tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] < unixtime_at_ti0 + 0.05
+    assert ret == "SUC"
+
+    tlm_MOBC = wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
     )
+    assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == epoch_set
+
+    # epochをデフォルトに戻す
+    ret = wings.util.send_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,), c2a_enum.Tlm_CODE_HK
+    )
+    assert ret == "SUC"
+
+    tlm_MOBC = wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
+    )
+    assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL
 
 
 if __name__ == "__main__":
-    pass
     # test_tmgr_set_time()
     # test_tmgr_set_unixtime()
+    # test_tmgr_set_utl_unixtime_epoch()
+    pass
