@@ -1,8 +1,8 @@
 #ifndef BLOCK_COMMAND_USER_SETTINGS_H_
 #define BLOCK_COMMAND_USER_SETTINGS_H_
 
-#include <src_core/CmdTlm/block_command_table.h>
-#include <src_core/CmdTlm/block_command_executor.h>
+#include <src_core/TlmCmd/block_command_table.h>
+#include <src_core/TlmCmd/block_command_executor.h>
 
 #define BCUS_MRAM_BCT_BLOCKS (10) // MRAM‚ÉŠm•Û‚·‚é
 

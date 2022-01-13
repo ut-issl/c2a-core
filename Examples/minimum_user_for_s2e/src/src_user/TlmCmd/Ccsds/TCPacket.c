@@ -3,10 +3,10 @@
 
 #include <string.h> // for memcpy
 
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include "../command_definitions.h" // for Cmd_CODE_EXECUTE_APP
-#include <src_core/CmdTlm/packet_handler.h> // for TL_CMD_LIST_LINE
-#include <src_core/CmdTlm/block_command_table.h> // for BCT_MAX_BLOCK
+#include <src_core/TlmCmd/packet_handler.h> // for TL_CMD_LIST_LINE
+#include <src_core/TlmCmd/block_command_table.h> // for BCT_MAX_BLOCK
 #include <src_core/Library/endian_memcpy.h>
 
 /**

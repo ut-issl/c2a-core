@@ -5,7 +5,7 @@
 #ifndef COMMON_TLM_CMD_PACKET_DEFINE_H_
 #define COMMON_TLM_CMD_PACKET_DEFINE_H_
 
-#include "../../CmdTlm/Ccsds/TCPacket.h"
+#include "../../TlmCmd/Ccsds/TCPacket.h"
 
 // 使用するパケット構造体をCTCP型として定義する
 typedef TCP CTCP;

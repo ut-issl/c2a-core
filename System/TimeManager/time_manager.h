@@ -6,7 +6,7 @@
 #define TIME_MANAGER_H_
 
 #include "obc_time.h"
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_tlm_cmd_packet.h"
 
 #define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z 時点の unixtime.
                                                                  utl_unixtime_epoch_ のデフォルト値 */

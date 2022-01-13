@@ -5,12 +5,12 @@
 #ifndef GS_H_
 #define GS_H_
 
-#include <src_core/CmdTlm/packet_handler.h>
+#include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/IfWrapper/ccsds.h>
 #include "../../IfWrapper/ccsds_user.h"
-#include "../../CmdTlm/Ccsds/vcdu.h"
+#include "../../TlmCmd/Ccsds/vcdu.h"
 #include "gs_validate.h"
 
 /**

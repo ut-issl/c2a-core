@@ -28,7 +28,7 @@ typedef enum
   BC_AC_TLM_CMD_HIRATE = 50,
 
   // ==== 各系領域 ====
-  // ./C2A/CmdTlm/NormalBlockCommandDefinition/で定義
+  // ./C2A/TlmCmd/NormalBlockCommandDefinition/で定義
   // アノマリハンドラはBC_AH_など，接頭辞を適切につけること！
 
   // CDH:60-79

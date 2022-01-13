@@ -7,7 +7,7 @@
 
 #include <stddef.h> // for size_t
 
-#include <src_core/CmdTlm/packet_list.h>
+#include <src_core/TlmCmd/packet_list.h>
 #include "m_pdu.h"
 #include <src_core/System/TimeManager/time_manager.h>
 

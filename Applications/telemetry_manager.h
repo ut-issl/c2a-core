@@ -7,9 +7,9 @@
 #define TELEMETRY_MANAGER_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
-#include "../CmdTlm/common_tlm_cmd_packet_util.h"
-#include "../CmdTlm/block_command_table.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_tlm_cmd_packet_util.h"
+#include "../TlmCmd/block_command_table.h"
 
 
 #define TLM_MGR_USE_BC_NUM            (10)    //!< 用いるBCの数．基本的に10固定を想定

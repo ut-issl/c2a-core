@@ -6,7 +6,7 @@
 #include "telemetry_frame.h"
 
 #include <src_user/Library/stdint.h>
-#include <src_user/CmdTlm/telemetry_definitions.h>
+#include <src_user/TlmCmd/telemetry_definitions.h>
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
 #include <src_user/Settings/build_settings.h>

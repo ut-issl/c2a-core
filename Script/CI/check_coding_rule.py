@@ -549,7 +549,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                     continue
                 if match.group(2) == ":" and line.find("case", 0, match.start()):   # case hoge:
                     continue
-                if match.group(2) in [">", "/"] and line[0:8] == "#include":        # #include <src_core/CmdTlm/command_dispatcher.h> など
+                if match.group(2) in [">", "/"] and line[0:8] == "#include":        # #include <src_core/TlmCmd/command_dispatcher.h> など
                     continue
                 if match.group(2) in ["-", "+"]:   # 10.5e-10 -> 5e, - でひっかかる
                     ptn = "\d+(e|E)"
@@ -580,7 +580,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                     continue
                 if match.group(1) in ["->", "++", "--", "::", "::~", "&", "!"]:       # TOOD: "&" は二項演算子のときに漏れが発生する・・・
                     continue
-                if match.group(1) in ["<", "/"] and line[0:8] == "#include":        # #include <src_core/CmdTlm/command_dispatcher.h> など
+                if match.group(1) in ["<", "/"] and line[0:8] == "#include":        # #include <src_core/TlmCmd/command_dispatcher.h> など
                     continue
                 if match.group(1) in ["+", "-", "*", "~"]:   # TODO 単項演算子問題
                     before_line = line[:match.start()].strip()

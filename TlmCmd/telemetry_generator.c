@@ -6,7 +6,7 @@
 #include "telemetry_frame.h"
 #include "packet_handler.h"
 #include "../System/TimeManager/time_manager.h"
-#include <src_user/CmdTlm/telemetry_definitions.h>
+#include <src_user/TlmCmd/telemetry_definitions.h>
 
 static uint8_t TG_get_next_adu_counter_(void);
 

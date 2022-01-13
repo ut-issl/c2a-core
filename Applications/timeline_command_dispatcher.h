@@ -17,9 +17,9 @@ typedef enum
 // FIXME: TL‚ğ3–{ˆÈã‚É‚Å‚«‚é‚æ‚¤‚É‚·‚é
 
 // zŠÂQÆ‚ğ–h‚®‚½‚ß‚É‚±‚±‚Åinclude
-#include "../CmdTlm/command_dispatcher.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
-#include "../CmdTlm/packet_handler.h"
+#include "../TlmCmd/command_dispatcher.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
+#include "../TlmCmd/packet_handler.h"
 #include "../System/ApplicationManager/app_info.h"
 
 // FIXME: \‘¢‘Ì‚É‚·‚é

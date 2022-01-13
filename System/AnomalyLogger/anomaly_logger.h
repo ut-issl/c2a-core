@@ -4,7 +4,7 @@
 #include <stddef.h> // for size_t
 
 #include "../TimeManager/obc_time.h"
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_tlm_cmd_packet.h"
 #include <src_user/Settings/AnomalyLogger/anomaly_group.h>
 
 #define AL_TLM_PAGE_SIZE (32)                                 //!< アノマリロガーのログテーブルの1テレメトリパケット(=1ページ)に格納されるログ数（ページネーション用）

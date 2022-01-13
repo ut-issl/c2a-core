@@ -15,7 +15,7 @@
 #define PH_ST_TLM_LIST_MAX  (16)
 #define PH_RP_TLM_LIST_MAX  (16)
 
-#include <src_user/Settings/CmdTlm/packet_handler_params.h>
+#include <src_user/Settings/TlmCmd/packet_handler_params.h>
 
 // zŠÂQÆ‚ğ–h‚®‚½‚ß‚É‚±‚±‚Åinclude
 #include "common_tlm_cmd_packet.h"

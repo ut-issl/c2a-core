@@ -10,11 +10,11 @@
 
 #include "block_command_executor.h"
 
-#include <src_user/CmdTlm/block_command_user_settings.h>
-#include <src_user/CmdTlm/block_command_definitions.h>
+#include <src_user/TlmCmd/block_command_user_settings.h>
+#include <src_user/TlmCmd/block_command_definitions.h>
 #include "packet_handler.h"
 #include "command_analyze.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
 #include "../Library/endian_memcpy.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"

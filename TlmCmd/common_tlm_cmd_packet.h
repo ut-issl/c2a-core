@@ -10,12 +10,12 @@
 
 #include <stddef.h> // for size_t
 #include "../System/TimeManager/obc_time.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include <src_user/Library/stdint.h>
 #include <src_user/Applications/app_registry.h>
 
-#include <src_user/Settings/CmdTlm/common_tlm_cmd_packet_define.h>
-#include <src_user/Settings/CmdTlm/common_tlm_cmd_packet_params.h>
+#include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_define.h>
+#include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_params.h>
 
 /**
  * @enum   CCP_EXEC_STS

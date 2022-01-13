@@ -9,7 +9,7 @@
 
 #include <string.h> // for memcpy
 #include "./Ccsds/TCPacket.h"
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
 
 // ********************

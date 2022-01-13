@@ -42,7 +42,7 @@
 
 #include <stddef.h>
 #include <src_user/Library/stdint.h>
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_tlm_cmd_packet.h"
 #include "../TimeManager/obc_time.h"
 
 // EL_GROUP (uint32_t ‚ð‘z’è) ‚ð‚±‚±‚Å’è‹`‚·‚é

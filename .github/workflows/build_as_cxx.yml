@@ -12,7 +12,7 @@ on:
       - 'c2a_core_main.h'
       - 'common.cmake'
       - 'Applications/**'
-      - 'CmdTlm/**'
+      - 'TlmCmd/**'
       - 'Drivers/**'
       - 'IfWrapper/**'
       - 'Library/**'

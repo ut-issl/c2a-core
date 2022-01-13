@@ -15,7 +15,7 @@ Comment,Name,ShortName,BCID,エイリアス,,,,,Danger Flag,Description,Note
 ,BC_AR_GS_RELATED_PROCESS,,44,,,,,,danger,,
 ,BC_AC_TLM_CMD_HIRATE,,50,,,,,,danger,,
 **,==== 各系領域 ====,,,,,,,,,,
-*,./C2A/CmdTlm/NormalBlockCommandDefinition/で定義,,,,,,,,,,
+*,./C2A/TlmCmd/NormalBlockCommandDefinition/で定義,,,,,,,,,,
 *,アノマリハンドラはBC_AH_など，接頭辞を適切につけること！,,,,,,,,,,
 **,CDH:60-79,,,,,,,,,,
 ,BC_HK_CYCLIC_TLM,BC_HK10S,60,○,○,○,○,○,,,

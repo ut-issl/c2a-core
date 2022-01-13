@@ -6,14 +6,14 @@
 #define COMMAND_ANALYZE_H_
 
 #include "common_tlm_cmd_packet.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 
 #define CA_TLM_PAGE_SIZE      (32)                                  //!< コマンドテーブルの1テレメトリパケット(=1ページ)に格納されるコマンド数（ページネーション用）
 #define CA_TLM_PAGE_MAX       (48)                                  //!< コマンドテーブルページ数（ページネーション用）
 #define CA_MAX_CMDS           (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)  //!< コマンドテーブルサイズ．すなわち登録できる最大コマンド数
 #define CA_MAX_CMD_PARAM_NUM  (6)                                   //!< コマンドパラメタ（引数）の最大数．現時点ではユーザー側で可変にすることを想定してはない
 
-#include <src_user/Settings/CmdTlm/command_analyze_params.h>
+#include <src_user/Settings/TlmCmd/command_analyze_params.h>
 
 
 /**
@@ -143,7 +143,7 @@ int CA_has_raw_param(CMD_CODE cmd_code);
 
 /**
  * @brief  Cmd Tableのロード
- * @note   定義は /src_user/CmdTlm/CommandDefinitions.c にある
+ * @note   定義は /src_user/TlmCmd/CommandDefinitions.c にある
  * @param  cmd_table: Cmd Tableの実体
  * @return void
  */

@@ -12,8 +12,8 @@
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/System/EventManager/event_handler.h>
 #include <src_core/System/WatchdogTimer/watchdog_timer.h>
-#include <src_core/CmdTlm/command_analyze.h>
-#include <src_core/CmdTlm/block_command_executor.h>
+#include <src_core/TlmCmd/command_analyze.h>
+#include <src_core/TlmCmd/block_command_executor.h>
 #include "../Applications/app_headers.h"
 #include "../Library/git_revision.h"
 #include "../Drivers/Com/gs_validate.h"

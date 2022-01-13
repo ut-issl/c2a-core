@@ -5,7 +5,7 @@
  */
 #include "nbc_header.h"
 
-#include <src_core/CmdTlm/block_command_loader.h>
+#include <src_core/TlmCmd/block_command_loader.h>
 
 #include "../command_definitions.h"
 #include "../block_command_definitions.h"

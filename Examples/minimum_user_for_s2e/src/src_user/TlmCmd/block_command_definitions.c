@@ -1,7 +1,7 @@
 #pragma section REPRO
 #include "block_command_definitions.h"
-#include <src_core/CmdTlm/block_command_loader.h>
-#include <src_core/CmdTlm/block_command_table.h>
+#include <src_core/TlmCmd/block_command_loader.h>
+#include <src_core/TlmCmd/block_command_table.h>
 #include <string.h> // for memcpy
 #include "command_definitions.h"
 

@@ -4,7 +4,7 @@
 #include "../System/TimeManager/obc_time.h"
 #include "common_tlm_cmd_packet.h"
 #include "packet_list.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 
 typedef struct
 {

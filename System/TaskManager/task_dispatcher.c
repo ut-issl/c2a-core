@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <string.h> // for memcpy
 
-#include "../../CmdTlm/packet_list.h"
-#include "../../CmdTlm/block_command_executor.h"
+#include "../../TlmCmd/packet_list.h"
+#include "../../TlmCmd/block_command_executor.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
 #include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
-#include <src_user/CmdTlm/block_command_definitions.h>
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"
 #include <src_user/Library/VT100.h>
 

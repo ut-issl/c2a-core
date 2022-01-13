@@ -11,7 +11,7 @@
 #define TF_TLM_PAGE_MAX  (4)                                     //!< テレメテーブルページ数（ページネーション用）
 #define TF_MAX_TLMS      (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)    //!< テレメテーブルサイズ．すなわち登録できる最大テレメ数
 
-#include <src_user/Settings/CmdTlm/telemetry_frame_params.h>
+#include <src_user/Settings/TlmCmd/telemetry_frame_params.h>
 
 /**
  * @struct TF_TlmInfo
@@ -69,7 +69,7 @@ int TF_generate_contents(int packet_id,
 
 /**
  * @brief  Tlm Tableのロード
- * @note   定義は /src_user/CmdTlm/TelemetryDefinitions.c にある
+ * @note   定義は /src_user/TlmCmd/TelemetryDefinitions.c にある
  * @param  tlm_table: Tlm Tableの実体
  * @return void
  */

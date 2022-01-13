@@ -54,7 +54,7 @@
 
 #include <stddef.h>
 #include "../TimeManager/obc_time.h"
-#include "../../CmdTlm/block_command_table.h"
+#include "../../TlmCmd/block_command_table.h"
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 
 

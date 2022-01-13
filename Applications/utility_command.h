@@ -3,7 +3,7 @@
 // FIXME: このAppは現在管理されていない！
 //        使用する前に確認すること
 
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_tlm_cmd_packet.h"
 #include "../IfWrapper/uart.h"
 #include "../System/ApplicationManager/app_info.h"
 

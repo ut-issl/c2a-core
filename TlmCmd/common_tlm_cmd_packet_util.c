@@ -8,7 +8,7 @@
 #include "../Applications/timeline_command_dispatcher.h" // for TL_ID_MAX
 #include "command_analyze.h"
 #include "block_command_table.h" // for BCT_MAX_BLOCKS
-#include <src_user/CmdTlm/command_definitions.h>  // for CMD_CODE
+#include <src_user/TlmCmd/command_definitions.h>  // for CMD_CODE
 #include "../Library/endian_memcpy.h"
 #include <stddef.h>     // for NULL
 #include <string.h>

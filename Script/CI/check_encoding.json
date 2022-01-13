@@ -2,7 +2,7 @@
   "root_dir" : "../../",
   "target_dirs" : [
     "Applications/",
-    "CmdTlm/",
+    "TlmCmd/",
     "Drivers/",
     "IfWrapper/",
     "Library/",

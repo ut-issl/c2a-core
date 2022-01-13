@@ -1,7 +1,7 @@
 #pragma section REPRO
 #include "command_dispatcher.h"
 
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
 #include "packet_handler.h"
 

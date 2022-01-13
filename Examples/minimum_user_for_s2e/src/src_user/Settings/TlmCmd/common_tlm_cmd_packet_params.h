@@ -5,7 +5,7 @@
 #ifndef COMMON_TLM_CMD_PACKET_PARAMS_H_
 #define COMMON_TLM_CMD_PACKET_PARAMS_H_
 
-#include "../../CmdTlm/Ccsds/TCPacket.h"
+#include "../../TlmCmd/Ccsds/TCPacket.h"
 
 #undef CTCP_MY_DST_ID
 

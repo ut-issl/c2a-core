@@ -23,7 +23,7 @@
 // コマンドの引数長チェックもこれを用いる
 #define SIZE_OF_BCT_ID_T    (2)    //!< bct_id_t の型サイズ．メモリインパクトがそれなりにあるので，可変に
 
-#include <src_user/Settings/CmdTlm/block_command_table_params.h>
+#include <src_user/Settings/TlmCmd/block_command_table_params.h>
 
 #if SIZE_OF_BCT_ID_T == 1
 typedef uint8_t bct_id_t;

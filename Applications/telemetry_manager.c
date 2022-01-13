@@ -9,14 +9,14 @@
 #include <string.h>     // for memsetÇ»Ç«ÇÃmemån
 
 #include "./divided_cmd_utility.h"
-#include "../CmdTlm/block_command_loader.h"
-#include "../CmdTlm/block_command_executor.h"
-#include "../CmdTlm/command_analyze.h"
+#include "../TlmCmd/block_command_loader.h"
+#include "../TlmCmd/block_command_executor.h"
+#include "../TlmCmd/command_analyze.h"
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
-#include <src_user/CmdTlm/block_command_definitions.h>
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 
 /**
  * @brief  Appèâä˙âªä÷êî

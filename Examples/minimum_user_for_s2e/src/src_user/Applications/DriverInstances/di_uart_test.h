@@ -7,7 +7,7 @@
 
 #include "../../Drivers/Etc/UART_TEST.h"
 #include <src_core/System/ApplicationManager/app_info.h>
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 
 extern const UART_TEST_Driver* uart_test_instance;
 
