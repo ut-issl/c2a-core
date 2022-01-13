@@ -16,11 +16,11 @@ sub GetSetting {
 	$SETTING{'LOG_FILE'}  = './log.log';
 	$SETTING{'SEARCH_PATH'} = [
 		'Applications',
-		'TlmCmd',
 		'Drivers',
 		'IfWrapper',
 		'Library',
-		'System'
+		'System',
+		'TlmCmd'
 	];
 
 	# スキップファイル
