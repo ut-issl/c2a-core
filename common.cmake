@@ -21,6 +21,7 @@ endif()
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
   target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
+  target_compile_options(${PROJECT_NAME} PUBLIC "/source-charset:utf-8")
 else()
   # SJIS
   # if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")

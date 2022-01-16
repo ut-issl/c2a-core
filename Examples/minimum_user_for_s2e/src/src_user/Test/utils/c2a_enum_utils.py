@@ -19,4 +19,4 @@ def get_c2a_enum():
             + json_dict["c2a_src_rel_path"]
         )
 
-    return c2a.load_enum(c2a_src_abs_path)
+    return c2a.load_enum(c2a_src_abs_path, "utf-8")

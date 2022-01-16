@@ -1,12 +1,12 @@
 @ECHO OFF
-REM @brief sils_defineのコメントアウトを有効化する
+REM @brief sils_define.h のコメントアウトを有効化する
 
-REM スクリプト実行時、sils_define.hから
+REM スクリプト実行時，sils_define.h から
 REM ```
-REM #define SILS_FW //ここでdefineする！
+REM #define SILS_FW
 REM ```
-REM と書かれた行を検出し、コメントアウトする。
-REM 以下のサイトを参考にした。
+REM と書かれた行を検出し，コメントアウトを有効化する
+REM 以下のサイトを参考にした
 REM   文字列置換: https://qiita.com/wagase/items/2180d8911dcc2a748fd3
 REM   空行処理  : https://blogs.yahoo.co.jp/kerupani/15344574.html
 
@@ -18,14 +18,13 @@ for /f "tokens=1* delims=:" %%A in ('findstr /n "^" ..\Settings\sils_define.h') 
 
   REM 空の行はechoで表示できないので分岐しておく
   if "%%B" == "" (
-    echo.>>..\Settings\SILS_DEFINE.tmp
+    echo.>>..\Settings\sils_define.tmp
   ) else (
-    set line0=!line0:#define SILS_FW //ここでdefineする！=//#define SILS_FW //ここでdefineする！!
+    set line0=!line0:#define SILS_FW=// #define SILS_FW!
     set line0=!line0:////=//!
-    echo !line0!>>..\Settings\SILS_DEFINE.tmp
+    echo !line0!>>..\Settings\sils_define.tmp
   )
 )
 
 REM 一時ファイルを削除し、変更を反映
-rem move SILS_DEFINE.tmp sils_define.h
-move ..\Settings\SILS_DEFINE.tmp ..\Settings\sils_define.h
+move ..\Settings\sils_define.tmp ..\Settings\sils_define.h

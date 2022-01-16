@@ -1,5 +1,6 @@
 {
   "c2a_root_dir" : "./",
+  "input_file_encoding" : "utf-8",
   "target_dirs" : [
     "src_core/",
     "src_user/"

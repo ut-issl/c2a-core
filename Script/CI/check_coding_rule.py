@@ -62,7 +62,7 @@ def check_coding_rule(settings: dict) -> int:
     for ignore_file in settings['ignore_files']:
         ignore_files.append(settings['c2a_root_dir'] + ignore_file)
 
-    preprocess_(target_dirs, ignore_dirs, ignore_files, settings['additional_type'])
+    preprocess_(target_dirs, ignore_dirs, ignore_files, settings)
 
     for target_dir in target_dirs:
         for root, dirs, files in os.walk(target_dir):
@@ -92,14 +92,14 @@ def check_coding_rule(settings: dict) -> int:
                         print(path)
                     continue
 
-                ret = check_file_(path)
+                ret = check_file_(path, settings)
                 if ret != 0:
                     # print(path)
                     flag = 1
     return flag;
 
 
-def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list, additional_type: list):
+def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list, settings: dict):
     global g_type_set
     for target_dir in target_dirs:
         for root, dirs, files in os.walk(target_dir):
@@ -113,21 +113,19 @@ def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list, additi
                 path = path.replace("\\", "/")
                 if path in ignore_files:
                     continue
-                preprocess_inner_(path)
+                preprocess_inner_(path, settings)
 
     ignore_types = ["auto", "signed", "unsigned", "using", "typedef", "struct", "enum", "class"]
     for ignore_type in ignore_types:
         if ignore_type in g_type_set:
             g_type_set.remove(ignore_type)
-    # pprint.pprint(additional_type)
-    g_type_set |= set(additional_type)
+    # pprint.pprint(settings['additional_type'])
+    g_type_set |= set(settings['additional_type'])
     # pprint.pprint(g_type_set)
 
 
-def preprocess_inner_(path: str):
-    # FIXME: ユーザー定義にする
-    # with open(path, encoding='shift_jis') as f:
-    with open(path, encoding='utf-8') as f:
+def preprocess_inner_(path: str, settings: dict):
+    with open(path, encoding=settings['input_file_encoding']) as f:
         code_lines = f.read().split("\n")
 
     ptn_find_type = '^ *(\w+)\*? +\w+'
@@ -154,12 +152,10 @@ def preprocess_inner_(path: str):
 
 
 # 0: OK, 1: NG
-def check_file_(path: str) -> int:
+def check_file_(path: str, settings: dict) -> int:
     flag = 0
 
-    # FIXME: ユーザー定義にする
-    # with open(path, encoding='shift_jis') as f:
-    with open(path, encoding='utf-8') as f:
+    with open(path, encoding=settings['input_file_encoding']) as f:
         code_lines = f.read().split("\n")
 
     # print(path)

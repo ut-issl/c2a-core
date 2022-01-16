@@ -3,7 +3,9 @@
 
 #include "sils_define.h"
 
-#ifndef SILS_FW
+#ifdef SILS_FW
+#define IS_LITTLE_ENDIAN // SILS環境により変更する
+#else
 // #define IS_LITTLE_ENDIAN // マイコン環境により変更する
 #endif
 
