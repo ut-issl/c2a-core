@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief GS Driver ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰»
+ * @brief GS Driver ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
  */
 
 #include "di_gs.h"
@@ -19,7 +19,7 @@ const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler = &DI_GS_ms_tlm_
 static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_; // replay tlm
 const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler = &DI_GS_rp_tlm_packet_handler_;
 
-// ˆÈ‰º init ‚Æ update ‚Ì’è‹`
+// ä»¥ä¸‹ init ã¨ update ã®å®šç¾©
 static void DI_GS_cmd_packet_handler_init_(void);
 static void DI_GS_cmd_packet_handler_(void);
 
@@ -61,12 +61,12 @@ static void DI_GS_cmd_packet_handler_(void)
 
   GS_rec_tcf(&gs_driver_);
 
-  // TlmXV
+  // Tlmæ›´æ–°
   for (select = 0; select < CCSDS_SELECT_NUM; ++select)
   {
     CCSDS_read_sequence((uint32_t)select, &gs_driver_.ccsds_info.uip_stat[select]);
   }
-  // TODO: ƒGƒ‰[ˆ—
+  // TODO: ã‚¨ãƒ©ãƒ¼å‡¦ç†
 }
 
 static void DI_GS_mst_packet_handler_init_(void)
@@ -78,23 +78,23 @@ static void DI_GS_mst_packet_handler_(void)
 {
   int i;
 
-  // –{“–‚È‚ç max(¡‚Ì FIFO ‚Ì‹ó‚«, c‚èŠÔ‚ÅÀs‰Â”\‚È”) ‚Æ‚©‚µ‚½‚¢
+  // æœ¬å½“ãªã‚‰ max(ä»Šã® FIFO ã®ç©ºã, æ®‹ã‚Šæ™‚é–“ã§å®Ÿè¡Œå¯èƒ½ãªæ•°) ã¨ã‹ã—ãŸã„
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
     T2M_ACK ack = T2M_form_m_pdu(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu, &PH_ms_tlm_list, &DI_GS_ms_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
-    // Realtime VCDU ƒJƒEƒ“ƒ^‚Ìİ’è
+    // Realtime VCDU ã‚«ã‚¦ãƒ³ã‚¿ã®è¨­å®š
     VCDU_setup_realtime_vcdu_hdr(&DI_GS_ms_tlm_packet_handler_.vcdu, DI_GS_ms_tlm_packet_handler_.vcdu_counter);
     DI_GS_ms_tlm_packet_handler_.vcdu_counter = VCDU_calc_next_counter(DI_GS_ms_tlm_packet_handler_.vcdu_counter);
 
-    // CLCW ‚Ìİ’è
-    // CMD ‚Ì VCID ‚Æ TLM ‚Ì VCID ‚Í“Æ—§‚ÅŠÖŒW‚ª‚È‚¢
-    // TLM ‚Ì VCID í•ÊiRealtime, Replay)‚É‚æ‚ç‚¸ CLCW ‚ğİ’è‚µ‚Ä—Ç‚¢
-    // CLCW ‚ª‘Î‰‚·‚é CMD ‚Ì VCID ‚Í CLCW ‚Ì“à•”‚Åw’è‚³‚ê‚é
+    // CLCW ã®è¨­å®š
+    // CMD ã® VCID ã¨ TLM ã® VCID ã¯ç‹¬ç«‹ã§é–¢ä¿‚ãŒãªã„
+    // TLM ã® VCID ç¨®åˆ¥ï¼ˆRealtime, Replay)ã«ã‚ˆã‚‰ãš CLCW ã‚’è¨­å®šã—ã¦è‰¯ã„
+    // CLCW ãŒå¯¾å¿œã™ã‚‹ CMD ã® VCID ã¯ CLCW ã®å†…éƒ¨ã§æŒ‡å®šã•ã‚Œã‚‹
     VCDU_set_clcw(&DI_GS_ms_tlm_packet_handler_.vcdu, GS_form_clcw());
 
-    // Š®¬‚µ‚½ VCDU ‚ğ MS VCDU ‚Æ‚µ‚Ä‘—o
+    // å®Œæˆã—ãŸ VCDU ã‚’ MS VCDU ã¨ã—ã¦é€å‡º
     GS_send_vcdu(&gs_driver_, &DI_GS_ms_tlm_packet_handler_.vcdu);
   }
 }
@@ -108,23 +108,23 @@ static void DI_GS_rpt_packet_handler_(void)
 {
   int i;
 
-  // –{“–‚È‚ç max(¡‚Ì FIFO ‚Ì‹ó‚«, c‚èŠÔ‚ÅÀs‰Â”\‚È”) ‚Æ‚©‚µ‚½‚¢
+  // æœ¬å½“ãªã‚‰ max(ä»Šã® FIFO ã®ç©ºã, æ®‹ã‚Šæ™‚é–“ã§å®Ÿè¡Œå¯èƒ½ãªæ•°) ã¨ã‹ã—ãŸã„
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
     T2M_ACK ack = T2M_form_m_pdu(&DI_GS_rp_tlm_packet_handler_.tc_packet_to_m_pdu, &PH_rp_tlm_list, &DI_GS_rp_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
-    // Replay VCDU ƒJƒEƒ“ƒ^‚Ìİ’è
+    // Replay VCDU ã‚«ã‚¦ãƒ³ã‚¿ã®è¨­å®š
     VCDU_setup_replay_vcdu_hdr(&DI_GS_rp_tlm_packet_handler_.vcdu, DI_GS_rp_tlm_packet_handler_.vcdu_counter);
     DI_GS_rp_tlm_packet_handler_.vcdu_counter = VCDU_calc_next_counter(DI_GS_rp_tlm_packet_handler_.vcdu_counter);
 
-    // CLCW ‚Ìİ’è
-    // CMD ‚Ì VCID‚Æ TLM ‚Ì VCID ‚Í“Æ—§‚ÅŠÖŒW‚ª‚È‚¢
-    // TLM ‚Ì VCID í•ÊiRealtime, Replay) ‚É‚æ‚ç‚¸ CLCW ‚ğİ’è‚µ‚Ä—Ç‚¢
-    // CLCW ‚ª‘Î‰‚·‚é CMD ‚Ì VCID ‚Í CLCW ‚Ì“à•”‚Åw’è‚³‚ê‚é
+    // CLCW ã®è¨­å®š
+    // CMD ã® VCIDã¨ TLM ã® VCID ã¯ç‹¬ç«‹ã§é–¢ä¿‚ãŒãªã„
+    // TLM ã® VCID ç¨®åˆ¥ï¼ˆRealtime, Replay) ã«ã‚ˆã‚‰ãš CLCW ã‚’è¨­å®šã—ã¦è‰¯ã„
+    // CLCW ãŒå¯¾å¿œã™ã‚‹ CMD ã® VCID ã¯ CLCW ã®å†…éƒ¨ã§æŒ‡å®šã•ã‚Œã‚‹
     VCDU_set_clcw(&DI_GS_rp_tlm_packet_handler_.vcdu, GS_form_clcw());
 
-    // Š®¬‚µ‚½ VCDU ‚ğ RP VCDU ‚Æ‚µ‚Ä‘—o
+    // å®Œæˆã—ãŸ VCDU ã‚’ RP VCDU ã¨ã—ã¦é€å‡º
     GS_send_vcdu(&gs_driver_, &DI_GS_rp_tlm_packet_handler_.vcdu);
   }
 }

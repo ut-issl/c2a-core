@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  CA‚ÌCoreTlmƒpƒ‰ƒƒ^‚ÌƒI[ƒo[ƒ‰ƒCƒh—pƒwƒbƒ_[
+ * @brief  CAã®CoreTlmãƒ‘ãƒ©ãƒ¡ã‚¿ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ç”¨ãƒ˜ãƒƒãƒ€ãƒ¼
  */
 #ifndef COMMAND_ANALYZE_PARAMS_H_
 #define COMMAND_ANALYZE_PARAMS_H_
@@ -9,11 +9,11 @@
 #undef CA_TLM_PAGE_MAX
 #undef CA_MAX_CMDS
 
-// 1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚éƒRƒ}ƒ“ƒh”
+// 1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ã‚³ãƒžãƒ³ãƒ‰æ•°
 #define CA_TLM_PAGE_SIZE (32)
-// ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹ƒy[ƒW”
+// ã‚³ãƒžãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ãƒšãƒ¼ã‚¸æ•°
 #define CA_TLM_PAGE_MAX (48)
-// ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹ƒTƒCƒY
+// ã‚³ãƒžãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µã‚¤ã‚º
 #define CA_MAX_CMDS (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)
 
 #endif

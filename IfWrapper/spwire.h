@@ -1,17 +1,17 @@
 /**
  * @file
- * @brief SPWIRE(�X�y�[�X���C��)�ʐM���b�p�[�̃N���X�ł��B
+ * @brief SPWIRE(スペースワイヤ)通信ラッパーのクラスです。
  *
- * SPWIRE(�X�y�[�X���C��)�ʐM���b�p�[�́A
- * SPWIRE�̃C���^�[�t�F�[�X���������A
- * SPWIRE�|�[�g�̏������A�f�[�^���M�A�f�[�^��M���s���A
- * SPWIRE�ʐM���b�p�[�̃N���X�ł��B
- * �X�̋@��̃C���^�[�t�F�[�X���W���[���Ɍp��?�����Ďg�p���܂��B
- * @note SPWIRE(�X�y�[�X���C��)�̃��[�e�B���O�͕����l�����܂����A
- * ����͐ڑ�����@�킪SOBC(EM)��CPU�{�[�h(J111�`J114�|�[�g)���m�Őڑ������ꍇ�̌o�H�ɂ̂ݑΉ����Ă��܂��B
- * �܂��A�f�[�^�̂��Ƃ��CPU�{�[�h��̃������}�b�v��ɂ̂݌��肳��Ă��܂�(�f�B�X�e�B�l�[�V�����L�[�Œ�:0x24)�B
- * @warning J111,J112�|�[�g��IF�{�[�h������API�Ŏg�p����Ă����肷��̂ŁA�Ȃ�ׂ�����o���Ȃ������ǂ��B
- * �܂��A����J111�|�[�g�ɂ�IF�{�[�h���ڑ�����Ă���͂��Ȃ̂ŁA���̐ݒ�Ŗ{�N���X���g�p���Ȃ��͂��B
+ * SPWIRE(スペースワイヤ)通信ラッパーは、
+ * SPWIREのインターフェースを実現し、
+ * SPWIREポートの初期化、データ送信、データ受信を行う、
+ * SPWIRE通信ラッパーのクラスです。
+ * 個々の機器のインターフェースモジュールに継承?せさて使用します。
+ * @note SPWIRE(スペースワイヤ)のルーティングは複数考えられますが、
+ * 今回は接続相手機器がSOBC(EM)のCPUボード(J111〜J114ポート)同士で接続した場合の経路にのみ対応しています。
+ * また、データのやりとりもCPUボード上のメモリマップ上にのみ限定されています(ディスティネーションキー固定:0x24)。
+ * @warning J111,J112ポートはIFボード向けにAPIで使用されていたりするので、なるべく手を出さない方が良い。
+ * また、今回J111ポートにはIFボードが接続されているはずなので、その設定で本クラスを使用しないはず。
  */
 
 #ifndef SPWIRE_H_
@@ -21,13 +21,13 @@
 
 /**
  * @class SPWIRE_Config
- * @brief SPWIRE�|�[�g�̏������A�f�[�^���M�A�f�[�^��M�̍ۂɕK�v�ƂȂ�ݒ�����i�[����\���̂ł��B
+ * @brief SPWIREポートの初期化、データ送信、データ受信の際に必要となる設定情報を格納する構造体です。
  */
 typedef struct
 {
-  uint8_t  own_port;   /**< @protected @brief �p����̋@��ւȂ����Ă������g�̃|�[�g�ԍ��̉�1��*/
-  uint8_t  target_port;  /**< @protected @brief �p����̋@��̂Ȃ����Ă���|�[�g�ԍ��̉�1��*/
-  uint32_t reg_addr;   /**< @protected @brief �p����̋@��̓ǂݏ������s�����W�X�^�A�h���X(�Ȃ�ׂ�4�̔{���A�h���X���w��)*/
+  uint8_t  own_port;   /**< @protected @brief 継承先の機器へつながっていく自身のポート番号の下1桁*/
+  uint8_t  target_port;  /**< @protected @brief 継承先の機器のつながっているポート番号の下1桁*/
+  uint32_t reg_addr;   /**< @protected @brief 継承先の機器の読み書きを行うレジスタアドレス(なるべく4の倍数アドレスを指定)*/
 } SPWIRE_Config;
 
 

@@ -20,7 +20,7 @@ const AnomalyLogger* const anomaly_logger = &anomaly_logger_;
 
 const AL_AnomalyRecord* AL_get_record(size_t pos)
 {
-  // �w��͈̓G���[�̏ꍇ��NULL��Ԃ�
+  // 指定範囲エラーの場合はNULLを返す
   if (pos >= anomaly_logger_.header) return NULL;
 
   return &(anomaly_logger_.records[pos]);
@@ -28,8 +28,8 @@ const AL_AnomalyRecord* AL_get_record(size_t pos)
 
 const AL_AnomalyRecord* AL_get_latest_record(void)
 {
-  // �o�^�A�m�}���[���Ȃ��ꍇ�͐擪�v�f��Ԃ��B
-  // ���̏ꍇ�̐擪�v�f��AL_initialize()�ɂ���ă[���N���A�ς݁B
+  // 登録アノマリーがない場合は先頭要素を返す。
+  // この場合の先頭要素はAL_initialize()によってゼロクリア済み。
   if (anomaly_logger_.header == 0) return &(anomaly_logger_.records[0]);
 
   return &(anomaly_logger_.records[anomaly_logger_.header - 1]);
@@ -39,7 +39,7 @@ void AL_initialize(void)
 {
   AL_clear();
   AL_init_logging_ena_flag_();
-  anomaly_logger_.threshold_of_nearly_full = AL_RECORD_MAX - 10;      // ���̒l 2019/02/06
+  anomaly_logger_.threshold_of_nearly_full = AL_RECORD_MAX - 10;      // 仮の値 2019/02/06
 
   AL_load_default_settings();
 }
@@ -50,11 +50,11 @@ CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CTCP* packet)
   uint32_t group, local;
   int ret;
 
-  // �p�����[�^�𒊏o
+  // パラメータを抽出
   endian_memcpy(&group, param, 4);
   endian_memcpy(&local, param + 4, 4);
 
-  // �p�����[�^��o�^
+  // パラメータを登録
   ret = AL_add_anomaly(group, local);
 
   if (ret == AL_ADD_SUCCESS)
@@ -82,26 +82,26 @@ int AL_add_anomaly(uint32_t group, uint32_t local)
   new_anomaly_record.code.local = local;
   new_anomaly_record.run_length = 1;
 
-  // �o�^������̏ꍇ�͂��̎������L�^����
+  // 登録数上限の場合はその事実を記録する
   if (anomaly_logger_.header == AL_RECORD_MAX - 1)
   {
     new_anomaly_record.code.group = AL_CORE_GROUP_ANOMALY_LOGGER;
     new_anomaly_record.code.local = AL_FULL;
   }
 
-  // ����AL_AnomalyCode�̓o�^�͈��k����
+  // 同じAL_AnomalyCodeの登録は圧縮する
   if (AC_is_equal_(&(new_anomaly_record.code), &(prev_anomaly_record->code)))
   {
-    // �����ƘA�����X�V���ēo�^
+    // 時刻と連長を更新し再登録
     new_anomaly_record.run_length += prev_anomaly_record->run_length;
     anomaly_logger_.records[anomaly_logger_.header - 1] = new_anomaly_record;
   }
   else
   {
-    // �V�K�o�^
+    // 新規登録
     anomaly_logger_.records[anomaly_logger_.header] = new_anomaly_record;
 
-    // �o�^��������łȂ��Ȃ�擪�ʒu���C���N�������g
+    // 登録数が上限でないなら先頭位置をインクリメント
     if (anomaly_logger_.header != AL_RECORD_MAX - 1)
     {
       ++anomaly_logger_.header;
@@ -125,7 +125,7 @@ CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-// �����́CAH������Ă΂��̂Œ��ӁI
+// こいつは，AHからも呼ばれるので注意！
 void AL_clear(void)
 {
   anomaly_logger_.counter = 0;
@@ -159,7 +159,7 @@ CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
 
   if (page >= AL_TLM_PAGE_MAX)
   {
-    // �y�[�W�ԍ����R�}���h�e�[�u���͈͊O
+    // ページ番号がコマンドテーブル範囲外
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -169,7 +169,7 @@ CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
 
 
 // 2019-01-18
-// �ǉ�
+// 追加
 
 CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CTCP* packet)
 {
@@ -181,7 +181,7 @@ CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CTCP* packet)
 static void AL_init_logging_ena_flag_(void)
 {
   int i;
-  // �f�t�H���g�ł͑SGROUP ID�Ń��M���O���L��
+  // デフォルトでは全GROUP IDでロギングが有効
   for (i = 0; i < (AL_GROUP_MAX / 8); ++i)
   {
     anomaly_logger_.is_logging_enable[i] = 0xff;
@@ -194,7 +194,7 @@ CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CTCP* packet)
   uint32_t group;
   int ret;
 
-  // �p�����[�^�𒊏o
+  // パラメータを抽出
   endian_memcpy(&group, param, 4);
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
@@ -220,7 +220,7 @@ CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CTCP* packet)
   uint32_t group;
   int ret;
 
-  // �p�����[�^�𒊏o
+  // パラメータを抽出
   endian_memcpy(&group, param, 4);
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
@@ -240,13 +240,13 @@ CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CTCP* packet)
   }
 }
 
-// �L���Ȃ�1
-// �����Ȃ�0
-// �G���[��-1
+// 有効なら1
+// 無効なら0
+// エラーは-1
 static int  AL_is_logging_enable_(uint32_t group)
 {
   uint32_t group_idx      = group / 8;
-  uint32_t group_subidx   = 7 - group % 8;    // ���]
+  uint32_t group_subidx   = 7 - group % 8;    // 反転
   uint8_t  info;
   uint8_t  mask;
   uint8_t  ret;
@@ -268,7 +268,7 @@ static int  AL_is_logging_enable_(uint32_t group)
 static int  AL_enable_logging_(uint32_t group)
 {
   uint32_t group_idx      = group / 8;
-  uint32_t group_subidx   = 7 - group % 8;    // ���]
+  uint32_t group_subidx   = 7 - group % 8;    // 反転
   uint8_t  info;
   uint8_t  mask;
 
@@ -289,7 +289,7 @@ static int  AL_enable_logging_(uint32_t group)
 static int  AL_disable_logging_(uint32_t group)
 {
   uint32_t group_idx      = group / 8;
-  uint32_t group_subidx   = 7 - group % 8;    // ���]
+  uint32_t group_subidx   = 7 - group % 8;    // 反転
   uint8_t  info;
   uint8_t  mask;
 
@@ -300,7 +300,7 @@ static int  AL_disable_logging_(uint32_t group)
 
   info = anomaly_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
-  mask = (uint8_t)(~mask);                     // �r�b�g���]
+  mask = (uint8_t)(~mask);                     // ビット反転
   info = (uint8_t)(info & mask);
 
   anomaly_logger_.is_logging_enable[group_idx] = info;
@@ -314,7 +314,7 @@ CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CTCP* packet)
   const uint8_t* param = CCP_get_param_head(packet);
   uint16_t thres;
 
-  // �p�����[�^�𒊏o
+  // パラメータを抽出
   endian_memcpy(&thres, param, 2);
 
   anomaly_logger_.threshold_of_nearly_full = thres;
@@ -323,7 +323,7 @@ CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CTCP* packet)
 
 
 
-// 2019/04/26 ���J����
+// 2019/04/26 公開した
 int AL_enable_logging(uint32_t group)
 {
   return AL_enable_logging_(group);

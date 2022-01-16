@@ -1,17 +1,17 @@
 /**
  * @file
- * @brief OBC‚Ìî•ñ‚Ì’è‹`‚Æ‰‰Z
+ * @brief OBCã®æ™‚åˆ»æƒ…å ±ã®å®šç¾©ã¨æ¼”ç®—
  */
 #ifndef OBC_TIME_H_
 #define OBC_TIME_H_
 
 #include <src_user/Library/stdint.h>
 
-// step, cycle‚É‚Â‚¢‚Ä‚ÍTimeManager‚ğQÆ‚Ì‚±‚Æ
-#define OBCT_STEP_IN_MSEC (1)                                                    //!< 1 step ‚Å‰½ ms ‚©
-#define OBCT_STEPS_PER_CYCLE (100)                                               //!< ‰½ step ‚Å 1 cycle ‚©
-#define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1 s ‚Å‰½ cycle ‚©
-#define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< Å‘å cycle ”D‚Â‚Ü‚è TI ‚ª‚¢‚­‚Â‚ÅƒI[ƒo[ƒtƒ[‚·‚é‚©
+// step, cycleã«ã¤ã„ã¦ã¯TimeManagerã‚’å‚ç…§ã®ã“ã¨
+#define OBCT_STEP_IN_MSEC (1)                                                    //!< 1 step ã§ä½• ms ã‹
+#define OBCT_STEPS_PER_CYCLE (100)                                               //!< ä½• step ã§ 1 cycle ã‹
+#define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1 s ã§ä½• cycle ã‹
+#define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< æœ€å¤§ cycle æ•°ï¼ã¤ã¾ã‚Š TI ãŒã„ãã¤ã§ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã™ã‚‹ã‹
 
 #include <src_user/Settings/System/obc_time_params.h>
 
@@ -20,196 +20,196 @@ typedef uint32_t step_t;
 
 /**
  * @struct ObcTime
- * @brief OBC‚Ìî•ñ‚ğ•Û‚·‚é\‘¢‘Ì
+ * @brief OBCã®æ™‚åˆ»æƒ…å ±ã‚’ä¿æŒã™ã‚‹æ§‹é€ ä½“
  */
 typedef struct
 {
-  cycle_t total_cycle; //!< TI ‚Ì‚±‚Æ. OBC ‚ª‹N“®‚µ‚Ä‚©‚çi³Šm‚É‚ÍC\‘¢‘Ì‚ª‰Šú‰»‚³‚ê‚Ä‚©‚çj‚ÌŒo‰ßŠÔ
-  cycle_t mode_cycle;  //!< ÅŒã‚É mode ‚ğ•Ï‚¦‚Ä‚©‚ç‚ÌŒo‰ßŠÔ
-  step_t  step;        //!< “à•” step.  TimeLine ‚Å‚Ìˆ—ŠÔ•ªŠ„‚Ég‚í‚ê‚é
+  cycle_t total_cycle; //!< TI ã®ã“ã¨. OBC ãŒèµ·å‹•ã—ã¦ã‹ã‚‰ï¼ˆæ­£ç¢ºã«ã¯ï¼Œæ§‹é€ ä½“ãŒåˆæœŸåŒ–ã•ã‚Œã¦ã‹ã‚‰ï¼‰ã®çµŒéæ™‚é–“
+  cycle_t mode_cycle;  //!< æœ€å¾Œã« mode ã‚’å¤‰ãˆã¦ã‹ã‚‰ã®çµŒéæ™‚é–“
+  step_t  step;        //!< å†…éƒ¨ step.  TimeLine ã§ã®å‡¦ç†æ™‚é–“åˆ†å‰²ã«ä½¿ã‚ã‚Œã‚‹
 } ObcTime;
 
 /**
  * @struct OBCT_UnixtimeInfo
- * @brief unixtime‚ÆObcTime‚ğ•R‚Ã‚¯‚é\‘¢‘Ì
+ * @brief unixtimeã¨ObcTimeã‚’ç´ã¥ã‘ã‚‹æ§‹é€ ä½“
  */
 typedef struct
 {
-  double unixtime_at_ti0;    //!< ŠÏ‘ªî•ñ‚©‚çŒvZ‚µ‚½, master_clock ‚ª {0, 0, 0} ‚Ì‚Ì unixtime
-  cycle_t ti_at_last_update; //!< UnixtimeInfo ‚ğÅŒã‚ÉXV‚µ‚½‚Ég‚Á‚½ (GPS‚È‚Ç‚Ì) î•ñ‚ğŠÏ‘ª‚µ‚½“_‚Ì total_cycle
+  double unixtime_at_ti0;    //!< è¦³æ¸¬æƒ…å ±ã‹ã‚‰è¨ˆç®—ã—ãŸ, master_clock ãŒ {0, 0, 0} ã®æ™‚ã® unixtime
+  cycle_t ti_at_last_update; //!< UnixtimeInfo ã‚’æœ€å¾Œã«æ›´æ–°ã—ãŸæ™‚ã«ä½¿ã£ãŸ (GPSãªã©ã®) æƒ…å ±ã‚’è¦³æ¸¬ã—ãŸæ™‚ç‚¹ã® total_cycle
 } OBCT_UnixtimeInfo;
 
 
 /**
- * @brief ˆø”‚©‚ç ObcTime ‚ğì¬‚·‚é
+ * @brief å¼•æ•°ã‹ã‚‰ ObcTime ã‚’ä½œæˆã™ã‚‹
  * @param[in] total_cycle
  * @param[in] mode_cycle
  * @param[in] step
- * @return V‹K‚Éì¬‚µ‚½ ObcTime \‘¢‘Ì
+ * @return æ–°è¦ã«ä½œæˆã—ãŸ ObcTime æ§‹é€ ä½“
  */
 ObcTime OBCT_create(cycle_t total_cycle,
                     cycle_t mode_cycle,
                     step_t step);
 
 /**
- * @brief ObcTime ‚ğƒNƒŠƒA‚µ‘S‚Äƒ[ƒ‚É‚·‚é
- * @param[in] time ƒNƒŠƒA‚³‚ê‚é ObcTime \‘¢‘Ì
+ * @brief ObcTime ã‚’ã‚¯ãƒªã‚¢ã—å…¨ã¦ã‚¼ãƒ­ã«ã™ã‚‹
+ * @param[in] time ã‚¯ãƒªã‚¢ã•ã‚Œã‚‹ ObcTime æ§‹é€ ä½“
  * @return void
  */
 void OBCT_clear(ObcTime* time);
 
 /**
- * @brief ObcTime‚ğstep‚İ‚ÅƒCƒ“ƒNƒŠƒƒ“ƒg‚·‚é
- * @param[in] time ƒJƒEƒ“ƒgƒAƒbƒv‚³‚ê‚é ObcTime \‘¢‘Ì
+ * @brief ObcTimeã‚’stepåˆ»ã¿ã§ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã™ã‚‹
+ * @param[in] time ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã•ã‚Œã‚‹ ObcTime æ§‹é€ ä½“
  * @return void
  */
 void OBCT_count_up(ObcTime* time);
 
 /**
- * @brief ObcTime ‚ªæ‚è‚¤‚éÅ‘å’l‚ğ•Ô‚·
+ * @brief ObcTime ãŒå–ã‚Šã†ã‚‹æœ€å¤§å€¤ã‚’è¿”ã™
  * @param void
- * @return Šeƒƒ“ƒo[‚ğÅ‘å’l‚É‚µ‚ÄV‹Kì¬‚µ‚½ ObcTime \‘¢‘Ì
+ * @return å„ãƒ¡ãƒ³ãƒãƒ¼ã‚’æœ€å¤§å€¤ã«ã—ã¦æ–°è¦ä½œæˆã—ãŸ ObcTime æ§‹é€ ä½“
  */
 ObcTime OBCT_get_max(void);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì total_cycle ‚ğ•Ô‚·
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® total_cycle ã‚’è¿”ã™
  * @param[in] time
  * @return total_cycle
  */
 cycle_t OBCT_get_total_cycle(const ObcTime* time);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì mode_cycle ‚ğ•Ô‚·
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® mode_cycle ã‚’è¿”ã™
  * @param[in] time
  * @return mode_cycle
  */
 cycle_t OBCT_get_mode_cycle(const ObcTime* time);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì step ‚ğ•Ô‚·
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® step ã‚’è¿”ã™
  * @param[in] time
  * @return step
  */
 step_t  OBCT_get_step(const ObcTime* time);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì total_cycle ‚ğƒ~ƒŠ•b’PˆÊ‚Å•Ô‚·
- * @note uint32_t ‚ªƒI[ƒo[ƒtƒ[‚·‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
- * @note ŒvZã‚Ístep‚àl—¶
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® total_cycle ã‚’ãƒŸãƒªç§’å˜ä½ã§è¿”ã™
+ * @note uint32_t ãŒã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã™ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
+ * @note è¨ˆç®—ä¸Šã¯stepã‚‚è€ƒæ…®
  * @param[in] time
- * @return ƒ~ƒŠ•b’PˆÊ‚Ì total_cycle
+ * @return ãƒŸãƒªç§’å˜ä½ã® total_cycle
  */
 uint32_t OBCT_get_total_cycle_in_msec(const ObcTime* time);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì mode_cycle ‚ğƒ~ƒŠ•b’PˆÊ‚Å•Ô‚·
- * @note uint32_t ‚ªƒI[ƒo[ƒtƒ[‚·‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
- * @note ŒvZã‚Ístep‚àl—¶
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® mode_cycle ã‚’ãƒŸãƒªç§’å˜ä½ã§è¿”ã™
+ * @note uint32_t ãŒã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã™ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
+ * @note è¨ˆç®—ä¸Šã¯stepã‚‚è€ƒæ…®
  * @param[in] time
- * @return ƒ~ƒŠ•b’PˆÊ‚Ì mode_cycle
+ * @return ãƒŸãƒªç§’å˜ä½ã® mode_cycle
  */
 uint32_t OBCT_get_mode_cycle_in_msec(const ObcTime* time);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì total_cycle ‚ğ•b’PˆÊ‚Å•Ô‚·
- * @note ŒvZã‚Ístep‚àl—¶
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® total_cycle ã‚’ç§’å˜ä½ã§è¿”ã™
+ * @note è¨ˆç®—ä¸Šã¯stepã‚‚è€ƒæ…®
  * @param[in] time
- * @return •b’PˆÊ‚Ì total_cycle. ­”“_ˆÈ‰º‚à•Û
+ * @return ç§’å˜ä½ã® total_cycle. å°‘æ•°ç‚¹ä»¥ä¸‹ã‚‚ä¿æŒ
  */
 double OBCT_get_total_cycle_in_sec(const ObcTime* time);
 
 /**
- * @brief ˆø”‚Åw’è‚µ‚½ ObcTime ‚Ì mode_cycle ‚ğ•b’PˆÊ‚Å•Ô‚·
- * @note ŒvZã‚Ístep‚àl—¶
+ * @brief å¼•æ•°ã§æŒ‡å®šã—ãŸ ObcTime ã® mode_cycle ã‚’ç§’å˜ä½ã§è¿”ã™
+ * @note è¨ˆç®—ä¸Šã¯stepã‚‚è€ƒæ…®
  * @param[in] time
- * @return •b’PˆÊ‚Ì mode_cycle. ­”“_ˆÈ‰º‚à•Û
+ * @return ç§’å˜ä½ã® mode_cycle. å°‘æ•°ç‚¹ä»¥ä¸‹ã‚‚ä¿æŒ
  */
 double OBCT_get_mode_cycle_in_sec(const ObcTime* time);
 
 /**
- * @brief ƒ~ƒŠ•b‚ğ cycle ‚É•ÏŠ·‚·‚é
+ * @brief ãƒŸãƒªç§’ã‚’ cycle ã«å¤‰æ›ã™ã‚‹
  * @param[in] msec
- * @return cycle (’[”‚ÍØ‚èÌ‚Ä)
+ * @return cycle (ç«¯æ•°ã¯åˆ‡ã‚Šæ¨ã¦)
  */
 cycle_t OBCT_msec2cycle(uint32_t msec);
 
 /**
- * @brief cycle ‚ğƒ~ƒŠ•b‚É•ÏŠ·‚·‚é
+ * @brief cycle ã‚’ãƒŸãƒªç§’ã«å¤‰æ›ã™ã‚‹
  * @param[in] cycle
- * @return ƒ~ƒŠ•b’PˆÊ‚É•ÏŠ·‚³‚ê‚½ cycle
+ * @return ãƒŸãƒªç§’å˜ä½ã«å¤‰æ›ã•ã‚ŒãŸ cycle
  */
 uint32_t OBCT_cycle2msec(cycle_t cycle);
 
 /**
- * @brief •b‚ğ cycle ‚É•ÏŠ·‚·‚é
+ * @brief ç§’ã‚’ cycle ã«å¤‰æ›ã™ã‚‹
  * @param[in] sec
  * @return cycle
  */
 cycle_t OBCT_sec2cycle(uint32_t sec);
 
 /**
- * @brief cycle ‚ğ•b‚É•ÏŠ·‚·‚é
+ * @brief cycle ã‚’ç§’ã«å¤‰æ›ã™ã‚‹
  * @param[in] cycle
- * @return •b’PˆÊ‚É•ÏŠ·‚³‚ê‚½cycle (’[”‚ÍØ‚èÌ‚Ä‚Ä®”‚É‚·‚é)
+ * @return ç§’å˜ä½ã«å¤‰æ›ã•ã‚ŒãŸcycle (ç«¯æ•°ã¯åˆ‡ã‚Šæ¨ã¦ã¦æ•´æ•°ã«ã™ã‚‹)
  */
 uint32_t OBCT_cycle2sec(cycle_t cycle);
 
 /**
- * @brief ObcTime ‚Ìˆø‚«Z‚ğs‚¤
+ * @brief ObcTime ã®å¼•ãç®—ã‚’è¡Œã†
  * @param[in] before
  * @param[in] after
- * @retval after >= before ‚Ìê‡: after ‚©‚ç before ‚ğˆø‚¢‚½Œ‹‰Ê‚Ì ObcTime
- * @retval after <  before ‚Ìê‡: {0, 0, 0}
+ * @retval after >= before ã®å ´åˆ: after ã‹ã‚‰ before ã‚’å¼•ã„ãŸçµæœã® ObcTime
+ * @retval after <  before ã®å ´åˆ: {0, 0, 0}
  */
 ObcTime OBCT_diff(const ObcTime* before,
                   const ObcTime* after);
 
 /**
- * @brief ObcTime ‚Ìˆø‚«Z‚ğ step ’PˆÊ‚Ås‚¤
- * @note ƒI[ƒo[ƒtƒ[‚É’ˆÓ
+ * @brief ObcTime ã®å¼•ãç®—ã‚’ step å˜ä½ã§è¡Œã†
+ * @note ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã«æ³¨æ„
  * @param[in] before
  * @param[in] after
- * @retval after >= before ‚Ìê‡: after - before ‚ğ step ’PˆÊ‚É•ÏŠ·‚µ‚½‚à‚Ì
- * @retval after <  before ‚Ìê‡: 0
+ * @retval after >= before ã®å ´åˆ: after - before ã‚’ step å˜ä½ã«å¤‰æ›ã—ãŸã‚‚ã®
+ * @retval after <  before ã®å ´åˆ: 0
  */
 step_t OBCT_diff_in_step(const ObcTime* before,
                          const ObcTime* after);
 
 /**
- * @brief ObcTime ‚Ìˆø‚«Z‚ğƒ~ƒŠ•b’PˆÊ‚Ås‚¤
+ * @brief ObcTime ã®å¼•ãç®—ã‚’ãƒŸãƒªç§’å˜ä½ã§è¡Œã†
  * @param[in] before
  * @param[in] after
- * @retval after >= before ‚Ìê‡: after - before ‚ğƒ~ƒŠ•b’PˆÊ‚É•ÏŠ·‚µ‚½‚à‚Ì
- * @retval after <  before ‚Ìê‡: 0
+ * @retval after >= before ã®å ´åˆ: after - before ã‚’ãƒŸãƒªç§’å˜ä½ã«å¤‰æ›ã—ãŸã‚‚ã®
+ * @retval after <  before ã®å ´åˆ: 0
  */
 uint32_t OBCT_diff_in_msec(const ObcTime* before,
                            const ObcTime* after);
 
 /**
- * @brief ObcTime ‚Ìˆø‚«Z‚ğ•b’PˆÊ‚Ås‚¤
+ * @brief ObcTime ã®å¼•ãç®—ã‚’ç§’å˜ä½ã§è¡Œã†
  * @param[in] before
  * @param[in] after
- * @retval after >= before ‚Ìê‡: after - before ‚ğ•b’PˆÊ‚É•ÏŠ·‚µ‚½‚à‚Ì
- * @retval after <  before ‚Ìê‡: 0
+ * @retval after >= before ã®å ´åˆ: after - before ã‚’ç§’å˜ä½ã«å¤‰æ›ã—ãŸã‚‚ã®
+ * @retval after <  before ã®å ´åˆ: 0
  */
 double OBCT_diff_in_sec(const ObcTime* before,
                         const ObcTime* after);
 
 /**
- * @brief ObcTime ‚Ì‘«‚µZ‚ğs‚¤
- * @note ƒI[ƒo[ƒtƒ[‚É’ˆÓ
- * @param[in] left  ˆê€–Ú
- * @param[in] right “ñ€–Ú
- * @return ˆø”‚ğ‘«‚µ‡‚í‚¹‚½Œ‹‰Ê‚Ì ObcTime
+ * @brief ObcTime ã®è¶³ã—ç®—ã‚’è¡Œã†
+ * @note ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã«æ³¨æ„
+ * @param[in] left  ä¸€é …ç›®
+ * @param[in] right äºŒé …ç›®
+ * @return å¼•æ•°ã‚’è¶³ã—åˆã‚ã›ãŸçµæœã® ObcTime
  */
 ObcTime OBCT_add(const ObcTime* left, const ObcTime* right);
 
 /**
- * @brief ObcTime ‚Ì”äŠr
- * @note  mode_cycle ‚ÍŒ©‚È‚¢
- * @param[in] t1: ”äŠr‘ÎÛ
- * @param[in] t2: ”äŠr‘ÎÛ
+ * @brief ObcTime ã®æ¯”è¼ƒ
+ * @note  mode_cycle ã¯è¦‹ãªã„
+ * @param[in] t1: æ¯”è¼ƒå¯¾è±¡
+ * @param[in] t2: æ¯”è¼ƒå¯¾è±¡
  * @retval 1  : t1 < t2
  * @retval 0  : t1 == t2
  * @retval -1 : t2 > t1
@@ -217,32 +217,32 @@ ObcTime OBCT_add(const ObcTime* left, const ObcTime* right);
 int OBCT_compare(const ObcTime* t1, const ObcTime* t2);
 
 /**
- * @brief ƒfƒoƒbƒOo—Í‚É ObcTime ‚ğ•\¦‚·‚é
+ * @brief ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›ã« ObcTime ã‚’è¡¨ç¤ºã™ã‚‹
  * @param[in] time
  * @return void
  */
 void OBCT_print(const ObcTime* time);
 
 /**
- * @brief ŠÏ‘ª‚µ‚½ UnixTime ‚Æ‚»‚ê‚ğŠÏ‘ª‚µ‚½‚Ì ObcTime ‚ğó‚¯æ‚è OBCT_UnixtimeInfo ‚ğì¬‚·‚é
- * @param[in] unixtime (GPS “™‚©‚çŠÏ‘ª‚µ‚½) unixtime
- * @param[in] time (GPS “™‚©‚ç) unixtime ‚ğŠÏ‘ª‚µ‚½‚Ì ObcTime
- * @return ˆø”‚©‚çŒvZ‚µ‚½ OBCT_UnixtimeInfo
+ * @brief è¦³æ¸¬ã—ãŸ UnixTime ã¨ãã‚Œã‚’è¦³æ¸¬ã—ãŸæ™‚ã® ObcTime ã‚’å—ã‘å–ã‚Š OBCT_UnixtimeInfo ã‚’ä½œæˆã™ã‚‹
+ * @param[in] unixtime (GPS ç­‰ã‹ã‚‰è¦³æ¸¬ã—ãŸ) unixtime
+ * @param[in] time (GPS ç­‰ã‹ã‚‰) unixtime ã‚’è¦³æ¸¬ã—ãŸæ™‚ã® ObcTime
+ * @return å¼•æ•°ã‹ã‚‰è¨ˆç®—ã—ãŸ OBCT_UnixtimeInfo
  */
 OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime* time);
 
 /**
- * @brief OBCT_UnixtimeInfo ‚ğƒNƒŠƒA‚µ‚Ä‘S‚Ä0‚É‚·‚é
- * @param[in] uti ƒNƒŠƒA‚·‚é OBCT_UnixtimeInfo
+ * @brief OBCT_UnixtimeInfo ã‚’ã‚¯ãƒªã‚¢ã—ã¦å…¨ã¦0ã«ã™ã‚‹
+ * @param[in] uti ã‚¯ãƒªã‚¢ã™ã‚‹ OBCT_UnixtimeInfo
  * @return void
  */
 void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti);
 
 /**
- * @brief OBCT_UnixtimeInfo ‚ğŠÏ‘ªî•ñ‚ğ—p‚¢‚ÄXV‚·‚é
- * @param[in] uti XV‚·‚é OBCT_UnixtimeInfo
- * @param[in] unixtime (GPS “™‚©‚çŠÏ‘ª‚µ‚½) unixtime
- * @param[in] time (GPS “™‚©‚ç) unixtime ‚ğŠÏ‘ª‚µ‚½‚Ì ObcTime
+ * @brief OBCT_UnixtimeInfo ã‚’è¦³æ¸¬æƒ…å ±ã‚’ç”¨ã„ã¦æ›´æ–°ã™ã‚‹
+ * @param[in] uti æ›´æ–°ã™ã‚‹ OBCT_UnixtimeInfo
+ * @param[in] unixtime (GPS ç­‰ã‹ã‚‰è¦³æ¸¬ã—ãŸ) unixtime
+ * @param[in] time (GPS ç­‰ã‹ã‚‰) unixtime ã‚’è¦³æ¸¬ã—ãŸæ™‚ã® ObcTime
  * @return void
  */
 void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime* time);

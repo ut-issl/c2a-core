@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  コマンド定義に必要なヘッダー
+ * @brief  繧ｳ繝槭Φ繝牙ｮ夂ｾｩ縺ｫ蠢�隕√↑繝倥ャ繝繝ｼ
  */
 #ifndef COMMAND_SOURCE_H_
 #define COMMAND_SOURCE_H_

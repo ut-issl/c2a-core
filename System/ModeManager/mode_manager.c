@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ƒ‚[ƒh‘JˆÚ‚Ì§Œä
+ * @brief ãƒ¢ãƒ¼ãƒ‰é·ç§»ã®åˆ¶å¾¡
  */
 #include "mode_manager.h"
 
@@ -19,28 +19,28 @@
 #include "../../Library/endian_memcpy.h"
 
 /**
- * @brief Cmd_MM_START_TRANSITION‚ÌÀ‘Ì
- * @param[in] id: ˆÚsæ‚Ì Mode ID
+ * @brief Cmd_MM_START_TRANSITIONã®å®Ÿä½“
+ * @param[in] id: ç§»è¡Œå…ˆã® Mode ID
  * @return MM_ACK
  */
 static MM_ACK MM_start_transition_(MD_MODEID id);
 
 /**
- * @brief Cmd_MM_FINISH_TRANSITION‚ÌÀ‘Ì
+ * @brief Cmd_MM_FINISH_TRANSITIONã®å®Ÿä½“
  * @param void
  * @return MM_ACK
  */
 static MM_ACK MM_finish_transition_(void);
 
 /**
- * @brief (ƒ‚[ƒh‘JˆÚ‚É‘Î‰‚·‚é)ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ìƒ^ƒCƒ€ƒ‰ƒCƒ“‚Ö‚Ì“WŠJ‚ğs‚¤
- * @param[in] index: “WŠJ‚·‚é BC ID
+ * @brief (ãƒ¢ãƒ¼ãƒ‰é·ç§»ã«å¯¾å¿œã™ã‚‹)ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã¸ã®å±•é–‹ã‚’è¡Œã†
+ * @param[in] index: å±•é–‹ã™ã‚‹ BC ID
  * @return MM_ACK
  */
 static void MM_deploy_block_cmd_(bct_id_t index);
 
 /**
- * @brief ƒ‚[ƒh‘JˆÚƒe[ƒuƒ‹‚ğ‚·‚×‚Ä–¢’è‹`‚É‰Šú‰»‚·‚é
+ * @brief ãƒ¢ãƒ¼ãƒ‰é·ç§»ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ã™ã¹ã¦æœªå®šç¾©ã«åˆæœŸåŒ–ã™ã‚‹
  * @return void
  */
 static void MM_clear_transition_table_(void);
@@ -50,18 +50,18 @@ const ModeManager* const mode_manager = &mode_manager_;
 
 void MM_initialize(void)
 {
-  // Šeƒ‚[ƒhEƒ‚[ƒh‘JˆÚ‚É‘Î‰‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì“Ç‚İ‚İ
+  // å„ãƒ¢ãƒ¼ãƒ‰ãƒ»ãƒ¢ãƒ¼ãƒ‰é·ç§»ã«å¯¾å¿œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®èª­ã¿è¾¼ã¿
   MD_load_mode_list();
 
   MM_clear_transition_table_();
   MD_load_transition_table();
 
-  // ‹N“®’¼Œã‚©‚Âƒ‚[ƒh‘JˆÚÀs’†‚Å‚Í‚È‚¢‚Æ‚µ‚Ä‰Šú‰»
+  // èµ·å‹•ç›´å¾Œã‹ã¤ãƒ¢ãƒ¼ãƒ‰é·ç§»å®Ÿè¡Œä¸­ã§ã¯ãªã„ã¨ã—ã¦åˆæœŸåŒ–
   mode_manager_.stat = MM_STATUS_FINISHED;
   mode_manager_.previous_id = MD_MODEID_START_UP;
   mode_manager_.current_id = MD_MODEID_START_UP;
 
-  // ‹N“®’¼Œã‚Éˆê“x‚Ì‚İÀs‚µ‚½‚¢ƒRƒ}ƒ“ƒh‚Í‚±‚Ìƒ‚[ƒh‘JˆÚ‚ÅÀs‚·‚é
+  // èµ·å‹•ç›´å¾Œã«ä¸€åº¦ã®ã¿å®Ÿè¡Œã—ãŸã„ã‚³ãƒãƒ³ãƒ‰ã¯ã“ã®ãƒ¢ãƒ¼ãƒ‰é·ç§»ã§å®Ÿè¡Œã™ã‚‹
   MM_start_transition_(MD_MODEID_INITIAL);
 }
 
@@ -69,7 +69,7 @@ void MM_clear_transition_table_(void)
 {
   int from, to;
 
-  // ‰Šú‰» ‘S‚Ä‚ğ–¢’è‹`‚Éİ’èB
+  // åˆæœŸåŒ– å…¨ã¦ã‚’æœªå®šç¾©ã«è¨­å®šã€‚
   for (from = 0; from < MD_MODEID_MODE_MAX; ++from)
   {
     for (to = 0; to < MD_MODEID_MODE_MAX; ++to)
@@ -81,7 +81,7 @@ void MM_clear_transition_table_(void)
 
 /**
  * @brief
- * ƒ‚[ƒh‘JˆÚŒã‚Éƒ^ƒXƒNƒŠƒXƒg‚Æ‚µ‚ÄÀs‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğİ’è‚·‚éƒRƒ}ƒ“ƒh
+ * ãƒ¢ãƒ¼ãƒ‰é·ç§»å¾Œã«ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã¨ã—ã¦å®Ÿè¡Œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’è¨­å®šã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
  */
 CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CTCP* packet)
 {
@@ -91,11 +91,11 @@ CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CTCP* packet)
 
   if (CCP_get_param_len(packet) != (1 + SIZE_OF_BCT_ID_T))
   {
-    // ƒpƒ‰ƒ[ƒ^‚ÍƒpƒPƒbƒgƒwƒbƒ_‚Æuint8_t 2ŒÂimode, index)B
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ãƒ‘ã‚±ãƒƒãƒˆãƒ˜ãƒƒãƒ€ã¨uint8_t 2å€‹ï¼ˆmode, index)ã€‚
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
 
-  // ‚Ç‚Ìƒ‚[ƒh‚É‚Ç‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğ“o˜^‚·‚é‚©‚ğˆø”‚©‚ç“Ç‚İo‚·
+  // ã©ã®ãƒ¢ãƒ¼ãƒ‰ã«ã©ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã™ã‚‹ã‹ã‚’å¼•æ•°ã‹ã‚‰èª­ã¿å‡ºã™
   mode = (MD_MODEID)param[0];
   endian_memcpy(&bc_index, param + 1, SIZE_OF_BCT_ID_T);
 
@@ -111,18 +111,18 @@ MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
 {
   if (mode >= MD_MODEID_MODE_MAX)
   {
-    // ’è‹`‚³‚ê‚Ä‚¢‚È‚¢ƒ‚[ƒh”Ô†‚ªw’è‚³‚ê‚½ê‡
+    // å®šç¾©ã•ã‚Œã¦ã„ãªã„ãƒ¢ãƒ¼ãƒ‰ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
     return MM_BAD_ID;
   }
   else if (bc_index > MM_NOT_DEFINED)
   {
-    // ”ÍˆÍŠO‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒh”Ô†‚ªw’è‚³‚ê‚½ê‡
+    // ç¯„å›²å¤–ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
     return MM_BAD_BC_INDEX;
   }
   else if (bc_index != MM_NOT_DEFINED && BCE_is_active(bc_index) != 1)
   {
-    // –³Œø‰»‚³‚ê‚Ä‚¢‚éƒuƒƒbƒN”Ô†‚ªw’è‚³‚ê‚½ê‡
-    // ’è‹`‚È‚µ—p‚Ì’l‚ğ“Á•Êˆµ‚¢‚µ‚Ä‚¢‚éB
+    // ç„¡åŠ¹åŒ–ã•ã‚Œã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
+    // å®šç¾©ãªã—ç”¨ã®å€¤ã‚’ç‰¹åˆ¥æ‰±ã„ã—ã¦ã„ã‚‹ã€‚
     return MM_INACTIVE_BLOCK;
   }
 
@@ -133,7 +133,7 @@ MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
 
 /**
  * @brief
- * ƒ‚[ƒh‘JˆÚ‚ÉÀs‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğİ’è‚·‚éƒRƒ}ƒ“ƒh
+ * ãƒ¢ãƒ¼ãƒ‰é·ç§»æ™‚ã«å®Ÿè¡Œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’è¨­å®šã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
  */
 CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CTCP* packet)
 {
@@ -143,11 +143,11 @@ CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CTCP* packet)
 
   if (CCP_get_param_len(packet) != 1 + 1 + SIZE_OF_BCT_ID_T)
   {
-    // ƒRƒ}ƒ“ƒh‚ÍƒpƒPƒbƒgƒwƒbƒ_‚Æuint8_t 3ŒÂifrom, to, index)B
+    // ã‚³ãƒãƒ³ãƒ‰ã¯ãƒ‘ã‚±ãƒƒãƒˆãƒ˜ãƒƒãƒ€ã¨uint8_t 3å€‹ï¼ˆfrom, to, index)ã€‚
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
 
-  // ‚Ç‚Ìƒ‚[ƒh‘JˆÚ‚É‚Ç‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğ“o˜^‚·‚é‚©‚ğˆø”‚©‚ç“Ç‚İo‚·
+  // ã©ã®ãƒ¢ãƒ¼ãƒ‰é·ç§»ã«ã©ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã™ã‚‹ã‹ã‚’å¼•æ•°ã‹ã‚‰èª­ã¿å‡ºã™
   from = param[0];
   to   = param[1];
   endian_memcpy(&bc_index, param + 2, SIZE_OF_BCT_ID_T);
@@ -166,18 +166,18 @@ MM_ACK MM_set_transition_table(MD_MODEID from,
 {
   if ((from >= MD_MODEID_MODE_MAX) || (to >= MD_MODEID_MODE_MAX))
   {
-    // ’è‹`‚³‚ê‚Ä‚¢‚È‚¢ƒ‚[ƒh”Ô†‚ªw’è‚³‚ê‚½ê‡
+    // å®šç¾©ã•ã‚Œã¦ã„ãªã„ãƒ¢ãƒ¼ãƒ‰ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
     return MM_BAD_ID;
   }
   else if (bc_index > MM_NOT_DEFINED)
   {
-    // ”ÍˆÍŠO‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒh”Ô†‚ªw’è‚³‚ê‚½ê‡
+    // ç¯„å›²å¤–ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
     return MM_BAD_BC_INDEX;
   }
   else if (bc_index != MM_NOT_DEFINED && BCE_is_active(bc_index) != 1)
   {
-    // –³Œø‰»‚³‚ê‚Ä‚¢‚éƒuƒƒbƒN”Ô†‚ªw’è‚³‚ê‚½ê‡
-    // ’è‹`‚È‚µ—p‚Ì’l‚ğ“Á•Êˆµ‚¢‚µ‚Ä‚¢‚éB
+    // ç„¡åŠ¹åŒ–ã•ã‚Œã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
+    // å®šç¾©ãªã—ç”¨ã®å€¤ã‚’ç‰¹åˆ¥æ‰±ã„ã—ã¦ã„ã‚‹ã€‚
     return MM_INACTIVE_BLOCK;
   }
 
@@ -188,16 +188,16 @@ MM_ACK MM_set_transition_table(MD_MODEID from,
 
 /**
  * @brief
- * ƒ‚[ƒh‘JˆÚ‚ğŠJn‚·‚éƒRƒ}ƒ“ƒh
+ * ãƒ¢ãƒ¼ãƒ‰é·ç§»ã‚’é–‹å§‹ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
  */
 CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CTCP* packet)
 {
   MD_MODEID id;
 
-  // ‚Ç‚Ìƒ‚[ƒh‚É‘JˆÚ‚·‚é‚©‚ğˆø”‚©‚ç“Ç‚İo‚·
+  // ã©ã®ãƒ¢ãƒ¼ãƒ‰ã«é·ç§»ã™ã‚‹ã‹ã‚’å¼•æ•°ã‹ã‚‰èª­ã¿å‡ºã™
   id = (MD_MODEID)CCP_get_param_head(packet)[0];
 
-  // ƒGƒ‰[î•ñ‚ğ•Û‘¶
+  // ã‚¨ãƒ©ãƒ¼æƒ…å ±ã‚’ä¿å­˜
   mode_manager_.mm_ack = MM_start_transition_(id);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
@@ -212,7 +212,7 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
 
   if (id >= MD_MODEID_MODE_MAX)
   {
-    // ’è‹`‚³‚ê‚Ä‚¢‚È‚¢ƒ‚[ƒh”Ô†‚ªw’è‚³‚ê‚½ê‡
+    // å®šç¾©ã•ã‚Œã¦ã„ãªã„ãƒ¢ãƒ¼ãƒ‰ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
 #ifndef AL_DISALBE_AT_C2A_CORE
     AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_BAD_ID);
 #endif
@@ -221,7 +221,7 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
   }
   else if (mode_manager_.stat != MM_STATUS_FINISHED)
   {
-    // •Ê‚Ìƒ‚[ƒh‘JˆÚ‚ğÀs’†‚Ìê‡
+    // åˆ¥ã®ãƒ¢ãƒ¼ãƒ‰é·ç§»ã‚’å®Ÿè¡Œä¸­ã®å ´åˆ
 #ifndef AL_DISALBE_AT_C2A_CORE
     AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_OVERWRITE);
 #endif
@@ -229,12 +229,12 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
     return MM_OVERWRITE;
   }
 
-  // Às‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğ“Ç‚İ‚ñ‚Å‚İ‚é
+  // å®Ÿè¡Œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’èª­ã¿è¾¼ã‚“ã§ã¿ã‚‹
   bc_index = mode_manager_.transition_table[mode_manager_.current_id][id];
 
   if (bc_index == MM_NOT_DEFINED)
   {
-    // Às‚µ‚½‚¢ƒ‚[ƒh‘JˆÚ‚É‘Î‰‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ª“o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡
+    // å®Ÿè¡Œã—ãŸã„ãƒ¢ãƒ¼ãƒ‰é·ç§»ã«å¯¾å¿œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ãŒç™»éŒ²ã•ã‚Œã¦ã„ãªã„å ´åˆ
 #ifndef AL_DISALBE_AT_C2A_CORE
     AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_ILLEGAL_MOVE);
 #endif
@@ -242,7 +242,7 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
     return MM_ILLEGAL_MOVE;
   }
 
-  // ‚±‚±‚Ü‚Å‚­‚ê‚Îƒ‚[ƒh‘JˆÚ‚ğÀs
+  // ã“ã“ã¾ã§ãã‚Œã°ãƒ¢ãƒ¼ãƒ‰é·ç§»ã‚’å®Ÿè¡Œ
   TMGR_clear_master_mode_cycle();
   MM_deploy_block_cmd_(mode_manager_.transition_table[mode_manager_.current_id][id]);
   mode_manager_.previous_id = mode_manager_.current_id;
@@ -254,9 +254,9 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
 
 /**
  * @brief
- * ƒ‚[ƒh‘JˆÚI—¹‚ğ¦‚·ƒRƒ}ƒ“ƒh
- * ƒ‚[ƒh‘JˆÚ‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚É“ü‚ê‚Äg‚¤
- * “ü‚Á‚Ä‚¢‚È‚¢ê‡Aƒ^ƒXƒNƒŠƒXƒg‚ª‘JˆÚæ‚Ìƒ‚[ƒh‚É’u‚«Š·‚í‚ç‚È‚¢‚Ì‚Å’ˆÓ
+ * ãƒ¢ãƒ¼ãƒ‰é·ç§»çµ‚äº†ã‚’ç¤ºã™ã‚³ãƒãƒ³ãƒ‰
+ * ãƒ¢ãƒ¼ãƒ‰é·ç§»ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«å…¥ã‚Œã¦ä½¿ã†
+ * å…¥ã£ã¦ã„ãªã„å ´åˆã€ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆãŒé·ç§»å…ˆã®ãƒ¢ãƒ¼ãƒ‰ã«ç½®ãæ›ã‚ã‚‰ãªã„ã®ã§æ³¨æ„
  */
 CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CTCP* packet)
 {
@@ -276,7 +276,7 @@ static MM_ACK MM_finish_transition_(void)
 
   if (mode_manager_.stat != MM_STATUS_IN_PROGRESS)
   {
-    // ƒ‚[ƒh‘JˆÚ‚ªÀs’†‚Å‚È‚¢ê‡
+    // ãƒ¢ãƒ¼ãƒ‰é·ç§»ãŒå®Ÿè¡Œä¸­ã§ãªã„å ´åˆ
 #ifndef AL_DISALBE_AT_C2A_CORE
     AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_NOT_IN_PROGRESS);
 #endif
@@ -284,9 +284,9 @@ static MM_ACK MM_finish_transition_(void)
     return MM_NOT_IN_PROGRESS;
   }
 
-  TMGR_clear_master_mode_cycle(); // ‚±‚ê‚ğstart/finish—¼•û‚Å‚µ‚Ä‚¢‚é‚Ì‚Í‚È‚ºH
+  TMGR_clear_master_mode_cycle(); // ã“ã‚Œã‚’start/finishä¸¡æ–¹ã§ã—ã¦ã„ã‚‹ã®ã¯ãªãœï¼Ÿ
 
-  // ƒ^ƒXƒNƒŠƒXƒg‚ğA‘JˆÚŒã‚Ìƒ‚[ƒh‚É“o˜^‚³‚ê‚½ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÖXV
+  // ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã‚’ã€é·ç§»å¾Œã®ãƒ¢ãƒ¼ãƒ‰ã«ç™»éŒ²ã•ã‚ŒãŸãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã¸æ›´æ–°
   ack = TDSP_set_task_list_id(MM_get_tasklist_id_of_mode(mode_manager_.current_id));
 
   switch (ack)

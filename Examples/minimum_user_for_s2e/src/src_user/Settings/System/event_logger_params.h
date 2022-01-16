@@ -1,7 +1,7 @@
 /**
  * @file
- * @brief event_logger ‚ÌŠeíİ’è
- *        Šeƒpƒ‰ƒƒ^—Ş‚ÌÚ×‚Í event_logger.h ‚ğQÆ‚·‚é‚±‚Æ
+ * @brief event_logger ã®å„ç¨®è¨­å®š
+ *        å„ãƒ‘ãƒ©ãƒ¡ã‚¿é¡ã®è©³ç´°ã¯ event_logger.h ã‚’å‚ç…§ã™ã‚‹ã“ã¨
  */
 #ifndef EVENT_LOGGER_PARAMS_H_
 #define EVENT_LOGGER_PARAMS_H_

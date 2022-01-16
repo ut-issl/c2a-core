@@ -1,11 +1,11 @@
 /**
  * @file
- * @brief  HWˆË‘¶Print
+ * @brief  HWä¾å­˜Print
  */
 
 
-// print‚ÍHWˆË‘¶«‚ª‹­‚¢‚½‚ßCƒwƒbƒ_[‚Ícore‚É‚¨‚«C“K‹Xuser‚©‚çƒI[ƒo[ƒ‰ƒCƒh‚·‚é
-// ƒrƒ‹ƒh‘ÎÛ‚É‚Ä‘I‘ð‚·‚é
+// printã¯HWä¾å­˜æ€§ãŒå¼·ã„ãŸã‚ï¼Œãƒ˜ãƒƒãƒ€ãƒ¼ã¯coreã«ãŠãï¼Œé©å®œuserã‹ã‚‰ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹
+// ãƒ“ãƒ«ãƒ‰å¯¾è±¡ã«ã¦é¸æŠžã™ã‚‹
 #include "print.h"
 
 void Printf(char* format, ...)

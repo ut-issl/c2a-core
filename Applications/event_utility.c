@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ƒCƒxƒ“ƒgˆ—‚Ì’èŠúÀs‚Ì‚½‚ß‚ÌApp
- * @note  À¿“I‚É‚Í event_handler ‚ğ’èŠúÀs‚·‚é‚¾‚¯
+ * @brief ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†ã®å®šæœŸå®Ÿè¡Œã®ãŸã‚ã®App
+ * @note  å®Ÿè³ªçš„ã«ã¯ event_handler ã‚’å®šæœŸå®Ÿè¡Œã™ã‚‹ã ã‘
  */
 #include "event_utility.h"
 #include "../System/EventManager/event_handler.h"

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  TF‚ÌCoreTlmƒpƒ‰ƒƒ^‚ÌƒI[ƒo[ƒ‰ƒCƒh—pƒwƒbƒ_[
+ * @brief  TFã®CoreTlmãƒ‘ãƒ©ãƒ¡ã‚¿ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ç”¨ãƒ˜ãƒƒãƒ€ãƒ¼
  */
 #ifndef TELEMETRY_FRAME_PARAMS_H_
 #define TELEMETRY_FRAME_PARAMS_H_
@@ -9,11 +9,11 @@
 #undef TF_TLM_PAGE_MAX
 #undef TF_MAX_TLMS
 
-// 1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚éƒeƒŒƒƒgƒŠ”
+// 1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªæ•°
 #define TF_TLM_PAGE_SIZE (64)
-// ƒeƒŒƒƒgƒŠƒe[ƒuƒ‹ƒy[ƒW”
+// ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ†ãƒ¼ãƒ–ãƒ«ãƒšãƒ¼ã‚¸æ•°
 #define TF_TLM_PAGE_MAX (4)
-// ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹ƒTƒCƒY
+// ã‚³ãƒžãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µã‚¤ã‚º
 #define TF_MAX_TLMS (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)
 
 #endif

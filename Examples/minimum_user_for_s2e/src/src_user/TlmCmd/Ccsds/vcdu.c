@@ -44,7 +44,7 @@ void VCDU_setup_replay_vcdu_hdr(VCDU* vcdu,
 static void VCDU_set_common_hdr_(VCDU* vcdu)
 {
   VCDU_set_ver(vcdu, VCDU_VER_2);
-  VCDU_set_scid(vcdu, VCDU_SCID_SAMPLE_SATELLITE); // FIXME: ‰¼
+  VCDU_set_scid(vcdu, VCDU_SCID_SAMPLE_SATELLITE); // FIXME: ä»®
   VCDU_set_replay_flag(vcdu, VCDU_REPLAY_FALSE);
   VCDU_clear_spare_(vcdu);
 }

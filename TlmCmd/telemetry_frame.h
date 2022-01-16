@@ -1,22 +1,22 @@
 /**
  * @file
- * @brief  ƒeƒŒƒƒgƒŠ‚Ì“o˜^CƒeƒŒƒƒgƒŠŠÖ˜Aˆ—
+ * @brief  ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªã®ç™»éŒ²ï¼Œãƒ†ãƒ¬ãƒ¡ãƒˆãƒªé–¢é€£å‡¦ç†
  */
 #ifndef TELEMETRY_FRAME_H_
 #define TELEMETRY_FRAME_H_
 
 #include "./common_tlm_cmd_packet.h"
 
-#define TF_TLM_PAGE_SIZE (64)                                    //!< ƒeƒŒƒƒe[ƒuƒ‹‚Ì1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚éƒeƒŒƒ”
-#define TF_TLM_PAGE_MAX  (4)                                     //!< ƒeƒŒƒƒe[ƒuƒ‹ƒy[ƒW”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define TF_MAX_TLMS      (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)    //!< ƒeƒŒƒƒe[ƒuƒ‹ƒTƒCƒYD‚·‚È‚í‚¿“o˜^‚Å‚«‚éÅ‘åƒeƒŒƒ”
+#define TF_TLM_PAGE_SIZE (64)                                    //!< ãƒ†ãƒ¬ãƒ¡ãƒ†ãƒ¼ãƒ–ãƒ«ã®1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ãƒ†ãƒ¬ãƒ¡æ•°
+#define TF_TLM_PAGE_MAX  (4)                                     //!< ãƒ†ãƒ¬ãƒ¡ãƒ†ãƒ¼ãƒ–ãƒ«ãƒšãƒ¼ã‚¸æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define TF_MAX_TLMS      (TF_TLM_PAGE_SIZE * TF_TLM_PAGE_MAX)    //!< ãƒ†ãƒ¬ãƒ¡ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µã‚¤ã‚ºï¼ã™ãªã‚ã¡ç™»éŒ²ã§ãã‚‹æœ€å¤§ãƒ†ãƒ¬ãƒ¡æ•°
 
 #include <src_user/Settings/TlmCmd/telemetry_frame_params.h>
 
 /**
  * @struct TF_TlmInfo
- * @brief  tlm ‚Ìî•ñ
- * @note   tlm_func ‚ÍC¬Œ÷‚ÍƒeƒŒƒ’·C¸”s‚Í TF_ACK ‚ğ•Ô‚·
+ * @brief  tlm ã®æƒ…å ±
+ * @note   tlm_func ã¯ï¼ŒæˆåŠŸæ™‚ã¯ãƒ†ãƒ¬ãƒ¡é•·ï¼Œå¤±æ•—æ™‚ã¯ TF_ACK ã‚’è¿”ã™
  */
 typedef struct
 {
@@ -25,8 +25,8 @@ typedef struct
 
 /**
  * @enum   TF_ACK
- * @brief  tlm_func ‚È‚Ç‚Ì•Ô‚è’l‚É‚Â‚©‚¤
- * @note   int8_t ‚ğ‘z’èi®”‚ÍƒeƒŒƒ’·‚Åg‚¤‚Ì‚ÅC•‰”j
+ * @brief  tlm_func ãªã©ã®è¿”ã‚Šå€¤ã«ã¤ã‹ã†
+ * @note   int8_t ã‚’æƒ³å®šï¼ˆæ•´æ•°ã¯ãƒ†ãƒ¬ãƒ¡é•·ã§ä½¿ã†ã®ã§ï¼Œè² æ•°ï¼‰
  */
 typedef enum
 {
@@ -38,39 +38,39 @@ typedef enum
 
 /**
  * @struct TelemetryFrame
- * @brief  TelemetryFrame ‚Ì Info \‘¢‘Ì
+ * @brief  TelemetryFrame ã® Info æ§‹é€ ä½“
  */
 typedef struct
 {
-  TF_TlmInfo tlm_table[TF_MAX_TLMS];  //!< ƒeƒŒƒƒgƒŠƒe[ƒuƒ‹
-  uint8_t tlm_page_no;                //!< ƒeƒŒƒ‚Åg‚¤ƒy[ƒW”
+  TF_TlmInfo tlm_table[TF_MAX_TLMS];  //!< ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ†ãƒ¼ãƒ–ãƒ«
+  uint8_t tlm_page_no;                //!< ãƒ†ãƒ¬ãƒ¡ã§ä½¿ã†ãƒšãƒ¼ã‚¸æ•°
 } TelemetryFrame;
 
 extern const TelemetryFrame* const telemetry_frame;
 
 
 /**
- * @brief  TF ‚Ì‰Šú‰»
+ * @brief  TF ã®åˆæœŸåŒ–
  * @param  void
  * @return void
  */
 void TF_initialize(void);
 
 /**
- * @brief  ƒeƒŒƒ‚ğÀÛ‚É¶¬‚·‚éŠÖ”
+ * @brief  ãƒ†ãƒ¬ãƒ¡ã‚’å®Ÿéš›ã«ç”Ÿæˆã™ã‚‹é–¢æ•°
  * @param  packet_id: Tlm ID
- * @param  contents:  ƒeƒŒƒ‚ğì‚é body ‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param  max_len:   ƒeƒŒƒ‚Ì body ‚Æ‚µ‚Äg‚¦‚éÅ‘å’·
- * @return ¬Œ÷‚ÍƒeƒŒƒ’·C¸”s‚Í TF_ACK
+ * @param  contents:  ãƒ†ãƒ¬ãƒ¡ã‚’ä½œã‚‹ body ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  max_len:   ãƒ†ãƒ¬ãƒ¡ã® body ã¨ã—ã¦ä½¿ãˆã‚‹æœ€å¤§é•·
+ * @return æˆåŠŸæ™‚ã¯ãƒ†ãƒ¬ãƒ¡é•·ï¼Œå¤±æ•—æ™‚ã¯ TF_ACK
  */
 int TF_generate_contents(int packet_id,
                          unsigned char* contents,
                          int max_len);
 
 /**
- * @brief  Tlm Table‚Ìƒ[ƒh
- * @note   ’è‹`‚Í /src_user/TlmCmd/TelemetryDefinitions.c ‚É‚ ‚é
- * @param  tlm_table: Tlm Table‚ÌÀ‘Ì
+ * @brief  Tlm Tableã®ãƒ­ãƒ¼ãƒ‰
+ * @note   å®šç¾©ã¯ /src_user/TlmCmd/TelemetryDefinitions.c ã«ã‚ã‚‹
+ * @param  tlm_table: Tlm Tableã®å®Ÿä½“
  * @return void
  */
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS]);

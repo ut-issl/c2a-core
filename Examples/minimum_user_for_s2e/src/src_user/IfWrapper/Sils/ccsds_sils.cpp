@@ -1,14 +1,14 @@
 #pragma section REPRO
 /**
 * @file ccsds_sils.cpp
-* @brief CCSDS’ÊMƒ‰ƒbƒp[‚ÌƒNƒ‰ƒX‚Å‚·B
+* @brief CCSDSé€šä¿¡ãƒ©ãƒƒãƒ‘ãƒ¼ã®ã‚¯ãƒ©ã‚¹ã§ã™ã€‚
 *
-* CCSDS’ÊMƒ‰ƒbƒp[‚ÍA
-* CCSDS‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX‚ðŽÀŒ»‚µA
-* CCSDSƒ|[ƒg‚Ì‰Šú‰»Aƒf[ƒ^‘—MAƒf[ƒ^ŽóM‚ðs‚¤A
-* CCSDS’ÊMƒ‰ƒbƒp[‚ÌƒNƒ‰ƒX‚Å‚·B
-* ŒÂX‚Ì‹@Ší‚ÌƒCƒ“ƒ^[ƒtƒF[ƒXƒ‚ƒWƒ…[ƒ‹‚ÉŒp³‚³‚¹‚ÄŽg—p‚µ‚Ü‚·B
-* @note OBC–Í‹[ƒRƒ“ƒ|<->SILS‚Æ‚ÍUART‚Æ“¯—l‚Éƒf[ƒ^’ÊM‚ðs‚¤
+* CCSDSé€šä¿¡ãƒ©ãƒƒãƒ‘ãƒ¼ã¯ã€
+* CCSDSã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å®Ÿç¾ã—ã€
+* CCSDSãƒãƒ¼ãƒˆã®åˆæœŸåŒ–ã€ãƒ‡ãƒ¼ã‚¿é€ä¿¡ã€ãƒ‡ãƒ¼ã‚¿å—ä¿¡ã‚’è¡Œã†ã€
+* CCSDSé€šä¿¡ãƒ©ãƒƒãƒ‘ãƒ¼ã®ã‚¯ãƒ©ã‚¹ã§ã™ã€‚
+* å€‹ã€…ã®æ©Ÿå™¨ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã«ç¶™æ‰¿ã•ã›ã¦ä½¿ç”¨ã—ã¾ã™ã€‚
+* @note OBCæ¨¡æ“¬ã‚³ãƒ³ãƒ<->SILSã¨ã¯UARTã¨åŒæ§˜ã«ãƒ‡ãƒ¼ã‚¿é€šä¿¡ã‚’è¡Œã†
 */
 
 #include "../ccsds_user.h"
@@ -21,9 +21,9 @@
 
 int CCSDS_init(void* my_ccsds_v)
 {
-  // ‰Šú‰»•K—v–³‚µ (‰Šú‰» API ‚ª–³‚¢)
+  // åˆæœŸåŒ–å¿…è¦ç„¡ã— (åˆæœŸåŒ– API ãŒç„¡ã„)
   CCSDS_Config* my_ccsds = (CCSDS_Config*)my_ccsds_v;
-  CCSDS_set_rate(0xAD,  my_ccsds); // ‰Šú’l 230.4 [kbps]
+  CCSDS_set_rate(0xAD,  my_ccsds); // åˆæœŸå€¤ 230.4 [kbps]
 
 #ifdef USE_SCI_COM_WINGS
   SILS_SIC_IF_init();

@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  ƒeƒŒƒƒgƒŠ’è‹`
- * @note   ‚±‚ÌƒR[ƒh‚Í©“®¶¬‚³‚ê‚Ä‚¢‚Ü‚·I
+ * @brief  ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªå®šç¾©
+ * @note   ã“ã®ã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ç”Ÿæˆã•ã‚Œã¦ã„ã¾ã™ï¼
  */
 #include "../../src_core/TlmCmd/telemetry_frame.h"
 #include "telemetry_definitions.h"

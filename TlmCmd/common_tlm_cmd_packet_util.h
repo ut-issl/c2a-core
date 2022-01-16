@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  CTCP ‚Ì”Ä—pUtil
+ * @brief  CTCP ã®æ±ç”¨Util
  */
 #ifndef COMMON_TLM_CMD_PACKET_UTIL_H_
 #define COMMON_TLM_CMD_PACKET_UTIL_H_
@@ -9,17 +9,17 @@
 
 /**
  * @enum   CTCP_UTIL_ACK
- * @brief  CTCP Utility ‚Ì”Ä—p•Ô‚è’l
- * @note   uint8_t ‚ğ‘z’è
+ * @brief  CTCP Utility ã®æ±ç”¨è¿”ã‚Šå€¤
+ * @note   uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  CTCP_UTIL_ACK_OK = 0,       //!< ³íI—¹
-  CTCP_UTIL_ACK_PARAM_ERR     //!< ƒpƒ‰ƒƒ^ƒGƒ‰[
+  CTCP_UTIL_ACK_OK = 0,       //!< æ­£å¸¸çµ‚äº†
+  CTCP_UTIL_ACK_PARAM_ERR     //!< ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚¨ãƒ©ãƒ¼
 } CTCP_UTIL_ACK;
 
 /**
- * @brief  AppÀsƒRƒ}ƒ“ƒh‚ğ¶¬
+ * @brief  Appå®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã‚’ç”Ÿæˆ
  * @param[in,out] packet: CTCP
  * @param[in]     ti: TI
  * @param[in]     id: AR_APP_ID
@@ -28,31 +28,31 @@ typedef enum
 void CCP_form_app_cmd(CTCP* packet, cycle_t ti, AR_APP_ID id);
 
 /**
- * @brief  Realtime command ‚ğ¶¬
- * @note   ˆø”‚ª•s³‚È‚Æ‚«C packet ‚Í NOP RTC ‚ğ•Ô‚·
+ * @brief  Realtime command ã‚’ç”Ÿæˆ
+ * @note   å¼•æ•°ãŒä¸æ­£ãªã¨ãï¼Œ packet ã¯ NOP RTC ã‚’è¿”ã™
  * @param[in,out] packet: CTCP
  * @param[in]     packet: CMD_CODE
- * @param[in]     *param: ƒpƒ‰ƒƒ^
- * @param[in]     len:    ƒpƒ‰ƒƒ^’·
+ * @param[in]     *param: ãƒ‘ãƒ©ãƒ¡ã‚¿
+ * @param[in]     len:    ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
  * @return CTCP_UTIL_ACK
  */
 CTCP_UTIL_ACK CCP_form_rtc(CTCP* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  Timeline command ‚ğ¶¬
- * @note   ˆø”‚ª•s³‚È‚Æ‚«C packet ‚Í NOP TLC ‚ğ•Ô‚·
+ * @brief  Timeline command ã‚’ç”Ÿæˆ
+ * @note   å¼•æ•°ãŒä¸æ­£ãªã¨ãï¼Œ packet ã¯ NOP TLC ã‚’è¿”ã™
  * @param[in,out] packet: CTCP
  * @param[in]     ti:     TI
  * @param[in]     packet: CMD_CODE
- * @param[in]     *param: ƒpƒ‰ƒƒ^
- * @param[in]     len:    ƒpƒ‰ƒƒ^’·
+ * @param[in]     *param: ãƒ‘ãƒ©ãƒ¡ã‚¿
+ * @param[in]     len:    ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
  * @return CTCP_UTIL_ACK
  */
 CTCP_UTIL_ACK CCP_form_tlc(CTCP* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  BC“WŠJ command ‚ğ¶¬
- * @note   ˆø”‚ª•s³‚È‚Æ‚«C packet ‚Í NOP RTC ‚ğ•Ô‚·
+ * @brief  BCå±•é–‹ command ã‚’ç”Ÿæˆ
+ * @note   å¼•æ•°ãŒä¸æ­£ãªã¨ãï¼Œ packet ã¯ NOP RTC ã‚’è¿”ã™
  * @param[in,out] packet: CTCP
  * @param[in]     tl_no: Timeline no
  * @param[in]     block_no: BC ID
@@ -61,73 +61,73 @@ CTCP_UTIL_ACK CCP_form_tlc(CTCP* packet, cycle_t ti, CMD_CODE cmd_id, const uint
 CTCP_UTIL_ACK CCP_form_block_deploy_cmd(CTCP* packet, uint8_t tl_no, bct_id_t block_no);
 
 /**
- * @brief  Realtime Command ‚©‚ç Timeline Command ‚Ö•ÏŠ·
- * @param[in,out] packet: •ÏŠ·‚·‚é packet
+ * @brief  Realtime Command ã‹ã‚‰ Timeline Command ã¸å¤‰æ›
+ * @param[in,out] packet: å¤‰æ›ã™ã‚‹ packet
  * @param[in]     ti:     TI
  * @return void
  */
 void CCP_convert_rtc_to_tlc(CTCP* packet, cycle_t ti);
 
 /**
- * @brief  CCP packet ‚©‚çCƒTƒCƒY‚ª 1 byte ‚ÌƒRƒ}ƒ“ƒhˆø”‚ğæ“¾‚·‚é
- * @note   ƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚Ìê‡‚ÍC 0 ‚ª‘ã“ü‚³‚ê‚½ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
- * @note   CCP_get_param_from_packet ƒ}ƒNƒ ‚Åg‚¤‚±‚Æ‚ğ‘z’è‚µCƒ†[ƒU[‚Í‚±‚ÌŠÖ”‚ğ’¼Ú’@‚­‚±‚Æ‚Í‘z’è‚µ‚Ä‚¢‚È‚¢
- * @param[in] packet: æ“¾‚·‚é packet
- * @param[in] n: N”Ô–Ú‚Ìˆø” i0‹NZj
- * @return ƒpƒ‰ƒƒ^‚ğ•Û‚µ‚½ƒ|ƒCƒ“ƒ^iŒ^‚ÍˆÓ–¡‚ğ‚à‚Á‚Ä‚È‚¢j
+ * @brief  CCP packet ã‹ã‚‰ï¼Œã‚µã‚¤ã‚ºãŒ 1 byte ã®ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã‚’å–å¾—ã™ã‚‹
+ * @note   ã‚»ã‚°ãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é•åã®å ´åˆã¯ï¼Œ 0 ãŒä»£å…¥ã•ã‚ŒãŸãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+ * @note   CCP_get_param_from_packet ãƒã‚¯ãƒ­ ã§ä½¿ã†ã“ã¨ã‚’æƒ³å®šã—ï¼Œãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã“ã®é–¢æ•°ã‚’ç›´æ¥å©ãã“ã¨ã¯æƒ³å®šã—ã¦ã„ãªã„
+ * @param[in] packet: å–å¾—ã™ã‚‹ packet
+ * @param[in] n: Nç•ªç›®ã®å¼•æ•° ï¼ˆ0èµ·ç®—ï¼‰
+ * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’ä¿æŒã—ãŸãƒã‚¤ãƒ³ã‚¿ï¼ˆå‹ã¯æ„å‘³ã‚’ã‚‚ã£ã¦ãªã„ï¼‰
  */
 uint8_t* CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n);
 
 /**
- * @brief  CCP packet ‚©‚çCƒTƒCƒY‚ª 2 byte ‚ÌƒRƒ}ƒ“ƒhˆø”‚ğæ“¾‚·‚é
- * @note   ƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚Ìê‡‚ÍC 0 ‚ª‘ã“ü‚³‚ê‚½ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
- * @note   CCP_get_param_from_packet ƒ}ƒNƒ ‚Åg‚¤‚±‚Æ‚ğ‘z’è‚µCƒ†[ƒU[‚Í‚±‚ÌŠÖ”‚ğ’¼Ú’@‚­‚±‚Æ‚Í‘z’è‚µ‚Ä‚¢‚È‚¢
- * @param[in] packet: æ“¾‚·‚é packet
- * @param[in] n: N”Ô–Ú‚Ìˆø” i0‹NZj
- * @return ƒpƒ‰ƒƒ^‚ğ•Û‚µ‚½ƒ|ƒCƒ“ƒ^iŒ^‚ÍˆÓ–¡‚ğ‚à‚Á‚Ä‚È‚¢j
+ * @brief  CCP packet ã‹ã‚‰ï¼Œã‚µã‚¤ã‚ºãŒ 2 byte ã®ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã‚’å–å¾—ã™ã‚‹
+ * @note   ã‚»ã‚°ãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é•åã®å ´åˆã¯ï¼Œ 0 ãŒä»£å…¥ã•ã‚ŒãŸãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+ * @note   CCP_get_param_from_packet ãƒã‚¯ãƒ­ ã§ä½¿ã†ã“ã¨ã‚’æƒ³å®šã—ï¼Œãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã“ã®é–¢æ•°ã‚’ç›´æ¥å©ãã“ã¨ã¯æƒ³å®šã—ã¦ã„ãªã„
+ * @param[in] packet: å–å¾—ã™ã‚‹ packet
+ * @param[in] n: Nç•ªç›®ã®å¼•æ•° ï¼ˆ0èµ·ç®—ï¼‰
+ * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’ä¿æŒã—ãŸãƒã‚¤ãƒ³ã‚¿ï¼ˆå‹ã¯æ„å‘³ã‚’ã‚‚ã£ã¦ãªã„ï¼‰
  */
 uint16_t* CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n);
 
 /**
- * @brief  CCP packet ‚©‚çCƒTƒCƒY‚ª 4 byte ‚ÌƒRƒ}ƒ“ƒhˆø”‚ğæ“¾‚·‚é
- * @note   ƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚Ìê‡‚ÍC 0 ‚ª‘ã“ü‚³‚ê‚½ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
- * @note   CCP_get_param_from_packet ƒ}ƒNƒ ‚Åg‚¤‚±‚Æ‚ğ‘z’è‚µCƒ†[ƒU[‚Í‚±‚ÌŠÖ”‚ğ’¼Ú’@‚­‚±‚Æ‚Í‘z’è‚µ‚Ä‚¢‚È‚¢
- * @param[in] packet: æ“¾‚·‚é packet
- * @param[in] n: N”Ô–Ú‚Ìˆø” i0‹NZj
- * @return ƒpƒ‰ƒƒ^‚ğ•Û‚µ‚½ƒ|ƒCƒ“ƒ^iŒ^‚ÍˆÓ–¡‚ğ‚à‚Á‚Ä‚È‚¢j
+ * @brief  CCP packet ã‹ã‚‰ï¼Œã‚µã‚¤ã‚ºãŒ 4 byte ã®ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã‚’å–å¾—ã™ã‚‹
+ * @note   ã‚»ã‚°ãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é•åã®å ´åˆã¯ï¼Œ 0 ãŒä»£å…¥ã•ã‚ŒãŸãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+ * @note   CCP_get_param_from_packet ãƒã‚¯ãƒ­ ã§ä½¿ã†ã“ã¨ã‚’æƒ³å®šã—ï¼Œãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã“ã®é–¢æ•°ã‚’ç›´æ¥å©ãã“ã¨ã¯æƒ³å®šã—ã¦ã„ãªã„
+ * @param[in] packet: å–å¾—ã™ã‚‹ packet
+ * @param[in] n: Nç•ªç›®ã®å¼•æ•° ï¼ˆ0èµ·ç®—ï¼‰
+ * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’ä¿æŒã—ãŸãƒã‚¤ãƒ³ã‚¿ï¼ˆå‹ã¯æ„å‘³ã‚’ã‚‚ã£ã¦ãªã„ï¼‰
  */
 uint32_t* CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n);
 
 /**
- * @brief  CCP packet ‚©‚çCƒTƒCƒY‚ª 8 byte ‚ÌƒRƒ}ƒ“ƒhˆø”‚ğæ“¾‚·‚é
- * @note   ƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚Ìê‡‚ÍC 0 ‚ª‘ã“ü‚³‚ê‚½ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
- * @note   CCP_get_param_from_packet ƒ}ƒNƒ ‚Åg‚¤‚±‚Æ‚ğ‘z’è‚µCƒ†[ƒU[‚Í‚±‚ÌŠÖ”‚ğ’¼Ú’@‚­‚±‚Æ‚Í‘z’è‚µ‚Ä‚¢‚È‚¢
- * @param[in] packet: æ“¾‚·‚é packet
- * @param[in] n: N”Ô–Ú‚Ìˆø” i0‹NZj
- * @return ƒpƒ‰ƒƒ^‚ğ•Û‚µ‚½ƒ|ƒCƒ“ƒ^iŒ^‚ÍˆÓ–¡‚ğ‚à‚Á‚Ä‚È‚¢j
+ * @brief  CCP packet ã‹ã‚‰ï¼Œã‚µã‚¤ã‚ºãŒ 8 byte ã®ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã‚’å–å¾—ã™ã‚‹
+ * @note   ã‚»ã‚°ãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é•åã®å ´åˆã¯ï¼Œ 0 ãŒä»£å…¥ã•ã‚ŒãŸãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+ * @note   CCP_get_param_from_packet ãƒã‚¯ãƒ­ ã§ä½¿ã†ã“ã¨ã‚’æƒ³å®šã—ï¼Œãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã“ã®é–¢æ•°ã‚’ç›´æ¥å©ãã“ã¨ã¯æƒ³å®šã—ã¦ã„ãªã„
+ * @param[in] packet: å–å¾—ã™ã‚‹ packet
+ * @param[in] n: Nç•ªç›®ã®å¼•æ•° ï¼ˆ0èµ·ç®—ï¼‰
+ * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’ä¿æŒã—ãŸãƒã‚¤ãƒ³ã‚¿ï¼ˆå‹ã¯æ„å‘³ã‚’ã‚‚ã£ã¦ãªã„ï¼‰
  */
 uint64_t* CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n);
 
 /**
- * @brief  CCP packet ‚©‚çCRAW ƒRƒ}ƒ“ƒhˆø”‚ğæ“¾‚·‚é
- * @note   RAW ƒpƒ‰ƒƒ^‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍC 0 ‚ğ•Ô‚·
- * @param[in]  packet: æ“¾‚·‚é packet
- * @param[out] dest: RAW ƒpƒ‰ƒƒ^ƒRƒs[æ
- * @param[in]  max_copy_len : ƒRƒs[‚·‚éÅ‘å’·D 0 ‚Ìê‡C–³§ŒÀ
- * @return ƒRƒs[‚µ‚½’·‚³
+ * @brief  CCP packet ã‹ã‚‰ï¼ŒRAW ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã‚’å–å¾—ã™ã‚‹
+ * @note   RAW ãƒ‘ãƒ©ãƒ¡ã‚¿ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ï¼Œ 0 ã‚’è¿”ã™
+ * @param[in]  packet: å–å¾—ã™ã‚‹ packet
+ * @param[out] dest: RAW ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚³ãƒ”ãƒ¼å…ˆ
+ * @param[in]  max_copy_len : ã‚³ãƒ”ãƒ¼ã™ã‚‹æœ€å¤§é•·ï¼ 0 ã®å ´åˆï¼Œç„¡åˆ¶é™
+ * @return ã‚³ãƒ”ãƒ¼ã—ãŸé•·ã•
  */
 uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t max_copy_len);
 
 /**
  * @def    CCP_get_param_from_packet(packet, n, type)
- * @brief  CCP packet ‚©‚çCn”Ô–Ú‚ÌƒRƒ}ƒ“ƒhˆø”‚ğæ“¾‚·‚é
- * @note   ƒZƒOƒƒ“ƒe[ƒVƒ‡ƒ“ˆá”½‚Ìê‡‚ÍC 0 ‚ğ•Ô‚·
- * @note   ŠÖ”‚Å‚Í‚È‚­ƒ}ƒNƒ‚Å‚ ‚é‚±‚Æ‚É’ˆÓ‚·‚é
- * @param[in] packet: æ“¾‚·‚é packet
- * @param[in] n: N”Ô–Ú‚Ìˆø” i0‹NZj
- * @param[in] type: æ“¾‚·‚éƒpƒ‰ƒƒ^‚ÌŒ^Dƒ†[ƒU[’è‹`Œ^‚Å‚àOK‚¾‚ªC enum ‚Í•s‰Â
- * @return ƒpƒ‰ƒƒ^iŒ^‚ÍˆÓ–¡‚ğ‚à‚Á‚Ä‚È‚¢j
- * @note   g—p—á
+ * @brief  CCP packet ã‹ã‚‰ï¼Œnç•ªç›®ã®ã‚³ãƒãƒ³ãƒ‰å¼•æ•°ã‚’å–å¾—ã™ã‚‹
+ * @note   ã‚»ã‚°ãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é•åã®å ´åˆã¯ï¼Œ 0 ã‚’è¿”ã™
+ * @note   é–¢æ•°ã§ã¯ãªããƒã‚¯ãƒ­ã§ã‚ã‚‹ã“ã¨ã«æ³¨æ„ã™ã‚‹
+ * @param[in] packet: å–å¾—ã™ã‚‹ packet
+ * @param[in] n: Nç•ªç›®ã®å¼•æ•° ï¼ˆ0èµ·ç®—ï¼‰
+ * @param[in] type: å–å¾—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ã‚¿ã®å‹ï¼ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©å‹ã§ã‚‚OKã ãŒï¼Œ enum ã¯ä¸å¯
+ * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ï¼ˆå‹ã¯æ„å‘³ã‚’ã‚‚ã£ã¦ãªã„ï¼‰
+ * @note   ä½¿ç”¨ä¾‹
  *         uint32_t param0 = CCP_get_param_from_packet(packet, 0, uint32_t);
  *         HOGE_ENUM param1 = (HOGE_ENUM)CCP_get_param_from_packet(packet, 1, uint8_t);
  */

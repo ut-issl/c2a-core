@@ -16,7 +16,7 @@
 
 /**
  * @brief
- * ŠeƒuƒƒbƒNƒRƒ}ƒ“ƒhID‚É’†g‚Ì‰Šú’l‚ğƒ[ƒh‚µ‚Ä‚¢‚­
+ * å„ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰IDã«ä¸­èº«ã®åˆæœŸå€¤ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¦ã„ã
  */
 void BC_load_defaults(void)
 {
@@ -25,7 +25,7 @@ void BC_load_defaults(void)
   BCL_load_bc(BC_SL_NOP,                    BCL_load_nop_sl);
 
   // Block Cmds for TaskList
-  // ‚±‚¢‚Â‚Í TDSP_initialize() ‚Å“WŠJ‚³‚ê‚é
+  // ã“ã„ã¤ã¯ TDSP_initialize() ã§å±•é–‹ã•ã‚Œã‚‹
   BCL_load_bc(BC_TL_START_UP,               BCL_load_initial_mode);
   BCL_load_bc(BC_TL_INITIAL,                BCL_load_initial_mode);
 

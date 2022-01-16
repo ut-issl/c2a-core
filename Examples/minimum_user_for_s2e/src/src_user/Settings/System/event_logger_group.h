@@ -1,35 +1,35 @@
 /**
  * @file
- * @brief event_logger ‚Ì ƒCƒxƒ“ƒg¯•ÊID‚ğ’è‹`
- * @note  ‘O”¼‚Í C2A core ‚Åg‚í‚ê‚é‚½‚ßCID‚Ì‚©‚Ô‚è‚É’ˆÓ‚·‚é‚±‚Æ
+ * @brief event_logger ã® ã‚¤ãƒ™ãƒ³ãƒˆè­˜åˆ¥IDã‚’å®šç¾©
+ * @note  å‰åŠã¯ C2A core ã§ä½¿ã‚ã‚Œã‚‹ãŸã‚ï¼ŒIDã®ã‹ã¶ã‚Šã«æ³¨æ„ã™ã‚‹ã“ã¨
  */
 #ifndef EVENT_LOGGER_GROUP_H_
 #define EVENT_LOGGER_GROUP_H_
 
 /**
  * @enum  EL_GROUP
- * @brief event_logger ‚Ì Event Group ‚Ì user ’è‹`•”•ª
- * @note  uint32_t ‚ğ‘z’è
- * @note  ‘O”¼‚Ì id ‚Í C2A core ‘¤‚Å EL_CORE_GROUP ‚Æ‚µ‚Ä’è‹`‚³‚ê‚Ä‚¢‚é‚±‚Æ‚É’ˆÓ‚·‚é
+ * @brief event_logger ã® Event Group ã® user å®šç¾©éƒ¨åˆ†
+ * @note  uint32_t ã‚’æƒ³å®š
+ * @note  å‰åŠã® id ã¯ C2A core å´ã§ EL_CORE_GROUP ã¨ã—ã¦å®šç¾©ã•ã‚Œã¦ã„ã‚‹ã“ã¨ã«æ³¨æ„ã™ã‚‹
  */
 typedef enum
 {
   // C2A CORE: 0-19
-  // src_core/System/EventManager/event_logger.h ‚Ì EL_CORE_GROUP ‚É‚Ä’è‹`
+  // src_core/System/EventManager/event_logger.h ã® EL_CORE_GROUP ã«ã¦å®šç¾©
 
   // CDH: 20-39
   EL_GROUP_UART = 20,         // TODO
   EL_GROUP_UART_REOPEN,
 
   // TEST
-  EL_GROUP_TEST             = 0xf0,        // pytest—p
-  EL_GROUP_TEST1            = 0xf1,        // pytest—p
-  EL_GROUP_TEST_EH          = 0xf2,        // pytest—p EH
-  EL_GROUP_TEST_EH_RESPOND  = 0xf3,        // pytest—p EH‚Ì‘Î‰ŒŸ’m—p
-  EL_GROUP_TEST_EH1         = 0xf4,        // pytest—p EH
+  EL_GROUP_TEST             = 0xf0,        // pytestç”¨
+  EL_GROUP_TEST1            = 0xf1,        // pytestç”¨
+  EL_GROUP_TEST_EH          = 0xf2,        // pytestç”¨ EH
+  EL_GROUP_TEST_EH_RESPOND  = 0xf3,        // pytestç”¨ EHã®å¯¾å¿œæ¤œçŸ¥ç”¨
+  EL_GROUP_TEST_EH1         = 0xf4,        // pytestç”¨ EH
 
-  // ‚Æ‚è‚ ‚¦‚¸Å‘å’l‚Í0xff‚ÉI
-  EL_GROUP_MAX = 0x100       // ‚±‚ê‚Í‚¢‚¶‚ç‚È‚¢I
+  // ã¨ã‚Šã‚ãˆãšæœ€å¤§å€¤ã¯0xffã«ï¼
+  EL_GROUP_MAX = 0x100       // ã“ã‚Œã¯ã„ã˜ã‚‰ãªã„ï¼
 } EL_GROUP;
 
 #endif

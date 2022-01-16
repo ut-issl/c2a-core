@@ -2,10 +2,10 @@
 #define AH_RULES_H_
 /**
  * @file
- * @brief  AH�̃��[�U�[��`������Core���番��
+ * @brief  AHのユーザー定義部分をCoreから分離
  */
 
-// �����_�ŁC�ő吔��128�I
+// 現時点で，最大数は128個！
 typedef enum
 {
   AH_RULE_SAMPLE

@@ -6,15 +6,15 @@
 #include <src_core/TlmCmd/block_command_table.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// SI‚ğg‚¤‚±‚Æ‚Í‚à‚¤”ñ„§III
-// •’Ê‚ÌBC‚ğg‚¤‚±‚ÆIIII
+// SIã‚’ä½¿ã†ã“ã¨ã¯ã‚‚ã†éæ¨å¥¨ï¼ï¼ï¼
+// æ™®é€šã®BCã‚’ä½¿ã†ã“ã¨ï¼ï¼ï¼ï¼
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 void SI_finish_transition(CTCP* packet);
 
 void SI_start_hk_tlm(CTCP* packet);
 
-// BC“WŠJ
+// BCå±•é–‹
 void SI_deploy_block(CTCP* packet, int line_no, bct_id_t block_no);
 
 

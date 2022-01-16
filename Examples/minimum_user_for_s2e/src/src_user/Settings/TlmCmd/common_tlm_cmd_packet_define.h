@@ -1,26 +1,26 @@
 /**
  * @file
- * @brief  CTCPŒ^‚Ì’è‹`
+ * @brief  CTCPåž‹ã®å®šç¾©
  */
 #ifndef COMMON_TLM_CMD_PACKET_DEFINE_H_
 #define COMMON_TLM_CMD_PACKET_DEFINE_H_
 
 #include "../../TlmCmd/Ccsds/TCPacket.h"
 
-// Žg—p‚·‚éƒpƒPƒbƒg\‘¢‘Ì‚ðCTCPŒ^‚Æ‚µ‚Ä’è‹`‚·‚é
+// ä½¿ç”¨ã™ã‚‹ãƒ‘ã‚±ãƒƒãƒˆæ§‹é€ ä½“ã‚’CTCPåž‹ã¨ã—ã¦å®šç¾©ã™ã‚‹
 typedef TCP CTCP;
 
-// ˆ¶æID‚ð’è‹`
+// å®›å…ˆIDã‚’å®šç¾©
 typedef TCP_APID CTCP_DEST_ID;
 
-// 2021-01-22 ’Ç‰Á
-// DEST_TYPE ‚ð’è‹`
+// 2021-01-22 è¿½åŠ 
+// DEST_TYPE ã‚’å®šç¾©
 typedef TCP_CMD_DEST_TYPE CCP_DEST_TYPE;
 
-// ƒeƒŒƒRƒ}ƒpƒPƒbƒg‚ÌÅ‘å’·‚ð’è‹`
+// ãƒ†ãƒ¬ã‚³ãƒžãƒ‘ã‚±ãƒƒãƒˆã®æœ€å¤§é•·ã‚’å®šç¾©
 #define CTCP_MAX_LEN (TCP_MAX_LEN)
 
-// Ž©•ªˆ¶‚ÄCMD‚ðŽ¦‚·Destination ID‚ð’è‹`
+// è‡ªåˆ†å®›ã¦CMDã‚’ç¤ºã™Destination IDã‚’å®šç¾©
 #define CTCP_MY_DST_ID (TCP_APID_MOBC_CMD)
 
 #endif

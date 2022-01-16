@@ -2,14 +2,14 @@
 /**
  * @file
  * @brief   uart_sils_sci_if
- * @details SILS‚ÅDriver‚ÌƒeƒXƒg‚ğ‚·‚é‚æ‚¤‚Éì‚Á‚½
-            ccsds_sils_sci_if.c/h‚Ì‚Ù‚ÚƒRƒs[
+ * @details SILSã§Driverã®ãƒ†ã‚¹ãƒˆã‚’ã™ã‚‹ã‚ˆã†ã«ä½œã£ãŸ
+            ccsds_sils_sci_if.c/hã®ã»ã¼ã‚³ãƒ”ãƒ¼
  */
 
 #include "uart_sils_sci_if.hpp"
 
 
-// Å‰‚¾‚¯‰Šú‰»‚µ‚ÄAƒvƒƒOƒ‰ƒ€I—¹‚Éƒ|[ƒg‚ğ•Â‚¶‚é‚æ‚¤‚É‚µ‚½‚¢
+// æœ€åˆã ã‘åˆæœŸåŒ–ã—ã¦ã€ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†æ™‚ã«ãƒãƒ¼ãƒˆã‚’é–‰ã˜ã‚‹ã‚ˆã†ã«ã—ãŸã„
 static SCIComPortUart sci_com_uart_;
 
 int SILS_SCI_UART_IF_init(void)
@@ -31,27 +31,27 @@ int SILS_SCI_UART_IF_RX(unsigned char* data_v, int count)
 
 SCIComPortUart::SCIComPortUart(void)
 {
-  // ƒrƒ‹ƒh’Ê‚ç‚È‚©‚Á‚½‚Ì‚ÅCZEUS‚©‚ç‚¿‚å‚Á‚Æ•Ï‚¦‚½
+  // ãƒ“ãƒ«ãƒ‰é€šã‚‰ãªã‹ã£ãŸã®ã§ï¼ŒZEUSã‹ã‚‰ã¡ã‚‡ã£ã¨å¤‰ãˆãŸ
   myHComPort_ = CreateFile("\\\\.\\COM13", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
   if ((int)myHComPort_ == -1)
   {
-    // ³í‚Éƒ|[ƒgƒI[ƒvƒ“‚Å‚«‚Ä‚¢‚È‚¢ê‡‚ÍI—¹
+    // æ­£å¸¸ã«ãƒãƒ¼ãƒˆã‚ªãƒ¼ãƒ—ãƒ³ã§ãã¦ã„ãªã„å ´åˆã¯çµ‚äº†
     CloseHandle(myHComPort_);
     init_success = false;
     return;
   }
 
-  // ‚Ç‚¤‚â‚ç³íƒ|[ƒgopen‚É‚È‚ç‚È‚¢‚Á‚Û‚­C‚±‚ê‚ª•K—v
+  // ã©ã†ã‚„ã‚‰æ­£å¸¸ãƒãƒ¼ãƒˆopenã«ãªã‚‰ãªã„ã£ã½ãï¼Œã“ã‚ŒãŒå¿…è¦
   init_success = true;
 
-  // ƒ|[ƒg‚Ìƒ{[ƒŒ[ƒgAƒpƒŠƒeƒB“™‚ğİ’è
+  // ãƒãƒ¼ãƒˆã®ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆã€ãƒ‘ãƒªãƒ†ã‚£ç­‰ã‚’è¨­å®š
   config_.BaudRate = 115200;
   config_.Parity = PARITY_NONE;
   config_.ByteSize = 8;
   config_.StopBits = STOPBITS_10;
 
-  // ParityAStopBitsADataBits‚à“¯—l‚Éİ’è
+  // Parityã€StopBitsã€DataBitsã‚‚åŒæ§˜ã«è¨­å®š
   SetCommState(myHComPort_, &config_);
 }
 
@@ -65,8 +65,8 @@ SCIComPortUart::~SCIComPortUart(void)
 
 int SCIComPortUart::Send(unsigned char* buffer, size_t offset, size_t count)
 {
-  DWORD toWriteBytes = count; // ‘—M‚µ‚½‚¢ƒoƒCƒg”
-  DWORD writeBytes;           // ÀÛ‚É‘—M‚³‚ê‚½ƒoƒCƒg”
+  DWORD toWriteBytes = count; // é€ä¿¡ã—ãŸã„ãƒã‚¤ãƒˆæ•°
+  DWORD writeBytes;           // å®Ÿéš›ã«é€ä¿¡ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
 
   if (init_success == true)
   {
@@ -82,10 +82,10 @@ int SCIComPortUart::Send(unsigned char* buffer, size_t offset, size_t count)
 
 int SCIComPortUart::Receive(unsigned char* buffer, size_t offset, size_t count)
 {
-  DWORD fromReadBytes = count; // óM‚µ‚½‚¢ƒoƒCƒg”
+  DWORD fromReadBytes = count; // å—ä¿¡ã—ãŸã„ãƒã‚¤ãƒˆæ•°
   DWORD dwErrors;
   COMSTAT ComStat;
-  DWORD dwCount;               // óM‚µ‚½ƒoƒCƒg”
+  DWORD dwCount;               // å—ä¿¡ã—ãŸãƒã‚¤ãƒˆæ•°
 
   if (init_success == true)
   {
@@ -101,7 +101,7 @@ int SCIComPortUart::Receive(unsigned char* buffer, size_t offset, size_t count)
       }
       else
       {
-        fromReadBytes = count; // “Ç‚İ‚İ‚·‚¬‚é‚Æƒf[ƒ^‚ª¸‚í‚ê‚é‚Ì‚Å“Ç‚İ‚Ş—Ê‚ğ§Œä
+        fromReadBytes = count; // èª­ã¿è¾¼ã¿ã™ãã‚‹ã¨ãƒ‡ãƒ¼ã‚¿ãŒå¤±ã‚ã‚Œã‚‹ã®ã§èª­ã¿è¾¼ã‚€é‡ã‚’åˆ¶å¾¡
         ReadFile(myHComPort_, buffer + offset, fromReadBytes, &dwCount, NULL);
       }
     }

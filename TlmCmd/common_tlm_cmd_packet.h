@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  CTCP ‚ÌéŒ¾
+ * @brief  CTCP ã®å®£è¨€
  * @note   CTCP: Common Tlm Cmd Packet
  * @note   CCP:  Common Cmd Packet
  * @note   CTP:  Common Tlm Packet
@@ -19,30 +19,30 @@
 
 /**
  * @enum   CCP_EXEC_STS
- * @brief  ƒRƒ}ƒ“ƒhÀsŒ‹‰ÊƒR[ƒh
- * @note   int‚ğ‘z’è
+ * @brief  ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œçµæœã‚³ãƒ¼ãƒ‰
+ * @note   intã‚’æƒ³å®š
  */
 typedef enum
 {
-  CCP_EXEC_PACKET_FMT_ERR = -6,     //!< packet handler ‚Å—p‚¢‚é
-  CCP_EXEC_ROUTING_FAILED = -5,     //!< command router ‚Å—p‚¢‚é
-  CCP_EXEC_CMD_NOT_DEFINED = -4,    //!< cmdExec ‚Å—p‚¢‚é
-  CCP_EXEC_ILLEGAL_CONTEXT = -3,    //!< ƒRƒ}ƒ“ƒhÀs‚Ì‚»‚Ì‘¼‚ÌƒGƒ‰[
-  CCP_EXEC_ILLEGAL_PARAMETER = -2,  //!< ƒRƒ}ƒ“ƒhÀs‚Ìƒpƒ‰ƒƒ^ƒGƒ‰[
-  CCP_EXEC_ILLEGAL_LENGTH = -1,     //!< ƒRƒ}ƒ“ƒhÀs‚ÌƒRƒ}ƒ“ƒhˆø”’·ƒGƒ‰[
-  CCP_EXEC_SUCCESS = 0,             /*!< ƒRƒ}ƒ“ƒhÀs¬Œ÷
-                                         ‚È‚¨CƒRƒ}ƒ“ƒh‚ÌÀs‚ÌŒ‹‰Ê‚È‚Ì‚ÅC‚»‚ÌŒã‚Ìˆ—‚ª¸”s‚µ‚Ä‚àCƒRƒ}ƒ“ƒh‚ªÀs‚³‚ê‚Ä‚¢‚ê‚Î‚±‚ê‚ğ•Ô‚· */
-  CCP_EXEC_UNKNOWN                  //!< “à•”ˆ——pDg‚í‚È‚¢D
+  CCP_EXEC_PACKET_FMT_ERR = -6,     //!< packet handler ã§ç”¨ã„ã‚‹
+  CCP_EXEC_ROUTING_FAILED = -5,     //!< command router ã§ç”¨ã„ã‚‹
+  CCP_EXEC_CMD_NOT_DEFINED = -4,    //!< cmdExec ã§ç”¨ã„ã‚‹
+  CCP_EXEC_ILLEGAL_CONTEXT = -3,    //!< ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œæ™‚ã®ãã®ä»–ã®ã‚¨ãƒ©ãƒ¼
+  CCP_EXEC_ILLEGAL_PARAMETER = -2,  //!< ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œæ™‚ã®ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚¨ãƒ©ãƒ¼
+  CCP_EXEC_ILLEGAL_LENGTH = -1,     //!< ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œæ™‚ã®ã‚³ãƒãƒ³ãƒ‰å¼•æ•°é•·ã‚¨ãƒ©ãƒ¼
+  CCP_EXEC_SUCCESS = 0,             /*!< ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡ŒæˆåŠŸ
+                                         ãªãŠï¼Œã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã®çµæœãªã®ã§ï¼Œãã®å¾Œã®å‡¦ç†ãŒå¤±æ•—ã—ã¦ã‚‚ï¼Œã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œã•ã‚Œã¦ã„ã‚Œã°ã“ã‚Œã‚’è¿”ã™ */
+  CCP_EXEC_UNKNOWN                  //!< å†…éƒ¨å‡¦ç†ç”¨ï¼ä½¿ã‚ãªã„ï¼
 } CCP_EXEC_STS;
 
 
-#include "block_command_table.h"      // CTCP, CCP_EXEC_STS ‚Ì’è‹`‚æ‚è‚ ‚Æ‚É include
+#include "block_command_table.h"      // CTCP, CCP_EXEC_STS ã®å®šç¾©ã‚ˆã‚Šã‚ã¨ã« include
 
 
 /**
  * @enum   CTCP_TC_DSC (Tlm Cmd Discrimination)
- * @brief  tlm or cmd ‚ğ‹K’è
- * @note   uint8_t‚ğ‘z’è
+ * @brief  tlm or cmd ã‚’è¦å®š
+ * @note   uint8_tã‚’æƒ³å®š
  */
 typedef enum
 {
@@ -53,12 +53,12 @@ typedef enum
 
 /**
  * @enum   CCP_EXEC_TYPE
- * @brief  ƒRƒ}ƒ“ƒhÀsí•Ê
- * @note   0x0*‚ğ‘z’èiãˆÊ4bit‚Í‘¼‚ÌC2A‚ğ“‹Ú‚µ‚½ƒ{[ƒh—p‚É“]‘—‚·‚é‚½‚ß‚Ég‚¤‚½‚ßj
- *         ‚»‚Ì’è‹`‚ÍTCP_DEST_TYPE‚É‚ ‚é
- * @note   TCP_CMD_EXEC_TYPE ‚Æ CCP_EXEC_TYPE ‚Ì’è‹`‚Íˆê’v (³Šm‚É‚ÍA‘OÒ‚ÍŒãÒ‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚é)
- *         CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet) ‚ğQÆ
- * @note   GS‚©‚ç‚ÌOBC.TL‚âCC2A“à‚ÌCCP_form_tlc‚Í‚·‚×‚ÄTL0ˆµ‚¢‚É‚È‚é
+ * @brief  ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œç¨®åˆ¥
+ * @note   0x0*ã‚’æƒ³å®šï¼ˆä¸Šä½4bitã¯ä»–ã®C2Aã‚’æ­è¼‰ã—ãŸãƒœãƒ¼ãƒ‰ç”¨ã«è»¢é€ã™ã‚‹ãŸã‚ã«ä½¿ã†ãŸã‚ï¼‰
+ *         ãã®å®šç¾©ã¯TCP_DEST_TYPEã«ã‚ã‚‹
+ * @note   TCP_CMD_EXEC_TYPE ã¨ CCP_EXEC_TYPE ã®å®šç¾©ã¯ä¸€è‡´ (æ­£ç¢ºã«ã¯ã€å‰è€…ã¯å¾Œè€…ã«å«ã¾ã‚Œã¦ã„ã‚‹)
+ *         CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet) ã‚’å‚ç…§
+ * @note   GSã‹ã‚‰ã®OBC.TLã‚„ï¼ŒC2Aå†…ã®CCP_form_tlcã¯ã™ã¹ã¦TL0æ‰±ã„ã«ãªã‚‹
  */
 typedef enum
 {
@@ -74,8 +74,8 @@ typedef enum
 
 /**
  * @enum   CTP_DEST_FLAG
- * @brief  ”z‘—æw’èDƒeƒŒƒ‚ÌƒLƒ…[‚ğw’è‚·‚éƒtƒ‰ƒOD
- * @note   4bit‚Ìƒtƒ‰ƒODd‘—‚Å‚«‚é‚æ‚¤‚ÉCbit‚²‚Æ‚Ìƒtƒ‰ƒO‚Æ‚·‚é
+ * @brief  é…é€å…ˆæŒ‡å®šï¼ãƒ†ãƒ¬ãƒ¡ã®ã‚­ãƒ¥ãƒ¼ã‚’æŒ‡å®šã™ã‚‹ãƒ•ãƒ©ã‚°ï¼
+ * @note   4bitã®ãƒ•ãƒ©ã‚°ï¼é‡é€ã§ãã‚‹ã‚ˆã†ã«ï¼Œbitã”ã¨ã®ãƒ•ãƒ©ã‚°ã¨ã™ã‚‹
  */
 typedef enum
 {
@@ -92,17 +92,17 @@ typedef enum
 // ********************
 
 /**
- * @brief  tlm ‚© cmd ‚©‚ğ”»’f
+ * @brief  tlm ã‹ cmd ã‹ã‚’åˆ¤æ–­
  * @param  packet: CTCP packet
  * @return CTCP_TC_DSC
  */
 CTCP_TC_DSC CTCP_get_tc_dsc(const CTCP* packet);
 
 /**
- * @brief  CTCP ‚ğƒRƒs[
- * @note   userÀ‘•Ÿ‘æ‚¾‚ªC‚‘¬‰»‚Ì‚½‚ß‚·‚·‚×‚Ä‚Å‚Í‚È‚­•K—vÅ’áŒÀ‚µ‚©ƒRƒs[‚µ‚È‚¢ê‡‚à‚ ‚é
- * @param[in,out] dest: ƒRƒs[æ CTCP
- * @param[in]     src:  ƒRƒs[Œ³ CTCP
+ * @brief  CTCP ã‚’ã‚³ãƒ”ãƒ¼
+ * @note   userå®Ÿè£…æ¬¡ç¬¬ã ãŒï¼Œé«˜é€ŸåŒ–ã®ãŸã‚ã™ã™ã¹ã¦ã§ã¯ãªãå¿…è¦æœ€ä½é™ã—ã‹ã‚³ãƒ”ãƒ¼ã—ãªã„å ´åˆã‚‚ã‚ã‚‹
+ * @param[in,out] dest: ã‚³ãƒ”ãƒ¼å…ˆ CTCP
+ * @param[in]     src:  ã‚³ãƒ”ãƒ¼å…ƒ CTCP
  * @return void
  */
 void CTCP_copy_packet(CTCP* dest, const CTCP* src);
@@ -113,14 +113,14 @@ void CTCP_copy_packet(CTCP* dest, const CTCP* src);
 // *******************
 
 /**
- * @brief  TI ‚ğæ“¾
+ * @brief  TI ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return ti
  */
 cycle_t CCP_get_ti(const CTCP* packet);
 
 /**
- * @brief  TI ‚ğİ’è
+ * @brief  TI ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
  * @param[in]     ti: TI
  * @return void
@@ -128,29 +128,29 @@ cycle_t CCP_get_ti(const CTCP* packet);
 void CCP_set_ti(CTCP* packet, cycle_t ti);
 
 /**
- * @brief  ˆ¶æ (TCP‚Å‚ÍAPID) ‚ğæ“¾
+ * @brief  å®›å…ˆ (TCPã§ã¯APID) ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return CTCP_DEST_ID
  */
 CTCP_DEST_ID CCP_get_dest_id(const CTCP* packet);
 
 /**
- * @brief  ˆ¶æ (TCP‚Å‚ÍAPID) ‚ğİ’è
+ * @brief  å®›å…ˆ (TCPã§ã¯APID) ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
- * @param[in]     id: ˆ¶æ
+ * @param[in]     id: å®›å…ˆ
  * @return void
  */
 void CCP_set_dest_id(CTCP* packet, CTCP_DEST_ID id);
 
 /**
- * @brief  EXEC_TYPE ‚ğæ“¾
+ * @brief  EXEC_TYPE ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return CCP_EXEC_TYPE
  */
 CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet);
 
 /**
- * @brief  EXEC_TYPE ‚ğİ’è
+ * @brief  EXEC_TYPE ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
  * @param[in]     type: EXEC_TYPE
  * @return void
@@ -158,31 +158,31 @@ CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet);
 void CCP_set_exec_type(CTCP* packet, CCP_EXEC_TYPE type);
 
 /**
- * @brief  DEST_TYPE ‚ğæ“¾
+ * @brief  DEST_TYPE ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return CCP_DEST_TYPE
- * @note   2021/01/22‚É CCP_EXEC_TYPE ‚ÌãˆÊ4bit‚ğ”qØ‚·‚éŒ`‚Å’Ç‰ÁÀ‘•
+ * @note   2021/01/22ã« CCP_EXEC_TYPE ã®ä¸Šä½4bitã‚’æ‹å€Ÿã™ã‚‹å½¢ã§è¿½åŠ å®Ÿè£…
  */
 CCP_DEST_TYPE CCP_get_dest_type(const CTCP* packet);
 
 /**
- * @brief  DEST_TYPE ‚ğİ’è
+ * @brief  DEST_TYPE ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
  * @param[in]     type: DEST_TYPE
  * @return void
- * @note   2021/01/22‚É CCP_EXEC_TYPE ‚ÌãˆÊ4bit‚ğ”qØ‚·‚éŒ`‚Å’Ç‰ÁÀ‘•
+ * @note   2021/01/22ã« CCP_EXEC_TYPE ã®ä¸Šä½4bitã‚’æ‹å€Ÿã™ã‚‹å½¢ã§è¿½åŠ å®Ÿè£…
  */
 void CCP_set_dest_type(CTCP* packet, CCP_DEST_TYPE type);
 
 /**
- * @brief  CMD ID ‚ğæ“¾
+ * @brief  CMD ID ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return CMD_CODE
  */
 CMD_CODE CCP_get_id(const CTCP* packet);
 
 /**
- * @brief  CMD ID ‚ğİ’è
+ * @brief  CMD ID ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
  * @param[in]     id: CMD_CODE
  * @return void
@@ -190,43 +190,43 @@ CMD_CODE CCP_get_id(const CTCP* packet);
 void CCP_set_id(CTCP* packet, CMD_CODE id);
 
 /**
- * @brief  CTCP (CCP) ‚ÌƒpƒPƒbƒg’·‚ğæ“¾
+ * @brief  CTCP (CCP) ã®ãƒ‘ã‚±ãƒƒãƒˆé•·ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return packet len
  */
 uint16_t CCP_get_packet_len(const CTCP* packet);
 
 /**
- * @brief  CMD ƒpƒ‰ƒƒ^’·‚ğæ“¾
+ * @brief  CMD ãƒ‘ãƒ©ãƒ¡ã‚¿é•·ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return param len
  */
 uint16_t CCP_get_param_len(const CTCP* packet);
 
 /**
- * @brief  CMD ƒpƒ‰ƒƒ^’·‚ÌÅ‘å’l‚ğæ“¾
+ * @brief  CMD ãƒ‘ãƒ©ãƒ¡ã‚¿é•·ã®æœ€å¤§å€¤ã‚’å–å¾—
  * @return max param len
  */
 uint16_t CCP_get_max_param_len(void);
 
 /**
- * @brief  æ“ª‚Ìƒpƒ‰ƒƒ^‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾
+ * @brief  å…ˆé ­ã®ãƒ‘ãƒ©ãƒ¡ã‚¿ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return *param_head
  */
 const uint8_t* CCP_get_param_head(const CTCP* packet);
 
 /**
- * @brief  ƒpƒ‰ƒƒ^‚ğİ’è
+ * @brief  ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
- * @param[in]     param: ƒpƒ‰ƒƒ^”z—ñ‚Ìƒ|ƒCƒ“ƒ^
- * @param[in]     len:   ƒpƒ‰ƒƒ^’·
+ * @param[in]     param: ãƒ‘ãƒ©ãƒ¡ã‚¿é…åˆ—ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param[in]     len:   ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
  * @return void
  */
 void CCP_set_param(CTCP* packet, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  ‹¤’Ê•”•ª‚Ì Header ‚ğ\’z
+ * @brief  å…±é€šéƒ¨åˆ†ã® Header ã‚’æ§‹ç¯‰
  * @param[in,out] packet: CTCP
  * @return void
  */
@@ -238,14 +238,14 @@ void CCP_set_common_hdr(CTCP* packet);
 // *******************
 
 /**
- * @brief  CTP_DEST_FLAG ‚ğæ“¾
+ * @brief  CTP_DEST_FLAG ã‚’å–å¾—
  * @param  packet: CTCP packet
  * @return CTP_DEST_FLAG
  */
 CTP_DEST_FLAG CTP_get_dest_flag(const CTCP* packet);
 
 /**
- * @brief  CTP_DEST_FLAG ‚ğİ’è
+ * @brief  CTP_DEST_FLAG ã‚’è¨­å®š
  * @param[in,out] packet: CTCP
  * @param[in]     flag: CTP_DEST_FLAG
  * @return void
@@ -253,10 +253,10 @@ CTP_DEST_FLAG CTP_get_dest_flag(const CTCP* packet);
 void CTP_set_dest_flag(CTCP* packet, CTP_DEST_FLAG flag);
 
 /**
- * @brief  ADU•ªŠ„‚È‚µ‚Ìê‡‚ÌUser Dataæ“ª‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾
+ * @brief  ADUåˆ†å‰²ãªã—ã®å ´åˆã®User Dataå…ˆé ­ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
  * @param  packet: CTCP packet
- * @note   TCP‚Ìê‡CADU•ªŠ„‚È‚µ‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾
- * @note   ‚±‚ÌŠÖ”‚Åæ“¾‚µ‚½ƒ|ƒCƒ“ƒ^Œo—R‚Åtlm‚Ìƒf[ƒ^‚ğƒZƒbƒg‚·‚é–‚ª‚ ‚é‚½‚ßCconst‚ğ‚Â‚¯‚Ä‚¢‚È‚¢
+ * @note   TCPã®å ´åˆï¼ŒADUåˆ†å‰²ãªã—æ™‚ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
+ * @note   ã“ã®é–¢æ•°ã§å–å¾—ã—ãŸãƒã‚¤ãƒ³ã‚¿çµŒç”±ã§tlmã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆã™ã‚‹äº‹ãŒã‚ã‚‹ãŸã‚ï¼Œconstã‚’ã¤ã‘ã¦ã„ãªã„
  */
 uint8_t* CTP_get_user_data_head(CTCP* packet);
 

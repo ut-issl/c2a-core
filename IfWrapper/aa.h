@@ -1,12 +1,12 @@
 /**
  * @file
- * @brief AA(ActiveAnalog)���b�p�[�̃N���X�ł��B
+ * @brief AA(ActiveAnalog)ラッパーのクラスです。
  *
- * AA(ActiveAnalog)���b�p�[�́A
- * AA�̃C���^�[�t�F�[�X���������A
- * AA�|�[�g�̏������A�d���l�擾���s���A
- * AA���b�p�[�̃N���X�ł��B
- * �X�̋@��̃C���^�[�t�F�[�X���W���[���Ɍp��?�����Ďg�p���܂��B
+ * AA(ActiveAnalog)ラッパーは、
+ * AAのインターフェースを実現し、
+ * AAポートの初期化、電圧値取得を行う、
+ * AAラッパーのクラスです。
+ * 個々の機器のインターフェースモジュールに継承?せさて使用します。
  */
 
 #ifndef AA_H_
@@ -16,11 +16,11 @@
 
 /**
  * @class AA_Config
- * @brief AA�|�[�g�̏������A�d���l�擾�̍ۂɕK�v�ƂȂ�ݒ�����i�[����\���̂ł��B
+ * @brief AAポートの初期化、電圧値取得の際に必要となる設定情報を格納する構造体です。
  */
 typedef struct
 {
-  uint8_t ch; /**< @protected @brief  �`���l���w���bit0���|�[�g1�ɁAbit7���|�[�g8�ɑΉ����A1��ݒ肵���|�[�g�̓d���l�������擾���܂��B*/
+  uint8_t ch; /**< @protected @brief  チャネル指定のbit0がポート1に、bit7がポート8に対応し、1を設定したポートの電圧値だけを取得します。*/
 } AA_Config;
 
 

@@ -11,7 +11,7 @@
 
 /**
  * @struct TCP_PacketParams
- * @brief  packet‚©‚çƒf[ƒ^‚ğ”²‚«æ‚é‚Æ‚«‚Ìƒpƒ‰ƒƒ^
+ * @brief  packetã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’æŠœãå–ã‚‹ã¨ãã®ãƒ‘ãƒ©ãƒ¡ã‚¿
  */
 typedef struct
 {
@@ -23,25 +23,25 @@ typedef struct
 static const TCP_PacketParams TCP_pp_ver_              = { 0, 0xe0, 5};  // 11100000b
 static const TCP_PacketParams TCP_pp_type_             = { 0, 0x10, 4};  // 00010000b
 static const TCP_PacketParams TCP_pp_2nd_hdr_flag_     = { 0, 0x08, 3};  // 00001000b
-static const TCP_PacketParams TCP_pp_apid_             = { 0, 0x07, 0};  // 00000111b    // 2byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
+static const TCP_PacketParams TCP_pp_apid_             = { 0, 0x07, 0};  // 00000111b    // 2byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
 static const TCP_PacketParams TCP_pp_seq_flag_         = { 2, 0xc0, 6};  // 11000000b
-static const TCP_PacketParams TCP_pp_seq_cnt_          = { 2, 0x3f, 0};  // 00111111b    // 2byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
-static const TCP_PacketParams TCP_pp_packet_len_       = { 4, 0xff, 0};  // 11111111b    // 2byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
+static const TCP_PacketParams TCP_pp_seq_cnt_          = { 2, 0x3f, 0};  // 00111111b    // 2byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
+static const TCP_PacketParams TCP_pp_packet_len_       = { 4, 0xff, 0};  // 11111111b    // 2byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
 
 static const TCP_PacketParams TCP_CMD_pp_fmt_id_       = { 6, 0xff, 0};  // 11111111b
 static const TCP_PacketParams TCP_CMD_pp_type_         = { 7, 0xff, 0};  // 11111111b
-static const TCP_PacketParams TCP_CMD_pp_ch_id_        = { 8, 0xff, 0};  // 11111111b    // 2byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
-static const TCP_PacketParams TCP_CMD_pp_exec_type_    = {10, 0x0f, 0};  // 00001111b    // TCP_CMD_DEST_TYPE ‚Æ‹¤—p‚µ‚Ä‚¢‚é‚±‚Æ‚É’ˆÓ
-static const TCP_PacketParams TCP_CMD_pp_dest_type_    = {10, 0xf0, 0};  // 11110000b    // TCP_CMD_EXEC_TYPE ‚Æ‹¤—p‚µ‚Ä‚¢‚é‚±‚Æ‚É’ˆÓ
-static const TCP_PacketParams TCP_CMD_pp_ti_           = {11, 0xff, 0};  // 11111111b    // 4byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
+static const TCP_PacketParams TCP_CMD_pp_ch_id_        = { 8, 0xff, 0};  // 11111111b    // 2byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
+static const TCP_PacketParams TCP_CMD_pp_exec_type_    = {10, 0x0f, 0};  // 00001111b    // TCP_CMD_DEST_TYPE ã¨å…±ç”¨ã—ã¦ã„ã‚‹ã“ã¨ã«æ³¨æ„
+static const TCP_PacketParams TCP_CMD_pp_dest_type_    = {10, 0xf0, 0};  // 11110000b    // TCP_CMD_EXEC_TYPE ã¨å…±ç”¨ã—ã¦ã„ã‚‹ã“ã¨ã«æ³¨æ„
+static const TCP_PacketParams TCP_CMD_pp_ti_           = {11, 0xff, 0};  // 11111111b    // 4byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
 
-static const TCP_PacketParams TCP_TLM_pp_ti_           = { 6, 0xff, 0};  // 11111111b    // 4byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
+static const TCP_PacketParams TCP_TLM_pp_ti_           = { 6, 0xff, 0};  // 11111111b    // 4byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
 static const TCP_PacketParams TCP_TLM_pp_category_     = {10, 0xff, 0};  // 11111111b
 static const TCP_PacketParams TCP_TLM_pp_packet_id_    = {11, 0xff, 0};  // 11111111b
 static const TCP_PacketParams TCP_TLM_pp_adu_seq_flag_ = {12, 0xc0, 6};  // 11000000b
 static const TCP_PacketParams TCP_TLM_pp_adu_cnt_      = {12, 0x3f, 0};  // 00111111b
-static const TCP_PacketParams TCP_TLM_pp_adu_seq_cnt_  = {13, 0xff, 0};  // 11111111b    // 2byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
-static const TCP_PacketParams TCP_TLM_pp_adu_len_      = {15, 0xff, 0};  // 11111111b    // 3byte‚É‚Ü‚½‚ª‚é‚±‚Æ‚É’ˆÓ
+static const TCP_PacketParams TCP_TLM_pp_adu_seq_cnt_  = {13, 0xff, 0};  // 11111111b    // 2byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
+static const TCP_PacketParams TCP_TLM_pp_adu_len_      = {15, 0xff, 0};  // 11111111b    // 3byteã«ã¾ãŸãŒã‚‹ã“ã¨ã«æ³¨æ„
 
 
 // *******************
@@ -166,13 +166,13 @@ uint16_t TCP_get_packet_len(const TCP* tcp)
   packet_len <<= 8;
   packet_len += tcp->packet[TCP_pp_packet_len_.pos + 1];
 
-  // TCPacket‚ÌLength‚Í0‹NZ•\‹L‚È‚Ì‚Å1‹NZ‚É•ÏŠ·‚µ‚Ä•Ô‚·
+  // TCPacketã®Lengthã¯0èµ·ç®—è¡¨è¨˜ãªã®ã§1èµ·ç®—ã«å¤‰æ›ã—ã¦è¿”ã™
   return (uint16_t)(packet_len + 1);
 }
 
 void TCP_set_packet_len(TCP* tcp, uint16_t len)
 {
-  uint16_t z_origin = (uint16_t)(len - 1);  // CCSDS‚Ìƒf[ƒ^’·‚Í0‹NZ•\‹L‚È‚Ì‚Å1‹NZ‚ğ•ÏŠ·
+  uint16_t z_origin = (uint16_t)(len - 1);  // CCSDSã®ãƒ‡ãƒ¼ã‚¿é•·ã¯0èµ·ç®—è¡¨è¨˜ãªã®ã§1èµ·ç®—ã‚’å¤‰æ›
   uint8_t val = (uint8_t)(z_origin >> 8 & TCP_pp_packet_len_.mask);
 
   tcp->packet[TCP_pp_packet_len_.pos] &= (uint8_t)(~TCP_pp_packet_len_.mask);
@@ -185,7 +185,7 @@ void TCP_set_packet_len(TCP* tcp, uint16_t len)
 void TCP_copy_packet(TCP* dest, const TCP* src)
 {
   uint16_t cmd_packet_len = (uint16_t)(TCP_get_packet_len(src) + TCP_PRM_HDR_LEN);
-  // ‚‘¬‰»‚Ì‚½‚ß‚ÉC\‘¢‘Ì‚Ì‚·‚×‚Ä‚ğƒRƒs[‚¹‚¸C•K—vÅ’áŒÀ‚µ‚©ƒRƒs[‚µ‚Ä‚¢‚È‚¢
+  // é«˜é€ŸåŒ–ã®ãŸã‚ã«ï¼Œæ§‹é€ ä½“ã®ã™ã¹ã¦ã‚’ã‚³ãƒ”ãƒ¼ã›ãšï¼Œå¿…è¦æœ€ä½é™ã—ã‹ã‚³ãƒ”ãƒ¼ã—ã¦ã„ãªã„
   memcpy(dest->packet, src->packet, (size_t)cmd_packet_len);
 }
 
@@ -259,8 +259,8 @@ void TCP_CMD_set_channel_id(TCP* tcp, uint16_t id)
   tcp->packet[TCP_CMD_pp_ch_id_.pos + 1] = val;
 }
 
-// 2021/01/22 TCP_CMD_DEST_TYPE ‚Ì’a¶‚É”º‚¢C‰ºˆÊ4bit‚Ì‚İ‚Ìmask‚É‚È‚Á‚½
-// ‚±‚ê‚ªpure TCP‚Æ‚Ìˆá‚¢
+// 2021/01/22 TCP_CMD_DEST_TYPE ã®èª•ç”Ÿã«ä¼´ã„ï¼Œä¸‹ä½4bitã®ã¿ã®maskã«ãªã£ãŸ
+// ã“ã‚ŒãŒpure TCPã¨ã®é•ã„
 TCP_CMD_EXEC_TYPE TCP_CMD_get_exec_type(const TCP* tcp)
 {
   TCP_CMD_EXEC_TYPE exec_type = (TCP_CMD_EXEC_TYPE)((tcp->packet[TCP_CMD_pp_exec_type_.pos] & TCP_CMD_pp_exec_type_.mask) >>
@@ -279,8 +279,8 @@ TCP_CMD_EXEC_TYPE TCP_CMD_get_exec_type(const TCP* tcp)
   }
 }
 
-// 2021/01/22 TCP_CMD_DEST_TYPE ‚Ì’a¶‚É”º‚¢C‰ºˆÊ4bit‚Ì‚İ‚Ìmask‚É‚È‚Á‚½
-// ‚±‚ê‚ªpure TCP‚Æ‚Ìˆá‚¢
+// 2021/01/22 TCP_CMD_DEST_TYPE ã®èª•ç”Ÿã«ä¼´ã„ï¼Œä¸‹ä½4bitã®ã¿ã®maskã«ãªã£ãŸ
+// ã“ã‚ŒãŒpure TCPã¨ã®é•ã„
 void TCP_CMD_set_exec_type(TCP* tcp, TCP_CMD_EXEC_TYPE type)
 {
   uint8_t val = (uint8_t)(type << TCP_CMD_pp_exec_type_.offset);
@@ -342,32 +342,32 @@ const uint8_t* TCP_CMD_get_param_head(const TCP* tcp)
 
 void TCP_CMD_set_param(TCP* tcp, const uint8_t* param, uint16_t len)
 {
-  // ƒpƒ‰ƒ[ƒ^‚ğƒpƒPƒbƒg‚ÉƒRƒs[
-  // param‚ÍŠù‚É¬Œ`‚³‚ê‚Ä‚¢‚é‚Ì‚Å‚±‚±‚Í endian_memcpy ‚Å‚Í‚È‚­ memcpy (param‚Ì”, í—Ş‚È‚Ç‚ª‚±‚ÌŠÖ”‚©‚ç‚Í•s–¾)
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ãƒ‘ã‚±ãƒƒãƒˆã«ã‚³ãƒ”ãƒ¼
+  // paramã¯æ—¢ã«æˆå½¢ã•ã‚Œã¦ã„ã‚‹ã®ã§ã“ã“ã¯ endian_memcpy ã§ã¯ãªã memcpy (paramã®æ•°, ç¨®é¡ãªã©ãŒã“ã®é–¢æ•°ã‹ã‚‰ã¯ä¸æ˜)
   memcpy(&(tcp->packet[TCP_PRM_HDR_LEN + TCP_CMD_2ND_HDR_LEN + TCP_CMD_USER_HDR_LEN]), param, (size_t)len);
 
-  // ƒpƒ‰ƒ[ƒ^’·‚É‡‚í‚¹ƒpƒPƒbƒg’·‚ğİ’è
-  // ƒpƒPƒbƒg’·‚Íƒwƒbƒ_•ª‚ª‰ÁZ‚³‚ê‚é
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é•·ã«åˆã‚ã›ãƒ‘ã‚±ãƒƒãƒˆé•·ã‚’è¨­å®š
+  // ãƒ‘ã‚±ãƒƒãƒˆé•·ã¯ãƒ˜ãƒƒãƒ€åˆ†ãŒåŠ ç®—ã•ã‚Œã‚‹
   TCP_set_packet_len(tcp, (uint16_t)(TCP_CMD_2ND_HDR_LEN + TCP_CMD_USER_HDR_LEN + len));
 }
 
 void TCP_CMD_set_common_hdr(TCP* tcp)
 {
-  // ‚±‚±‚Å‚ÍVersion Number‚ÍVersion-1ŒÅ’è
+  // ã“ã“ã§ã¯Version Numberã¯Version-1å›ºå®š
   TCP_set_ver(tcp, TCP_VER_1);
-  // Command Packet‚È‚Ì‚ÅType‚ÍTelecommandŒÅ’è
+  // Command Packetãªã®ã§Typeã¯Telecommandå›ºå®š
   TCP_set_type(tcp, TCP_TYPE_CMD);
-  // ‚±‚±‚Å‚ÍSecondary Header‚Í•K{
+  // ã“ã“ã§ã¯Secondary Headerã¯å¿…é ˆ
   TCP_set_2nd_hdr_flag(tcp, TCP_2ND_HDR_PRESENT);
   // APID
   TCP_set_apid(tcp, CTCP_MY_DST_ID);
-  // ‚±‚±‚Å‚ÍSequence Flag‚ÍStandalone Packet‚ÉŒÅ’è
+  // ã“ã“ã§ã¯Sequence Flagã¯Standalone Packetã«å›ºå®š
   TCP_set_seq_flag(tcp, TCP_SEQ_SINGLE);
-  // ‚±‚±‚Å‚ÍSequence Count‚Í0ŒÅ’è
+  // ã“ã“ã§ã¯Sequence Countã¯0å›ºå®š
   TCP_set_seq_cnt(tcp, 0);
-  // ‚±‚±‚Å‚ÍFormat ID‚ÍControl Command PacketŒÅ’è
+  // ã“ã“ã§ã¯Format IDã¯Control Command Packetå›ºå®š
   TCP_CMD_set_fmt_id(tcp, TCP_CMD_FMT_ID_CONTROL);
-  // ‚±‚±‚Å‚ÍCommand Type‚ÍSerial MagnitudeŒÅ’è
+  // ã“ã“ã§ã¯Command Typeã¯Serial Magnitudeå›ºå®š
   TCP_CMD_set_type(tcp, TCP_CMD_TYPE_SM);
 }
 
@@ -467,15 +467,15 @@ uint32_t TCP_TLM_get_adu_len(const TCP* tcp)
   len <<= 8;
   len += tcp->packet[TCP_TLM_pp_adu_len_.pos + 2];
 
-  // TCPacket‚ÌADU Length‚Í0‹NZ‚È‚Ì‚Å1‹NZ‚É•ÏŠ·‚µ‚Ä•Ô‚·
+  // TCPacketã®ADU Lengthã¯0èµ·ç®—ãªã®ã§1èµ·ç®—ã«å¤‰æ›ã—ã¦è¿”ã™
   return len + 1;
 }
 
 void TCP_TLM_set_adu_len(TCP* tcp, uint32_t len)
 {
-  uint32_t z_origin = len - 1; // 1‹NZ‚Ì’l‚ğ0‹NZ‚É•ÏŠ·
+  uint32_t z_origin = len - 1; // 1èµ·ç®—ã®å€¤ã‚’0èµ·ç®—ã«å¤‰æ›
 
-  // 24bit’·‚È‚Ì‚ÅÅãˆÊ8bit‚ÍØ‚èÌ‚Ä‚ç‚ê‚ç‚ê‚é
+  // 24bité•·ãªã®ã§æœ€ä¸Šä½8bitã¯åˆ‡ã‚Šæ¨ã¦ã‚‰ã‚Œã‚‰ã‚Œã‚‹
   tcp->packet[TCP_TLM_pp_adu_len_.pos]     = (uint8_t)((z_origin >> 16) & 0xff);
   tcp->packet[TCP_TLM_pp_adu_len_.pos + 1] = (uint8_t)((z_origin >>  8) & 0xff);
   tcp->packet[TCP_TLM_pp_adu_len_.pos + 2] = (uint8_t)(z_origin & 0xff);
@@ -483,7 +483,7 @@ void TCP_TLM_set_adu_len(TCP* tcp, uint32_t len)
 
 uint16_t TCP_TLM_get_packet_len(const TCP* packet)
 {
-  // User Data’· + TCP Primary Header’·
+  // User Dataé•· + TCP Primary Headeré•·
   return (uint16_t)(TCP_get_packet_len(packet) + TCP_PRM_HDR_LEN);
 }
 
@@ -501,36 +501,36 @@ void TCP_TLM_setup_primary_hdr(TCP* tcp, TCP_APID apid, uint16_t len)
 
 void TCP_TLM_set_common_hdr(TCP* tcp)
 {
-  // ‚±‚±‚Å‚ÍVersion Number‚ÍVersion-1ŒÅ’è
+  // ã“ã“ã§ã¯Version Numberã¯Version-1å›ºå®š
   TCP_set_ver(tcp, TCP_VER_1);
-  // Telemetry Packet‚È‚Ì‚ÅType‚ÍTelemetryŒÅ’è
+  // Telemetry Packetãªã®ã§Typeã¯Telemetryå›ºå®š
   TCP_set_type(tcp, TCP_TYPE_TLM);
-  // ‚±‚±‚Å‚ÍSecondary Header‚Í•K{
+  // ã“ã“ã§ã¯Secondary Headerã¯å¿…é ˆ
   TCP_set_2nd_hdr_flag(tcp, TCP_2ND_HDR_PRESENT);
-  // ‚±‚±‚Å‚ÍSequence Flag‚ÍStandalone Packet‚ÉŒÅ’è
+  // ã“ã“ã§ã¯Sequence Flagã¯Standalone Packetã«å›ºå®š
   TCP_set_seq_flag(tcp, TCP_SEQ_SINGLE);
-  // ‚±‚±‚Å‚ÍSequence Count‚Í0ŒÅ’è
+  // ã“ã“ã§ã¯Sequence Countã¯0å›ºå®š
   TCP_set_seq_cnt(tcp, 0);
 }
 
 void TCP_TLM_setup_fill_packet(TCP* tcp, uint16_t fill_size)
 {
-  // ƒpƒPƒbƒg‚Ì“à—e‚ğ0ƒNƒŠƒAB
+  // ãƒ‘ã‚±ãƒƒãƒˆã®å†…å®¹ã‚’0ã‚¯ãƒªã‚¢ã€‚
   memset(tcp->packet, 0x00, TCP_MAX_LEN);
 
   if (fill_size > TCP_PRM_HDR_LEN)
   {
-    // ŒŠ–„‚ß—Ìˆæ‚ªTC Packet Primary Header’·‚æ‚è‘å‚«‚¢ê‡B
-    // ŒŠ–„‚ß—Ìˆæ‚Éƒsƒbƒ^ƒŠƒnƒ}‚éFill Packet‚ğ¶¬‚·‚éB
+    // ç©´åŸ‹ã‚é ˜åŸŸãŒTC Packet Primary Headeré•·ã‚ˆã‚Šå¤§ãã„å ´åˆã€‚
+    // ç©´åŸ‹ã‚é ˜åŸŸã«ãƒ”ãƒƒã‚¿ãƒªãƒãƒã‚‹Fill Packetã‚’ç”Ÿæˆã™ã‚‹ã€‚
     TCP_TLM_setup_primary_hdr(tcp,
                               TCP_APID_FILL_PKT,
                               (uint16_t)(fill_size - TCP_PRM_HDR_LEN));
   }
   else
   {
-    // ŒŠ–„‚ß—Ìˆæ‚ªTC Packet Primary Header’·‚æ‚è¬‚³‚¢ê‡B
-    // —Ìˆæƒsƒbƒ^ƒŠ‚ÌFill Packet‚Ì¶¬‚Í•s‰Â”\‚È‚Ì‚ÅAƒf[ƒ^’·1
-    // ‚ÌFill Packet‚ğ¶¬‚·‚éB
+    // ç©´åŸ‹ã‚é ˜åŸŸãŒTC Packet Primary Headeré•·ã‚ˆã‚Šå°ã•ã„å ´åˆã€‚
+    // é ˜åŸŸãƒ”ãƒƒã‚¿ãƒªã®Fill Packetã®ç”Ÿæˆã¯ä¸å¯èƒ½ãªã®ã§ã€ãƒ‡ãƒ¼ã‚¿é•·1
+    // ã®Fill Packetã‚’ç”Ÿæˆã™ã‚‹ã€‚
     TCP_TLM_setup_primary_hdr(tcp,
                               TCP_APID_FILL_PKT,
                               1);

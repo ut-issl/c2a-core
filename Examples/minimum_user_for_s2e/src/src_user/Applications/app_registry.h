@@ -1,6 +1,6 @@
 #ifndef APP_REGISTRY_H_
 #define APP_REGISTRY_H_
-// ‚±‚¢‚Â‚ÌŽ©“®¶¬‚ª‚Ù‚µ‚¢DDD
+// ã“ã„ã¤ã®è‡ªå‹•ç”ŸæˆãŒã»ã—ã„ï¼Žï¼Žï¼Ž
 typedef enum
 {
   AR_NOP,

@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief event_logger �̐ݒ�
+ * @brief event_logger の設定
  */
 
 #include <src_core/System/EventManager/event_logger.h>

@@ -1,14 +1,14 @@
 /**
  * @file
- * @brief �R�}���h�������T�|�[�g����Util
+ * @brief コマンド分割をサポートするUtil
  * @note  HOW TO USE
- *        1. �eCmd�ɂď��߂� DCU_check_in �����s���C���݂̎��s�󋵂��擾����
- *        2. ���s���I���� �ēx�ċA������K�v������ꍇ�� DCU_register_next �œo�^����
- *        3. ���ׂĂ̏������I�������ꍇ�� DCU_report_finish �����s����
- *        4. ���s���̃G���[�� DCU_report_err �ŕ񍐂���D����ƒ��f�����
- *        5. ���f�������Ƃ��� DCU_abort_cmd �����s����
- *        6. ���f���ꂽ��Ԃ����Z�b�g����ꍇ�� DCU_donw_abort_flag �����s����
- * @note  telemetry_manager �ȂǂŎg���Ă���̂ŁC������Q�Ƃ̂���
+ *        1. 各Cmdにて初めに DCU_check_in を実行し，現在の実行状況を取得する
+ *        2. 実行が終了し 再度再帰させる必要がある場合は DCU_register_next で登録する
+ *        3. すべての処理が終了した場合は DCU_report_finish を実行する
+ *        4. 実行中のエラーは DCU_report_err で報告する．すると中断される
+ *        5. 中断したいときは DCU_abort_cmd を実行する
+ *        6. 中断された状態をリセットする場合は DCU_donw_abort_flag を実行する
+ * @note  telemetry_manager などで使っているので，それを参照のこと
  */
 #ifndef DIVIDED_CMD_UTILITY_H_
 #define DIVIDED_CMD_UTILITY_H_
@@ -18,75 +18,75 @@
 #include "../System/TimeManager/obc_time.h"
 #include <src_user/TlmCmd/command_definitions.h>
 
-#define DCU_LOG_MAX    (16)    //!< �ۑ����郍�O�̍ő吔
+#define DCU_LOG_MAX    (16)    //!< 保存するログの最大数
 
 #include <src_user/Settings/Applications/divided_cmd_utility_params.h>
 
-// key �� uint8_t �Ȃ̂ŁC����ȉ���v������
+// key が uint8_t なので，それ以下を要請する
 #if DCU_LOG_MAX > 255
 #error "err at divided_cmd_utility"
 #endif
 
 /**
  * @enum   DCU_ACK
- * @note   uint8_t ��z��
- * @brief  �ėp�Ԃ�l
+ * @note   uint8_t を想定
+ * @brief  汎用返り値
  */
 typedef enum
 {
-  DCU_ACK_OK = 0,       //!< ����I��
-  DCU_ACK_ERR           //!< �G���[
+  DCU_ACK_OK = 0,       //!< 正常終了
+  DCU_ACK_ERR           //!< エラー
 } DCU_ACK;
 
 
 /**
  * @enum   DCU_STATUS
- * @note   uint8_t ��z��
- * @brief  ���s��
+ * @note   uint8_t を想定
+ * @brief  実行状況
  */
 typedef enum
 {
-  DCU_STATUS_FINISHED = 0,        //!< ���s�I�� or �����s
-  DCU_STATUS_PROGRESS,            //!< ���s��
-  DCU_STATUS_ABORTED_BY_ERR,      //!< �G���[�ɂ�蒆�f
-  DCU_STATUS_ABORTED_BY_CMD       //!< �R�}���h�ɂ�蒆�f
+  DCU_STATUS_FINISHED = 0,        //!< 実行終了 or 未実行
+  DCU_STATUS_PROGRESS,            //!< 実行中
+  DCU_STATUS_ABORTED_BY_ERR,      //!< エラーにより中断
+  DCU_STATUS_ABORTED_BY_CMD       //!< コマンドにより中断
 } DCU_STATUS;
 
 
 /**
  * @enum   DCU_LOG_ACK
- * @note   uint8_t ��z��
- * @brief  ���O����̕Ԃ�l
+ * @note   uint8_t を想定
+ * @brief  ログ操作の返り値
  */
 typedef enum
 {
-  DCU_LOG_ACK_OK = 0,           //!< ����I��
-  DCU_LOG_ACK_NOT_FOUND         //!< �w�胍�O�������炸
+  DCU_LOG_ACK_OK = 0,           //!< 正常終了
+  DCU_LOG_ACK_NOT_FOUND         //!< 指定ログが見つからず
 } DCU_LOG_ACK;
 
 
 /**
  * @struct DCU_ExecStatus
- * @brief  ���s��
+ * @brief  実行状況
  */
 typedef struct
 {
-  CMD_CODE     cmd_code;          //!< ���s�R�}���h
-  DCU_STATUS   status;            //!< ���s��
-  uint16_t     exec_counter;      //!< ���s�J�E���^�D���x�ڂ̎��s���H
-  CCP_EXEC_STS last_exec_sts;     //!< �ŏI���s����
-  ObcTime      last_exec_time;    //!< �ŏI���s����
+  CMD_CODE     cmd_code;          //!< 実行コマンド
+  DCU_STATUS   status;            //!< 実行状況
+  uint16_t     exec_counter;      //!< 実行カウンタ．何度目の実行か？
+  CCP_EXEC_STS last_exec_sts;     //!< 最終実行結果
+  ObcTime      last_exec_time;    //!< 最終実行時刻
 } DCU_ExecStatus;
 
 
 /**
  * @struct DividedCmdUtility
- * @brief  DividedCmdUtility �� AppInfo �\����
+ * @brief  DividedCmdUtility の AppInfo 構造体
  */
 typedef struct
 {
-  DCU_ExecStatus exec_logs[DCU_LOG_MAX];        //!< ���s���O�D[exec_log_order[0]] ���ł��V�����D�Â����͎̂̂Ă��Ă����D
-  uint8_t        exec_log_order[DCU_LOG_MAX];   //!< ���s���O�̃\�[�g�L�[�D exec_logs ���ŐV���ɕ��בւ��邽�߂Ɏg���D
+  DCU_ExecStatus exec_logs[DCU_LOG_MAX];        //!< 実行ログ．[exec_log_order[0]] が最も新しい．古いものは捨てられていく．
+  uint8_t        exec_log_order[DCU_LOG_MAX];   //!< 実行ログのソートキー． exec_logs を最新順に並べ替えるために使う．
 } DividedCmdUtility;
 
 extern const DividedCmdUtility* const divided_cmd_utility;
@@ -95,82 +95,82 @@ AppInfo DCU_create_app(void);
 
 
 /**
- * @brief  DCU�Ƀ`�F�b�N�C������D�����R�}���h���s���C�ŏ��ɌĂяo���֐��D
- * @param[in]  cmd_code:     ���g�� CMD_CODE
- * @param[out] exec_counter: ���̎��s�񐔂�����ڂ��H
- * @retval DCU_STATUS_FINISHED:       ������s�ł���D exec_counter �� 0 ��Ԃ��D
- * @retval DCU_STATUS_PROGRESS:       ����2��ڈȍ~�̎��s�ł���
- * @retval DCU_STATUS_ABORTED_BY_ERR: �G���[���������Ă���̂ŁC���s�𒆎~���ׂ��i CCP_EXEC_ILLEGAL_CONTEXT ��Ԃ��ׂ� �j
- * @retval DCU_STATUS_ABORTED_BY_CMD: ���s���f�R�}���h����M���Ă���̂ŁC���s�𒆎~���ׂ��i CCP_EXEC_ILLEGAL_CONTEXT ��Ԃ��ׂ� �j
+ * @brief  DCUにチェックインする．分割コマンド実行時，最初に呼び出す関数．
+ * @param[in]  cmd_code:     自身の CMD_CODE
+ * @param[out] exec_counter: 次の実行回数が何回目か？
+ * @retval DCU_STATUS_FINISHED:       初回実行である． exec_counter は 0 を返す．
+ * @retval DCU_STATUS_PROGRESS:       分割2回目以降の実行である
+ * @retval DCU_STATUS_ABORTED_BY_ERR: エラーが発生しているので，実行を中止すべき（ CCP_EXEC_ILLEGAL_CONTEXT を返すべき ）
+ * @retval DCU_STATUS_ABORTED_BY_CMD: 実行中断コマンドを受信しているので，実行を中止すべき（ CCP_EXEC_ILLEGAL_CONTEXT を返すべき ）
  */
 DCU_STATUS DCU_check_in(CMD_CODE cmd_code, uint16_t* exec_counter);
 
 /**
- * @brief  ���̕����̎��s��o�^
- * @param[in] cmd_code: ���g�� CMD_CODE
- * @param[in] param:    �R�}���h�p�����^
- * @param[in] len:      �p�����^��
+ * @brief  次の分割の実行を登録
+ * @param[in] cmd_code: 自身の CMD_CODE
+ * @param[in] param:    コマンドパラメタ
+ * @param[in] len:      パラメタ長
  * @return DCU_ACK
  */
 DCU_ACK DCU_register_next(CMD_CODE cmd_code, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  DCU�ɁC�����R�}���h�����s�I���������Ƃ�`����
- * @param[in] cmd_code: ���g�� CMD_CODE
- * @param[in] last_exec_sts: �R�}���h���s����
+ * @brief  DCUに，分割コマンドが実行終了したことを伝える
+ * @param[in] cmd_code: 自身の CMD_CODE
+ * @param[in] last_exec_sts: コマンド実行結果
  * @return void
  */
 void DCU_report_finish(CMD_CODE cmd_code, CCP_EXEC_STS last_exec_sts);
 
 /**
- * @brief  DCU�ɁC�r���ŃG���[�������������Ƃ�`����
- * @note   �Ȍ�̎��s�͒��f�����
- * @param[in] cmd_code: ���g�� CMD_CODE
- * @param[in] last_exec_sts: �R�}���h���s����
+ * @brief  DCUに，途中でエラーが発生したことを伝える
+ * @note   以後の実行は中断される
+ * @param[in] cmd_code: 自身の CMD_CODE
+ * @param[in] last_exec_sts: コマンド実行結果
  * @return void
  */
 void DCU_report_err(CMD_CODE cmd_code, CCP_EXEC_STS last_exec_sts);
 
 /**
- * @brief  �G���[�C�܂��̓R�}���h�ɂ���Ē��f�X�e�[�^�X�ƂȂ��Ă���R�}���h���C���s�\��Ԃɖ߂�
- * @param[in] cmd_code: ���s�\��Ԃɖ߂��R�}���h�� CMD_CODE
+ * @brief  エラー，またはコマンドによって中断ステータスとなっているコマンドを，実行可能状態に戻す
+ * @param[in] cmd_code: 実行可能状態に戻すコマンドの CMD_CODE
  * @return void
  */
 void DCU_donw_abort_flag(CMD_CODE cmd_code);
 
 /**
- * @brief  ���s���̕����R�}���h���O�����狭���I�ɒ��f������
- * @note   �����G���[�� DCU_report_err ���g���ׂ��ŁC��{�I�ɂ͎g��Ȃ��͂�
- * @note   abort ����̕��A�́C�����������i�r������̍ĊJ�͕s�j
- * @param[in] cmd_code: ��~������R�}���h�� CMD_CODE
+ * @brief  実行中の分割コマンドを外部から強制的に中断させる
+ * @note   内部エラーは DCU_report_err を使うべきで，基本的には使わないはず
+ * @note   abort からの復帰は，初期化される（途中からの再開は不可）
+ * @param[in] cmd_code: 停止させるコマンドの CMD_CODE
  * @return void
  */
 void DCU_abort_cmd(CMD_CODE cmd_code);
 
 /**
- * @brief  ���O��T���āC�w�肵���R�}���h���O���擾����
- * @note   exec_log �� divided_cmd_utility �̊Y���̃��O�ւ̃|�C���^�ɍ����ւ���D
- * @param[in] cmd_code: �T���R�}���h
- * @param[out] exec_log: �擾�������O�Dconst�|�C���^�ŁC�Q�Ɛ�����������邽�߁CNULL�|�C���^��n���̂�OK
- * @retval DCU_LOG_ACK_OK:        ��������
- * @retval DCU_LOG_ACK_NOT_FOUND: �����炸
+ * @brief  ログを探して，指定したコマンドログを取得する
+ * @note   exec_log は divided_cmd_utility の該当のログへのポインタに差し替える．
+ * @param[in] cmd_code: 探すコマンド
+ * @param[out] exec_log: 取得したログ．constポインタで，参照先を書き換えるため，NULLポインタを渡すのもOK
+ * @retval DCU_LOG_ACK_OK:        見つかった
+ * @retval DCU_LOG_ACK_NOT_FOUND: 見つからず
  */
 DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec_log);
 
 /**
- * @brief ���s���̕����R�}���h���~����
- * @note  �����C�w�肵�� Cmd �����s���ł͂Ȃ��Ă� CCP_EXEC_SUCCESS ��Ԃ�
+ * @brief 実行中の分割コマンドを停止する
+ * @note  もし，指定した Cmd が実行中ではなくても CCP_EXEC_SUCCESS を返す
  */
 CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet);
 
 /**
- * @brief �G���[�C�܂��̓R�}���h�ɂ���Ē��f�X�e�[�^�X�ƂȂ��Ă���R�}���h���C���s�\��Ԃɖ߂�
- * @note  �����C�w�肵�� Cmd �����f�X�e�[�^�X�ł͂Ȃ��Ă� CCP_EXEC_SUCCESS ��Ԃ�
+ * @brief エラー，またはコマンドによって中断ステータスとなっているコマンドを，実行可能状態に戻す
+ * @note  もし，指定した Cmd が中断ステータスではなくても CCP_EXEC_SUCCESS を返す
  */
 CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CTCP* packet);
 
 /**
- * @brief ���O���N���A����
+ * @brief ログをクリアする
  */
 CCP_EXEC_STS Cmd_DCU_CLEAR_LOG(const CTCP* packet);
 

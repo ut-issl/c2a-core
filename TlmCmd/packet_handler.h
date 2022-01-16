@@ -6,9 +6,9 @@
 
 #define PH_GS_CMD_LIST_MAX  (8)
 #define PH_RT_CMD_LIST_MAX  (32)
-#define PH_TL0_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX)   // ƒRƒƒ“ƒg’Ç‰Ái2019/08/19j
-                                                                   // ‚±‚ê‚ªÅ’·‚¶‚á‚È‚¢‚Æ‚¢‚¯‚È‚¢
-                                                                   // TLCD_tl_list_for_tlm‚Ì’·‚³‚ª‚±‚ê‚È‚Ì‚ÅII
+#define PH_TL0_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX)   // ã‚³ãƒ¡ãƒ³ãƒˆè¿½åŠ ï¼ˆ2019/08/19ï¼‰
+                                                                   // ã“ã‚ŒãŒæœ€é•·ã˜ã‚ƒãªã„ã¨ã„ã‘ãªã„
+                                                                   // TLCD_tl_list_for_tlmã®é•·ã•ãŒã“ã‚Œãªã®ã§ï¼ï¼
 #define PH_TL1_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
 #define PH_TL2_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
 #define PH_MS_TLM_LIST_MAX  (16)
@@ -17,7 +17,7 @@
 
 #include <src_user/Settings/TlmCmd/packet_handler_params.h>
 
-// zŠÂQÆ‚ğ–h‚®‚½‚ß‚É‚±‚±‚Åinclude
+// å¾ªç’°å‚ç…§ã‚’é˜²ããŸã‚ã«ã“ã“ã§include
 #include "common_tlm_cmd_packet.h"
 #include "packet_list.h"
 #include "../Applications/timeline_command_dispatcher.h"
@@ -46,7 +46,7 @@ typedef enum
   PH_BC_INACTIVE_BLOCK,
   PH_BC_COMBINE_FAILED,
   PH_BC_ROTATE_FAILED,
-  PH_BC_ZERO_PERIOD,         // BCT_rotate_block_cmd_‚Åg‚¤(–{—ˆ‚±‚Ìenum‚Éæ‚¹‚é‚×‚«‚©‚Í—vŒŸ“¢)
+  PH_BC_ZERO_PERIOD,         // BCT_rotate_block_cmd_ã§ä½¿ã†(æœ¬æ¥ã“ã®enumã«ä¹—ã›ã‚‹ã¹ãã‹ã¯è¦æ¤œè¨)
   PH_TLM_INVALID_DIST_FLAG,
   PH_UNKNOWN
 } PH_ACK;
@@ -54,7 +54,7 @@ typedef enum
 extern PacketList PH_gs_cmd_list;
 extern PacketList PH_rt_cmd_list;
 extern PacketList PH_tl_cmd_list[TL_ID_MAX];
-// extern PacketList PH_hk_tlm_list;    // EQU‚Å‚ÍMS TLM‚É“‡
+// extern PacketList PH_hk_tlm_list;    // EQUã§ã¯MS TLMã«çµ±åˆ
 extern PacketList PH_ms_tlm_list;
 extern PacketList PH_st_tlm_list;
 extern PacketList PH_rp_tlm_list;

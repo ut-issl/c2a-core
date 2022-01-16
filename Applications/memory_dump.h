@@ -5,8 +5,8 @@
 #include "../TlmCmd/common_tlm_cmd_packet.h"
 
 #define MEM_TLM_ID      (0xff)
-#define MEM_DUMP_WIDTH  (CTCP_MAX_LEN - 18)     // �e�����p�P�b�g�ő咷 - �w�b�_��
-#define MEM_MAX_SPAN    (0x00800000)            // �ő�_���v����16MB(ADU�T�C�Y����)
+#define MEM_DUMP_WIDTH  (CTCP_MAX_LEN - 18)     // テレメパケット最大長 - ヘッダ長
+#define MEM_MAX_SPAN    (0x00800000)            // 最大ダンプ幅は16MB(ADUサイズ制約)
 
 typedef enum
 {
@@ -31,29 +31,29 @@ AppInfo MEM_create_app(void);
 
 
 // 2018/08/24
-// �����̉��߂��R�����g�Ƃ��Ēǉ�
+// 自分の解釈をコメントとして追加
 CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet);
 
 CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CTCP* packet);
-// 1�p�P�b�g�ɓ���؂�Ȃ��ꍇ�́C�ŏ���ADU�������ꂽ�ŏ��̃p�P�b�g�̂݃_���v
-// ������x����ƁC���̎��̃p�P�b�g���_���v
-// �Ō�͂����Ǝ~�܂�
+// 1パケットに入り切らない場合は，最初のADU分割された最初のパケットのみダンプ
+// もう一度送ると，その次のパケットがダンプ
+// 最後はちゃんと止まる
 
 CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet);
-// ADU�������ꂽ�ꍇ�C���̓r���̃p�P�b�g����_���v
+// ADU分割された場合，その途中のパケットからダンプ
 
 CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet);
-// �A�h���X���w�肵�āC�_���v�H
-// Cmd_MEM_SET_REGION �͖����H
+// アドレスを指定して，ダンプ？
+// Cmd_MEM_SET_REGION は無視？
 
 CCP_EXEC_STS Cmd_MEM_LOAD(const CTCP* packet);
-// MEM�ɃA�b�v�����N���ď�������
+// MEMにアップリンクして書き込み
 
 CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet);
-// Cmd_MEM_COPY_REGION_SEQ�̃R�s�[����w��
+// Cmd_MEM_COPY_REGION_SEQのコピー先を指定
 
 CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CTCP* packet);
-// dest��rp���w�蕝�����R�s�[���Ă���
-// �����Cmd_MEM_DUMP_REGION_SEQ�Ɠ��l�ɁC���x���J��Ԃ����s���Ďg���D
+// destにrpを指定幅だけコピーしていく
+// これもCmd_MEM_DUMP_REGION_SEQと同様に，何度も繰り返し発行して使う．
 
 #endif

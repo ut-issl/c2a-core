@@ -3,12 +3,12 @@
 
 #include "../Settings/sils_define.h"
 
-// HEW‚âŠO•”ƒ‰ƒCƒuƒ‰ƒŠƒwƒbƒ_[‚Æ‚Ìd•¡typedef‚ğƒK[ƒh
+// HEWã‚„å¤–éƒ¨ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãƒ˜ãƒƒãƒ€ãƒ¼ã¨ã®é‡è¤‡typedefã‚’ã‚¬ãƒ¼ãƒ‰
 #ifndef _TYPEDEFINE_H_
 
 #ifndef SILS_FW
-// HEW‚É•W€ƒwƒbƒ_stdint.h‚É‘Š“–‚·‚éƒwƒbƒ_‚ª‚È‚©‚Á‚½‚½‚ßA•K—v‹@”\‚ğ©‘O‚Å’è‹`B
-// bit•w’è‚Ì®”Œ^‚ğ‚Ğ‚Æ‚Ü‚¸’è‹`
+// HEWã«æ¨™æº–ãƒ˜ãƒƒãƒ€stdint.hã«ç›¸å½“ã™ã‚‹ãƒ˜ãƒƒãƒ€ãŒãªã‹ã£ãŸãŸã‚ã€å¿…è¦æ©Ÿèƒ½ã‚’è‡ªå‰ã§å®šç¾©ã€‚
+// bitå¹…æŒ‡å®šã®æ•´æ•°å‹ã‚’ã²ã¨ã¾ãšå®šç¾©
 
 typedef signed char           int8_t;
 typedef signed short          int16_t;

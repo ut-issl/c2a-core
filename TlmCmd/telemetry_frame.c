@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  ƒeƒŒƒƒgƒŠ‚Ì“o˜^CƒeƒŒƒƒgƒŠŠÖ˜Aˆ—
+ * @brief  ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªã®ç™»éŒ²ï¼Œãƒ†ãƒ¬ãƒ¡ãƒˆãƒªé–¢é€£å‡¦ç†
  */
 #include "telemetry_frame.h"
 
@@ -35,7 +35,7 @@ int TF_generate_contents(int packet_id,
 
 void TF_initialize(void)
 {
-  // tlm_table_‚ğ‰Šú‰»
+  // tlm_table_ã‚’åˆæœŸåŒ–
   initialize_tlm_table_();
 
   if (TF_MAX_TLMS <= TLM_CODE_MAX)
@@ -55,7 +55,7 @@ static void initialize_tlm_table_(void)
     telemetry_frame_.tlm_table[i].tlm_func = NULL;
   }
 
-  // ƒy[ƒW”Ô†‚Ì‰Šú’l‚Í0‚Éİ’è
+  // ãƒšãƒ¼ã‚¸ç•ªå·ã®åˆæœŸå€¤ã¯0ã«è¨­å®š
   telemetry_frame_.tlm_page_no = 0;
 }
 
@@ -112,10 +112,10 @@ void TF_copy_float(uint8_t* ptr,
   for (i = 0; i < sizeof(float); ++i)
   {
 #ifdef IS_LITTLE_ENDIAN
-    // Little Endian‚ğ‘z’è‚µ‚½ƒR[ƒhB
+    // Little Endianã‚’æƒ³å®šã—ãŸã‚³ãƒ¼ãƒ‰ã€‚
     ptr[i] = temp[sizeof(float) - i - 1];
 #else
-    // Big Endian‚ğ‘z’è‚µ‚½ƒR[ƒhB
+    // Big Endianã‚’æƒ³å®šã—ãŸã‚³ãƒ¼ãƒ‰ã€‚
     ptr[i] = temp[i];
 #endif
   }
@@ -130,10 +130,10 @@ void TF_copy_double(uint8_t* ptr,
   for (i = 0; i < sizeof(double); ++i)
   {
 #ifdef IS_LITTLE_ENDIAN
-    // Little Endian‚ğ‘z’è‚µ‚½ƒR[ƒhB
+    // Little Endianã‚’æƒ³å®šã—ãŸã‚³ãƒ¼ãƒ‰ã€‚
     ptr[i] = temp[sizeof(double) - i - 1];
 #else
-    // Big Endian‚ğ‘z’è‚µ‚½ƒR[ƒhB
+    // Big Endianã‚’æƒ³å®šã—ãŸã‚³ãƒ¼ãƒ‰ã€‚
     ptr[i] = temp[i];
 #endif
   }
@@ -150,7 +150,7 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CTCP* packet)
 
   if ((int)index >= TF_MAX_TLMS)
   {
-    // “o˜^w’èˆÊ’u‚ªƒeƒŒƒƒgƒŠ”ãŒÀ‚ğ’´‚¦‚Ä‚¢‚éê‡‚ÍˆÙí”»’è
+    // ç™»éŒ²æŒ‡å®šä½ç½®ãŒãƒ†ãƒ¬ãƒ¡ãƒˆãƒªæ•°ä¸Šé™ã‚’è¶…ãˆã¦ã„ã‚‹å ´åˆã¯ç•°å¸¸åˆ¤å®š
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -166,7 +166,7 @@ CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CTCP* packet)
   page = CCP_get_param_head(packet)[0];
   if (page >= TF_TLM_PAGE_MAX)
   {
-    // ƒy[ƒW”Ô†‚ªƒRƒ}ƒ“ƒhƒe[ƒuƒ‹”ÍˆÍŠO
+    // ãƒšãƒ¼ã‚¸ç•ªå·ãŒã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 

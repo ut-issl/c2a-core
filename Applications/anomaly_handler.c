@@ -42,25 +42,25 @@ static void AH_init_(void)
 {
   int i;
 
-  // ‰Šúİ’è‚Í‚·‚×‚Ä‚Ìƒ‹[ƒ‹‚ğ–³Œø‰»‚·‚é
+  // åˆæœŸè¨­å®šã¯ã™ã¹ã¦ã®ãƒ«ãƒ¼ãƒ«ã‚’ç„¡åŠ¹åŒ–ã™ã‚‹
   for (i = 0; i < AH_MAX_RULES; ++i)
   {
     anomaly_handler_.elements[i].is_active = 0;
   }
 
-  // ƒfƒtƒHƒ‹ƒg‚Ìƒ‹[ƒ‹\¬‚ğ“Ç‚İ‚İ
+  // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ«ãƒ¼ãƒ«æ§‹æˆã‚’èª­ã¿è¾¼ã¿
   AH_load_default_rules_();
-  // ‘Î‰‚ğƒ[ƒƒNƒŠƒA
+  // å¯¾å¿œæ™‚åˆ»ã‚’ã‚¼ãƒ­ã‚¯ãƒªã‚¢
   OBCT_clear(&(anomaly_handler_.respond_at));
-  // ‰Šú‚Í”ÍˆÍŠO‚Éİ’è‚µŠY“–‚È‚µ‚ğ•\Œ»
+  // åˆæœŸã¯ç¯„å›²å¤–ã«è¨­å®šã—è©²å½“ãªã—ã‚’è¡¨ç¾
   anomaly_handler_.latest_id = AH_MAX_RULES;
-  // ‘Î‰Às”‚ğƒNƒŠƒA
+  // å¯¾å¿œå®Ÿè¡Œæ•°ã‚’ã‚¯ãƒªã‚¢
   anomaly_handler_.action_counter = 0;
-  // ƒAƒmƒ}ƒŠ‘Î‰ŒŸ’m—p‚Ì•Ï”‚ğƒNƒŠƒA
+  // ã‚¢ãƒãƒãƒªå¯¾å¿œæ¤œçŸ¥ç”¨ã®å¤‰æ•°ã‚’ã‚¯ãƒªã‚¢
   AH_prev_act_ = 0;
-  // ƒAƒmƒ}ƒŠˆ—ó‹µ‚ğ‰Šú‰»
+  // ã‚¢ãƒãƒãƒªå‡¦ç†çŠ¶æ³ã‚’åˆæœŸåŒ–
   AH_clear_log_();
-  // ƒeƒŒƒgƒŠ—pƒy[ƒW”Ô†‚Í0‚É‰Šú‰»
+  // ãƒ†ãƒ¬ãƒˆãƒªç”¨ãƒšãƒ¼ã‚¸ç•ªå·ã¯0ã«åˆæœŸåŒ–
   anomaly_handler_.page_no = 0;
 
   AH_respond_log_.pointer = 0;
@@ -82,28 +82,28 @@ static void AH_load_default_rules_(void)
 
 static void AH_exec_(void)
 {
-  const AL_AnomalyRecord* ar = AL_get_record(anomaly_handler_.al_pointer.pos);   // ‰Šú’l‚Í‘–¸ŠJnˆÊ’u
+  const AL_AnomalyRecord* ar = AL_get_record(anomaly_handler_.al_pointer.pos);   // åˆæœŸå€¤ã¯èµ°æŸ»é–‹å§‹ä½ç½®
 
-  // ƒAƒmƒ}ƒŠŒÂ”‚ª•Ï‰»‚µ‚Ä‚¢‚È‚¢ê‡
+  // ã‚¢ãƒãƒãƒªå€‹æ•°ãŒå¤‰åŒ–ã—ã¦ã„ãªã„å ´åˆ
   if (anomaly_handler_.al_pointer.count == anomaly_logger->counter) return;
-  // V‚½‚ÈƒAƒmƒ}ƒŠ‚ª”­¶‚µ‚½ê‡
+  // æ–°ãŸãªã‚¢ãƒãƒãƒªãŒç™ºç”Ÿã—ãŸå ´åˆ
   else if (anomaly_handler_.al_pointer.count < anomaly_logger->counter)
   {
     size_t record_id;
 
     for (record_id = anomaly_handler_.al_pointer.pos; record_id < anomaly_logger->header; ++record_id)
     {
-      size_t prev_id = AH_check_rules_(record_id);   // ˆÊ’u‡‚í‚¹‚Ì‚½‚ßDReprog‚Ì‘ÎÇ—Ã–@‚È‚Ì‚ÅCC³‚µ‚½‚¢
+      size_t prev_id = AH_check_rules_(record_id);   // ä½ç½®åˆã‚ã›ã®ãŸã‚ï¼Reprogæ™‚ã®å¯¾ç—‡ç™‚æ³•ãªã®ã§ï¼Œä¿®æ­£ã—ãŸã„
       (void)prev_id;
       ar = AL_get_record(record_id);
 
-      // Å‰‚Ìˆê‚Â–ÚF‘O‰ñÅŒã‚É‹L˜^‚³‚ê‚½•”•ªDˆ³k‚Í‚±‚±‚É‹L˜^‚³‚ê‚é
+      // æœ€åˆã®ä¸€ã¤ç›®ï¼šå‰å›æœ€å¾Œã«è¨˜éŒ²ã•ã‚ŒãŸéƒ¨åˆ†ï¼åœ§ç¸®æ™‚ã¯ã“ã“ã«è¨˜éŒ²ã•ã‚Œã‚‹
       if (record_id == anomaly_handler_.al_pointer.pos)
       {
-        // ‚à‚µrun_length‚ª‘‚¦‚Ä‚¢‚ê‚Î¨V‚½‚É‚±‚ÌƒAƒmƒ}ƒŠ‚ª”­¶‚µ‚Ä‚¢‚ê‚Î
+        // ã‚‚ã—run_lengthãŒå¢—ãˆã¦ã„ã‚Œã°â†’æ–°ãŸã«ã“ã®ã‚¢ãƒãƒãƒªãŒç™ºç”Ÿã—ã¦ã„ã‚Œã°
         if (ar->run_length > anomaly_handler_.latest_run_length)
         {
-          // ‘Î‰‚ğ‚·‚é
+          // å¯¾å¿œã‚’ã™ã‚‹
           size_t id = AH_check_rules_(record_id);
 
           if (id != AH_MAX_RULES)
@@ -114,7 +114,7 @@ static void AH_exec_(void)
       }
       else
       {
-        // anomaly_logger->header‚ª1ˆÈã‘‚¦‚Ä‚¢‚é¨V‚½‚Èí—Ş‚ÌƒAƒmƒ}ƒŠ‚ª”­¶‚µ‚Ä‚¢‚é
+        // anomaly_logger->headerãŒ1ä»¥ä¸Šå¢—ãˆã¦ã„ã‚‹â†’æ–°ãŸãªç¨®é¡ã®ã‚¢ãƒãƒãƒªãŒç™ºç”Ÿã—ã¦ã„ã‚‹
         size_t id = AH_check_rules_(record_id);
 
         if (id != AH_MAX_RULES)
@@ -124,15 +124,15 @@ static void AH_exec_(void)
       }
     }
 
-    // ˆ—I—¹ŒãAÅVˆÊ’uE‰ñ”‚ğAnomalyLogger‘¤‚Æ“¯Šú
+    // å‡¦ç†çµ‚äº†å¾Œã€æœ€æ–°ä½ç½®ãƒ»å›æ•°ã‚’AnomalyLoggerå´ã¨åŒæœŸ
     anomaly_handler_.al_pointer.pos = anomaly_logger->header - 1;
     anomaly_handler_.al_pointer.count = anomaly_logger->counter;
     anomaly_handler_.latest_run_length = ar->run_length;
   }
-  // ˆÙí: AnomalyHandler‚ÆAnomalyLogger‚ÌŠÖŒW‚ª•ö‚ê‚Ä‚¢‚éB
+  // ç•°å¸¸: AnomalyHandlerã¨AnomalyLoggerã®é–¢ä¿‚ãŒå´©ã‚Œã¦ã„ã‚‹ã€‚
   else
   {
-    // d•û‚ª‚È‚¢‚Ì‚ÅA‹L˜^‚ğƒŠƒZƒbƒg‚µ‹­§“¯Šú‚·‚éB
+    // ä»•æ–¹ãŒãªã„ã®ã§ã€è¨˜éŒ²ã‚’ãƒªã‚»ãƒƒãƒˆã—å¼·åˆ¶åŒæœŸã™ã‚‹ã€‚
     AH_clear_log_();
   }
 }
@@ -144,38 +144,38 @@ static size_t AH_check_rules_(size_t record_id)
   int is_latest = (record_id == anomaly_logger->header);
   size_t id;
 
-  // ‘Sƒ‹[ƒ‹‚ğ‡Ÿ‘–¸
+  // å…¨ãƒ«ãƒ¼ãƒ«ã‚’é †æ¬¡èµ°æŸ»
   for (id = 0; id < AH_MAX_RULES; ++id)
   {
     AH_Element ahe = anomaly_handler_.elements[id];
 
-    // ƒ‹[ƒ‹‚ª–³Œø‚Ìê‡‚ÍƒXƒLƒbƒv
+    // ãƒ«ãƒ¼ãƒ«ãŒç„¡åŠ¹ã®å ´åˆã¯ã‚¹ã‚­ãƒƒãƒ—
     if (!(ahe.is_active)) continue;
-    // ƒR[ƒh•sˆê’v‚Ìê‡‚ÍƒXƒLƒbƒv
+    // ã‚³ãƒ¼ãƒ‰ä¸ä¸€è‡´ã®å ´åˆã¯ã‚¹ã‚­ãƒƒãƒ—
     else if (!AH_is_equal_code_(&(ahe.rule.code), &(ar->code))) continue;
 
-    // ƒR[ƒh‚É‘Î‰‚·‚éƒ‹[ƒ‹‚ª‘¶İB”»’èğŒ‚ğ•]‰¿B
+    // ã‚³ãƒ¼ãƒ‰ã«å¯¾å¿œã™ã‚‹ãƒ«ãƒ¼ãƒ«ãŒå­˜åœ¨ã€‚åˆ¤å®šæ¡ä»¶ã‚’è©•ä¾¡ã€‚
     switch (ahe.rule.cond)
     {
     case AH_SINGLE:
-      // ƒR[ƒh‚ª‘¶İ‚µ‚½“_‚Å–³ğŒ‡’vB
+      // ã‚³ãƒ¼ãƒ‰ãŒå­˜åœ¨ã—ãŸæ™‚ç‚¹ã§ç„¡æ¡ä»¶åˆè‡´ã€‚
       return id;
 
     case AH_CONTINUOUS:
 
-      // ˜A‘±‰ñ”‚ğ’´‰ß‚µ‚½ê‡‚ÉğŒ‡’vB
+      // é€£ç¶šå›æ•°ã‚’è¶…éã—ãŸå ´åˆã«æ¡ä»¶åˆè‡´ã€‚
       if (ahe.rule.threshold < ar->run_length) return id;
 
       break;
 
     case AH_CUMULATE:
 
-      // ÏZ‰ñ”‚ğ’´‰ß‚µ‚½ê‡‚ÉğŒ‡’vB
+      // ç©ç®—å›æ•°ã‚’è¶…éã—ãŸå ´åˆã«æ¡ä»¶åˆè‡´ã€‚
       if (ahe.counter <= ar->run_length)
       {
         return id;
       }
-      // ÅVƒŒƒR[ƒh‚É‘Î‚·‚é”äŠr‚Å‚È‚¢ê‡‚ÍÏZ”‚ğXV‚·‚éB
+      // æœ€æ–°ãƒ¬ã‚³ãƒ¼ãƒ‰ã«å¯¾ã™ã‚‹æ¯”è¼ƒã§ãªã„å ´åˆã¯ç©ç®—æ•°ã‚’æ›´æ–°ã™ã‚‹ã€‚
       else if (!is_latest)
       {
         ahe.counter -= ar->run_length;
@@ -185,7 +185,7 @@ static size_t AH_check_rules_(size_t record_id)
     }
   }
 
-  return AH_MAX_RULES; // ŠY“–‚È‚µ‚Ìê‡‚Í“o˜^ãŒÀ‚ğ•Ô‚·B
+  return AH_MAX_RULES; // è©²å½“ãªã—ã®å ´åˆã¯ç™»éŒ²ä¸Šé™ã‚’è¿”ã™ã€‚
 }
 
 
@@ -198,15 +198,15 @@ static int AH_is_equal_code_(const AL_AnomalyCode* a,
 
 static void AH_respond_to_anomaly_(size_t id)
 {
-  // ‚±‚ê‚ªŒÄ‚Î‚ê‚Ä‚é‚É‚ÍCanomaly_handler_.elements[].is_active == 1‚Í•ÛØ‚³‚ê‚Ä‚¢‚éD
+  // ã“ã‚ŒãŒå‘¼ã°ã‚Œã¦ã‚‹ã«ã¯ï¼Œanomaly_handler_.elements[].is_active == 1ã¯ä¿è¨¼ã•ã‚Œã¦ã„ã‚‹ï¼
 
-  // ‘Î‰ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğƒŠƒAƒ‹ƒ^ƒCƒ€ƒRƒ}ƒ“ƒh‚Å“WŠJ
+  // å¯¾å¿œãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ã‚³ãƒãƒ³ãƒ‰ã§å±•é–‹
   CTCP packet;
-  // ’ÊíBC‚È‚Ì‚ÅTLC1‚É“WŠJ
+  // é€šå¸¸BCãªã®ã§TLC1ã«å±•é–‹
   CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
   PH_dispatch_command(&packet);
 
-  // Às‚µ‚½ƒ‹[ƒ‹‚ğ‹L˜^‚µ‰ñ”‚ğXV
+  // å®Ÿè¡Œã—ãŸãƒ«ãƒ¼ãƒ«ã‚’è¨˜éŒ²ã—å›æ•°ã‚’æ›´æ–°
   anomaly_handler_.respond_at = TMGR_get_master_clock();
   anomaly_handler_.latest_id = id;
   ++anomaly_handler_.action_counter;
@@ -218,7 +218,7 @@ static void AH_respond_to_anomaly_(size_t id)
     AH_respond_log_.pointer += 1;
   }
 
-  // ‡’v‚µ‚½ƒ‹[ƒ‹‚Í–³Œø‰»‚·‚éB
+  // åˆè‡´ã—ãŸãƒ«ãƒ¼ãƒ«ã¯ç„¡åŠ¹åŒ–ã™ã‚‹ã€‚
   anomaly_handler_.elements[id].is_active = 0;
 }
 
@@ -237,14 +237,14 @@ static void AH_print_ah_status_(void)
          anomaly_handler_.respond_at.total_cycle, anomaly_handler_.respond_at.mode_cycle, anomaly_handler_.respond_at.step,
          anomaly_handler_.al_pointer.pos, anomaly_handler_.al_pointer.count);
 
-  // Ví‚ÌƒAƒmƒ}ƒŠ‚ª”­¶‚µ‚½ê‡Œx‰¹1‰ñ
+  // æ–°ç¨®ã®ã‚¢ãƒãƒãƒªãŒç™ºç”Ÿã—ãŸå ´åˆè­¦å‘ŠéŸ³1å›
   if (AH_prev_pos_ != anomaly_handler_.al_pointer.pos)
   {
     Printf("\a");
     AH_prev_pos_ = anomaly_handler_.al_pointer.pos;
   }
 
-  // ƒAƒmƒ}ƒŠ‘Î‰‚ª”­¶‚µ‚½ê‡Œx‰¹2‰ñ
+  // ã‚¢ãƒãƒãƒªå¯¾å¿œãŒç™ºç”Ÿã—ãŸå ´åˆè­¦å‘ŠéŸ³2å›
   if (AH_prev_act_ != anomaly_handler_.action_counter)
   {
     Printf("\a\a");
@@ -264,17 +264,17 @@ CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CTCP* packet)
 
   if (CCP_get_param_len(packet) != (5 + SIZE_OF_BCT_ID_T))
   {
-    // ƒpƒ‰ƒ[ƒ^’·Šm”F(6Bytes)
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é•·ç¢ºèª(6Bytes)
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
   else if (param[ID] >= AH_MAX_RULES)
   {
-    // “o˜^w’èˆÊ’u‚ª‹–—e”ÍˆÍŠO
+    // ç™»éŒ²æŒ‡å®šä½ç½®ãŒè¨±å®¹ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
   else if (param[COND] > AH_CUMULATE)
   {
-    // ”»’èğŒ‚ª’è‹`‚³‚ê‚½‚à‚Ì‚Æˆê’v‚µ‚È‚¢
+    // åˆ¤å®šæ¡ä»¶ãŒå®šç¾©ã•ã‚ŒãŸã‚‚ã®ã¨ä¸€è‡´ã—ãªã„
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -292,7 +292,7 @@ CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CTCP* packet)
 
 static void AH_add_rule_(size_t id, const AH_Rule* ahr)
 {
-  anomaly_handler_.elements[id].is_active = 0; // “o˜^“_‚Å‚Í–³Œø‚Æ‚·‚é
+  anomaly_handler_.elements[id].is_active = 0; // ç™»éŒ²æ™‚ç‚¹ã§ã¯ç„¡åŠ¹ã¨ã™ã‚‹
   anomaly_handler_.elements[id].rule = *ahr;
   anomaly_handler_.elements[id].counter = ahr->threshold;
 }
@@ -303,10 +303,10 @@ CCP_EXEC_STS Cmd_AH_ACTIVATE_RULE(const CTCP* packet)
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
 
-  id = param[0];            // ”ñ–¾¦“I‚Ècast
+  id = param[0];            // éæ˜ç¤ºçš„ãªcast
   if (id >= AH_MAX_RULES)
   {
-    // w’èˆÊ’u‚ª”ÍˆÍŠO
+    // æŒ‡å®šä½ç½®ãŒç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -327,10 +327,10 @@ CCP_EXEC_STS Cmd_AH_INACTIVATE_RULE(const CTCP* packet)
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
 
-  id = param[0];            // ”ñ–¾¦“I‚Ècast
+  id = param[0];            // éæ˜ç¤ºçš„ãªcast
   if (id >= AH_MAX_RULES)
   {
-    // w’èˆÊ’u‚ª”ÍˆÍŠO
+    // æŒ‡å®šä½ç½®ãŒç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -355,14 +355,14 @@ CCP_EXEC_STS Cmd_AH_CLEAR_LOG(const CTCP* packet)
 
 static void AH_clear_log_(void)
 {
-  // AnomalyHnadler“à‚Ì•Ûî•ñ‚ğ‰Šú‰»
+  // AnomalyHnadlerå†…ã®ä¿æŒæƒ…å ±ã‚’åˆæœŸåŒ–
   anomaly_handler_.al_pointer.count = 0;
   anomaly_handler_.al_pointer.pos = 0;
-  // ‘O‰ñ‚Ìrun_length‚ğ‰Šú‰»
+  // å‰å›ã®run_lengthã‚’åˆæœŸåŒ–
   anomaly_handler_.latest_run_length = 0;
-  // ƒAƒmƒ}ƒŠ”­¶ŒŸ’m—p•Ï”‚ğ‰Šú‰»
+  // ã‚¢ãƒãƒãƒªç™ºç”Ÿæ¤œçŸ¥ç”¨å¤‰æ•°ã‚’åˆæœŸåŒ–
   AH_prev_pos_ = 0;
-  // AnomalyLogger‚ÌƒŠƒXƒg‚ğƒNƒŠƒA
+  // AnomalyLoggerã®ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
   AL_clear();
 }
 
@@ -375,7 +375,7 @@ CCP_EXEC_STS Cmd_AH_SET_PAGE_FOR_TLM(const CTCP* packet)
 
   if (page >= AH_TLM_PAGE_MAX)
   {
-    // ƒy[ƒW”Ô†‚ªƒRƒ}ƒ“ƒhƒe[ƒuƒ‹”ÍˆÍŠO
+    // ãƒšãƒ¼ã‚¸ç•ªå·ãŒã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -412,7 +412,7 @@ CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 
   if (page >= AH_LOG_TLM_PAGE_MAX)
   {
-    // ƒy[ƒW”Ô†‚ªƒRƒ}ƒ“ƒhƒe[ƒuƒ‹”ÍˆÍŠO
+    // ãƒšãƒ¼ã‚¸ç•ªå·ãŒã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -422,7 +422,7 @@ CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 
 
 // 2019-02-04
-// ƒ†[ƒU[’è‹`•”•ª—£‚É‚æ‚èC’Ç‰Á
+// ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©éƒ¨åˆ†é›¢ã«ã‚ˆã‚Šï¼Œè¿½åŠ 
 void AH_add_rule(size_t id, const AH_Rule* ahr, uint8_t is_active)
 {
   AH_add_rule_(id, ahr);

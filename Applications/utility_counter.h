@@ -1,13 +1,13 @@
 #ifndef UTILITY_COUNTER_H_
 #define UTILITY_COUNTER_H_
-// FIXME: ‚±‚ÌApp‚ÍŒ»İŠÇ—‚³‚ê‚Ä‚¢‚È‚¢I
-//        g—p‚·‚é‘O‚ÉŠm”F‚·‚é‚±‚Æ
+// FIXME: ã“ã®Appã¯ç¾åœ¨ç®¡ç†ã•ã‚Œã¦ã„ãªã„ï¼
+//        ä½¿ç”¨ã™ã‚‹å‰ã«ç¢ºèªã™ã‚‹ã“ã¨
 
 #include "../System/ApplicationManager/app_info.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../TlmCmd/common_tlm_cmd_packet.h"
 
-// ”Ä—pƒJƒEƒ“ƒ^—p\‘¢‘Ì
+// æ±ç”¨ã‚«ã‚¦ãƒ³ã‚¿ç”¨æ§‹é€ ä½“
 typedef enum
 {
   UTIL_COUNTER_RES00 = 0,
@@ -61,7 +61,7 @@ extern const UtilityCounter* const utility_counter;
 
 AppInfo UTIL_COUNTER_create_app(void);
 
-// ƒRƒ}ƒ“ƒh
+// ã‚³ãƒãƒ³ãƒ‰
 CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CTCP* packet);
 CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CTCP* packet);
 CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CTCP* packet);

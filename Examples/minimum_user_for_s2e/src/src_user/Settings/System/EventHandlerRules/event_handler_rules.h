@@ -1,15 +1,15 @@
 /**
  * @file
- * @brief  EH ‚Ì Rule ‹¤’Êƒwƒbƒ_
+ * @brief  EH ã® Rule å…±é€šãƒ˜ãƒƒãƒ€
  */
 #ifndef EVENT_HANDLER_RULES_H_
 #define EVENT_HANDLER_RULES_H_
 
 /**
  * @enum  AH_RULE_ID
- * @brief EH_Rule ‚Ì ID
- * @note  Å‘å”‚Í EH_RULE_MAX ‚Å‹K’è
- * @note  uint16_t ‚ğ‘z’è
+ * @brief EH_Rule ã® ID
+ * @note  æœ€å¤§æ•°ã¯ EH_RULE_MAX ã§è¦å®š
+ * @note  uint16_t ã‚’æƒ³å®š
  */
 typedef enum
 {
@@ -25,13 +25,13 @@ typedef enum
 
 
 /**
- * @brief  event_handler ‚ÌƒfƒtƒHƒ‹ƒgƒ‹[ƒ‹‚ğ“Ç‚İ‚Ş
+ * @brief  event_handler ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ«ãƒ¼ãƒ«ã‚’èª­ã¿è¾¼ã‚€
  * @param  void
  * @return void
  */
 void EH_load_default_rules(void);
 
-// ˆÈ‰ºCƒ†[ƒU[’è‹` ƒ‹[ƒ‹“o˜^ŠÖ”éŒ¾
+// ä»¥ä¸‹ï¼Œãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾© ãƒ«ãƒ¼ãƒ«ç™»éŒ²é–¢æ•°å®£è¨€
 void EH_load_rule_test(void);
 
 #endif

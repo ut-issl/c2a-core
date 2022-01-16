@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief PacketList ‚©‚ç TCPacket ‚ğæ‚Á‚Ä‚«‚Ä‚»‚ê‚ğ‘—M‰Â”\‚È M_PDU ‚Ö‚Æ•ÏŠ·‚·‚é
+ * @brief PacketList ã‹ã‚‰ TCPacket ã‚’å–ã£ã¦ãã¦ãã‚Œã‚’é€ä¿¡å¯èƒ½ãª M_PDU ã¸ã¨å¤‰æ›ã™ã‚‹
  */
 #ifndef TCP_TO_M_PDU_H_
 #define TCP_TO_M_PDU_H_
@@ -13,7 +13,7 @@
 
 /**
  * @enum  T2M_ACK
- * @brief T2M ŠÖ”‚Ì•Ô‚è’l
+ * @brief T2M é–¢æ•°ã®è¿”ã‚Šå€¤
  */
 typedef enum
 {
@@ -25,7 +25,7 @@ typedef enum
 
 /**
  * @struct TcpToMPdu
- * @brief  TCPacket ‚ğ M_PDU ‚É•ÏŠ·‚·‚é‚Æ‚«‚É•K—v‚Èƒpƒ‰ƒ[ƒ^
+ * @brief  TCPacket ã‚’ M_PDU ã«å¤‰æ›ã™ã‚‹ã¨ãã«å¿…è¦ãªãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 typedef struct
 {
@@ -37,17 +37,17 @@ typedef struct
 } TcpToMPdu;
 
 /**
- * @brief T2M \‘¢‘Ì‚Ì‰Šú‰»
- * @param[out] tcp_to_m_pdu: ‰Šú‰»‚·‚é T2M
+ * @brief T2M æ§‹é€ ä½“ã®åˆæœŸåŒ–
+ * @param[out] tcp_to_m_pdu: åˆæœŸåŒ–ã™ã‚‹ T2M
  * @return void
  */
 void T2M_initialize(TcpToMPdu* tcp_to_m_pdu);
 
 /**
- * @brief TCPacket ‚ğ M_PDU ‚É•ÏŠ·‚·‚é
- * @param[in] pl: TCPacket ‚ğæ“¾‚·‚é Packet List
- * @param[in] tcp_to_m_pdu: •ÏŠ·‚·‚é‚Ìƒpƒ‰ƒ[ƒ^ŒQ
- * @param[out] m_pdu: ¶¬‚³‚ê‚é M_PDU
+ * @brief TCPacket ã‚’ M_PDU ã«å¤‰æ›ã™ã‚‹
+ * @param[in] pl: TCPacket ã‚’å–å¾—ã™ã‚‹ Packet List
+ * @param[in] tcp_to_m_pdu: å¤‰æ›ã™ã‚‹æ™‚ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç¾¤
+ * @param[out] m_pdu: ç”Ÿæˆã•ã‚Œã‚‹ M_PDU
  * @return T2M_ACK
  */
 T2M_ACK T2M_form_m_pdu(TcpToMPdu* tcp_to_m_pdu, PacketList* pl, M_PDU* m_pdu);

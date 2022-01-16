@@ -1,7 +1,7 @@
 /**
  * @file
- * @brief user‚ªƒeƒŒƒƒgƒŠ‹l‚Ü‚è‚ğ‚âTLˆì‚ê‚ğ–h‚¬‚Â‚ÂC‚Ü‚½CDH‚È‚Ç‚ªƒeƒŒƒƒgƒŠ‚ğŠÇ—‚µ‚â‚·‚­‚·‚é‚½‚ß‚ÌApp
- * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 ‚â telemetry_manager.h ‚ÌÅ‰º•”‚ğQÆiFIXME: ‚ ‚Æ‚Ådocument‚ÉˆÚ‚·j
+ * @brief userãŒãƒ†ãƒ¬ãƒ¡ãƒˆãƒªè©°ã¾ã‚Šã‚’ã‚„TLæº¢ã‚Œã‚’é˜²ãã¤ã¤ï¼Œã¾ãŸCDHãªã©ãŒãƒ†ãƒ¬ãƒ¡ãƒˆãƒªã‚’ç®¡ç†ã—ã‚„ã™ãã™ã‚‹ãŸã‚ã®App
+ * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 ã‚„ telemetry_manager.h ã®æœ€ä¸‹éƒ¨ã‚’å‚ç…§ï¼ˆFIXME: ã‚ã¨ã§documentã«ç§»ã™ï¼‰
  */
 #ifndef TELEMETRY_MANAGER_H_
 #define TELEMETRY_MANAGER_H_
@@ -12,35 +12,35 @@
 #include "../TlmCmd/block_command_table.h"
 
 
-#define TLM_MGR_USE_BC_NUM            (10)    //!< —p‚¢‚éBC‚Ì”DŠî–{“I‚É10ŒÅ’è‚ğ‘z’è
-#define TLM_MGR_MAX_TLM_NUM_PER_BC    (10)    //!< 1BC‚É‰½ŒÂ‚ÌƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚ğ“o˜^‚Å‚«‚é‚©DŠî–{“I‚É10ŒÅ’è‚ğ‘z’è
+#define TLM_MGR_USE_BC_NUM            (10)    //!< ç”¨ã„ã‚‹BCã®æ•°ï¼åŸºæœ¬çš„ã«10å›ºå®šã‚’æƒ³å®š
+#define TLM_MGR_MAX_TLM_NUM_PER_BC    (10)    //!< 1BCã«ä½•å€‹ã®ãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã§ãã‚‹ã‹ï¼åŸºæœ¬çš„ã«10å›ºå®šã‚’æƒ³å®š
 
 
-#if BCT_MAX_CMD_NUM < TLM_MGR_MAX_TLM_NUM_PER_BC       // FIXME: BCT‘¤‚ª’¼‚Á‚½‚ç‚È‚¨‚·
+#if BCT_MAX_CMD_NUM < TLM_MGR_MAX_TLM_NUM_PER_BC       // FIXME: BCTå´ãŒç›´ã£ãŸã‚‰ãªãŠã™
 #error BCT_MAX_CMD_NUM is not enough for TelemetryManager
 #endif
 
 
 /**
  * @enum   TLM_MGR_ERR_CODE
- * @note   uint8_t ‚ğ‘z’è
- * @brief  ”Ä—pƒGƒ‰[ƒR[ƒh
+ * @note   uint8_t ã‚’æƒ³å®š
+ * @brief  æ±ç”¨ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
  */
 typedef enum
 {
   TLM_MGR_ERR_CODE_OK,
-  TLM_MGR_ERR_CODE_MASTER_DUPLICATED,      //!< BC Às‚Ì master‚Æ‚È‚é BC ‚ªd•¡‚µ‚Ä‚¢‚é
-  TLM_MGR_ERR_CODE_MASTER_IS_ABSENT,       //!< BC Às‚Ì master‚Æ‚È‚é BC ‚ª‘¶İ‚µ‚È‚¢
-  TLM_MGR_ERR_CODE_REGISTER_INFO_BC_FULL,  //!< RegisterInfo ‚É‚±‚êˆÈã BC ‚ğ“o˜^‚Å‚«‚È‚¢
-  TLM_MGR_ERR_CODE_CMD_FULL,               //!< ‚±‚êˆÈãƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚ğ“o˜^‚Å‚«‚È‚¢
-  TLM_MGR_ERR_CODE_OTHER_ERR               //!< ‚»‚Ì‘¼‚ÌƒGƒ‰[
+  TLM_MGR_ERR_CODE_MASTER_DUPLICATED,      //!< BC å®Ÿè¡Œã® masterã¨ãªã‚‹ BC ãŒé‡è¤‡ã—ã¦ã„ã‚‹
+  TLM_MGR_ERR_CODE_MASTER_IS_ABSENT,       //!< BC å®Ÿè¡Œã® masterã¨ãªã‚‹ BC ãŒå­˜åœ¨ã—ãªã„
+  TLM_MGR_ERR_CODE_REGISTER_INFO_BC_FULL,  //!< RegisterInfo ã«ã“ã‚Œä»¥ä¸Š BC ã‚’ç™»éŒ²ã§ããªã„
+  TLM_MGR_ERR_CODE_CMD_FULL,               //!< ã“ã‚Œä»¥ä¸Šãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã§ããªã„
+  TLM_MGR_ERR_CODE_OTHER_ERR               //!< ãã®ä»–ã®ã‚¨ãƒ©ãƒ¼
 } TLM_MGR_ERR_CODE;
 
 
 /**
  * @enum   TLM_MGR_BC_TYPE
- * @note   uint8_t ‚ğ‘z’è
- * @brief  BC‚Ìƒ^ƒCƒvD‚±‚ê‚É‚ÄÀsí•Ê‚ª•Ï‚í‚é
+ * @note   uint8_t ã‚’æƒ³å®š
+ * @brief  BCã®ã‚¿ã‚¤ãƒ—ï¼ã“ã‚Œã«ã¦å®Ÿè¡Œç¨®åˆ¥ãŒå¤‰ã‚ã‚‹
  */
 typedef enum
 {
@@ -55,7 +55,7 @@ typedef enum
 
 /**
  * @struct TLM_MGR_BcInfo
- * @brief  BC‚Ìî•ñ
+ * @brief  BCã®æƒ…å ±
  */
 typedef struct
 {
@@ -66,38 +66,38 @@ typedef struct
 
 /**
  * @struct TLM_MGR_RegisterInfo
- * @brief  ‚Ç‚¤BC‚ğŠÇ—‚µCƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚ğ“o˜^‚µC“®‚©‚µ‚Ä‚¢‚­‚©‚Ìî•ñ
- * @note   TLM_MGR_BcInfo ‚Ìî•ñ‚©‚ç¶¬‚³‚ê‚é
+ * @brief  ã©ã†BCã‚’ç®¡ç†ã—ï¼Œãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã—ï¼Œå‹•ã‹ã—ã¦ã„ãã‹ã®æƒ…å ±
+ * @note   TLM_MGR_BcInfo ã®æƒ…å ±ã‹ã‚‰ç”Ÿæˆã•ã‚Œã‚‹
  */
 typedef struct
 {
-  uint8_t bc_info_idx[TLM_MGR_USE_BC_NUM];             //!< bc_info ‚Ì‚Ç‚Ì idx ‚Ì BC ‚ğg‚¤‚©DstaticŠm•Û‚Ì‚½‚ßCÅ‘å” TLM_MGR_USE_BC_NUM ‚Ì”z—ñ‚ğŠm•Û
-  uint8_t bc_info_idx_used_num;                        //!< g—p‚µ‚Ä‚¢‚é BC ”
-  uint8_t tlm_register_pointer_to_idx_of_bc_info_idx;  //!< Ÿ‚ÉƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚ğ“o˜^‚µ‚½ê‡‚Ég—p‚³‚ê‚é bc_info_idx ‚Ì”z—ñ idx
-  uint8_t tlm_register_pointer_to_bc_cmd_idx;          //!< Ÿ‚ÉƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚ğ“o˜^‚µ‚½ê‡‚É“o˜^‚·‚éBC pos.cmd
+  uint8_t bc_info_idx[TLM_MGR_USE_BC_NUM];             //!< bc_info ã®ã©ã® idx ã® BC ã‚’ä½¿ã†ã‹ï¼staticç¢ºä¿ã®ãŸã‚ï¼Œæœ€å¤§æ•° TLM_MGR_USE_BC_NUM ã®é…åˆ—ã‚’ç¢ºä¿
+  uint8_t bc_info_idx_used_num;                        //!< ä½¿ç”¨ã—ã¦ã„ã‚‹ BC æ•°
+  uint8_t tlm_register_pointer_to_idx_of_bc_info_idx;  //!< æ¬¡ã«ãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã—ãŸå ´åˆã«ä½¿ç”¨ã•ã‚Œã‚‹ bc_info_idx ã®é…åˆ— idx
+  uint8_t tlm_register_pointer_to_bc_cmd_idx;          //!< æ¬¡ã«ãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã—ãŸå ´åˆã«ç™»éŒ²ã™ã‚‹BC pos.cmd
 } TLM_MGR_RegisterInfo;
 
 
 /**
  * @struct TelemetryManager
- * @brief  TelemetryManager ‚Ì AppInfo\‘¢‘Ì
+ * @brief  TelemetryManager ã® AppInfoæ§‹é€ ä½“
  */
 typedef struct
 {
   TLM_MGR_BcInfo bc_info[TLM_MGR_USE_BC_NUM];
   struct
   {
-    TLM_MGR_RegisterInfo master;          //!< BC‘S‘Ì‚ğ“WŠJ‚µ‚Ä‚¢‚­ master BC
-    TLM_MGR_RegisterInfo hk_tlm;          //!< HK ƒeƒŒƒi1 Hzj
-    TLM_MGR_RegisterInfo system_tlm;      /*!< ‘SŒn‚âsystem‚Å“ü‚ê‚Ä‚¨‚«‚½‚¢tlmi1 Hzj
-                                               user‚ÌtlmÁ‹D’Ç‰Á‚Ì‰e‹¿‚ğó‚¯‚È‚¢
-                                               ‚±‚ê‚É‚æ‚Á‚ÄCtlm‚Ì‘S‘ÌŠÇ—‚ª—eˆÕ‚É‚È‚é  */
-    TLM_MGR_RegisterInfo high_freq_tlm;   //!< user ƒeƒŒƒi1 Hzj
-    TLM_MGR_RegisterInfo low_freq_tlm;    //!< user ƒeƒŒƒi1/10 Hzj
-    TLM_MGR_RegisterInfo reserve;         //!< Œ»óg‚Á‚Ä‚È‚¢BCD•‚‚­‚Ì‚ªŒ™‚È‚Ì‚ÅCƒƒ“ƒo‚Íì‚é‚ªƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚Í“o˜^‚³‚ê‚È‚¢
+    TLM_MGR_RegisterInfo master;          //!< BCå…¨ä½“ã‚’å±•é–‹ã—ã¦ã„ã master BC
+    TLM_MGR_RegisterInfo hk_tlm;          //!< HK ãƒ†ãƒ¬ãƒ¡ï¼ˆ1 Hzï¼‰
+    TLM_MGR_RegisterInfo system_tlm;      /*!< å…¨ç³»ã‚„systemã§å…¥ã‚Œã¦ãŠããŸã„tlmï¼ˆ1 Hzï¼‰
+                                               userã®tlmæ¶ˆå»ï¼è¿½åŠ ã®å½±éŸ¿ã‚’å—ã‘ãªã„
+                                               ã“ã‚Œã«ã‚ˆã£ã¦ï¼Œtlmã®å…¨ä½“ç®¡ç†ãŒå®¹æ˜“ã«ãªã‚‹  */
+    TLM_MGR_RegisterInfo high_freq_tlm;   //!< user ãƒ†ãƒ¬ãƒ¡ï¼ˆ1 Hzï¼‰
+    TLM_MGR_RegisterInfo low_freq_tlm;    //!< user ãƒ†ãƒ¬ãƒ¡ï¼ˆ1/10 Hzï¼‰
+    TLM_MGR_RegisterInfo reserve;         //!< ç¾çŠ¶ä½¿ã£ã¦ãªã„BCï¼æµ®ãã®ãŒå«Œãªã®ã§ï¼Œãƒ¡ãƒ³ãƒã¯ä½œã‚‹ãŒãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã¯ç™»éŒ²ã•ã‚Œãªã„
   } register_info;
   bct_id_t master_bc_id;
-  uint8_t is_inited;                      //!< ‰Šú‰»‚³‚ê‚Ä‚¢‚é‚©H
+  uint8_t is_inited;                      //!< åˆæœŸåŒ–ã•ã‚Œã¦ã„ã‚‹ã‹ï¼Ÿ
 } TelemetryManager;
 
 
@@ -107,91 +107,91 @@ AppInfo TLM_MGR_create_app(void);
 
 
 /**
- * @brief ‰Šú‰»
+ * @brief åˆæœŸåŒ–
  */
 CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet);
 
 /**
- * @brief master bc ‚Ì‰Šú‰»
+ * @brief master bc ã®åˆæœŸåŒ–
  */
 CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CTCP* packet);
 
 /**
- * @brief HKƒeƒŒƒ‚ğ‰Šú‰»
+ * @brief HKãƒ†ãƒ¬ãƒ¡ã‚’åˆæœŸåŒ–
  */
 CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CTCP* packet);
 
 /**
- * @brief systemƒeƒŒƒ‚ğ‰Šú‰»
+ * @brief systemãƒ†ãƒ¬ãƒ¡ã‚’åˆæœŸåŒ–
  */
 CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CTCP* packet);
 
 /**
- * @brief high_freq_tlm, low_freq_tlm ‚ğ‰Šú‰»
- * @note  •Ö‹Xã TLM_MGR_BC_TYPE_RESERVE ‚Ì BC ‚à‰Šú‰»‚µ‚Ä‚µ‚Ü‚¤
+ * @brief high_freq_tlm, low_freq_tlm ã‚’åˆæœŸåŒ–
+ * @note  ä¾¿å®œä¸Š TLM_MGR_BC_TYPE_RESERVE ã® BC ã‚‚åˆæœŸåŒ–ã—ã¦ã—ã¾ã†
  */
 CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet);
 
 /**
- * @brief TLM‘—oŠJn
- * @note  master bc ‚Ì––”ö‚ğ Cmd_TLCD_DEPLOY_BLOCK ‚É‚µ‚Ä deploy block ‚µ‚Ä‚¢‚é‚¾‚¯
+ * @brief TLMé€å‡ºé–‹å§‹
+ * @note  master bc ã®æœ«å°¾ã‚’ Cmd_TLCD_DEPLOY_BLOCK ã«ã—ã¦ deploy block ã—ã¦ã„ã‚‹ã ã‘
  */
 CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet);
 
 /**
- * @brief TLM‘—oˆê’â~
- * @note  master bc ‚Ì––”ö‚Ì Cmd_TLCD_DEPLOY_BLOCK ‚ğ NOP ‚É·‚µ‘Ö‚¦‚Ä‚¢‚é‚¾‚¯
- * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE / Cmd_TLM_MGR_CLEAR_TLM_TL ‚¾‚Æ‘¼‚Ì‚à‚Ì‚àÁ‚¦‚Ä‚µ‚Ü‚¤
- * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE / Cmd_TLM_MGR_CLEAR_TLM_TL ‚Ì‚Ù‚¤‚ª“KØ‚Èê‡‚à‚ ‚é‚Ì‚Å‚æ‚­l‚¦‚é‚±‚Æ
+ * @brief TLMé€å‡ºä¸€æ™‚åœæ­¢
+ * @note  master bc ã®æœ«å°¾ã® Cmd_TLCD_DEPLOY_BLOCK ã‚’ NOP ã«å·®ã—æ›¿ãˆã¦ã„ã‚‹ã ã‘
+ * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE / Cmd_TLM_MGR_CLEAR_TLM_TL ã ã¨ä»–ã®ã‚‚ã®ã‚‚æ¶ˆãˆã¦ã—ã¾ã†
+ * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE / Cmd_TLM_MGR_CLEAR_TLM_TL ã®ã»ã†ãŒé©åˆ‡ãªå ´åˆã‚‚ã‚ã‚‹ã®ã§ã‚ˆãè€ƒãˆã‚‹ã“ã¨
  */
 CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet);
 
 /**
- * @brief TLM‘—o—pTL‚ğƒNƒŠƒA
- * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE ‚µ‚Ä‚¢‚é‚¾‚¯
- * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE ‚ğGS‚©‚ç‘—‚Á‚Ä‚à‚¢‚¢‚ªC TL No ‚ªƒ}ƒWƒbƒNƒiƒ“ƒo[‚É‚È‚é‚Ì‚ÅD
+ * @brief TLMé€å‡ºç”¨TLã‚’ã‚¯ãƒªã‚¢
+ * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE ã—ã¦ã„ã‚‹ã ã‘
+ * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE ã‚’GSã‹ã‚‰é€ã£ã¦ã‚‚ã„ã„ãŒï¼Œ TL No ãŒãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼ã«ãªã‚‹ã®ã§ï¼
  */
 CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CTCP* packet);
 
 /**
- * @brief HKƒeƒŒƒ‚ğ“o˜^
+ * @brief HKãƒ†ãƒ¬ãƒ¡ã‚’ç™»éŒ²
  */
 CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CTCP* packet);
 
 /**
- * @brief systemƒeƒŒƒ‚ğ“o˜^
+ * @brief systemãƒ†ãƒ¬ãƒ¡ã‚’ç™»éŒ²
  */
 CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CTCP* packet);
 
 /**
- * @brief high_freq_tlm ‚ğ“o˜^
+ * @brief high_freq_tlm ã‚’ç™»éŒ²
  */
 CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CTCP* packet);
 
 /**
- * @brief low_freq_tlm ‚ğ“o˜^
+ * @brief low_freq_tlm ã‚’ç™»éŒ²
  */
 CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CTCP* packet);
 
 
-// TODO: ‚¢‚«‚È‚èİ’è‚ª•Ï‚í‚é‚Ì‚Å‚Í‚È‚­Cİ’è•ÏX ¨ ”½‰fC‚É‚µ‚½‚¢D
+// TODO: ã„ããªã‚Šè¨­å®šãŒå¤‰ã‚ã‚‹ã®ã§ã¯ãªãï¼Œè¨­å®šå¤‰æ›´ â†’ åæ˜ ï¼Œã«ã—ãŸã„ï¼
 // CCP_EXEC_STS Cmd_TLM_MGR_APPLY(const CTCP* packet);
 
 
 // *** HOW TO USE ***
 /*
-1. ‰Šú‰»FCmd_TLM_MGR_INIT
-  - BC‚ğ‚¢‚¶‚é‚½‚ßCApp‚Ì‰Šú‰»‚Å‚ÍŒ»“_‚Å‚Å‚«‚È‚¢‚Ì‚ÅC–¾¦“I‚É‰Šú‰»‚·‚é•K—v‚ ‚è
-    - initial SL‚É‚¢‚ê‚Ä‚à‚¢‚¢‚©‚à
-2. ”ñƒ†[ƒU[ƒeƒŒƒ‚Ì“o˜^
-  - HK, SYSTEM TLM‚ğ“o˜^‚µ‚Ä‚¨‚­ ( Cmd_TLM_MGR_REGISTER_HOGE ‚Å )
-3. ƒeƒŒƒ‘—oŠJn
-  - ‰‰ñ‚Í”O‚Ìˆ× Cmd_TLM_MGR_CLEAR_TLM_TL ‚ğ‚µ‚ÄCŠù‘¶‚ÌTL2‚ğÁ‚·
-  - Cmd_TLM_MGR_START_TLM ‚É‚ÄƒeƒŒƒ‘—oŠJn
-    - ~‚ß‚é‚Ì‚Í Cmd_TLM_MGR_STOP_TLM
-4. Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM / Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM ‚É‚ÄC1 Hz, 1/10 Hz ‚Ìƒ†[ƒU[ƒeƒŒƒ‚ğŠel‚ªD‚«‚É“o˜^‚Å‚«‚é
-5. Œ±‚ªI‚í‚Á‚½‚ç Cmd_TLM_MGR_CLEAR_USER_TLM ‚ğ‚µ‚ÄCƒ†[ƒU[ƒeƒŒƒ‚ğÁ‚·
-6. Ÿ‚Ég‚¤l‚ª‚¢‚½‚çC4.‚©‚çŒJ‚è•Ô‚·
+1. åˆæœŸåŒ–ï¼šCmd_TLM_MGR_INIT
+  - BCã‚’ã„ã˜ã‚‹ãŸã‚ï¼ŒAppã®åˆæœŸåŒ–ã§ã¯ç¾æ™‚ç‚¹ã§ã§ããªã„ã®ã§ï¼Œæ˜ç¤ºçš„ã«åˆæœŸåŒ–ã™ã‚‹å¿…è¦ã‚ã‚Š
+    - initial SLã«ã„ã‚Œã¦ã‚‚ã„ã„ã‹ã‚‚
+2. éãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ†ãƒ¬ãƒ¡ã®ç™»éŒ²
+  - HK, SYSTEM TLMã‚’ç™»éŒ²ã—ã¦ãŠã ( Cmd_TLM_MGR_REGISTER_HOGE ã§ )
+3. ãƒ†ãƒ¬ãƒ¡é€å‡ºé–‹å§‹
+  - åˆå›ã¯å¿µã®ç‚º Cmd_TLM_MGR_CLEAR_TLM_TL ã‚’ã—ã¦ï¼Œæ—¢å­˜ã®TL2ã‚’æ¶ˆã™
+  - Cmd_TLM_MGR_START_TLM ã«ã¦ãƒ†ãƒ¬ãƒ¡é€å‡ºé–‹å§‹
+    - æ­¢ã‚ã‚‹ã®ã¯ Cmd_TLM_MGR_STOP_TLM
+4. Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM / Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM ã«ã¦ï¼Œ1 Hz, 1/10 Hz ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ†ãƒ¬ãƒ¡ã‚’å„äººãŒå¥½ãã«ç™»éŒ²ã§ãã‚‹
+5. è©¦é¨“ãŒçµ‚ã‚ã£ãŸã‚‰ Cmd_TLM_MGR_CLEAR_USER_TLM ã‚’ã—ã¦ï¼Œãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ†ãƒ¬ãƒ¡ã‚’æ¶ˆã™
+6. æ¬¡ã«ä½¿ã†äººãŒã„ãŸã‚‰ï¼Œ4.ã‹ã‚‰ç¹°ã‚Šè¿”ã™
 
 */
 

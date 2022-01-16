@@ -36,7 +36,7 @@ CCP_EXEC_STS Cmd_RTCD_CLEAR_ERR_LOG(const CTCP* packet)
 {
   (void)packet;
 
-  // ‹L˜^‚³‚ê‚½ƒGƒ‰[î•ñ‚ğ‰ğœB
+  // è¨˜éŒ²ã•ã‚ŒãŸã‚¨ãƒ©ãƒ¼æƒ…å ±ã‚’è§£é™¤ã€‚
   CDIS_clear_error_status(&realtime_command_dispatcher_);
   return CCP_EXEC_SUCCESS;
 }

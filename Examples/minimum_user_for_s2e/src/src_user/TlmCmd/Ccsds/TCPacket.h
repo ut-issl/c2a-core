@@ -34,8 +34,8 @@ typedef enum
 
 /**
  * @enum   TCP_TYPE
- * @brief  tlm or cmd ‚ğ‹K’è
- * @note   0/1‚Ì1bit
+ * @brief  tlm or cmd ã‚’è¦å®š
+ * @note   0/1ã®1bit
  */
 typedef enum
 {
@@ -45,8 +45,8 @@ typedef enum
 
 /**
  * @enum   TCP_2ND_HDR_FLAG
- * @brief  TCP ‚Ì Secondary Header Flag ‚Ì—L–³
- * @note   0/1‚Ì1bit
+ * @brief  TCP ã® Secondary Header Flag ã®æœ‰ç„¡
+ * @note   0/1ã®1bit
  */
 typedef enum
 {
@@ -57,9 +57,9 @@ typedef enum
 /**
  * @enum   TCP_APID
  * @brief  Application Process ID
- * @note   GSTOS ‚Ì’~Ïƒf[ƒ^‚ÌŠg’£q‚É‚Â‚­”š
+ * @note   GSTOS ã®è“„ç©ãƒ‡ãƒ¼ã‚¿ã®æ‹¡å¼µå­ã«ã¤ãæ•°å­—
  * @note   11bit
- * @note   CTCP_DEST_ID ‚Æ‚µ‚Ä typedef ‚·‚é
+ * @note   CTCP_DEST_ID ã¨ã—ã¦ typedef ã™ã‚‹
  */
 typedef enum
 {
@@ -77,8 +77,8 @@ typedef enum
  * @enum   TCP_SEQ_FLAG
  * @brief  Sequence Flag
  * @note   2bit
- * @note   Packet Sequence Flag for each ADU ‚à‚±‚ê‚ğ—p‚¢‚éD
- *         ‚»‚Ìê‡C component ‚ğ segment ‚Æ“Ç‚İ‘Ö‚¦‚éD
+ * @note   Packet Sequence Flag for each ADU ã‚‚ã“ã‚Œã‚’ç”¨ã„ã‚‹ï¼
+ *         ãã®å ´åˆï¼Œ component ã‚’ segment ã¨èª­ã¿æ›¿ãˆã‚‹ï¼
  */
 typedef enum
 {
@@ -115,13 +115,13 @@ typedef enum
 
 /**
  * @enum   TCP_CMD_EXEC_TYPE
- * @brief  ƒRƒ}ƒ“ƒhÀsí•Ê
- * @note   0x0*‚ğ‘z’èiãˆÊ4bit‚Í‘¼‚ÌC2A‚ğ“‹Ú‚µ‚½ƒ{[ƒh—p‚É“]‘—‚·‚é‚½‚ß‚Ég‚¤‚½‚ßj
- *         ‚»‚Ì’è‹`‚Í TCP_DEST_TYPE ‚É‚ ‚é
- *         pure TCP‚Í‚±‚±‚ª8bit‚Å‚ ‚é‚±‚Æ‚É’ˆÓ
- * @note   TCP_CMD_EXEC_TYPE ‚Æ CCP_EXEC_TYPE ‚Ì’è‹`‚Íˆê’v (³Šm‚É‚ÍA‘OÒ‚ÍŒãÒ‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚é)
- *         CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet) ‚ğQÆ
- * @note   GS‚©‚ç‚ÌOBC.TL‚âCC2A“à‚ÌCCP_form_tlc‚Í‚·‚×‚ÄTL0ˆµ‚¢‚É‚È‚é
+ * @brief  ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œç¨®åˆ¥
+ * @note   0x0*ã‚’æƒ³å®šï¼ˆä¸Šä½4bitã¯ä»–ã®C2Aã‚’æ­è¼‰ã—ãŸãƒœãƒ¼ãƒ‰ç”¨ã«è»¢é€ã™ã‚‹ãŸã‚ã«ä½¿ã†ãŸã‚ï¼‰
+ *         ãã®å®šç¾©ã¯ TCP_DEST_TYPE ã«ã‚ã‚‹
+ *         pure TCPã¯ã“ã“ãŒ8bitã§ã‚ã‚‹ã“ã¨ã«æ³¨æ„
+ * @note   TCP_CMD_EXEC_TYPE ã¨ CCP_EXEC_TYPE ã®å®šç¾©ã¯ä¸€è‡´ (æ­£ç¢ºã«ã¯ã€å‰è€…ã¯å¾Œè€…ã«å«ã¾ã‚Œã¦ã„ã‚‹)
+ *         CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet) ã‚’å‚ç…§
+ * @note   GSã‹ã‚‰ã®OBC.TLã‚„ï¼ŒC2Aå†…ã®CCP_form_tlcã¯ã™ã¹ã¦TL0æ‰±ã„ã«ãªã‚‹
  */
 typedef enum
 {
@@ -135,11 +135,11 @@ typedef enum
 
 /**
  * @enum   TCP_CMD_DEST_TYPE
- * @brief  ƒRƒ}ƒ“ƒh‚Ì‰ğß‚Ìˆ¶æ‚ğ‹K’è
- * @note   TO_ME: ©•ª©g ¨ ©•ª©g‚ÌTLC‚âBC‚Æ‚µ‚Ä‰ğß
- * @note   TO_*:  “]‘—æ‚ÌTL‚âBC‚Æ‚µ‚Ä‰ğßiGS‚©‚ç—ˆ‚½ƒRƒ}ƒ“ƒh‚ğ©g‚ÌƒLƒ…[‚É‚¢‚ê‚È‚¢j
- * @note   0x*0‚ğ‘z’è
- * @note   ‰ºˆÊ4bit‚Í TCP_CMD_EXEC_TYPE ‚Æ CCP_EXEC_TYPE ‚É
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ã®è§£é‡ˆã®å®›å…ˆã‚’è¦å®š
+ * @note   TO_ME: è‡ªåˆ†è‡ªèº« â†’ è‡ªåˆ†è‡ªèº«ã®TLCã‚„BCã¨ã—ã¦è§£é‡ˆ
+ * @note   TO_*:  è»¢é€å…ˆã®TLã‚„BCã¨ã—ã¦è§£é‡ˆï¼ˆGSã‹ã‚‰æ¥ãŸã‚³ãƒãƒ³ãƒ‰ã‚’è‡ªèº«ã®ã‚­ãƒ¥ãƒ¼ã«ã„ã‚Œãªã„ï¼‰
+ * @note   0x*0ã‚’æƒ³å®š
+ * @note   ä¸‹ä½4bitã¯ TCP_CMD_EXEC_TYPE ã¨ CCP_EXEC_TYPE ã«
  */
 typedef enum
 {
@@ -156,14 +156,14 @@ typedef enum
 // *******************
 
 /**
- * @brief  TCP ver ‚ğæ“¾
+ * @brief  TCP ver ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_VER
  */
 TCP_VER TCP_get_ver(const TCP* tcp);
 
 /**
- * @brief  TCP ver ‚ğİ’è
+ * @brief  TCP ver ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     ver: TCP_VER
  * @return void
@@ -171,14 +171,14 @@ TCP_VER TCP_get_ver(const TCP* tcp);
 void TCP_set_ver(TCP* tcp, TCP_VER ver);
 
 /**
- * @brief  TCP type ‚ğæ“¾
+ * @brief  TCP type ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_TYPE
  */
 TCP_TYPE TCP_get_type(const TCP* tcp);
 
 /**
- * @brief  TCP type ‚ğİ’è
+ * @brief  TCP type ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     type: TCP_TYPE
  * @return void
@@ -186,14 +186,14 @@ TCP_TYPE TCP_get_type(const TCP* tcp);
 void TCP_set_type(TCP* tcp, TCP_TYPE type);
 
 /**
- * @brief  TCP Secondary Header Flag ‚ğæ“¾
+ * @brief  TCP Secondary Header Flag ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_2ND_HDR_FLAG
  */
 TCP_2ND_HDR_FLAG TCP_get_2nd_hdr_flag(const TCP* tcp);
 
 /**
- * @brief  TCP Secondary Header Flag ‚ğİ’è
+ * @brief  TCP Secondary Header Flag ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     flag: TCP_2ND_HDR_FLAG
  * @return void
@@ -201,14 +201,14 @@ TCP_2ND_HDR_FLAG TCP_get_2nd_hdr_flag(const TCP* tcp);
 void TCP_set_2nd_hdr_flag(TCP* tcp, TCP_2ND_HDR_FLAG flag);
 
 /**
- * @brief  APID ‚ğæ“¾
+ * @brief  APID ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_APID
  */
 TCP_APID TCP_get_apid(const TCP* tcp);
 
 /**
- * @brief  APID ‚ğİ’è
+ * @brief  APID ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     apid: APID
  * @return void
@@ -216,14 +216,14 @@ TCP_APID TCP_get_apid(const TCP* tcp);
 void TCP_set_apid(TCP* tcp, TCP_APID apid);
 
 /**
- * @brief  Sequence Flag ‚ğæ“¾
+ * @brief  Sequence Flag ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_SEQ_FLAG
  */
 TCP_SEQ_FLAG TCP_get_seq_flag(const TCP* tcp);
 
 /**
- * @brief  Sequence Flag ‚ğİ’è
+ * @brief  Sequence Flag ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     flag: TCP_SEQ_FLAG
  * @return void
@@ -231,14 +231,14 @@ TCP_SEQ_FLAG TCP_get_seq_flag(const TCP* tcp);
 void TCP_set_seq_flag(TCP* tcp, TCP_SEQ_FLAG flag);
 
 /**
- * @brief  Sequence Count ‚ğæ“¾
+ * @brief  Sequence Count ã‚’å–å¾—
  * @param  tcp: TCP
  * @return Sequence Count
  */
 uint16_t TCP_get_seq_cnt(const TCP* tcp);
 
 /**
- * @brief  Sequence Count ‚ğİ’è
+ * @brief  Sequence Count ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     cnt: Sequence Count
  * @return void
@@ -246,15 +246,15 @@ uint16_t TCP_get_seq_cnt(const TCP* tcp);
 void TCP_set_seq_cnt(TCP* tcp, uint16_t cnt);
 
 /**
- * @brief  Packet Length ‚ğæ“¾
+ * @brief  Packet Length ã‚’å–å¾—
  * @param  tcp: TCP
  * @return Packet Length
  */
 uint16_t TCP_get_packet_len(const TCP* tcp);
 
 /**
- * @brief  Packet Length ‚ğİ’è
- * @note   Packet Length ‚Æ‚Í space packet ‚ÌPACKET DATA FIELD ’·‚Å‚ ‚èC PRIMARY HEADER ‚ğŠÜ‚Ü‚È‚¢
+ * @brief  Packet Length ã‚’è¨­å®š
+ * @note   Packet Length ã¨ã¯ space packet ã®PACKET DATA FIELD é•·ã§ã‚ã‚Šï¼Œ PRIMARY HEADER ã‚’å«ã¾ãªã„
  *         ( https://public.ccsds.org/Pubs/133x0b2e1.pdf )
  * @param[in,out] tcp: TCP
  * @param[in]     len: Packet Length
@@ -263,10 +263,10 @@ uint16_t TCP_get_packet_len(const TCP* tcp);
 void TCP_set_packet_len(TCP* tcp, uint16_t len);
 
 /**
- * @brief  TCP ‚ğƒRƒs[
- * @note   ‚‘¬‰»‚Ì‚½‚ß‚·‚·‚×‚Ä‚Å‚Í‚È‚­•K—vÅ’áŒÀ‚µ‚©ƒRƒs[‚µ‚È‚¢ê‡
- * @param[in,out] dest: ƒRƒs[æ TCP
- * @param[in]     src:  ƒRƒs[Œ³ TCP
+ * @brief  TCP ã‚’ã‚³ãƒ”ãƒ¼
+ * @note   é«˜é€ŸåŒ–ã®ãŸã‚ã™ã™ã¹ã¦ã§ã¯ãªãå¿…è¦æœ€ä½é™ã—ã‹ã‚³ãƒ”ãƒ¼ã—ãªã„å ´åˆ
+ * @param[in,out] dest: ã‚³ãƒ”ãƒ¼å…ˆ TCP
+ * @param[in]     src:  ã‚³ãƒ”ãƒ¼å…ƒ TCP
  * @return void
  */
 void TCP_copy_packet(TCP* dest, const TCP* src);
@@ -276,14 +276,14 @@ void TCP_copy_packet(TCP* dest, const TCP* src);
 // ***********************
 
 /**
- * @brief  Format ID ‚ğæ“¾
+ * @brief  Format ID ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_CMD_FMT_ID
  */
 TCP_CMD_FMT_ID TCP_CMD_get_fmt_id(const TCP* tcp);
 
 /**
- * @brief  Format ID ‚ğİ’è
+ * @brief  Format ID ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     id:  TCP_CMD_FMT_ID
  * @return void
@@ -291,14 +291,14 @@ TCP_CMD_FMT_ID TCP_CMD_get_fmt_id(const TCP* tcp);
 void TCP_CMD_set_fmt_id(TCP* tcp, TCP_CMD_FMT_ID id);
 
 /**
- * @brief  Command Type ‚ğæ“¾
+ * @brief  Command Type ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_CMD_TYPE
  */
 TCP_CMD_TYPE TCP_CMD_get_type(const TCP* tcp);
 
 /**
- * @brief  Command Type ‚ğİ’è
+ * @brief  Command Type ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     type: TCP_CMD_TYPE
  * @return void
@@ -306,14 +306,14 @@ TCP_CMD_TYPE TCP_CMD_get_type(const TCP* tcp);
 void TCP_CMD_set_type(TCP* tcp, TCP_CMD_TYPE type);
 
 /**
- * @brief  channel ID ‚ğæ“¾
+ * @brief  channel ID ã‚’å–å¾—
  * @param  tcp: TCP
  * @return channel ID
  */
 uint16_t TCP_CMD_get_channel_id(const TCP* tcp);
 
 /**
- * @brief  channel ID ‚ğİ’è
+ * @brief  channel ID ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     id:  channel ID
  * @return void
@@ -321,14 +321,14 @@ uint16_t TCP_CMD_get_channel_id(const TCP* tcp);
 void TCP_CMD_set_channel_id(TCP* tcp, uint16_t id);
 
 /**
- * @brief  EXEC_TYPE ‚ğæ“¾
+ * @brief  EXEC_TYPE ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_CMD_EXEC_TYPE
  */
 TCP_CMD_EXEC_TYPE TCP_CMD_get_exec_type(const TCP* tcp);
 
 /**
- * @brief  EXEC_TYPE ‚ğİ’è
+ * @brief  EXEC_TYPE ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     type: TCP_CMD_EXEC_TYPE
  * @return void
@@ -336,31 +336,31 @@ TCP_CMD_EXEC_TYPE TCP_CMD_get_exec_type(const TCP* tcp);
 void TCP_CMD_set_exec_type(TCP* tcp, TCP_CMD_EXEC_TYPE type);
 
 /**
- * @brief  CMD_DEST_TYPE ‚ğæ“¾
+ * @brief  CMD_DEST_TYPE ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_CMD_DEST_TYPE
- * @note   2021/01/22‚É TCP_CMD_EXEC_TYPE ‚ÌãˆÊ4bit‚ğ”qØ‚·‚éŒ`‚Å’Ç‰ÁÀ‘•
+ * @note   2021/01/22ã« TCP_CMD_EXEC_TYPE ã®ä¸Šä½4bitã‚’æ‹å€Ÿã™ã‚‹å½¢ã§è¿½åŠ å®Ÿè£…
  */
 TCP_CMD_DEST_TYPE TCP_CMD_get_dest_type(const TCP* tcp);
 
 /**
- * @brief  CMD_DEST_TYPE ‚ğİ’è
+ * @brief  CMD_DEST_TYPE ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     type: TCP_CMD_DEST_TYPE
  * @return void
- * @note   2021/01/22‚É TCP_CMD_EXEC_TYPE ‚ÌãˆÊ4bit‚ğ”qØ‚·‚éŒ`‚Å’Ç‰ÁÀ‘•
+ * @note   2021/01/22ã« TCP_CMD_EXEC_TYPE ã®ä¸Šä½4bitã‚’æ‹å€Ÿã™ã‚‹å½¢ã§è¿½åŠ å®Ÿè£…
  */
 void TCP_CMD_set_dest_type(TCP* tcp, TCP_CMD_DEST_TYPE type);
 
 /**
- * @brief  Time Indicator (TI) ‚ğæ“¾
+ * @brief  Time Indicator (TI) ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TI
  */
 uint32_t TCP_CMD_get_ti(const TCP* tcp);
 
 /**
- * @brief  Time Indicator (TI) ‚ğİ’è
+ * @brief  Time Indicator (TI) ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     ti:  TI
  * @return void
@@ -368,23 +368,23 @@ uint32_t TCP_CMD_get_ti(const TCP* tcp);
 void TCP_CMD_set_ti(TCP* tcp, uint32_t ti);
 
 /**
- * @brief  æ“ª‚Ìƒpƒ‰ƒƒ^‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾
+ * @brief  å…ˆé ­ã®ãƒ‘ãƒ©ãƒ¡ã‚¿ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
  * @param  tcp: TCP
  * @return *param_head
  */
 const uint8_t* TCP_CMD_get_param_head(const TCP* tcp);
 
 /**
- * @brief  ƒpƒ‰ƒƒ^‚ğİ’è
+ * @brief  ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’è¨­å®š
  * @param[in,out] tcp:   TCP
- * @param[in]     param: ƒpƒ‰ƒƒ^”z—ñ‚Ìƒ|ƒCƒ“ƒ^
- * @param[in]     len:   ƒpƒ‰ƒƒ^’·
+ * @param[in]     param: ãƒ‘ãƒ©ãƒ¡ã‚¿é…åˆ—ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param[in]     len:   ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
  * @return void
  */
 void TCP_CMD_set_param(TCP* tcp, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  ‹¤’Ê•”•ª‚Ì Header ‚ğ\’z
+ * @brief  å…±é€šéƒ¨åˆ†ã® Header ã‚’æ§‹ç¯‰
  * @param[in,out] tcp:  TCP
  * @return void
  */
@@ -396,14 +396,14 @@ void TCP_CMD_set_common_hdr(TCP* tcp);
 // ***********************
 
 /**
- * @brief  Time Indicator (TI) ‚ğæ“¾
+ * @brief  Time Indicator (TI) ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TI
  */
 uint32_t TCP_TLM_get_ti(const TCP* tcp);
 
 /**
- * @brief  Time Indicator (TI) ‚ğİ’è
+ * @brief  Time Indicator (TI) ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     ti:  TI
  * @return void
@@ -411,14 +411,14 @@ uint32_t TCP_TLM_get_ti(const TCP* tcp);
 void TCP_TLM_set_ti(TCP* tcp, uint32_t ti);
 
 /**
- * @brief  category ‚ğæ“¾
+ * @brief  category ã‚’å–å¾—
  * @param  tcp: TCP
  * @return category
  */
 uint8_t TCP_TLM_get_category(const TCP* tcp);
 
 /**
- * @brief  category ‚ğİ’è
+ * @brief  category ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     category: category
  * @return void
@@ -426,14 +426,14 @@ uint8_t TCP_TLM_get_category(const TCP* tcp);
 void TCP_TLM_set_category(TCP* tcp, uint8_t category);
 
 /**
- * @brief  packet id ‚ğæ“¾
+ * @brief  packet id ã‚’å–å¾—
  * @param  tcp: TCP
  * @return packet id
  */
 uint8_t TCP_TLM_get_packet_id(const TCP* tcp);
 
 /**
- * @brief  packet id ‚ğİ’è
+ * @brief  packet id ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     id:  packet id
  * @return void
@@ -441,14 +441,14 @@ uint8_t TCP_TLM_get_packet_id(const TCP* tcp);
 void TCP_TLM_set_packet_id(TCP* tcp, uint8_t id);
 
 /**
- * @brief  Packet Sequence Flag for each ADU ‚ğæ“¾
+ * @brief  Packet Sequence Flag for each ADU ã‚’å–å¾—
  * @param  tcp: TCP
  * @return TCP_SEQ_FLAG
  */
 TCP_SEQ_FLAG TCP_TLM_get_adu_seq_flag(const TCP* tcp);
 
 /**
- * @brief  Packet Sequence Flag for each ADU ‚ğİ’è
+ * @brief  Packet Sequence Flag for each ADU ã‚’è¨­å®š
  * @param[in,out] tcp:  TCP
  * @param[in]     flag: TCP_SEQ_FLAG
  * @return void
@@ -456,14 +456,14 @@ TCP_SEQ_FLAG TCP_TLM_get_adu_seq_flag(const TCP* tcp);
 void TCP_TLM_set_adu_seq_flag(TCP* tcp, TCP_SEQ_FLAG flag);
 
 /**
- * @brief  ADU Count ‚ğæ“¾
+ * @brief  ADU Count ã‚’å–å¾—
  * @param  tcp: TCP
  * @return ADU Count
  */
 uint8_t TCP_TLM_get_adu_cnt(const TCP* tcp);
 
 /**
- * @brief  ADU Count ‚ğİ’è
+ * @brief  ADU Count ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     cnt: ADU Count
  * @return void
@@ -471,14 +471,14 @@ uint8_t TCP_TLM_get_adu_cnt(const TCP* tcp);
 void TCP_TLM_set_adu_cnt(TCP* tcp, uint8_t cnt);
 
 /**
- * @brief  Packet Sequence Count for each ADU ‚ğæ“¾
+ * @brief  Packet Sequence Count for each ADU ã‚’å–å¾—
  * @param  tcp: TCP
  * @return Packet Sequence Count for each ADU
  */
 uint16_t TCP_TLM_get_adu_seq_cnt(const TCP* tcp);
 
 /**
- * @brief  Packet Sequence Count for each ADU ‚ğİ’è
+ * @brief  Packet Sequence Count for each ADU ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     cnt: Packet Sequence Count for each ADU
  * @return void
@@ -486,23 +486,23 @@ uint16_t TCP_TLM_get_adu_seq_cnt(const TCP* tcp);
 void TCP_TLM_set_adu_seq_cnt(TCP* tcp, uint16_t cnt);
 
 /**
- * @brief  ADU Length ‚ğæ“¾
+ * @brief  ADU Length ã‚’å–å¾—
  * @param  tcp: TCP
  * @return ADU Length
  */
 uint32_t TCP_TLM_get_adu_len(const TCP* tcp);
 
 /**
- * @brief  ADU Length ‚ğİ’è
+ * @brief  ADU Length ã‚’è¨­å®š
  * @param[in,out] tcp: TCP
  * @param[in]     len: ADU Length
  * @return void
- * @note   24 bit‚È‚½‚ßCÅãˆÊ8bit‚ÍØ‚èÌ‚Ä‚ç‚ê‚é
+ * @note   24 bitãªãŸã‚ï¼Œæœ€ä¸Šä½8bitã¯åˆ‡ã‚Šæ¨ã¦ã‚‰ã‚Œã‚‹
  */
 void TCP_TLM_set_adu_len(TCP* tcp, uint32_t len);
 
 /**
- * @brief  TCP‘S‘Ì‚Ìi Primary Header ‚ğŠÜ‚ñ‚¾j Packet’·‚ğæ“¾
+ * @brief  TCPå…¨ä½“ã®ï¼ˆ Primary Header ã‚’å«ã‚“ã ï¼‰ Packeté•·ã‚’å–å¾—
  * @param[in,out] tcp: TCP
  * @param[in]     len: Packet Length
  * @return void
@@ -510,15 +510,15 @@ void TCP_TLM_set_adu_len(TCP* tcp, uint32_t len);
 uint16_t TCP_TLM_get_packet_len(const TCP* packet);
 
 /**
- * @brief  ADU•ªŠ„‚È‚µ‚Ìê‡‚ÌUser Dataæ“ª‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾
+ * @brief  ADUåˆ†å‰²ãªã—ã®å ´åˆã®User Dataå…ˆé ­ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—
  * @param  tcp: TCP
  * @return *param_head
- * @note   ‚±‚ÌŠÖ”‚Åæ“¾‚µ‚½ƒ|ƒCƒ“ƒ^Œo—R‚Åtlm‚Ìƒf[ƒ^‚ğƒZƒbƒg‚·‚é–‚ª‚ ‚é‚½‚ßCconst‚ğ‚Â‚¯‚Ä‚¢‚È‚¢
+ * @note   ã“ã®é–¢æ•°ã§å–å¾—ã—ãŸãƒã‚¤ãƒ³ã‚¿çµŒç”±ã§tlmã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆã™ã‚‹äº‹ãŒã‚ã‚‹ãŸã‚ï¼Œconstã‚’ã¤ã‘ã¦ã„ãªã„
  */
 uint8_t* TCP_TLM_get_user_data_head(TCP* packet);
 
 /**
- * @brief  Primary Header ‚ğ\’z
+ * @brief  Primary Header ã‚’æ§‹ç¯‰
  * @param[in,out] tcp:  TCP
  * @param[in]     apid: TCP_APID
  * @param[in]     len:  Packet Length
@@ -527,14 +527,14 @@ uint8_t* TCP_TLM_get_user_data_head(TCP* packet);
 void TCP_TLM_setup_primary_hdr(TCP* tcp, TCP_APID apid, uint16_t len);
 
 /**
- * @brief  ‹¤’Ê•”•ª‚Ì Header ‚ğ\’z
+ * @brief  å…±é€šéƒ¨åˆ†ã® Header ã‚’æ§‹ç¯‰
  * @param[in,out] tcp:  TCP
  * @return void
  */
 void TCP_TLM_set_common_hdr(TCP* tcp);
 
 /**
- * @brief  TCP‘S‘Ì‚ğ0x00ƒNƒŠƒA‚µCfill_size‚É“™‚µ‚¢ƒTƒCƒY‚ÌƒpƒPƒbƒg‚ğ¶¬‚·‚é
+ * @brief  TCPå…¨ä½“ã‚’0x00ã‚¯ãƒªã‚¢ã—ï¼Œfill_sizeã«ç­‰ã—ã„ã‚µã‚¤ã‚ºã®ãƒ‘ã‚±ãƒƒãƒˆã‚’ç”Ÿæˆã™ã‚‹
  * @param[in,out] tcp: TCP
  * @param[in]     fill_size: Packet size
  * @return void

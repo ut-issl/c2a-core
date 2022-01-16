@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief test—pD EH ‚ÌƒeƒXƒg‚Å EH ‚ª”­‰Î‚µ‚½‚±‚Æ‚ğŒŸ’m‚·‚é
+ * @brief testç”¨ï¼ EH ã®ãƒ†ã‚¹ãƒˆã§ EH ãŒç™ºç«ã—ãŸã“ã¨ã‚’æ¤œçŸ¥ã™ã‚‹
  */
 #include "nbc_header.h"
 

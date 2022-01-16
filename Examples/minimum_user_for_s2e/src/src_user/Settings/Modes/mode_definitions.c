@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ƒ‚[ƒh’è‹`‚Æƒ‚[ƒh‘JˆÚ’è‹`
+ * @brief ãƒ¢ãƒ¼ãƒ‰å®šç¾©ã¨ãƒ¢ãƒ¼ãƒ‰é·ç§»å®šç¾©
  */
 #include "mode_definitions.h"
 
@@ -10,7 +10,7 @@
 #include "../../TlmCmd/block_command_definitions.h"
 
 
-// ƒ‚[ƒh‚²‚Æ‚ÌTL‚ğw’è
+// ãƒ¢ãƒ¼ãƒ‰ã”ã¨ã®TLã‚’æŒ‡å®š
 void MD_load_mode_list(void)
 {
   MM_set_mode_list(MD_MODEID_START_UP,      BC_TL_START_UP);
@@ -21,7 +21,7 @@ void MD_load_mode_list(void)
 
 void MD_load_transition_table(void)
 {
-  // ‹N“®‚Ì‚İÀs
+  // èµ·å‹•æ™‚ã®ã¿å®Ÿè¡Œ
   MM_set_transition_table(MD_MODEID_START_UP, MD_MODEID_INITIAL, BC_SL_START_UP_TO_INITIAL);
 }
 

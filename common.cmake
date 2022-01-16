@@ -23,9 +23,9 @@ if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
 else()
   # SJIS
-  if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${PROJECT_NAME} PUBLIC "-finput-charset=cp932")
-  endif()
+  # if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  #   target_compile_options(${PROJECT_NAME} PUBLIC "-finput-charset=cp932")
+  # endif()
 
   # 32bit
   if(NOT USE_32BIT_COMPILER)

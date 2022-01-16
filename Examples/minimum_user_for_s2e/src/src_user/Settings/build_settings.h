@@ -4,10 +4,10 @@
 #include "sils_define.h"
 
 #ifndef SILS_FW
-// #define IS_LITTLE_ENDIAN // ƒ}ƒCƒRƒ“ŠÂ‹«‚É‚æ‚è•ÏX‚·‚é
+// #define IS_LITTLE_ENDIAN // ãƒã‚¤ã‚³ãƒ³ç’°å¢ƒã«ã‚ˆã‚Šå¤‰æ›´ã™ã‚‹
 #endif
 
-// #define BUILD_SETTINGS_FAST_BUILD    //!< ‚‘¬ƒrƒ‹ƒhƒIƒvƒVƒ‡ƒ“iŒŸØ‚Í•K‚¸ƒRƒƒ“ƒgƒAƒEƒg‚·‚é‚±‚Æj
+// #define BUILD_SETTINGS_FAST_BUILD    //!< é«˜é€Ÿãƒ“ãƒ«ãƒ‰ã‚ªãƒ—ã‚·ãƒ§ãƒ³ï¼ˆæ¤œè¨¼æ™‚ã¯å¿…ãšã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹ã“ã¨ï¼‰
 #define BUILD_SETTINGS_AUTO_FPGA_RESET
 
 #endif

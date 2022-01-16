@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  ƒRƒ}ƒ“ƒh’è‹`
- * @note   ‚±‚ÌƒR[ƒh‚Í©“®¶¬‚³‚ê‚Ä‚¢‚Ü‚·I
+ * @brief  ã‚³ãƒãƒ³ãƒ‰å®šç¾©
+ * @note   ã“ã®ã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ç”Ÿæˆã•ã‚Œã¦ã„ã¾ã™ï¼
  */
 #include "../../src_core/TlmCmd/command_analyze.h"
 #include "command_definitions.h"

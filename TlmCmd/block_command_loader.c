@@ -1,10 +1,10 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  �u���b�N�R�}���h�o�^�֘A�̃��[�e�B���e�B
+ * @brief  ブロックコマンド登録関連のユーティリティ
  *
- *         �{�@�\�̓u���b�N�R�}���h�̓o�^����wrap���Cuser���Ȍ������S�Ȍ`�Ńu���b�N
- *         �R�}���h�o�^���s����悤�ɂ��邽�߂̃��[�e�B���e�B�@�\�ł��D
+ *         本機能はブロックコマンドの登録部をwrapし，userが簡潔かつ安全な形でブロック
+ *         コマンド登録を行えるようにするためのユーティリティ機能です．
  */
 
 #include <string.h>
@@ -22,15 +22,15 @@ static void BCL_clear_info_(void);
 
 
 /**
- * @brief  �u���b�N�R�}���h�o�^���̏����ꎞ�ۑ����邽�߂̃o�b�t�@
+ * @brief  ブロックコマンド登録中の情報を一時保存するためのバッファ
  */
 typedef struct
 {
-  CTCP packet;                                //!< �o�^���̃R�}���h���ꎞ�ۑ����邽�߂̃o�b�t�@
-  uint8_t params[BCL_PARAM_MAX_LENGTH];       /*!< �o�^���̃p�����[�^���ꎞ�ۑ����邽�߂̃o�b�t�@
-                                                   ���������y�ɂ��邽�߂Ɉ�R�}���h���ÓI�Ɋm�ۂ��Ă���
-                                                   TODO: �T�C�Y���ߏ肩������Ȃ��̂Ŏ��Ԃ���Β��� */
-  int param_idx;                              //!< params�z��̒��Ŏ��Ƀp�����[�^��o�^����\���index
+  CTCP packet;                                //!< 登録中のコマンドを一時保存するためのバッファ
+  uint8_t params[BCL_PARAM_MAX_LENGTH];       /*!< 登録中のパラメータを一時保存するためのバッファ
+                                                   初期化を楽にするために一コマンド分静的に確保している
+                                                   TODO: サイズが過剰かもしれないので時間あれば調整 */
+  int param_idx;                              //!< params配列の中で次にパラメータを登録する予定のindex
 } BlockCommandLoader;
 
 static BlockCommandLoader block_command_loader_;
@@ -38,7 +38,7 @@ static BlockCommandLoader block_command_loader_;
 
 void BCL_load_bc(bct_id_t pos, void (*BCL_load_func)(void))
 {
-  // �ŏ��ɃS�~�f�[�^�������Ă���
+  // 最初にゴミデータを消しておく
   BCL_clear_info_();
 
   BCT_store_pos();
@@ -46,8 +46,8 @@ void BCL_load_bc(bct_id_t pos, void (*BCL_load_func)(void))
 
   BCL_load_func();
 
-  // TODO: load���e�̌��؂�����
-  //       ���s���G���[�Ȃ̂ŁC�����ςȂ̂͂Ƃ肠�����N�������ăA�m�}���Ŋm�F���H
+  // TODO: load内容の検証を入れる
+  //       実行時エラーなので，多少変なのはとりあえず起動させてアノマリで確認か？
 
   BCE_activate_block();
   BCT_restore_pos();
@@ -193,13 +193,13 @@ void BCL_tool_prepare_param_float(float val)
   block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((tmp      ) & 0xff);
 }
 
-// �������_�ł�uint64_t���g���Ȃ��������g���l�����Ȃ��̂ł������񖳌���
+// 実装時点ではuint64_tを使えなかったかつ使う人も少ないのでいったん無効化
 #if 0
 void BCL_tool_prepare_param_double(double val)
 {
   int i;
 
-  // TODO: idx���߂�assertion������
+  // TODO: idx超過のassertionを入れる
   for (i = 0; i < sizeof(val); i++)
   {
     block_command_loader_.param_buffer[block_command_loader_.command_idx][block_command_loader_.param_idx++]

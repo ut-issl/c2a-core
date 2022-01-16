@@ -9,66 +9,66 @@
 
 /**
  * @struct TDSP_Info
- * @brief TaskDispatcher‚Ìó‘Ô
+ * @brief TaskDispatcherã®çŠ¶æ…‹
  */
 typedef struct
 {
-  CommandDispatcher tskd;     //!< ƒ^ƒXƒNƒŠƒXƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ÆA‚»‚Ì‘¼Àsî•ñ‚ğ•Û‘¶‚·‚é\‘¢‘Ì
-  bct_id_t task_list_id;      //!< ƒ^ƒXƒNƒŠƒXƒg‚É“WŠJ‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌID
-  cycle_t  activated_at;      //!< ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ªƒ^ƒXƒNƒŠƒXƒg‚É“WŠJ‚³‚ê‚½‚ÌƒTƒCƒNƒ‹”
+  CommandDispatcher tskd;     //!< ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿ã¨ã€ãã®ä»–å®Ÿè¡Œæƒ…å ±ã‚’ä¿å­˜ã™ã‚‹æ§‹é€ ä½“
+  bct_id_t task_list_id;      //!< ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã«å±•é–‹ã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®ID
+  cycle_t  activated_at;      //!< ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ãŒã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã«å±•é–‹ã•ã‚ŒãŸæ™‚ã®ã‚µã‚¤ã‚¯ãƒ«æ•°
 } TDSP_Info;
 
 /**
  * @enum  TDSP_ACK
- * @brief TDSP‚ÌƒGƒ‰[ƒXƒe[ƒ^ƒX
+ * @brief TDSPã®ã‚¨ãƒ©ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
  * @note  uint8_t
  */
 typedef enum
 {
   TDSP_SUCCESS,
-  TDSP_DEPLOY_FAILED,    //!< ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ìƒ^ƒXƒNƒŠƒXƒg‚Ö‚Ì“WŠJ‚ÉƒGƒ‰[‚ª”­¶
-  TDSP_CYCLE_OVERRUN,    //!< 1ƒTƒCƒNƒ‹ˆÈ“à‚É‚·‚×‚Ä‚ÌƒRƒ}ƒ“ƒh‚ğÀs‚µI‚¦‚È‚©‚Á‚½
-  TDSP_STEP_OVERRUN,     //!< ƒRƒ}ƒ“ƒh‚ªÀs—\’è‚ÌƒXƒeƒbƒv”‚ğ‰ß‚¬‚Ä‚¢‚é
-  TDSP_TASK_EXEC_FAILED, //!< ƒRƒ}ƒ“ƒhÀs‚ÉƒGƒ‰[‚ª”­¶
-  TDSP_INVAILD_BCT_ID,   //!< Às‚·‚é BCT_ID ‚ª–³Œø‚¾‚Á‚½
-  TDSP_INACTIVE_BCT_ID,  //!< Às‚·‚é BCT_ID ‚ª–³Œø‰»‚³‚ê‚Ä‚¢‚é
-  TDSP_EMPTY_BC,         //!< Às‚·‚é BC ‚ª‹ó‚¾‚Á‚½
+  TDSP_DEPLOY_FAILED,    //!< ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã¸ã®å±•é–‹æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿ
+  TDSP_CYCLE_OVERRUN,    //!< 1ã‚µã‚¤ã‚¯ãƒ«ä»¥å†…ã«ã™ã¹ã¦ã®ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã—çµ‚ãˆãªã‹ã£ãŸ
+  TDSP_STEP_OVERRUN,     //!< ã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œäºˆå®šã®ã‚¹ãƒ†ãƒƒãƒ—æ•°ã‚’éãã¦ã„ã‚‹
+  TDSP_TASK_EXEC_FAILED, //!< ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œæ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿ
+  TDSP_INVAILD_BCT_ID,   //!< å®Ÿè¡Œã™ã‚‹ BCT_ID ãŒç„¡åŠ¹ã ã£ãŸ
+  TDSP_INACTIVE_BCT_ID,  //!< å®Ÿè¡Œã™ã‚‹ BCT_ID ãŒç„¡åŠ¹åŒ–ã•ã‚Œã¦ã„ã‚‹
+  TDSP_EMPTY_BC,         //!< å®Ÿè¡Œã™ã‚‹ BC ãŒç©ºã ã£ãŸ
   TDSP_UNKNOWN
 } TDSP_ACK;
 
 extern const TDSP_Info* const TDSP_info;
 
 /**
- * @brief ƒ^ƒXƒNŠÇ—‚ğs‚¤TDSP_Info\‘¢‘Ì(TDSP_Info_)‚Ì‰Šú‰»
- * @note  ƒf[ƒ^\‘¢‚Í Packet List
+ * @brief ã‚¿ã‚¹ã‚¯ç®¡ç†ã‚’è¡Œã†TDSP_Infoæ§‹é€ ä½“(TDSP_Info_)ã®åˆæœŸåŒ–
+ * @note  ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã¯ Packet List
  */
 void TDSP_initialize(void);
 
 /**
- * @brief w’è‚µ‚½ BC ‚ğ TaskList ‚É“WŠJ‚·‚é‚à‚Ì‚Æ‚µ‚Ä“o˜^
- * @param[in] id: BC ‚Ì id
- * @note “WŠJ©‘Ì‚ÍTDSP_deploy_block_as_task_list_‚Ås‚¤
- *       "BC ‚ğ TaskList ‚É“WŠJ" ‚Æ‚Í `src_user\Settings\Modes\TaskLists\InitialTL.c` ‚È‚Ç‚ğQÆ.
+ * @brief æŒ‡å®šã—ãŸ BC ã‚’ TaskList ã«å±•é–‹ã™ã‚‹ã‚‚ã®ã¨ã—ã¦ç™»éŒ²
+ * @param[in] id: BC ã® id
+ * @note å±•é–‹è‡ªä½“ã¯TDSP_deploy_block_as_task_list_ã§è¡Œã†
+ *       "BC ã‚’ TaskList ã«å±•é–‹" ã¨ã¯ `src_user\Settings\Modes\TaskLists\InitialTL.c` ãªã©ã‚’å‚ç…§.
  */
 TDSP_ACK TDSP_set_task_list_id(bct_id_t id);
 
 /**
- * @brief Œ»İ‚É‰‚¶‚ÄATaskList ‚©‚ç Cmd ‚ğˆê‚ÂÀs‚·‚é or TaskList ‚ğÄ“WŠJ‚·‚é
+ * @brief ç¾åœ¨æ™‚åˆ»ã«å¿œã˜ã¦ã€TaskList ã‹ã‚‰ Cmd ã‚’ä¸€ã¤å®Ÿè¡Œã™ã‚‹ or TaskList ã‚’å†å±•é–‹ã™ã‚‹
  *
- *        “WŠJ‚³‚ê‚Ä‚¢‚éƒ^ƒXƒNƒŠƒXƒg‚ÌÀs (cycle ƒŒƒxƒ‹) ‚ğ”äŠr‚µ, task_list_ ‚É“o˜^‚³‚ê‚Ä‚¢‚éƒ^ƒXƒN‚ğ‡”Ô‚ÉÀs‚·‚é.
- *        1‚Âƒ^ƒXƒN‚ğÁ‰»‚·‚é‚Æ return ‚·‚é. (while(1) ‚Å‰ñ‚Á‚Ä‚¢‚é‚Ì‚Å‚·‚®–ß‚Á‚Ä‚­‚é.)
- *        Às cycle ‚ªŒ»İ‚¾‚Á‚½ê‡, Šeƒ^ƒXƒN‚Ì step ‚É‚æ‚Á‚ÄÀs‚·‚é, ‚µ‚È‚¢‚ğ switch ‚É‡‚í‚¹‚Äˆ—‚·‚é.
- *        ÀÛ‚Éƒ^ƒXƒN‚ğˆ—‚·‚éê‡, CDIS_dispatch_command -> PH_dispatch_command -> cmdExec ‚Ì‡‚ÉÀs‚³‚ê‚é(^‚Ì Executer ‚Í cmdExec).
+ *        å±•é–‹ã•ã‚Œã¦ã„ã‚‹ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã®å®Ÿè¡Œæ™‚åˆ» (cycle ãƒ¬ãƒ™ãƒ«) ã‚’æ¯”è¼ƒã—, task_list_ ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚¿ã‚¹ã‚¯ã‚’é †ç•ªã«å®Ÿè¡Œã™ã‚‹.
+ *        1ã¤ã‚¿ã‚¹ã‚¯ã‚’æ¶ˆåŒ–ã™ã‚‹ã¨ return ã™ã‚‹. (while(1) ã§å›ã£ã¦ã„ã‚‹ã®ã§ã™ãæˆ»ã£ã¦ãã‚‹.)
+ *        å®Ÿè¡Œ cycle ãŒç¾åœ¨ã ã£ãŸå ´åˆ, å„ã‚¿ã‚¹ã‚¯ã® step ã«ã‚ˆã£ã¦å®Ÿè¡Œã™ã‚‹, ã—ãªã„ã‚’ switch ã«åˆã‚ã›ã¦å‡¦ç†ã™ã‚‹.
+ *        å®Ÿéš›ã«ã‚¿ã‚¹ã‚¯ã‚’å‡¦ç†ã™ã‚‹å ´åˆ, CDIS_dispatch_command -> PH_dispatch_command -> cmdExec ã®é †ã«å®Ÿè¡Œã•ã‚Œã‚‹(çœŸã® Executer ã¯ cmdExec).
  */
 void TDSP_execute_pl_as_task_list(void);
 
 /**
- * @brief ƒ^ƒXƒNƒŠƒXƒg‚Ì“WŠJƒTƒCƒNƒ‹”‚ğŒ»İ‚ÌƒTƒCƒNƒ‹”‚É‹­§“I‚É‡‚í‚¹‚é
+ * @brief ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã®å±•é–‹æ™‚ã‚µã‚¤ã‚¯ãƒ«æ•°ã‚’ç¾åœ¨ã®ã‚µã‚¤ã‚¯ãƒ«æ•°ã«å¼·åˆ¶çš„ã«åˆã‚ã›ã‚‹
  */
 void TDSP_resync_internal_counter(void);
 
 /**
- * @brief w’è‚µ‚½ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğAŸ‚Éƒ^ƒXƒNƒŠƒXƒg‚É“WŠJ‚·‚é‚à‚Ì‚Æ‚µ‚Ä“o˜^‚·‚éƒRƒ}ƒ“ƒh
+ * @brief æŒ‡å®šã—ãŸãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’ã€æ¬¡ã«ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã«å±•é–‹ã™ã‚‹ã‚‚ã®ã¨ã—ã¦ç™»éŒ²ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
  */
 CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CTCP* packet);
 

@@ -1,6 +1,6 @@
 /**
 * @file   UART_TEST.h
-* @brief  ƒeƒXƒg—pUART‚ÌDriver
+* @brief  ãƒ†ã‚¹ãƒˆç”¨UARTã®Driver
 */
 
 #ifndef UART_TEST_H
@@ -35,30 +35,30 @@ typedef struct
 } UART_TEST_Driver;
 
 
-// Šî–{ŠÖ”
+// åŸºæœ¬é–¢æ•°
 
 /**
- * @brief  UART_TEST‰Šú‰»
+ * @brief  UART_TESTåˆæœŸåŒ–
  *
- *         UART_TEST_Driver\‘¢‘Ì‚Ìƒ|ƒCƒ“ƒ^‚ğ“n‚·‚±‚Æ‚Åƒ|[ƒg‚ğ‰Šú‰»‚µCUART_TEST_Driver‚ÌŠeƒƒ“ƒo‚à‰Šú‰»‚·‚é
- * @param  *uart_test_instance : ‰Šú‰»‚·‚éUART_TEST_Driver\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param  ch    : UART_TEST‚ªÚ‘±‚³‚ê‚Ä‚¢‚éUARTƒ|[ƒg”Ô†
+ *         UART_TEST_Driveræ§‹é€ ä½“ã®ãƒã‚¤ãƒ³ã‚¿ã‚’æ¸¡ã™ã“ã¨ã§ãƒãƒ¼ãƒˆã‚’åˆæœŸåŒ–ã—ï¼ŒUART_TEST_Driverã®å„ãƒ¡ãƒ³ãƒã‚‚åˆæœŸåŒ–ã™ã‚‹
+ * @param  *uart_test_instance : åˆæœŸåŒ–ã™ã‚‹UART_TEST_Driveræ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  ch    : UART_TESTãŒæ¥ç¶šã•ã‚Œã¦ã„ã‚‹UARTãƒãƒ¼ãƒˆç•ªå·
  * @return DS_INIT_ERR_CODE
  */
 DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, unsigned char ch);
 
 
 /**
- * @brief  UART_TEST‚Ìƒf[ƒ^iƒeƒŒƒjóM
- * @param  *uart_test_instance : UART_TEST_Driver\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ * @brief  UART_TESTã®ãƒ‡ãƒ¼ã‚¿ï¼ˆãƒ†ãƒ¬ãƒ¡ï¼‰å—ä¿¡
+ * @param  *uart_test_instance : UART_TEST_Driveræ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
  * @return DS_REC_ERR_CODE
  */
 DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance);
 
 
 /**
- * @brief  UART_TEST‚Ö‚ÌƒRƒ}ƒ“ƒh‘—M
- * @param  *uart_test_instance   : UART_TEST_Driver\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ * @brief  UART_TESTã¸ã®ã‚³ãƒãƒ³ãƒ‰é€ä¿¡
+ * @param  *uart_test_instance   : UART_TEST_Driveræ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
  * @param  id      : Cmd id
  * @return DS_CMD_ERR_CODE
  */

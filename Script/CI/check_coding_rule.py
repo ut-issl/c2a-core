@@ -125,7 +125,9 @@ def preprocess_(target_dirs: list, ignore_dirs: list, ignore_files: list, additi
 
 
 def preprocess_inner_(path: str):
-    with open(path, encoding='shift_jis') as f:
+    # FIXME: ユーザー定義にする
+    # with open(path, encoding='shift_jis') as f:
+    with open(path, encoding='utf-8') as f:
         code_lines = f.read().split("\n")
 
     ptn_find_type = '^ *(\w+)\*? +\w+'
@@ -155,7 +157,9 @@ def preprocess_inner_(path: str):
 def check_file_(path: str) -> int:
     flag = 0
 
-    with open(path, encoding='shift_jis') as f:
+    # FIXME: ユーザー定義にする
+    # with open(path, encoding='shift_jis') as f:
+    with open(path, encoding='utf-8') as f:
         code_lines = f.read().split("\n")
 
     # print(path)

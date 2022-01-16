@@ -6,7 +6,7 @@
 #define VCDU_HEADER_SIZE (6u)
 #define VCDU_TRAILER_SIZE (4u)
 #define VCDU_LEN (VCDU_HEADER_SIZE + M_PDU_LEN + VCDU_TRAILER_SIZE)
-#define VCDU_COUNTER_MAX (0x01000000) // 24bit’·
+#define VCDU_COUNTER_MAX (0x01000000) // 24bité•·
 
 typedef struct
 {

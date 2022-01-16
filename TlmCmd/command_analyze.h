@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  ƒRƒ}ƒ“ƒh‚ÌÀsE“o˜^CƒRƒ}ƒ“ƒhŠÖ˜Aˆ—
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œãƒ»ç™»éŒ²ï¼Œã‚³ãƒãƒ³ãƒ‰é–¢é€£å‡¦ç†
  */
 #ifndef COMMAND_ANALYZE_H_
 #define COMMAND_ANALYZE_H_
@@ -8,30 +8,30 @@
 #include "common_tlm_cmd_packet.h"
 #include <src_user/TlmCmd/command_definitions.h>
 
-#define CA_TLM_PAGE_SIZE      (32)                                  //!< ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹‚Ì1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚éƒRƒ}ƒ“ƒh”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define CA_TLM_PAGE_MAX       (48)                                  //!< ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹ƒy[ƒW”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define CA_MAX_CMDS           (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)  //!< ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹ƒTƒCƒYD‚·‚È‚í‚¿“o˜^‚Å‚«‚éÅ‘åƒRƒ}ƒ“ƒh”
-#define CA_MAX_CMD_PARAM_NUM  (6)                                   //!< ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^iˆø”j‚ÌÅ‘å”DŒ»“_‚Å‚Íƒ†[ƒU[‘¤‚Å‰Â•Ï‚É‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚Í‚È‚¢
+#define CA_TLM_PAGE_SIZE      (32)                                  //!< ã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ã®1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ã‚³ãƒãƒ³ãƒ‰æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define CA_TLM_PAGE_MAX       (48)                                  //!< ã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ãƒšãƒ¼ã‚¸æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define CA_MAX_CMDS           (CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX)  //!< ã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µã‚¤ã‚ºï¼ã™ãªã‚ã¡ç™»éŒ²ã§ãã‚‹æœ€å¤§ã‚³ãƒãƒ³ãƒ‰æ•°
+#define CA_MAX_CMD_PARAM_NUM  (6)                                   //!< ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿ï¼ˆå¼•æ•°ï¼‰ã®æœ€å¤§æ•°ï¼ç¾æ™‚ç‚¹ã§ã¯ãƒ¦ãƒ¼ã‚¶ãƒ¼å´ã§å¯å¤‰ã«ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã¯ãªã„
 
 #include <src_user/Settings/TlmCmd/command_analyze_params.h>
 
 
 /**
  * @enum  AC_ACK
- * @brief CA ‚Ì”Ä—p•Ô‚è’l
- * @note  uint8_t ‚ğ‘z’è
+ * @brief CA ã®æ±ç”¨è¿”ã‚Šå€¤
+ * @note  uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  CA_ACK_OK = 0,  //!< ³íI—¹
-  CA_ACK_ERR      //!< ƒGƒ‰[
+  CA_ACK_OK = 0,  //!< æ­£å¸¸çµ‚äº†
+  CA_ACK_ERR      //!< ã‚¨ãƒ©ãƒ¼
 } CA_ACK;
 
 /**
  * @struct CA_PackedParamSizeInfo
- * @brief  ƒpƒ‰ƒƒ^‚ÌƒTƒCƒYî•ñ‚ğˆ³k‚µ‚½\‘¢‘Ì
- * @note   2‚Â‚Ìƒpƒ‰ƒƒ^ƒTƒCƒYî•ñ‚ğ uint8_t ‚É‰Ÿ‚µ‚ß‚é
- * @note   ’l‚Í CA_PARAM_SIZE_TYPE
+ * @brief  ãƒ‘ãƒ©ãƒ¡ã‚¿ã®ã‚µã‚¤ã‚ºæƒ…å ±ã‚’åœ§ç¸®ã—ãŸæ§‹é€ ä½“
+ * @note   2ã¤ã®ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚µã‚¤ã‚ºæƒ…å ±ã‚’ uint8_t ã«æŠ¼ã—è¾¼ã‚ã‚‹
+ * @note   å€¤ã¯ CA_PARAM_SIZE_TYPE
  */
 typedef struct
 {
@@ -48,103 +48,103 @@ typedef struct
 
 /**
  * @enum  CA_PARAM_SIZE_TYPE
- * @brief ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^ƒTƒCƒY
- * @note  unsigned 4bit •Ï”‚ğ‘z’è
+ * @brief ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚µã‚¤ã‚º
+ * @note  unsigned 4bit å¤‰æ•°ã‚’æƒ³å®š
  */
 typedef enum
 {
-  CA_PARAM_SIZE_TYPE_NONE = 0,    //!< ƒpƒ‰ƒƒ^‚È‚µ
+  CA_PARAM_SIZE_TYPE_NONE = 0,    //!< ãƒ‘ãƒ©ãƒ¡ã‚¿ãªã—
   CA_PARAM_SIZE_TYPE_1BYTE,       //!< 1 byte
   CA_PARAM_SIZE_TYPE_2BYTE,       //!< 2 byte
   CA_PARAM_SIZE_TYPE_4BYTE,       //!< 4 byte
   CA_PARAM_SIZE_TYPE_8BYTE,       //!< 8 byte
-  CA_PARAM_SIZE_TYPE_RAW = 0xf    //!< RAW ƒpƒ‰ƒƒ^
+  CA_PARAM_SIZE_TYPE_RAW = 0xf    //!< RAW ãƒ‘ãƒ©ãƒ¡ã‚¿
 } CA_PARAM_SIZE_TYPE;
 
 /**
  * @struct CA_CmdInfo
- * @brief  ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹‚Ì—v‘f‚Æ‚È‚é\‘¢‘Ì
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ã®è¦ç´ ã¨ãªã‚‹æ§‹é€ ä½“
  */
 typedef struct
 {
-  CCP_EXEC_STS (*cmd_func)(const CTCP*);                                    //!< ƒRƒ}ƒ“ƒh‚Æ‚È‚éŠÖ”
-  CA_PackedParamSizeInfo param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];  //!< ƒpƒ‰ƒƒ^ƒTƒCƒYî•ñ
+  CCP_EXEC_STS (*cmd_func)(const CTCP*);                                    //!< ã‚³ãƒãƒ³ãƒ‰ã¨ãªã‚‹é–¢æ•°
+  CA_PackedParamSizeInfo param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];  //!< ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚µã‚¤ã‚ºæƒ…å ±
 } CA_CmdInfo;
 
 /**
  * @struct CommandAnalyze
- * @brief  CommandAnalyze ‚Ì Info \‘¢‘Ì
+ * @brief  CommandAnalyze ã® Info æ§‹é€ ä½“
  */
 typedef struct
 {
-  CA_CmdInfo cmd_table[CA_MAX_CMDS];  //!< ƒRƒ}ƒ“ƒhƒe[ƒuƒ‹
-  uint8_t tlm_page_no;                //!< ƒeƒŒƒ‚Åg‚¤ƒy[ƒW”
+  CA_CmdInfo cmd_table[CA_MAX_CMDS];  //!< ã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«
+  uint8_t tlm_page_no;                //!< ãƒ†ãƒ¬ãƒ¡ã§ä½¿ã†ãƒšãƒ¼ã‚¸æ•°
 } CommandAnalyze;
 
 extern const CommandAnalyze* const command_analyze;
 
 
 /**
- * @brief  CA ‚Ì‰Šú‰»
+ * @brief  CA ã®åˆæœŸåŒ–
  * @param  void
  * @return void
  */
 void CA_initialize(void);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒhÀs‚Ì–{‘Ì
- * @param  packet: Às‚·‚éƒRƒ}ƒ“ƒh
+ * @brief  ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œã®æœ¬ä½“
+ * @param  packet: å®Ÿè¡Œã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
  * @return CCP_EXEC_STS
  */
 CCP_EXEC_STS CA_execute_cmd(const CTCP* packet);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^”‚ğæ“¾‚·‚é
- * @param  cmd_code:  ƒ`ƒFƒbƒN‚·‚éƒRƒ}ƒ“ƒh‚ÌID
- * @return ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^”
- * @note   •s³‚Èˆø”‚Ìê‡‚Í 0 ‚ğ•Ô‚·
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿æ•°ã‚’å–å¾—ã™ã‚‹
+ * @param  cmd_code:  ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®ID
+ * @return ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿æ•°
+ * @note   ä¸æ­£ãªå¼•æ•°ã®å ´åˆã¯ 0 ã‚’è¿”ã™
  */
 uint8_t CA_get_cmd_param_num(CMD_CODE cmd_code);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^ƒTƒCƒY‚ğæ“¾‚·‚é
- * @param  cmd_code:  ƒ`ƒFƒbƒN‚·‚éƒRƒ}ƒ“ƒh‚ÌID
- * @param  n: N”Ô–Ú‚Ìƒpƒ‰ƒƒ^ i0‹NZj
- * @return ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^ƒTƒCƒY
- * @note   •s³‚Èˆø”‚Ìê‡‚Í 0 ‚ğ•Ô‚·
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
+ * @param  cmd_code:  ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®ID
+ * @param  n: Nç•ªç›®ã®ãƒ‘ãƒ©ãƒ¡ã‚¿ ï¼ˆ0èµ·ç®—ï¼‰
+ * @return ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚µã‚¤ã‚º
+ * @note   ä¸æ­£ãªå¼•æ•°ã®å ´åˆã¯ 0 ã‚’è¿”ã™
  */
 uint8_t CA_get_cmd_param_size(CMD_CODE cmd_code, uint8_t n);
 
 /**
- * @brief  Å¬ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^’·‚ğæ“¾‚·‚é
- * @param  cmd_code:  ƒ`ƒFƒbƒN‚·‚éƒRƒ}ƒ“ƒh‚ÌID
- * @return ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^’·
- * @note   •s³‚Èˆø”‚Ìê‡‚Í 0 ‚ğ•Ô‚·
- * @note   RAW ƒpƒ‰ƒƒ^‚ÍƒTƒCƒY 0 ‚Æ‚µ‚ÄŒvZ‚·‚é‚½‚ßCÅ¬ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^’·‚Æ‚È‚é
+ * @brief  æœ€å°ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿é•·ã‚’å–å¾—ã™ã‚‹
+ * @param  cmd_code:  ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®ID
+ * @return ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
+ * @note   ä¸æ­£ãªå¼•æ•°ã®å ´åˆã¯ 0 ã‚’è¿”ã™
+ * @note   RAW ãƒ‘ãƒ©ãƒ¡ã‚¿ã¯ã‚µã‚¤ã‚º 0 ã¨ã—ã¦è¨ˆç®—ã™ã‚‹ãŸã‚ï¼Œæœ€å°ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿é•·ã¨ãªã‚‹
  */
 uint16_t CA_get_cmd_param_min_len(CMD_CODE cmd_code);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^’·‚ğƒ`ƒFƒbƒN‚·‚é
- * @param  cmd_code:  ƒ`ƒFƒbƒN‚·‚éƒRƒ}ƒ“ƒh‚ÌID
- * @param  param_len: ƒpƒ‰ƒƒ^’·
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿é•·ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+ * @param  cmd_code:  ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®ID
+ * @param  param_len: ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
  * @return CA_ACK
- * @note   •s³‚Èˆø”‚Ìê‡‚Í CA_ACK_ERR ‚ğ•Ô‚·
+ * @note   ä¸æ­£ãªå¼•æ•°ã®å ´åˆã¯ CA_ACK_ERR ã‚’è¿”ã™
  */
 CA_ACK CA_ckeck_cmd_param_len(CMD_CODE cmd_code, uint16_t param_len);
 
 /**
- * @brief  RAW ƒpƒ‰ƒƒ^‚ğ‚Á‚Ä‚¢‚é‚©H
- * @param  cmd_code:  ƒ`ƒFƒbƒN‚·‚éƒRƒ}ƒ“ƒh‚ÌID
- * @retval 1: RAW ƒpƒ‰ƒƒ^‚ ‚è
- * @retval 0: RAW ƒpƒ‰ƒƒ^‚È‚µ or •s³‚Èˆø”
+ * @brief  RAW ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’æŒã£ã¦ã„ã‚‹ã‹ï¼Ÿ
+ * @param  cmd_code:  ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ã®ID
+ * @retval 1: RAW ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚ã‚Š
+ * @retval 0: RAW ãƒ‘ãƒ©ãƒ¡ã‚¿ãªã— or ä¸æ­£ãªå¼•æ•°
  */
 int CA_has_raw_param(CMD_CODE cmd_code);
 
 /**
- * @brief  Cmd Table‚Ìƒ[ƒh
- * @note   ’è‹`‚Í /src_user/TlmCmd/CommandDefinitions.c ‚É‚ ‚é
- * @param  cmd_table: Cmd Table‚ÌÀ‘Ì
+ * @brief  Cmd Tableã®ãƒ­ãƒ¼ãƒ‰
+ * @note   å®šç¾©ã¯ /src_user/TlmCmd/CommandDefinitions.c ã«ã‚ã‚‹
+ * @param  cmd_table: Cmd Tableã®å®Ÿä½“
  * @return void
  */
 void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS]);
