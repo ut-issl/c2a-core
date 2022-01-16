@@ -129,7 +129,7 @@ finalthing();
 
 
 ### 文字コード
-- 文字コードは基本的にUTF-8で統一する．
+- 文字コードは基本的に UTF-8 で統一する．
 	- 一部のバッチファイルなど， Shift-JIS のほうが圧倒的に楽なものについては例外を認める．
 	- User側で Shift-JIS などを要求する場合 (HEW など) は， User 側のビルドワークフローで変換するなどで対応する．
 - 改行コードはCR+LFで統一する．
@@ -685,7 +685,7 @@ typedef enum
 ```cpp
 #ifndef SILS_FW
 // #define SILS_FW //ここでdefineする！
-#endif //SILS_FW
+#endif
 
 #ifdef SILS_FW
 #define IS_LITTLE_ENDIAN // SILS環境により変更する
