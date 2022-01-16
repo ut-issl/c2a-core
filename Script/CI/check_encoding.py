@@ -76,6 +76,9 @@ def check_encoding(path):
     # UTF-8 Ver
     if enc == 'utf-8' or enc == 'ascii':
         return 0
+    # なぜか以下のような誤認もあるので
+    if enc == 'Windows-1252' or enc == 'ISO-8859-1' or enc is None:
+        return 0
     print(ret)
     return 1
 
