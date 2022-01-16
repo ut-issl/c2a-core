@@ -48,6 +48,7 @@ def check(target_dir):
         for file in files:
             ext = (os.path.splitext(file))[1]
             # print(ext)
+            # FIXME: md, txt, cmake, sh, bat もチェックするようにする
             if ext != ".h" and ext != ".c":
                 continue
             path = root + r"/" + file
@@ -65,10 +66,15 @@ def check_encoding(path):
         ret = chardet.detect(f.read())
         enc = ret['encoding']
     # print(enc)
-    if enc == 'SHIFT_JIS' or enc == 'CP932' or enc == 'ascii':
-        return 0
-    # なぜか以下のような誤認もあるので
-    if enc == 'Windows-1252' or enc == 'Windows-1254' or enc is None:
+    # FIXME: ユーザー定義にする
+    # SJIS Ver
+    # if enc == 'SHIFT_JIS' or enc == 'CP932' or enc == 'ascii':
+    #     return 0
+    # # なぜか以下のような誤認もあるので
+    # if enc == 'Windows-1252' or enc == 'Windows-1254' or enc is None:
+    #     return 0
+    # UTF-8 Ver
+    if enc == 'utf-8' or enc == 'ascii':
         return 0
     print(ret)
     return 1
