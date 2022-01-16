@@ -55,14 +55,14 @@ def check(target_dir, settings):
         for file in files:
             ext = (os.path.splitext(file))[1].replace('.', '')
             # print(ext)
-            if ext in settings['text_file_extensions']:
-                encoding = settings['input_text_file_encoding']
-            elif ext in settings['text_code_extensions']:
-                encoding = settings['input_code_file_encoding']
-            elif ext in settings['text_script_extensions']:
-                encoding = settings['input_script_file_encoding']
-            elif ext in settings['text_exceptional_extensions']:
-                encoding = settings['input_exceptional_file_encoding']
+            if ext in settings['text_file_config']['extensions']:
+                encoding = settings['text_file_config']['input_encoding']
+            elif ext in settings['code_file_config']['extensions']:
+                encoding = settings['code_file_config']['input_encoding']
+            elif ext in settings['script_file_config']['extensions']:
+                encoding = settings['script_file_config']['input_encoding']
+            elif ext in settings['exceptional_file_config']['extensions']:
+                encoding = settings['exceptional_file_config']['input_encoding']
             else:
                 continue
 
