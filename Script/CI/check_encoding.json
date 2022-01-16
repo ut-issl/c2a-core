@@ -1,5 +1,27 @@
 {
   "root_dir" : "../../",
+  "input_text_file_encoding" : "utf-8",
+  "text_file_extensions" : [
+    "txt",
+    "md",
+    "json",
+    "cmake"
+  ],
+  "input_code_file_encoding" : "utf-8",
+  "text_code_extensions" : [
+    "c",
+    "h"
+  ],
+  "input_script_file_encoding" : "utf-8",
+  "text_script_extensions" : [
+    "sh",
+    "pl",
+    "py"
+  ],
+  "input_exceptional_file_encoding" : "shift_jis",
+  "text_exceptional_extensions" : [
+    "bat"
+  ],
   "target_dirs" : [
     "Applications/",
     "Drivers/",
