@@ -1,27 +1,27 @@
 /**
  * @file
- * @brief BCT‚Ì’è‹`, BCTü‚è‚ÌŠÖ”
+ * @brief BCTã®å®šç¾©, BCTå‘¨ã‚Šã®é–¢æ•°
  */
 #ifndef BLOCK_COMMAND_TABLE_H_
 #define BLOCK_COMMAND_TABLE_H_
 
 #include <src_user/Library/stdint.h>
 
-#define BCT_CMD_MAX_LENGTH (64)  /*!< BCT‚É•Û‘¶‚·‚éƒpƒPƒbƒg‚ÌƒpƒPƒbƒgƒTƒCƒY‚ÌãŒÀ
-                                    TCP‚ÌÅ‘å’·‚Í‚©‚È‚è‘å‚«‚¢‚Ì‚ÅC‚±‚±‚Å‚Í‚»‚ê‚æ‚è¬‚³‚­‚µ‚Äƒƒ‚ƒŠ‚ğß–ñ‚·‚é‚Ì‚ª’Ê—á
-                                    ‚±‚Ì’l‚æ‚è‘å‚«‚ÈƒRƒ}ƒ“ƒh‚ÍBCT‚É•Û‘¶‚Å‚«‚È‚­‚È‚é‚±‚Æ‚É’ˆÓ‚·‚é‚±‚Æ*/
-#define BCT_MAX_CMD_NUM    (32)  //!< ‚P‚Â‚ÌBC‚ÉÅ‘å‰½ŒÂ‚ÌƒRƒ}ƒ“ƒh‚ğ‘}“ü‚Å‚«‚é‚©
+#define BCT_CMD_MAX_LENGTH (64)  /*!< BCTã«ä¿å­˜ã™ã‚‹ãƒ‘ã‚±ãƒƒãƒˆã®ãƒ‘ã‚±ãƒƒãƒˆã‚µã‚¤ã‚ºã®ä¸Šé™
+                                    TCPã®æœ€å¤§é•·ã¯ã‹ãªã‚Šå¤§ãã„ã®ã§ï¼Œã“ã“ã§ã¯ãã‚Œã‚ˆã‚Šå°ã•ãã—ã¦ãƒ¡ãƒ¢ãƒªã‚’ç¯€ç´„ã™ã‚‹ã®ãŒé€šä¾‹
+                                    ã“ã®å€¤ã‚ˆã‚Šå¤§ããªã‚³ãƒãƒ³ãƒ‰ã¯BCTã«ä¿å­˜ã§ããªããªã‚‹ã“ã¨ã«æ³¨æ„ã™ã‚‹ã“ã¨*/
+#define BCT_MAX_CMD_NUM    (32)  //!< ï¼‘ã¤ã®BCã«æœ€å¤§ä½•å€‹ã®ã‚³ãƒãƒ³ãƒ‰ã‚’æŒ¿å…¥ã§ãã‚‹ã‹
 
-#define BCT_MAX_BLOCKS    (383) //!< BC‚ÌID‚ÌÅ‘å”
-// ‚±‚±•Ï‚¦‚½‚çCCmd_RESET_(RE)STORE_BCT* ‚à•Ï‚¦‚éI
-// 2019/07/19 ƒRƒƒ“ƒg’Ç‰Á
-// MM_NOT_DEFINED‚ÉBCT_MAX_BLOCKS ‚ªg‚í‚ê‚Ä‚¢‚é‚Ì‚ÅC-1‚³‚ê‚Ä‚éD
-// ‚¯‚ÇC‚Ü‚ -1‚·‚é•K—v‚à‚ ‚Ü‚è‚È‚³‚»‚¤H
+#define BCT_MAX_BLOCKS    (383) //!< BCã®IDã®æœ€å¤§æ•°
+// ã“ã“å¤‰ãˆãŸã‚‰ï¼ŒCmd_RESET_(RE)STORE_BCT* ã‚‚å¤‰ãˆã‚‹ï¼
+// 2019/07/19 ã‚³ãƒ¡ãƒ³ãƒˆè¿½åŠ 
+// MM_NOT_DEFINEDã«BCT_MAX_BLOCKS ãŒä½¿ã‚ã‚Œã¦ã„ã‚‹ã®ã§ï¼Œ-1ã•ã‚Œã¦ã‚‹ï¼
+// ã‘ã©ï¼Œã¾ã‚-1ã™ã‚‹å¿…è¦ã‚‚ã‚ã¾ã‚Šãªã•ãã†ï¼Ÿ
 
 
-// ¡ŒãCBCT‚ÌƒTƒCƒY•ÏX‚ª‚µ‚â‚·‚¢‚æ‚¤‚É’è‹`‚·‚é
-// ƒRƒ}ƒ“ƒh‚Ìˆø”’·ƒ`ƒFƒbƒN‚à‚±‚ê‚ğ—p‚¢‚é
-#define SIZE_OF_BCT_ID_T    (2)    //!< bct_id_t ‚ÌŒ^ƒTƒCƒYDƒƒ‚ƒŠƒCƒ“ƒpƒNƒg‚ª‚»‚ê‚È‚è‚É‚ ‚é‚Ì‚ÅC‰Â•Ï‚É
+// ä»Šå¾Œï¼ŒBCTã®ã‚µã‚¤ã‚ºå¤‰æ›´ãŒã—ã‚„ã™ã„ã‚ˆã†ã«å®šç¾©ã™ã‚‹
+// ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°é•·ãƒã‚§ãƒƒã‚¯ã‚‚ã“ã‚Œã‚’ç”¨ã„ã‚‹
+#define SIZE_OF_BCT_ID_T    (2)    //!< bct_id_t ã®å‹ã‚µã‚¤ã‚ºï¼ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‘ã‚¯ãƒˆãŒãã‚Œãªã‚Šã«ã‚ã‚‹ã®ã§ï¼Œå¯å¤‰ã«
 
 #include <src_user/Settings/TlmCmd/block_command_table_params.h>
 
@@ -35,18 +35,18 @@ typedef uint32_t bct_id_t;
 #error Illegal value for SIZE_OF_BCT_ID_T
 #endif
 
-#include "common_tlm_cmd_packet.h" // bct_id_t ‚Ì’è‹`‚æ‚è‚ ‚Æ‚Éinclude
+#include "common_tlm_cmd_packet.h" // bct_id_t ã®å®šç¾©ã‚ˆã‚Šã‚ã¨ã«include
 
 /*
-Block Command Table ‚Í
+Block Command Table ã¯
 BCT_MAX_BLOCKS x BCT_MAX_CMD_NUM
-‚Ìƒe[ƒuƒ‹‚Å‚ ‚èC
-BCT_Pos.block ‚ªƒuƒƒbƒN”Ô†C
-BCT_Pos.cmd   ‚ª‚»‚ÌƒuƒƒbƒN“à‚Å‚ÌˆÊ’u
-‚ğ•Û‚µ‚Ä‚¢‚éD
-ƒRƒ}ƒ“ƒh‚ÌÀƒf[ƒ^‚ğ•Û‘¶‚µ‚Ä‚¢‚é–{‘Ì‚Í
+ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã§ã‚ã‚Šï¼Œ
+BCT_Pos.block ãŒãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ï¼Œ
+BCT_Pos.cmd   ãŒãã®ãƒ–ãƒ­ãƒƒã‚¯å†…ã§ã®ä½ç½®
+ã‚’ä¿æŒã—ã¦ã„ã‚‹ï¼
+ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã¦ã„ã‚‹æœ¬ä½“ã¯
 
-[\‘¢‘Ì’è‹`]                        [ƒTƒCƒY Byte]
+[æ§‹é€ ä½“å®šç¾©]                        [ã‚µã‚¤ã‚º Byte]
 BlockCommandTable                        7668               at 383
   BCT_Pos                               8 : 4 * 2
     block                                   2
@@ -60,25 +60,25 @@ BCT_Table                          784767               at 383
     data[BCT_CMD_MAX_LENGTH]                        64
 
 Sum                                792435 : 784767 + 7668
-‚È‚¨C\‘¢‘Ì‚ÌƒTƒCƒY‚ÍC‚»‚Ìƒƒ“ƒo‚ÌƒTƒCƒY‚Ì˜a‚É‚È‚é‚Æ‚ÍŒÀ‚ç‚È‚¢‚±‚Æ‚É’ˆÓD
-‚±‚Ì’l‚Í–ÚˆÀ‚Å‚ ‚éD(ƒf[ƒ^‚ÌŒø—¦‰»‚Ì‚½‚ß‚ÉCƒpƒfƒBƒ“ƒO‚³‚ê‚é‚±‚Æ‚ª‚ ‚é‚½‚ß.)
+ãªãŠï¼Œæ§‹é€ ä½“ã®ã‚µã‚¤ã‚ºã¯ï¼Œãã®ãƒ¡ãƒ³ãƒã®ã‚µã‚¤ã‚ºã®å’Œã«ãªã‚‹ã¨ã¯é™ã‚‰ãªã„ã“ã¨ã«æ³¨æ„ï¼
+ã“ã®å€¤ã¯ç›®å®‰ã§ã‚ã‚‹ï¼(ãƒ‡ãƒ¼ã‚¿ã®åŠ¹ç‡åŒ–ã®ãŸã‚ã«ï¼Œãƒ‘ãƒ‡ã‚£ãƒ³ã‚°ã•ã‚Œã‚‹ã“ã¨ãŒã‚ã‚‹ãŸã‚.)
 */
 
 /**
  * @struct BCT_Pos
- * @brief  BCT“à‚Å‚Ìì‹Æ’†‚ÌˆÊ’uî•ñ
+ * @brief  BCTå†…ã§ã®ä½œæ¥­ä¸­ã®ä½ç½®æƒ…å ±
  */
 typedef struct
 {
-  bct_id_t block; //!< ƒuƒƒbƒN‚ÌˆÊ’uî•ñ
-  uint8_t  cmd;   //!< ‚»‚ÌƒuƒƒbƒN“à‚Å‚Ç‚ÌƒRƒ}ƒ“ƒh‚ğw‚·‚©
+  bct_id_t block; //!< ãƒ–ãƒ­ãƒƒã‚¯ã®ä½ç½®æƒ…å ±
+  uint8_t  cmd;   //!< ãã®ãƒ–ãƒ­ãƒƒã‚¯å†…ã§ã©ã®ã‚³ãƒãƒ³ãƒ‰ã‚’æŒ‡ã™ã‹
 } BCT_Pos;
 
 /**
  * @struct BCT_CmdData
- * @brief  Cmd ‚Ì•Û‘¶êŠ
- * @note   TCP_MAX_LENGTH (444) ‚Æ”ä‚×‚Ä‚©‚È‚è’Z‚¢ BCT_CMD_MAX_LENGTH (64)
- *         CTCP‚Ì’è‹`‚ªƒ†[ƒU[ˆË‘¶‚È‚Ì‚ÅŒ»ó uint8_t ‚Ì”z—ñ‚É‚È‚Á‚Ä‚¢‚é (FIXME: ’¼‚·)
+ * @brief  Cmd ã®ä¿å­˜å ´æ‰€
+ * @note   TCP_MAX_LENGTH (444) ã¨æ¯”ã¹ã¦ã‹ãªã‚ŠçŸ­ã„ BCT_CMD_MAX_LENGTH (64)
+ *         CTCPã®å®šç¾©ãŒãƒ¦ãƒ¼ã‚¶ãƒ¼ä¾å­˜ãªã®ã§ç¾çŠ¶ uint8_t ã®é…åˆ—ã«ãªã£ã¦ã„ã‚‹ (FIXME: ç›´ã™)
  */
 typedef struct
 {
@@ -87,45 +87,45 @@ typedef struct
 
 /**
  * @struct BCT_Table
- * @brief  BCT ‚Ì–{‘Ì. ÀÛ‚É BC ‚Ì cmd ‚ªŠm•Û‚³‚ê‚Ä‚¢‚é
+ * @brief  BCT ã®æœ¬ä½“. å®Ÿéš›ã« BC ã® cmd ãŒç¢ºä¿ã•ã‚Œã¦ã„ã‚‹
  */
 typedef struct
 {
-  uint8_t     length;                   //!< cmds ‚É•Û‘¶‚³‚ê‚Ä‚¢‚éƒRƒ}ƒ“ƒh”
-  BCT_CmdData cmds[BCT_MAX_CMD_NUM];     //!< Še cmd ‚ª•Û‘¶‚³‚ê‚é”z—ñ
+  uint8_t     length;                   //!< cmds ã«ä¿å­˜ã•ã‚Œã¦ã„ã‚‹ã‚³ãƒãƒ³ãƒ‰æ•°
+  BCT_CmdData cmds[BCT_MAX_CMD_NUM];     //!< å„ cmd ãŒä¿å­˜ã•ã‚Œã‚‹é…åˆ—
 } BCT_Table;
 
 /**
  * @struct BCT_Func
- * @brief  Šesetter, getter ‚ª“ü‚é
- * @note   ŒöŠJ‚³‚ê‚Ä‚¢‚é‚ª private ˆµ‚¢. getter ‚Íƒ‰ƒbƒv‚³‚ê‚Ä‚¢‚é‚Ì‚Å‚»‚¿‚ç‚ğg‚¤‚±‚Æ
- *         ‘¶İ‚·‚é——R‚Í’†g‚ª MRAM ‚È‚ÇOdç’·‰»‚³‚ê‚Ä‚¢‚éêŠ‚É‚ ‚é‚±‚Æ‚à‚ ‚é‚½‚ß
+ * @brief  å„setter, getter ãŒå…¥ã‚‹
+ * @note   å…¬é–‹ã•ã‚Œã¦ã„ã‚‹ãŒ private æ‰±ã„. getter ã¯ãƒ©ãƒƒãƒ—ã•ã‚Œã¦ã„ã‚‹ã®ã§ãã¡ã‚‰ã‚’ä½¿ã†ã“ã¨
+ *         å­˜åœ¨ã™ã‚‹ç†ç”±ã¯ä¸­èº«ãŒ MRAM ãªã©ä¸‰é‡å†—é•·åŒ–ã•ã‚Œã¦ã„ã‚‹å ´æ‰€ã«ã‚ã‚‹ã“ã¨ã‚‚ã‚ã‚‹ãŸã‚
  */
 typedef struct
 {
-  BCT_CmdData* (*get_bc_cmd_data_)(const BCT_Pos* pos);                           //!< cmd_data ‚Ì getter
-  uint8_t      (*get_bc_length_)(const bct_id_t block);                           //!< length ‚Ì getter
-  void         (*set_bc_cmd_data_)(const BCT_Pos* pos, const BCT_CmdData* value); //!< cmd_data ‚Ì setter
-  void         (*set_bc_length_)(const bct_id_t block, uint8_t length);           //!< length ‚Ì setter
+  BCT_CmdData* (*get_bc_cmd_data_)(const BCT_Pos* pos);                           //!< cmd_data ã® getter
+  uint8_t      (*get_bc_length_)(const bct_id_t block);                           //!< length ã® getter
+  void         (*set_bc_cmd_data_)(const BCT_Pos* pos, const BCT_CmdData* value); //!< cmd_data ã® setter
+  void         (*set_bc_length_)(const bct_id_t block, uint8_t length);           //!< length ã® setter
 } BCT_Func;
 
 /**
  * @struct BlockCommandTable
- * @brief  BCT ‘S‘Ì‚Ì\‘¢‘Ì
+ * @brief  BCT å…¨ä½“ã®æ§‹é€ ä½“
  */
 typedef struct
 {
-  BCT_Pos pos;                            //!< “o˜^‚È‚Ç‚Ìì‹Æ’†‚ÌˆÊ’uî•ñ
-  BCT_Pos pos_stored;                     /*!< OBC“à•”‚Ìˆ—‚Åƒ|ƒCƒ“ƒ^‚ª•Ï‚í‚ç‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Ìˆê‘Ş”ğêŠD
-                                               Ú×‚ÍC2AƒhƒLƒ…ƒƒ“ƒg uƒuƒƒbƒNƒRƒ}ƒ“ƒh’Ç‰Á•û–@.mdv  */
-  BCT_Table* blocks[BCT_MAX_BLOCKS];      //!< BCT‚ÌŠeBCDD‚«‚ÈêŠ‚ÅŠm•Û‚Å‚«‚é—l‚Éƒ|ƒCƒ“ƒ^‚É‚µ‚Ä‚¢‚é
-  BCT_Func   func[BCT_MAX_BLOCKS];        //!< BCTŠÖŒW‚ÌŠÖ”
+  BCT_Pos pos;                            //!< ç™»éŒ²ãªã©ã®ä½œæ¥­ä¸­ã®ä½ç½®æƒ…å ±
+  BCT_Pos pos_stored;                     /*!< OBCå†…éƒ¨ã®å‡¦ç†ã§ãƒã‚¤ãƒ³ã‚¿ãŒå¤‰ã‚ã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®ä¸€æ™‚é€€é¿å ´æ‰€ï¼
+                                               è©³ç´°ã¯C2Aãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ ã€Œãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰è¿½åŠ æ–¹æ³•.mdã€  */
+  BCT_Table* blocks[BCT_MAX_BLOCKS];      //!< BCTã®å„BCï¼å¥½ããªå ´æ‰€ã§ç¢ºä¿ã§ãã‚‹æ§˜ã«ãƒã‚¤ãƒ³ã‚¿ã«ã—ã¦ã„ã‚‹
+  BCT_Func   func[BCT_MAX_BLOCKS];        //!< BCTé–¢ä¿‚ã®é–¢æ•°
 } BlockCommandTable;
 
 /**
  * @enum  BCT_ACK
- * @brief BCT ŠÖŒW‚ÌŠÖ”‚ÌƒGƒ‰[ƒXƒe[ƒ^ƒX
- * @note  uint8_t ‚ğ‘z’è
+ * @brief BCT é–¢ä¿‚ã®é–¢æ•°ã®ã‚¨ãƒ©ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
+ * @note  uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
@@ -143,150 +143,150 @@ typedef enum
 extern const BlockCommandTable* const block_command_table;
 
 /**
- * @brief BCT ‚Ì‰Šú‰»ŠÖ”
- * @note  BCT ‚Æ‘‚¢‚Ä‚¢‚é‚ª“à•”‚Å‚Í BCE_init ‚àŒÄ‚Î‚ê‚é‚½‚ß BC ‚ªŠÖŒW‚·‚é—LÛ–³Û‚ª‰Šú‰»‚³‚ê‚é.
+ * @brief BCT ã®åˆæœŸåŒ–é–¢æ•°
+ * @note  BCT ã¨æ›¸ã„ã¦ã„ã‚‹ãŒå†…éƒ¨ã§ã¯ BCE_init ã‚‚å‘¼ã°ã‚Œã‚‹ãŸã‚ BC ãŒé–¢ä¿‚ã™ã‚‹æœ‰è±¡ç„¡è±¡ãŒåˆæœŸåŒ–ã•ã‚Œã‚‹.
  */
 void BCT_initialize(void);
 
 /**
- * @brief BCT_CmdData ‚Ì const pointer getter
- * @note ƒAƒT[ƒVƒ‡ƒ“‚Í‚³‚ê‚È‚¢
+ * @brief BCT_CmdData ã® const pointer getter
+ * @note ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã¯ã•ã‚Œãªã„
  * @param[in] pos: const BCT_Pos*
  * @return const BCT_Pos*
  */
 const BCT_CmdData* BCT_get_bc_cmd_data(const BCT_Pos* pos);
 
 /**
- * @brief BCT ‚Ì length ‚Ì getter
- * @note ƒAƒT[ƒVƒ‡ƒ“‚Í‚³‚ê‚È‚¢D—LŒø‚Å‚È‚¢ block ‚Ìê‡C 0 ‚ğ•Ô‚·
- * @param[in] block: BC ‚Ì idx
+ * @brief BCT ã® length ã® getter
+ * @note ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã¯ã•ã‚Œãªã„ï¼æœ‰åŠ¹ã§ãªã„ block ã®å ´åˆï¼Œ 0 ã‚’è¿”ã™
+ * @param[in] block: BC ã® idx
  * @return length
  */
 uint8_t BCT_get_bc_length(const bct_id_t block);
 
 /**
- * @brief w’è‚³‚ê‚½ block ‚Ì BCT ‚ğ‰Šú‰»‚·‚é
- * @param[in] block: BC ‚Ì idx
+ * @brief æŒ‡å®šã•ã‚ŒãŸ block ã® BCT ã‚’åˆæœŸåŒ–ã™ã‚‹
+ * @param[in] block: BC ã® idx
  * @return BCT_ACK
  */
 BCT_ACK BCT_clear_block(const bct_id_t block);
 
 /**
- * @brief pos ‚ğ pos_stored ‚É•Û‘¶
- * @note ’nã‹Ç‚ÆOBC“à•”‚ÌBC‚Ìƒ|ƒCƒ“ƒ^‚ª¬‚´‚Á‚Ä‚¨‚©‚µ‚­‚È‚ç‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Ì‰üC. Ú×‚ÍC2AƒhƒLƒ…ƒƒ“ƒg uƒuƒƒbƒNƒRƒ}ƒ“ƒh’Ç‰Á•û–@.mdv
+ * @brief pos ã‚’ pos_stored ã«ä¿å­˜
+ * @note åœ°ä¸Šå±€ã¨OBCå†…éƒ¨ã®BCã®ãƒã‚¤ãƒ³ã‚¿ãŒæ··ã–ã£ã¦ãŠã‹ã—ããªã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®æ”¹ä¿®. è©³ç´°ã¯C2Aãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ ã€Œãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰è¿½åŠ æ–¹æ³•.mdã€
  * @param  void
  * @return void
  */
 void BCT_store_pos(void);
 
 /**
- * @brief pos ‚ğ pos_stored ‚©‚ç•œ‹Œ
+ * @brief pos ã‚’ pos_stored ã‹ã‚‰å¾©æ—§
  * @param  void
  * @return void
  */
 void BCT_restore_pos(void);
 
 /**
- * @brief BCT_Pos* ‚Ì validate
- * @param  pos: BCT‚ÌˆÊ’u
+ * @brief BCT_Pos* ã® validate
+ * @param  pos: BCTã®ä½ç½®
  * @return BCT_ACK
  */
 BCT_ACK BCT_check_position(const BCT_Pos* pos);
 
 /**
- * @brief BCT_Pos* ‚ğˆø”‚©‚çì‚é
- * @param[out] pos: ‚»‚±‚Éì‚é pointer
- * @param[in] block: BC ‚Ì idx
- * @param[in] cmd: Cmds_data “à‚Å‚Ì idx
+ * @brief BCT_Pos* ã‚’å¼•æ•°ã‹ã‚‰ä½œã‚‹
+ * @param[out] pos: ãã“ã«ä½œã‚‹ pointer
+ * @param[in] block: BC ã® idx
+ * @param[in] cmd: Cmds_data å†…ã§ã® idx
  * @return BCT_ACK
  */
 BCT_ACK BCT_make_pos(BCT_Pos* pos, const bct_id_t block, const uint8_t cmd);
 
 /**
- * @brief •Û‘¶ƒf[ƒ^‚ğCTCP‚ÉƒRƒs[‚·‚é.
- * @param[in]  pos: ƒRƒs[Œ³‚Ìpacket‚ÌˆÊ’u
- * @param[out] packet: ƒRƒs[‚³‚ê‚é CTCP*
+ * @brief ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã‚’CTCPã«ã‚³ãƒ”ãƒ¼ã™ã‚‹.
+ * @param[in]  pos: ã‚³ãƒ”ãƒ¼å…ƒã®packetã®ä½ç½®
+ * @param[out] packet: ã‚³ãƒ”ãƒ¼ã•ã‚Œã‚‹ CTCP*
  * @return BCT_ACK
- * @note  ƒRƒ}ƒ“ƒh’·‚Í‹C‚É‚¹‚¸Å‘å’·‚ğ“Ç‚İo‚·‚±‚Æ‚Æ‚·‚é.
- *        ÀÛ‚Ì’·‚³î•ñ‚ÍƒRƒs[‚³‚ê‚Ä‚¢‚éƒwƒbƒ_‚ÉŠi”[‚³‚ê‚Ä‚¢‚é.
+ * @note  ã‚³ãƒãƒ³ãƒ‰é•·ã¯æ°—ã«ã›ãšæœ€å¤§é•·ã‚’èª­ã¿å‡ºã™ã“ã¨ã¨ã™ã‚‹.
+ *        å®Ÿéš›ã®é•·ã•æƒ…å ±ã¯ã‚³ãƒ”ãƒ¼ã•ã‚Œã¦ã„ã‚‹ãƒ˜ãƒƒãƒ€ã«æ ¼ç´ã•ã‚Œã¦ã„ã‚‹.
  */
 BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CTCP* packet);
 
 /**
- * @brief Cmd ‚ğ block_command_table->pos ‚É“o˜^‚·‚é
- * @param[in] packet: “o˜^‚·‚é Cmd ‚Ì“à—e
+ * @brief Cmd ã‚’ block_command_table->pos ã«ç™»éŒ²ã™ã‚‹
+ * @param[in] packet: ç™»éŒ²ã™ã‚‹ Cmd ã®å†…å®¹
  * @return BCT_ACK
  */
 BCT_ACK BCT_register_cmd(const CTCP* packet);
 
 /**
- * @brief Šù‚É“o˜^‚³‚ê‚Ä‚¢‚é BC ‚Ì Cmd ‚Ì’†g‚ğŠO•”‚©‚çã‘‚«‚·‚é
- * @param[in] pos: ã‘‚«‚·‚éˆÊ’u
- * @param[in] packet: ã‘‚«‚³‚ê‚é packet
+ * @brief æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ BC ã® Cmd ã®ä¸­èº«ã‚’å¤–éƒ¨ã‹ã‚‰ä¸Šæ›¸ãã™ã‚‹
+ * @param[in] pos: ä¸Šæ›¸ãã™ã‚‹ä½ç½®
+ * @param[in] packet: ä¸Šæ›¸ãã•ã‚Œã‚‹ packet
  * @return BCT_ACK
  */
 BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CTCP* packet);
 
 /**
- * @brief BCT ‚Ì’†g‚ğ ‘¼‚Ì BCT ‚É COPY ‚·‚é
- * @param[in] dst_block ƒRƒs[æ‚Ì bct_id
- * @param[in] src_block ƒRƒs[Œ³‚Ì bct_id
+ * @brief BCT ã®ä¸­èº«ã‚’ ä»–ã® BCT ã« COPY ã™ã‚‹
+ * @param[in] dst_block ã‚³ãƒ”ãƒ¼å…ˆã® bct_id
+ * @param[in] src_block ã‚³ãƒ”ãƒ¼å…ƒã® bct_id
  * @return BCT_ACK
  */
 BCT_ACK BCT_copy_bct(const bct_id_t dst_block, const bct_id_t src_block);
 
-// ˆÈ‰º3‚Â‚Í BCT ‚É“o˜^‚³‚ê‚Ä‚¢‚é Cmd ‚©‚ç‚»‚Ì“à—e‚ğæ‚èo‚·getter
+// ä»¥ä¸‹3ã¤ã¯ BCT ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ Cmd ã‹ã‚‰ãã®å†…å®¹ã‚’å–ã‚Šå‡ºã™getter
 /**
- * @brief BCT “à‚Ì Cmd ‚Ì CMD_CODE ‚Ì getter
- * @param[in] block: BC ‚Ì idx
- * @param[in] cmd: Cmds_data “à‚Å‚Ì idx
+ * @brief BCT å†…ã® Cmd ã® CMD_CODE ã® getter
+ * @param[in] block: BC ã® idx
+ * @param[in] cmd: Cmds_data å†…ã§ã® idx
  * @return CMD_CODE
- * @note (block, cmd) ‚ªˆÙí’l‚¾‚Á‚½ê‡‚Í Cmd_CODE_MAX ‚ğ•Ô‚·
+ * @note (block, cmd) ãŒç•°å¸¸å€¤ã ã£ãŸå ´åˆã¯ Cmd_CODE_MAX ã‚’è¿”ã™
  */
 CMD_CODE BCT_get_id(const bct_id_t block, const uint8_t cmd);
 
 /**
- * @brief BCT “à‚Ì Cmd ‚Ì TI ‚Ì getter
- * @param[in] block: BC ‚Ì idx
- * @param[in] cmd: Cmds_data “à‚Å‚Ì idx
+ * @brief BCT å†…ã® Cmd ã® TI ã® getter
+ * @param[in] block: BC ã® idx
+ * @param[in] cmd: Cmds_data å†…ã§ã® idx
  * @return TI
- * @note (block, cmd) ‚ªˆÙí’l‚¾‚Á‚½ê‡‚Í 0 ‚ğ•Ô‚·
+ * @note (block, cmd) ãŒç•°å¸¸å€¤ã ã£ãŸå ´åˆã¯ 0 ã‚’è¿”ã™
  */
 cycle_t BCT_get_ti(const bct_id_t block, const uint8_t cmd);
 
 /**
- * @brief BCT “à‚Ì Cmd ‚Ì param_head ‚Ì getter
- * @param[in] block: BC ‚Ì idx
- * @param[in] cmd: Cmds_data “à‚Å‚Ì idx
- * @return const uint8_t* ƒ|ƒCƒ“ƒ^
- * @note (block, cmd) ‚ªˆÙí’l‚¾‚Á‚½ê‡‚Í (0, 0) ‚Ì‚à‚Ì‚ğ•Ô‚·
+ * @brief BCT å†…ã® Cmd ã® param_head ã® getter
+ * @param[in] block: BC ã® idx
+ * @param[in] cmd: Cmds_data å†…ã§ã® idx
+ * @return const uint8_t* ãƒã‚¤ãƒ³ã‚¿
+ * @note (block, cmd) ãŒç•°å¸¸å€¤ã ã£ãŸå ´åˆã¯ (0, 0) ã®ã‚‚ã®ã‚’è¿”ã™
  */
 const uint8_t* BCT_get_param_head(const bct_id_t block, const uint8_t cmd);
 
 /**
- * @brief BCT ‚Ì block ‚Ìw‚·ƒ|ƒCƒ“ƒ^ & func ‚ğ“ü‚ê‘Ö‚¦‚é
- * @param[in] block_a: “ü‚ê‘Ö‚¦‚é BC
- * @param[in] block_b: “ü‚ê‘Ö‚¦‚é BC
- * @return BCT_ACK ÀsŒ‹‰Ê
- * @note ID1:HK:SRAM, ID2:AH:MRAM ‚ª‚ ‚Á‚½‚É ID1:AH:MRAM, ID2:HK:SRAM ‚ªo—ˆ‚é
- *       `BCT_swap_contents` ‚Æ‘g‚İ‡‚í‚¹‚é‚±‚Æ‚Å”Ô† - ’†g‚Í‚»‚Ì‚Ü‚Ü‚Å RAM ‚¾‚¯‚ğØ‚è‘Ö‚¦‚é‚±‚Æ‚ªo—ˆ‚é
- *       •K‚¸ `BCE_swap_address` ‚Æ‹¤‚Ég—p‚·‚é‚±‚Æ
+ * @brief BCT ã® block ã®æŒ‡ã™ãƒã‚¤ãƒ³ã‚¿ & func ã‚’å…¥ã‚Œæ›¿ãˆã‚‹
+ * @param[in] block_a: å…¥ã‚Œæ›¿ãˆã‚‹ BC
+ * @param[in] block_b: å…¥ã‚Œæ›¿ãˆã‚‹ BC
+ * @return BCT_ACK å®Ÿè¡Œçµæœ
+ * @note ID1:HK:SRAM, ID2:AH:MRAM ãŒã‚ã£ãŸæ™‚ã« ID1:AH:MRAM, ID2:HK:SRAM ãŒå‡ºæ¥ã‚‹
+ *       `BCT_swap_contents` ã¨çµ„ã¿åˆã‚ã›ã‚‹ã“ã¨ã§ç•ªå· - ä¸­èº«ã¯ãã®ã¾ã¾ã§ RAM ã ã‘ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã“ã¨ãŒå‡ºæ¥ã‚‹
+ *       å¿…ãš `BCE_swap_address` ã¨å…±ã«ä½¿ç”¨ã™ã‚‹ã“ã¨
  */
 BCT_ACK BCT_swap_address(const bct_id_t block_a, const bct_id_t block_b);
 
 /**
- * @brief BCT ‚Ì block ‚Ìw‚·’†g‚ğ“ü‚ê‘Ö‚¦‚é
- * @param[in] block_a: “ü‚ê‘Ö‚¦‚é BC
- * @param[in] block_b: “ü‚ê‘Ö‚¦‚é BC
- * @return BCT_ACK ÀsŒ‹‰Ê
- * @note ID1:AH:MRAM, ID2:HK:SRAM ‚ª‚ ‚Á‚½‚É ID1:HK:MRAM, ID2:AH:SRAM ‚ªo—ˆ‚é
- *       `BCT_swap_ram` ‚Æ‘g‚İ‡‚í‚¹‚é‚±‚Æ‚Å”Ô† - ’†g‚Í‚»‚Ì‚Ü‚Ü‚Å RAM ‚¾‚¯‚ğØ‚è‘Ö‚¦‚é‚±‚Æ‚ªo—ˆ‚é
- *       •K‚¸ `BCE_swap_contents` ‚Æ‹¤‚Ég—p‚·‚é‚±‚Æ
+ * @brief BCT ã® block ã®æŒ‡ã™ä¸­èº«ã‚’å…¥ã‚Œæ›¿ãˆã‚‹
+ * @param[in] block_a: å…¥ã‚Œæ›¿ãˆã‚‹ BC
+ * @param[in] block_b: å…¥ã‚Œæ›¿ãˆã‚‹ BC
+ * @return BCT_ACK å®Ÿè¡Œçµæœ
+ * @note ID1:AH:MRAM, ID2:HK:SRAM ãŒã‚ã£ãŸæ™‚ã« ID1:HK:MRAM, ID2:AH:SRAM ãŒå‡ºæ¥ã‚‹
+ *       `BCT_swap_ram` ã¨çµ„ã¿åˆã‚ã›ã‚‹ã“ã¨ã§ç•ªå· - ä¸­èº«ã¯ãã®ã¾ã¾ã§ RAM ã ã‘ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã“ã¨ãŒå‡ºæ¥ã‚‹
+ *       å¿…ãš `BCE_swap_contents` ã¨å…±ã«ä½¿ç”¨ã™ã‚‹ã“ã¨
  */
 BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
 
 /**
- * @brief enum•ÏŠ·—pŠÖ”
+ * @brief enumå¤‰æ›ç”¨é–¢æ•°
  * @param  ack: BCT_ACK
  * @return CCP_EXEC_STS
  */

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  BCTのCoreTlmパラメタのオーバーライド用ヘッダー
+ * @brief  BCT縺ｮCoreTlm繝代Λ繝｡繧ｿ縺ｮ繧ｪ繝ｼ繝舌�ｼ繝ｩ繧､繝臥畑繝倥ャ繝繝ｼ
  */
 #ifndef BLOCK_COMMAND_TABLE_PARAMS_H_
 #define BLOCK_COMMAND_TABLE_PARAMS_H_

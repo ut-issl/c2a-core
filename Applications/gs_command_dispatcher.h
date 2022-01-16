@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief ’nã‹Ç‚©‚ç”­s‚³‚ê‚½ RTC (Real Time Cmd) ‚ğÀs‚·‚é
+ * @brief åœ°ä¸Šå±€ã‹ã‚‰ç™ºè¡Œã•ã‚ŒãŸ RTC (Real Time Cmd) ã‚’å®Ÿè¡Œã™ã‚‹
  */
 #ifndef GS_COMMAND_DISPATCHER_H_
 #define GS_COMMAND_DISPATCHER_H_
@@ -11,7 +11,7 @@
 extern const CommandDispatcher* const gs_command_dispatcher;
 
 /**
- * @brief  GSCD App ¶¬ŠÖ”
+ * @brief  GSCD App ç”Ÿæˆé–¢æ•°
  * @param  void
  * @return GSCD AppInfo
  */

@@ -1,8 +1,8 @@
 #! /bin/sh
 
-# @brief git revision –„‚ß‚İ
+# @brief git revision åŸ‹ã‚è¾¼ã¿
 
-# current directory‚ÉˆÚ“®
+# current directoryã«ç§»å‹•
 cd `dirname $0`
 
 git_rev_user=$(git log --pretty=format:%H -1)

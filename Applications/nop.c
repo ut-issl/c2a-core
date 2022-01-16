@@ -2,8 +2,8 @@
 /**
  * @file
  * @brief NOP (No Operation) App
- * @note  C2A‚Í NOP ‚ª‚ ‚é‚±‚Æ‚ð‘O’ñ‚Æ‚µ‚Ä‚¢‚é
- *        ‚±‚Ì App ‚Í•K‚¸ App “o˜^‚µC Cmd_NOP ‚à•K‚¸ƒRƒ}ƒ“ƒh“o˜^‚µ‚Ä‚¨‚­‚±‚Æ
+ * @note  C2Aã¯ NOP ãŒã‚ã‚‹ã“ã¨ã‚’å‰æã¨ã—ã¦ã„ã‚‹
+ *        ã“ã® App ã¯å¿…ãš App ç™»éŒ²ã—ï¼Œ Cmd_NOP ã‚‚å¿…ãšã‚³ãƒžãƒ³ãƒ‰ç™»éŒ²ã—ã¦ãŠãã“ã¨
  */
 #include "nop.h"
 #include <stddef.h>

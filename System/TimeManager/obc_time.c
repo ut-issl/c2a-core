@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief OBC‚Ìî•ñ‚Ì’è‹`‚Æ‰‰Z
+ * @brief OBCã®æ™‚åˆ»æƒ…å ±ã®å®šç¾©ã¨æ¼”ç®—
  */
 #include "obc_time.h"
 #include "../../Library/print.h"
@@ -119,19 +119,19 @@ ObcTime OBCT_diff(const ObcTime* before,
 
   if (OBCT_compare(after, before) == 1)
   {
-    return OBCT_create(0, 0, 0); // after < before ‚Ìê‡‚ÍŒ‹‰Ê‚ªƒ}ƒCƒiƒX‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚½‚ß
+    return OBCT_create(0, 0, 0); // after < before ã®å ´åˆã¯çµæœãŒãƒã‚¤ãƒŠã‚¹ã«ãªã£ã¦ã—ã¾ã†ãŸã‚
   }
 
-  // ‚Ü‚¸cycle‚Ì·•ª‚ğŒvZ
+  // ã¾ãšcycleã®å·®åˆ†ã‚’è¨ˆç®—
   diff.total_cycle = after->total_cycle - before->total_cycle;
   diff.mode_cycle = after->mode_cycle - before->mode_cycle;
 
-  // step‚Ì‚İ‚Å·•ª‚ğl‚¦‚ê‚Î‚æ‚¢ê‡
+  // stepã®ã¿ã§å·®åˆ†ã‚’è€ƒãˆã‚Œã°ã‚ˆã„å ´åˆ
   if (after->step >= before->step)
   {
     diff.step = after->step - before->step;
   }
-  // cycle‚©‚ç‚ÌŒ…Ø‚è‚ª•K—v‚Èê‡
+  // cycleã‹ã‚‰ã®æ¡å€Ÿã‚ŠãŒå¿…è¦ãªå ´åˆ
   else
   {
     diff.step = OBCT_STEPS_PER_CYCLE - before->step + after->step;

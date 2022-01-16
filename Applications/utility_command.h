@@ -1,29 +1,29 @@
 #ifndef UTILITY_COMMAND_H_
 #define UTILITY_COMMAND_H_
-// FIXME: ‚±‚ÌApp‚ÍŒ»İŠÇ—‚³‚ê‚Ä‚¢‚È‚¢I
-//        g—p‚·‚é‘O‚ÉŠm”F‚·‚é‚±‚Æ
+// FIXME: ã“ã®Appã¯ç¾åœ¨ç®¡ç†ã•ã‚Œã¦ã„ãªã„ï¼
+//        ä½¿ç”¨ã™ã‚‹å‰ã«ç¢ºèªã™ã‚‹ã“ã¨
 
 #include "../TlmCmd/common_tlm_cmd_packet.h"
 #include "../IfWrapper/uart.h"
 #include "../System/ApplicationManager/app_info.h"
 
-#define UTIL_CMD_SIZE_MAX (256) // 256BytesˆÈãƒRƒ}ƒ“ƒh‚Æ‚µ‚Ä‘—‚é‚±‚Æ‚Í‚È‚¢‚Í‚¸DDDICOUPS_PARAM_BL‚æ‚è’·‚¢‚µ
+#define UTIL_CMD_SIZE_MAX (256) // 256Bytesä»¥ä¸Šã‚³ãƒãƒ³ãƒ‰ã¨ã—ã¦é€ã‚‹ã“ã¨ã¯ãªã„ã¯ãšï¼ï¼ï¼ICOUPS_PARAM_BLã‚ˆã‚Šé•·ã„ã—
 
-// ”Ä—pƒRƒ}ƒ“ƒh—p\‘¢‘Ì
+// æ±ç”¨ã‚³ãƒãƒ³ãƒ‰ç”¨æ§‹é€ ä½“
 typedef struct
 {
   UART_Config uart_config_dummy;
   unsigned char util_cmd_buffer[UTIL_CMD_SIZE_MAX];
-  unsigned int cmd_size; // ‘—MƒRƒ}ƒ“ƒhƒTƒCƒY
+  unsigned int cmd_size; // é€ä¿¡ã‚³ãƒãƒ³ãƒ‰ã‚µã‚¤ã‚º
   unsigned int pointer;
-  int uart_err_code; // UTIL_CMD_send_‚Å‚ÌƒGƒ‰[î•ñ•Û—p
+  int uart_err_code; // UTIL_CMD_send_ã§ã®ã‚¨ãƒ©ãƒ¼æƒ…å ±ä¿æŒç”¨
 } UtilityCommand;
 
 extern const UtilityCommand* const utility_command;
 
 AppInfo UTIL_CMD_create_app(void);
 
-// ƒRƒ}ƒ“ƒh
+// ã‚³ãƒãƒ³ãƒ‰
 CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CTCP* packet);
 CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CTCP* packet);
 CCP_EXEC_STS Cmd_UTIL_CMD_RESET(const CTCP* packet);

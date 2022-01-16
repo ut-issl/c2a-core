@@ -1,16 +1,16 @@
 /**
  * @file
  * @brief   ccsds_sils_sci_if
- * @details WINGS TMTC IF‚ÆCCSDS‚ÌTransfer Frame‚ğSCI COM‚Å‚â‚è‚Æ‚è‚·‚éIF
-            Windowsã‚Åcom0com‚ğg‚¤‚±‚Æ‚ğ‘z’è
-            SCIComPort class‚ÍŠî–{“I‚ÉEQU ZEUS‚ÌƒR[ƒh‚ğ—¬—p
+ * @details WINGS TMTC IFã¨CCSDSã®Transfer Frameã‚’SCI COMã§ã‚„ã‚Šã¨ã‚Šã™ã‚‹IF
+            Windowsä¸Šã§com0comã‚’ä½¿ã†ã“ã¨ã‚’æƒ³å®š
+            SCIComPort classã¯åŸºæœ¬çš„ã«EQU ZEUSã®ã‚³ãƒ¼ãƒ‰ã‚’æµç”¨
  */
 #ifndef CCSDS_SILS_SIC_IF_H_
 #define CCSDS_SILS_SIC_IF_H_
 
 #include <Windows.h>
 
-// ZEUS SILS‚©‚ç‚ÌƒRƒs[
+// ZEUS SILSã‹ã‚‰ã®ã‚³ãƒ”ãƒ¼
 class SCIComPort
 {
 public:

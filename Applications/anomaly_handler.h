@@ -11,16 +11,16 @@
 #include <src_user/Settings/AnomalyLogger/anomaly_group.h>
 #include <src_user/Settings/Applications/AnomalyHandlerRules/ah_rules.h>
 
-#define AH_TLM_PAGE_SIZE (32)                                  //!< AnomalyHandler‚Ìƒ‹[ƒ‹ƒe[ƒuƒ‹‚Ì1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚éƒ‹[ƒ‹”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define AH_TLM_PAGE_MAX  (4)                                   //!< AnomalyHandler‚Ìƒ‹[ƒ‹ƒe[ƒuƒ‹‚Ìƒy[ƒW”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define AH_MAX_RULES (AH_TLM_PAGE_SIZE * AH_TLM_PAGE_MAX)        //!< Å‘å‰½ŒÂ‚Ìƒ‹[ƒ‹iƒAƒmƒ}ƒŠ - ƒCƒxƒ“ƒg‘Î‰j‚ğ•Û‚Å‚«‚é‚©
+#define AH_TLM_PAGE_SIZE (32)                                  //!< AnomalyHandlerã®ãƒ«ãƒ¼ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã®1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ãƒ«ãƒ¼ãƒ«æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define AH_TLM_PAGE_MAX  (4)                                   //!< AnomalyHandlerã®ãƒ«ãƒ¼ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒšãƒ¼ã‚¸æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define AH_MAX_RULES (AH_TLM_PAGE_SIZE * AH_TLM_PAGE_MAX)        //!< æœ€å¤§ä½•å€‹ã®ãƒ«ãƒ¼ãƒ«ï¼ˆã‚¢ãƒãƒãƒª - ã‚¤ãƒ™ãƒ³ãƒˆå¯¾å¿œï¼‰ã‚’ä¿æŒã§ãã‚‹ã‹
 
-#define AH_LOG_TLM_PAGE_SIZE (32)                              //!< AnomalyHandler‚Ì”­“®ƒCƒxƒ“ƒgƒƒOƒe[ƒuƒ‹‚Ì1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚é”­“®ƒCƒxƒ“ƒgƒƒO”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define AH_LOG_TLM_PAGE_MAX  (4)                               //!< AnomalyHandler‚Ì”­“®ƒCƒxƒ“ƒgƒƒOƒe[ƒuƒ‹‚Ìƒy[ƒW”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define AH_LOG_MAX (AH_LOG_TLM_PAGE_SIZE * AH_LOG_TLM_PAGE_MAX)  //!< Å‘å‰½ŒÂ‚ÌƒCƒxƒ“ƒgƒƒO‚ğ•Û‚Å‚«‚é‚©
+#define AH_LOG_TLM_PAGE_SIZE (32)                              //!< AnomalyHandlerã®ç™ºå‹•ã‚¤ãƒ™ãƒ³ãƒˆãƒ­ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«ã®1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ç™ºå‹•ã‚¤ãƒ™ãƒ³ãƒˆãƒ­ã‚°æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define AH_LOG_TLM_PAGE_MAX  (4)                               //!< AnomalyHandlerã®ç™ºå‹•ã‚¤ãƒ™ãƒ³ãƒˆãƒ­ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒšãƒ¼ã‚¸æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define AH_LOG_MAX (AH_LOG_TLM_PAGE_SIZE * AH_LOG_TLM_PAGE_MAX)  //!< æœ€å¤§ä½•å€‹ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ­ã‚°ã‚’ä¿æŒã§ãã‚‹ã‹
 // 2018-12-11
-// ª‚±‚ê‚Á‚ÄC AL_RECORD_MAX ‚ÆƒTƒCƒY‘µ‚¦‚é•K—v‚È‚¢‚ÌH
-// ‚È‚³‚»‚¤H
+// â†‘ã“ã‚Œã£ã¦ï¼Œ AL_RECORD_MAX ã¨ã‚µã‚¤ã‚ºæƒãˆã‚‹å¿…è¦ãªã„ã®ï¼Ÿ
+// ãªã•ãã†ï¼Ÿ
 
 #include <src_user/Settings/Applications/anomaly_handler_params.h>
 
@@ -35,15 +35,15 @@ typedef struct
 {
   AL_AnomalyCode  code;
   AH_CONDITION cond;
-  size_t       threshold;     // tlm‚Å‚Íunit8_t‚¾....    AH_CUMULATE—p‚ÌƒJƒEƒ“ƒ^
-  bct_id_t     bc_id;         // tlm‚Å‚Íunit8_t‚¾....    // TODO 2019/08/30 BCT‚ÌŒ`‚ª•Ï‚í‚Á‚½‚Ì‚ÅCTLM‚à’¼‚·III
+  size_t       threshold;     // tlmã§ã¯unit8_tã ....    AH_CUMULATEç”¨ã®ã‚«ã‚¦ãƒ³ã‚¿
+  bct_id_t     bc_id;         // tlmã§ã¯unit8_tã ....    // TODO 2019/08/30 BCTã®å½¢ãŒå¤‰ã‚ã£ãŸã®ã§ï¼ŒTLMã‚‚ç›´ã™ï¼ï¼ï¼
 } AH_Rule;
 
 typedef struct
 {
   int     is_active;
   AH_Rule rule;
-  size_t  counter;            // AH_CUMULATE—p‚ÌƒJƒEƒ“ƒ^
+  size_t  counter;            // AH_CUMULATEç”¨ã®ã‚«ã‚¦ãƒ³ã‚¿
 } AH_Element;
 
 typedef struct
@@ -57,10 +57,10 @@ typedef struct
   AH_Element elements[AH_MAX_RULES];
   AH_Pointer al_pointer;
   ObcTime    respond_at;
-  size_t     latest_id;             // tlm‚Å‚Íunit8_t‚¾....
-  size_t     action_counter;        // tlm‚Å‚Íunit8_t‚¾....
-  size_t     latest_run_length;     // tlm‚Å‚Íunit8_t‚¾....
-  uint8_t    page_no;               // tlm‚Å‚Íunit8_t‚¾....
+  size_t     latest_id;             // tlmã§ã¯unit8_tã ....
+  size_t     action_counter;        // tlmã§ã¯unit8_tã ....
+  size_t     latest_run_length;     // tlmã§ã¯unit8_tã ....
+  uint8_t    page_no;               // tlmã§ã¯unit8_tã ....
 } AnomalyHandler;
 
 typedef struct
@@ -88,8 +88,8 @@ void AH_activate_rule(size_t id);
 
 void AH_inactivate_rule(size_t id);
 
-// static‚È•û‚ÍƒfƒtƒHƒ‹ƒg‚Å‚Í–³Œø‚¾‚ªC
-// ‚±‚¢‚Â‚Í‰Šú‰»‚Ég‚í‚ê‚é‚Ì‚ÅC‘I‘ğ§‚É‚µ‚½
+// staticãªæ–¹ã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯ç„¡åŠ¹ã ãŒï¼Œ
+// ã“ã„ã¤ã¯åˆæœŸåŒ–æ™‚ã«ä½¿ã‚ã‚Œã‚‹ã®ã§ï¼Œé¸æŠåˆ¶ã«ã—ãŸ
 void AH_add_rule(size_t id, const AH_Rule* ahr, uint8_t is_active);
 
 CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CTCP* packet);

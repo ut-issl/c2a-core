@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ƒCƒxƒ“ƒg”­‰ÎŒ^ˆ—‚ğs‚¤
- * @note  event_logger ‚Ìî•ñ‚ğŒ³‚É BC ‚ğ“WŠJ‚·‚é ( Event ”­‰Î‚É‰‚¶‚Ä‘Î‰‚ğs‚¤ )
+ * @brief ã‚¤ãƒ™ãƒ³ãƒˆç™ºç«å‹å‡¦ç†ã‚’è¡Œã†
+ * @note  event_logger ã®æƒ…å ±ã‚’å…ƒã« BC ã‚’å±•é–‹ã™ã‚‹ ( Event ç™ºç«ã«å¿œã˜ã¦å¯¾å¿œã‚’è¡Œã† )
  */
 #include "event_handler.h"
 #include <string.h>
@@ -15,24 +15,24 @@
 
 /**
  * @enum   EH_EL_LOCAL_ID
- * @brief  EL_CORE_GROUP_EVENT_HANDLER ƒCƒxƒ“ƒg‚Ì local id
- * @note   uint8_t ‚ğ‘z’è
+ * @brief  EL_CORE_GROUP_EVENT_HANDLER ã‚¤ãƒ™ãƒ³ãƒˆã® local id
+ * @note   uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  EH_EL_LOCAL_ID_EL_TOTAL_COUNTER_ERR = 0,  //!< EL‚ÆEH‚ÌƒJƒEƒ“ƒ^‚Ì•s®‡ƒGƒ‰[ (counter_total)
-  EH_EL_LOCAL_ID_EL_COUNTER_ERR,            //!< EL‚ÆEH‚ÌƒJƒEƒ“ƒ^‚Ì•s®‡ƒGƒ‰[ (counters)
-  EH_EL_LOCAL_ID_TOO_MANY_EVENT,            //!< ƒCƒxƒ“ƒg‚ª”­¶‚µ‚·‚¬‚ÄCTLog‚ª¸‚í‚ê‚Ä‚¢‚é
-  EH_EL_LOCAL_ID_FAIL_FORM_CTCP,            //!< BC “WŠJ Cmd ‚Ì¶¬‚É¸”s
-  EH_EL_LOCAL_ID_LOG_TABLE_FULL,            //!< EH_LogTable ‚ª–”t‚É‚È‚èC wp ‚ª 0 ‚É–ß‚Á‚½
-  EH_EL_LOCAL_ID_SEARCH_ERR,                //!< EH_search_rule_table_index_ ‚Ì•Ô‚è’l•s³
-  EH_EL_LOCAL_ID_UNKNOWN_ERR                //!< •s–¾‚ÈƒGƒ‰[
+  EH_EL_LOCAL_ID_EL_TOTAL_COUNTER_ERR = 0,  //!< ELã¨EHã®ã‚«ã‚¦ãƒ³ã‚¿ã®ä¸æ•´åˆã‚¨ãƒ©ãƒ¼ (counter_total)
+  EH_EL_LOCAL_ID_EL_COUNTER_ERR,            //!< ELã¨EHã®ã‚«ã‚¦ãƒ³ã‚¿ã®ä¸æ•´åˆã‚¨ãƒ©ãƒ¼ (counters)
+  EH_EL_LOCAL_ID_TOO_MANY_EVENT,            //!< ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã—ã™ãã¦ï¼ŒTLogãŒå¤±ã‚ã‚Œã¦ã„ã‚‹
+  EH_EL_LOCAL_ID_FAIL_FORM_CTCP,            //!< BC å±•é–‹ Cmd ã®ç”Ÿæˆã«å¤±æ•—
+  EH_EL_LOCAL_ID_LOG_TABLE_FULL,            //!< EH_LogTable ãŒæº€æ¯ã«ãªã‚Šï¼Œ wp ãŒ 0 ã«æˆ»ã£ãŸ
+  EH_EL_LOCAL_ID_SEARCH_ERR,                //!< EH_search_rule_table_index_ ã®è¿”ã‚Šå€¤ä¸æ­£
+  EH_EL_LOCAL_ID_UNKNOWN_ERR                //!< ä¸æ˜ãªã‚¨ãƒ©ãƒ¼
 } EH_EL_LOCAL_ID;
 
 /**
  * @enum   EH_ACK
- * @brief  EH ‚Ì“à•”ŠÖ”•Ô‚è’l
- * @note   uint8_t ‚ğ‘z’è
+ * @brief  EH ã®å†…éƒ¨é–¢æ•°è¿”ã‚Šå€¤
+ * @note   uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
@@ -42,165 +42,165 @@ typedef enum
 
 /**
  * @enum   EH_RULE_SORTED_INDEX_ACK
- * @brief  EH_RuleSortedIndex ‚ğ‘€ì‚·‚é‚Æ‚«‚Ì•Ô‚è’l
- * @note   uint8_t ‚ğ‘z’è
+ * @brief  EH_RuleSortedIndex ã‚’æ“ä½œã™ã‚‹ã¨ãã®è¿”ã‚Šå€¤
+ * @note   uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  EH_RULE_SORTED_INDEX_ACK_OK = 0,           //!< ³íI—¹
-  EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID,  //!< •s³‚È EH_RULE_ID
-  EH_RULE_SORTED_INDEX_ACK_NOT_FOUND,        //!< Œ©‚Â‚©‚ç‚¸
-  EH_RULE_SORTED_INDEX_ACK_FULL,             //!< ‚±‚êˆÈã“o˜^‚Å‚«‚È‚¢
-  EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE,   //!< ƒ‹[ƒ‹‚Ìã‘‚«‚É‚È‚Á‚Ä‚µ‚Ü‚¤i‚·‚Å‚É“¯‚¶ ID ‚Éƒ‹[ƒ‹‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚½‚ßŠü‹pj
-  EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL    //!< d•¡ãŒÀ‚Ü‚Åd•¡‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é
+  EH_RULE_SORTED_INDEX_ACK_OK = 0,           //!< æ­£å¸¸çµ‚äº†
+  EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID,  //!< ä¸æ­£ãª EH_RULE_ID
+  EH_RULE_SORTED_INDEX_ACK_NOT_FOUND,        //!< è¦‹ã¤ã‹ã‚‰ãš
+  EH_RULE_SORTED_INDEX_ACK_FULL,             //!< ã“ã‚Œä»¥ä¸Šç™»éŒ²ã§ããªã„
+  EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE,   //!< ãƒ«ãƒ¼ãƒ«ã®ä¸Šæ›¸ãã«ãªã£ã¦ã—ã¾ã†ï¼ˆã™ã§ã«åŒã˜ ID ã«ãƒ«ãƒ¼ãƒ«ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãŸã‚æ£„å´ï¼‰
+  EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL    //!< é‡è¤‡ä¸Šé™ã¾ã§é‡è¤‡ã—ã¦ã—ã¾ã£ã¦ã„ã‚‹
 } EH_RULE_SORTED_INDEX_ACK;
 
 /**
  * @enum   EH_CKECK_RULE_ACK
- * @brief  EH_check_rule ŒnŠÖ”‚Ì•Ô‚è’l
- * @note   uint8_t ‚ğ‘z’è
+ * @brief  EH_check_rule ç³»é–¢æ•°ã®è¿”ã‚Šå€¤
+ * @note   uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  EH_CKECK_RULE_ACK_MATCH = 0,          //!< ŠY“– EH_Rule ‚Éƒ}ƒbƒ`‚µ‚½
-  EH_CKECK_RULE_ACK_NOT_MATCH           //!< ŠY“– EH_Rule ‚Éƒ}ƒbƒ`‚µ‚È‚©‚Á‚½
+  EH_CKECK_RULE_ACK_MATCH = 0,          //!< è©²å½“ EH_Rule ã«ãƒãƒƒãƒã—ãŸ
+  EH_CKECK_RULE_ACK_NOT_MATCH           //!< è©²å½“ EH_Rule ã«ãƒãƒƒãƒã—ãªã‹ã£ãŸ
 } EH_CKECK_RULE_ACK;
 
 
 /**
- * @brief  EH_RuleTable ‚ğ‘SÁ‹
+ * @brief  EH_RuleTable ã‚’å…¨æ¶ˆå»
  * @param  void
  * @return void
  */
 static void EH_clear_rules_(void);
 
 /**
- * @brief  EH ‘Î‰ƒƒO‚ğ‘SÁ‹
+ * @brief  EH å¯¾å¿œãƒ­ã‚°ã‚’å…¨æ¶ˆå»
  * @param  void
  * @return void
  */
 static void EH_clear_log_(void);
 
 /**
- * @brief  EL ‘¤‚Ì EL_Event ‚ÌƒJƒEƒ“ƒ^‚ğƒ`ƒFƒbƒN‚µC®‡«‚ğŠm”F‚·‚é
+ * @brief  EL å´ã® EL_Event ã®ã‚«ã‚¦ãƒ³ã‚¿ã‚’ãƒã‚§ãƒƒã‚¯ã—ï¼Œæ•´åˆæ€§ã‚’ç¢ºèªã™ã‚‹
  * @param  void
- * @retval EH_ACK_OK  : ³íI—¹
- * @retval EH_ACK_ERR : EL ‚Æ EH ‚ÌƒJƒEƒ“ƒ^‚Ì•s®‡‚ª”­¶‚µC EH ƒJƒEƒ“ƒ^ƒŠƒZƒbƒg
+ * @retval EH_ACK_OK  : æ­£å¸¸çµ‚äº†
+ * @retval EH_ACK_ERR : EL ã¨ EH ã®ã‚«ã‚¦ãƒ³ã‚¿ã®ä¸æ•´åˆãŒç™ºç”Ÿã—ï¼Œ EH ã‚«ã‚¦ãƒ³ã‚¿ãƒªã‚»ãƒƒãƒˆ
  */
 static EH_ACK EH_check_el_event_counter_(void);
 
 /**
- * @brief  EH_Rule ‚ª‘¶İ‚·‚é‚©ƒ`ƒFƒbƒN‚·‚é‚½‚ß‚ÌŸ‚Ì EL_Event (EL_ERROR_LEVEL_EH ‚ğœ‚­) ‚ğ•Ô‚·
- * @note   Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡C NULL ‚ğ•Ô‚·
+ * @brief  EH_Rule ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹ãŸã‚ã®æ¬¡ã® EL_Event (EL_ERROR_LEVEL_EH ã‚’é™¤ã) ã‚’è¿”ã™
+ * @note   è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆï¼Œ NULL ã‚’è¿”ã™
  * @param  void
- * @return æ“¾‚µ‚½ EL_Event
+ * @return å–å¾—ã—ãŸ EL_Event
  */
 static const EL_Event* EH_get_event_to_check_rule_(void);
 
 /**
- * @brief  EL_Event ‚É‘Î‰‚·‚é EH_Rule ‚ª‘¶İ‚·‚é‚©ƒ`ƒFƒbƒN‚µC‘Î‰‚·‚é
- * @note   ‘½’i‚Ì EH ‘Î‰‚Ì‚½‚ß‚ÉCÄ‹AŒÄo‚µ‚Ì‹N“_‚Æ‚È‚é
- * @param[in] event: ƒ`ƒFƒbƒN‚·‚é EL_Event
- * @return ‘Î‰‚µ‚½ EH_Rule ”i‘½’i‘Î‰‚àl—¶j
+ * @brief  EL_Event ã«å¯¾å¿œã™ã‚‹ EH_Rule ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã—ï¼Œå¯¾å¿œã™ã‚‹
+ * @note   å¤šæ®µã® EH å¯¾å¿œã®ãŸã‚ã«ï¼Œå†å¸°å‘¼å‡ºã—ã®èµ·ç‚¹ã¨ãªã‚‹
+ * @param[in] event: ãƒã‚§ãƒƒã‚¯ã™ã‚‹ EL_Event
+ * @return å¯¾å¿œã—ãŸ EH_Rule æ•°ï¼ˆå¤šæ®µå¯¾å¿œã‚‚è€ƒæ…®ï¼‰
  */
 static uint8_t EH_check_event_and_respond_(const EL_Event* event);
 
 /**
- * @brief  EH ‚Ì‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚µC EL_Event ‚É‘Î‰‚·‚é
+ * @brief  EH ã®å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã—ï¼Œ EL_Event ã«å¯¾å¿œã™ã‚‹
  *
- *         ‘Î‰ğŒ‚Éƒ}ƒbƒ`‚µ‚½ê‡C EL_CORE_GROUP_EH_MATCH_RULE ƒCƒxƒ“ƒg‚ğ”­s‚µC‘½’i‚Ì EH ‘Î‰‚ğ–â‚¢‡‚í‚¹‚é
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   Ä‹AŒÄo‚µ‚³‚ê‚é
- * @param[in] rule_id: ‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚µC‘Î‰‚·‚é EH_RULE_ID
- * @param[in] event:   ”­¶‚µ‚½ EL_Event
- * @return ‘Î‰‚µ‚½ EH_Rule ”i‘½’i‘Î‰‚àl—¶j
+ *         å¯¾å¿œæ¡ä»¶ã«ãƒãƒƒãƒã—ãŸå ´åˆï¼Œ EL_CORE_GROUP_EH_MATCH_RULE ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºè¡Œã—ï¼Œå¤šæ®µã® EH å¯¾å¿œã‚’å•ã„åˆã‚ã›ã‚‹
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   å†å¸°å‘¼å‡ºã—ã•ã‚Œã‚‹
+ * @param[in] rule_id: å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã—ï¼Œå¯¾å¿œã™ã‚‹ EH_RULE_ID
+ * @param[in] event:   ç™ºç”Ÿã—ãŸ EL_Event
+ * @return å¯¾å¿œã—ãŸ EH_Rule æ•°ï¼ˆå¤šæ®µå¯¾å¿œã‚‚è€ƒæ…®ï¼‰
  */
 static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  ãˆÊ‚Ì EH ‚Ì‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚µC‘Î‰‚·‚é
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   Ä‹AŒÄo‚µ‚³‚ê‚é
- * @param[in] rule_id: ‰ºˆÊ‚Æ‚È‚é‰Â”\«‚ª‚ ‚é EH_RULE_ID
- * @return ‘Î‰‚µ‚½ EH_Rule ”i‘½’i‘Î‰‚àl—¶j
+ * @brief  ä¸Šä½ã® EH ã®å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã—ï¼Œå¯¾å¿œã™ã‚‹
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   å†å¸°å‘¼å‡ºã—ã•ã‚Œã‚‹
+ * @param[in] rule_id: ä¸‹ä½ã¨ãªã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ EH_RULE_ID
+ * @return å¯¾å¿œã—ãŸ EH_Rule æ•°ï¼ˆå¤šæ®µå¯¾å¿œã‚‚è€ƒæ…®ï¼‰
  */
 static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id);
 
 /**
- * @brief  EH ‚Ì‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @param[in] rule_id: ‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é EH_RULE_ID
- * @param[in] event:   ”­¶‚µ‚½ EL_Event
+ * @brief  EH ã®å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @param[in] rule_id: å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ EH_RULE_ID
+ * @param[in] event:   ç™ºç”Ÿã—ãŸ EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_rule_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  EH ‚Ì‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é (EH_RESPONSE_CONDITION_SINGLE)
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   ãˆÊ‚Ì EH_Rule ‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚Í‚İ‚È‚¢
- * @param[in] rule_id: ‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é EH_RULE_ID
- * @param[in] event:   ”­¶‚µ‚½ EL_Event
+ * @brief  EH ã®å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ (EH_RESPONSE_CONDITION_SINGLE)
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   ä¸Šä½ã® EH_Rule ã«ã¤ã„ã¦ã¯ã“ã“ã§ã¯ã¿ãªã„
+ * @param[in] rule_id: å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ EH_RULE_ID
+ * @param[in] event:   ç™ºç”Ÿã—ãŸ EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_single_rule_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  EH ‚Ì‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é (EH_RESPONSE_CONDITION_CONTINUOUS)
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   ãˆÊ‚Ì EH_Rule ‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚Í‚İ‚È‚¢
- * @param[in] rule_id: ‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é EH_RULE_ID
- * @param[in] event:   ”­¶‚µ‚½ EL_Event
+ * @brief  EH ã®å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ (EH_RESPONSE_CONDITION_CONTINUOUS)
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   ä¸Šä½ã® EH_Rule ã«ã¤ã„ã¦ã¯ã“ã“ã§ã¯ã¿ãªã„
+ * @param[in] rule_id: å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ EH_RULE_ID
+ * @param[in] event:   ç™ºç”Ÿã—ãŸ EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  EH ‚Ì‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é (EH_RESPONSE_CONDITION_CUMULATIVE)
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   ãˆÊ‚Ì EH_Rule ‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚Í‚İ‚È‚¢
- * @param[in] rule_id: ‘Î‰ğŒ‚ğƒ`ƒFƒbƒN‚·‚é EH_RULE_ID
- * @param[in] event:   ”­¶‚µ‚½ EL_Event
+ * @brief  EH ã®å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ (EH_RESPONSE_CONDITION_CUMULATIVE)
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   ä¸Šä½ã® EH_Rule ã«ã¤ã„ã¦ã¯ã“ã“ã§ã¯ã¿ãªã„
+ * @param[in] rule_id: å¯¾å¿œæ¡ä»¶ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ EH_RULE_ID
+ * @param[in] event:   ç™ºç”Ÿã—ãŸ EL_Event
  * @return EH_CKECK_RULE_ACK
  */
 static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_Event* event);
 
 /**
- * @brief  EH ‘Î‰‚ğÀ{
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   is_active ‚Í‚±‚ÌŠÖ”‚Å‚Í‚İ‚È‚¢iã—¬‚Åƒ`ƒFƒbƒN‚µ‚Ä‚é‚±‚Æ‚ğ‘z’èj
- * @param[in] rule_id: ‘Î‰‚·‚é EH_RULE_ID
+ * @brief  EH å¯¾å¿œã‚’å®Ÿæ–½
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   is_active ã¯ã“ã®é–¢æ•°ã§ã¯ã¿ãªã„ï¼ˆä¸Šæµã§ãƒã‚§ãƒƒã‚¯ã—ã¦ã‚‹ã“ã¨ã‚’æƒ³å®šï¼‰
+ * @param[in] rule_id: å¯¾å¿œã™ã‚‹ EH_RULE_ID
  * @return void
  */
 static void EH_respond_(EH_RULE_ID rule_id);
 
 /**
- * @brief  EH ‘Î‰‚ÌƒƒO‚ğc‚·
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @param[in] rule_id:        ‘Î‰‚µ‚½ EH_RULE_ID
- * @param[in] deploy_cmd_ack: ‘Î‰ BC “WŠJƒRƒ}ƒ“ƒh‚ÌÀsŒ‹‰Ê
+ * @brief  EH å¯¾å¿œã®ãƒ­ã‚°ã‚’æ®‹ã™
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @param[in] rule_id:        å¯¾å¿œã—ãŸ EH_RULE_ID
+ * @param[in] deploy_cmd_ack: å¯¾å¿œ BC å±•é–‹ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œçµæœ
  * @return void
  */
 static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd_ack);
 
 /**
- * @brief  ‚Ü‚¾ˆ—‚µ‚Ä‚¢‚È‚¢Å‚àŒÃ‚¢ EL_Event (EL_ERROR_LEVEL_EH ‚ğœ‚­) ‚ğ•Ô‚·
- * @note   Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡C NULL ‚ğ•Ô‚·
+ * @brief  ã¾ã å‡¦ç†ã—ã¦ã„ãªã„æœ€ã‚‚å¤ã„ EL_Event (EL_ERROR_LEVEL_EH ã‚’é™¤ã) ã‚’è¿”ã™
+ * @note   è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆï¼Œ NULL ã‚’è¿”ã™
  * @param  void
- * @return Œ©‚Â‚¯‚½ EL_Event
+ * @return è¦‹ã¤ã‘ãŸ EL_Event
  */
 static const EL_Event* EH_get_oldest_event_excluding_eh_error_level_(void);
 
 /**
- * @brief  EH_RuleSortedIndex ‚©‚çC–Ú“I‚Ì EL_Event ‚Ì idx ‚ğŒŸõ‚·‚é
- * @note   ˆø”‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @param[in]  group: ŒŸõ‚·‚é EL_Event.group
- * @param[in]  local: ŒŸõ‚·‚é EL_Event.local
- * @param[out] found_ids: Œ©‚Â‚©‚Á‚½ EH_RULE_ID ˆê——
- * @param[out] found_sorted_idxes: Œ©‚Â‚©‚Á‚½ EH_RuleSortedIndex ‚Ì index
- * @param[out] found_id_num: Œ©‚Â‚©‚Á‚½ idx ‚Ì”
- * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: Œ©‚Â‚©‚ç‚¸
- * @retval EH_RULE_SORTED_INDEX_ACK_OK: ³í‚É’TõŠ®—¹
+ * @brief  EH_RuleSortedIndex ã‹ã‚‰ï¼Œç›®çš„ã® EL_Event ã® idx ã‚’æ¤œç´¢ã™ã‚‹
+ * @note   å¼•æ•°ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @param[in]  group: æ¤œç´¢ã™ã‚‹ EL_Event.group
+ * @param[in]  local: æ¤œç´¢ã™ã‚‹ EL_Event.local
+ * @param[out] found_ids: è¦‹ã¤ã‹ã£ãŸ EH_RULE_ID ä¸€è¦§
+ * @param[out] found_sorted_idxes: è¦‹ã¤ã‹ã£ãŸ EH_RuleSortedIndex ã® index
+ * @param[out] found_id_num: è¦‹ã¤ã‹ã£ãŸ idx ã®æ•°
+ * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: è¦‹ã¤ã‹ã‚‰ãš
+ * @retval EH_RULE_SORTED_INDEX_ACK_OK: æ­£å¸¸ã«æ¢ç´¢å®Œäº†
  */
 static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
                                                             uint32_t local,
@@ -209,10 +209,10 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
                                                             uint8_t* found_id_num);
 
 /**
- * @brief  bsearch —p‚Ì EH_RuleSortedIndex ”äŠrŠÖ”
- * @note   duplicate_id ‚ª 0 ‚Å‚ ‚é‚à‚Ì‚ğŒ©‚Â‚¯‚é‘z’è
- * @param[in]  key:  bsearch ‚ÅŒŸõ‚·‚é EH_RuleSortedIndex
- * @param[in]  elem: bsearch ŒŸõ‘ÎÛ‚Ì EH_RuleSortedIndex ”z—ñ—v‘f
+ * @brief  bsearch ç”¨ã® EH_RuleSortedIndex æ¯”è¼ƒé–¢æ•°
+ * @note   duplicate_id ãŒ 0 ã§ã‚ã‚‹ã‚‚ã®ã‚’è¦‹ã¤ã‘ã‚‹æƒ³å®š
+ * @param[in]  key:  bsearch ã§æ¤œç´¢ã™ã‚‹ EH_RuleSortedIndex
+ * @param[in]  elem: bsearch æ¤œç´¢å¯¾è±¡ã® EH_RuleSortedIndex é…åˆ—è¦ç´ 
  * @retval 1:  key > elem
  * @retval 0:  key == elem
  * @retval -1: key < elem
@@ -220,31 +220,31 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
 static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* elem);
 
 /**
- * @brief  EH_Rule ‚ğ EH_RuleTable ‚Æ EH_RuleSortedIndex ‚É‘}“ü‚·‚é
- * @note   ˆø”‚Í rule ‚ÉŠÖ‚µ‚Ä‚ÍƒAƒT[ƒVƒ‡ƒ“Ï‚İ‚ğ‰¼’è‚·‚é
- * @note   ‚·‚Å‚É“o˜^‚³‚ê‚½ id ‚É‘Î‚µ‚Ä‚Ìã‘‚«“o˜^‚ÍƒGƒ‰[ (EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE) ‚ğ•Ô‚·
- * @param[in] id: ‘}“ü‚·‚é EH_Rule ‚Ì EH_RULE_ID
- * @param[in] rule: ‘}“ü‚·‚é EH_Rule
- * @retval EH_RULE_SORTED_INDEX_ACK_FULL: ƒ‹[ƒ‹“o˜^ãŒÀ‚É“’BÏ‚İ
- * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: •s³‚È EH_RULE_ID
- * @retval EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE: ‚·‚Å‚É“¯‚¶ ID ‚Éƒ‹[ƒ‹‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚½‚ßŠü‹p
- * @retval EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL: d•¡ãŒÀ‚Ü‚Åd•¡‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é
- * @retval EH_RULE_SORTED_INDEX_ACK_OK: ³í‚É‘}“üŠ®—¹
+ * @brief  EH_Rule ã‚’ EH_RuleTable ã¨ EH_RuleSortedIndex ã«æŒ¿å…¥ã™ã‚‹
+ * @note   å¼•æ•°ã¯ rule ã«é–¢ã—ã¦ã¯ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³æ¸ˆã¿ã‚’ä»®å®šã™ã‚‹
+ * @note   ã™ã§ã«ç™»éŒ²ã•ã‚ŒãŸ id ã«å¯¾ã—ã¦ã®ä¸Šæ›¸ãç™»éŒ²ã¯ã‚¨ãƒ©ãƒ¼ (EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE) ã‚’è¿”ã™
+ * @param[in] id: æŒ¿å…¥ã™ã‚‹ EH_Rule ã® EH_RULE_ID
+ * @param[in] rule: æŒ¿å…¥ã™ã‚‹ EH_Rule
+ * @retval EH_RULE_SORTED_INDEX_ACK_FULL: ãƒ«ãƒ¼ãƒ«ç™»éŒ²ä¸Šé™ã«åˆ°é”æ¸ˆã¿
+ * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: ä¸æ­£ãª EH_RULE_ID
+ * @retval EH_RULE_SORTED_INDEX_ACK_RULE_OVERWRITE: ã™ã§ã«åŒã˜ ID ã«ãƒ«ãƒ¼ãƒ«ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãŸã‚æ£„å´
+ * @retval EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL: é‡è¤‡ä¸Šé™ã¾ã§é‡è¤‡ã—ã¦ã—ã¾ã£ã¦ã„ã‚‹
+ * @retval EH_RULE_SORTED_INDEX_ACK_OK: æ­£å¸¸ã«æŒ¿å…¥å®Œäº†
  */
 static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Rule* rule);
 
 /**
- * @brief  EH_Rule ‚ğ EH_RuleTable ‚Æ EH_RuleSortedIndex ‚©‚çíœ‚·‚é
- * @param[in] id: íœ‚·‚é EH_Rule ‚Ì EH_RULE_ID
- * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: •s³‚È EH_RULE_ID
- * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: íœ‘ÎÛ‚ªŒ©‚Â‚©‚ç‚¸ or “o˜^‚³‚ê‚Ä‚È‚¢
- * @retval EH_RULE_SORTED_INDEX_ACK_OK: ³í‚ÉíœŠ®—¹
+ * @brief  EH_Rule ã‚’ EH_RuleTable ã¨ EH_RuleSortedIndex ã‹ã‚‰å‰Šé™¤ã™ã‚‹
+ * @param[in] id: å‰Šé™¤ã™ã‚‹ EH_Rule ã® EH_RULE_ID
+ * @retval EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID: ä¸æ­£ãª EH_RULE_ID
+ * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: å‰Šé™¤å¯¾è±¡ãŒè¦‹ã¤ã‹ã‚‰ãš or ç™»éŒ²ã•ã‚Œã¦ãªã„
+ * @retval EH_RULE_SORTED_INDEX_ACK_OK: æ­£å¸¸ã«å‰Šé™¤å®Œäº†
  */
 static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id);
 
 /**
- * @brief  EH_RULE_ID ‚Ìƒ‹[ƒ‹“o˜^ó‹µ‚ğ’²‚×‚é
- * @param[in] id: ’²‚×‚é EH_RULE_ID
+ * @brief  EH_RULE_ID ã®ãƒ«ãƒ¼ãƒ«ç™»éŒ²çŠ¶æ³ã‚’èª¿ã¹ã‚‹
+ * @param[in] id: èª¿ã¹ã‚‹ EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
 static EH_CHECK_RULE_ACK EH_check_rule_id_(EH_RULE_ID id);
@@ -273,17 +273,17 @@ static void EH_clear_rules_(void)
 {
   int i;
   memset(&event_handler_.rule_table, 0x00, sizeof(EH_RuleTable));
-  // Œ»“_‚Å EL_CORE_GROUP_NULL == 0 ‚Å‚ ‚é‚½‚ßCˆÈ‰º‚Í•s—vD
+  // ç¾æ™‚ç‚¹ã§ EL_CORE_GROUP_NULL == 0 ã§ã‚ã‚‹ãŸã‚ï¼Œä»¥ä¸‹ã¯ä¸è¦ï¼
   // for (i = 0; i < EH_RULE_MAX; ++i)
   // {
   //   event_handler_.rule_table.rules[i].settings.event.group = (EL_GROUP)EL_CORE_GROUP_NULL;
   // }
 
-  // EH_RuleSortedIndex ‚àƒNƒŠƒA
+  // EH_RuleSortedIndex ã‚‚ã‚¯ãƒªã‚¢
   memset(event_handler_.sorted_idxes, 0x00, sizeof(EH_RuleSortedIndex) * EH_RULE_MAX);
   for (i = 0; i < EH_RULE_MAX; ++i)
   {
-    // Œ»“_‚Å EL_CORE_GROUP_NULL == 0 ‚Å‚ ‚é‚½‚ßCˆÈ‰º‚Í•s—vD
+    // ç¾æ™‚ç‚¹ã§ EL_CORE_GROUP_NULL == 0 ã§ã‚ã‚‹ãŸã‚ï¼Œä»¥ä¸‹ã¯ä¸è¦ï¼
     // event_handler_.sorted_idxes[i].group = (EL_GROUP)EL_CORE_GROUP_NULL;
     event_handler_.sorted_idxes[i].rule_id = EH_RULE_MAX;
   }
@@ -316,7 +316,7 @@ void EH_execute(void)
     const EL_Event* event = EH_get_event_to_check_rule_();
     if (event == NULL)
     {
-      // ‚à‚¤ƒ`ƒFƒbƒN‚·‚×‚«ƒCƒxƒ“ƒg‚Í‚È‚µ
+      // ã‚‚ã†ãƒã‚§ãƒƒã‚¯ã™ã¹ãã‚¤ãƒ™ãƒ³ãƒˆã¯ãªã—
       break;
     }
 
@@ -333,16 +333,16 @@ static EH_ACK EH_check_el_event_counter_(void)
   uint8_t err_level;
   uint32_t subtotal = 0;
 
-  // ƒJƒEƒ“ƒ^•s®‡‚ğ’²‚×‚éD
-  // ƒGƒ‰[“™‚Í’èŠú“I‚ÉƒŠƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚Í‚¸‚È‚Ì‚ÅCƒI[ƒo[ƒtƒ[‚Íl—¶‚µ‚Ä‚¢‚È‚¢
+  // ã‚«ã‚¦ãƒ³ã‚¿ä¸æ•´åˆã‚’èª¿ã¹ã‚‹ï¼
+  // ã‚¨ãƒ©ãƒ¼ç­‰ã¯å®šæœŸçš„ã«ãƒªã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚‹ã¯ãšãªã®ã§ï¼Œã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã¯è€ƒæ…®ã—ã¦ã„ãªã„
   if (delta_counter < 0)
   {
-    // •s®‡
+    // ä¸æ•´åˆ
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_EL_TOTAL_COUNTER_ERR,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)(-delta_counter));
-    // d•û‚ª‚È‚¢‚Ì‚Å‹­§“I‚É‡‚í‚¹‚é
+    // ä»•æ–¹ãŒãªã„ã®ã§å¼·åˆ¶çš„ã«åˆã‚ã›ã‚‹
     EH_match_event_counter_to_el();
     return EH_ACK_ERR;
   }
@@ -352,12 +352,12 @@ static EH_ACK EH_check_el_event_counter_(void)
     delta_counters[err_level] = event_logger->statistics.record_counters[err_level] - event_handler_.el_event_counter.counters[err_level];
     if (delta_counters[err_level] < 0)
     {
-      // •s®‡
+      // ä¸æ•´åˆ
       EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                       EH_EL_LOCAL_ID_EL_COUNTER_ERR,
                       EL_ERROR_LEVEL_HIGH,
                       (uint32_t)(err_level));
-      // d•û‚ª‚È‚¢‚Ì‚Å‹­§“I‚É‡‚í‚¹‚é
+      // ä»•æ–¹ãŒãªã„ã®ã§å¼·åˆ¶çš„ã«åˆã‚ã›ã‚‹
       EH_match_event_counter_to_el();
       return EH_ACK_ERR;
     }
@@ -367,12 +367,12 @@ static EH_ACK EH_check_el_event_counter_(void)
 
   if (delta_counter != subtotal)
   {
-    // •s®‡
+    // ä¸æ•´åˆ
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_EL_COUNTER_ERR,
                     EL_ERROR_LEVEL_HIGH,
-                    EL_ERROR_LEVEL_MAX);    // ‚±‚±‚Ì note ‚Í­‚µl‚¦‚éH
-    // d•û‚ª‚È‚¢‚Ì‚Å‹­§“I‚É‡‚í‚¹‚é
+                    EL_ERROR_LEVEL_MAX);    // ã“ã“ã® note ã¯å°‘ã—è€ƒãˆã‚‹ï¼Ÿ
+    // ä»•æ–¹ãŒãªã„ã®ã§å¼·åˆ¶çš„ã«åˆã‚ã›ã‚‹
     EH_match_event_counter_to_el();
     return EH_ACK_ERR;
   }
@@ -386,7 +386,7 @@ static const EL_Event* EH_get_event_to_check_rule_(void)
   const EL_Event* event = EH_get_oldest_event_excluding_eh_error_level_();
   if (event == NULL) return NULL;
 
-  // ˆ—‚·‚é EL_Event ‚ªŒ©‚Â‚©‚Á‚½‚Ì‚ÅCƒJƒEƒ“ƒgƒAƒbƒv
+  // å‡¦ç†ã™ã‚‹ EL_Event ãŒè¦‹ã¤ã‹ã£ãŸã®ã§ï¼Œã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
   event_handler_.el_event_counter.counter_total++;
   event_handler_.el_event_counter.counters[event->err_level]++;
 
@@ -410,7 +410,7 @@ static uint8_t EH_check_event_and_respond_(const EL_Event* event)
 
   if (search_ack == EH_RULE_SORTED_INDEX_ACK_NOT_FOUND)
   {
-    // ‘Î‰‚·‚é EH_Rule ‚È‚µ
+    // å¯¾å¿œã™ã‚‹ EH_Rule ãªã—
     return 0;
   }
   if (search_ack != EH_RULE_SORTED_INDEX_ACK_OK)
@@ -422,7 +422,7 @@ static uint8_t EH_check_event_and_respond_(const EL_Event* event)
     return 0;
   }
 
-  // ƒ‹[ƒ‹ƒ`ƒFƒbƒN & ‘Î‰
+  // ãƒ«ãƒ¼ãƒ«ãƒã‚§ãƒƒã‚¯ & å¯¾å¿œ
   for (i = 0; i < found_id_num; ++i)
   {
     responded_num += EH_check_rule_and_respond_(found_ids[i], event);
@@ -439,7 +439,7 @@ static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* ev
 
   if (rule_settings->event.group != event->group || rule_settings->event.local != event->local)
   {
-    // ‰½‚©‚ª‚¨‚©‚µ‚¢i‚ ‚è‚¦‚È‚¢‚ªCˆÀ‘S‚Ì‚½‚ß“ü‚ê‚Ä‚¢‚éD–â‘è‚È‚³‚»‚¤‚È‚çÁ‚µ‚Ä‚æ‚µj
+    // ä½•ã‹ãŒãŠã‹ã—ã„ï¼ˆã‚ã‚Šãˆãªã„ãŒï¼Œå®‰å…¨ã®ãŸã‚å…¥ã‚Œã¦ã„ã‚‹ï¼å•é¡Œãªã•ãã†ãªã‚‰æ¶ˆã—ã¦ã‚ˆã—ï¼‰
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
@@ -452,18 +452,18 @@ static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* ev
     return 0;
   }
 
-  // ‚±‚±‚Ü‚Å—ˆ‚½‚çˆø”‚Éæ‚Á‚½ EH_RULE_ID ‚Í EH_Rule ‚Éƒ}ƒbƒ`‚µ‚½
+  // ã“ã“ã¾ã§æ¥ãŸã‚‰å¼•æ•°ã«å–ã£ãŸ EH_RULE_ID ã¯ EH_Rule ã«ãƒãƒƒãƒã—ãŸ
   EL_record_event((EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE,
                   (uint32_t)rule_id,
                   EL_ERROR_LEVEL_EH,
                   (uint32_t)event->err_level);
 
-  // ãˆÊ‚Ì EH_Rule ‚Éƒ}ƒbƒ`‚µ‚È‚¢‚©–â‚¢‡‚í‚¹
+  // ä¸Šä½ã® EH_Rule ã«ãƒãƒƒãƒã—ãªã„ã‹å•ã„åˆã‚ã›
   responded_num = EH_check_higher_level_rule_and_respond_(rule_id);
 
   if (responded_num > 0)
   {
-    // ãˆÊ‚Å‘Î‰‚³‚ê‚½
+    // ä¸Šä½ã§å¯¾å¿œã•ã‚ŒãŸ
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,
                     (uint32_t)rule_id,
                     EL_ERROR_LEVEL_EH,
@@ -471,7 +471,7 @@ static uint8_t EH_check_rule_and_respond_(EH_RULE_ID rule_id, const EL_Event* ev
     return responded_num;
   }
 
-  // ‚±‚Ìƒ‹[ƒ‹‚Å‘Î‰‚·‚é
+  // ã“ã®ãƒ«ãƒ¼ãƒ«ã§å¯¾å¿œã™ã‚‹
   EH_respond_(rule_id);
   return 1;
 }
@@ -485,7 +485,7 @@ static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id)
 
   if (delta_counter < 1)
   {
-    // ‰½‚©‚ª‚¨‚©‚µ‚¢i‚ ‚è‚¦‚È‚¢‚ªCˆÀ‘S‚Ì‚½‚ß“ü‚ê‚Ä‚¢‚éD–â‘è‚È‚³‚»‚¤‚È‚çÁ‚µ‚Ä‚æ‚µj
+    // ä½•ã‹ãŒãŠã‹ã—ã„ï¼ˆã‚ã‚Šãˆãªã„ãŒï¼Œå®‰å…¨ã®ãŸã‚å…¥ã‚Œã¦ã„ã‚‹ï¼å•é¡Œãªã•ãã†ãªã‚‰æ¶ˆã—ã¦ã‚ˆã—ï¼‰
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
@@ -494,7 +494,7 @@ static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id)
   }
   if (higher_level_trigger_event->group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE || higher_level_trigger_event->local != rule_id)
   {
-    // ‰½‚©‚ª‚¨‚©‚µ‚¢i‚ ‚è‚¦‚È‚¢‚ªCˆÀ‘S‚Ì‚½‚ß“ü‚ê‚Ä‚¢‚éD–â‘è‚È‚³‚»‚¤‚È‚çÁ‚µ‚Ä‚æ‚µj
+    // ä½•ã‹ãŒãŠã‹ã—ã„ï¼ˆã‚ã‚Šãˆãªã„ãŒï¼Œå®‰å…¨ã®ãŸã‚å…¥ã‚Œã¦ã„ã‚‹ï¼å•é¡Œãªã•ãã†ãªã‚‰æ¶ˆã—ã¦ã‚ˆã—ï¼‰
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
@@ -502,11 +502,11 @@ static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id)
     return 0;
   }
 
-  // EL_Event ‚ğˆ—‚µ‚½‚Ì‚ÅƒJƒEƒ“ƒgƒAƒbƒv
+  // EL_Event ã‚’å‡¦ç†ã—ãŸã®ã§ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
   event_handler_.el_event_counter.counter_total += delta_counter;
   event_handler_.el_event_counter.counters[EL_ERROR_LEVEL_EH] += delta_counter;
 
-  // ãˆÊ‚Ì EH_Rule ‚ª‚ ‚é‚©ŒŸõ‚µ‚Ä‘Î‰iÄ‹Aj
+  // ä¸Šä½ã® EH_Rule ãŒã‚ã‚‹ã‹æ¤œç´¢ã—ã¦å¯¾å¿œï¼ˆå†å¸°ï¼‰
   return EH_check_event_and_respond_(higher_level_trigger_event);
 }
 
@@ -536,7 +536,7 @@ static EH_CKECK_RULE_ACK EH_check_rule_(EH_RULE_ID rule_id, const EL_Event* even
   case EH_RESPONSE_CONDITION_CUMULATIVE:
     return EH_check_cumulative_rule_(rule_id, event);
   default:
-    // ‰½‚©‚ª‚¨‚©‚µ‚¢i‚ ‚è‚¦‚È‚¢‚ªCˆÀ‘S‚Ì‚½‚ß“ü‚ê‚Ä‚¢‚éD–â‘è‚È‚³‚»‚¤‚È‚çÁ‚µ‚Ä‚æ‚µj
+    // ä½•ã‹ãŒãŠã‹ã—ã„ï¼ˆã‚ã‚Šãˆãªã„ãŒï¼Œå®‰å…¨ã®ãŸã‚å…¥ã‚Œã¦ã„ã‚‹ï¼å•é¡Œãªã•ãã†ãªã‚‰æ¶ˆã—ã¦ã‚ˆã—ï¼‰
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
@@ -562,7 +562,7 @@ static EH_CKECK_RULE_ACK EH_check_continuous_rule_(EH_RULE_ID rule_id, const EL_
 
   if (delta_time_ms > rule->settings.condition.time_threshold_ms)
   {
-    // ˜A‘±‚Å‚Í‚È‚­‚È‚Á‚½
+    // é€£ç¶šã§ã¯ãªããªã£ãŸ
     EH_clear_rule_counter(rule_id);
   }
 
@@ -604,8 +604,8 @@ static void EH_respond_(EH_RULE_ID rule_id)
   deploy_ack = CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
   if (deploy_ack != CTCP_UTIL_ACK_OK)
   {
-    // BC “WŠJ Cmd ‚Ì¶¬‚É¸”s
-    // ³‚µ‚­‘g‚ñ‚Å‚¢‚éê‡C‚±‚±‚É—ˆ‚é‚Í‚¸‚Í‚È‚¢
+    // BC å±•é–‹ Cmd ã®ç”Ÿæˆã«å¤±æ•—
+    // æ­£ã—ãçµ„ã‚“ã§ã„ã‚‹å ´åˆï¼Œã“ã“ã«æ¥ã‚‹ã¯ãšã¯ãªã„
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
                     EL_ERROR_LEVEL_HIGH,
@@ -619,7 +619,7 @@ static void EH_respond_(EH_RULE_ID rule_id)
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
                     EL_ERROR_LEVEL_HIGH,
-                    (uint32_t)(deploy_cmd_ack + 100));   // FIXME: CCP_EXEC_STS ‚ª•‰”‚àŠÜ‚Ş‚Ì‚ÅDDD‚È‚ñ‚Æ‚©‚µ‚½‚¢
+                    (uint32_t)(deploy_cmd_ack + 100));   // FIXME: CCP_EXEC_STS ãŒè² æ•°ã‚‚å«ã‚€ã®ã§ï¼ï¼ï¼ãªã‚“ã¨ã‹ã—ãŸã„
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
@@ -652,13 +652,13 @@ static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd
 
 static const EL_Event* EH_get_oldest_event_excluding_eh_error_level_(void)
 {
-  uint8_t err_level;      // for ‚Å‰ñ‚·‚Ì‚Å u8 ‚Å
+  uint8_t err_level;      // for ã§å›ã™ã®ã§ u8 ã§
   ObcTime oldest_time = OBCT_get_max();
   const EL_Event* oldest_event = NULL;
 
   for (err_level = 0; err_level < EL_ERROR_LEVEL_MAX; ++err_level)
   {
-    // EH Às’†‚É‚à EL ‚ÌƒCƒxƒ“ƒg“o˜^‚Í”­¶‚·‚é‚½‚ßC‚±‚±‚ÅÅV‚Ìî•ñ‚ğŒ³‚Éˆ—‚·‚é
+    // EH å®Ÿè¡Œä¸­ã«ã‚‚ EL ã®ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ã¯ç™ºç”Ÿã™ã‚‹ãŸã‚ï¼Œã“ã“ã§æœ€æ–°ã®æƒ…å ±ã‚’å…ƒã«å‡¦ç†ã™ã‚‹
     int32_t delta_counter = event_logger->statistics.record_counters[err_level] - event_handler_.el_event_counter.counters[err_level];
     const uint16_t tlog_capacity = event_logger->tlogs[err_level].log_capacity;
     const EL_Event* event;
@@ -666,26 +666,26 @@ static const EL_Event* EH_get_oldest_event_excluding_eh_error_level_(void)
     if (err_level == EL_ERROR_LEVEL_EH) continue;
     if (delta_counter <= 0) continue;
 
-    // ƒLƒƒƒp‚ğˆì‚ê‚Ä‚¢‚½‚çC’ú‚ß‚Äî•ñ‚ğC³‚·‚é
+    // ã‚­ãƒ£ãƒ‘ã‚’æº¢ã‚Œã¦ã„ãŸã‚‰ï¼Œè«¦ã‚ã¦æƒ…å ±ã‚’ä¿®æ­£ã™ã‚‹
     if (delta_counter > tlog_capacity)
     {
       const uint16_t keep_tlogs_num = (uint16_t)(tlog_capacity / 2);
       uint32_t drop_tlog_num;
 
-      // ƒCƒxƒ“ƒg‚ª”­¶‚µ‚·‚¬‚ÄCTLog‚ª¸‚í‚ê‚Ä‚¢‚é
+      // ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã—ã™ãã¦ï¼ŒTLogãŒå¤±ã‚ã‚Œã¦ã„ã‚‹
       EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                       EH_EL_LOCAL_ID_TOO_MANY_EVENT,
                       EL_ERROR_LEVEL_HIGH,
                       (uint32_t)(err_level));
 
-      // ˆì‚ê‚©‚¦‚Á‚Ä‚¢‚é‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚ÅC‚Ü‚½‚·‚®ˆì‚ê‚é‚±‚Æ‚ğl—¶‚µ
-      // tlog_capacity ‚Ì”¼•ª‚®‚ç‚¢‚Ü‚Å‚Ì‚±‚µCŒã‚Í’ú‚ß‚é
+      // æº¢ã‚Œã‹ãˆã£ã¦ã„ã‚‹ã¨ã„ã†ã“ã¨ãªã®ã§ï¼Œã¾ãŸã™ãæº¢ã‚Œã‚‹ã“ã¨ã‚’è€ƒæ…®ã—
+      // tlog_capacity ã®åŠåˆ†ãã‚‰ã„ã¾ã§ã®ã“ã—ï¼Œå¾Œã¯è«¦ã‚ã‚‹
       drop_tlog_num = (uint32_t)(delta_counter - keep_tlogs_num);
 
       event_handler_.el_event_counter.counter_total += drop_tlog_num;
       event_handler_.el_event_counter.counters[err_level] += drop_tlog_num;
 
-      // ƒJƒEƒ“ƒ^‚ğ•Ï‚¦‚½‚Ì‚ÅCXV
+      // ã‚«ã‚¦ãƒ³ã‚¿ã‚’å¤‰ãˆãŸã®ã§ï¼Œæ›´æ–°
       delta_counter = event_logger->statistics.record_counters[err_level] - event_handler_.el_event_counter.counters[err_level];
     }
 
@@ -707,8 +707,8 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
                                                             uint16_t found_sorted_idxes[EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES],
                                                             uint8_t* found_id_num)
 {
-  // idx: 0 ~ rule_table.registered_rule_num ‚ÌŠÔ‚Å“ñ•ª’Tõ‚·‚é
-  // d•¡‚à‚ ‚è“¾‚é‚±‚Æ‚ğl—¶‚·‚é (duplicate_id ‚ÍˆÙ‚È‚é)
+  // idx: 0 ~ rule_table.registered_rule_num ã®é–“ã§äºŒåˆ†æ¢ç´¢ã™ã‚‹
+  // é‡è¤‡ã‚‚ã‚ã‚Šå¾—ã‚‹ã“ã¨ã‚’è€ƒæ…®ã™ã‚‹ (duplicate_id ã¯ç•°ãªã‚‹)
 
   uint16_t found_idx = EH_RULE_MAX;
   const EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
@@ -732,7 +732,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   found_idx = (uint16_t)(p_searched_sorted_idx - (&event_handler_.sorted_idxes[0]));
 
-  // Œ©‚Â‚©‚Á‚½DŒã‚ÍC‚¢‚­‚Â‚ ‚é‚©H
+  // è¦‹ã¤ã‹ã£ãŸï¼å¾Œã¯ï¼Œã„ãã¤ã‚ã‚‹ã‹ï¼Ÿ
   *found_id_num = 0;
   possible_num_of_id_duplicates = EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES;
   if (possible_num_of_id_duplicates > event_handler_.rule_table.registered_rule_num - found_idx)
@@ -766,12 +766,12 @@ static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* ele
     {
       if (p_elem->duplicate_id == 0)
       {
-        // ’T‚µ‚Ä‚½‚à‚Ì
+        // æ¢ã—ã¦ãŸã‚‚ã®
         return 0;
       }
       else
       {
-        // ‚à‚Á‚Æè‘O‚É‚ ‚é‚Í‚¸
+        // ã‚‚ã£ã¨æ‰‹å‰ã«ã‚ã‚‹ã¯ãš
         return -1;
       }
     }
@@ -797,7 +797,7 @@ static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* ele
 
 static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Rule* rule)
 {
-  // insert ‚ÍC‚ß‚ñ‚Ç‚­‚³‚¢ & •p”É‚É‚Í‹N‚«‚È‚¢‚Ì‚ÅC“ñ•ª’Tõ‚¹‚¸‚É‚â‚Á‚Ä‚¢‚­
+  // insert ã¯ï¼Œã‚ã‚“ã©ãã•ã„ & é »ç¹ã«ã¯èµ·ããªã„ã®ã§ï¼ŒäºŒåˆ†æ¢ç´¢ã›ãšã«ã‚„ã£ã¦ã„ã
   EH_RuleTable* p_rule_table = &event_handler_.rule_table;
   EH_RuleSortedIndex* p_sorted_idxes = event_handler_.sorted_idxes;
   const EL_GROUP insert_group = rule->settings.event.group;
@@ -827,26 +827,26 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
 
     if (p_sorted_idx->group > insert_group)
     {
-      // ‘}“ü‚·‚éêŠ‚Í‚±‚±
+      // æŒ¿å…¥ã™ã‚‹å ´æ‰€ã¯ã“ã“
       insert_idx = i;
       break;
     }
 
-    // ‚±‚±‚Ü‚Å‚«‚½‚ç p_sorted_idx->group == insert_group
+    // ã“ã“ã¾ã§ããŸã‚‰ p_sorted_idx->group == insert_group
     if (p_sorted_idx->local < insert_local) continue;
 
     if (p_sorted_idx->local > insert_local)
     {
-      // ‘}“ü‚·‚éêŠ‚Í‚±‚±
+      // æŒ¿å…¥ã™ã‚‹å ´æ‰€ã¯ã“ã“
       insert_idx = i;
       break;
     }
 
-    // ‚±‚±‚Ü‚Å‚«‚½‚ç
+    // ã“ã“ã¾ã§ããŸã‚‰
     // - p_sorted_idx->group == insert_group
     // - p_sorted_idx->local == insert_local
 
-    // d•¡‚µ‚Ä‚é or ‚·‚é
+    // é‡è¤‡ã—ã¦ã‚‹ or ã™ã‚‹
     for (j = 1; j < EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES; ++j)
     {
       uint16_t idx = (uint16_t)(i + j);
@@ -854,7 +854,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
 
       if (idx >= p_rule_table->registered_rule_num)
       {
-        // ––’[‚Ü‚Å‚«‚½‚Ì‚ÅC‚±‚±‚ª‘}“ü‚·‚éêŠ
+        // æœ«ç«¯ã¾ã§ããŸã®ã§ï¼Œã“ã“ãŒæŒ¿å…¥ã™ã‚‹å ´æ‰€
         insert_idx = idx;
         duplicate_id = j;
         break_flag = 1;
@@ -863,11 +863,11 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
 
       if (p_sorted_idx->group == insert_group && p_sorted_idx->local == insert_local)
       {
-        // ‚Ü‚¾d•¡‚µ‚Ä‚¢‚é
+        // ã¾ã é‡è¤‡ã—ã¦ã„ã‚‹
         continue;
       }
 
-      // d•¡‚µ‚È‚­‚È‚Á‚½‚Ì‚ÅC‚±‚±‚ª‘}“ü‚·‚éêŠ
+      // é‡è¤‡ã—ãªããªã£ãŸã®ã§ï¼Œã“ã“ãŒæŒ¿å…¥ã™ã‚‹å ´æ‰€
       insert_idx = idx;
       duplicate_id = j;
       break_flag = 1;
@@ -875,12 +875,12 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
     }
     if (break_flag) break;
 
-    // d•¡ãŒÀ‚Ü‚Åd•¡‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é
+    // é‡è¤‡ä¸Šé™ã¾ã§é‡è¤‡ã—ã¦ã—ã¾ã£ã¦ã„ã‚‹
     return EH_RULE_SORTED_INDEX_ACK_DUPLICATE_FULL;
   }
 
-  // ‚±‚±‚Ü‚Å—ˆ‚½‚çC‘}“ü‚Å‚«‚é
-  // insert_idx, duplicate_id ‚ªo‘µ‚Á‚Ä‚¢‚é‚Í‚¸
+  // ã“ã“ã¾ã§æ¥ãŸã‚‰ï¼ŒæŒ¿å…¥ã§ãã‚‹
+  // insert_idx, duplicate_id ãŒå‡ºæƒã£ã¦ã„ã‚‹ã¯ãš
   memmove(&p_sorted_idxes[insert_idx + 1],
           &p_sorted_idxes[insert_idx],
           sizeof(EH_RuleSortedIndex) * (EH_RULE_MAX - insert_idx - 1));
@@ -898,7 +898,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_insert_rule_table_(EH_RULE_ID id, const EH_Ru
 
 static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
 {
-  // delete ‚ÍC‚ß‚ñ‚Ç‚­‚³‚¢ & •p”É‚É‚Í‹N‚«‚È‚¢‚Ì‚ÅC“ñ•ª’Tõ‚¹‚¸‚É‚â‚Á‚Ä‚¢‚­
+  // delete ã¯ï¼Œã‚ã‚“ã©ãã•ã„ & é »ç¹ã«ã¯èµ·ããªã„ã®ã§ï¼ŒäºŒåˆ†æ¢ç´¢ã›ãšã«ã‚„ã£ã¦ã„ã
   EH_RuleTable* p_rule_table = &event_handler_.rule_table;
   EH_RuleSortedIndex* p_sorted_idxes = event_handler_.sorted_idxes;
   EL_GROUP delete_group;
@@ -911,7 +911,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
   if (check_ack == EH_CHECK_RULE_ACK_INVALID_RULE_ID) return EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID;
   if (check_ack == EH_CHECK_RULE_ACK_UNREGISTERED) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
 
-  // ‚±‚Ì‚QŒÂCconst ‚É‚µ‚½‚¢DDD
+  // ã“ã®ï¼’å€‹ï¼Œconst ã«ã—ãŸã„ï¼ï¼ï¼
   delete_group = p_rule_table->rules[id].settings.event.group;
   delete_local = p_rule_table->rules[id].settings.event.local;
 
@@ -920,7 +920,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
   {
     if (id == p_sorted_idxes[i].rule_id)
     {
-      // Œ©‚Â‚©‚Á‚½
+      // è¦‹ã¤ã‹ã£ãŸ
       delete_idx = i;
       break;
     }
@@ -928,8 +928,8 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
 
   if (delete_idx == EH_RULE_MAX)
   {
-    // –{“–‚Í‚±‚ê‚Í‚ ‚è‚¦‚È‚¢‚Í‚¸
-    // i‚ ‚è‚¦‚È‚¢‚ªCˆÀ‘S‚Ì‚½‚ß“ü‚ê‚Ä‚¢‚éD–â‘è‚È‚³‚»‚¤‚È‚çÁ‚µ‚Ä‚æ‚µj
+    // æœ¬å½“ã¯ã“ã‚Œã¯ã‚ã‚Šãˆãªã„ã¯ãš
+    // ï¼ˆã‚ã‚Šãˆãªã„ãŒï¼Œå®‰å…¨ã®ãŸã‚å…¥ã‚Œã¦ã„ã‚‹ï¼å•é¡Œãªã•ãã†ãªã‚‰æ¶ˆã—ã¦ã‚ˆã—ï¼‰
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_UNKNOWN_ERR,
                     EL_ERROR_LEVEL_HIGH,
@@ -937,7 +937,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
     return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   }
 
-  // ‚±‚±‚Ü‚Å—ˆ‚½‚çíœ‚Å‚«‚é
+  // ã“ã“ã¾ã§æ¥ãŸã‚‰å‰Šé™¤ã§ãã‚‹
   memmove(&p_sorted_idxes[delete_idx],
           &p_sorted_idxes[delete_idx + 1],
           sizeof(EH_RuleSortedIndex) * (EH_RULE_MAX - delete_idx - 1));
@@ -945,7 +945,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id)
   p_sorted_idxes[EH_RULE_MAX - 1].group = (EL_GROUP)EL_CORE_GROUP_NULL;
   p_sorted_idxes[EH_RULE_MAX - 1].rule_id = EH_RULE_MAX;
 
-  // d•¡ID‚Ìˆ—
+  // é‡è¤‡IDã®å‡¦ç†
   for (j = 0; j < (EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - 1); ++j)
   {
     uint16_t idx = (uint16_t)(delete_idx + j);
@@ -1035,7 +1035,7 @@ EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id)
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   event_handler_.rule_table.rules[id].settings.is_active = 1;
-  // ‹}‚É”­‰Î‚µ‚Ä‚à¢‚é‚Ì‚Å
+  // æ€¥ã«ç™ºç«ã—ã¦ã‚‚å›°ã‚‹ã®ã§
   EH_clear_rule_counter(id);
   return EH_CHECK_RULE_ACK_OK;
 }
@@ -1058,7 +1058,7 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
-  // –³ŒÀƒ‹[ƒv‰ñ”ğ‚Ì‚½‚ß for ‚Å
+  // ç„¡é™ãƒ«ãƒ¼ãƒ—å›é¿ã®ãŸã‚ for ã§
   for (i = 0; i < EH_RULE_MAX; ++i)
   {
     if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
@@ -1080,7 +1080,7 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
-  // –³ŒÀƒ‹[ƒv‰ñ”ğ‚Ì‚½‚ß for ‚Å
+  // ç„¡é™ãƒ«ãƒ¼ãƒ—å›é¿ã®ãŸã‚ for ã§
   for (i = 0; i < EH_RULE_MAX; ++i)
   {
     if (EH_inactivate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
@@ -1127,7 +1127,7 @@ void EH_clear_rule_counter_by_event(EL_GROUP group, uint32_t local, EL_ERROR_LEV
 
   if (search_ack == EH_RULE_SORTED_INDEX_ACK_NOT_FOUND)
   {
-    // ‘Î‰‚·‚é EH_Rule ‚È‚µ
+    // å¯¾å¿œã™ã‚‹ EH_Rule ãªã—
     return;
   }
   if (search_ack != EH_RULE_SORTED_INDEX_ACK_OK)
@@ -1139,7 +1139,7 @@ void EH_clear_rule_counter_by_event(EL_GROUP group, uint32_t local, EL_ERROR_LEV
     return;
   }
 
-  // Œ©‚Â‚©‚Á‚½ƒ‹[ƒ‹‚É‘Î‚µ‚Äˆ—
+  // è¦‹ã¤ã‹ã£ãŸãƒ«ãƒ¼ãƒ«ã«å¯¾ã—ã¦å‡¦ç†
   for (i = 0; i < found_id_num; ++i)
   {
     EH_RULE_ID id = found_ids[i];
@@ -1171,7 +1171,7 @@ const EH_Log* EH_get_the_nth_log_from_the_latest(uint16_t n)
 
   if (n >= EH_LOG_MAX)
   {
-    // d•û‚ª‚È‚¢‚Ì‚ÅCÅV‚Ì‚à‚Ì‚ğ
+    // ä»•æ–¹ãŒãªã„ã®ã§ï¼Œæœ€æ–°ã®ã‚‚ã®ã‚’
     idx = 0;
   }
   else
@@ -1209,8 +1209,8 @@ CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CTCP* packet)
 {
-  // “o˜^‚·‚éuŠÔ‚É‚µ‚©‚í‚©‚ç‚È‚¢‚Ì‚ÅC‚±‚±‚Å‚Í’l‚ÌƒAƒT[ƒVƒ‡ƒ“‚Í‚¹‚¸C
-  // Cmd_EH_REGISTER_RULE ‚ÅƒAƒT[ƒVƒ‡ƒ“‚·‚é
+  // ç™»éŒ²ã™ã‚‹ç¬é–“ã«ã—ã‹ã‚ã‹ã‚‰ãªã„ã®ã§ï¼Œã“ã“ã§ã¯å€¤ã®ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã¯ã›ãšï¼Œ
+  // Cmd_EH_REGISTER_RULE ã§ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹
   event_handler_.reg_from_cmd.rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   event_handler_.reg_from_cmd.settings.event.group = (EL_GROUP)CCP_get_param_from_packet(packet, 1, uint32_t);
   event_handler_.reg_from_cmd.settings.event.local = CCP_get_param_from_packet(packet, 2, uint32_t);
@@ -1224,8 +1224,8 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CTCP* packet)
 {
-  // “o˜^‚·‚éuŠÔ‚É‚µ‚©‚í‚©‚ç‚È‚¢‚Ì‚ÅC‚±‚±‚Å‚Í’l‚ÌƒAƒT[ƒVƒ‡ƒ“‚Í‚¹‚¸C
-  // Cmd_EH_REGISTER_RULE ‚ÅƒAƒT[ƒVƒ‡ƒ“‚·‚é
+  // ç™»éŒ²ã™ã‚‹ç¬é–“ã«ã—ã‹ã‚ã‹ã‚‰ãªã„ã®ã§ï¼Œã“ã“ã§ã¯å€¤ã®ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã¯ã›ãšï¼Œ
+  // Cmd_EH_REGISTER_RULE ã§ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹
   event_handler_.reg_from_cmd.settings.condition.type = (EH_RESPONSE_CONDITION_TYPE)CCP_get_param_from_packet(packet, 0, uint8_t);
   event_handler_.reg_from_cmd.settings.condition.count_threshold = CCP_get_param_from_packet(packet, 1, uint16_t);
   event_handler_.reg_from_cmd.settings.condition.time_threshold_ms = CCP_get_param_from_packet(packet, 2, uint32_t);
@@ -1253,7 +1253,7 @@ CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CTCP* packet)
   case EH_REGISTER_ACK_ILLEGAL_COUNT_THRESHOLD:
   case EH_REGISTER_ACK_ILLEGAL_BCT_ID:
   case EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG:
-    return CCP_EXEC_ILLEGAL_PARAMETER;    // ³Šm‚É‚Í‚±‚ÌƒRƒ}ƒ“ƒh‚Ìƒpƒ‰ƒƒ^‚Å‚Í‚È‚¢‚ªDDD
+    return CCP_EXEC_ILLEGAL_PARAMETER;    // æ­£ç¢ºã«ã¯ã“ã®ã‚³ãƒãƒ³ãƒ‰ã®ãƒ‘ãƒ©ãƒ¡ã‚¿ã§ã¯ãªã„ãŒï¼ï¼ï¼
   case EH_REGISTER_ACK_ERR_FULL:
   case EH_REGISTER_ACK_ERR_RULE_OVERWRITE:
   case EH_REGISTER_ACK_ERR_DUPLICATE_FULL:

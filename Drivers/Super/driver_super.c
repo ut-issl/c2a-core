@@ -1,21 +1,21 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  Še§ŒäƒZƒ“ƒTEƒAƒNƒ`ƒ…ƒG[ƒ^“™‚Æ‚ÌƒCƒ“ƒ^[ƒtƒF[ƒXƒhƒ‰ƒCƒoŒQ‚ÌƒX[ƒp[ƒNƒ‰ƒX
+ * @brief  å„åˆ¶å¾¡ã‚»ãƒ³ã‚µãƒ»ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ç­‰ã¨ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ãƒ‰ãƒ©ã‚¤ãƒç¾¤ã®ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
  *
- *         DriverSuper Class ‚Í
- *         Še§ŒäƒZƒ“ƒTEƒAƒNƒ`ƒ…ƒG[ƒ^“™‚Æ‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX‚ğÀŒ»‚µC
- *         ‰Šú‰»CƒRƒ}ƒ“ƒh”­sCƒeƒŒƒƒgƒŠƒŠƒNƒGƒXƒgCƒeƒŒƒƒgƒŠóMCƒeƒŒƒƒgƒŠ‰ğÍ‚È‚Ç‚ğs‚¤Cƒhƒ‰ƒCƒoŒQ‚ÌƒX[ƒp[ƒNƒ‰ƒX‚Å‚·D
- *         ŒÂX‚Ì‹@Ší‚ÌƒCƒ“ƒ^[ƒtƒF[ƒXƒhƒ‰ƒCƒo‚ÉŒp³‚³‚¹‚Äg—p‚µ‚Ü‚·D
+ *         DriverSuper Class ã¯
+ *         å„åˆ¶å¾¡ã‚»ãƒ³ã‚µãƒ»ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ç­‰ã¨ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å®Ÿç¾ã—ï¼Œ
+ *         åˆæœŸåŒ–ï¼Œã‚³ãƒãƒ³ãƒ‰ç™ºè¡Œï¼Œãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒªã‚¯ã‚¨ã‚¹ãƒˆï¼Œãƒ†ãƒ¬ãƒ¡ãƒˆãƒªå—ä¿¡ï¼Œãƒ†ãƒ¬ãƒ¡ãƒˆãƒªè§£æãªã©ã‚’è¡Œã†ï¼Œãƒ‰ãƒ©ã‚¤ãƒç¾¤ã®ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹ã§ã™ï¼
+ *         å€‹ã€…ã®æ©Ÿå™¨ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã«ç¶™æ‰¿ã•ã›ã¦ä½¿ç”¨ã—ã¾ã™ï¼
  */
 
 #include "driver_super.h"
 #include "../../Library/print.h"
-#include <string.h>     // for memset‚È‚Ç‚ÌmemŒn
+#include <string.h>     // for memsetãªã©ã®memç³»
 #include <stddef.h>     // for NULL
 
-// #define DS_DEBUG                       // “KØ‚È‚Æ‚«‚ÉƒRƒƒ“ƒgƒAƒEƒg‚·‚é
-// #define DS_DEBUG_SHOW_REC_DATA         // “KØ‚È‚Æ‚«‚ÉƒRƒƒ“ƒgƒAƒEƒg‚·‚é
+// #define DS_DEBUG                       // é©åˆ‡ãªã¨ãã«ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹
+// #define DS_DEBUG_SHOW_REC_DATA         // é©åˆ‡ãªã¨ãã«ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹
 
 static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream);
 static int      DS_tx_(DriverSuper* p_super, uint8_t stream);
@@ -62,13 +62,13 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
 static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config);
 static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config);
 
-// ƒ_ƒ~[ŠÖ”
-// EQU‚¾‚ÆŠÖ”ƒ|ƒCƒ“ƒ^‚Ì‰Šú’l‚ğNULL‚É‚µ‚Ä‚¢‚½‚½‚ß‚É‚Ê‚é‚Û‚Å–ŒÌ‚Á‚½‚Ì‚Å
+// ãƒ€ãƒŸãƒ¼é–¢æ•°
+// EQUã ã¨é–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã®åˆæœŸå€¤ã‚’NULLã«ã—ã¦ã„ãŸãŸã‚ã«ã¬ã‚‹ã½ã§äº‹æ•…ã£ãŸã®ã§
 static DS_ERR_CODE DS_load_init_setting_dummy_(DriverSuper* p_super);
 static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, void* p_driver);
 
 
-// ###### DriverSuperŠî–{ŠÖ” ######
+// ###### DriverSuperåŸºæœ¬é–¢æ•° ######
 
 DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
 {
@@ -81,8 +81,8 @@ DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_in
 
   if (DS_validate_config(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
 
-  // IF‚Ì‰Šú‰»
-  // ˆê’UƒVƒ“ƒvƒ‹‚ÉIF_init‚ÌƒGƒ‰[ƒR[ƒh‚Í–³‹‚·‚éiÀ‹@‚Å‚±‚±‚ÅƒGƒ‰[o‚éê‡‚ÍƒR[ƒh‚ª‚¨‚©‚µ‚¢‚Ì‚ÅD•K—v‚ª‚ ‚ê‚Î«—ˆÀ‘•Dj
+  // IFã®åˆæœŸåŒ–
+  // ä¸€æ—¦ã‚·ãƒ³ãƒ—ãƒ«ã«IF_initã®ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã¯ç„¡è¦–ã™ã‚‹ï¼ˆå®Ÿæ©Ÿã§ã“ã“ã§ã‚¨ãƒ©ãƒ¼å‡ºã‚‹å ´åˆã¯ã‚³ãƒ¼ãƒ‰ãŒãŠã‹ã—ã„ã®ã§ï¼å¿…è¦ãŒã‚ã‚Œã°å°†æ¥å®Ÿè£…ï¼ï¼‰
   if ( (*IF_init[p_super->interface])(p_super->if_config) != 0 ) return DS_ERR_CODE_ERR;
 
   return DS_ERR_CODE_OK;
@@ -93,8 +93,8 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
 {
   uint8_t stream;
 
-  p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) ‚Ì—l‚Èg‚¢•û‚ğ‚·‚é‚Ì‚ÅƒZƒOƒtƒH‚ª‹N‚±‚é‰Â”\«‚ª‚ ‚è
-  p_super->if_config = NULL;        // FIXME: NULLƒ|ƒCƒ“ƒ^‚Í‚±‚ÌŠÖ”‚ªReset’P‘Ì‚Åg‚í‚ê‚é‚Æƒ}ƒY‚¢
+  p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) ã®æ§˜ãªä½¿ã„æ–¹ã‚’ã™ã‚‹ã®ã§ã‚»ã‚°ãƒ•ã‚©ãŒèµ·ã“ã‚‹å¯èƒ½æ€§ãŒã‚ã‚Š
+  p_super->if_config = NULL;        // FIXME: NULLãƒã‚¤ãƒ³ã‚¿ã¯ã“ã®é–¢æ•°ãŒResetå˜ä½“ã§ä½¿ã‚ã‚Œã‚‹ã¨ãƒã‚ºã„
 
   memset(p_super->config.rx_buffer_, 0x00, sizeof(p_super->config.rx_buffer_));
 
@@ -108,7 +108,7 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->config.rx_time_       = TMGR_get_master_clock();
 
   p_super->config.should_monitor_for_rx_disruption_ = 0;
-  p_super->config.time_threshold_for_rx_disruption_ = 60 * 1000;      // ‚±‚Ì’l‚Í‚æ‚­l‚¦‚é‚±‚Æ
+  p_super->config.time_threshold_for_rx_disruption_ = 60 * 1000;      // ã“ã®å€¤ã¯ã‚ˆãè€ƒãˆã‚‹ã“ã¨
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -139,8 +139,8 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
 {
   uint8_t stream;
 
-  // ˆÈ‰ºCŠeí buffer ‚ğ memset‚Å”O‚Ìˆ×0ƒNƒŠƒA‚µ‚Ä‚¨‚­‚ªC
-  // î•ñ‚Í carry_over_buffer_size_ ‚É‚ ‚é‚Ì‚ÅC“®ìãˆÓ–¡‚Í‚È‚¢D
+  // ä»¥ä¸‹ï¼Œå„ç¨® buffer ã‚’ memsetã§å¿µã®ç‚º0ã‚¯ãƒªã‚¢ã—ã¦ãŠããŒï¼Œ
+  // æƒ…å ±ã¯ carry_over_buffer_size_ ã«ã‚ã‚‹ã®ã§ï¼Œå‹•ä½œä¸Šæ„å‘³ã¯ãªã„ï¼
   memset(p_super->config.rx_buffer_, 0x00, sizeof(p_super->config.rx_buffer_));
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
@@ -169,20 +169,20 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
 
   p_super->config.rx_call_count_++;
 
-  // ŠeDriver‚Å•¨—“I‚ÉÚ‘±‚³‚ê‚Ä‚¢‚é wire ‚Í‚P–{‚È‚Ì‚ÅC‚»‚ê‚ğ‚±‚±‚ÅóM‚·‚éD
-  // Œã’i‚Ì stream ‚Å‚ÍC‚»‚ÌóM‚µ‚½ƒrƒbƒg—ñ‚É‘Î‚µ‚ÄC•¡”‚ÌƒtƒŒ[ƒ€í—Ş‚É‘Î‚µ‚ÄCƒtƒŒ[ƒ€’TõCŠm’èˆ—‚ğ‘–‚ç‚·D
+  // å„Driverã§ç‰©ç†çš„ã«æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ wire ã¯ï¼‘æœ¬ãªã®ã§ï¼Œãã‚Œã‚’ã“ã“ã§å—ä¿¡ã™ã‚‹ï¼
+  // å¾Œæ®µã® stream ã§ã¯ï¼Œãã®å—ä¿¡ã—ãŸãƒ“ãƒƒãƒˆåˆ—ã«å¯¾ã—ã¦ï¼Œè¤‡æ•°ã®ãƒ•ãƒ¬ãƒ¼ãƒ ç¨®é¡ã«å¯¾ã—ã¦ï¼Œãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢ï¼Œç¢ºå®šå‡¦ç†ã‚’èµ°ã‚‰ã™ï¼
   ret_rx = DS_rx_(p_super);
   p_super->config.rec_status_.ret_from_if_rx = ret_rx;
 
   if (ret_rx > 0)
   {
-    // ‚È‚É‚©‚µ‚ç‚ÌóMƒf[ƒ^‚ ‚è
+    // ãªã«ã‹ã—ã‚‰ã®å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚ã‚Š
     p_super->config.rx_count_++;
     p_super->config.rx_time_ = TMGR_get_master_clock();
   }
 
-  // óM“râ”»’è
-  // ƒeƒŒƒ‚È‚Ç‚ÅŒ©‚é‚Æ‚«‚ÉƒmƒCƒY‚É‚È‚é‚Ì‚ÅC”»’è‚µ‚È‚¢‚Æ‚«‚Í OK ‚É‚µ‚Ä‚¨‚­
+  // å—ä¿¡é€”çµ¶åˆ¤å®š
+  // ãƒ†ãƒ¬ãƒ¡ãªã©ã§è¦‹ã‚‹ã¨ãã«ãƒã‚¤ã‚ºã«ãªã‚‹ã®ã§ï¼Œåˆ¤å®šã—ãªã„ã¨ãã¯ OK ã«ã—ã¦ãŠã
   p_super->config.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_OK;
   if (p_super->config.should_monitor_for_rx_disruption_)
   {
@@ -204,8 +204,8 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
       continue;
     }
 
-    // setter ‚Å validation ‚©‚¯‚é‚ÆC‰Šú‰»‚È‚Ç‚Å‰½“x‚à‚©‚©‚é‚±‚Æ‚âC
-    // ‚»‚à‚»‚à‚±‚Ì validation ‚Í‘Å‚¿ã‚°‚Æ‚¢‚¤‚æ‚è‚Ş‚µ‚ë’nãŒ±‚É—L—p‚È‚Ì‚ÅC‚±‚±‚É’u‚­
+    // setter ã§ validation ã‹ã‘ã‚‹ã¨ï¼ŒåˆæœŸåŒ–ãªã©ã§ä½•åº¦ã‚‚ã‹ã‹ã‚‹ã“ã¨ã‚„ï¼Œ
+    // ãã‚‚ãã‚‚ã“ã® validation ã¯æ‰“ã¡ä¸Šã’æ™‚ã¨ã„ã†ã‚ˆã‚Šã‚€ã—ã‚åœ°ä¸Šè©¦é¨“æ™‚ã«æœ‰ç”¨ãªã®ã§ï¼Œã“ã“ã«ç½®ã
     if (p_stream_config->is_validation_needed_for_rec_)
     {
       DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
@@ -216,26 +216,26 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
       }
     }
 
-    if (ret_rx < 0)     // ‚±‚Ì‹¤’Êˆ—‚ª for ‚Ì’†‚É‚ ‚é‚ÌCáŠ±ƒLƒ‚‚¢DDD
+    if (ret_rx < 0)     // ã“ã®å…±é€šå‡¦ç†ãŒ for ã®ä¸­ã«ã‚ã‚‹ã®ï¼Œè‹¥å¹²ã‚­ãƒ¢ã„ï¼ï¼ï¼
     {
-      // RX¸”s
+      // RXå¤±æ•—
       p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_ERR;
-      // [TODO] ‚±‚±‚É DriverSuper ‚Æ‚µ‚Ä‚Ì‹¤’Ê‚ÌƒAƒmƒ}ƒŠ”­s‚ğ“ü‚ê‚é‚©‚Í—v‹c˜_
-      //        ŒÂ•Ê‘Î‰‚È‚Ì‚ÅC Driver ‚ÉÀ‘•‚·‚éC‚È‚¢‚µ‚ÍC IF ‘¤‚ÉÀ‘•‚·‚é‚Ì‚ª©‘R‚©H
+      // [TODO] ã“ã“ã« DriverSuper ã¨ã—ã¦ã®å…±é€šã®ã‚¢ãƒãƒãƒªç™ºè¡Œã‚’å…¥ã‚Œã‚‹ã‹ã¯è¦è­°è«–
+      //        å€‹åˆ¥å¯¾å¿œãªã®ã§ï¼Œ Driver ã«å®Ÿè£…ã™ã‚‹ï¼Œãªã„ã—ã¯ï¼Œ IF å´ã«å®Ÿè£…ã™ã‚‹ã®ãŒè‡ªç„¶ã‹ï¼Ÿ
       continue;
     }
     else if (ret_rx == 0)
     {
-      // óMƒf[ƒ^‚È‚µ
-      // ŒJ‰zƒf[ƒ^‚ª‚ ‚ê‚Îˆ—‚·‚é
+      // å—ä¿¡ãƒ‡ãƒ¼ã‚¿ãªã—
+      // ç¹°è¶Šãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Œã°å‡¦ç†ã™ã‚‹
       if (p_stream_config->is_rx_buffer_carry_over_)
       {
-        // ŒJ‰z‚ª‚ ‚é‚Ì‚ÅC‚±‚±‚Å continue ‚¹‚¸‚ÖŸ‚Ö
+        // ç¹°è¶ŠãŒã‚ã‚‹ã®ã§ï¼Œã“ã“ã§ continue ã›ãšã¸æ¬¡ã¸
       }
       else
       {
-        // rec_status_.status_code Šî–{‚ÍXV‚¹‚¸
-        // FIXED ‚Ìê‡‚ÍƒŠƒZƒbƒg
+        // rec_status_.status_code åŸºæœ¬ã¯æ›´æ–°ã›ãš
+        // FIXED ã®å ´åˆã¯ãƒªã‚»ãƒƒãƒˆ
         if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
         {
           p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
@@ -245,15 +245,15 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     }
     else
     {
-      // ‰½‚à‚µ‚È‚¢
+      // ä½•ã‚‚ã—ãªã„
     }
 
-    // ‚±‚±‚Ü‚Å‚«‚½‚çóMƒf[ƒ^‚ ‚è
+    // ã“ã“ã¾ã§ããŸã‚‰å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚ã‚Š
 
-    rec_data_len = (uint16_t)ret_rx;      // ‚±‚±‚Ü‚Å‚­‚ê‚Î”ñ•‰”
+    rec_data_len = (uint16_t)ret_rx;      // ã“ã“ã¾ã§ãã‚Œã°éè² æ•°
     DS_analyze_rx_buffer_(p_super, stream, rec_data_len);
 
-    // ƒtƒŒ[ƒ€Šm’èˆ—
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šå‡¦ç†
     if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
     {
       p_stream_config->rx_frame_fix_count_++;
@@ -262,14 +262,14 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     }
   }
 
-  // stream‚ÌƒeƒŒƒ“râ”»’èiƒeƒŒƒƒtƒŒ[ƒ€Šm’è“râ”»’èj
+  // streamã®ãƒ†ãƒ¬ãƒ¡é€”çµ¶åˆ¤å®šï¼ˆãƒ†ãƒ¬ãƒ¡ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šé€”çµ¶åˆ¤å®šï¼‰
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
     DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
     ObcTime now;
     uint32_t last_tlm_fix_ago;
 
-    // ƒeƒŒƒ‚È‚Ç‚ÅŒ©‚é‚Æ‚«‚ÉƒmƒCƒY‚É‚È‚é‚Ì‚ÅC”»’è‚µ‚È‚¢‚Æ‚«‚Í OK ‚É‚µ‚Ä‚¨‚­
+    // ãƒ†ãƒ¬ãƒ¡ãªã©ã§è¦‹ã‚‹ã¨ãã«ãƒã‚¤ã‚ºã«ãªã‚‹ã®ã§ï¼Œåˆ¤å®šã—ãªã„ã¨ãã¯ OK ã«ã—ã¦ãŠã
     p_stream_config->rec_status_.tlm_disruption_status = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
 
     if (!p_stream_config->is_enabled_ || !p_stream_config->should_monitor_for_tlm_disruption_)
@@ -344,21 +344,21 @@ DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream)
 
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh‘—Mˆ—
+ * @brief  ã‚³ãƒãƒ³ãƒ‰é€ä¿¡å‡¦ç†
  *
- *         DS_send_general_cmd ‚Æ DS_send_req_tlm_cmd‚Ì‹¤’Ê•”•ª
- * @param  *p_super DriverSuper\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param  stream   ‚Ç‚Ìconfig‚ğg—p‚·‚é‚©Dstream‚Í0-MAX‚È‚Ì‚ÅCŒp³æ‚ÅENUM‚È‚ÇéŒ¾‚µ‚Äg‚¢‚â‚·‚­‚·‚ê‚Î‚¢‚¢‚Æv‚¤D
- * @retval DS_ERR_CODE_OK  : ³íI—¹
- * @retval DS_ERR_CODE_ERR : IF_TX ‚Å‚ÌƒGƒ‰[‚ ‚è
- * @note   óMó‹µ‚âƒGƒ‰[î•ñ‚Í send_status_ ‚ÉŠi”[‚³‚ê‚Ä‚¢‚é
+ *         DS_send_general_cmd ã¨ DS_send_req_tlm_cmdã®å…±é€šéƒ¨åˆ†
+ * @param  *p_super DriverSuperæ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  stream   ã©ã®configã‚’ä½¿ç”¨ã™ã‚‹ã‹ï¼streamã¯0-MAXãªã®ã§ï¼Œç¶™æ‰¿å…ˆã§ENUMãªã©å®£è¨€ã—ã¦ä½¿ã„ã‚„ã™ãã™ã‚Œã°ã„ã„ã¨æ€ã†ï¼
+ * @retval DS_ERR_CODE_OK  : æ­£å¸¸çµ‚äº†
+ * @retval DS_ERR_CODE_ERR : IF_TX ã§ã®ã‚¨ãƒ©ãƒ¼ã‚ã‚Š
+ * @note   å—ä¿¡çŠ¶æ³ã‚„ã‚¨ãƒ©ãƒ¼æƒ…å ±ã¯ send_status_ ã«æ ¼ç´ã•ã‚Œã¦ã„ã‚‹
  */
 static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
 {
   DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
 
-  // setter ‚Å validation ‚©‚¯‚é‚ÆC‰Šú‰»‚È‚Ç‚Å‰½“x‚à‚©‚©‚é‚±‚Æ‚âC
-  // ‚»‚à‚»‚à‚±‚Ì validation ‚Í‘Å‚¿ã‚°‚¶‚Æ‚¢‚¤‚æ‚è‚Ş‚µ‚ë’nãŒ±‚É—L—p‚È‚Ì‚ÅC‚±‚±‚É’u‚­
+  // setter ã§ validation ã‹ã‘ã‚‹ã¨ï¼ŒåˆæœŸåŒ–ãªã©ã§ä½•åº¦ã‚‚ã‹ã‹ã‚‹ã“ã¨ã‚„ï¼Œ
+  // ãã‚‚ãã‚‚ã“ã® validation ã¯æ‰“ã¡ä¸Šã’ã˜ã¨ã„ã†ã‚ˆã‚Šã‚€ã—ã‚åœ°ä¸Šè©¦é¨“æ™‚ã«æœ‰ç”¨ãªã®ã§ï¼Œã“ã“ã«ç½®ã
   if (p_stream_config->is_validation_needed_for_send_)
   {
     DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
@@ -382,12 +382,12 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
 }
 
 /**
- * @brief  Œp³æ‚Ì‹@Ší‚ÉƒRƒ}ƒ“ƒh‚ğ”­s‚·‚é
- * @note   ‚±‚ÌŠÖ”‚ÌÀs‘O‚ÉCtx_frame_, tx_frame_size_‚Ìİ’è‚ª•K—v‚Å‚ ‚é
- * @param  *p_super DriverSuper\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param  stream   ‚Ç‚Ìconfig‚ğg—p‚·‚é‚©Dstream‚Í0-MAX‚È‚Ì‚ÅCŒp³æ‚ÅENUM‚È‚ÇéŒ¾‚µ‚Äg‚¢‚â‚·‚­‚·‚ê‚Î‚¢‚¢‚Æv‚¤D
- * @retval DS_ERR_CODE_OK (0) : ³íI—¹
- * @retval 0ˆÈŠO : IF_TX ‚Ì–ß‚è’l
+ * @brief  ç¶™æ‰¿å…ˆã®æ©Ÿå™¨ã«ã‚³ãƒãƒ³ãƒ‰ã‚’ç™ºè¡Œã™ã‚‹
+ * @note   ã“ã®é–¢æ•°ã®å®Ÿè¡Œå‰ã«ï¼Œtx_frame_, tx_frame_size_ã®è¨­å®šãŒå¿…è¦ã§ã‚ã‚‹
+ * @param  *p_super DriverSuperæ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  stream   ã©ã®configã‚’ä½¿ç”¨ã™ã‚‹ã‹ï¼streamã¯0-MAXãªã®ã§ï¼Œç¶™æ‰¿å…ˆã§ENUMãªã©å®£è¨€ã—ã¦ä½¿ã„ã‚„ã™ãã™ã‚Œã°ã„ã„ã¨æ€ã†ï¼
+ * @retval DS_ERR_CODE_OK (0) : æ­£å¸¸çµ‚äº†
+ * @retval 0ä»¥å¤– : IF_TX ã®æˆ»ã‚Šå€¤
  */
 static int DS_tx_(DriverSuper* p_super, uint8_t stream)
 {
@@ -411,11 +411,11 @@ static int DS_tx_(DriverSuper* p_super, uint8_t stream)
 
 
 /**
- * @brief  Œp³æ‚Ì‹@Ší‚©‚ç‚ÌóMƒf[ƒ^‚ª‚ ‚é‚©Šm”F‚µCóM‚·‚é
- * @param  *p_super DriverSuper\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @retval 0    : óMƒf[ƒ^‚È‚µ
- * @retval ³” : óMƒf[ƒ^’· [Byte]
- * @retval •‰” : IF_RX‚ÌƒGƒ‰[
+ * @brief  ç¶™æ‰¿å…ˆã®æ©Ÿå™¨ã‹ã‚‰ã®å—ä¿¡ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã‹ç¢ºèªã—ï¼Œå—ä¿¡ã™ã‚‹
+ * @param  *p_super DriverSuperæ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @retval 0    : å—ä¿¡ãƒ‡ãƒ¼ã‚¿ãªã—
+ * @retval æ­£æ•° : å—ä¿¡ãƒ‡ãƒ¼ã‚¿é•· [Byte]
+ * @retval è² æ•° : IF_RXã®ã‚¨ãƒ©ãƒ¼
  */
 static int DS_rx_(DriverSuper* p_super)
 {
@@ -426,7 +426,7 @@ static int DS_rx_(DriverSuper* p_super)
   int16_t i;
 #endif
 
-  // ­‚È‚­‚Æ‚à‚P‚Â‚Ìstream‚ª—LŒø‚Å‚©‚ÂCrx_frame_size_‚ª0ˆÈŠO‚Å‚È‚¢‚ÆóMˆ—‚Í‚µ‚È‚¢
+  // å°‘ãªãã¨ã‚‚ï¼‘ã¤ã®streamãŒæœ‰åŠ¹ã§ã‹ã¤ï¼Œrx_frame_size_ãŒ0ä»¥å¤–ã§ãªã„ã¨å—ä¿¡å‡¦ç†ã¯ã—ãªã„
   flag = 0;
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -446,7 +446,7 @@ static int DS_rx_(DriverSuper* p_super)
   Printf("DS: rx_\n");
 #endif
 
-  if (rec_data_len <= 0) return rec_data_len;     // •‰”‚ÍƒGƒ‰[ƒR[ƒh
+  if (rec_data_len <= 0) return rec_data_len;     // è² æ•°ã¯ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
 
 #ifdef DS_DEBUG_SHOW_REC_DATA
   Printf("DS: Receive data size is %d bytes, as follow:\n", rec_data_len);
@@ -463,18 +463,18 @@ static int DS_rx_(DriverSuper* p_super)
 
 
 /**
- * @brief  óMƒtƒŒ[ƒ€‰ğÍŠÖ”
- * @param  *p_super      DriverSuper\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param  stream        ‚Ç‚Ìconfig‚ğg—p‚·‚é‚©Dstream‚Í0-MAX‚È‚Ì‚ÅCŒp³æ‚ÅENUM‚È‚ÇéŒ¾‚µ‚Äg‚¢‚â‚·‚­‚·‚ê‚Î‚¢‚¢‚Æv‚¤D
- * @param  rec_data_len  óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return void Ú×‚Í DS_StreamRecStatus
+ * @brief  å—ä¿¡ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°
+ * @param  *p_super      DriverSuperæ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  stream        ã©ã®configã‚’ä½¿ç”¨ã™ã‚‹ã‹ï¼streamã¯0-MAXãªã®ã§ï¼Œç¶™æ‰¿å…ˆã§ENUMãªã©å®£è¨€ã—ã¦ä½¿ã„ã‚„ã™ãã™ã‚Œã°ã„ã„ã¨æ€ã†ï¼
+ * @param  rec_data_len  å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return void è©³ç´°ã¯ DS_StreamRecStatus
  */
 static void DS_analyze_rx_buffer_(DriverSuper* p_super,
                                   uint8_t stream,
                                   uint16_t rec_data_len)
 {
-  // ‰ğÍ—póMƒoƒbƒtƒ@
-  // ‹‘å‚Èƒf[ƒ^‚È‚Ì‚ÅCstatic‚Å—\‚ßŠm•Û‚µ‚Ä‚¨‚«CÀs‚ÌƒXƒ^ƒbƒNŒÍŠ‰‚ğ”ğ‚¯‚é
+  // è§£æç”¨å—ä¿¡ãƒãƒƒãƒ•ã‚¡
+  // å·¨å¤§ãªãƒ‡ãƒ¼ã‚¿ãªã®ã§ï¼Œstaticã§äºˆã‚ç¢ºä¿ã—ã¦ãŠãï¼Œå®Ÿè¡Œæ™‚ã®ã‚¹ã‚¿ãƒƒã‚¯æ¯æ¸‡ã‚’é¿ã‘ã‚‹
   static uint8_t rx_buffer[DS_RX_BUFFER_SIZE_MAX * 2];
   DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
   uint16_t total_processed_data_len;
@@ -488,14 +488,14 @@ static void DS_analyze_rx_buffer_(DriverSuper* p_super,
 
 
 /**
- * @brief  ‰ğÍ—póMƒoƒbƒtƒ@‚Ì€”õ
+ * @brief  è§£æç”¨å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã®æº–å‚™
  *
- *         ŒJ‚è‰z‚³‚ê‚½ƒf[ƒ^‚Æ¡‰ñóM‚µ‚½ƒf[ƒ^‚ÌŒ‹‡‚ğs‚¢CóMƒf[ƒ^‰ğÍ‚Ì€”õ‚ğ‚·‚é
- * @param[in]  *p_super      DriverSuper\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @param[in]  stream        ‚Ç‚Ìconfig‚ğg—p‚·‚é‚©Dstream‚Í0-MAX‚È‚Ì‚ÅCŒp³æ‚ÅENUM‚È‚ÇéŒ¾‚µ‚Äg‚¢‚â‚·‚­‚·‚ê‚Î‚¢‚¢‚Æv‚¤D
- * @param[out] *rx_buffer    ‰ğÍ—póMƒoƒbƒtƒ@
- * @param[in]  rec_data_len  óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return ‰ğÍ—póMƒoƒbƒtƒ@‚Ì’·‚³
+ *         ç¹°ã‚Šè¶Šã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã¨ä»Šå›å—ä¿¡ã—ãŸãƒ‡ãƒ¼ã‚¿ã®çµåˆã‚’è¡Œã„ï¼Œå—ä¿¡ãƒ‡ãƒ¼ã‚¿è§£æã®æº–å‚™ã‚’ã™ã‚‹
+ * @param[in]  *p_super      DriverSuperæ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param[in]  stream        ã©ã®configã‚’ä½¿ç”¨ã™ã‚‹ã‹ï¼streamã¯0-MAXãªã®ã§ï¼Œç¶™æ‰¿å…ˆã§ENUMãªã©å®£è¨€ã—ã¦ä½¿ã„ã‚„ã™ãã™ã‚Œã°ã„ã„ã¨æ€ã†ï¼
+ * @param[out] *rx_buffer    è§£æç”¨å—ä¿¡ãƒãƒƒãƒ•ã‚¡
+ * @param[in]  rec_data_len  å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return è§£æç”¨å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
  */
 static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
                                                      uint8_t stream,
@@ -505,7 +505,7 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
   DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
   uint16_t buffer_offset = 0;
 
-  // ŒJ‰zóMƒf[ƒ^‚Ì‚Æ‚è‚±‚İ
+  // ç¹°è¶Šå—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ã¨ã‚Šã“ã¿
   if (p_stream_config->is_rx_buffer_carry_over_)
   {
     memcpy(rx_buffer,
@@ -514,7 +514,7 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
     buffer_offset += p_stream_config->carry_over_buffer_size_;
   }
 
-  // ¡‰ñóM•ª‚Ì‚Æ‚è‚±‚İ
+  // ä»Šå›å—ä¿¡åˆ†ã®ã¨ã‚Šã“ã¿
   memcpy(&(rx_buffer[buffer_offset]),
          p_super->config.rx_buffer_,
          (size_t)rec_data_len);
@@ -529,27 +529,27 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
 
 
 /**
- * @brief  ƒtƒŒ[ƒ€‰ğÍŠÖ”
+ * @brief  ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°
  *
- *         ‰ğÍ—póMƒoƒbƒtƒ@‚ğ‘–¸‚µCƒoƒCƒg’PˆÊ‚ÅƒtƒŒ[ƒ€“àƒf[ƒ^‚ğE‚Á‚Ä‚¢‚­
- * @param  p_stream_config DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer       óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  rec_data_len    óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³D‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ *         è§£æç”¨å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã‚’èµ°æŸ»ã—ï¼Œãƒã‚¤ãƒˆå˜ä½ã§ãƒ•ãƒ¬ãƒ¼ãƒ å†…ãƒ‡ãƒ¼ã‚¿ã‚’æ‹¾ã£ã¦ã„ã
+ * @param  p_stream_config DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer       å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  rec_data_len    å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
                                              uint8_t* rx_buffer,
                                              uint16_t rec_data_len)
 {
   uint16_t total_processed_data_len;
-  // óMƒoƒbƒtƒ@‚Ìƒf[ƒ^‚ğ‘–¸‚µC•K—v‚Èƒf[ƒ^‚ğƒtƒŒ[ƒ€‚Æ‚µ‚Äpickup‚·‚éŠÖ”
+  // å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ‡ãƒ¼ã‚¿ã‚’èµ°æŸ»ã—ï¼Œå¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã—ã¦pickupã™ã‚‹é–¢æ•°
   uint16_t (*pickup_func)(DS_StreamConfig* p_stream_config,
                           uint8_t* rx_buffer,
                           uint16_t total_processed_data_len,
                           uint16_t rec_data_len);
   p_stream_config->rx_frame_head_pos_of_frame_candidate_ = 0;
 
-  // TODO: ƒrƒbƒOƒf[ƒ^‘Î‰
+  // TODO: ãƒ“ãƒƒã‚°ãƒ‡ãƒ¼ã‚¿å¯¾å¿œ
   if (p_stream_config->rx_frame_size_ > 0 && p_stream_config->rx_frame_size_ < DS_RX_FRAME_SIZE_MAX)
   {
     pickup_func = DS_analyze_rx_buffer_fixed_pickup_;
@@ -562,7 +562,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
   }
   else if (p_stream_config->rx_frame_size_ < 0 && p_stream_config->rx_frame_size_ < DS_RX_FRAME_SIZE_MAX)
   {
-    // ƒtƒŒ[ƒ€‚ÉƒtƒŒ[ƒ€’·ƒf[ƒ^‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚©H
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ã«ãƒ•ãƒ¬ãƒ¼ãƒ é•·ãƒ‡ãƒ¼ã‚¿ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã‹ï¼Ÿ
     if (p_stream_config->rx_framelength_pos_ >= 0)
     {
       pickup_func = DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_;
@@ -579,7 +579,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
     return rec_data_len;
   }
 
-  // óMƒoƒbƒtƒ@‚©‚çƒf[ƒ^‚ğƒsƒbƒNƒAƒbƒv‚µ‚Ä‚¢‚­
+  // å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ”ãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã¦ã„ã
   total_processed_data_len = p_stream_config->carry_over_buffer_next_pos_;
   while (total_processed_data_len < rec_data_len)
   {
@@ -594,7 +594,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
       break;
     }
 
-    // •s®‡‚ª‹N‚«‚½‚çCŒ»İ‚ÌframeŒó•â‚Ìæ“ª + 1ƒoƒCƒg–Ú‚É‘–¸êŠ‚ğ–ß‚·
+    // ä¸æ•´åˆãŒèµ·ããŸã‚‰ï¼Œç¾åœ¨ã®frameå€™è£œã®å…ˆé ­ + 1ãƒã‚¤ãƒˆç›®ã«èµ°æŸ»å ´æ‰€ã‚’æˆ»ã™
     if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_HEADER_MISMATCH ||
         p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FOOTER_MISMATCH ||
         p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG ||
@@ -602,11 +602,11 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
     {
       total_processed_data_len = (uint16_t)(p_stream_config->rx_frame_head_pos_of_frame_candidate_ + 1);
 
-      // ‘¼‚Ì•”•ª‚Å‚ÌğŒ•ªŠò‚Ì‚½‚ß‚ÉCÚ×ƒGƒ‰[î•ñ‚ğŒ»İ‚ÌƒXƒe[ƒ^ƒX‚Éã‘‚«‚·‚é
+      // ä»–ã®éƒ¨åˆ†ã§ã®æ¡ä»¶åˆ†å²ã®ãŸã‚ã«ï¼Œè©³ç´°ã‚¨ãƒ©ãƒ¼æƒ…å ±ã‚’ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«ä¸Šæ›¸ãã™ã‚‹
       p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
     }
 
-    // processed_data_len > rec_data_len‚È‚é‚±‚Æ‚Í‚ ‚è‚¦‚È‚¢‚ªC”O‚Ìˆ×ƒ`ƒƒƒbƒN‚·‚éHH
+    // processed_data_len > rec_data_lenãªã‚‹ã“ã¨ã¯ã‚ã‚Šãˆãªã„ãŒï¼Œå¿µã®ç‚ºãƒãƒ£ãƒƒã‚¯ã™ã‚‹ï¼Ÿï¼Ÿ
   }
 
   return total_processed_data_len;
@@ -614,11 +614,11 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
 
 
 /**
- * @brief  ƒtƒŒ[ƒ€‰ğÍŠÖ”Œã‚Ìƒf[ƒ^ŒJ‰zŠÖ”
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @param  rec_data_len             óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
+ * @brief  ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°å¾Œã®ãƒ‡ãƒ¼ã‚¿ç¹°è¶Šé–¢æ•°
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @param  rec_data_len             å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
  * @return void
  */
 static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_config,
@@ -626,35 +626,35 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
                                                     uint16_t total_processed_data_len,
                                                     uint16_t rec_data_len)
 {
-  // óMƒf[ƒ^‚ğŸ‰ñŒÄ‚Ño‚µ‚Éˆø‚«Œp‚®i‚¢‚­‚Â‚©‚Ìƒpƒ^[ƒ“‚ ‚èj
-  // ƒtƒŒ[ƒ€Šm’è‚µ‚½ê‡i–¢‰ğÍóMƒf[ƒ^‚ª‚ ‚é‰Â”\«‚ª‚ ‚éj
-  //     ŒµŠi‚ÈƒtƒŒ[ƒ€’Tõ‚ª–³Œø
-  //          --> ƒtƒŒ[ƒ€Šm’è‚µ‚½ƒf[ƒ^‚ÍOK‚Æ‚µC‚»‚êˆÈŒã‚Ì‰ğÍ‚Å‚«‚È‚©‚Á‚½óMƒf[ƒ^‚Ì‚İ‚ğŸ‰ñ‚Éˆø‚«Œp‚®
-  //     ŒµŠi‚ÈƒtƒŒ[ƒ€’Tõ‚ª—LŒø
-  //          --> Šm’èƒtƒŒ[ƒ€‚ªƒ†[ƒU[‘¤‚Å’e‚©‚ê‚é‰Â”\«‚ğl—¶‚µCŠm’èƒtƒŒ[ƒ€‚Ìæ“ª + 1 ƒoƒCƒg–ÚˆÈ~‚ğŸ‰ñ‚Éˆø‚«Œp‚®
-  //              Ÿ‰ñ‚Ìƒwƒbƒ_’Tõ‚Í‚»‚±‚©‚çn‚Ü‚é
-  // ƒtƒŒ[ƒ€Šm’è‚µ‚È‚©‚Á‚½ê‡i–¢‰ğÍóMƒf[ƒ^‚Í‚È‚µj
-  //     DS_STREAM_REC_STATUS_FINDING_HEADER ‚Ì‚Æ‚«
-  //          --> ƒwƒbƒ_‚ª‚È‚©‚Á‚½‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚ÅCˆø‚«Œp‚¬ƒf[ƒ^‚Í‚È‚µ
-  //     DS_STREAM_REC_STATUS_FINDING_HEADER ‚Å‚È‚¢‚Æ‚«
-  //          --> ƒtƒŒ[ƒ€Œó•â‚ÌƒtƒŒ[ƒ€æ“ªˆÈ~‚ğŸ‰ñ‚Éˆø‚«Œp‚®
-  //              ‚±‚ê‚É‚æ‚èCƒtƒbƒ^•sˆê’v‚È‚Ç‚Ì•s®‡‚ª”­¶‚µ‚½ê‡‚ÉƒtƒŒ[ƒ€’Tõ‚ğ‚â‚è’¼‚¹‚é
+  // å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’æ¬¡å›å‘¼ã³å‡ºã—ã«å¼•ãç¶™ãï¼ˆã„ãã¤ã‹ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚ã‚Šï¼‰
+  // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šã—ãŸå ´åˆï¼ˆæœªè§£æå—ä¿¡ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ï¼‰
+  //     å³æ ¼ãªãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢ãŒç„¡åŠ¹
+  //          --> ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šã—ãŸãƒ‡ãƒ¼ã‚¿ã¯OKã¨ã—ï¼Œãã‚Œä»¥å¾Œã®è§£æã§ããªã‹ã£ãŸå—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ã¿ã‚’æ¬¡å›ã«å¼•ãç¶™ã
+  //     å³æ ¼ãªãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢ãŒæœ‰åŠ¹
+  //          --> ç¢ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ãŒãƒ¦ãƒ¼ã‚¶ãƒ¼å´ã§å¼¾ã‹ã‚Œã‚‹å¯èƒ½æ€§ã‚’è€ƒæ…®ã—ï¼Œç¢ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ã®å…ˆé ­ + 1 ãƒã‚¤ãƒˆç›®ä»¥é™ã‚’æ¬¡å›ã«å¼•ãç¶™ã
+  //              æ¬¡å›ã®ãƒ˜ãƒƒãƒ€æ¢ç´¢ã¯ãã“ã‹ã‚‰å§‹ã¾ã‚‹
+  // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šã—ãªã‹ã£ãŸå ´åˆï¼ˆæœªè§£æå—ä¿¡ãƒ‡ãƒ¼ã‚¿ã¯ãªã—ï¼‰
+  //     DS_STREAM_REC_STATUS_FINDING_HEADER ã®ã¨ã
+  //          --> ãƒ˜ãƒƒãƒ€ãŒãªã‹ã£ãŸã¨ã„ã†ã“ã¨ãªã®ã§ï¼Œå¼•ãç¶™ããƒ‡ãƒ¼ã‚¿ã¯ãªã—
+  //     DS_STREAM_REC_STATUS_FINDING_HEADER ã§ãªã„ã¨ã
+  //          --> ãƒ•ãƒ¬ãƒ¼ãƒ å€™è£œã®ãƒ•ãƒ¬ãƒ¼ãƒ å…ˆé ­ä»¥é™ã‚’æ¬¡å›ã«å¼•ãç¶™ã
+  //              ã“ã‚Œã«ã‚ˆã‚Šï¼Œãƒ•ãƒƒã‚¿ä¸ä¸€è‡´ãªã©ã®ä¸æ•´åˆãŒç™ºç”Ÿã—ãŸå ´åˆã«ãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢ã‚’ã‚„ã‚Šç›´ã›ã‚‹
 
   p_stream_config->carry_over_buffer_size_ = 0;
   if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
     if (p_stream_config->is_strict_frame_search_)
     {
-      // Šm’èƒtƒŒ[ƒ€‚Ìæ“ª + 1 ƒoƒCƒg–ÚˆÈ~‚ğŸ‰ñ‚Éˆø‚«Œp‚®
+      // ç¢ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ã®å…ˆé ­ + 1 ãƒã‚¤ãƒˆç›®ä»¥é™ã‚’æ¬¡å›ã«å¼•ãç¶™ã
       p_stream_config->carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->rx_frame_head_pos_of_frame_candidate_ - 1);
-      // Ÿ‰ñ‚ÍCˆø‚«Œp‚¢‚¾ƒf[ƒ^‚Ìæ“ª‚©‚çÄ‚ÑƒtƒŒ[ƒ€’Tõ
+      // æ¬¡å›ã¯ï¼Œå¼•ãç¶™ã„ã ãƒ‡ãƒ¼ã‚¿ã®å…ˆé ­ã‹ã‚‰å†ã³ãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢
       p_stream_config->carry_over_buffer_next_pos_ = 0;
     }
     else
     {
-      // ƒtƒŒ[ƒ€Šm’è‚µ‚ÄC‰ğÍ‚Å‚«‚È‚©‚Á‚½óMƒf[ƒ^‚ª‚ ‚éê‡CŸ‰ñ‚Éˆø‚«Œp‚®
+      // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šã—ã¦ï¼Œè§£æã§ããªã‹ã£ãŸå—ä¿¡ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆï¼Œæ¬¡å›ã«å¼•ãç¶™ã
       p_stream_config->carry_over_buffer_size_ = (uint16_t)(rec_data_len - total_processed_data_len);
-      // Ÿ‰ñ‚ÍCˆø‚«Œp‚¢‚¾ƒf[ƒ^‚Ìæ“ª‚©‚çÄ‚ÑƒtƒŒ[ƒ€’Tõ
+      // æ¬¡å›ã¯ï¼Œå¼•ãç¶™ã„ã ãƒ‡ãƒ¼ã‚¿ã®å…ˆé ­ã‹ã‚‰å†ã³ãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢
       p_stream_config->carry_over_buffer_next_pos_ = 0;
     }
   }
@@ -662,16 +662,16 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
   {
     if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
     {
-      // ˆø‚«Œp‚¬ƒf[ƒ^‚Í‚È‚µ
+      // å¼•ãç¶™ããƒ‡ãƒ¼ã‚¿ã¯ãªã—
       p_stream_config->carry_over_buffer_size_ = 0;
-      // Ÿ‰ñ‚ÍCæ“ª‚©‚çÄ‚ÑƒtƒŒ[ƒ€’Tõ
+      // æ¬¡å›ã¯ï¼Œå…ˆé ­ã‹ã‚‰å†ã³ãƒ•ãƒ¬ãƒ¼ãƒ æ¢ç´¢
       p_stream_config->carry_over_buffer_next_pos_ = 0;
     }
     else
     {
-      // Šm’èƒtƒŒ[ƒ€‚Ìæ“ªˆÈ~‚ğŸ‰ñ‚Éˆø‚«Œp‚®
+      // ç¢ºå®šãƒ•ãƒ¬ãƒ¼ãƒ ã®å…ˆé ­ä»¥é™ã‚’æ¬¡å›ã«å¼•ãç¶™ã
       p_stream_config->carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->rx_frame_head_pos_of_frame_candidate_);
-      // Ÿ‰ñ‚ÍCˆø‚«Œp‚¢‚¾ƒf[ƒ^‚ÍƒXƒLƒbƒv‚µCóM‚µ‚½‚à‚Ì‚Ìæ“ª‚©‚çƒtƒŒ[ƒ€
+      // æ¬¡å›ã¯ï¼Œå¼•ãç¶™ã„ã ãƒ‡ãƒ¼ã‚¿ã¯ã‚¹ã‚­ãƒƒãƒ—ã—ï¼Œå—ä¿¡ã—ãŸã‚‚ã®ã®å…ˆé ­ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ 
       p_stream_config->carry_over_buffer_next_pos_ = p_stream_config->carry_over_buffer_size_;
     }
   }
@@ -686,7 +686,7 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
   }
   else
   {
-    // ˆø‚«Œp‚®ƒTƒCƒY‚ª DS_RX_BUFFER_SIZE_MAX ‚ğ’´‚¦‚½ê‡Cˆ—‚ÌƒLƒƒƒp‚ğ’´‚¦‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é‚Ì‚ÅCƒŠƒZƒbƒgD
+    // å¼•ãç¶™ãã‚µã‚¤ã‚ºãŒ DS_RX_BUFFER_SIZE_MAX ã‚’è¶…ãˆãŸå ´åˆï¼Œå‡¦ç†ã®ã‚­ãƒ£ãƒ‘ã‚’è¶…ãˆã¦ã—ã¾ã£ã¦ã„ã‚‹ã®ã§ï¼Œãƒªã‚»ãƒƒãƒˆï¼
     if (p_stream_config->carry_over_buffer_size_ > 0)
     {
       p_stream_config->rec_status_.count_of_carry_over_failures++;
@@ -701,26 +701,26 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
 
 
 /**
- * @brief  ŒÅ’è’·ƒtƒŒ[ƒ€‰ğÍŠÖ”iƒoƒCƒg—ñˆ—j
+ * @brief  å›ºå®šé•·ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°ï¼ˆãƒã‚¤ãƒˆåˆ—å‡¦ç†ï¼‰
  *
- *         óMƒoƒbƒtƒ@‚Ìƒf[ƒ^‚ğ‘–¸‚µC•K—v‚Èƒf[ƒ^‚ğƒtƒŒ[ƒ€‚Æ‚µ‚Äpickup‚·‚é
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @param  rec_data_len             óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³D‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ *         å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ‡ãƒ¼ã‚¿ã‚’èµ°æŸ»ã—ï¼Œå¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã—ã¦pickupã™ã‚‹
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @param  rec_data_len             å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config,
                                                    uint8_t* rx_buffer,
                                                    uint16_t total_processed_data_len,
                                                    uint16_t rec_data_len)
 {
-  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ‚±‚ÌƒLƒƒƒXƒg‚ÍáŠ±Šë‚È‚¢iƒR[ƒh‚ª˜_—“I‚É³‚µ‚¯‚ê‚Î–â‘è‚È‚¢‚ªj
-  DS_StreamConfig* p = p_stream_config;  // ‚¿‚å‚Á‚Æ•Ï”–¼‚ª’·‚·‚¬‚Ä”z—ñindex‚È‚Ç‚ª‚İ‚¸‚ç‚¢‚Ì‚Å...
+  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ã“ã®ã‚­ãƒ£ã‚¹ãƒˆã¯è‹¥å¹²å±ãªã„ï¼ˆã‚³ãƒ¼ãƒ‰ãŒè«–ç†çš„ã«æ­£ã—ã‘ã‚Œã°å•é¡Œãªã„ãŒï¼‰
+  DS_StreamConfig* p = p_stream_config;  // ã¡ã‚‡ã£ã¨å¤‰æ•°åãŒé•·ã™ãã¦é…åˆ—indexãªã©ãŒã¿ãšã‚‰ã„ã®ã§...
 
   if (p->rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
   {
-    // ‚Ü‚¾ƒwƒbƒ_‚Ìæ“ª‚·‚ç–¢”­Œ©‚Ìê‡iƒwƒbƒ_‚È‚µ‚Í‚±‚±‚ÍƒXƒLƒbƒvj
+    // ã¾ã ãƒ˜ãƒƒãƒ€ã®å…ˆé ­ã™ã‚‰æœªç™ºè¦‹ã®å ´åˆï¼ˆãƒ˜ãƒƒãƒ€ãªã—æ™‚ã¯ã“ã“ã¯ã‚¹ã‚­ãƒƒãƒ—ï¼‰
     return DS_analyze_rx_buffer_finding_header_(p_stream_config,
                                                 rx_buffer,
                                                 total_processed_data_len,
@@ -728,18 +728,18 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
   }
   else if (p->rx_frame_rec_len_ < p->rx_header_size_)
   {
-    // ƒwƒbƒ_óM’†
+    // ãƒ˜ãƒƒãƒ€å—ä¿¡ä¸­
     return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len);
   }
   else if (p->rx_frame_rec_len_ < p->rx_frame_size_ - p->rx_footer_size_)
   {
-    // ƒf[ƒ^óM’†
-    // ‚±‚±‚Í‚‘¬‰»‚Ì‚½‚ß‚ÉˆêŠ‡ˆ—
+    // ãƒ‡ãƒ¼ã‚¿å—ä¿¡ä¸­
+    // ã“ã“ã¯é«˜é€ŸåŒ–ã®ãŸã‚ã«ä¸€æ‹¬å‡¦ç†
     uint16_t pickup_data_len;
 
-    // ƒwƒbƒ_‚È‚µ‚Ìê‡‚ÍC‚±‚±‚ªƒtƒŒ[ƒ€æ“ª
+    // ãƒ˜ãƒƒãƒ€ãªã—ã®å ´åˆã¯ï¼Œã“ã“ãŒãƒ•ãƒ¬ãƒ¼ãƒ å…ˆé ­
     if (p->rx_frame_rec_len_ == 0)
     {
       p->rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
@@ -747,7 +747,7 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
 
     pickup_data_len = (uint16_t)(p->rx_frame_size_ - p->rx_footer_size_ - p->rx_frame_rec_len_);
 
-    // ¡‰ñ‚Å‘S•”óM‚µ‚«‚ç‚È‚¢ê‡
+    // ä»Šå›ã§å…¨éƒ¨å—ä¿¡ã—ãã‚‰ãªã„å ´åˆ
     if (pickup_data_len > unprocessed_data_len)
     {
       pickup_data_len = unprocessed_data_len;
@@ -760,9 +760,9 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
     p->rx_frame_rec_len_ += pickup_data_len;
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
-    // ƒtƒbƒ^‚ª‚È‚­CdataóMdØ‚Á‚½ê‡‚ÍƒtƒŒ[ƒ€Šm’è
-    // ‚±‚ê‚ª‚È‚¢‚ÆCDS_analyze_rx_buffer_fixed_ ‚Å
-    // ¡‚Ü‚³‚ÉóM‚µ‚½ƒf[ƒ^’·‚ª‚Ò‚Á‚½‚èƒtƒŒ[ƒ€––‚¾‚Á‚½ê‡‚ÉCƒtƒŒ[ƒ€Šm’è‚ª‚PüŠú’x‚ê‚é‚±‚Æ‚É‚È‚é‚Ì‚Å
+    // ãƒ•ãƒƒã‚¿ãŒãªãï¼Œdataå—ä¿¡ä»•åˆ‡ã£ãŸå ´åˆã¯ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
+    // ã“ã‚ŒãŒãªã„ã¨ï¼ŒDS_analyze_rx_buffer_fixed_ ã§
+    // ä»Šã¾ã•ã«å—ä¿¡ã—ãŸãƒ‡ãƒ¼ã‚¿é•·ãŒã´ã£ãŸã‚Šãƒ•ãƒ¬ãƒ¼ãƒ æœ«ã ã£ãŸå ´åˆã«ï¼Œãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šãŒï¼‘å‘¨æœŸé…ã‚Œã‚‹ã“ã¨ã«ãªã‚‹ã®ã§
     if (p->rx_footer_size_ == 0 && p->rx_frame_rec_len_ == p->rx_frame_size_)
     {
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
@@ -774,7 +774,7 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
   }
   else
   {
-    // ƒtƒbƒ^óM’† or ƒtƒbƒ^‚È‚µ‚Ìê‡‚ÍƒtƒŒ[ƒ€Šm’è
+    // ãƒ•ãƒƒã‚¿å—ä¿¡ä¸­ or ãƒ•ãƒƒã‚¿ãªã—ã®å ´åˆã¯ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
     return DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len,
@@ -784,28 +784,28 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
 
 
 /**
- * @brief  ‰Â•ÏƒtƒŒ[ƒ€‰ğÍŠÖ”iƒoƒCƒg—ñˆ—j
+ * @brief  å¯å¤‰ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°ï¼ˆãƒã‚¤ãƒˆåˆ—å‡¦ç†ï¼‰
  *
- *         óMƒoƒbƒtƒ@‚Ìƒf[ƒ^‚ğ‘–¸‚µC•K—v‚Èƒf[ƒ^‚ğƒtƒŒ[ƒ€‚Æ‚µ‚Äpickup‚·‚é
- * @note   óMƒtƒŒ[ƒ€‚ÉƒtƒŒ[ƒ€’·ƒf[ƒ^‚ª‘¶İ‚µ‚Ä‚¢‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚·‚é
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @param  rec_data_len             óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³D‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ *         å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ‡ãƒ¼ã‚¿ã‚’èµ°æŸ»ã—ï¼Œå¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã—ã¦pickupã™ã‚‹
+ * @note   å—ä¿¡ãƒ•ãƒ¬ãƒ¼ãƒ ã«ãƒ•ãƒ¬ãƒ¼ãƒ é•·ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ã¦ã„ã‚‹ã“ã¨ã‚’å‰æã¨ã™ã‚‹
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @param  rec_data_len             å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamConfig* p_stream_config,
                                                                          uint8_t* rx_buffer,
                                                                          uint16_t total_processed_data_len,
                                                                          uint16_t rec_data_len)
 {
-  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ‚±‚ÌƒLƒƒƒXƒg‚ÍáŠ±Šë‚È‚¢iƒR[ƒh‚ª˜_—“I‚É³‚µ‚¯‚ê‚Î–â‘è‚È‚¢‚ªj
-  DS_StreamConfig* p = p_stream_config;  // ‚¿‚å‚Á‚Æ•Ï”–¼‚ª’·‚·‚¬‚Ä”z—ñindex‚È‚Ç‚ª‚İ‚¸‚ç‚¢‚Ì‚Å...
-  uint32_t rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);      // ‚Ü‚¾óM‚µ‚Ä‚¢‚È‚¢ê‡‚Í•s’è’l‚ª“ü‚é‚±‚Æ‚É—¯ˆÓ‚·‚é‚±‚ÆII
+  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ã“ã®ã‚­ãƒ£ã‚¹ãƒˆã¯è‹¥å¹²å±ãªã„ï¼ˆã‚³ãƒ¼ãƒ‰ãŒè«–ç†çš„ã«æ­£ã—ã‘ã‚Œã°å•é¡Œãªã„ãŒï¼‰
+  DS_StreamConfig* p = p_stream_config;  // ã¡ã‚‡ã£ã¨å¤‰æ•°åãŒé•·ã™ãã¦é…åˆ—indexãªã©ãŒã¿ãšã‚‰ã„ã®ã§...
+  uint32_t rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);      // ã¾ã å—ä¿¡ã—ã¦ã„ãªã„å ´åˆã¯ä¸å®šå€¤ãŒå…¥ã‚‹ã“ã¨ã«ç•™æ„ã™ã‚‹ã“ã¨ï¼ï¼
 
   if (p->rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
   {
-    // ‚Ü‚¾ƒwƒbƒ_‚Ìæ“ª‚·‚ç–¢”­Œ©‚Ìê‡iƒwƒbƒ_‚È‚µ‚Í‚±‚±‚ÍƒXƒLƒbƒvj
+    // ã¾ã ãƒ˜ãƒƒãƒ€ã®å…ˆé ­ã™ã‚‰æœªç™ºè¦‹ã®å ´åˆï¼ˆãƒ˜ãƒƒãƒ€ãªã—æ™‚ã¯ã“ã“ã¯ã‚¹ã‚­ãƒƒãƒ—ï¼‰
     return DS_analyze_rx_buffer_finding_header_(p_stream_config,
                                                 rx_buffer,
                                                 total_processed_data_len,
@@ -813,18 +813,18 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
   }
   else if (p->rx_frame_rec_len_ < p->rx_header_size_)
   {
-    // ƒwƒbƒ_óM’†
+    // ãƒ˜ãƒƒãƒ€å—ä¿¡ä¸­
     return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len);
   }
   else if (p->rx_frame_rec_len_ < p->rx_framelength_pos_ + p->rx_framelength_type_size_)
   {
-    // ƒtƒŒ[ƒ€ƒTƒCƒY’Tõ’†
-    // ‚±‚±‚Í‚‘¬‰»‚Ì‚½‚ß‚ÉˆêŠ‡ˆ—
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ã‚µã‚¤ã‚ºæ¢ç´¢ä¸­
+    // ã“ã“ã¯é«˜é€ŸåŒ–ã®ãŸã‚ã«ä¸€æ‹¬å‡¦ç†
     uint16_t pickup_data_len;
 
-    // ƒwƒbƒ_‚È‚µ‚Ìê‡‚ÍC‚±‚±‚ªƒtƒŒ[ƒ€æ“ª
+    // ãƒ˜ãƒƒãƒ€ãªã—ã®å ´åˆã¯ï¼Œã“ã“ãŒãƒ•ãƒ¬ãƒ¼ãƒ å…ˆé ­
     if (p->rx_frame_rec_len_ == 0)
     {
       p->rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
@@ -832,7 +832,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
 
     pickup_data_len = (uint16_t)(p->rx_framelength_pos_ + p->rx_framelength_type_size_ - p->rx_frame_rec_len_);
 
-    // ¡‰ñ‚Å‘S•”óM‚µ‚«‚ç‚È‚¢ê‡
+    // ä»Šå›ã§å…¨éƒ¨å—ä¿¡ã—ãã‚‰ãªã„å ´åˆ
     if (pickup_data_len > unprocessed_data_len)
     {
       pickup_data_len = unprocessed_data_len;
@@ -845,12 +845,12 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
     p->rx_frame_rec_len_ += pickup_data_len;
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH;
 
-    // ƒtƒŒ[ƒ€’·‚ğóM‚µI‚í‚Á‚½ê‡Cƒ`ƒFƒbƒN‚·‚é
+    // ãƒ•ãƒ¬ãƒ¼ãƒ é•·ã‚’å—ä¿¡ã—çµ‚ã‚ã£ãŸå ´åˆï¼Œãƒã‚§ãƒƒã‚¯ã™ã‚‹
     if (p->rx_frame_rec_len_ >= p->rx_framelength_pos_ + p->rx_framelength_type_size_)
     {
       rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);
 
-      // ƒoƒbƒtƒ@[’´‚¦‚ÍƒGƒ‰[‚ğo‚·I
+      // ãƒãƒƒãƒ•ã‚¡ãƒ¼è¶…ãˆã¯ã‚¨ãƒ©ãƒ¼ã‚’å‡ºã™ï¼
       if (rx_frame_size > DS_RX_FRAME_SIZE_MAX)
       {
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
@@ -858,10 +858,10 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too long\n");
 #endif
-        return 0;       // TODO: ‚±‚±‚Å‰½‚ğ•Ô‚·‚©‚Í‚à‚¤‚·‚±‚µl‚¦‚Ä‚à—Ç‚¢‚©‚àH
+        return 0;       // TODO: ã“ã“ã§ä½•ã‚’è¿”ã™ã‹ã¯ã‚‚ã†ã™ã“ã—è€ƒãˆã¦ã‚‚è‰¯ã„ã‹ã‚‚ï¼Ÿ
       }
 
-      // bodyƒTƒCƒY‚ª‚Í0ˆÈã‚ğ—v¿
+      // bodyã‚µã‚¤ã‚ºãŒã¯0ä»¥ä¸Šã‚’è¦è«‹
       if (rx_frame_size < p->rx_header_size_ + p->rx_footer_size_)
       {
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT;
@@ -869,7 +869,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too short\n");
 #endif
-        return 0;       // TODO: ‚±‚±‚Å‰½‚ğ•Ô‚·‚©‚Í‚à‚¤‚·‚±‚µl‚¦‚Ä‚à—Ç‚¢‚©‚àH
+        return 0;       // TODO: ã“ã“ã§ä½•ã‚’è¿”ã™ã‹ã¯ã‚‚ã†ã™ã“ã—è€ƒãˆã¦ã‚‚è‰¯ã„ã‹ã‚‚ï¼Ÿ
       }
     }
 
@@ -877,12 +877,12 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
   }
   else if (p->rx_frame_rec_len_ < rx_frame_size - p->rx_footer_size_)
   {
-    // ƒf[ƒ^óM’†
-    // ‚±‚±‚Í‚‘¬‰»‚Ì‚½‚ß‚ÉˆêŠ‡ˆ—
+    // ãƒ‡ãƒ¼ã‚¿å—ä¿¡ä¸­
+    // ã“ã“ã¯é«˜é€ŸåŒ–ã®ãŸã‚ã«ä¸€æ‹¬å‡¦ç†
 
-    uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->rx_footer_size_ - p->rx_frame_rec_len_);    // TODO: Œ»İCƒtƒŒ[ƒ€’·‚ªuint16_t‚ğ’´‚¦‚é‚±‚Æ‚Í‘z’è‚µ‚Ä‚¢‚È‚¢I
+    uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->rx_footer_size_ - p->rx_frame_rec_len_);    // TODO: ç¾åœ¨ï¼Œãƒ•ãƒ¬ãƒ¼ãƒ é•·ãŒuint16_tã‚’è¶…ãˆã‚‹ã“ã¨ã¯æƒ³å®šã—ã¦ã„ãªã„ï¼
 
-    // ¡‰ñ‚Å‘S•”óM‚µ‚«‚ç‚È‚¢ê‡
+    // ä»Šå›ã§å…¨éƒ¨å—ä¿¡ã—ãã‚‰ãªã„å ´åˆ
     if (pickup_data_len > unprocessed_data_len)
     {
       pickup_data_len = unprocessed_data_len;
@@ -895,8 +895,8 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
     p->rx_frame_rec_len_ += pickup_data_len;
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
-    // ƒtƒbƒ^‚ª‚È‚­CdataóMdØ‚Á‚½ê‡‚ÍƒtƒŒ[ƒ€Šm’è
-    // ‚±‚ê‚ª‚È‚¢‚ÆCDS_analyze_rx_buffer_fixed_ ‚Å¡‚Ü‚³‚ÉóM‚µ‚½ƒf[ƒ^’·‚ª‚Ò‚Á‚½‚èƒtƒŒ[ƒ€––‚¾‚Á‚½ê‡‚ÉCƒtƒŒ[ƒ€Šm’è‚ª‚PüŠú’x‚ê‚é‚±‚Æ‚É‚È‚é‚Ì‚Å
+    // ãƒ•ãƒƒã‚¿ãŒãªãï¼Œdataå—ä¿¡ä»•åˆ‡ã£ãŸå ´åˆã¯ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
+    // ã“ã‚ŒãŒãªã„ã¨ï¼ŒDS_analyze_rx_buffer_fixed_ ã§ä»Šã¾ã•ã«å—ä¿¡ã—ãŸãƒ‡ãƒ¼ã‚¿é•·ãŒã´ã£ãŸã‚Šãƒ•ãƒ¬ãƒ¼ãƒ æœ«ã ã£ãŸå ´åˆã«ï¼Œãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šãŒï¼‘å‘¨æœŸé…ã‚Œã‚‹ã“ã¨ã«ãªã‚‹ã®ã§
     if (p->rx_footer_size_ == 0 && p->rx_frame_rec_len_ == rx_frame_size)
     {
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
@@ -907,7 +907,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
   }
   else
   {
-    // ƒtƒbƒ^óM’† or ƒtƒbƒ^‚È‚µ‚Ìê‡‚ÍƒtƒŒ[ƒ€Šm’è
+    // ãƒ•ãƒƒã‚¿å—ä¿¡ä¸­ or ãƒ•ãƒƒã‚¿ãªã—ã®å ´åˆã¯ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
     return DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len,
@@ -917,29 +917,29 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
 
 
 /**
- * @brief  ‰Â•ÏƒtƒŒ[ƒ€‰ğÍŠÖ”iƒoƒCƒg—ñˆ—j
+ * @brief  å¯å¤‰ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°ï¼ˆãƒã‚¤ãƒˆåˆ—å‡¦ç†ï¼‰
  *
- *         óMƒoƒbƒtƒ@‚Ìƒf[ƒ^‚ğ‘–¸‚µC•K—v‚Èƒf[ƒ^‚ğƒtƒŒ[ƒ€‚Æ‚µ‚Äpickup‚·‚é
- * @note   DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_ ‚Æ‚Ìˆá‚¢‚ÍCƒeƒŒƒ’·ƒf[ƒ^‚ªƒtƒŒ[ƒ€‚ÉŠÜ‚Ü‚ê‚é‚©”Û‚©
- * @note   ƒtƒbƒ^‚ª‘¶İ‚µ‚Ä‚¢‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚·‚é
- * @note   ƒwƒbƒ_‚È‚µ‚Í”F‚ß‚éD‚½‚¾‚µCóMƒf[ƒ^æ“ª‚©‚çƒtƒŒ[ƒ€‚Æ‚İ‚È‚·‚Ì‚ÅCƒwƒbƒ_‚ ‚è‚ğ‹­‚­„§‚·‚é
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @param  rec_data_len             óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³D‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ *         å—ä¿¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ‡ãƒ¼ã‚¿ã‚’èµ°æŸ»ã—ï¼Œå¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã—ã¦pickupã™ã‚‹
+ * @note   DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_ ã¨ã®é•ã„ã¯ï¼Œãƒ†ãƒ¬ãƒ¡é•·ãƒ‡ãƒ¼ã‚¿ãŒãƒ•ãƒ¬ãƒ¼ãƒ ã«å«ã¾ã‚Œã‚‹ã‹å¦ã‹
+ * @note   ãƒ•ãƒƒã‚¿ãŒå­˜åœ¨ã—ã¦ã„ã‚‹ã“ã¨ã‚’å‰æã¨ã™ã‚‹
+ * @note   ãƒ˜ãƒƒãƒ€ãªã—ã¯èªã‚ã‚‹ï¼ãŸã ã—ï¼Œå—ä¿¡ãƒ‡ãƒ¼ã‚¿å…ˆé ­ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã¿ãªã™ã®ã§ï¼Œãƒ˜ãƒƒãƒ€ã‚ã‚Šã‚’å¼·ãæ¨å¥¨ã™ã‚‹
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @param  rec_data_len             å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p_stream_config,
                                                                   uint8_t* rx_buffer,
                                                                   uint16_t total_processed_data_len,
                                                                   uint16_t rec_data_len)
 {
-  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ‚±‚ÌƒLƒƒƒXƒg‚ÍáŠ±Šë‚È‚¢iƒR[ƒh‚ª˜_—“I‚É³‚µ‚¯‚ê‚Î–â‘è‚È‚¢‚ªj
-  DS_StreamConfig* p = p_stream_config;  // ‚¿‚å‚Á‚Æ•Ï”–¼‚ª’·‚·‚¬‚Ä”z—ñindex‚È‚Ç‚ª‚İ‚¸‚ç‚¢‚Ì‚Å...
+  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ã“ã®ã‚­ãƒ£ã‚¹ãƒˆã¯è‹¥å¹²å±ãªã„ï¼ˆã‚³ãƒ¼ãƒ‰ãŒè«–ç†çš„ã«æ­£ã—ã‘ã‚Œã°å•é¡Œãªã„ãŒï¼‰
+  DS_StreamConfig* p = p_stream_config;  // ã¡ã‚‡ã£ã¨å¤‰æ•°åãŒé•·ã™ãã¦é…åˆ—indexãªã©ãŒã¿ãšã‚‰ã„ã®ã§...
 
   if (p->rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
   {
-    // ‚Ü‚¾ƒwƒbƒ_‚Ìæ“ª‚·‚ç–¢”­Œ©‚Ìê‡iƒwƒbƒ_‚È‚µ‚Í‚±‚±‚ÍƒXƒLƒbƒvj
+    // ã¾ã ãƒ˜ãƒƒãƒ€ã®å…ˆé ­ã™ã‚‰æœªç™ºè¦‹ã®å ´åˆï¼ˆãƒ˜ãƒƒãƒ€ãªã—æ™‚ã¯ã“ã“ã¯ã‚¹ã‚­ãƒƒãƒ—ï¼‰
     return DS_analyze_rx_buffer_finding_header_(p_stream_config,
                                                 rx_buffer,
                                                 total_processed_data_len,
@@ -947,42 +947,42 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
   }
   else if (p->rx_frame_rec_len_ < p->rx_header_size_)
   {
-    // ƒwƒbƒ_óM’†
+    // ãƒ˜ãƒƒãƒ€å—ä¿¡ä¸­
     return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len);
   }
   else
   {
-    // ÅŒã‚Ü‚ÅóM‚µCƒtƒbƒ^‚ÌÅI•¶š‚ğ’T‚·Dƒtƒbƒ^‚È‚µ‚Í‚ ‚è‚¦‚È‚¢D
+    // æœ€å¾Œã¾ã§å—ä¿¡ã—ï¼Œãƒ•ãƒƒã‚¿ã®æœ€çµ‚æ–‡å­—ã‚’æ¢ã™ï¼ãƒ•ãƒƒã‚¿ãªã—ã¯ã‚ã‚Šãˆãªã„ï¼
     uint8_t* p_footer_last;     // inclusive
-    int32_t  body_data_len;     // ƒTƒCƒY“I‚É‚Íu16‚Å‚æ‚¢‚ªC•‰”‚à‚Æ‚è‚½‚¢‚Ì‚Åi32‚Æ‚µ‚Ä‚¢‚é
+    int32_t  body_data_len;     // ã‚µã‚¤ã‚ºçš„ã«ã¯u16ã§ã‚ˆã„ãŒï¼Œè² æ•°ã‚‚ã¨ã‚ŠãŸã„ã®ã§i32ã¨ã—ã¦ã„ã‚‹
     uint16_t processed_data_len;
     uint16_t i;
     uint16_t estimated_rx_frame_size;
     uint16_t pickup_data_len;
 
-    // ƒwƒbƒ_‚È‚µ‚Ìê‡‚ÍC‚±‚±‚ªƒtƒŒ[ƒ€æ“ª
+    // ãƒ˜ãƒƒãƒ€ãªã—ã®å ´åˆã¯ï¼Œã“ã“ãŒãƒ•ãƒ¬ãƒ¼ãƒ å…ˆé ­
     if (p->rx_frame_rec_len_ == 0)
     {
       p->rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
     }
 
-    // “Í‚¢‚Ä‚¢‚éƒf[ƒ^‚ğóMƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚ÉŠi”[‚·‚é
-    // ‚±‚±‚Í‚‘¬‰»‚Ì‚½‚ß‚ÉˆêŠ‡ˆ—
+    // å±Šã„ã¦ã„ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚’å—ä¿¡ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã«æ ¼ç´ã™ã‚‹
+    // ã“ã“ã¯é«˜é€ŸåŒ–ã®ãŸã‚ã«ä¸€æ‹¬å‡¦ç†
     pickup_data_len = unprocessed_data_len;
-    // ‰i‰“‚Éƒtƒbƒ^‚ğóM‚µ‚È‚¢ê‡‚Éƒoƒbƒtƒ@[ƒI[ƒo[ƒ‰ƒ“‚·‚é‚±‚Æ‚ğ–h‚®
+    // æ°¸é ã«ãƒ•ãƒƒã‚¿ã‚’å—ä¿¡ã—ãªã„å ´åˆã«ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚ªãƒ¼ãƒãƒ¼ãƒ©ãƒ³ã™ã‚‹ã“ã¨ã‚’é˜²ã
     if (p->rx_frame_rec_len_ + pickup_data_len > DS_RX_FRAME_SIZE_MAX)
     {
       if (p->rx_frame_rec_len_ >= DS_RX_FRAME_SIZE_MAX)
       {
-        // ‚±‚êˆÈãóM‚Å‚«‚È‚¢‚½‚ßCƒtƒbƒ^’Tõ¸”s‚Æ‚µ‚ÄCƒŠƒZƒbƒg‚·‚é
+        // ã“ã‚Œä»¥ä¸Šå—ä¿¡ã§ããªã„ãŸã‚ï¼Œãƒ•ãƒƒã‚¿æ¢ç´¢å¤±æ•—ã¨ã—ã¦ï¼Œãƒªã‚»ãƒƒãƒˆã™ã‚‹
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
         p->rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame is too long\n");
 #endif
-        return 0;   // ˆ—Ï‚İƒf[ƒ^‚à‚È‚µ
+        return 0;   // å‡¦ç†æ¸ˆã¿ãƒ‡ãƒ¼ã‚¿ã‚‚ãªã—
       }
       pickup_data_len = (uint16_t)(DS_RX_FRAME_SIZE_MAX - p->rx_frame_rec_len_);
     }
@@ -990,14 +990,14 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
-    // ƒtƒbƒ^ÅI•¶š‚ğ’T‚·
+    // ãƒ•ãƒƒã‚¿æœ€çµ‚æ–‡å­—ã‚’æ¢ã™
     p_footer_last = (uint8_t*)memchr(&(rx_buffer[p->rx_frame_rec_len_]),
                                      (int)(p->rx_footer_[p->rx_footer_size_ - 1]),
                                      (size_t)pickup_data_len);
 
     if (p_footer_last == NULL)
     {
-      // ‚Ü‚¾‚Ü‚¾óM‚·‚é
+      // ã¾ã ã¾ã å—ä¿¡ã™ã‚‹
       p->rx_frame_rec_len_ += pickup_data_len;
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return pickup_data_len;
@@ -1007,29 +1007,29 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
     body_data_len = (p_footer_last - rx_buffer + 1) - p->rx_header_size_ - p->rx_footer_size_;
     if (body_data_len < 0)
     {
-      // ‚±‚ê‚Íƒtƒbƒ^‚Å‚Í‚È‚¢‚Ì‚ÅóM‘±s
-      // ‚Ü‚¾‚Ü‚¾óM‚·‚é
+      // ã“ã‚Œã¯ãƒ•ãƒƒã‚¿ã§ã¯ãªã„ã®ã§å—ä¿¡ç¶šè¡Œ
+      // ã¾ã ã¾ã å—ä¿¡ã™ã‚‹
       p->rx_frame_rec_len_ += pickup_data_len;
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return pickup_data_len;
     }
 
-    // ƒtƒbƒ^Œó•â”­Œ©
-    // ƒtƒbƒ^ƒ`ƒFƒbƒN‚·‚é
+    // ãƒ•ãƒƒã‚¿å€™è£œç™ºè¦‹
+    // ãƒ•ãƒƒã‚¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹
     estimated_rx_frame_size = (uint16_t)(p->rx_header_size_ + body_data_len + p->rx_footer_size_);
     for (i = 0; i < p->rx_footer_size_; i++)
     {
       if (rx_buffer[estimated_rx_frame_size - i - 1] != p->rx_footer_[p->rx_footer_size_ - i - 1])
       {
-        // ‚±‚ê‚Íƒtƒbƒ^‚Å‚Í‚È‚¢‚Ì‚ÅóM‘±s
-        // ‚Ü‚¾‚Ü‚¾óM‚·‚é
+        // ã“ã‚Œã¯ãƒ•ãƒƒã‚¿ã§ã¯ãªã„ã®ã§å—ä¿¡ç¶šè¡Œ
+        // ã¾ã ã¾ã å—ä¿¡ã™ã‚‹
         p->rx_frame_rec_len_ += pickup_data_len;
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
         return pickup_data_len;
       }
     }
 
-    // ƒtƒbƒ^Šm’è ¨ ƒtƒŒ[ƒ€Šm’è
+    // ãƒ•ãƒƒã‚¿ç¢ºå®š â†’ ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
     p->rec_status_.fixed_frame_len = estimated_rx_frame_size;
     p->rx_frame_rec_len_ = 0;
@@ -1039,25 +1039,25 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
 
 
 /**
- * @brief  ƒtƒŒ[ƒ€‰ğÍŠÖ”iƒwƒbƒ_’Tõj
- * @note   ƒwƒbƒ_‚ªŒ©‚Â‚©‚Á‚½ê‡CÅ‰‚Ì1 byte‚Ì‚İˆ—‚·‚é
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @param  rec_data_len             óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì’·‚³
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³D‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ * @brief  ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°ï¼ˆãƒ˜ãƒƒãƒ€æ¢ç´¢ï¼‰
+ * @note   ãƒ˜ãƒƒãƒ€ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆï¼Œæœ€åˆã®1 byteã®ã¿å‡¦ç†ã™ã‚‹
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @param  rec_data_len             å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_config,
                                                      uint8_t* rx_buffer,
                                                      uint16_t total_processed_data_len,
                                                      uint16_t rec_data_len)
 {
-  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ‚±‚ÌƒLƒƒƒXƒg‚ÍáŠ±Šë‚È‚¢iƒR[ƒh‚ª˜_—“I‚É³‚µ‚¯‚ê‚Î–â‘è‚È‚¢‚ªj
-  DS_StreamConfig* p = p_stream_config;  // ‚¿‚å‚Á‚Æ•Ï”–¼‚ª’·‚·‚¬‚Ä”z—ñindex‚È‚Ç‚ª‚İ‚¸‚ç‚¢‚Ì‚Å...
+  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // ã“ã®ã‚­ãƒ£ã‚¹ãƒˆã¯è‹¥å¹²å±ãªã„ï¼ˆã‚³ãƒ¼ãƒ‰ãŒè«–ç†çš„ã«æ­£ã—ã‘ã‚Œã°å•é¡Œãªã„ãŒï¼‰
+  DS_StreamConfig* p = p_stream_config;  // ã¡ã‚‡ã£ã¨å¤‰æ•°åãŒé•·ã™ãã¦é…åˆ—indexãªã©ãŒã¿ãšã‚‰ã„ã®ã§...
   uint8_t* p_header;
   uint16_t processed_data_len;
 
-  // ƒR[ƒh‚ª³‚µ‚¯‚ê‚ÎCƒwƒbƒ_‚ª‚È‚¢ƒP[ƒX‚Í‚±‚±‚É“’B‚µ“¾‚È‚¢‚ªCƒkƒ‹ƒ|‰ñ”ğ‚ğ‚¢‚ê‚Ä‚¨‚­
+  // ã‚³ãƒ¼ãƒ‰ãŒæ­£ã—ã‘ã‚Œã°ï¼Œãƒ˜ãƒƒãƒ€ãŒãªã„ã‚±ãƒ¼ã‚¹ã¯ã“ã“ã«åˆ°é”ã—å¾—ãªã„ãŒï¼ŒãƒŒãƒ«ãƒå›é¿ã‚’ã„ã‚Œã¦ãŠã
   if (p_stream_config->rx_header_ == NULL)
   {
 #ifdef DS_DEBUG
@@ -1067,8 +1067,8 @@ static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_c
     return unprocessed_data_len;
   }
 
-  // ‚Ü‚¾ƒwƒbƒ_‚Ìæ“ª‚·‚ç–¢”­Œ©‚Ìê‡
-  // ‚±‚±‚Í‚‘¬‰»‚Ì‚½‚ß‚ÉˆêŠ‡ˆ—
+  // ã¾ã ãƒ˜ãƒƒãƒ€ã®å…ˆé ­ã™ã‚‰æœªç™ºè¦‹ã®å ´åˆ
+  // ã“ã“ã¯é«˜é€ŸåŒ–ã®ãŸã‚ã«ä¸€æ‹¬å‡¦ç†
   p_header = (uint8_t*)memchr(&(rx_buffer[total_processed_data_len]),
                               (int)(p->rx_header_[0]),
                               (size_t)unprocessed_data_len);
@@ -1084,7 +1084,7 @@ static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_c
 
   processed_data_len = (uint16_t)(p_header - &(rx_buffer[total_processed_data_len]) + 1);
 
-  // ƒwƒbƒ_ƒRƒs[Dƒzƒ“ƒg‚Íbuffer‚©‚çƒRƒs‚é‚×‚«‚¾‚¯‚ÇC‚¿‚å‚Á‚ÆƒAƒhƒŒƒX‚¢‚¶‚Á‚Ä‚¢‚Ä•|‚¢‚Ì‚ÅDDD
+  // ãƒ˜ãƒƒãƒ€ã‚³ãƒ”ãƒ¼ï¼ãƒ›ãƒ³ãƒˆã¯bufferã‹ã‚‰ã‚³ãƒ”ã‚‹ã¹ãã ã‘ã©ï¼Œã¡ã‚‡ã£ã¨ã‚¢ãƒ‰ãƒ¬ã‚¹ã„ã˜ã£ã¦ã„ã¦æ€–ã„ã®ã§ï¼ï¼ï¼
   p->rx_frame_[p->rx_frame_rec_len_] = p->rx_header_[0];
   p->rx_frame_rec_len_++;
 
@@ -1095,23 +1095,23 @@ static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_c
 
 
 /**
- * @brief  ƒtƒŒ[ƒ€‰ğÍŠÖ”iƒwƒbƒ_óM’†j
- * @note   1 byte‚Ì‚İˆ—‚·‚é
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³i‚Ü‚ C1‚È‚ñ‚¾‚¯‚ÇjD‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ * @brief  ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°ï¼ˆãƒ˜ãƒƒãƒ€å—ä¿¡ä¸­ï¼‰
+ * @note   1 byteã®ã¿å‡¦ç†ã™ã‚‹
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ˆã¾ã‚ï¼Œ1ãªã‚“ã ã‘ã©ï¼‰ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream_config,
                                                        uint8_t* rx_buffer,
                                                        uint16_t total_processed_data_len)
 {
-  DS_StreamConfig* p = p_stream_config;  // ‚¿‚å‚Á‚Æ•Ï”–¼‚ª’·‚·‚¬‚Ä”z—ñindex‚È‚Ç‚ª‚İ‚¸‚ç‚¢‚Ì‚Å...
+  DS_StreamConfig* p = p_stream_config;  // ã¡ã‚‡ã£ã¨å¤‰æ•°åãŒé•·ã™ãã¦é…åˆ—indexãªã©ãŒã¿ãšã‚‰ã„ã®ã§...
 
-  // ƒwƒbƒ_óM’†
-  // óM‚ª×Ø‚ê‚Ì‚Æ‚«‚È‚Ç‚Ìˆ—•ªŠò‚ª‚ß‚ñ‚Ç‚­‚³‚¢‚Ì‚ÅC1byte‚¸‚Âˆ—‚³‚¹‚é
+  // ãƒ˜ãƒƒãƒ€å—ä¿¡ä¸­
+  // å—ä¿¡ãŒç´°åˆ‡ã‚Œã®ã¨ããªã©ã®å‡¦ç†åˆ†å²ãŒã‚ã‚“ã©ãã•ã„ã®ã§ï¼Œ1byteãšã¤å‡¦ç†ã•ã›ã‚‹
 
-  // ƒwƒbƒ_‚ª³‚µ‚¢‚©H
+  // ãƒ˜ãƒƒãƒ€ãŒæ­£ã—ã„ã‹ï¼Ÿ
   if (rx_buffer[total_processed_data_len] == p->rx_header_[p->rx_frame_rec_len_])
   {
     p->rx_frame_[p->rx_frame_rec_len_] = p->rx_header_[p->rx_frame_rec_len_];
@@ -1122,9 +1122,9 @@ static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream
   }
   else
   {
-    // ƒwƒbƒ_‚ª³‚µ‚­‚È‚©‚Á‚½
-    // DS_STREAM_REC_STATUS_HEADER_MISMATCH ‚É‚È‚èCÄ‚Ñƒoƒbƒtƒ@‚ğŠª‚«–ß‚µ‚Äƒwƒbƒ_’Tõ‚ğn‚ß‚é
-    // ‚»‚ÌŒã DS_STREAM_REC_STATUS_FINDING_HEADER ‚É–ß‚é
+    // ãƒ˜ãƒƒãƒ€ãŒæ­£ã—ããªã‹ã£ãŸ
+    // DS_STREAM_REC_STATUS_HEADER_MISMATCH ã«ãªã‚Šï¼Œå†ã³ãƒãƒƒãƒ•ã‚¡ã‚’å·»ãæˆ»ã—ã¦ãƒ˜ãƒƒãƒ€æ¢ç´¢ã‚’å§‹ã‚ã‚‹
+    // ãã®å¾Œ DS_STREAM_REC_STATUS_FINDING_HEADER ã«æˆ»ã‚‹
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_HEADER_MISMATCH;
     p->rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
@@ -1136,40 +1136,40 @@ static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream
 
 
 /**
- * @brief  ƒtƒŒ[ƒ€‰ğÍŠÖ”iƒtƒbƒ^óM’†j
- * @note   1 byte‚Ì‚İˆ—‚·‚é
- * @note   Œ»İCƒtƒŒ[ƒ€’·‚ªuint16_t‚ğ’´‚¦‚é‚±‚Æ‚Í‘z’è‚µ‚Ä‚¢‚È‚¢I
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @param  rx_buffer                óMƒf[ƒ^‚Ìƒoƒbƒtƒ@i”z—ñj
- * @param  total_processed_data_len óMƒf[ƒ^‚Ìƒoƒbƒtƒ@‚Ì‚¤‚¿C‚·‚Å‚Éˆ—‚³‚ê‚½ƒoƒCƒg”
- * @param  rx_frame_size            ƒtƒŒ[ƒ€ƒTƒCƒYi‰Â•Ï’·ƒtƒŒ[ƒ€‚Ìê‡‚à‚ ‚é‚Ì‚ÅCˆø”‚Éæ‚éj
- * @return ¡‰ñ‚ÌŒÄ‚Ño‚µ‚Å‘–¸‚µ‚½ƒoƒCƒg’·‚³i‚Ü‚ C1‚È‚ñ‚¾‚¯‚ÇjD‚»‚Ì‘¼‚ÌÚ×‚Í DS_StreamRecStatus
+ * @brief  ãƒ•ãƒ¬ãƒ¼ãƒ è§£æé–¢æ•°ï¼ˆãƒ•ãƒƒã‚¿å—ä¿¡ä¸­ï¼‰
+ * @note   1 byteã®ã¿å‡¦ç†ã™ã‚‹
+ * @note   ç¾åœ¨ï¼Œãƒ•ãƒ¬ãƒ¼ãƒ é•·ãŒuint16_tã‚’è¶…ãˆã‚‹ã“ã¨ã¯æƒ³å®šã—ã¦ã„ãªã„ï¼
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @param  rx_buffer                å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ï¼ˆé…åˆ—ï¼‰
+ * @param  total_processed_data_len å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ•ã‚¡ã®ã†ã¡ï¼Œã™ã§ã«å‡¦ç†ã•ã‚ŒãŸãƒã‚¤ãƒˆæ•°
+ * @param  rx_frame_size            ãƒ•ãƒ¬ãƒ¼ãƒ ã‚µã‚¤ã‚ºï¼ˆå¯å¤‰é•·ãƒ•ãƒ¬ãƒ¼ãƒ ã®å ´åˆã‚‚ã‚ã‚‹ã®ã§ï¼Œå¼•æ•°ã«å–ã‚‹ï¼‰
+ * @return ä»Šå›ã®å‘¼ã³å‡ºã—ã§èµ°æŸ»ã—ãŸãƒã‚¤ãƒˆé•·ã•ï¼ˆã¾ã‚ï¼Œ1ãªã‚“ã ã‘ã©ï¼‰ï¼ãã®ä»–ã®è©³ç´°ã¯ DS_StreamRecStatus
  */
 static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream_config,
                                                        uint8_t* rx_buffer,
                                                        uint16_t total_processed_data_len,
                                                        uint16_t rx_frame_size)
 {
-  DS_StreamConfig* p = p_stream_config;  // ‚¿‚å‚Á‚Æ•Ï”–¼‚ª’·‚·‚¬‚Ä”z—ñindex‚È‚Ç‚ª‚İ‚¸‚ç‚¢‚Ì‚Å...
+  DS_StreamConfig* p = p_stream_config;  // ã¡ã‚‡ã£ã¨å¤‰æ•°åãŒé•·ã™ãã¦é…åˆ—indexãªã©ãŒã¿ãšã‚‰ã„ã®ã§...
   uint16_t rec_footer_pos;
 
-  // ƒtƒbƒ^‚È‚µ‚Ìê‡‚ÍƒtƒŒ[ƒ€Šm’è
+  // ãƒ•ãƒƒã‚¿ãªã—ã®å ´åˆã¯ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
   if (p->rx_footer_size_ == 0)
   {
-    // ƒtƒbƒ^‚È‚µ
+    // ãƒ•ãƒƒã‚¿ãªã—
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
     p->rec_status_.fixed_frame_len = p->rx_frame_rec_len_;
     p->rx_frame_rec_len_ = 0;
-    return 0;   // ˆ—Ï‚İƒf[ƒ^‚à‚È‚µ
+    return 0;   // å‡¦ç†æ¸ˆã¿ãƒ‡ãƒ¼ã‚¿ã‚‚ãªã—
   }
 
-  // ƒtƒbƒ^óM
-  // ‚±‚±‚àğŒ•ªŠò‚ª‚ß‚ñ‚Ç‚­‚³‚¢‚Ì‚ÅC1byte‚¸‚Âˆ—‚·‚é
+  // ãƒ•ãƒƒã‚¿å—ä¿¡
+  // ã“ã“ã‚‚æ¡ä»¶åˆ†å²ãŒã‚ã‚“ã©ãã•ã„ã®ã§ï¼Œ1byteãšã¤å‡¦ç†ã™ã‚‹
   rec_footer_pos = (uint16_t)(p->rx_frame_rec_len_ - (rx_frame_size - p->rx_footer_size_));
 
-  // Šú‘Ò‚³‚ê‚Ä‚¢‚éƒtƒbƒ^‚ªóM‚Å‚«‚½‚©H
-  // óM‚Å‚«‚È‚©‚Á‚½ê‡C DS_STREAM_REC_STATUS_FOOTER_MISMATCH ‚É‚È‚èCÄ‚Ñƒoƒbƒtƒ@‚ğŠª‚«–ß‚µ‚Äƒwƒbƒ_’Tõ‚ğn‚ß‚é
-  // ‚»‚ÌŒã DS_STREAM_REC_STATUS_FINDING_HEADER ‚É–ß‚é
+  // æœŸå¾…ã•ã‚Œã¦ã„ã‚‹ãƒ•ãƒƒã‚¿ãŒå—ä¿¡ã§ããŸã‹ï¼Ÿ
+  // å—ä¿¡ã§ããªã‹ã£ãŸå ´åˆï¼Œ DS_STREAM_REC_STATUS_FOOTER_MISMATCH ã«ãªã‚Šï¼Œå†ã³ãƒãƒƒãƒ•ã‚¡ã‚’å·»ãæˆ»ã—ã¦ãƒ˜ãƒƒãƒ€æ¢ç´¢ã‚’å§‹ã‚ã‚‹
+  // ãã®å¾Œ DS_STREAM_REC_STATUS_FINDING_HEADER ã«æˆ»ã‚‹
   if (rx_buffer[total_processed_data_len] != p->rx_footer_[rec_footer_pos])
   {
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FOOTER_MISMATCH;
@@ -1180,20 +1180,20 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
     return 1;
   }
 
-  // ‚±‚±‚Ü‚Å‚«‚½‚ç³‚µ‚¢ƒtƒbƒ^‚ªóM‚³‚ê‚Ä‚¢‚é
+  // ã“ã“ã¾ã§ããŸã‚‰æ­£ã—ã„ãƒ•ãƒƒã‚¿ãŒå—ä¿¡ã•ã‚Œã¦ã„ã‚‹
   p->rx_frame_[p->rx_frame_rec_len_] = p->rx_footer_[rec_footer_pos];
   p->rx_frame_rec_len_++;
 
   if (p->rx_frame_rec_len_ == rx_frame_size)
   {
-    // ƒtƒŒ[ƒ€Šm’è
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®š
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
     p->rec_status_.fixed_frame_len = p->rx_frame_rec_len_;
     p->rx_frame_rec_len_ = 0;
   }
   else
   {
-    // ƒtƒŒ[ƒ€Šm’è‚¹‚¸
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºå®šã›ãš
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FOOTER;
   }
 
@@ -1202,10 +1202,10 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
 
 
 /**
- * @brief  ƒtƒŒ[ƒ€‰ğÍ’†‚ÉóM‚µ‚½ƒtƒŒ[ƒ€‚©‚çƒtƒŒ[ƒ€’·‚ğæ“¾‚·‚éŠÖ”
- * @note   DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_ ‚©‚çŒÄ‚Î‚ê‚é‚±‚Æ‚ğ‘z’è
- * @param  p_stream_config          DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @return ƒtƒŒ[ƒ€’·
+ * @brief  ãƒ•ãƒ¬ãƒ¼ãƒ è§£æä¸­ã«å—ä¿¡ã—ãŸãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ é•·ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+ * @note   DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_ ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã“ã¨ã‚’æƒ³å®š
+ * @param  p_stream_config          DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
+ * @return ãƒ•ãƒ¬ãƒ¼ãƒ é•·
  */
 static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_config)
 {
@@ -1231,10 +1231,10 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
 
 
 /**
- * @brief  DS_StreamConfig\‘¢‘Ì‚Ì‰Šú‰»
+ * @brief  DS_StreamConfigæ§‹é€ ä½“ã®åˆæœŸåŒ–
  *
- *         DS_StreamConfig\‘¢‘Ì‚ğ‰Šú‰»‚µCƒfƒtƒHƒ‹ƒg’l‚Å–„‚ß‚éD
- * @param  p_stream_config  DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
+ *         DS_StreamConfigæ§‹é€ ä½“ã‚’åˆæœŸåŒ–ã—ï¼Œãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã§åŸ‹ã‚ã‚‹ï¼
+ * @param  p_stream_config  DriverSuperæ§‹é€ ä½“ã®DS_StreamConfig
  * @return DS_ERR_CODE
  */
 static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
@@ -1267,7 +1267,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->ret_from_data_analyzer_ = DS_ERR_CODE_OK;
 
   p_stream_config->should_monitor_for_tlm_disruption_ = 0;
-  p_stream_config->time_threshold_for_tlm_disruption_ = 60 * 1000;      // ‚±‚Ì’l‚Í‚æ‚­l‚¦‚é‚±‚Æ
+  p_stream_config->time_threshold_for_tlm_disruption_ = 60 * 1000;      // ã“ã®å€¤ã¯ã‚ˆãè€ƒãˆã‚‹ã“ã¨
 
   p_stream_config->is_validation_needed_for_send_ = 0;
   p_stream_config->is_validation_needed_for_rec_  = 0;
@@ -1286,11 +1286,11 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
          0x00,
          sizeof(p_stream_config->rx_buffer_for_carry_over_));
 
-  // DS_StreamSendStatus ‚Ì‰Šú‰»
+  // DS_StreamSendStatus ã®åˆæœŸåŒ–
   p_stream_config->send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
   p_stream_config->send_status_.ret_from_if_tx = 0;
 
-  // DS_StreamRecStatus ‚Ì‰Šú‰»
+  // DS_StreamRecStatus ã®åˆæœŸåŒ–
   p_stream_config->rec_status_.status_code                  = DS_STREAM_REC_STATUS_DISABLE;
   p_stream_config->rec_status_.fixed_frame_len              = 0;
   p_stream_config->rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
@@ -1308,40 +1308,40 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
   if (p_stream_config->rx_header_size_ != 0 && p_stream_config->rx_header_ == NULL) return DS_ERR_CODE_ERR;
   if (p_stream_config->rx_footer_size_ != 0 && p_stream_config->rx_footer_ == NULL) return DS_ERR_CODE_ERR;
 
-  if (p_stream_config->rx_frame_size_ > DS_RX_FRAME_SIZE_MAX) return DS_ERR_CODE_ERR;   // [TODO] Œ»İ‚ÍBigData–¢À‘•iÚ×‚Íƒwƒbƒ_ƒtƒ@ƒCƒ‹QÆj‚Ì‚½‚ßC‚±‚±‚Å’e‚­
+  if (p_stream_config->rx_frame_size_ > DS_RX_FRAME_SIZE_MAX) return DS_ERR_CODE_ERR;   // [TODO] ç¾åœ¨ã¯BigDataæœªå®Ÿè£…ï¼ˆè©³ç´°ã¯ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å‚ç…§ï¼‰ã®ãŸã‚ï¼Œã“ã“ã§å¼¾ã
 
   if (p_stream_config->rx_frame_size_ < 0)
   {
-    // ƒeƒŒƒƒgƒŠ‰Â•Ï’·
+    // ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªå¯å¤‰é•·
     if (p_stream_config->rx_framelength_pos_ < 0)
     {
-      // ƒtƒŒ[ƒ€ƒTƒCƒYƒf[ƒ^‚ª‚È‚¢ê‡
-      // ƒtƒbƒ^‚Ì‘¶İ‚ª•K{
+      // ãƒ•ãƒ¬ãƒ¼ãƒ ã‚µã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ãŒãªã„å ´åˆ
+      // ãƒ•ãƒƒã‚¿ã®å­˜åœ¨ãŒå¿…é ˆ
       if (p_stream_config->rx_footer_size_ == 0) return DS_ERR_CODE_ERR;
     }
     else
     {
-      if (p_stream_config->rx_header_size_ == 0) return DS_ERR_CODE_ERR;       // ‰Â•Ï’·‚©‚Âƒwƒbƒ_‚È‚µ‚Í‘Î‰‚µ‚È‚¢iŒÅ’è’·‚Ì‚æ‚¤‚É‚µ‚Ä‰ñ”ğ‚·‚éDÚ×‚Íƒwƒbƒ_ƒtƒ@ƒCƒ‹QÆj
-      if (p_stream_config->rx_framelength_pos_ < p_stream_config->rx_header_size_) return DS_ERR_CODE_ERR;    // ƒtƒŒ[ƒ€ƒTƒCƒY‚ªƒwƒbƒ_i‚Â‚Ü‚èŒÅ’è’lj‚ÉŠÜ‚Ü‚ê‚é‚±‚Æ‚Í‚ ‚è‚¦‚È‚¢‚Ì‚Å
+      if (p_stream_config->rx_header_size_ == 0) return DS_ERR_CODE_ERR;       // å¯å¤‰é•·ã‹ã¤ãƒ˜ãƒƒãƒ€ãªã—ã¯å¯¾å¿œã—ãªã„ï¼ˆå›ºå®šé•·ã®ã‚ˆã†ã«ã—ã¦å›é¿ã™ã‚‹ï¼è©³ç´°ã¯ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«å‚ç…§ï¼‰
+      if (p_stream_config->rx_framelength_pos_ < p_stream_config->rx_header_size_) return DS_ERR_CODE_ERR;    // ãƒ•ãƒ¬ãƒ¼ãƒ ã‚µã‚¤ã‚ºãŒãƒ˜ãƒƒãƒ€ï¼ˆã¤ã¾ã‚Šå›ºå®šå€¤ï¼‰ã«å«ã¾ã‚Œã‚‹ã“ã¨ã¯ã‚ã‚Šãˆãªã„ã®ã§
       if (!(p_stream_config->rx_framelength_type_size_ == 1 ||
             p_stream_config->rx_framelength_type_size_ == 2 ||
             p_stream_config->rx_framelength_type_size_ == 3 ||
-            p_stream_config->rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // Œ»İ‚Íuint8 to uint32‚Ì‚İ‘Î‰
+            p_stream_config->rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // ç¾åœ¨ã¯uint8 to uint32ã®ã¿å¯¾å¿œ
     }
   }
   else if (p_stream_config->rx_frame_size_ == 0)
   {
-    // ƒeƒŒƒ‚È‚µ
+    // ãƒ†ãƒ¬ãƒ¡ãªã—
   }
   else
   {
-    // ƒeƒŒƒƒgƒŠŒÅ’è’·
+    // ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªå›ºå®šé•·
     if (p_stream_config->rx_frame_size_ < (p_stream_config->rx_header_size_ + p_stream_config->rx_footer_size_)) return DS_ERR_CODE_ERR;
   }
 
   if (p_stream_config->is_strict_frame_search_)
   {
-    // ƒwƒbƒ_‚ª‚ ‚é‚±‚Æ‚ª‘O’ñ
+    // ãƒ˜ãƒƒãƒ€ãŒã‚ã‚‹ã“ã¨ãŒå‰æ
     if (p_stream_config->rx_header_size_ == 0) return DS_ERR_CODE_ERR;
   }
 
@@ -1366,7 +1366,7 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 
 
 // ###### DS_Config Getter/Setter ######
-// FIXME: HEW‚ÅWarning‚ªo‚Ä‚µ‚Ü‚¤igcc‚Å‚Í‚Å‚È‚¢j‚Ì‚ÅCƒLƒƒƒXƒg‚µ‚Ä‚¢‚éŠÖ”‚ª‚¢‚­‚Â‚©‚ ‚é
+// FIXME: HEWã§WarningãŒå‡ºã¦ã—ã¾ã†ï¼ˆgccã§ã¯ã§ãªã„ï¼‰ã®ã§ï¼Œã‚­ãƒ£ã‚¹ãƒˆã—ã¦ã„ã‚‹é–¢æ•°ãŒã„ãã¤ã‹ã‚ã‚‹
 const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
 {
   return &p_super->config.rec_status_;
@@ -1419,7 +1419,7 @@ DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_s
 }
 
 // ###### DS_StreamConfig Getter/Setter ######
-// FIXME: HEW‚ÅWarning‚ªo‚Ä‚µ‚Ü‚¤igcc‚Å‚Í‚Å‚È‚¢j‚Ì‚ÅCƒLƒƒƒXƒg‚µ‚Ä‚¢‚éŠÖ”‚ª‚¢‚­‚Â‚©‚ ‚é
+// FIXME: HEWã§WarningãŒå‡ºã¦ã—ã¾ã†ï¼ˆgccã§ã¯ã§ãªã„ï¼‰ã®ã§ï¼Œã‚­ãƒ£ã‚¹ãƒˆã—ã¦ã„ã‚‹é–¢æ•°ãŒã„ãã¤ã‹ã‚ã‚‹
 uint8_t DSSC_get_is_enable(const DS_StreamConfig* p_stream_config)
 {
   return (uint8_t)p_stream_config->is_enabled_;
@@ -1630,7 +1630,7 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 }
 
 
-// ###### Driver”Ä—pUtilŠÖ” ######
+// ###### Driveræ±ç”¨Utilé–¢æ•° ######
 
 CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
 {
@@ -1638,14 +1638,14 @@ CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
   {
   case DS_DRIVER_ERR_CODE_ILLEGAL_CONTEXT:
   case DS_DRIVER_ERR_CODE_UNKNOWN_ERR:
-    // ‘S‚Ä‚±‚ê‚Å‚¢‚¢‚Ì‚©‚ÍC—vŒŸ“¢
+    // å…¨ã¦ã“ã‚Œã§ã„ã„ã®ã‹ã¯ï¼Œè¦æ¤œè¨
     return CCP_EXEC_ILLEGAL_CONTEXT;
   case DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   case DS_DRIVER_ERR_CODE_ILLEGAL_LENGTH:
     return CCP_EXEC_ILLEGAL_LENGTH;
   default:
-    // ‚±‚±‚É—ˆ‚é‚Ì‚ÍˆÈ‰º
+    // ã“ã“ã«æ¥ã‚‹ã®ã¯ä»¥ä¸‹
     // DS_DRIVER_ERR_CODE_OK
     return CCP_EXEC_SUCCESS;
   }
@@ -1663,12 +1663,12 @@ CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code)
   case DS_CMD_ILLEGAL_LENGTH:
     return CCP_EXEC_ILLEGAL_LENGTH;
   default:
-    // ‚±‚±‚É—ˆ‚é‚Ì‚ÍˆÈ‰º‚Ì‚R‚Â
+    // ã“ã“ã«æ¥ã‚‹ã®ã¯ä»¥ä¸‹ã®ï¼“ã¤
     // DS_CMD_OK
     // DS_CMD_DRIVER_SUPER_ERR
     // DS_CMD_UNKNOWN_ERR
-    // ‰º‚Q‚Â‚ÌƒGƒ‰[‚ÍDriver‘¤‚Ì–â‘è‚ÅC‚»‚¿‚ç‚ÅƒGƒ‰[î•ñ‚ğ‚Â‚×‚«
-    // ‚±‚±‚Å‚Í SUCCESS‚ğ•Ô‚·
+    // ä¸‹ï¼’ã¤ã®ã‚¨ãƒ©ãƒ¼ã¯Driverå´ã®å•é¡Œã§ï¼Œãã¡ã‚‰ã§ã‚¨ãƒ©ãƒ¼æƒ…å ±ã‚’æŒã¤ã¹ã
+    // ã“ã“ã§ã¯ SUCCESSã‚’è¿”ã™
     return CCP_EXEC_SUCCESS;
   }
 }

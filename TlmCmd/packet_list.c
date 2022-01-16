@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief CTCP‚ÌƒŠƒXƒg‚Æ‚µ‚Ä‚Ìƒf[ƒ^\‘¢‚ğ’è‹`. •Ğ•ûŒüƒŠƒXƒg‚Æ‚µ‚ÄÀ‘•‚³‚ê‚Ä‚¢‚é
+ * @brief CTCPã®ãƒªã‚¹ãƒˆã¨ã—ã¦ã®ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã‚’å®šç¾©. ç‰‡æ–¹å‘ãƒªã‚¹ãƒˆã¨ã—ã¦å®Ÿè£…ã•ã‚Œã¦ã„ã‚‹
  */
 #include "packet_list.h"
 
@@ -11,14 +11,14 @@
 #include <src_user/Library/stdint.h>
 
 /**
- * @brief æ“ªƒm[ƒh‚ğ—‚Æ‚·
+ * @brief å…ˆé ­ãƒãƒ¼ãƒ‰ã‚’è½ã¨ã™
  * @param[in] pli: PacketList
  * @return void
  */
 static void PL_drop_head_(PacketList* pli);
 
 /**
- * @brief –¢g—pƒm[ƒh‚ğV‹K‚Éæ“¾
+ * @brief æœªä½¿ç”¨ãƒãƒ¼ãƒ‰ã‚’æ–°è¦ã«å–å¾—
  * @param[in] pli: PacketList
  * @return PL_Node*
  */
@@ -33,12 +33,12 @@ void PL_initialize(PL_Node* stock, size_t size, PacketList* pli)
   PL_clear_list(pli);
 }
 
-// private‚ÈŠeƒŠƒXƒg‚ğ˜AŒ‹ƒŠƒXƒgŒ`® or NULL‚Å‰Šú‰»‚·‚éB
+// privateãªå„ãƒªã‚¹ãƒˆã‚’é€£çµãƒªã‚¹ãƒˆå½¢å¼ or NULLã§åˆæœŸåŒ–ã™ã‚‹ã€‚
 void PL_clear_list(PacketList* pli)
 {
   int i;
 
-  // PL_node‚Ì”z—ñ‚ğ˜AŒ‹ƒŠƒXƒg‚Æ‚µ‚ÄÄ’è‹`
+  // PL_nodeã®é…åˆ—ã‚’é€£çµãƒªã‚¹ãƒˆã¨ã—ã¦å†å®šç¾©
   for (i = 0; i < pli->total_nodes_ - 1; ++i)
   {
     pli->stock_[i].next = &(pli->stock_[i + 1]);
@@ -46,7 +46,7 @@ void PL_clear_list(PacketList* pli)
 
   pli->stock_[pli->total_nodes_ - 1].next = NULL;
 
-  // Å‰‚Í‘Snode–³Œø‰»ó‘Ô
+  // æœ€åˆã¯å…¨nodeç„¡åŠ¹åŒ–çŠ¶æ…‹
   pli->active_nodes_ = 0;
   pli->inactive_list_head_ = pli->stock_;
   pli->active_list_head_ = NULL;
@@ -55,13 +55,13 @@ void PL_clear_list(PacketList* pli)
 
 uint32_t PL_count_executed_nodes(const PacketList* pli)
 {
-  // FIXME: HEW‚ÅWarning‚ªo‚Ä‚µ‚Ü‚¤igcc‚Å‚Í‚Å‚È‚¢j‚Ì‚ÅCƒLƒƒƒXƒg‚µ‚Ä‚¢‚é
+  // FIXME: HEWã§WarningãŒå‡ºã¦ã—ã¾ã†ï¼ˆgccã§ã¯ã§ãªã„ï¼‰ã®ã§ï¼Œã‚­ãƒ£ã‚¹ãƒˆã—ã¦ã„ã‚‹
   return (uint32_t)pli->executed_nodes_;
 }
 
 uint16_t PL_count_active_nodes(const PacketList* pli)
 {
-  // FIXME: HEW‚ÅWarning‚ªo‚Ä‚µ‚Ü‚¤igcc‚Å‚Í‚Å‚È‚¢j‚Ì‚ÅCƒLƒƒƒXƒg‚µ‚Ä‚¢‚é
+  // FIXME: HEWã§WarningãŒå‡ºã¦ã—ã¾ã†ï¼ˆgccã§ã¯ã§ãªã„ï¼‰ã®ã§ï¼Œã‚­ãƒ£ã‚¹ãƒˆã—ã¦ã„ã‚‹
   return (uint16_t)pli->active_nodes_;
 }
 
@@ -124,14 +124,14 @@ PL_ACK PL_push_back(PacketList* pli, const CTCP* packet)
 
   if (new_pl_node == NULL) return PL_LIST_FULL;
 
-  // VƒR[ƒh
-  // ‚±‚ÌƒR[ƒh‚¾‚ÆCpacket‚·‚×‚Ä‚Å‚Í‚È‚­•K—vÅ’áŒÀ‚Ì‚İ‚µ‚©ƒRƒs[‚µ‚È‚¢
+  // æ–°ã‚³ãƒ¼ãƒ‰
+  // ã“ã®ã‚³ãƒ¼ãƒ‰ã ã¨ï¼Œpacketã™ã¹ã¦ã§ã¯ãªãå¿…è¦æœ€ä½é™ã®ã¿ã—ã‹ã‚³ãƒ”ãƒ¼ã—ãªã„
   CTCP_copy_packet(&(new_pl_node->packet), packet);
 
-  // ‹ŒƒR[ƒh
-  // ‚½‚­‚³‚ñ“¯‚É push back ‚·‚é‚Æ’x‚¢
-  // ‘S—ÌˆæƒRƒs[‚·‚éD
-  // CTCP ‚ª packet ‚Æ‚¢‚¤ƒƒ“ƒo‚ğ‚Â‚±‚Æ‚ğ‰¼’è‚µ‚È‚­‚Ä—Ç‚¢
+  // æ—§ã‚³ãƒ¼ãƒ‰
+  // ãŸãã•ã‚“åŒæ™‚ã« push back ã™ã‚‹ã¨é…ã„
+  // å…¨é ˜åŸŸã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼
+  // CTCP ãŒ packet ã¨ã„ã†ãƒ¡ãƒ³ãƒã‚’æŒã¤ã“ã¨ã‚’ä»®å®šã—ãªãã¦è‰¯ã„
   // new_pl_node->packet = *packet;
 
   new_pl_node->next = NULL;
@@ -178,35 +178,35 @@ PL_ACK PL_insert_tl_cmd(PacketList* pli, const CTCP* packet, uint32_t now)
   cycle_t head, tail;
   cycle_t planed = CCP_get_ti(packet);
 
-  if (now > planed) return PL_TLC_PAST_TIME; // w’èÀsŠÔ‚ªŠù‚É‰ß‚¬‚Ä‚¢‚é
-  if (PL_is_full(pli)) return PL_LIST_FULL;  // “o˜^—]—T‚ª‚È‚¢
+  if (now > planed) return PL_TLC_PAST_TIME; // æŒ‡å®šå®Ÿè¡Œæ™‚é–“ãŒæ—¢ã«éãã¦ã„ã‚‹
+  if (PL_is_full(pli)) return PL_LIST_FULL;  // ç™»éŒ²ä½™è£•ãŒãªã„
 
-  // ‰½‚à“o˜^‚³‚ê‚Ä‚¢‚È‚¢
+  // ä½•ã‚‚ç™»éŒ²ã•ã‚Œã¦ã„ãªã„
   if (PL_is_empty(pli)) return PL_push_front(pli, packet);
 
-  // ‘¼ƒRƒ}ƒ“ƒh‚ª“o˜^‚³‚ê‚Ä‚¢‚é
+  // ä»–ã‚³ãƒãƒ³ãƒ‰ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹
   head = CCP_get_ti(&(PL_get_head(pli)->packet));
   tail = CCP_get_ti(&(PL_get_tail(pli)->packet));
 
-  if (tail < planed) // ‘¼‚Ì‚Ç‚ê‚æ‚è’x‚¢
+  if (tail < planed) // ä»–ã®ã©ã‚Œã‚ˆã‚Šé…ã„
   {
     return PL_push_back(pli, packet);
   }
-  else if (head > planed) // ‘¼‚Ì‚Ç‚ê‚æ‚è‘‚¢
+  else if (head > planed) // ä»–ã®ã©ã‚Œã‚ˆã‚Šæ—©ã„
   {
     return PL_push_front(pli, packet);
   }
-  else if (head == planed || tail == planed) // w’è‚ª“™‚µ‚¢
+  else if (head == planed || tail == planed) // æ™‚åˆ»æŒ‡å®šãŒç­‰ã—ã„
   {
     return PL_TLC_ALREADY_EXISTS;
   }
-  else // ‘¼ƒRƒ}ƒ“ƒh‚ÌŠÔ‚É‘}“ü‘€ì‚ª•K—v
+  else // ä»–ã‚³ãƒãƒ³ãƒ‰ã®é–“ã«æŒ¿å…¥æ“ä½œãŒå¿…è¦
   {
     int i;
     PL_Node* prev = (PL_Node*)PL_get_head(pli); // const_cast
     PL_Node* curr = prev->next;
 
-    // ‘}“üêŠ’Tõ
+    // æŒ¿å…¥å ´æ‰€æ¢ç´¢
     for (i = 1; i < pli->active_nodes_; ++i)
     {
       cycle_t curr_ti = CCP_get_ti(&(curr->packet));
@@ -216,12 +216,12 @@ PL_ACK PL_insert_tl_cmd(PacketList* pli, const CTCP* packet, uint32_t now)
         prev = curr;
         curr = prev->next;
       }
-      else if (curr_ti > planed) // ‘}“üêŠ”­Œ©
+      else if (curr_ti > planed) // æŒ¿å…¥å ´æ‰€ç™ºè¦‹
       {
         PL_insert_after(pli, prev, packet);
         break;
       }
-      else // Šù“o˜^ƒRƒ}ƒ“ƒh‚Æw’è‚ª“™‚µ‚¢
+      else // æ—¢ç™»éŒ²ã‚³ãƒãƒ³ãƒ‰ã¨æ™‚åˆ»æŒ‡å®šãŒç­‰ã—ã„
       {
         return PL_TLC_ALREADY_EXISTS;
       }
@@ -240,8 +240,8 @@ PL_ACK PL_insert_tl_cmd(PacketList* pli, const CTCP* packet, uint32_t now)
 PL_ACK PL_deploy_block_cmd(PacketList* pli, const bct_id_t block, uint32_t start_at)
 {
   int i, j;
-  int is_cleared = 0; // ƒŠƒXƒg‹­§ƒNƒŠƒA‚Ì‹L˜^—p•Ï”
-  uint32_t adj = 0; // ’²®‚Ì—İÏ—Ê•Û‘¶—p•Ï”
+  int is_cleared = 0; // ãƒªã‚¹ãƒˆå¼·åˆ¶ã‚¯ãƒªã‚¢ã®è¨˜éŒ²ç”¨å¤‰æ•°
+  uint32_t adj = 0; // æ™‚åˆ»èª¿æ•´ã®ç´¯ç©é‡ä¿å­˜ç”¨å¤‰æ•°
   uint8_t length;
 
   if (block >= BCT_MAX_BLOCKS) return PL_BC_INACTIVE_BLOCK;
@@ -249,43 +249,43 @@ PL_ACK PL_deploy_block_cmd(PacketList* pli, const bct_id_t block, uint32_t start
 
   if (!BCE_is_active(block)) return PL_BC_INACTIVE_BLOCK;
 
-  // ƒŠƒXƒg‚ÉƒuƒƒbƒN‘S‘Ì‚ğ“o˜^‚·‚é—]—T‚ª‚È‚¢ê‡
+  // ãƒªã‚¹ãƒˆã«ãƒ–ãƒ­ãƒƒã‚¯å…¨ä½“ã‚’ç™»éŒ²ã™ã‚‹ä½™è£•ãŒãªã„å ´åˆ
   if (PL_count_inactive_nodes(pli) < length)
   {
-    // ƒŠƒXƒg‚ğƒNƒŠƒA‚µ‹­§“I‚É‹ó‚«—Ìˆæ‚ğŠm•Û‚·‚éB
+    // ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢ã—å¼·åˆ¶çš„ã«ç©ºãé ˜åŸŸã‚’ç¢ºä¿ã™ã‚‹ã€‚
     PL_clear_list(pli);
     is_cleared = 1;
   }
 
   for (i = 0; i < length; ++i)
   {
-    static CTCP temp_; // ƒTƒCƒY‚ª‘å‚«‚¢‚½‚ßÃ“I—Ìˆæ‚ÉŠm•Û
+    static CTCP temp_; // ã‚µã‚¤ã‚ºãŒå¤§ãã„ãŸã‚é™çš„é ˜åŸŸã«ç¢ºä¿
     BCT_Pos pos;
     PL_ACK ack = PL_SUCCESS;
 
-    // ƒRƒ}ƒ“ƒh‚ğ“Ç‚İ‚¾‚µATLC‚Æ‚µ‚ÄÀs‚ğİ’èB
+    // ã‚³ãƒãƒ³ãƒ‰ã‚’èª­ã¿ã ã—ã€TLCã¨ã—ã¦å®Ÿè¡Œæ™‚åˆ»ã‚’è¨­å®šã€‚
     pos.block = block;
     pos.cmd = (uint8_t)i;
     BCT_load_cmd(&pos, &temp_);
     CCP_set_ti(&temp_, (cycle_t)(start_at + adj + CCP_get_ti(&temp_)));
-    CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // BLC -> TLC     // FIXME: TaskList‚àTL012‚à‚·‚×‚Ä CCP_EXEC_TYPE_TL0 ‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚ªC‚í‚©‚è‚É‚­‚­‚È‚¢H
+    CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // BLC -> TLC     // FIXME: TaskListã‚‚TL012ã‚‚ã™ã¹ã¦ CCP_EXEC_TYPE_TL0 ã«ãªã£ã¦ã—ã¾ã†ãŒï¼Œã‚ã‹ã‚Šã«ãããªã„ï¼Ÿ
 
     for (j = 0; j <= pli->active_nodes_; ++j)
     {
-      // ƒRƒ}ƒ“ƒh‚ğTLC‚É“o˜^‚ğ‚İ‚é
+      // ã‚³ãƒãƒ³ãƒ‰ã‚’TLCã«ç™»éŒ²ã‚’è©¦ã¿ã‚‹
       ack = PL_insert_tl_cmd(pli, &temp_, start_at);
       if (ack != PL_TLC_ALREADY_EXISTS) break;
 
-      // “¯ˆê‚ÅŠù‚É“o˜^‚³‚ê‚Ä‚¢‚½ê‡‚Í‚ğ‚¸‚ç‚µ‚ÄÄ“o˜^
+      // åŒä¸€æ™‚åˆ»ã§æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ãŸå ´åˆã¯æ™‚åˆ»ã‚’ãšã‚‰ã—ã¦å†ç™»éŒ²
       CCP_set_ti(&temp_, CCP_get_ti(&temp_) + 1);
-      ++adj; // —İÏ’²®ŠÔ‚ğXV‚·‚é
+      ++adj; // ç´¯ç©èª¿æ•´æ™‚é–“ã‚’æ›´æ–°ã™ã‚‹
     }
     if (ack != PL_SUCCESS) return ack;
   }
 
-  // ƒŠƒXƒg‚Ì‹­§ƒNƒŠƒA‚ğÀ{‚µ‚½ê‡B
+  // ãƒªã‚¹ãƒˆã®å¼·åˆ¶ã‚¯ãƒªã‚¢ã‚’å®Ÿæ–½ã—ãŸå ´åˆã€‚
   if (is_cleared == 1) return PL_BC_LIST_CLEARED;
-  // ’²®‚ğs‚Á‚½ê‡B
+  // æ™‚åˆ»èª¿æ•´ã‚’è¡Œã£ãŸå ´åˆã€‚
   if (adj != 0) return PL_BC_TIME_ADJUSTED;
 
   return PL_SUCCESS;
@@ -293,7 +293,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pli, const bct_id_t block, uint32_t start
 
 PL_ACK PL_check_tl_cmd(PacketList* pli, uint32_t time)
 {
-  if (!PL_is_empty(pli)) // ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ª‹ó‚Å‚È‚¢
+  if (!PL_is_empty(pli)) // ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆãŒç©ºã§ãªã„
   {
     const CTCP* packet = &pli->active_list_head_->packet;
     uint32_t planed = CCP_get_ti(packet);

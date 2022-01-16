@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief git revision‚ğƒR[ƒh‚É–„‚ß‚Ş
+ * @brief git revisionã‚’ã‚³ãƒ¼ãƒ‰ã«åŸ‹ã‚è¾¼ã‚€
  */
 
 #include "git_revision.h"

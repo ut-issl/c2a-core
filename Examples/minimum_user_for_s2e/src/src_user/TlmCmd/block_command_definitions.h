@@ -1,46 +1,46 @@
 /**
  * @file
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh’è‹`
- * @note   ‚±‚ÌƒR[ƒh‚Í©“®¶¬‚³‚ê‚Ä‚¢‚Ü‚·I
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰å®šç¾©
+ * @note   ã“ã®ã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ç”Ÿæˆã•ã‚Œã¦ã„ã¾ã™ï¼
  */
 #ifndef BLOCK_COMMAND_DEFINITIONS_H_
 #define BLOCK_COMMAND_DEFINITIONS_H_
 
-// “o˜^‚³‚ê‚éBlockCommandTable‚Ìblock”Ô†‚ğ‹K’è
+// ç™»éŒ²ã•ã‚Œã‚‹BlockCommandTableã®blockç•ªå·ã‚’è¦å®š
 typedef enum
 {
 
-  // Block Cmds for Mode Transition (ƒV[ƒPƒ“ƒXƒŠƒXƒg)
-  // ./src_user/Settings/Modes/Transitions/ ‚Å’è‹`
+  // Block Cmds for Mode Transition (ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ãƒªã‚¹ãƒˆ)
+  // ./src_user/Settings/Modes/Transitions/ ã§å®šç¾©
   BC_SL_START_UP_TO_INITIAL = 0,
   BC_SL_NOP  = 17,
 
-  // Block Cmds for TaskList (ƒ^ƒXƒNƒŠƒXƒg) : 286-300
-  // ./src_user/Settings/Modes/TaskLists/ ‚Å’è‹`
+  // Block Cmds for TaskList (ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆ) : 286-300
+  // ./src_user/Settings/Modes/TaskLists/ ã§å®šç¾©
   BC_TL_START_UP = 20,
   BC_TL_INITIAL = 21,
 
   // Block Cmds for Composition (App Rotator, Combinar)
-  // ./src_user/Settings/Modes/TaskLists/Composition/ ‚Å’è‹`
+  // ./src_user/Settings/Modes/TaskLists/Composition/ ã§å®šç¾©
   BC_AR_DEBUG_DISPLAY_INI = 40,
   BC_AR_DRIVERS_UPDATE_INI = 42,
   BC_AR_GS_RELATED_PROCESS = 44,
   BC_AC_TLM_CMD_HIRATE = 50,
 
-  // ==== ŠeŒn—Ìˆæ ====
-  // ./C2A/TlmCmd/NormalBlockCommandDefinition/‚Å’è‹`
-  // ƒAƒmƒ}ƒŠƒnƒ“ƒhƒ‰‚ÍBC_AH_‚È‚ÇCÚ“ª«‚ğ“KØ‚É‚Â‚¯‚é‚±‚ÆI
+  // ==== å„ç³»é ˜åŸŸ ====
+  // ./C2A/TlmCmd/NormalBlockCommandDefinition/ã§å®šç¾©
+  // ã‚¢ãƒãƒãƒªãƒãƒ³ãƒ‰ãƒ©ã¯BC_AH_ãªã©ï¼Œæ¥é ­è¾ã‚’é©åˆ‡ã«ã¤ã‘ã‚‹ã“ã¨ï¼
 
   // CDH:60-79
   BC_HK_CYCLIC_TLM = 60,
-  BC_RESERVED_FOR_HK = 77,    // EM“d‹CŒ±‚Å‚ÌƒRƒ}ƒ“ƒhƒtƒ@ƒCƒ‹‚Æ‚ÌƒoƒbƒeƒBƒ“ƒO‚ğ–h‚®
+  BC_RESERVED_FOR_HK = 77,    // EMé›»æ°—è©¦é¨“ã§ã®ã‚³ãƒãƒ³ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ã¨ã®ãƒãƒƒãƒ†ã‚£ãƒ³ã‚°ã‚’é˜²ã
 
   // COMM:90-99
 
-  // ==== ’nã‚©‚çup‚·‚ég‚Ì‚İh—Ìˆæ ====
-  // C2A‚Å‚Íg—p‚µ‚È‚¢
+  // ==== åœ°ä¸Šã‹ã‚‰upã™ã‚‹â€œã®ã¿â€é ˜åŸŸ ====
+  // C2Aã§ã¯ä½¿ç”¨ã—ãªã„
 
-  // ==== ’Ç‰Á—Ìˆæ ====
+  // ==== è¿½åŠ é ˜åŸŸ ====
 
   // Telemetry Manager
   BC_TLM_MGR0 = 350,
@@ -59,7 +59,7 @@ typedef enum
 
   // BCT MAX : 382
 
-  BC_ID_MAX    // BCT ©‘Ì‚ÌƒTƒCƒY‚Í BCT_MAX_BLOCKS ‚Å‹K’è
+  BC_ID_MAX    // BCT è‡ªä½“ã®ã‚µã‚¤ã‚ºã¯ BCT_MAX_BLOCKS ã§è¦å®š
 } BC_DEFAULT_ID;
 
 void BC_load_defaults(void);

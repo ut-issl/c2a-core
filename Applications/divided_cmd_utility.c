@@ -1,15 +1,15 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ƒRƒ}ƒ“ƒh•ªŠ„‚ğƒTƒ|[ƒg‚·‚éUtil
+ * @brief ã‚³ãƒãƒ³ãƒ‰åˆ†å‰²ã‚’ã‚µãƒãƒ¼ãƒˆã™ã‚‹Util
  * @note  HOW TO USE
- *        1. ŠeCmd‚É‚Ä‰‚ß‚É DCU_check_in ‚ğÀs‚µCŒ»İ‚ÌÀsó‹µ‚ğæ“¾‚·‚é
- *        2. Às‚ªI—¹‚µ Ä“xÄ‹A‚³‚¹‚é•K—v‚ª‚ ‚éê‡‚Í DCU_register_next ‚Å“o˜^‚·‚é
- *        3. ‚·‚×‚Ä‚Ìˆ—‚ªI—¹‚µ‚½ê‡‚Í DCU_report_finish ‚ğÀs‚·‚é
- *        4. Às’†‚ÌƒGƒ‰[‚Í DCU_report_err ‚Å•ñ‚·‚éD‚·‚é‚Æ’†’f‚³‚ê‚é
- *        5. ’†’f‚µ‚½‚¢‚Æ‚«‚Í DCU_abort_cmd ‚ğÀs‚·‚é
- *        6. ’†’f‚³‚ê‚½ó‘Ô‚ğƒŠƒZƒbƒg‚·‚éê‡‚Í DCU_donw_abort_flag ‚ğÀs‚·‚é
- * @note  telemetry_manager ‚È‚Ç‚Åg‚Á‚Ä‚¢‚é‚Ì‚ÅC‚»‚ê‚ğQÆ‚Ì‚±‚Æ
+ *        1. å„Cmdã«ã¦åˆã‚ã« DCU_check_in ã‚’å®Ÿè¡Œã—ï¼Œç¾åœ¨ã®å®Ÿè¡ŒçŠ¶æ³ã‚’å–å¾—ã™ã‚‹
+ *        2. å®Ÿè¡ŒãŒçµ‚äº†ã— å†åº¦å†å¸°ã•ã›ã‚‹å¿…è¦ãŒã‚ã‚‹å ´åˆã¯ DCU_register_next ã§ç™»éŒ²ã™ã‚‹
+ *        3. ã™ã¹ã¦ã®å‡¦ç†ãŒçµ‚äº†ã—ãŸå ´åˆã¯ DCU_report_finish ã‚’å®Ÿè¡Œã™ã‚‹
+ *        4. å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã¯ DCU_report_err ã§å ±å‘Šã™ã‚‹ï¼ã™ã‚‹ã¨ä¸­æ–­ã•ã‚Œã‚‹
+ *        5. ä¸­æ–­ã—ãŸã„ã¨ãã¯ DCU_abort_cmd ã‚’å®Ÿè¡Œã™ã‚‹
+ *        6. ä¸­æ–­ã•ã‚ŒãŸçŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹å ´åˆã¯ DCU_donw_abort_flag ã‚’å®Ÿè¡Œã™ã‚‹
+ * @note  telemetry_manager ãªã©ã§ä½¿ã£ã¦ã„ã‚‹ã®ã§ï¼Œãã‚Œã‚’å‚ç…§ã®ã“ã¨
  */
 #include "divided_cmd_utility.h"
 #include "../TlmCmd/packet_handler.h"
@@ -18,50 +18,50 @@
 #include "../System/EventManager/event_logger.h"
 
 /**
- * @brief  App‰Šú‰»ŠÖ”
+ * @brief  AppåˆæœŸåŒ–é–¢æ•°
  * @param  void
  * @return void
  */
 static void DCU_init_(void);
 
 /**
- * @brief  ƒƒOƒNƒŠƒA
+ * @brief  ãƒ­ã‚°ã‚¯ãƒªã‚¢
  * @param  void
  * @return void
  */
 static void DCU_clear_log_(void);
 
 /**
- * @brief  ƒƒOƒNƒŠƒAi‚P—v‘fj
- * @param[in]  log_idx:  Á‚·ƒƒO
- * @param[in]  cmd_code: İ’è‚·‚éƒRƒ}ƒ“ƒhID
+ * @brief  ãƒ­ã‚°ã‚¯ãƒªã‚¢ï¼ˆï¼‘è¦ç´ ï¼‰
+ * @param[in]  log_idx:  æ¶ˆã™ãƒ­ã‚°
+ * @param[in]  cmd_code: è¨­å®šã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ID
  * @return void
  */
 static void DCU_clear_log_element_(uint8_t log_idx, CMD_CODE cmd_code);
 
 /**
- * @brief  ŠY“–ƒRƒ}ƒ“ƒh‚ÌƒƒO‚ğŒŸõ‚µæ“¾‚·‚é
- * @param[in]  cmd_code: ’Tõ‚·‚éƒRƒ}ƒ“ƒh
- * @param[out] log_idx:  exec_logs ‚É‚¨‚¯‚éƒƒO‚ÌêŠ
- * @param[out] sort_key: exec_log_order ‚É‚¨‚¯‚éƒƒO‚ÌêŠ
- * @retval DCU_LOG_ACK_OK:        Œ©‚Â‚©‚Á‚½
- * @retval DCU_LOG_ACK_NOT_FOUND: Œ©‚Â‚©‚ç‚¸
+ * @brief  è©²å½“ã‚³ãƒãƒ³ãƒ‰ã®ãƒ­ã‚°ã‚’æ¤œç´¢ã—å–å¾—ã™ã‚‹
+ * @param[in]  cmd_code: æ¢ç´¢ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰
+ * @param[out] log_idx:  exec_logs ã«ãŠã‘ã‚‹ãƒ­ã‚°ã®å ´æ‰€
+ * @param[out] sort_key: exec_log_order ã«ãŠã‘ã‚‹ãƒ­ã‚°ã®å ´æ‰€
+ * @retval DCU_LOG_ACK_OK:        è¦‹ã¤ã‹ã£ãŸ
+ * @retval DCU_LOG_ACK_NOT_FOUND: è¦‹ã¤ã‹ã‚‰ãš
  */
 static DCU_LOG_ACK DCU_search_log_(CMD_CODE cmd_code, uint8_t* log_idx, uint8_t* sort_key);
 
 /**
- * @brief  ŠY“–ƒRƒ}ƒ“ƒh‚ÌƒƒO‚ğCƒƒO‚Ìæ“ª‚Éo‚·
- * @note   ƒƒO‚ª‚È‚¯‚ê‚Î insert ‚·‚é
- * @param[in]  cmd_code: æ“ª‚Éo‚·ƒRƒ}ƒ“ƒh
+ * @brief  è©²å½“ã‚³ãƒãƒ³ãƒ‰ã®ãƒ­ã‚°ã‚’ï¼Œãƒ­ã‚°ã®å…ˆé ­ã«å‡ºã™
+ * @note   ãƒ­ã‚°ãŒãªã‘ã‚Œã° insert ã™ã‚‹
+ * @param[in]  cmd_code: å…ˆé ­ã«å‡ºã™ã‚³ãƒãƒ³ãƒ‰
  * @return void
  */
 static void DCU_move_to_front_in_log_(CMD_CODE cmd_code);
 
 /**
- * @brief  æ“ª‚ÉŠY“–ƒRƒ}ƒ“ƒh‚ÌƒƒO‚ğ‚Â‚­‚é
- * @note   Å‚àŒÃ‚¢ƒƒO‚ª”jŠü‚³‚ê‚é‚±‚Æ‚É’ˆÓ
- * @note   ‚·‚Å‚ÉƒƒO‚ª‚ ‚Á‚½ê‡‚àƒ`ƒFƒbƒN‚¹‚¸‚É insert ‚·‚éD‚·‚Å‚Éƒ`ƒFƒbƒN‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚·‚éIII
- * @param[in]  cmd_code: æ“ª‚Éì‚éƒRƒ}ƒ“ƒh
+ * @brief  å…ˆé ­ã«è©²å½“ã‚³ãƒãƒ³ãƒ‰ã®ãƒ­ã‚°ã‚’ã¤ãã‚‹
+ * @note   æœ€ã‚‚å¤ã„ãƒ­ã‚°ãŒç ´æ£„ã•ã‚Œã‚‹ã“ã¨ã«æ³¨æ„
+ * @note   ã™ã§ã«ãƒ­ã‚°ãŒã‚ã£ãŸå ´åˆã‚‚ãƒã‚§ãƒƒã‚¯ã›ãšã« insert ã™ã‚‹ï¼ã™ã§ã«ãƒã‚§ãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’å‰æã¨ã™ã‚‹ï¼ï¼ï¼
+ * @param[in]  cmd_code: å…ˆé ­ã«ä½œã‚‹ã‚³ãƒãƒ³ãƒ‰
  * @return void
  */
 static void DCU_create_log_on_front_(CMD_CODE cmd_code);
@@ -136,7 +136,7 @@ static void DCU_move_to_front_in_log_(CMD_CODE cmd_code)
 
   if (log_ret == DCU_LOG_ACK_NOT_FOUND)
   {
-    // ƒƒO‚ª‚È‚¢‚Ì‚Åì‚é
+    // ãƒ­ã‚°ãŒãªã„ã®ã§ä½œã‚‹
     DCU_create_log_on_front_(cmd_code);
     return;
   }
@@ -154,7 +154,7 @@ static void DCU_create_log_on_front_(CMD_CODE cmd_code)
   uint8_t i;
   uint8_t idx;
 
-  // Å‚àŒÃ‚¢ƒƒO‚ğæ“¾
+  // æœ€ã‚‚å¤ã„ãƒ­ã‚°ã‚’å–å¾—
   idx = divided_cmd_utility_.exec_log_order[DCU_LOG_MAX - 1];
   if (divided_cmd_utility_.exec_logs[idx].status == DCU_STATUS_PROGRESS)
   {
@@ -180,7 +180,7 @@ DCU_STATUS DCU_check_in(CMD_CODE cmd_code, uint16_t* exec_counter)
   DCU_STATUS status;
 
   DCU_move_to_front_in_log_(cmd_code);
-  idx = divided_cmd_utility_.exec_log_order[0];  // ©g‚ÌƒƒOidxC‚Â‚Ü‚èÅ‚àV‚µ‚¢ƒƒOidx‚ğE‚¤
+  idx = divided_cmd_utility_.exec_log_order[0];  // è‡ªèº«ã®ãƒ­ã‚°idxï¼Œã¤ã¾ã‚Šæœ€ã‚‚æ–°ã—ã„ãƒ­ã‚°idxã‚’æ‹¾ã†
   status = divided_cmd_utility_.exec_logs[idx].status;
 
   if (status == DCU_STATUS_FINISHED)
@@ -193,7 +193,7 @@ DCU_STATUS DCU_check_in(CMD_CODE cmd_code, uint16_t* exec_counter)
   }
   else
   {
-    // ‚È‚É‚à‚µ‚È‚¢
+    // ãªã«ã‚‚ã—ãªã„
   }
 
   divided_cmd_utility_.exec_logs[idx].last_exec_time = TMGR_get_master_clock();
@@ -286,7 +286,7 @@ DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec
 
 CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet)
 {
-  // CMD_CODE ‚Í u16 ‚Æ‘z’è‚·‚é
+  // CMD_CODE ã¯ u16 ã¨æƒ³å®šã™ã‚‹
   CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_abort_cmd(target_cmd);
@@ -297,7 +297,7 @@ CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet)
 
 CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CTCP* packet)
 {
-  // CMD_CODE ‚Í u16 ‚Æ‘z’è‚·‚é
+  // CMD_CODE ã¯ u16 ã¨æƒ³å®šã™ã‚‹
   CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_donw_abort_flag(target_cmd);

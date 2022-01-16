@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  DCU の CoreApp パラメタのオーバーライド用ヘッダー
+ * @brief  DCU 縺ｮ CoreApp 繝代Λ繝｡繧ｿ縺ｮ繧ｪ繝ｼ繝舌�ｼ繝ｩ繧､繝臥畑繝倥ャ繝繝ｼ
  */
 #ifndef DIVIDED_CMD_UTILITY_PARAMS_H_
 #define DIVIDED_CMD_UTILITY_PARAMS_H_

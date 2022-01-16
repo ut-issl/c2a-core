@@ -1,7 +1,7 @@
 /**
  * @file
- * @brief  ƒeƒŒƒƒgƒŠ’è‹`
- * @note   ‚±‚ÌƒR[ƒh‚ÍŽ©“®¶¬‚³‚ê‚Ä‚¢‚Ü‚·I
+ * @brief  ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªå®šç¾©
+ * @note   ã“ã®ã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ç”Ÿæˆã•ã‚Œã¦ã„ã¾ã™ï¼
  */
 #ifndef TELEMETRY_DEFINITIONS_H_
 #define TELEMETRY_DEFINITIONS_H_

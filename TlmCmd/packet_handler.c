@@ -35,8 +35,8 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
                             const CTCP* packet,
                             cycle_t now);
 /**
- * @brief UTL_cmd ‚ð TL_cmd ‚É•ÏŠ·‚µ‚Ä tl_cmd_list ‚É’Ç‰Á‚·‚é
- * @note TODOFconst cast ‚Å‚à‚¢‚¢‚©ŒŸ“¢‚·‚é
+ * @brief UTL_cmd ã‚’ TL_cmd ã«å¤‰æ›ã—ã¦ tl_cmd_list ã«è¿½åŠ ã™ã‚‹
+ * @note TODOï¼šconst cast ã§ã‚‚ã„ã„ã‹æ¤œè¨Žã™ã‚‹
  * @param[in] packet
  * @return PH_ACK
  */
@@ -61,9 +61,9 @@ void PH_init(void)
   PH_user_init();
 }
 
-// ƒpƒPƒbƒg‰ðÍŠÖ”
-// GSTOS‚©‚ç‚ÌƒpƒPƒbƒgˆÈŠO‚à‚·‚×‚Ä‚±‚±‚Åˆ—‚³‚ê‚é
-// Cmd_GENERATE_TLM‚Æ‚©‚àD
+// ãƒ‘ã‚±ãƒƒãƒˆè§£æžé–¢æ•°
+// GSTOSã‹ã‚‰ã®ãƒ‘ã‚±ãƒƒãƒˆä»¥å¤–ã‚‚ã™ã¹ã¦ã“ã“ã§å‡¦ç†ã•ã‚Œã‚‹
+// Cmd_GENERATE_TLMã¨ã‹ã‚‚ï¼Ž
 PH_ACK PH_analyze_packet(const CTCP* packet)
 {
   switch (CTCP_get_tc_dsc(packet))
@@ -83,9 +83,9 @@ PH_ACK PH_analyze_packet(const CTCP* packet)
 
 static PH_ACK PH_analyze_cmd_(const CTCP* packet)
 {
-  // ƒ†[ƒU[’è‹`•”
-  // Šî–{“I‚É‚ÍCÚ‘±‚³‚ê‚Ä‚¢‚éC2A‚ð“‹Ú‚µ‚½ƒ{[ƒh‚É
-  // ‚±‚Ì’iŠKiƒLƒ…[ƒCƒ“ƒO‚³‚êCŽž’²®‚³‚êC PH_user_cmd_router ‚ÅŽÀs‚³‚ê‚é‚Ì‚Å‚Í‚È‚­C‚±‚Ì’iŠKj‚Å“]‘—‚µ‚½‚¢‚Æ‚«‚ÉŽg‚¤
+  // ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©éƒ¨
+  // åŸºæœ¬çš„ã«ã¯ï¼ŒæŽ¥ç¶šã•ã‚Œã¦ã„ã‚‹C2Aã‚’æ­è¼‰ã—ãŸãƒœãƒ¼ãƒ‰ã«
+  // ã“ã®æ®µéšŽï¼ˆã‚­ãƒ¥ãƒ¼ã‚¤ãƒ³ã‚°ã•ã‚Œï¼Œæ™‚åˆ»èª¿æ•´ã•ã‚Œï¼Œ PH_user_cmd_router ã§å®Ÿè¡Œã•ã‚Œã‚‹ã®ã§ã¯ãªãï¼Œã“ã®æ®µéšŽï¼‰ã§è»¢é€ã—ãŸã„ã¨ãã«ä½¿ã†
   PH_ACK ack = PH_user_analyze_cmd(packet);
   if (ack != PH_UNKNOWN)
   {
@@ -149,7 +149,7 @@ static PH_ACK PH_analyze_tlm_(const CTCP* packet)
   CTP_DEST_FLAG flag = CTP_get_dest_flag(packet);
 
   // Housekeeping Telemetry
-  if (flag & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm ‚Ìƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚Ä‚àCMS_TLM‚Æ‚µ‚Äˆ—‚·‚é•ûj‚É‚µ‚½
+  if (flag & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm ã®ãƒ•ãƒ©ã‚°ãŒç«‹ã£ã¦ã„ã¦ã‚‚ï¼ŒMS_TLMã¨ã—ã¦å‡¦ç†ã™ã‚‹æ–¹é‡ã«ã—ãŸ
 
   // Mission Telemetry
   if (flag & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
@@ -160,7 +160,7 @@ static PH_ACK PH_analyze_tlm_(const CTCP* packet)
   // Replay Telemetry
   if (flag & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
 
-  // [TODO] —vŒŸ“¢:ŠeQueue–ˆ‚Ì“o˜^ƒGƒ‰[”»’è‚Í–¢ŽÀ‘•
+  // [TODO] è¦æ¤œè¨Ž:å„Queueæ¯Žã®ç™»éŒ²ã‚¨ãƒ©ãƒ¼åˆ¤å®šã¯æœªå®Ÿè£…
   return PH_SUCCESS;
 }
 
@@ -168,19 +168,19 @@ CCP_EXEC_STS PH_dispatch_command(const CTCP* packet)
 {
   if (CTCP_get_tc_dsc(packet) != CTCP_TC_DSC_CMD)
   {
-    // CMDˆÈŠO‚ÌƒpƒPƒbƒg‚ª—ˆ‚½‚çˆÙí”»’èB
+    // CMDä»¥å¤–ã®ãƒ‘ã‚±ãƒƒãƒˆãŒæ¥ãŸã‚‰ç•°å¸¸åˆ¤å®šã€‚
     return CCP_EXEC_PACKET_FMT_ERR;
   }
 
   if (CCP_get_dest_id(packet) == CTCP_MY_DST_ID)
   {
-    // Ž©•ªˆ¶‚Ä‚ÌƒRƒ}ƒ“ƒh‚Ìê‡‚Í‘Î‰žˆ—‚ðŒÄ‚Ño‚µB
+    // è‡ªåˆ†å®›ã¦ã®ã‚³ãƒžãƒ³ãƒ‰ã®å ´åˆã¯å¯¾å¿œå‡¦ç†ã‚’å‘¼ã³å‡ºã—ã€‚
     return CA_execute_cmd(packet);
   }
   else
   {
-    // •Ê‹@Šíˆ¶ƒRƒ}ƒ“ƒh‚Ìê‡‚ÍƒpƒPƒbƒg•ª”zˆ—‚Ö
-    return PH_user_cmd_router(packet);              // “–‰Ccore‚Écmd_router_‚ª‘¶Ý‚µ‚½‚ªCcore‚É‚ ‚Á‚Ä‚àˆÓ–¡‚ª‚È‚¢‚Ì‚Åuser‚Ì‚Ý‚É‚µ‚½
+    // åˆ¥æ©Ÿå™¨å®›ã‚³ãƒžãƒ³ãƒ‰ã®å ´åˆã¯ãƒ‘ã‚±ãƒƒãƒˆåˆ†é…å‡¦ç†ã¸
+    return PH_user_cmd_router(packet);              // å½“åˆï¼Œcoreã«cmd_router_ãŒå­˜åœ¨ã—ãŸãŒï¼Œcoreã«ã‚ã£ã¦ã‚‚æ„å‘³ãŒãªã„ã®ã§userã®ã¿ã«ã—ãŸ
   }
 }
 
@@ -229,14 +229,14 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
 
 static PH_ACK PH_add_utl_cmd_(const CTCP* packet)
 {
-  static CTCP temp_; // ƒTƒCƒY‚ª‘å‚«‚¢‚½‚ßÃ“I—Ìˆæ‚ÉŠm•Û
+  static CTCP temp_; // ã‚µã‚¤ã‚ºãŒå¤§ãã„ãŸã‚é™çš„é ˜åŸŸã«ç¢ºä¿
 
-  // utl_unixtime : time_manager.h ‚Ì utl_unixtime_epoch_ ‚ðŽQÆ
-  // UTL_cmd ‚Å‚ÍƒpƒPƒbƒgƒwƒbƒ_[‚Ì ti ‚Ì•”•ª‚É utl_unixtime ‚ªŠi”[‚³‚ê‚Ä‚¢‚é
+  // utl_unixtime : time_manager.h ã® utl_unixtime_epoch_ ã‚’å‚ç…§
+  // UTL_cmd ã§ã¯ãƒ‘ã‚±ãƒƒãƒˆãƒ˜ãƒƒãƒ€ãƒ¼ã® ti ã®éƒ¨åˆ†ã« utl_unixtime ãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹
   cycle_t utl_unixtime = CCP_get_ti(packet);
   cycle_t ti = TMGR_get_ti_from_utl_unixtime(utl_unixtime);
 
-  // TL_cmd ‚É•ÏŠ·‚µ‚Ä tl_cmd_list ‚É’Ç‰Á‚·‚é
+  // TL_cmd ã«å¤‰æ›ã—ã¦ tl_cmd_list ã«è¿½åŠ ã™ã‚‹
   CTCP_copy_packet(&temp_, packet);
   CCP_set_ti(&temp_, ti);
   CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0

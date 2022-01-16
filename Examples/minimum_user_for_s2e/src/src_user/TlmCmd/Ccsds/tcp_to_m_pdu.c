@@ -1,21 +1,21 @@
 #pragma section REPRO
 /**
  * @file
- * @brief PacketList ‚©‚ç TCPacket ‚ğæ‚Á‚Ä‚«‚Ä‚»‚ê‚ğ‘—M‰Â”\‚È M_PDU ‚Ö‚Æ•ÏŠ·‚·‚é
+ * @brief PacketList ã‹ã‚‰ TCPacket ã‚’å–ã£ã¦ãã¦ãã‚Œã‚’é€ä¿¡å¯èƒ½ãª M_PDU ã¸ã¨å¤‰æ›ã™ã‚‹
  */
 
 #include "tcp_to_m_pdu.h"
 
 void T2M_initialize(TcpToMPdu* tcp_to_m_pdu)
 {
-  // TC Packet Read Pointer‚Ì’l‚ğ‰Šú‰»
+  // TC Packet Read Pointerã®å€¤ã‚’åˆæœŸåŒ–
   tcp_to_m_pdu->tcp_rp = 0;
   tcp_to_m_pdu->m_pdu_wp = 0;
   tcp_to_m_pdu->fhp_valid = 0;
-  // ‹­§‘—o‘Ò‚¿ŠÔ‚Ì‰Šú’l‚Í10•b
-  // 32kbps‚È‚ç8VCDU/sec‚Ì‘—M”\—Í
+  // å¼·åˆ¶é€å‡ºå¾…ã¡æ™‚é–“ã®åˆæœŸå€¤ã¯10ç§’
+  // 32kbpsãªã‚‰8VCDU/secã®é€ä¿¡èƒ½åŠ›
   tcp_to_m_pdu->flush_interval = OBCT_sec2cycle(10);
-  // ÅIXV‚ÍŒ»İ‚Éİ’è
+  // æœ€çµ‚æ›´æ–°æ™‚åˆ»ã¯ç¾åœ¨æ™‚åˆ»ã«è¨­å®š
   tcp_to_m_pdu->last_updated = TMGR_get_master_total_cycle();
 
   return;
@@ -23,7 +23,7 @@ void T2M_initialize(TcpToMPdu* tcp_to_m_pdu)
 
 T2M_ACK T2M_form_m_pdu(TcpToMPdu* tcp_to_m_pdu, PacketList* pl, M_PDU* m_pdu)
 {
-  // M_PDU‚ªŠ®¬‚·‚é or TC Packet‚ª‚È‚­‚È‚é‚Ü‚ÅÀ{
+  // M_PDUãŒå®Œæˆã™ã‚‹ or TC PacketãŒãªããªã‚‹ã¾ã§å®Ÿæ–½
   while (tcp_to_m_pdu->m_pdu_wp != M_PDU_DATA_SIZE)
   {
     const TCP* packet;
@@ -31,94 +31,94 @@ T2M_ACK T2M_form_m_pdu(TcpToMPdu* tcp_to_m_pdu, PacketList* pl, M_PDU* m_pdu)
 
     if (PL_is_empty(pl))
     {
-      // ƒeƒŒƒƒgƒŠQueue‚É‘—o‚·‚×‚«ƒpƒPƒbƒg‚ª‚È‚¢ê‡
-      // ÅIXV‚©‚ç‚ÌŒo‰ßŠÔ‚ğZo
+      // ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªQueueã«é€å‡ºã™ã¹ããƒ‘ã‚±ãƒƒãƒˆãŒãªã„å ´åˆ
+      // æœ€çµ‚æ›´æ–°æ™‚åˆ»ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’ç®—å‡º
       cycle_t delta = TMGR_get_master_total_cycle() - tcp_to_m_pdu->last_updated;
 
       if (tcp_to_m_pdu->m_pdu_wp == 0)
       {
-        // M_PDU‚ÌWrite Pointer‚ª0‚Å‘—oƒf[ƒ^‚ª‚È‚¢ê‡
-        // ‘—oƒf[ƒ^‚È‚µ‚Æ‚µ‚Äˆ—‘Å‚¿Ø‚è
+        // M_PDUã®Write PointerãŒ0ã§é€å‡ºãƒ‡ãƒ¼ã‚¿ãŒãªã„å ´åˆ
+        // é€å‡ºãƒ‡ãƒ¼ã‚¿ãªã—ã¨ã—ã¦å‡¦ç†æ‰“ã¡åˆ‡ã‚Š
         return T2M_NO_DATA_TO_SEND;
       }
 
       if (delta < tcp_to_m_pdu->flush_interval)
       {
-        // Œo‰ßŠÔ‚ª‹­§‘—oŠÔŠu‚É’B‚µ‚Ä‚¢‚È‚¢ê‡
-        // ˆ—‚ğ‘Å‚¿Ø‚èAM_PDU–¢Š®¬‚Æ‚µ‚Ä0‚ğ•Ô‚·
+        // çµŒéæ™‚é–“ãŒå¼·åˆ¶é€å‡ºé–“éš”ã«é”ã—ã¦ã„ãªã„å ´åˆ
+        // å‡¦ç†ã‚’æ‰“ã¡åˆ‡ã‚Šã€M_PDUæœªå®Œæˆã¨ã—ã¦0ã‚’è¿”ã™
         return T2M_INVALID_M_PDU;
       }
       else
       {
-        // ‹­§‘—o‚Ì‚½‚ß‚É–„‚ß‚é‚×‚«ƒf[ƒ^—Ê‚ğŒvZ‚µA
-        // Fill Packet‚ğ¶¬AQueue‚É’Ç‰ÁB
+        // å¼·åˆ¶é€å‡ºã®ãŸã‚ã«åŸ‹ã‚ã‚‹ã¹ããƒ‡ãƒ¼ã‚¿é‡ã‚’è¨ˆç®—ã—ã€
+        // Fill Packetã‚’ç”Ÿæˆã€Queueã«è¿½åŠ ã€‚
         //
-        // M_PDU‚Ìc‚è—Ìˆæ‚ªFill Packet‚Ìƒwƒbƒ_’·ˆÈ‰º‚Ìê‡A
-        // ƒ†[ƒUƒf[ƒ^’·1‚ÌFill Packet‚ª¶¬‚³‚ê‚éB
-        // ‚±‚Ìê‡A¶¬‚³‚ê‚½Fill Packet‚ÍŸM_PDU‚É‚Ü‚½‚ª‚éB
-        // ‚±‚Ìó‘Ô‚Å’Ç‰Á‚ÌƒeƒŒƒƒgƒŠ‚ª¶¬‚³‚ê‚È‚¢ê‡‚ÍAFill
-        // Packet‚Ì‚İ‚Å\¬‚³‚ê‚½M_PDU‚ªˆê“x‘—o‚³‚ê‚é‚±‚Æ‚É‚È‚éB
-        static TCP fill_; // ƒTƒCƒY‚ª‘å‚«‚¢‚½‚ßÃ“IŠm•Û(ƒXƒ^ƒbƒN•ÛŒì)
+        // M_PDUã®æ®‹ã‚Šé ˜åŸŸãŒFill Packetã®ãƒ˜ãƒƒãƒ€é•·ä»¥ä¸‹ã®å ´åˆã€
+        // ãƒ¦ãƒ¼ã‚¶ãƒ‡ãƒ¼ã‚¿é•·1ã®Fill PacketãŒç”Ÿæˆã•ã‚Œã‚‹ã€‚
+        // ã“ã®å ´åˆã€ç”Ÿæˆã•ã‚ŒãŸFill Packetã¯æ¬¡M_PDUã«ã¾ãŸãŒã‚‹ã€‚
+        // ã“ã®çŠ¶æ…‹ã§è¿½åŠ ã®ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãŒç”Ÿæˆã•ã‚Œãªã„å ´åˆã¯ã€Fill
+        // Packetã®ã¿ã§æ§‹æˆã•ã‚ŒãŸM_PDUãŒä¸€åº¦é€å‡ºã•ã‚Œã‚‹ã“ã¨ã«ãªã‚‹ã€‚
+        static TCP fill_; // ã‚µã‚¤ã‚ºãŒå¤§ãã„ãŸã‚é™çš„ç¢ºä¿(ã‚¹ã‚¿ãƒƒã‚¯ä¿è­·)
         size_t fill_size = M_PDU_DATA_SIZE - tcp_to_m_pdu->m_pdu_wp;
         TCP_TLM_setup_fill_packet(&fill_, (uint16_t)fill_size);
         PL_push_back(pl, &fill_);
       }
     }
 
-    // Queueæ“ª‚ÌTC Packet‚ğæ“¾
-    // —LŒøƒpƒPƒbƒg‚Ü‚½‚ÍFillƒpƒPƒbƒg‚ª•K‚¸“ü‚Á‚Ä‚¢‚éB
+    // Queueå…ˆé ­ã®TC Packetã‚’å–å¾—
+    // æœ‰åŠ¹ãƒ‘ã‚±ãƒƒãƒˆã¾ãŸã¯Fillãƒ‘ã‚±ãƒƒãƒˆãŒå¿…ãšå…¥ã£ã¦ã„ã‚‹ã€‚
     packet = &(PL_get_head(pl)->packet);
 
-    // ‘‚«‚Şƒf[ƒ^’·‚ğŒvZ
+    // æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿é•·ã‚’è¨ˆç®—
     tcp_len = TCP_TLM_get_packet_len(packet);
     tcp_left = tcp_len - tcp_to_m_pdu->tcp_rp;
     m_pdu_left = M_PDU_DATA_SIZE - tcp_to_m_pdu->m_pdu_wp;
     write_len = (tcp_left > m_pdu_left) ? m_pdu_left : tcp_left;
 
-    // First Header Pointer‚ª–¢İ’è‚©‚Â‘‚«‚İŠJn‚ªƒpƒPƒbƒgæ“ª
+    // First Header PointerãŒæœªè¨­å®šã‹ã¤æ›¸ãè¾¼ã¿é–‹å§‹ãŒãƒ‘ã‚±ãƒƒãƒˆå…ˆé ­
     if ((tcp_to_m_pdu->fhp_valid != 1) && (tcp_to_m_pdu->tcp_rp == 0))
     {
-      // First Header Pointer‚ğŒ»İ‚ÌWrite Pointer‚Ì’l‚Éİ’è
+      // First Header Pointerã‚’ç¾åœ¨ã®Write Pointerã®å€¤ã«è¨­å®š
       M_PDU_set_1st_hdr_ptr(m_pdu, (uint16_t)tcp_to_m_pdu->m_pdu_wp);
-      // First Header Pointerİ’èÏ‚İ‚ğ‹L˜^
+      // First Header Pointerè¨­å®šæ¸ˆã¿ã‚’è¨˜éŒ²
       tcp_to_m_pdu->fhp_valid = 1;
     }
 
-    // M_PDUƒf[ƒ^‚Ì––”ö‚Éƒf[ƒ^‚ğ’Ç‰Á
+    // M_PDUãƒ‡ãƒ¼ã‚¿ã®æœ«å°¾ã«ãƒ‡ãƒ¼ã‚¿ã‚’è¿½åŠ 
     M_PDU_set_data(m_pdu,
                    &(packet->packet[tcp_to_m_pdu->tcp_rp]),
                    tcp_to_m_pdu->m_pdu_wp,
                    write_len);
 
-    // TC Pacekt Read Pointer‚ğXV
+    // TC Pacekt Read Pointerã‚’æ›´æ–°
     tcp_to_m_pdu->tcp_rp += write_len;
-    // M_PDU Write Pointer‚ğXV
+    // M_PDU Write Pointerã‚’æ›´æ–°
     tcp_to_m_pdu->m_pdu_wp += write_len;
-    // ÅI‘‚«‚İ‚ğXV
+    // æœ€çµ‚æ›¸ãè¾¼ã¿æ™‚åˆ»ã‚’æ›´æ–°
     tcp_to_m_pdu->last_updated = TMGR_get_master_total_cycle();
 
-    // TC Packet‘S‘Ì‚ğM_PDU‚É‘‚«‚İI‚í‚Á‚½ê‡
+    // TC Packetå…¨ä½“ã‚’M_PDUã«æ›¸ãè¾¼ã¿çµ‚ã‚ã£ãŸå ´åˆ
     if (tcp_to_m_pdu->tcp_rp == tcp_len)
     {
-      // ‘‚«‚İŠ®—¹‚µ‚½TC Packet‚ğQueue‚©‚ç”jŠü‚µRead Poineter‚Ì’l‚ğ‰Šú‰»
+      // æ›¸ãè¾¼ã¿å®Œäº†ã—ãŸTC Packetã‚’Queueã‹ã‚‰ç ´æ£„ã—Read Poineterã®å€¤ã‚’åˆæœŸåŒ–
       PL_drop_executed(pl);
       tcp_to_m_pdu->tcp_rp = 0;
     }
   }
 
-  // M_PDU‚ğ–„‚ßI‚í‚Á‚½‚Ì‚ÉFirst Header Pointer‚ª–¢İ’è‚Ìê‡
-  // -> ƒpƒPƒbƒgæ“ª‚ªM_PDU‚Ì’†‚ÉŠÜ‚Ü‚ê‚È‚©‚Á‚½ê‡
+  // M_PDUã‚’åŸ‹ã‚çµ‚ã‚ã£ãŸã®ã«First Header PointerãŒæœªè¨­å®šã®å ´åˆ
+  // -> ãƒ‘ã‚±ãƒƒãƒˆå…ˆé ­ãŒM_PDUã®ä¸­ã«å«ã¾ã‚Œãªã‹ã£ãŸå ´åˆ
   if (tcp_to_m_pdu->fhp_valid != 1)
   {
-    // First Header Pointer‚ğuƒwƒbƒ_‚È‚µv‚Éİ’è
+    // First Header Pointerã‚’ã€Œãƒ˜ãƒƒãƒ€ãªã—ã€ã«è¨­å®š
     M_PDU_set_1st_hdr_ptr(m_pdu, M_PDU_PTR_NO_HDR);
-    // First Header Pointerİ’èÏ‚İ‚ğ‹L˜^
+    // First Header Pointerè¨­å®šæ¸ˆã¿ã‚’è¨˜éŒ²
     tcp_to_m_pdu->fhp_valid = 1;
   }
 
-  // M_PDU Write Pointer‚Ì’l‚ğƒNƒŠƒA
+  // M_PDU Write Pointerã®å€¤ã‚’ã‚¯ãƒªã‚¢
   tcp_to_m_pdu->m_pdu_wp = 0;
-  // First Header Pointeró‘Ô‚ğ–¢İ’è‚É•ÏX
+  // First Header PointerçŠ¶æ…‹ã‚’æœªè¨­å®šã«å¤‰æ›´
   tcp_to_m_pdu->fhp_valid = 0;
 
   return T2M_SUCCESS;

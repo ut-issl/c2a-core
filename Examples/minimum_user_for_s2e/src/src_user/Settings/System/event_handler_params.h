@@ -1,7 +1,7 @@
 /**
  * @file
- * @brief event_handler ‚ÌŠeíİ’è
- *        Šeƒpƒ‰ƒƒ^—Ş‚ÌÚ×‚Í event_handler.h ‚ğQÆ‚·‚é‚±‚Æ
+ * @brief event_handler ã®å„ç¨®è¨­å®š
+ *        å„ãƒ‘ãƒ©ãƒ¡ã‚¿é¡ã®è©³ç´°ã¯ event_handler.h ã‚’å‚ç…§ã™ã‚‹ã“ã¨
  */
 #ifndef EVENT_HANDLER_PARAMS_H_
 #define EVENT_HANDLER_PARAMS_H_

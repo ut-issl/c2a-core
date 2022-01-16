@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  Driver‚Ì‚½‚ß‚ÌISSLƒtƒH[ƒ}ƒbƒg’ÊM‚Ì‚½‚ß‚ÌŒöŠJ’è‹`CŠÖ”‚È‚Ç
+ * @brief  Driverã®ãŸã‚ã®ISSLãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆé€šä¿¡ã®ãŸã‚ã®å…¬é–‹å®šç¾©ï¼Œé–¢æ•°ãªã©
  */
 
 #include "driver_super_issl_format.h"
@@ -10,7 +10,7 @@
 
 uint32_t DS_ISSLFMT_get_tlm_version(const DS_StreamConfig* p_stream_config)
 {
-  // [TODO] Œ»ó‚ÍVersion”Ô†‚ª8bit‚Ì‚à‚Ì‚Ì‚İ‚µ‚©‘Î‰‚µ‚Ä‚¢‚È‚¢
+  // [TODO] ç¾çŠ¶ã¯Versionç•ªå·ãŒ8bitã®ã‚‚ã®ã®ã¿ã—ã‹å¯¾å¿œã—ã¦ã„ãªã„
   return (uint32_t)(DSSC_get_rx_frame(p_stream_config)[DS_ISSLFMT_COMMON_HEADER_SIZE]);
 }
 
@@ -43,7 +43,7 @@ uint32_t DS_ISSLFMT_get_tlm_id(const uint32_t version, const DS_StreamConfig* p_
 
 uint32_t DS_ISSLFMT_get_tlm_length(const DS_StreamConfig* p_stream_config)
 {
-  // [TODO] 2bit‚Ì‚à‚Ì‚Ì‚İ‚µ‚©‘Î‰‚µ‚Ä‚¢‚È‚¢
+  // [TODO] 2bitã®ã‚‚ã®ã®ã¿ã—ã‹å¯¾å¿œã—ã¦ã„ãªã„
   uint16_t length = DSSC_get_rx_frame(p_stream_config)[2];
   length <<= 8;
   length  |= DSSC_get_rx_frame(p_stream_config)[3];
@@ -61,7 +61,7 @@ uint8_t DS_C2AFMT_get_tlm_id(const DS_StreamConfig* p_stream_config)
   uint8_t  tlm_id = DSSC_get_rx_frame(p_stream_config)[offset];
   return tlm_id;
 
-  // [TODO] –{“–‚ÍˆÈ‰º‚ÌŠÖ”‚ğg‚¢‚½‚¢‚ªCTPCŒ^‚Émemcpy‚µ‚È‚¢‚Æ‚±‚ÌŠÖ”‚ªg‚¦‚È‚¢DDD
+  // [TODO] æœ¬å½“ã¯ä»¥ä¸‹ã®é–¢æ•°ã‚’ä½¿ã„ãŸã„ãŒï¼ŒTPCå‹ã«memcpyã—ãªã„ã¨ã“ã®é–¢æ•°ãŒä½¿ãˆãªã„ï¼ï¼ï¼
   // return TCP_TLM_get_packet_id();
 }
 

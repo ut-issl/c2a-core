@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief App�̃w�b�_���܂Ƃ߂��w�b�_
+ * @brief Appのヘッダをまとめたヘッダ
  */
 #ifndef APP_HEADERS_H_
 #define APP_HEADERS_H_

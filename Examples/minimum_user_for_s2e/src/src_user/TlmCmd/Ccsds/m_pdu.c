@@ -88,13 +88,13 @@ void M_PDU_set_data(M_PDU* m_pdu,
                     size_t offset,
                     size_t len)
 {
-  // Žw’è‚³‚ê‚½ƒf[ƒ^’·‚ªãŒÀ’l‚ð’´‰ß‚·‚éê‡‚ÍãŒÀ’l‚É§ŒÀ
+  // æŒ‡å®šã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿é•·ãŒä¸Šé™å€¤ã‚’è¶…éŽã™ã‚‹å ´åˆã¯ä¸Šé™å€¤ã«åˆ¶é™
   if (offset + len > M_PDU_DATA_SIZE)
   {
     len = M_PDU_DATA_SIZE - offset;
   }
 
-  // offsetˆÈ~‚Éƒf[ƒ^‚ð‘‚«ž‚Þ
+  // offsetä»¥é™ã«ãƒ‡ãƒ¼ã‚¿ã‚’æ›¸ãè¾¼ã‚€
   memcpy(m_pdu->data + offset, data, len);
 }
 #pragma section

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief git revision‚ğƒR[ƒh‚É–„‚ß‚Ş
+ * @brief git revisionã‚’ã‚³ãƒ¼ãƒ‰ã«åŸ‹ã‚è¾¼ã‚€
  */
 #ifndef GIT_REVISION_H_
 #define GIT_REVISION_H_

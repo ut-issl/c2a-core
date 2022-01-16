@@ -44,7 +44,7 @@ TCF_SCID TCF_get_scid(const TCF* tcf)
   unsigned int pos = 0;
   uint8_t mask = 0x03; // 0000 0011b
 
-  // pos = 0‚Ì‰ºˆÊ2bits‚Æpos = 1‚Ì8bits‚ğ‡‚í‚¹‚½10bits
+  // pos = 0ã®ä¸‹ä½2bitsã¨pos = 1ã®8bitsã‚’åˆã‚ã›ãŸ10bits
   TCF_SCID scid = (TCF_SCID)(tcf->header[pos] & mask);
   scid = (TCF_SCID)(scid << 8);
   scid = (TCF_SCID)(scid + tcf->header[pos + 1]);
@@ -81,12 +81,12 @@ size_t TCF_get_frame_len(const TCF* tcf)
   unsigned int pos = 2;
   uint8_t mask = 0x03; // 0000 0011b
 
-  // pos = 0‚Ì‰ºˆÊ2bits‚Æpos = 1‚Ì8bits‚ğ‡‚í‚¹‚½10bits
+  // pos = 0ã®ä¸‹ä½2bitsã¨pos = 1ã®8bitsã‚’åˆã‚ã›ãŸ10bits
   size_t len = (tcf->header[pos] & mask);
   len <<= 8;
   len += tcf->header[pos + 1];
 
-  // TC Frame‚Ì’·‚³•\‹L‚Í0‹NZ‚È‚Ì‚Å1‹NZ‚É•ÏŠ·‚µ‚½’l‚ğ•Ô‚·
+  // TC Frameã®é•·ã•è¡¨è¨˜ã¯0èµ·ç®—ãªã®ã§1èµ·ç®—ã«å¤‰æ›ã—ãŸå€¤ã‚’è¿”ã™
   return len + 1;
 }
 

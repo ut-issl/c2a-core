@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  CTCP ‚Ì’è‹`
+ * @brief  CTCP ã®å®šç¾©
  * @note   CTCP: common_tlm_cmd_packet
  * @note   CCP:  CommonCmdPacket
  * @note   CTP:  CommonTlmPacket
@@ -63,7 +63,7 @@ void CCP_set_dest_id(CTCP* packet, CTCP_DEST_ID id)
 
 CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet)
 {
-  // TCP_CMD_EXEC_TYPE‚ÆCCP_EXEC_TYPE‚Ì’è‹`‚Í‡‚í‚¹‚Ä‚¢‚éD(³Šm‚É‚ÍA‘OÒ‚ÍŒãÒ‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éD)
+  // TCP_CMD_EXEC_TYPEã¨CCP_EXEC_TYPEã®å®šç¾©ã¯åˆã‚ã›ã¦ã„ã‚‹ï¼(æ­£ç¢ºã«ã¯ã€å‰è€…ã¯å¾Œè€…ã«å«ã¾ã‚Œã¦ã„ã‚‹ï¼)
   TCP_CMD_EXEC_TYPE exec_type = TCP_CMD_get_exec_type(packet);
   if (exec_type == TCP_CMD_EXEC_TYPE_UNKNOWN)
   {
@@ -77,7 +77,7 @@ CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet)
 
 void CCP_set_exec_type(CTCP* packet, CCP_EXEC_TYPE type)
 {
-  // CCP_EXEC_TYPE‚Ì‚Ù‚¤‚ª‚Æ‚è‚¤‚é”’l‚Ì•‚ªL‚¢‚Ì‚ÅCƒAƒT[ƒVƒ‡ƒ“
+  // CCP_EXEC_TYPEã®ã»ã†ãŒã¨ã‚Šã†ã‚‹æ•°å€¤ã®å¹…ãŒåºƒã„ã®ã§ï¼Œã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³
   if ((int)type >= (int)TCP_CMD_EXEC_TYPE_UNKNOWN)
   {
     TCP_CMD_set_exec_type(packet, TCP_CMD_EXEC_TYPE_UNKNOWN);
@@ -88,13 +88,13 @@ void CCP_set_exec_type(CTCP* packet, CCP_EXEC_TYPE type)
   }
 }
 
-// 2021-01-22 ’Ç‰Á
+// 2021-01-22 è¿½åŠ 
 CCP_DEST_TYPE CCP_get_dest_type(const CTCP* packet)
 {
   return (CCP_DEST_TYPE)TCP_CMD_get_dest_type(packet);
 }
 
-// 2021-01-22 ’Ç‰Á
+// 2021-01-22 è¿½åŠ 
 void CCP_set_dest_type(CTCP* packet, CCP_DEST_TYPE type)
 {
   TCP_CMD_set_dest_type(packet, (TCP_CMD_DEST_TYPE)type);
@@ -117,7 +117,7 @@ uint16_t CCP_get_packet_len(const CTCP* packet)
 
 uint16_t CCP_get_param_len(const CTCP* packet)
 {
-  // ƒ†[ƒU[ƒf[ƒ^’·‚©‚çƒwƒbƒ_’·‚ğœ‚¢‚½‚à‚Ì‚ªƒpƒ‰ƒ[ƒ^’·
+  // ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿é•·ã‹ã‚‰ãƒ˜ãƒƒãƒ€é•·ã‚’é™¤ã„ãŸã‚‚ã®ãŒãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é•·
   return (uint16_t)(TCP_get_packet_len(packet) - TCP_CMD_2ND_HDR_LEN - TCP_CMD_USER_HDR_LEN);
 }
 

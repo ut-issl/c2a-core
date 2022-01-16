@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief CTCP‚ÌƒŠƒXƒg‚Æ‚µ‚Ä‚Ìƒf[ƒ^\‘¢‚ð’è‹`. •Ð•ûŒüƒŠƒXƒg‚Æ‚µ‚ÄŽÀ‘•‚³‚ê‚Ä‚¢‚é
+ * @brief CTCPã®ãƒªã‚¹ãƒˆã¨ã—ã¦ã®ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã‚’å®šç¾©. ç‰‡æ–¹å‘ãƒªã‚¹ãƒˆã¨ã—ã¦å®Ÿè£…ã•ã‚Œã¦ã„ã‚‹
  */
 #ifndef PACKET_LIST_H_
 #define PACKET_LIST_H_
@@ -12,7 +12,7 @@
 
 /**
  * @struct PL_NodeTag
- * @brief  •Ð•ûŒüƒŠƒXƒg‚ð\¬‚·‚éŠeƒm[ƒh
+ * @brief  ç‰‡æ–¹å‘ãƒªã‚¹ãƒˆã‚’æ§‹æˆã™ã‚‹å„ãƒŽãƒ¼ãƒ‰
  */
 struct PL_NodeTag
 {
@@ -23,182 +23,182 @@ typedef struct PL_NodeTag PL_Node;
 
 /**
  * @struct PacketList
- * @brief  ƒpƒPƒbƒgƒŠƒXƒg–{‘Ì
- * @note   ƒf[ƒ^\‘¢‚Æ‚µ‚Ä‚Í •Ð•ûŒüƒŠƒXƒg
- *         ‰Šú‰»‚Å‚ÍŠO•”‚ÅŽ–‘O‚É—Ìˆæ‚¾‚¯Šm•Û‚µ‚Ä‚¨‚¢‚½PL_Node”z—ñ‚Ìæ“ªƒ|ƒCƒ“ƒ^‚ðstock‚É•Û‘¶‚µ‚Ä˜AŒ‹ƒŠƒXƒg‰», inactive_list_head‚É‚àƒRƒs[‚·‚é.
-           Žg‚¤‚Æ‚«‚É‚Íinactive_list‚©‚çPL_Nodeˆê‚Â‚ðŽæ‚èo‚µ‚Ä, ‚»‚Ì—Ìˆæ‚ðactive_list‚É‘}“ü‚·‚é.
-           ‚È‚¨ƒƒ“ƒo[‚Í‘S‚Ä private
+ * @brief  ãƒ‘ã‚±ãƒƒãƒˆãƒªã‚¹ãƒˆæœ¬ä½“
+ * @note   ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã¨ã—ã¦ã¯ ç‰‡æ–¹å‘ãƒªã‚¹ãƒˆ
+ *         åˆæœŸåŒ–ã§ã¯å¤–éƒ¨ã§äº‹å‰ã«é ˜åŸŸã ã‘ç¢ºä¿ã—ã¦ãŠã„ãŸPL_Nodeé…åˆ—ã®å…ˆé ­ãƒã‚¤ãƒ³ã‚¿ã‚’stockã«ä¿å­˜ã—ã¦é€£çµãƒªã‚¹ãƒˆåŒ–, inactive_list_headã«ã‚‚ã‚³ãƒ”ãƒ¼ã™ã‚‹.
+           ä½¿ã†ã¨ãã«ã¯inactive_listã‹ã‚‰PL_Nodeä¸€ã¤ã‚’å–ã‚Šå‡ºã—ã¦, ãã®é ˜åŸŸã‚’active_listã«æŒ¿å…¥ã™ã‚‹.
+           ãªãŠãƒ¡ãƒ³ãƒãƒ¼ã¯å…¨ã¦ private
  */
 typedef struct
 {
-  uint16_t total_nodes_;        //!< ‘Sƒm[ƒh” (static Šm•Û)
-  uint32_t executed_nodes_;     //!< ŽÀs‚³‚ê‚½ƒm[ƒh”
-  uint16_t active_nodes_;       //!< Œ»Ý•Ð•ûŒüƒŠƒXƒg‚É“ü‚Á‚Ä‚¢‚éƒm[ƒh”
+  uint16_t total_nodes_;        //!< å…¨ãƒŽãƒ¼ãƒ‰æ•° (static ç¢ºä¿)
+  uint32_t executed_nodes_;     //!< å®Ÿè¡Œã•ã‚ŒãŸãƒŽãƒ¼ãƒ‰æ•°
+  uint16_t active_nodes_;       //!< ç¾åœ¨ç‰‡æ–¹å‘ãƒªã‚¹ãƒˆã«å…¥ã£ã¦ã„ã‚‹ãƒŽãƒ¼ãƒ‰æ•°
 
-  PL_Node* stock_;              //!< Šm•Û‚³‚ê‚Ä‚¢‚é—Ìˆæ‘S‘Ì‚Ìæ“ª
-  PL_Node* inactive_list_head_; //!< Šm•Û‚³‚ê‚Ä‚¢‚é—Ìˆæ‚Ì“àAŽg‚Á‚Ä‚¢‚È‚¢‚à‚Ì‚Ìæ“ª, stack
-  PL_Node* active_list_head_;   //!< Šm•Û‚³‚ê‚Ä‚¢‚é—Ìˆæ‚Ì“àAŽg‚Á‚Ä‚¢‚é‚à‚Ì‚Ìæ“ª
-  PL_Node* active_list_tail_;   //!< Šm•Û‚³‚ê‚Ä‚¢‚é—Ìˆæ‚Ì“àAŽg‚Á‚Ä‚¢‚é‚à‚Ì‚Ì––’[
+  PL_Node* stock_;              //!< ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹é ˜åŸŸå…¨ä½“ã®å…ˆé ­
+  PL_Node* inactive_list_head_; //!< ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹é ˜åŸŸã®å†…ã€ä½¿ã£ã¦ã„ãªã„ã‚‚ã®ã®å…ˆé ­, stack
+  PL_Node* active_list_head_;   //!< ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹é ˜åŸŸã®å†…ã€ä½¿ã£ã¦ã„ã‚‹ã‚‚ã®ã®å…ˆé ­
+  PL_Node* active_list_tail_;   //!< ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹é ˜åŸŸã®å†…ã€ä½¿ã£ã¦ã„ã‚‹ã‚‚ã®ã®æœ«ç«¯
 } PacketList;
 
 /**
  * @enum  PL_ACK
- * @brief PacketList ŠÖ˜A‘€ì‚ÌƒGƒ‰[ƒR[ƒh
+ * @brief PacketList é–¢é€£æ“ä½œã®ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
  * @note  uint8_t
  */
 typedef enum
 {
-  PL_SUCCESS,            //!< ¬Œ÷
-  PL_LIST_FULL,          //!< PacketList ‚ªˆê”t (inactive –³‚µ)
-  PL_TLC_PAST_TIME,      //!< ŽÀsŽžŠÔŠù‚ÉŒo‰ß
-  PL_TLC_ALREADY_EXISTS, //!< “¯Žž‚ÉŠù‚É Node ‚ª‘¶Ý
-  PL_TLC_ON_TIME,        //!< ŽÀsŽž’š“x
-  PL_TLC_NOT_YET,        //!< ‚Ü‚¾ŽÀsŽž‚Å‚Í‚È‚¢
-  PL_BC_INACTIVE_BLOCK,  //!< –³Œø‚È BC
-  PL_BC_LIST_CLEARED,    //!< PL ƒNƒŠƒA (‰Šú‰», active ‘Síœ) ‚³‚ê‚½
-  PL_BC_TIME_ADJUSTED,   //!< “¯Žž‚É Node ‚ª‚ ‚Á‚½‚½‚ß’²®‚¹‚ê‚½
-  PL_NO_SUCH_NODE        //!< ‚»‚ñ‚È Node ‚Í–³‚¢
+  PL_SUCCESS,            //!< æˆåŠŸ
+  PL_LIST_FULL,          //!< PacketList ãŒä¸€æ¯ (inactive ç„¡ã—)
+  PL_TLC_PAST_TIME,      //!< å®Ÿè¡Œæ™‚é–“æ—¢ã«çµŒéŽ
+  PL_TLC_ALREADY_EXISTS, //!< åŒæ™‚åˆ»ã«æ—¢ã« Node ãŒå­˜åœ¨
+  PL_TLC_ON_TIME,        //!< å®Ÿè¡Œæ™‚åˆ»ä¸åº¦
+  PL_TLC_NOT_YET,        //!< ã¾ã å®Ÿè¡Œæ™‚åˆ»ã§ã¯ãªã„
+  PL_BC_INACTIVE_BLOCK,  //!< ç„¡åŠ¹ãª BC
+  PL_BC_LIST_CLEARED,    //!< PL ã‚¯ãƒªã‚¢ (åˆæœŸåŒ–, active å…¨å‰Šé™¤) ã•ã‚ŒãŸ
+  PL_BC_TIME_ADJUSTED,   //!< åŒæ™‚åˆ»ã« Node ãŒã‚ã£ãŸãŸã‚èª¿æ•´ã›ã‚ŒãŸ
+  PL_NO_SUCH_NODE        //!< ãã‚“ãª Node ã¯ç„¡ã„
 } PL_ACK;
 
 /**
- * @brief static ‚ÉŠm•Û‚³‚ê‚½ PL_Node ”z—ñ‚ðŽó‚¯Žæ‚è‚»‚Ì—Ìˆæ‚ðŽg—p‚µ‚Ä PL ‚ð‰Šú‰»
- * @param[in] stock: Žg—p‚·‚é PL_Node ”z—ñ
- * @param[in] size_t: ”z—ñ‚ÌƒTƒCƒY
- * @param[out] pli: ‰Šú‰»‚·‚é PacketList
+ * @brief static ã«ç¢ºä¿ã•ã‚ŒãŸ PL_Node é…åˆ—ã‚’å—ã‘å–ã‚Šãã®é ˜åŸŸã‚’ä½¿ç”¨ã—ã¦ PL ã‚’åˆæœŸåŒ–
+ * @param[in] stock: ä½¿ç”¨ã™ã‚‹ PL_Node é…åˆ—
+ * @param[in] size_t: é…åˆ—ã®ã‚µã‚¤ã‚º
+ * @param[out] pli: åˆæœŸåŒ–ã™ã‚‹ PacketList
  * @return void
  */
 void PL_initialize(PL_Node* stock, size_t size, PacketList* pli);
 
 /**
- * @brief PacketList ‚ðƒNƒŠƒA
- * @param[in] pli: ƒNƒŠƒA‚·‚é PacketList
+ * @brief PacketList ã‚’ã‚¯ãƒªã‚¢
+ * @param[in] pli: ã‚¯ãƒªã‚¢ã™ã‚‹ PacketList
  * @return void
- * @note ‘S active Node ‚ðíœ‚µ‚Ä ‘S‚Ä inactive ‚Ì stock ‚É‚·‚é
+ * @note å…¨ active Node ã‚’å‰Šé™¤ã—ã¦ å…¨ã¦ inactive ã® stock ã«ã™ã‚‹
  */
 void PL_clear_list(PacketList* pli);
 
 /**
- * @brief PacketList ‚ÅŽÀs‚³‚ê‚½ƒm[ƒh”‚ð•Ô‚·
+ * @brief PacketList ã§å®Ÿè¡Œã•ã‚ŒãŸãƒŽãƒ¼ãƒ‰æ•°ã‚’è¿”ã™
  * @param[in] pli: PacketList
- * @return uint32_t: ŽÀs‚³‚ê‚½ƒm[ƒh”
+ * @return uint32_t: å®Ÿè¡Œã•ã‚ŒãŸãƒŽãƒ¼ãƒ‰æ•°
  */
 uint32_t PL_count_executed_nodes(const PacketList* pli);
 
 /**
- * @brief PacketList ‚Å—LŒø‚È(ŽÀs‘Ò‚¿)ƒm[ƒh”‚ð•Ô‚·
+ * @brief PacketList ã§æœ‰åŠ¹ãª(å®Ÿè¡Œå¾…ã¡)ãƒŽãƒ¼ãƒ‰æ•°ã‚’è¿”ã™
  * @param[in] pli: PacketList
- * @return uint16_t: —LŒø‚È(ŽÀs‘Ò‚¿)ƒm[ƒh”
+ * @return uint16_t: æœ‰åŠ¹ãª(å®Ÿè¡Œå¾…ã¡)ãƒŽãƒ¼ãƒ‰æ•°
  */
 uint16_t PL_count_active_nodes(const PacketList* pli);
 
 /**
- * @brief PacketList ‚ÅŽg—p‚³‚ê‚Ä‚¢‚È‚¢ƒm[ƒh”‚ð•Ô‚·
+ * @brief PacketList ã§ä½¿ç”¨ã•ã‚Œã¦ã„ãªã„ãƒŽãƒ¼ãƒ‰æ•°ã‚’è¿”ã™
  * @param[in] pli: PacketList
- * @return uint16_t: Žg—p‚³‚ê‚Ä‚¢‚È‚¢ƒm[ƒh”
+ * @return uint16_t: ä½¿ç”¨ã•ã‚Œã¦ã„ãªã„ãƒŽãƒ¼ãƒ‰æ•°
  */
 uint16_t PL_count_inactive_nodes(const PacketList* pli);
 
 /**
- * @brief PacketList ‚ª‹ó‚©‚Ç‚¤‚©
+ * @brief PacketList ãŒç©ºã‹ã©ã†ã‹
  * @param[in] pli: PacketList
  * @return int 1: True 0: False
  */
 int PL_is_empty(const PacketList* pli);
 
 /**
- * @brief PacketList ‚ªˆê”t‚©‚Ç‚¤‚©
+ * @brief PacketList ãŒä¸€æ¯ã‹ã©ã†ã‹
  * @param[in] pli: PacketList
  * @return int 1: True 0: False
  */
 int PL_is_full(const PacketList* pli);
 
 /**
- * @brief PacketList ‚Ì active æ“ªƒm[ƒh‚ðŽæ“¾
+ * @brief PacketList ã® active å…ˆé ­ãƒŽãƒ¼ãƒ‰ã‚’å–å¾—
  * @param[in] pli: PacketList
  * @return const PL_Node*
  */
 const PL_Node* PL_get_head(const PacketList* pli);
 
 /**
- * @brief PacketList ‚Ì active ––’[ƒm[ƒh‚ðŽæ“¾
+ * @brief PacketList ã® active æœ«ç«¯ãƒŽãƒ¼ãƒ‰ã‚’å–å¾—
  * @param[in] pli: PacketList
  * @return const PL_Node*
  */
 const PL_Node* PL_get_tail(const PacketList* pli);
 
 /**
- * @brief ŽŸ‚ÌNode ‚ðŽæ“¾
- * @param[in] node: Œ»ƒm[ƒh
+ * @brief æ¬¡ã®Node ã‚’å–å¾—
+ * @param[in] node: ç¾ãƒŽãƒ¼ãƒ‰
  * @return const PL_Node*
  */
 const PL_Node* PL_get_next(const PL_Node* node);
 
 /**
- * @brief PacketList ‚Ìæ“ª‚É packet ‚ð‘}“ü
+ * @brief PacketList ã®å…ˆé ­ã« packet ã‚’æŒ¿å…¥
  * @param[in] pli: PacketList
- * @param[in] packet: ‘}“ü‚·‚é packet
+ * @param[in] packet: æŒ¿å…¥ã™ã‚‹ packet
  * @return PL_ACK
  */
 PL_ACK PL_push_front(PacketList* pli, const CTCP* packet);
 
 /**
- * @brief PacketList ‚Ì––”ö‚É packet ‚ð‘}“ü
+ * @brief PacketList ã®æœ«å°¾ã« packet ã‚’æŒ¿å…¥
  * @param[in] pli: PacketList
- * @param[in] packet: ‘}“ü‚·‚é packet
+ * @param[in] packet: æŒ¿å…¥ã™ã‚‹ packet
  * @return PL_ACK
  */
 PL_ACK PL_push_back(PacketList* pli, const CTCP* packet);
 
 /**
- * @brief ‚ ‚é Node ‚Ì’¼Œã‚É packet ‚ð‘}“ü
+ * @brief ã‚ã‚‹ Node ã®ç›´å¾Œã« packet ã‚’æŒ¿å…¥
  * @param[in] pli: PacketList
- * @param[in] pos: ’¼Œã‚É‘}“ü‚³‚ê‚é packet
- * @param[in] packet: ‘}“ü‚·‚é packet
+ * @param[in] pos: ç›´å¾Œã«æŒ¿å…¥ã•ã‚Œã‚‹ packet
+ * @param[in] packet: æŒ¿å…¥ã™ã‚‹ packet
  * @return PL_ACK
  */
 PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CTCP* packet);
 
 /**
- * @brief ‚ ‚é Node ‚Ì’¼Œã‚É packet ‚ð‘}“ü
+ * @brief ã‚ã‚‹ Node ã®ç›´å¾Œã« packet ã‚’æŒ¿å…¥
  * @param[in] pli: PacketList
- * @param[in] packet: ‘}“ü‚·‚é packet
- * @param[in] now: ‚±‚ê‚ÌŽw’èŽÀsŽžŠÔ
+ * @param[in] packet: æŒ¿å…¥ã™ã‚‹ packet
+ * @param[in] now: ã“ã‚Œã®æŒ‡å®šå®Ÿè¡Œæ™‚é–“
  * @return PL_ACK
- * @note TaskList ‚à TimeLine ‚à‚±‚ê‚ðŽg‚¤‚Ì‚Å now ‚Í uint32_t
+ * @note TaskList ã‚‚ TimeLine ã‚‚ã“ã‚Œã‚’ä½¿ã†ã®ã§ now ã¯ uint32_t
  */
 PL_ACK PL_insert_tl_cmd(PacketList* pli, const CTCP* packet, uint32_t now);
 
 /**
- * @brief PacketList ã‚É BC ‚ð“WŠJ‚·‚é
+ * @brief PacketList ä¸Šã« BC ã‚’å±•é–‹ã™ã‚‹
  * @param[in] pli: PacketList
- * @param[in] block: “WŠJ‚·‚é BC ‚Ì ID
- * @param[in] start_at: ŠJŽnŠî€Žž
+ * @param[in] block: å±•é–‹ã™ã‚‹ BC ã® ID
+ * @param[in] start_at: é–‹å§‹åŸºæº–æ™‚åˆ»
  * @return PL_ACK
- * @note TaskList ‚à TimeLine ‚à‚±‚ê‚ðŽg‚¤‚Ì‚Å start_at ‚Í uint32_t
+ * @note TaskList ã‚‚ TimeLine ã‚‚ã“ã‚Œã‚’ä½¿ã†ã®ã§ start_at ã¯ uint32_t
  */
 PL_ACK PL_deploy_block_cmd(PacketList* pli, const bct_id_t block, uint32_t start_at);
 
 /**
- * @brief PacketList ‚Ìæ“ª‚Æ time ‚ð”äŠr
+ * @brief PacketList ã®å…ˆé ­ã¨ time ã‚’æ¯”è¼ƒ
  * @param[in] pli: PacketList
- * @param[in] time: ”äŠr‚·‚éŽž
+ * @param[in] time: æ¯”è¼ƒã™ã‚‹æ™‚åˆ»
  * @return PL_ACK
- * @note TaskList ‚à TimeLine ‚à‚±‚ê‚ðŽg‚¤‚Ì‚Å start_at ‚Í time
+ * @note TaskList ã‚‚ TimeLine ã‚‚ã“ã‚Œã‚’ä½¿ã†ã®ã§ start_at ã¯ time
  */
 PL_ACK PL_check_tl_cmd(PacketList* pli, uint32_t time);
 
 /**
- * @brief æ“ªƒm[ƒh‚ð—Ž‚Æ‚·
+ * @brief å…ˆé ­ãƒŽãƒ¼ãƒ‰ã‚’è½ã¨ã™
  * @param[in] pli: PacketList
  * @return void
  */
 void PL_drop_executed(PacketList* pli);
 
 /**
- * @brief Žw’è‚³‚ê‚½ƒm[ƒh‚ð—Ž‚Æ‚·
+ * @brief æŒ‡å®šã•ã‚ŒãŸãƒŽãƒ¼ãƒ‰ã‚’è½ã¨ã™
  * @param[in] pli: PacketList
- * @param[in] prev: —Ž‚Æ‚·’¼‘O Node
- * @param[in] current: —Ž‚Æ‚· Node
+ * @param[in] prev: è½ã¨ã™ç›´å‰ Node
+ * @param[in] current: è½ã¨ã™ Node
  * @return void
  */
 void PL_drop_node(PacketList* pli, PL_Node* prev, PL_Node* current);

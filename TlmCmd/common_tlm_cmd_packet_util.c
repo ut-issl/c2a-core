@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  CTCP ‚Ì”Ä—pUtil
+ * @brief  CTCP ã®æ±ç”¨Util
  */
 
 #include "common_tlm_cmd_packet_util.h"
@@ -14,16 +14,16 @@
 #include <string.h>
 
 /**
- * @brief NOP cmd ‚Ì RTC CTCP ‚ğì‚é
+ * @brief NOP cmd ã® RTC CTCP ã‚’ä½œã‚‹
  * @param[in,out] packet: CTCP
  * @return void
  */
 void CCP_form_nop_rtc_(CTCP* packet);
 
 /**
- * @brief CTCP ƒpƒ‰ƒƒ^ŠJnˆÊ’u‚É‘Î‚·‚é n ”Ô–Ú‚Ìˆø”‚Ì offset ‚ğŒvZ‚·‚é
+ * @brief CTCP ãƒ‘ãƒ©ãƒ¡ã‚¿é–‹å§‹ä½ç½®ã«å¯¾ã™ã‚‹ n ç•ªç›®ã®å¼•æ•°ã® offset ã‚’è¨ˆç®—ã™ã‚‹
  * @param[in]  cmd_id: CMD_CODE
- * @param[in]  n: N”Ô–Ú‚Ìˆø” i0‹NZj
+ * @param[in]  n: Nç•ªç›®ã®å¼•æ•° ï¼ˆ0èµ·ç®—ï¼‰
  * @param[out] offset: offset
  * @return CTCP_UTIL_ACK
  */
@@ -37,9 +37,9 @@ void CCP_form_nop_rtc_(CTCP* packet)
 
 void CCP_form_app_cmd(CTCP* packet, cycle_t ti, AR_APP_ID id)
 {
-  // FIXME: ‚±‚Ì4‚ÍŠÂ‹«ˆË‘¶‚È‚Ì‚ÅCˆË‘¶‚µ‚È‚¢‚æ‚¤‚É’¼‚·
-  //        “KØ‚É’¼‚·‚±‚Æ‚ÅC CCP_form_tlc ‚Ì•Ô‚è’l‚ğ‚İ‚È‚­‚Ä—Ç‚­‚È‚é‚Í‚¸D
-  //        Cmd_AM_EXECUTE_APP ‚Ìˆø”æ“¾•”•ª‚Æ“¯‚É’¼‚·‚×‚«‚¾‚ªCƒpƒ‰ƒƒ^ƒTƒCƒY‚Í CmdDB‚©‚çæ“¾‰Â”\‚È‚Í‚¸D
+  // FIXME: ã“ã®4ã¯ç’°å¢ƒä¾å­˜ãªã®ã§ï¼Œä¾å­˜ã—ãªã„ã‚ˆã†ã«ç›´ã™
+  //        é©åˆ‡ã«ç›´ã™ã“ã¨ã§ï¼Œ CCP_form_tlc ã®è¿”ã‚Šå€¤ã‚’ã¿ãªãã¦è‰¯ããªã‚‹ã¯ãšï¼
+  //        Cmd_AM_EXECUTE_APP ã®å¼•æ•°å–å¾—éƒ¨åˆ†ã¨åŒæ™‚ã«ç›´ã™ã¹ãã ãŒï¼Œãƒ‘ãƒ©ãƒ¡ã‚¿ã‚µã‚¤ã‚ºã¯ CmdDBã‹ã‚‰å–å¾—å¯èƒ½ãªã¯ãšï¼
   uint8_t param[4];
   size_t  id_temp = id;
   endian_memcpy(param, &id_temp, 4);
@@ -65,7 +65,7 @@ CTCP_UTIL_ACK CCP_form_rtc(CTCP* packet, CMD_CODE cmd_id, const uint8_t* param, 
   CCP_set_id(packet, cmd_id);
   CCP_set_exec_type(packet, CCP_EXEC_TYPE_RT);
   CCP_set_dest_type(packet, TCP_CMD_DEST_TYPE_TO_ME);
-  CCP_set_ti(packet, 0); // RT‚Ìê‡ATI‚Í0ŒÅ’èB
+  CCP_set_ti(packet, 0); // RTã®å ´åˆã€TIã¯0å›ºå®šã€‚
   CCP_set_param(packet, param, len);
 
   return CTCP_UTIL_ACK_OK;
@@ -103,7 +103,7 @@ CTCP_UTIL_ACK CCP_form_block_deploy_cmd(CTCP* packet, uint8_t tl_no, bct_id_t bl
 
   if ((tl_no >= TL_ID_MAX) || (block_no >= BCT_MAX_BLOCKS))
   {
-    // ƒ^ƒCƒ€ƒ‰ƒCƒ“‚Ìline”Ô†AƒuƒƒbƒNƒRƒ}ƒ“ƒh”Ô†‚ª”ÍˆÍŠO‚Ìê‡ˆÙí”»’è
+    // ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã®lineç•ªå·ã€ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ç•ªå·ãŒç¯„å›²å¤–ã®å ´åˆç•°å¸¸åˆ¤å®š
     CCP_form_nop_rtc_(packet);
     return CTCP_UTIL_ACK_PARAM_ERR;
   }

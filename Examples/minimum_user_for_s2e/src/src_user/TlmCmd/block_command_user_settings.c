@@ -2,8 +2,8 @@
 
 #include "block_command_user_settings.h"
 
-static BCT_Table  BCUS_bc_table_[BCT_MAX_BLOCKS];      //!< BCT ‚Ì blocks ‚Ì–{‘Ì
-static BCE_Params BCUS_bc_exe_params_[BCT_MAX_BLOCKS]; //!< BCE_Params ‚Ì–{‘Ì
+static BCT_Table  BCUS_bc_table_[BCT_MAX_BLOCKS];      //!< BCT ã® blocks ã®æœ¬ä½“
+static BCE_Params BCUS_bc_exe_params_[BCT_MAX_BLOCKS]; //!< BCE_Params ã®æœ¬ä½“
 
 void BCUS_load_user_settings(BlockCommandTable* block_command_table, BlockCommandExecutor* block_command_executor)
 {

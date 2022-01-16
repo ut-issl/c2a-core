@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief CRC—p‚Ìƒ‰ƒCƒuƒ‰ƒŠ
+ * @brief CRCç”¨ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
  */
 #ifndef CRC_H_
 #define CRC_H_
@@ -11,60 +11,60 @@
 /**
  * @brief CRC-16-IBM
  *
- *        ¶¬‘½€®: x^16 + x^15 + x^2 + 1
- *        ƒrƒbƒg‘—‚è: ‰E‘—‚è, POLLY: 0xa001
- *        “Ç‚İo‚µ:   1byte(8 bit)
- * @param[in] crc: CRC‰Šú’l
- * @param[in] c: CRC‚ğŒvZ‚·‚ébyte—ñ
- * @param[in] n: —ñ‚Ì’·‚³
- * @param[in] rev_flag: ”½“]‚·‚é‚©‚Ç‚¤‚©
- * @return uint16_t: ŒvZŒ‹‰Ê
+ *        ç”Ÿæˆå¤šé …å¼: x^16 + x^15 + x^2 + 1
+ *        ãƒ“ãƒƒãƒˆé€ã‚Š: å³é€ã‚Š, POLLY: 0xa001
+ *        èª­ã¿å‡ºã—:   1byte(8 bit)
+ * @param[in] crc: CRCåˆæœŸå€¤
+ * @param[in] c: CRCã‚’è¨ˆç®—ã™ã‚‹byteåˆ—
+ * @param[in] n: åˆ—ã®é•·ã•
+ * @param[in] rev_flag: åè»¢ã™ã‚‹ã‹ã©ã†ã‹
+ * @return uint16_t: è¨ˆç®—çµæœ
  */
 uint16_t crc_16_ibm_right(uint16_t crc, const unsigned char* c, size_t n, int rev_flag);
 
 /**
  * @brief CRC-16-CCITT
  *
- *        ¶¬‘½€®: x^16 + x^12 + x^5 + 1
- *        ƒrƒbƒg‘—‚è: ¶‘—‚è, POLLY: 0x1021
- *        “Ç‚İo‚µ:   1byte(8 bit)
- * @param[in] crc: CRC‰Šú’l
- * @param[in] c: CRC‚ğŒvZ‚·‚ébyte—ñ
- * @param[in] n: —ñ‚Ì’·‚³
- * @param[in] rev_flag: ”½“]‚·‚é‚©‚Ç‚¤‚©
- * @return uint16_t: ŒvZŒ‹‰Ê
+ *        ç”Ÿæˆå¤šé …å¼: x^16 + x^12 + x^5 + 1
+ *        ãƒ“ãƒƒãƒˆé€ã‚Š: å·¦é€ã‚Š, POLLY: 0x1021
+ *        èª­ã¿å‡ºã—:   1byte(8 bit)
+ * @param[in] crc: CRCåˆæœŸå€¤
+ * @param[in] c: CRCã‚’è¨ˆç®—ã™ã‚‹byteåˆ—
+ * @param[in] n: åˆ—ã®é•·ã•
+ * @param[in] rev_flag: åè»¢ã™ã‚‹ã‹ã©ã†ã‹
+ * @return uint16_t: è¨ˆç®—çµæœ
  */
 uint16_t crc_16_ccitt_left(uint16_t crc, const unsigned char* c, size_t n, int rev_flag);
 
 /**
  * @brief CRC-16-CCITT
  *
- *        ¶¬‘½€®: x^16 + x^12 + x^5 + 1
- *        ƒrƒbƒg‘—‚è: ‰E‘—‚è, POLLY: 0x8408
- *        “Ç‚İo‚µ:   1byte(8 bit)
- * @param[in] crc: CRC‰Šú’l
- * @param[in] c: CRC‚ğŒvZ‚·‚ébyte—ñ
- * @param[in] n: —ñ‚Ì’·‚³
- * @param[in] rev_flag: ”½“]‚·‚é‚©‚Ç‚¤‚©
- * @return uint16_t: ŒvZŒ‹‰Ê
+ *        ç”Ÿæˆå¤šé …å¼: x^16 + x^12 + x^5 + 1
+ *        ãƒ“ãƒƒãƒˆé€ã‚Š: å³é€ã‚Š, POLLY: 0x8408
+ *        èª­ã¿å‡ºã—:   1byte(8 bit)
+ * @param[in] crc: CRCåˆæœŸå€¤
+ * @param[in] c: CRCã‚’è¨ˆç®—ã™ã‚‹byteåˆ—
+ * @param[in] n: åˆ—ã®é•·ã•
+ * @param[in] rev_flag: åè»¢ã™ã‚‹ã‹ã©ã†ã‹
+ * @return uint16_t: è¨ˆç®—çµæœ
  */
 uint16_t crc_16_ccitt_right(uint16_t crc, const unsigned char* c, size_t n, int rev_flag);
 
 /**
- * @brief crc—p‚Ìƒe[ƒuƒ‹ì¬
+ * @brief crcç”¨ã®ãƒ†ãƒ¼ãƒ–ãƒ«ä½œæˆ
  *
- *        “Ç‚İo‚µ:   1byte(8bit)(sizeof(table) = 256)
- *        ƒrƒbƒg‘—‚è: ‰E‘—‚è
- * @param[out] table: ƒe[ƒuƒ‹
- * @param[in] crc_poly: ¶¬‘½€®
- * @param[in] shift: ‰E:1, ¶:0
- * @note g‚í‚È‚¢‚Æ‚Ív‚¢‚Ü‚·‚ª...
+ *        èª­ã¿å‡ºã—:   1byte(8bit)(sizeof(table) = 256)
+ *        ãƒ“ãƒƒãƒˆé€ã‚Š: å³é€ã‚Š
+ * @param[out] table: ãƒ†ãƒ¼ãƒ–ãƒ«
+ * @param[in] crc_poly: ç”Ÿæˆå¤šé …å¼
+ * @param[in] shift: å³:1, å·¦:0
+ * @note ä½¿ã‚ãªã„ã¨ã¯æ€ã„ã¾ã™ãŒ...
  */
 void make_crc_8_table(uint8_t* table, uint8_t crc_poly, uint8_t shift);
 void make_crc_16_table(uint16_t* table, uint16_t crc_poly, uint8_t shift);
 void make_crc_32_table(uint32_t* table, uint32_t crc_poly, uint8_t shift);
 
-// g‚í‚È‚¢‚Æv‚¢‚Ü‚·‚ªƒfƒoƒbƒO—p‚É
+// ä½¿ã‚ãªã„ã¨æ€ã„ã¾ã™ãŒãƒ‡ãƒãƒƒã‚°ç”¨ã«
 // uint16_t crc_16_right_calc(uint16_t crc, uint16_t crc_poly, const unsigned char* c, size_t n, int rev_flag);
 // uint16_t crc_16_left_calc(uint16_t crc, uint16_t crc_poly, const unsigned char* c, size_t n, int rev_flag);
 

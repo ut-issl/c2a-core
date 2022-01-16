@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief BCT‚Ì’è‹`, BCTü‚è‚ÌŠÖ”
+ * @brief BCTã®å®šç¾©, BCTå‘¨ã‚Šã®é–¢æ•°
  */
 
 #include "block_command_table.h"
@@ -24,30 +24,30 @@ static BlockCommandTable block_command_table_;
 const BlockCommandTable* const block_command_table = &block_command_table_;
 
 /**
- * @brief BCT_Func ‚ÉƒfƒtƒHƒ‹ƒg‚ÌŠÖ”ƒ|ƒCƒ“ƒ^‚ğ“ü‚ê‚é
+ * @brief BCT_Func ã«ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®é–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã‚’å…¥ã‚Œã‚‹
  */
 static void BCT_load_default_func_pointer_(void);
 
-// ˆÈ‰º4‚Â‚Í default (SRAM, ç’·–³‚µ) ‚Ì getter, setter
+// ä»¥ä¸‹4ã¤ã¯ default (SRAM, å†—é•·ç„¡ã—) ã® getter, setter
 static BCT_CmdData* BC_get_bc_cmd_data_default_(const BCT_Pos* pos);
 static uint8_t BC_get_bc_length_default_(const bct_id_t block);
 static void BC_set_bc_cmd_data_default_(const BCT_Pos* pos, const BCT_CmdData* value);
 static void BC_set_bc_length_default_(const bct_id_t block, uint8_t length);
 
-// BCT_Func ‚ğƒ‰ƒbƒv‚µ‚½ static ‚È getter, setter. ‚È‚Ì‚Å •Ô‚è’l‚É const ‚ª‚Â‚©‚È‚¢
+// BCT_Func ã‚’ãƒ©ãƒƒãƒ—ã—ãŸ static ãª getter, setter. ãªã®ã§ è¿”ã‚Šå€¤ã« const ãŒã¤ã‹ãªã„
 static BCT_CmdData* BCT_get_bc_cmd_data_(const BCT_Pos* pos);
 static void BCT_set_bc_cmd_data_(const BCT_Pos* pos, const BCT_CmdData* value);
 static void BCT_set_bc_length_(const bct_id_t block, uint8_t length);
 
 /**
- * @brief pos, pos_stored ‚ğ initialize
+ * @brief pos, pos_stored ã‚’ initialize
  */
 static void BCT_clear_pos_(void);
 
 static BCT_ACK BCT_set_position_(const BCT_Pos* pos);
 
 /**
- * @brief pos ‚Ìw‚·êŠ‚É packet ‚Ì“à—e‚ğ•Û‘¶ (TCP_PRM_HDR_LEN ‚Ì’·‚³‚àl—¶)
+ * @brief pos ã®æŒ‡ã™å ´æ‰€ã« packet ã®å†…å®¹ã‚’ä¿å­˜ (TCP_PRM_HDR_LEN ã®é•·ã•ã‚‚è€ƒæ…®)
  */
 static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CTCP* packet);
 
@@ -64,7 +64,7 @@ void BCT_initialize(void)
     if (!BCUS_bc_should_clear(i)) continue;
 
     BCT_clear_block(i);
-    WDT_clear_wdt();      // ”O‚Ìˆ×H
+    WDT_clear_wdt();      // å¿µã®ç‚ºï¼Ÿ
   }
 
   BCT_clear_pos_();
@@ -175,10 +175,10 @@ BCT_ACK BCT_register_cmd(const CTCP* packet)
 
   length = BCT_get_bc_length(block_command_table_.pos.block);
 
-  // 2018/06/20 ƒRƒƒ“ƒg’Ç‹L
-  // Œ»İ“o˜^‚³‚ê‚Ä‚¢‚éƒRƒ}ƒ“ƒh”‚æ‚è‚à‘å‚«‚¯‚ê‚ÎƒGƒ‰[
-  // ‚Â‚Ü‚èC“o˜^‚³‚ê‚Ä‚¢‚éƒe[ƒuƒ‹‚Ìã‘‚«‚Í‚Å‚«‚é‚ªC
-  // –¢“o˜^‚ÌƒZƒ‹‚ğ”ò‚Î‚µ‚ÄC•s˜A‘±‚É“o˜^‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢C‚Í‚¸D
+  // 2018/06/20 ã‚³ãƒ¡ãƒ³ãƒˆè¿½è¨˜
+  // ç¾åœ¨ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚³ãƒãƒ³ãƒ‰æ•°ã‚ˆã‚Šã‚‚å¤§ãã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼
+  // ã¤ã¾ã‚Šï¼Œç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«ã®ä¸Šæ›¸ãã¯ã§ãã‚‹ãŒï¼Œ
+  // æœªç™»éŒ²ã®ã‚»ãƒ«ã‚’é£›ã°ã—ã¦ï¼Œä¸é€£ç¶šã«ç™»éŒ²ã™ã‚‹ã“ã¨ã¯ã§ããªã„ï¼Œã¯ãšï¼
   if (block_command_table_.pos.cmd > length)
   {
     return BCT_ISORATED_CMD;
@@ -191,10 +191,10 @@ BCT_ACK BCT_register_cmd(const CTCP* packet)
     return ack;
   }
 
-  // ˜A‘±“o˜^‚É”õ‚¦Aƒ|ƒCƒ“ƒ^ˆÊ’u‚ği‚ß‚éBãŒÀ’´‰ß‚ÍŸ‰ñ“o˜^ƒŠƒWƒFƒNƒg‚³‚ê‚éB
+  // é€£ç¶šç™»éŒ²ã«å‚™ãˆã€ãƒã‚¤ãƒ³ã‚¿ä½ç½®ã‚’é€²ã‚ã‚‹ã€‚ä¸Šé™è¶…éã¯æ¬¡å›ç™»éŒ²æ™‚ãƒªã‚¸ã‚§ã‚¯ãƒˆã•ã‚Œã‚‹ã€‚
   ++(block_command_table_.pos.cmd);
 
-  // ƒuƒƒbƒN––”ö‚Ö‚ÌƒRƒ}ƒ“ƒh’Ç‰Á‚Ìê‡‚ÍƒuƒƒbƒN’·‚ğXV‚·‚é
+  // ãƒ–ãƒ­ãƒƒã‚¯æœ«å°¾ã¸ã®ã‚³ãƒãƒ³ãƒ‰è¿½åŠ ã®å ´åˆã¯ãƒ–ãƒ­ãƒƒã‚¯é•·ã‚’æ›´æ–°ã™ã‚‹
   if (length < block_command_table_.pos.cmd)
   {
     length = block_command_table_.pos.cmd;
@@ -214,18 +214,18 @@ BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CTCP* packet)
   return BCT_save_cmd_(pos, packet);
 }
 
-// FIXME: ˆÈ‰º•¡”ŠÖ”‚É‚í‚½‚Á‚Ä BlockCmdCmdData ‚Æ CTCP‚Ì•ÏŠ·‚ªCŒ»İcast‚É‚æ‚Á‚Äs‚í‚ê‚Ä‚¢‚é‚ªCCTCP‚Íƒ†[ƒU[’è‹`‚È‚½‚ßC‚»‚êi=TCPˆÈŠOj‚É‘Î‰‚Å‚«‚é‚æ‚¤‚É‚·‚é
-//        “¯—l‚Ì——R‚Å memcpy ‚È‚Ç‚à‘Î‰‚·‚é•K—v‚ª‚ ‚éD
+// FIXME: ä»¥ä¸‹è¤‡æ•°é–¢æ•°ã«ã‚ãŸã£ã¦ BlockCmdCmdData ã¨ CTCPã®å¤‰æ›ãŒï¼Œç¾åœ¨castã«ã‚ˆã£ã¦è¡Œã‚ã‚Œã¦ã„ã‚‹ãŒï¼ŒCTCPã¯ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©ãªãŸã‚ï¼Œãã‚Œï¼ˆ=TCPä»¥å¤–ï¼‰ã«å¯¾å¿œã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
+//        åŒæ§˜ã®ç†ç”±ã§ memcpy ãªã©ã‚‚å¯¾å¿œã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
 static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CTCP* packet)
 {
-  // FIXME: TCP‚ÉˆË‘¶‚µ‚È‚¢C‚Â‚Ü‚èCTCP‚ÉˆË‘¶‚·‚éƒR[ƒh‚É‚·‚é
+  // FIXME: TCPã«ä¾å­˜ã—ãªã„ï¼Œã¤ã¾ã‚ŠCTCPã«ä¾å­˜ã™ã‚‹ã‚³ãƒ¼ãƒ‰ã«ã™ã‚‹
   BCT_ACK ack = BCT_check_position(pos);
   if (ack != BCT_SUCCESS) return ack;
 
-  // ƒpƒPƒbƒg‘S’·‚ª‘z’èÅ‘å’·‚ğ’´‚¦‚Ä‚¢‚éê‡‚ÍˆÙí”»’è
+  // ãƒ‘ã‚±ãƒƒãƒˆå…¨é•·ãŒæƒ³å®šæœ€å¤§é•·ã‚’è¶…ãˆã¦ã„ã‚‹å ´åˆã¯ç•°å¸¸åˆ¤å®š
   if (CCP_get_packet_len(packet) > BCT_CMD_MAX_LENGTH) return BCT_CMD_TOO_LONG;
 
-  // Ši”[‰Â”\‚ÈƒpƒPƒbƒg‚È‚ç“à—e‚ğƒRƒs[‚µ•Û‘¶
+  // æ ¼ç´å¯èƒ½ãªãƒ‘ã‚±ãƒƒãƒˆãªã‚‰å†…å®¹ã‚’ã‚³ãƒ”ãƒ¼ã—ä¿å­˜
   BCT_set_bc_cmd_data_(pos, (BCT_CmdData*)packet->packet); // const_cast
 
   return BCT_SUCCESS;
@@ -238,7 +238,7 @@ BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CTCP* packet)
 
   if (ack != BCT_SUCCESS) return ack;
   bc_cmddata = BCT_get_bc_cmd_data_(pos);
-  memcpy(&packet->packet, bc_cmddata, BCT_CMD_MAX_LENGTH);   // FIXME: CTCP‚ªTCPˆË‘¶‚È‚Ì‚Å’¼‚·
+  memcpy(&packet->packet, bc_cmddata, BCT_CMD_MAX_LENGTH);   // FIXME: CTCPãŒTCPä¾å­˜ãªã®ã§ç›´ã™
 
   return BCT_SUCCESS;
 }
@@ -296,8 +296,8 @@ const uint8_t* BCT_get_param_head(const bct_id_t block, const uint8_t cmd)
 }
 
 /* 2018/11/27
- * ’nã‹Ç‚ÆOBC“à•”‚ÌBC‚Ìƒ|ƒCƒ“ƒ^‚ª¬‚´‚Á‚Ä‚¨‚©‚µ‚­‚È‚ç‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Ì‰üC
- * Ú×‚ÍC2AƒhƒLƒ…ƒƒ“ƒg uƒuƒƒbƒNƒRƒ}ƒ“ƒh’Ç‰Á•û–@.mdv
+ * åœ°ä¸Šå±€ã¨OBCå†…éƒ¨ã®BCã®ãƒã‚¤ãƒ³ã‚¿ãŒæ··ã–ã£ã¦ãŠã‹ã—ããªã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®æ”¹ä¿®
+ * è©³ç´°ã¯C2Aãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ ã€Œãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰è¿½åŠ æ–¹æ³•.mdã€
  */
 void BCT_store_pos(void)
 {
@@ -372,7 +372,7 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
     BCT_set_bc_cmd_data_(&pos_a, cmd_b);
     BCT_set_bc_cmd_data_(&pos_b, &tmp_bct_cmddata);
 
-    WDT_clear_wdt(); // ŠÔ‚ª‚©‚©‚é‚Ì‚Å
+    WDT_clear_wdt(); // æ™‚é–“ãŒã‹ã‹ã‚‹ã®ã§
   }
 
   return BCT_SUCCESS;
@@ -415,14 +415,14 @@ CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CTCP* packet)
 
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
-    // ƒpƒ‰ƒ[ƒ^‚ÍƒuƒƒbƒN”Ô†
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µB
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—ã€‚
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  // w’è‚³‚ê‚½ƒuƒƒbƒN”Ô†‚ÌƒNƒŠƒA‚ğÀsB
+  // æŒ‡å®šã•ã‚ŒãŸãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã®ã‚¯ãƒªã‚¢ã‚’å®Ÿè¡Œã€‚
   ack = BCT_clear_block(block);
 
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
@@ -449,11 +449,11 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CTCP* packet)
 
   if (CCP_get_param_len(packet) != (SIZE_OF_BCT_ID_T + 1))
   {
-    // ƒpƒ‰ƒ[ƒ^‚ÍƒuƒƒbƒN”Ô†‚ÆƒRƒ}ƒ“ƒh”Ô†1ByteB
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã¨ã‚³ãƒãƒ³ãƒ‰ç•ªå·1Byteã€‚
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µ
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—
   endian_memcpy(&pos.block, param, SIZE_OF_BCT_ID_T);
   pos.cmd = param[SIZE_OF_BCT_ID_T];
 
@@ -485,13 +485,13 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
 
   BCT_Pos  pos;
   BCT_CmdData new_bct_cmddata; // FIXME: BCT_CmdData <-> CTCP
-  uint8_t new_cmd_param[sizeof(BCT_CmdData) - TCP_PRM_HDR_LEN - TCP_CMD_2ND_HDR_LEN - TCP_CMD_USER_HDR_LEN];   // ‚¢‚Á‚½‚ñ‚±‚±‚Éparam‚ğƒRƒs[‚·‚é, FIXME: TCP‚ÉˆË‘¶‚³‚¹‚È‚¢‚æ‚¤‚É
+  uint8_t new_cmd_param[sizeof(BCT_CmdData) - TCP_PRM_HDR_LEN - TCP_CMD_2ND_HDR_LEN - TCP_CMD_USER_HDR_LEN];   // ã„ã£ãŸã‚“ã“ã“ã«paramã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹, FIXME: TCPã«ä¾å­˜ã•ã›ãªã„ã‚ˆã†ã«
   uint16_t real_param_len = CCP_get_param_len(packet);
   uint16_t min_cmd_param_len = CA_get_cmd_param_min_len(Cmd_CODE_BCT_OVERWRITE_CMD);
   uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(new_cmd_param);
   uint16_t cmd_param_len;
 
-  // raw ‚È‚Ì‚Åˆø”’·ƒ`ƒFƒbƒN
+  // raw ãªã®ã§å¼•æ•°é•·ãƒã‚§ãƒƒã‚¯
   if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_EXEC_ILLEGAL_LENGTH;
 
   cmd_param_len = real_param_len - min_cmd_param_len;

@@ -1,8 +1,8 @@
 /**
  * @file
  * @brief watchdog timer
- * @note  ������BootLoader�ɔz�u����̂ŁC���v���\�̈�̂��̂�include���Ȃ����ƁI�I
- *        �Ȃ��CCMD�̓��v���Ώۓ��I�I
+ * @note  こいつもBootLoaderに配置するので，リプロ可能領域のものをincludeしないこと！！
+ *        なお，CMDはリプロ対象内！！
  */
 #ifndef WATCHDOG_TIMER_H_
 #define WATCHDOG_TIMER_H_
@@ -13,23 +13,23 @@
 extern const WDT_Config* const wdt_config;
 
 /**
- * @brief  WDT�̏�����
+ * @brief  WDTの初期化
  * @param  void
  * @return void
- * @note   IF_wapper�ł͂Ȃ��C���̊֐���global�Ɍ��J�����
+ * @note   IF_wapperではなく，この関数がglobalに公開される
  */
 void WDT_init(void);
 
 /**
- * @brief  WDT�̃N���A
+ * @brief  WDTのクリア
  * @param  void
  * @return void
- * @note   IF_wapper�ł͂Ȃ��C���̊֐���global�Ɍ��J�����
+ * @note   IF_wapperではなく，この関数がglobalに公開される
  */
 void WDT_clear_wdt(void);
 
-// ���S�ăv���ΏۊO
-// ���S�ăv���Ώۓ�
+// ↑全再プロ対象外
+// ↓全再プロ対象内
 
 CCP_EXEC_STS Cmd_WDT_INIT(const CTCP* packet);
 CCP_EXEC_STS Cmd_WDT_ENABLE(const CTCP* packet);

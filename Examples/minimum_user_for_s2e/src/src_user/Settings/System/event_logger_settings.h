@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief event_logger �̐ݒ�
+ * @brief event_logger の設定
  */
 #ifndef EVENT_LOGGER_SETTINGS_H_
 #define EVENT_LOGGER_SETTINGS_H_

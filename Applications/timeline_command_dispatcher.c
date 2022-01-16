@@ -17,7 +17,7 @@ const int* TLCD_line_no_for_tlm;
 static cycle_t TLCD_tl_tlm_updated_at_;
 const cycle_t* TLCD_tl_tlm_updated_at;
 static CTCP TLCD_null_packet_;
-const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0‚ªÅ’·‚È‚Ì‚Å‚»‚ê‚É‡‚í‚¹‚éB
+const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0ãŒæœ€é•·ãªã®ã§ãã‚Œã«åˆã‚ã›ã‚‹ã€‚
 static int TLCD_page_no_;
 const int* TLCD_page_no;
 
@@ -37,18 +37,18 @@ AppInfo TLCD0_create_app(void)
 
 static void TLCD0_init_(void)
 {
-  // TLC0 Dispatcher‚Ì‰Šú‰»ˆ—
+  // TLC0 Dispatcherã®åˆæœŸåŒ–å‡¦ç†
   timeline_command_dispatcher_[0] = CDIS_init(&(PH_tl_cmd_list[0]));
 
-  // ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒRƒ}ƒ“ƒh‚ÌƒeƒŒƒƒgƒŠ•Ï”‰Šúİ’è
-  // ‚·‚×‚Ä‚Ìƒ^ƒCƒ€ƒ‰ƒCƒ“‚Å‹¤—p‚È‚Ì‚ÅTL0‚Å‘ã•\‚µ‚Ä‰Šú‰»
+  // ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚³ãƒãƒ³ãƒ‰ã®ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªå¤‰æ•°åˆæœŸè¨­å®š
+  // ã™ã¹ã¦ã®ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã§å…±ç”¨ãªã®ã§TL0ã§ä»£è¡¨ã—ã¦åˆæœŸåŒ–
   TLCD_line_no_for_tlm = &TLCD_line_no_for_tlm_;
   TLCD_line_no_for_tlm_ = 0;
   TLCD_tl_tlm_updated_at = &TLCD_tl_tlm_updated_at_;
   memset(&TLCD_null_packet_, 0, sizeof(TLCD_null_packet_));
   TLCD_update_tl_list_for_tlm(0);
 
-  // ƒeƒŒƒƒgƒŠƒy[ƒW”Ô†‚ğ‰Šú’l0‚Éİ’è
+  // ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒšãƒ¼ã‚¸ç•ªå·ã‚’åˆæœŸå€¤0ã«è¨­å®š
   TLCD_page_no_ = 0;
   TLCD_page_no = &TLCD_page_no_;
 }
@@ -96,17 +96,17 @@ static void tlc_dispatcher_(int line_no)
   switch (ack)
   {
   case PL_TLC_ON_TIME:
-    // Às—\’è‚¿‚å‚¤‚Ç
+    // å®Ÿè¡Œäºˆå®šæ™‚åˆ»ã¡ã‚‡ã†ã©
     CDIS_dispatch_command(&timeline_command_dispatcher_[line_no]);
     break;
 
   case PL_TLC_PAST_TIME:
 
-    // Às—\’è’´‰ß
+    // å®Ÿè¡Œäºˆå®šæ™‚åˆ»è¶…é
     if (timeline_command_dispatcher_[line_no].lockout == 0)
     {
-      // Lockout–³Œø‚Ìê‡‚ÍƒAƒmƒ}ƒŠ[‚ğ‹L˜^B
-      // Lockout—LŒø‚Ìê‡‚ÍƒAƒmƒ}ƒŠ[‚Ì˜A‘±¶¬‚ğ–h‚®‚½‚ß’´‰ßó‘Ô‚Å‚àƒAƒmƒ}ƒŠ[‚ğ‹L˜^‚µ‚È‚¢B
+      // Lockoutç„¡åŠ¹ã®å ´åˆã¯ã‚¢ãƒãƒãƒªãƒ¼ã‚’è¨˜éŒ²ã€‚
+      // Lockoutæœ‰åŠ¹ã®å ´åˆã¯ã‚¢ãƒãƒãƒªãƒ¼ã®é€£ç¶šç”Ÿæˆã‚’é˜²ããŸã‚æ™‚åˆ»è¶…éçŠ¶æ…‹ã§ã‚‚ã‚¢ãƒãƒãƒªãƒ¼ã‚’è¨˜éŒ²ã—ãªã„ã€‚
 #ifndef AL_DISALBE_AT_C2A_CORE
       AL_add_anomaly(AL_CORE_GROUP_TLCD, (uint32_t)line_no);
 #endif
@@ -117,19 +117,19 @@ static void tlc_dispatcher_(int line_no)
 
       if (timeline_command_dispatcher_[line_no].stop_on_error == 1)
       {
-        // Lockout–³Œø‚©‚ÂSOE—LŒø‚Ìê‡
-        // Lockout—LŒø‚Æ‚µAƒ^ƒCƒ€ƒ‰ƒCƒ“ƒRƒ}ƒ“ƒhˆ—‚ğ’â~B
+        // Lockoutç„¡åŠ¹ã‹ã¤SOEæœ‰åŠ¹ã®å ´åˆ
+        // Lockoutæœ‰åŠ¹ã¨ã—ã€ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚³ãƒãƒ³ãƒ‰å‡¦ç†ã‚’åœæ­¢ã€‚
         timeline_command_dispatcher_[line_no].lockout = 1;
       }
     }
 
-    // ƒRƒ}ƒ“ƒhÀsˆ—ŒÄ‚Ño‚µB
-    // Lockout‚Æ‚È‚Á‚½ê‡‚ÍŒÄ‚Ño‚µ‚Ä‚àƒRƒ}ƒ“ƒh‚ÍÀs‚³‚ê‚È‚¢B
+    // ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œå‡¦ç†å‘¼ã³å‡ºã—ã€‚
+    // Lockoutã¨ãªã£ãŸå ´åˆã¯å‘¼ã³å‡ºã—ã¦ã‚‚ã‚³ãƒãƒ³ãƒ‰ã¯å®Ÿè¡Œã•ã‚Œãªã„ã€‚
     CDIS_dispatch_command(&timeline_command_dispatcher_[line_no]);
     break;
 
   case PL_TLC_NOT_YET:
-    // Às‚·‚×‚«ƒRƒ}ƒ“ƒh‚È‚µB
+    // å®Ÿè¡Œã™ã¹ãã‚³ãƒãƒ³ãƒ‰ãªã—ã€‚
     break;
 
   default:
@@ -145,16 +145,16 @@ uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
   if (line_no >= TL_ID_MAX) return TL_ID_MAX;
 
   pos = (PL_Node*)PL_get_head(&(PH_tl_cmd_list[line_no]));
-  // ƒeƒŒƒî•ñ¶¬‚ğ‹L˜^
+  // ãƒ†ãƒ¬ãƒ¡æƒ…å ±ç”Ÿæˆæ™‚åˆ»ã‚’è¨˜éŒ²
   TLCD_tl_tlm_updated_at_ = TMGR_get_master_total_cycle();
 
-  // ‘SƒŠƒXƒg“à—e‚ğƒNƒŠƒA
+  // å…¨ãƒªã‚¹ãƒˆå†…å®¹ã‚’ã‚¯ãƒªã‚¢
   for (i = 0; i < PH_TL0_CMD_LIST_MAX; ++i)
   {
     TLCD_tl_list_for_tlm[i] = &TLCD_null_packet_;
   }
 
-  // “o˜^‚³‚ê‚Ä‚¢‚éTLƒRƒ}ƒ“ƒh‚ğƒŠƒXƒg‚É‘‚«‚İ
+  // ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹TLã‚³ãƒãƒ³ãƒ‰ã‚’ãƒªã‚¹ãƒˆã«æ›¸ãè¾¼ã¿
   for (i = 0; pos != NULL; ++i)
   {
     TLCD_tl_list_for_tlm[i] = &(pos->packet);
@@ -172,7 +172,7 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CTCP* packet)
 
   if (line_no >= TL_ID_MAX)
   {
-    // w’è‚³‚ê‚½ƒ‰ƒCƒ“”Ô†‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍˆÙí”»’è
+    // æŒ‡å®šã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ç•ªå·ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®š
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -186,16 +186,16 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CTCP* packet)
   int line_no;
   cycle_t time;
 
-  // ƒ‰ƒCƒ“”Ô†‚ğ“Ç‚İ‚İ
-  line_no = param[0]; // ”ñ–¾¦“I‚Ècast
+  // ãƒ©ã‚¤ãƒ³ç•ªå·ã‚’èª­ã¿è¾¼ã¿
+  line_no = param[0]; // éæ˜ç¤ºçš„ãªcast
 
   if (line_no >= TL_ID_MAX)
   {
-    // w’è‚³‚ê‚½ƒ‰ƒCƒ“”Ô†‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍˆÙí”»’è
+    // æŒ‡å®šã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ç•ªå·ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®š
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  // w’èTI‚ğ“Ç‚İ‚İ
+  // æŒ‡å®šTIã‚’èª­ã¿è¾¼ã¿
   endian_memcpy(&time, packet + 1, sizeof(time));
 
   if (drop_tl_cmd_at_(line_no, time) == PH_SUCCESS)
@@ -241,12 +241,12 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet)
   uint8_t line_no;
   uint8_t flag;
 
-  // ƒpƒ‰ƒ[ƒ^“Ç‚İo‚µ&“à—eŠm”F
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿å‡ºã—&å†…å®¹ç¢ºèª
   line_no = param[0];
 
   if (line_no >= TL_ID_MAX)
   {
-    // w’è‚³‚ê‚½ƒ‰ƒCƒ“”Ô†‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍˆÙí”»’èB
+    // æŒ‡å®šã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ç•ªå·ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®šã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -254,11 +254,11 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet)
 
   if ((flag != 0) && (flag != 1))
   {
-    // ƒtƒ‰ƒO“à—e‚ª0/1‚Å‚È‚¢‚È‚çˆÙí”»’èB
+    // ãƒ•ãƒ©ã‚°å†…å®¹ãŒ0/1ã§ãªã„ãªã‚‰ç•°å¸¸åˆ¤å®šã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  // ˆÙíÀs’†’fƒtƒ‰ƒO‚ğİ’è
+  // ç•°å¸¸æ™‚å®Ÿè¡Œä¸­æ–­ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
   timeline_command_dispatcher_[line_no].stop_on_error = flag;
   return CCP_EXEC_SUCCESS;
 }
@@ -269,12 +269,12 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet)
   uint8_t line_no;
   uint8_t flag;
 
-  // ƒpƒ‰ƒ[ƒ^“Ç‚İo‚µ&’lƒ`ƒFƒbƒNB
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿å‡ºã—&å€¤ãƒã‚§ãƒƒã‚¯ã€‚
   line_no = param[0];
 
   if (line_no >= TL_ID_MAX)
   {
-    // ‘¶İ‚µ‚È‚¢ƒ‰ƒCƒ“”Ô†‚ªw’è‚³‚ê‚½ê‡‚ÍˆÙí”»’èB
+    // å­˜åœ¨ã—ãªã„ãƒ©ã‚¤ãƒ³ç•ªå·ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆã¯ç•°å¸¸åˆ¤å®šã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -282,11 +282,11 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet)
 
   if ((flag != 0) && (flag != 1))
   {
-    // ƒtƒ‰ƒOî•ñ‚ª0/1‚Å‚È‚¢ê‡‚ÍˆÙí”»’èB
+    // ãƒ•ãƒ©ã‚°æƒ…å ±ãŒ0/1ã§ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®šã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  // ƒRƒ}ƒ“ƒhÀsƒtƒ‰ƒO‚ğİ’èB
+  // ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œãƒ•ãƒ©ã‚°ã‚’è¨­å®šã€‚
   timeline_command_dispatcher_[line_no].lockout = flag;
   return CCP_EXEC_SUCCESS;
 }
@@ -295,12 +295,12 @@ CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet)
 {
   int line_no;
 
-  // ƒ‰ƒCƒ“”Ô†‚ğ“Ç‚İ‚İ
+  // ãƒ©ã‚¤ãƒ³ç•ªå·ã‚’èª­ã¿è¾¼ã¿
   line_no = CCP_get_param_head(packet)[0];
 
   if (line_no >= TL_ID_MAX)
   {
-    // w’è‚³‚ê‚½ƒ‰ƒCƒ“”Ô†‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍˆÙí”»’è
+    // æŒ‡å®šã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ç•ªå·ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®š
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -309,7 +309,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-// FIXME: EL‚ÌƒCƒxƒ“ƒg‹L˜^‚ğ’Ç‰Á‚·‚é
+// FIXME: ELã®ã‚¤ãƒ™ãƒ³ãƒˆè¨˜éŒ²ã‚’è¿½åŠ ã™ã‚‹
 CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
 {
   int      line_no;
@@ -319,17 +319,17 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
 
   if (CCP_get_param_len(packet) != (1 + SIZE_OF_BCT_ID_T))
   {
-    // ƒpƒ‰ƒ[ƒ^‚ÍTLƒ‰ƒCƒ“”Ô†(1Byte)‚ÆƒuƒƒbƒN”Ô†B
-    // ˆê’v‚µ‚È‚¢ê‡‚ÍˆÙí”»’èB
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯TLãƒ©ã‚¤ãƒ³ç•ªå·(1Byte)ã¨ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã€‚
+    // ä¸€è‡´ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®šã€‚
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
 
-  // ƒ‰ƒCƒ“”Ô†‚ğ“Ç‚İ‚İ
+  // ãƒ©ã‚¤ãƒ³ç•ªå·ã‚’èª­ã¿è¾¼ã¿
   line_no = param[0];
 
   if (line_no >= TL_ID_MAX)
   {
-    // w’è‚³‚ê‚½ƒ‰ƒCƒ“”Ô†‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍˆÙí”»’è
+    // æŒ‡å®šã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ç•ªå·ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®š
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -337,7 +337,7 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
 
   if (block_no >= BCT_MAX_BLOCKS)
   {
-    // w’è‚³‚ê‚½ƒuƒƒbƒN”Ô†‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍˆÙí”»’è
+    // æŒ‡å®šã•ã‚ŒãŸãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç•°å¸¸åˆ¤å®š
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -363,7 +363,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CTCP* packet)
 
   if (page >= TL_TLM_PAGE_MAX)
   {
-    // ƒy[ƒW”Ô†‚ªƒRƒ}ƒ“ƒhƒe[ƒuƒ‹”ÍˆÍŠO
+    // ãƒšãƒ¼ã‚¸ç•ªå·ãŒã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -379,11 +379,11 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CTCP* packet)
 
   if (line_no >= TL_ID_MAX)
   {
-    // ƒ‰ƒCƒ“”Ô†‚ª•s³B
+    // ãƒ©ã‚¤ãƒ³ç•ªå·ãŒä¸æ­£ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  // “–ŠYƒRƒ}ƒ“ƒhˆ—‹@”\‚ÌƒGƒ‰[‹L˜^‚ğ‰ğœB
+  // å½“è©²ã‚³ãƒãƒ³ãƒ‰å‡¦ç†æ©Ÿèƒ½ã®ã‚¨ãƒ©ãƒ¼è¨˜éŒ²ã‚’è§£é™¤ã€‚
   CDIS_clear_error_status(&timeline_command_dispatcher_[line_no]);
   return CCP_EXEC_SUCCESS;
 }

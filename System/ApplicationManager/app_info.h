@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief App î•ñ\‘¢‘Ì’è‹`‚Æ App ì¬
+ * @brief App æƒ…å ±æ§‹é€ ä½“å®šç¾©ã¨ App ä½œæˆ
  */
 #ifndef APP_INFO_H_
 #define APP_INFO_H_
@@ -9,21 +9,21 @@
 
 typedef struct
 {
-  const char* name;           //!< ƒAƒvƒŠ–¼ (C2A “à•”‚Å‚Íg—p‚³‚ê‚Ä‚¢‚È‚¢ )
-  step_t init_duration;       //!< ƒAƒvƒŠ‰Šú‰»ˆ—ŠÔ
-  step_t prev;                //!< ƒAƒvƒŠÀsˆ—ŠÔi’¼‹ßj
-  step_t min;                 //!< ƒAƒvƒŠÀsˆ—ŠÔiÅ¬’lj
-  step_t max;                 //!< ƒAƒvƒŠÀsˆ—ŠÔiÅ‘å’lj
-  void (*initializer)(void);  //!< ƒAƒvƒŠ‰Šú‰»ŠÖ”
-  void (*entry_point)(void);  //!< ƒAƒvƒŠÀsŠÖ”iƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒgj
+  const char* name;           //!< ã‚¢ãƒ—ãƒªå (C2A å†…éƒ¨ã§ã¯ä½¿ç”¨ã•ã‚Œã¦ã„ãªã„ )
+  step_t init_duration;       //!< ã‚¢ãƒ—ãƒªåˆæœŸåŒ–å‡¦ç†æ™‚é–“
+  step_t prev;                //!< ã‚¢ãƒ—ãƒªå®Ÿè¡Œå‡¦ç†æ™‚é–“ï¼ˆç›´è¿‘ï¼‰
+  step_t min;                 //!< ã‚¢ãƒ—ãƒªå®Ÿè¡Œå‡¦ç†æ™‚é–“ï¼ˆæœ€å°å€¤ï¼‰
+  step_t max;                 //!< ã‚¢ãƒ—ãƒªå®Ÿè¡Œå‡¦ç†æ™‚é–“ï¼ˆæœ€å¤§å€¤ï¼‰
+  void (*initializer)(void);  //!< ã‚¢ãƒ—ãƒªåˆæœŸåŒ–é–¢æ•°
+  void (*entry_point)(void);  //!< ã‚¢ãƒ—ãƒªå®Ÿè¡Œé–¢æ•°ï¼ˆã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆï¼‰
 } AppInfo;
 
 /**
- * @brief  AppInfo ‚ğì‚é
- * @param  name: ƒAƒvƒŠ–¼
- * @param  initializer: ƒAƒvƒŠ‰Šú‰»ŠÖ”
- * @param  entry_point: ƒAƒvƒŠÀsŠÖ”
- * @return ì¬‚³‚ê‚½ AppInfo
+ * @brief  AppInfo ã‚’ä½œã‚‹
+ * @param  name: ã‚¢ãƒ—ãƒªå
+ * @param  initializer: ã‚¢ãƒ—ãƒªåˆæœŸåŒ–é–¢æ•°
+ * @param  entry_point: ã‚¢ãƒ—ãƒªå®Ÿè¡Œé–¢æ•°
+ * @return ä½œæˆã•ã‚ŒãŸ AppInfo
  */
 AppInfo AI_create_app_info(const char* name,
                            void (*initializer)(void),

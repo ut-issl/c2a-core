@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
 * @file   di_uart_test.c
-* @brief  UART‚ÆDriverSuperƒeƒXƒg—p
+* @brief  UARTã¨DriverSuperãƒ†ã‚¹ãƒˆç”¨
 */
 #include "di_uart_test.h"
 
@@ -18,7 +18,7 @@ const UART_TEST_Driver* uart_test_instance;
 static void UART_TEST_init_by_AM_(void);
 static void UART_TEST_init_(void);
 static void UART_TEST_update_(void);
-// TODO: À‘•‚·‚é
+// TODO: å®Ÿè£…ã™ã‚‹
 // static int  UART_TEST_fill_with_zero_(uint32_t no);
 // static int  UART_TEST_abort_fill_nodata_(uint8_t err);
 // static int  UART_TEST_set_rec_flag_(uint32_t no);
@@ -26,9 +26,9 @@ static void UART_TEST_update_(void);
 // static int  UART_TEST_is_rec_flag_up_(uint32_t no);
 
 
-// !!!!!!!!!! ’ˆÓ !!!!!!!!!!
-// ‚±‚ÌDriver‚ÍCAM_initialize_app_ ‚Å‚Í‰Šú‰»‚³‚ê‚È‚¢II
-// initƒRƒ}ƒ“ƒh‚Å‰Šú‰»‚·‚é‚±‚Æ
+// !!!!!!!!!! æ³¨æ„ !!!!!!!!!!
+// ã“ã®Driverã¯ï¼ŒAM_initialize_app_ ã§ã¯åˆæœŸåŒ–ã•ã‚Œãªã„ï¼ï¼
+// initã‚³ãƒãƒ³ãƒ‰ã§åˆæœŸåŒ–ã™ã‚‹ã“ã¨
 AppInfo UART_TEST_update(void)
 {
   return AI_create_app_info("update_uart_test", UART_TEST_init_by_AM_, UART_TEST_update_);
@@ -63,7 +63,7 @@ static void UART_TEST_update_(void)
 
   ret = UART_TEST_rec(&uart_test_instance_);
 
-  // TODO: ƒGƒ‰[ˆ—
+  // TODO: ã‚¨ãƒ©ãƒ¼å‡¦ç†
   (void)ret;
 }
 

@@ -19,39 +19,39 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CTCP* packet)
   uint8_t num_dumps;
   int len;
 
-  // ƒpƒ‰ƒ[ƒ^“Ç‚Ýo‚µ
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿å‡ºã—
   category = param[0];
   id = param[1];
   num_dumps = param[2];
 
   if (num_dumps >= 8)
   {
-    // ƒpƒPƒbƒg¶¬‰ñ”‚ÌãŒÀ‚Í8‰ñ‚Æ‚·‚éB
-    // 32kbps‚Å‚ÌDLŽž‚É8VCDU/sec‚Å1•b•ª‚Ì’ÊM—ÊB
-    // ‚±‚ê‚ð’´‚¦‚éê‡‚Í•¡”‰ñƒRƒ}ƒ“ƒh‚ð‘—M‚µ‚Ä‘Î‰ž‚·‚éB
+    // ãƒ‘ã‚±ãƒƒãƒˆç”Ÿæˆå›žæ•°ã®ä¸Šé™ã¯8å›žã¨ã™ã‚‹ã€‚
+    // 32kbpsã§ã®DLæ™‚ã«8VCDU/secã§1ç§’åˆ†ã®é€šä¿¡é‡ã€‚
+    // ã“ã‚Œã‚’è¶…ãˆã‚‹å ´åˆã¯è¤‡æ•°å›žã‚³ãƒžãƒ³ãƒ‰ã‚’é€ä¿¡ã—ã¦å¯¾å¿œã™ã‚‹ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  // ADU¶¬
-  // ADU•ªŠ„‚ª”­¶‚µ‚È‚¢ê‡‚ÉŒÀ’è‚µ‚½ƒR[ƒh‚É‚È‚Á‚Ä‚¢‚éB
-  // TLM’è‹`ƒV[ƒgã‚Å’è‹`‚·‚éADU‚ÍADU’·‚ðADU•ªŠ„‚ª”­¶‚µ‚È‚¢’·‚³‚É§ŒÀ‚·‚éB
+  // ADUç”Ÿæˆ
+  // ADUåˆ†å‰²ãŒç™ºç”Ÿã—ãªã„å ´åˆã«é™å®šã—ãŸã‚³ãƒ¼ãƒ‰ã«ãªã£ã¦ã„ã‚‹ã€‚
+  // TLMå®šç¾©ã‚·ãƒ¼ãƒˆä¸Šã§å®šç¾©ã™ã‚‹ADUã¯ADUé•·ã‚’ADUåˆ†å‰²ãŒç™ºç”Ÿã—ãªã„é•·ã•ã«åˆ¶é™ã™ã‚‹ã€‚
   len = TF_generate_contents((int)id,
                              TCP_TLM_get_user_data_head(&tcp_),
                              TCP_MAX_LEN - TCP_PRM_HDR_LEN - TCP_TLM_2ND_HDR_LEN);
 
-  // ”ÍˆÍŠO‚ÌTLM ID‚ðœŠO
+  // ç¯„å›²å¤–ã®TLM IDã‚’é™¤å¤–
   if (len == TF_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (len < 0) return CCP_EXEC_ILLEGAL_CONTEXT;     // TODO: len‚ªƒ}ƒCƒiƒX‚Ì’l‚½‚¿‚ð‚Ç‚¤‚·‚é‚©H
+  if (len < 0) return CCP_EXEC_ILLEGAL_CONTEXT;     // TODO: lenãŒãƒžã‚¤ãƒŠã‚¹ã®å€¤ãŸã¡ã‚’ã©ã†ã™ã‚‹ã‹ï¼Ÿ
 
-  // TCPacketƒwƒbƒ_Ý’è
+  // TCPacketãƒ˜ãƒƒãƒ€è¨­å®š
   TCP_TLM_setup_primary_hdr(&tcp_, TCP_APID_MIS_TLM, (uint16_t)(len + 7));
   TCP_TLM_set_ti(&tcp_, (uint32_t)(TMGR_get_master_total_cycle()));
-  TCP_TLM_set_category(&tcp_, category); // ƒpƒ‰ƒ[ƒ^‚É‚æ‚éŽw’è
+  TCP_TLM_set_category(&tcp_, category); // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã«ã‚ˆã‚‹æŒ‡å®š
   TCP_TLM_set_packet_id(&tcp_, id);
   TCP_TLM_set_adu_seq_flag(&tcp_, TCP_SEQ_SINGLE);
   TCP_TLM_set_adu_cnt(&tcp_, TG_get_next_adu_counter_());
 
-  // ¶¬‚µ‚½ƒpƒPƒbƒg‚ðŽw’è‚³‚ê‚½‰ñ””z‘—ˆ—‚Ö“n‚·
+  // ç”Ÿæˆã—ãŸãƒ‘ã‚±ãƒƒãƒˆã‚’æŒ‡å®šã•ã‚ŒãŸå›žæ•°é…é€å‡¦ç†ã¸æ¸¡ã™
   while (num_dumps != 0)
   {
     PH_analyze_packet(&tcp_);
@@ -63,7 +63,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CTCP* packet)
 
 static uint8_t TG_get_next_adu_counter_(void)
 {
-  // ƒCƒ“ƒNƒŠƒƒ“ƒg‚µ‚½’l‚ð•Ô‚·‚½‚ß‰Šú’l‚Í0xff‚Æ‚·‚é
+  // ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã—ãŸå€¤ã‚’è¿”ã™ãŸã‚åˆæœŸå€¤ã¯0xffã¨ã™ã‚‹
   static uint8_t adu_counter_ = 0xff;
   return ++adu_counter_;
 }

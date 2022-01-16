@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  CTCP パラメタのオーバーライド用ヘッダー
+ * @brief  CTCP 繝代Λ繝｡繧ｿ縺ｮ繧ｪ繝ｼ繝舌�ｼ繝ｩ繧､繝臥畑繝倥ャ繝繝ｼ
  */
 #ifndef COMMON_TLM_CMD_PACKET_PARAMS_H_
 #define COMMON_TLM_CMD_PACKET_PARAMS_H_
@@ -9,6 +9,6 @@
 
 #undef CTCP_MY_DST_ID
 
-#define CTCP_MY_DST_ID (TCP_APID_MOBC_CMD)      //!< 自分宛てCMDを示すDestination IDを定義
+#define CTCP_MY_DST_ID (TCP_APID_MOBC_CMD)      //!< 閾ｪ蛻�螳帙※CMD繧堤､ｺ縺僖estination ID繧貞ｮ夂ｾｩ
 
 #endif

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief OBC‚Ìî•ñ‚ğ TimeManager \‘¢‘Ì‚É•Û‚µƒJƒEƒ“ƒgƒAƒbƒv‚·‚é. ‚»‚Ì‘¼, ‰‰Z‚É•K—v‚ÈŠÖ”‚àÀ‘•‚·‚é
+ * @brief OBCã®æ™‚åˆ»æƒ…å ±ã‚’ TimeManager æ§‹é€ ä½“ã«ä¿æŒã—ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã™ã‚‹. ãã®ä»–, æ™‚åˆ»æ¼”ç®—ã«å¿…è¦ãªé–¢æ•°ã‚‚å®Ÿè£…ã™ã‚‹
  */
 #ifndef TIME_MANAGER_H_
 #define TIME_MANAGER_H_
@@ -8,20 +8,20 @@
 #include "obc_time.h"
 #include "../../TlmCmd/common_tlm_cmd_packet.h"
 
-#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z “_‚Ì unixtime.
-                                                                 utl_unixtime_epoch_ ‚ÌƒfƒtƒHƒ‹ƒg’l */
+#define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z æ™‚ç‚¹ã® unixtime.
+                                                                 utl_unixtime_epoch_ ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ */
 
 /**
  * @struct TimeManager
- * @brief master_clock_ ‚Å OBC î•ñ‚ğ•Û‚·‚é‚Æ‚Æ‚à‚É, unixtime ‚Æ‚Ì•R‚Ã‚¯‚â‰Šú‰»î•ñ‚Ì‹L˜^‚ğs‚¤
+ * @brief master_clock_ ã§ OBC æ™‚åˆ»æƒ…å ±ã‚’ä¿æŒã™ã‚‹ã¨ã¨ã‚‚ã«, unixtime ã¨ã®ç´ã¥ã‘ã‚„åˆæœŸåŒ–æƒ…å ±ã®è¨˜éŒ²ã‚’è¡Œã†
  */
 typedef struct
 {
   ObcTime master_clock_;
   OBCT_UnixtimeInfo unixtime_info_;
-  double utl_unixtime_epoch_; /*!< ‚±‚ê‚ğƒ[ƒ‚Æ‚µ‚Ä‹NZ‚µ‚½ cycle ‚İ‚Ì‚ğ utl_unixtime ‚Æ’è‹`‚·‚é.
-                                   cycle –¢–‚Ì¸“x‚ÍØ‚èÌ‚Ä‚ç‚ê‚é‚Ì‚Å utl_unixtime ‚Í®”’l‚Æ‚È‚é.
-                                   UTL_cmd ‚ÌÀsî•ñ‚Æ‚µ‚Ä—p‚¢‚é. */
+  double utl_unixtime_epoch_; /*!< ã“ã‚Œã‚’æ™‚åˆ»ã‚¼ãƒ­ã¨ã—ã¦èµ·ç®—ã—ãŸ cycle åˆ»ã¿ã®æ™‚åˆ»ã‚’ utl_unixtime ã¨å®šç¾©ã™ã‚‹.
+                                   cycle æœªæº€ã®ç²¾åº¦ã¯åˆ‡ã‚Šæ¨ã¦ã‚‰ã‚Œã‚‹ã®ã§ utl_unixtime ã¯æ•´æ•°å€¤ã¨ãªã‚‹.
+                                   UTL_cmd ã®å®Ÿè¡Œæ™‚åˆ»æƒ…å ±ã¨ã—ã¦ç”¨ã„ã‚‹. */
   struct
   {
     ObcTime initializing_time;
@@ -32,136 +32,136 @@ typedef struct
 extern const TimeManager* const time_manager;
 
 /**
- * @brief TimeManager \‘¢‘Ì‚ğ‰Šú‰»‚·‚é
+ * @brief TimeManager æ§‹é€ ä½“ã‚’åˆæœŸåŒ–ã™ã‚‹
  * @param void
  * @return void
  */
 void TMGR_init(void);
 
 /**
- * @brief master_clock_ ‚Æ unixtime_info_ ‚ğƒNƒŠƒA‚µ‘S‚Äƒ[ƒ‚É‚·‚é
+ * @brief master_clock_ ã¨ unixtime_info_ ã‚’ã‚¯ãƒªã‚¢ã—å…¨ã¦ã‚¼ãƒ­ã«ã™ã‚‹
  * @param void
  * @return void
  */
 void TMGR_clear(void);
 
 /**
- * @brief master_clock_ ‚Ì mode_cycle ‚ğƒ[ƒ‚É‚·‚é
+ * @brief master_clock_ ã® mode_cycle ã‚’ã‚¼ãƒ­ã«ã™ã‚‹
  * @param void
  * @return void
  */
 void TMGR_clear_master_mode_cycle(void);
 
 /**
- * @brief master_clock_ ‚ğstep‚İ‚ÅƒCƒ“ƒNƒŠƒƒ“ƒg‚·‚é
+ * @brief master_clock_ ã‚’stepåˆ»ã¿ã§ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã™ã‚‹
  * @param void
  * @return void
  */
 void TMGR_count_up_master_clock(void);
 
 /**
- * @brief C2A‚Ì‰Šú‰»I—¹‚ÉŒÄ‚Ño‚µ, ‰Šú‰»flag‚ğ‰º‚°, TMGR‚ğ‚à‚¤ˆê“xƒNƒŠƒA‚·‚é
+ * @brief C2Aã®åˆæœŸåŒ–çµ‚äº†æ™‚ã«å‘¼ã³å‡ºã—, åˆæœŸåŒ–flagã‚’ä¸‹ã’, TMGRã‚’ã‚‚ã†ä¸€åº¦ã‚¯ãƒªã‚¢ã™ã‚‹
  * @param void
  * @return void
  */
 void TMGR_down_initializing_flag(void);
 
 /**
- * @brief Œ»İ‚Ì master_clock_ ‚ğæ“¾‚·‚é
+ * @brief ç¾åœ¨ã® master_clock_ ã‚’å–å¾—ã™ã‚‹
  * @param void
- * @retval {0, 0, 0} : C2A‰Šú‰»’†‚Ìê‡
- * @retval master_clock_ : ‚»‚êˆÈŠO
+ * @retval {0, 0, 0} : C2AåˆæœŸåŒ–ä¸­ã®å ´åˆ
+ * @retval master_clock_ : ãã‚Œä»¥å¤–
  */
 ObcTime TMGR_get_master_clock(void);
 
 /**
- * @brief ‰Šú‰»‚É‚©‚©‚Á‚½ŠÔ‚à‰ÁZ‚µ‚½ master_clock_ ‚ğ•Ô‚·
+ * @brief åˆæœŸåŒ–ã«ã‹ã‹ã£ãŸæ™‚é–“ã‚‚åŠ ç®—ã—ãŸ master_clock_ ã‚’è¿”ã™
  * @param void
  * @return master_clock_ + initializing_time
  */
 ObcTime TMGR_get_master_clock_from_boot(void);
 
 /**
- * @brief Œ»İ‚Ì total_cycle ‚ğ•Ô‚·
+ * @brief ç¾åœ¨ã® total_cycle ã‚’è¿”ã™
  * @param void
- * @return master_clock_ ‚Ì total_cycle
+ * @return master_clock_ ã® total_cycle
  */
 cycle_t TMGR_get_master_total_cycle(void);
 
 /**
- * @brief Œ»İ‚Ì mode_cycle ‚ğ•Ô‚·
+ * @brief ç¾åœ¨ã® mode_cycle ã‚’è¿”ã™
  * @param void
- * @return master_clock_ ‚Ì mode_cycle
+ * @return master_clock_ ã® mode_cycle
  */
 cycle_t TMGR_get_master_mode_cycle(void);
 
 /**
- * @brief Œ»İ‚Ì step ‚ğ•Ô‚·
+ * @brief ç¾åœ¨ã® step ã‚’è¿”ã™
  * @param void
- * @return master_clock_ ‚Ì step
+ * @return master_clock_ ã® step
  */
 step_t TMGR_get_master_step(void);
 
 /**
- * @brief Œ»İ‚Ì total_cycle ‚ğƒ~ƒŠ•b’PˆÊ‚Å•Ô‚·
- * @note uint32_t ‚ªƒI[ƒo[ƒtƒ[‚·‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
- * @note ŒvZã‚Ístep‚àl—¶
+ * @brief ç¾åœ¨ã® total_cycle ã‚’ãƒŸãƒªç§’å˜ä½ã§è¿”ã™
+ * @note uint32_t ãŒã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã™ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
+ * @note è¨ˆç®—ä¸Šã¯stepã‚‚è€ƒæ…®
  * @param void
- * @return ƒ~ƒŠ•b’PˆÊ‚Ì total_cycle
+ * @return ãƒŸãƒªç§’å˜ä½ã® total_cycle
  */
 uint32_t TMGR_get_master_total_cycle_in_msec(void);
 
 /**
- * @brief Œ»İ‚Ì mode_cycle ‚ğƒ~ƒŠ•b’PˆÊ‚Å•Ô‚·
- * @note uint32_t ‚ªƒI[ƒo[ƒtƒ[‚·‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
- * @note ŒvZã‚Ístep‚àl—¶
+ * @brief ç¾åœ¨ã® mode_cycle ã‚’ãƒŸãƒªç§’å˜ä½ã§è¿”ã™
+ * @note uint32_t ãŒã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã™ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
+ * @note è¨ˆç®—ä¸Šã¯stepã‚‚è€ƒæ…®
  * @param void
- * @return ƒ~ƒŠ•b’PˆÊ‚Ì mode_cycle
+ * @return ãƒŸãƒªç§’å˜ä½ã® mode_cycle
  */
 uint32_t TMGR_get_master_mode_cycle_in_msec(void);
 
 /**
- * @brief unixtime_info_ ‚ğæ“¾‚·‚é
+ * @brief unixtime_info_ ã‚’å–å¾—ã™ã‚‹
  * @param void
  * @return unixtime_info_
  */
 OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void);
 
 /**
- * @brief ObcTime ‚ğ unixtime ‚É•ÏŠ·‚·‚é
+ * @brief ObcTime ã‚’ unixtime ã«å¤‰æ›ã™ã‚‹
  * @param[in] ObcTime
- * @return unixtime (•b’PˆÊ, ¬”“_ˆÈ‰º‚à•Û)
+ * @return unixtime (ç§’å˜ä½, å°æ•°ç‚¹ä»¥ä¸‹ã‚‚ä¿æŒ)
  */
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time);
 
 /**
- * @brief unixtime ‚ğ ObcTime ‚É•ÏŠ·‚·‚é
+ * @brief unixtime ã‚’ ObcTime ã«å¤‰æ›ã™ã‚‹
  * @param[in] unixtime
- * @retval {0, 0, 0} : ˆø”‚Ì unixtime ‚ª unixtime_at_ti0 ‚æ‚è¬‚³‚¢‚Æ‚«
- * @retval ObcTime   : ‚»‚êˆÈŠO
+ * @retval {0, 0, 0} : å¼•æ•°ã® unixtime ãŒ unixtime_at_ti0 ã‚ˆã‚Šå°ã•ã„ã¨ã
+ * @retval ObcTime   : ãã‚Œä»¥å¤–
  */
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
 
 /**
- * @brief ˆê”Ê“I‚Èunixtime‚ğ, UTL_cmd‚Å—p‚¢‚é utl_unixtime ‚É•ÏŠ·‚·‚é
- * @param[in] unixtime •ÏŠ·‚µ‚½‚¢ unixtime
- * @retval 0 : ˆø”‚Ì unixtime ‚ª utl_unixtime_epoch_ ‚æ‚è¬‚³‚¢ê‡
- * @retval utl_unixtime : ‚»‚êˆÈŠO‚Ìê‡
+ * @brief ä¸€èˆ¬çš„ãªunixtimeã‚’, UTL_cmdã§ç”¨ã„ã‚‹ utl_unixtime ã«å¤‰æ›ã™ã‚‹
+ * @param[in] unixtime å¤‰æ›ã—ãŸã„ unixtime
+ * @retval 0 : å¼•æ•°ã® unixtime ãŒ utl_unixtime_epoch_ ã‚ˆã‚Šå°ã•ã„å ´åˆ
+ * @retval utl_unixtime : ãã‚Œä»¥å¤–ã®å ´åˆ
  */
 cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime);
 
 /**
- * @brief ˆø”‚Åw’è‚³‚ê‚½ utl_unixtime ‚É‘Î‰‚·‚é TI ‚ğ•Ô‚·
- * @note UTL_cmd ‚ÅÀsî•ñ‚ğ TI ‚É•ÏŠ·‚·‚éÛ‚É—p‚¢‚é
+ * @brief å¼•æ•°ã§æŒ‡å®šã•ã‚ŒãŸ utl_unixtime ã«å¯¾å¿œã™ã‚‹ TI ã‚’è¿”ã™
+ * @note UTL_cmd ã§å®Ÿè¡Œæ™‚åˆ»æƒ…å ±ã‚’ TI ã«å¤‰æ›ã™ã‚‹éš›ã«ç”¨ã„ã‚‹
  * @param[in] utl_unixtime
- * @return TI (total_cycle‚Ì‚±‚Æ)
+ * @return TI (total_cycleã®ã“ã¨)
  */
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
 
 /**
- * @brief unixtime_info_ ‚ğŠÏ‘ªî•ñ‚ğ—p‚¢‚ÄXV‚·‚é
- * @param[in] unixtime (GPS “™‚©‚çŠÏ‘ª‚µ‚½) unixtime
- * @param[in] time (GPS “™‚©‚ç) unixtime ‚ğŠÏ‘ª‚µ‚½‚Ì ObcTime
+ * @brief unixtime_info_ ã‚’è¦³æ¸¬æƒ…å ±ã‚’ç”¨ã„ã¦æ›´æ–°ã™ã‚‹
+ * @param[in] unixtime (GPS ç­‰ã‹ã‚‰è¦³æ¸¬ã—ãŸ) unixtime
+ * @param[in] time (GPS ç­‰ã‹ã‚‰) unixtime ã‚’è¦³æ¸¬ã—ãŸæ™‚ã® ObcTime
  * @return void
  */
 void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);

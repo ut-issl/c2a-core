@@ -1,7 +1,7 @@
 /**
  * @file
- * @brief  ƒRƒ}ƒ“ƒh’è‹`
- * @note   ‚±‚ÌƒR[ƒh‚ÍŽ©“®¶¬‚³‚ê‚Ä‚¢‚Ü‚·I
+ * @brief  ã‚³ãƒžãƒ³ãƒ‰å®šç¾©
+ * @note   ã“ã®ã‚³ãƒ¼ãƒ‰ã¯è‡ªå‹•ç”Ÿæˆã•ã‚Œã¦ã„ã¾ã™ï¼
  */
 #ifndef COMMAND_DEFINITIONS_H_
 #define COMMAND_DEFINITIONS_H_

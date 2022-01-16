@@ -1,9 +1,9 @@
 /**
  * @file
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh“o˜^ŠÖ˜A‚Ìƒ†[ƒeƒBƒŠƒeƒB
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²é–¢é€£ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£
  *
- *         –{‹@”\‚ÍƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì“o˜^•”‚ğwrap‚µCuser‚ªŠÈŒ‰‚©‚ÂˆÀ‘S‚ÈŒ`‚ÅƒuƒƒbƒN
- *         ƒRƒ}ƒ“ƒh“o˜^‚ğs‚¦‚é‚æ‚¤‚É‚·‚é‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB‹@”\‚Å‚·D
+ *         æœ¬æ©Ÿèƒ½ã¯ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®ç™»éŒ²éƒ¨ã‚’wrapã—ï¼ŒuserãŒç°¡æ½”ã‹ã¤å®‰å…¨ãªå½¢ã§ãƒ–ãƒ­ãƒƒã‚¯
+ *         ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²ã‚’è¡Œãˆã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£æ©Ÿèƒ½ã§ã™ï¼
  */
 #ifndef BLOCK_COMMAND_LOADER_H_
 #define BLOCK_COMMAND_LOADER_H_
@@ -14,15 +14,15 @@
 
 
 /**
- * @brief  w’è‚³‚ê‚½ƒuƒƒbƒNƒRƒ}ƒ“ƒhID‚Ö‚Ì“o˜^‚ğˆÀ‘S‚És‚¤‚½‚ß‚ÌwrapperŠÖ”
- * @note   BlockCommandDefinitions.c‚ÅŒÄ‚Î‚ê‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  pos        “o˜^æ‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒhID
- * @param  *func      ÀÛ‚É“o˜^‚ğs‚¤ŠÖ”‚Ö‚Ìƒ|ƒCƒ“ƒ^
- *                    ‚±‚ÌŠÖ”“à•”‚ÍBCL_tool_xxx‚Å\¬‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
+ * @brief  æŒ‡å®šã•ã‚ŒãŸãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰IDã¸ã®ç™»éŒ²ã‚’å®‰å…¨ã«è¡Œã†ãŸã‚ã®wrapperé–¢æ•°
+ * @note   BlockCommandDefinitions.cã§å‘¼ã°ã‚Œã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  pos        ç™»éŒ²å…ˆã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ID
+ * @param  *func      å®Ÿéš›ã«ç™»éŒ²ã‚’è¡Œã†é–¢æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ *                    ã“ã®é–¢æ•°å†…éƒ¨ã¯BCL_tool_xxxã§æ§‹æˆã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
  */
 void BCL_load_bc(bct_id_t pos, void (*func)(void));
 
-// À‘•—\’è
+// å®Ÿè£…äºˆå®š
 #if 0
 void BCL_load_tl(bct_id_t pos, void (*func)(void));
 void BCL_load_sl(bct_id_t pos, void (*func)(void));
@@ -30,112 +30,112 @@ void BCL_load_sl(bct_id_t pos, void (*func)(void));
 
 
 
-// registerŒn—ñ
+// registerç³»åˆ—
 
 /**
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚ÉƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚é
- * @note   ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì’è‹`‚Ég—p‚·‚é
- * @param  ti         ƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‘Š‘ÎTI
- * @param  cmd_id     Às‚·‚éƒRƒ}ƒ“ƒhID
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«ã‚³ãƒãƒ³ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+ * @note   ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®å®šç¾©æ™‚ã«ä½¿ç”¨ã™ã‚‹
+ * @param  ti         ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ç›¸å¯¾TI
+ * @param  cmd_id     å®Ÿè¡Œã™ã‚‹ã‚³ãƒãƒ³ãƒ‰ID
  */
 void BCL_tool_register_cmd(cycle_t ti, CMD_CODE cmd_id);
 
 /**
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚Éƒ[ƒe[ƒ^[‚ÌÀsƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚é
- * @note   ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì’è‹`‚Ég—p‚·‚é
- * @param  ti         ƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‘Š‘ÎTI
- * @param  bct_id     ƒ[ƒe[ƒg‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒhID
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«ãƒ­ãƒ¼ãƒ†ãƒ¼ã‚¿ãƒ¼ã®å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+ * @note   ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®å®šç¾©æ™‚ã«ä½¿ç”¨ã™ã‚‹
+ * @param  ti         ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ç›¸å¯¾TI
+ * @param  bct_id     ãƒ­ãƒ¼ãƒ†ãƒ¼ãƒˆã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ID
  */
 void BCL_tool_register_rotate(cycle_t ti, bct_id_t bct_id);
 
 /**
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚ÉƒRƒ“ƒoƒCƒi[‚ÌÀsƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚é
- * @note   ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì’è‹`‚Ég—p‚·‚é
- * @param  ti         ƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‘Š‘ÎTI
- * @param  bct_id     ƒRƒ“ƒoƒCƒ“‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒhID
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«ã‚³ãƒ³ãƒã‚¤ãƒŠãƒ¼ã®å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+ * @note   ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®å®šç¾©æ™‚ã«ä½¿ç”¨ã™ã‚‹
+ * @param  ti         ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ç›¸å¯¾TI
+ * @param  bct_id     ã‚³ãƒ³ãƒã‚¤ãƒ³ã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ID
  */
 void BCL_tool_register_combine(cycle_t ti, bct_id_t bct_id);
 
 /**
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚Éƒ^ƒCƒ€ƒŠƒ~ƒbƒgƒRƒ“ƒoƒCƒi[‚ÌÀsƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚é
- * @note   ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì’è‹`‚Ég—p‚·‚é
- * @param  ti         ƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‘Š‘ÎTI
- * @param  bct_id     ƒ^ƒCƒ€ƒŠƒ~ƒbƒgƒRƒ“ƒoƒCƒ“‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒhID
- * @param  limit_step ’´‰ß‚·‚é‚ÆÀs‚ğ‘Å‚¿Ø‚éƒXƒeƒbƒv”
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«ã‚¿ã‚¤ãƒ ãƒªãƒŸãƒƒãƒˆã‚³ãƒ³ãƒã‚¤ãƒŠãƒ¼ã®å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+ * @note   ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®å®šç¾©æ™‚ã«ä½¿ç”¨ã™ã‚‹
+ * @param  ti         ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ç›¸å¯¾TI
+ * @param  bct_id     ã‚¿ã‚¤ãƒ ãƒªãƒŸãƒƒãƒˆã‚³ãƒ³ãƒã‚¤ãƒ³ã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ID
+ * @param  limit_step è¶…éã™ã‚‹ã¨å®Ÿè¡Œã‚’æ‰“ã¡åˆ‡ã‚‹ã‚¹ãƒ†ãƒƒãƒ—æ•°
  */
 void BCL_tool_register_limit_combine(cycle_t ti, bct_id_t bct_id, step_t limit_step);
 
 /**
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚ÉƒuƒƒbƒNƒRƒ}ƒ“ƒh‚Ì“WŠJƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚é
- * @note   BlockCommandDefinitions.c‚ÅŒÄ‚Î‚ê‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  ti         ƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‘Š‘ÎTI
- * @param  bct_id     “WŠJ‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒhID
- * @param  tl_id      “WŠJæ‚Ìƒ^ƒCƒ€ƒ‰ƒCƒ“ID
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®å±•é–‹ã‚³ãƒãƒ³ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BlockCommandDefinitions.cã§å‘¼ã°ã‚Œã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  ti         ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ç›¸å¯¾TI
+ * @param  bct_id     å±•é–‹ã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ID
+ * @param  tl_id      å±•é–‹å…ˆã®ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ID
  */
 void BCL_tool_register_deploy(cycle_t ti, bct_id_t bct_id, TL_ID tl_id);
 
 /**
- * @brief  ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ÌÅŒã‚ÉƒAƒvƒŠ‚ÌÀsƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚é
- * @note   BlockCommandDefinitions.c‚ÅŒÄ‚Î‚ê‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  ti         ƒRƒ}ƒ“ƒh‚ğÀs‚·‚é‘Š‘ÎTI
- * @param  app_id     Às‚·‚éƒAƒvƒŠID
+ * @brief  ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã®æœ€å¾Œã«ã‚¢ãƒ—ãƒªã®å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BlockCommandDefinitions.cã§å‘¼ã°ã‚Œã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  ti         ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ç›¸å¯¾TI
+ * @param  app_id     å®Ÿè¡Œã™ã‚‹ã‚¢ãƒ—ãƒªID
  */
 void BCL_tool_register_app(cycle_t ti, AR_APP_ID app_id);
 
 
 
-// add cmd paramŒn—ñ
+// add cmd paramç³»åˆ—
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äuint8‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦uint8ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_uint8(uint8_t val);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äint8‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦int8ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_int8(int8_t val);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äuint16‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦uint16ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_uint16(uint16_t val);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äint16‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦int16ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_int16(int16_t val);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äuint32‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦uint32ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_uint32(uint32_t val);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äint32‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦int32ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_int32(int32_t val);
 
 /**
- * @brief  ƒRƒ}ƒ“ƒh“o˜^‘O‚ÉƒRƒ}ƒ“ƒh‚Ìˆø”‚Æ‚µ‚Äfloat‚Ìƒpƒ‰ƒ[ƒ^‚ğ’Ç‰Á‚·‚é
- * @note   BCL_tool_register_cmd‘O‚Å‚Ì‚İg—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @param  val        ’Ç‰Á‚·‚éƒpƒ‰ƒ[ƒ^
+ * @brief  ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å‰ã«ã‚³ãƒãƒ³ãƒ‰ã®å¼•æ•°ã¨ã—ã¦floatã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿½åŠ ã™ã‚‹
+ * @note   BCL_tool_register_cmdå‰ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @param  val        è¿½åŠ ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
  */
 void BCL_tool_prepare_param_float(float val);
 
-// À‘•“_‚Å‚Íuint64_t‚ğg‚¦‚È‚©‚Á‚½C‚©‚Âg‚¤l‚à­‚È‚¢‚Ì‚Å‚¢‚Á‚½‚ñ–³Œø‰»
+// å®Ÿè£…æ™‚ç‚¹ã§ã¯uint64_tã‚’ä½¿ãˆãªã‹ã£ãŸï¼Œã‹ã¤ä½¿ã†äººã‚‚å°‘ãªã„ã®ã§ã„ã£ãŸã‚“ç„¡åŠ¹åŒ–
 #if 0
 void BCL_tool_prepare_param_double(double val);
 #endif

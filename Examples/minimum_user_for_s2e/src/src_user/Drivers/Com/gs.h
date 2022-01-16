@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Ground Station ‚Æ‚Ì’ÊM—p‚Ì Driver
+ * @brief Ground Station ã¨ã®é€šä¿¡ç”¨ã® Driver
  */
 #ifndef GS_H_
 #define GS_H_
@@ -15,8 +15,8 @@
 
 /**
  * @enum GS_TCF_TYPE_ENUM
- * @note rx_header_ <-> stream ‚Å Še CMD ‚Æ‚Ì‘Î‰‚ÌU‚è•ª‚¯‚ğs‚Á‚Ä‚¢‚é. ‚»‚Ì Index ‚Æ‘Î‰‚³‚¹‚é‚½‚ß.
- * @note uint8_t ‚ğ‘z’è
+ * @note rx_header_ <-> stream ã§ å„ CMD ã¨ã®å¯¾å¿œã®æŒ¯ã‚Šåˆ†ã‘ã‚’è¡Œã£ã¦ã„ã‚‹. ãã® Index ã¨å¯¾å¿œã•ã›ã‚‹ãŸã‚.
+ * @note uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
@@ -28,34 +28,34 @@ typedef enum
 
 /**
  * @enum  GS_PORT_TYPE
- * @brief GS ‚Ì’ÊMƒ|[ƒg‚Í CCSDS ‚Æ UART ‚Ì 2 ‚Â‚ ‚é
- * @note  uint8_t ‚ğ‘z’è
+ * @brief GS ã®é€šä¿¡ãƒãƒ¼ãƒˆã¯ CCSDS ã¨ UART ã® 2 ã¤ã‚ã‚‹
+ * @note  uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
   GS_PORT_TYPE_CCSDS, //!< CCSDS
   GS_PORT_TYPE_UART,  //!< UART
-  GS_PORT_TYPE_NUM    //!< port ”
+  GS_PORT_TYPE_NUM    //!< port æ•°
 } GS_PORT_TYPE;
 
 /**
  * @struct GS_Info
- * @brief  ƒhƒ‰ƒCƒo[‚ÌŠeó‘Ô‚Ì‹L˜^
+ * @brief  ãƒ‰ãƒ©ã‚¤ãƒãƒ¼ã®å„çŠ¶æ…‹ã®è¨˜éŒ²
  */
 typedef struct
 {
-  DS_ERR_CODE rec_status;                   //!< DriverSuper ‚©‚ç‚ÌóMŒ‹‰Ê
-  GS_TCF_TYPE_ENUM last_rec_tcf_type;       //!< ÅŒã‚ÉóM‚µ‚½ tcf ‚Ìƒ^ƒCƒv
-  DS_ERR_CODE ad_rec_status;                //!< AD CMD ‚ğóM‚µ‚½‚Æ‚«‚Ì analyze Œ‹‰Ê
-  DS_ERR_CODE bc_rec_status;                //!< BC CMD ‚ğóM‚µ‚½‚Æ‚«‚Ì analyze Œ‹‰Ê
-  DS_ERR_CODE bd_rec_status;                //!< BD CMD ‚ğóM‚µ‚½‚Æ‚«‚Ì analyze Œ‹‰Ê
-  GS_VALIDATE_ERR tc_frame_validate_status; //!< TC Frame ‚ÌŒŸØŒ‹‰Ê
-  int ret_from_if_rx;                       //!< UART or CCSDS ‚©‚ç‚Ì•Ô‚è’l
-  cycle_t last_rec_time;                    //!< ÅŒã‚ÉóM‚µ‚½
-  PH_ACK cmd_ack;                           //!< óM‚µ‚½ CMD ‚ÌÀsŒ‹‰Ê
+  DS_ERR_CODE rec_status;                   //!< DriverSuper ã‹ã‚‰ã®å—ä¿¡çµæœ
+  GS_TCF_TYPE_ENUM last_rec_tcf_type;       //!< æœ€å¾Œã«å—ä¿¡ã—ãŸ tcf ã®ã‚¿ã‚¤ãƒ—
+  DS_ERR_CODE ad_rec_status;                //!< AD CMD ã‚’å—ä¿¡ã—ãŸã¨ãã® analyze çµæœ
+  DS_ERR_CODE bc_rec_status;                //!< BC CMD ã‚’å—ä¿¡ã—ãŸã¨ãã® analyze çµæœ
+  DS_ERR_CODE bd_rec_status;                //!< BD CMD ã‚’å—ä¿¡ã—ãŸã¨ãã® analyze çµæœ
+  GS_VALIDATE_ERR tc_frame_validate_status; //!< TC Frame ã®æ¤œè¨¼çµæœ
+  int ret_from_if_rx;                       //!< UART or CCSDS ã‹ã‚‰ã®è¿”ã‚Šå€¤
+  cycle_t last_rec_time;                    //!< æœ€å¾Œã«å—ä¿¡ã—ãŸæ™‚åˆ»
+  PH_ACK cmd_ack;                           //!< å—ä¿¡ã—ãŸ CMD ã®å®Ÿè¡Œçµæœ
 
-  cycle_t send_cycle;                       //!< ÅŒã‚É‘—M‚µ‚½‚Æ‚«‚Ì
-  VCDU_VCID vcid;                           //!< ‘—M‚µ‚½ TLM ‚Ìƒ^ƒCƒv
+  cycle_t send_cycle;                       //!< æœ€å¾Œã«é€ä¿¡ã—ãŸã¨ãã®æ™‚åˆ»
+  VCDU_VCID vcid;                           //!< é€ä¿¡ã—ãŸ TLM ã®ã‚¿ã‚¤ãƒ—
   uint32_t vcdu_counter;                    //!< VCDU counter
 } GS_Info;
 
@@ -65,48 +65,48 @@ typedef struct
  */
 typedef struct
 {
-  // CCSDS ‘¤‚Ì Driver
+  // CCSDS å´ã® Driver
   struct
   {
     DriverSuper  super;
     CCSDS_Config ccsds_config;
   } driver_ccsds;
 
-  // UART ‘¤‚Ì Driver
+  // UART å´ã® Driver
   struct
   {
     DriverSuper super;
     UART_Config uart_config;
   } driver_uart;
 
-  GS_Info info[GS_PORT_TYPE_NUM]; //!< CCSDS —p‚Æ UART —p 2 ‚Â
+  GS_Info info[GS_PORT_TYPE_NUM]; //!< CCSDS ç”¨ã¨ UART ç”¨ 2 ã¤
   const GS_Info* latest_info;
   CCSDS_Info ccsds_info;
   GS_PORT_TYPE tlm_tx_port_type;
-  uint8_t is_ccsds_tx_valid;      //!< CCSDS TX ‚ª—LŒø‚É‚È‚Á‚Ä‚¢‚é‚© (’nãŒ±‚Å“Ë‘R“d”g‚ğo‚·‚ÆŠëŒ¯‚È‚Ì‚Å)
+  uint8_t is_ccsds_tx_valid;      //!< CCSDS TX ãŒæœ‰åŠ¹ã«ãªã£ã¦ã„ã‚‹ã‹ (åœ°ä¸Šè©¦é¨“ã§çªç„¶é›»æ³¢ã‚’å‡ºã™ã¨å±é™ºãªã®ã§)
 } GS_Driver;
 
 /**
- * @brief Driver ‚Ì‰Šú‰»
- * @param[in] uart_ch: —Lü’ÊM‚Ì CH
+ * @brief Driver ã®åˆæœŸåŒ–
+ * @param[in] uart_ch: æœ‰ç·šé€šä¿¡æ™‚ã® CH
  * @return int: 0
  */
 int GS_init(GS_Driver* gs_driver, uint8_t uart_ch);
 
 /**
- * @brief ’nã‚©‚ç CMD ‚ğóM‚·‚é. Œ`®‚Í TCFrame
- * @param[in] gs_driver: ƒhƒ‰ƒCƒo[
+ * @brief åœ°ä¸Šã‹ã‚‰ CMD ã‚’å—ä¿¡ã™ã‚‹. å½¢å¼ã¯ TCFrame
+ * @param[in] gs_driver: ãƒ‰ãƒ©ã‚¤ãƒãƒ¼
  * @return int: 0
  */
 int GS_rec_tcf(GS_Driver* gs_driver);
 
 /**
- * @brief ’nã‚ÉŒü‚¯‚Ä TLM ‚ğ‘—M. Œ`®‚Í VCDU
- * @note  DS_send_general_cmd ‚ªg‚í‚ê‚Ä‚¢‚é‚ª, ‚±‚ê‚Í DS ‚Í MOBC ƒRƒ“ƒ|ŠÔ‚ğ‘z’è‚µ‚Ä‚¢‚é‚½‚ß, MOBC ‚©‚çŒ©‚é‚ÆƒRƒ“ƒ|‚É cmd ‚ğ‘—M‚µ‚Ä‚¢‚é—l‚ÉŒ©‚¦‚é, ‚ª ¡‰ñ‚Í MOBC ‚©‚ç’nã‚É TLM ‚ğ‘—M‚µ‚Ä‚¢‚é
- * @note TLM ‘—M, Œ`®‚Í VCDU
- * @param[in] gs_driver: ƒhƒ‰ƒCƒo[
- * @param[in] vcdu: ‘—M‚·‚é VCDU. ê‡‚É‚æ‚Á‚Ä‚Í‚»‚Ì‚Ü‚Ü DS ‚É“n‚·‚Ì‚ÅC local•Ï”‚Å‚Í‚È‚­static‚È•Ï”‚ğ“n‚·‚±‚Æ
- * @return DS_CMD_ERR_CODE: ‘—MŒ‹‰Ê
+ * @brief åœ°ä¸Šã«å‘ã‘ã¦ TLM ã‚’é€ä¿¡. å½¢å¼ã¯ VCDU
+ * @note  DS_send_general_cmd ãŒä½¿ã‚ã‚Œã¦ã„ã‚‹ãŒ, ã“ã‚Œã¯ DS ã¯ MOBC ã‚³ãƒ³ãƒé–“ã‚’æƒ³å®šã—ã¦ã„ã‚‹ãŸã‚, MOBC ã‹ã‚‰è¦‹ã‚‹ã¨ã‚³ãƒ³ãƒã« cmd ã‚’é€ä¿¡ã—ã¦ã„ã‚‹æ§˜ã«è¦‹ãˆã‚‹, ãŒ ä»Šå›ã¯ MOBC ã‹ã‚‰åœ°ä¸Šã« TLM ã‚’é€ä¿¡ã—ã¦ã„ã‚‹
+ * @note TLM é€ä¿¡, å½¢å¼ã¯ VCDU
+ * @param[in] gs_driver: ãƒ‰ãƒ©ã‚¤ãƒãƒ¼
+ * @param[in] vcdu: é€ä¿¡ã™ã‚‹ VCDU. å ´åˆã«ã‚ˆã£ã¦ã¯ãã®ã¾ã¾ DS ã«æ¸¡ã™ã®ã§ï¼Œ localå¤‰æ•°ã§ã¯ãªãstaticãªå¤‰æ•°ã‚’æ¸¡ã™ã“ã¨
+ * @return DS_CMD_ERR_CODE: é€ä¿¡çµæœ
  */
 DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu);
 

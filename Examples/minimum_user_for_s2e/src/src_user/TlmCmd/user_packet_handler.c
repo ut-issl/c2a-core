@@ -1,14 +1,14 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  packet_handler‚ÌƒRƒ}ƒ“ƒhƒ‹[ƒ^[CƒRƒ}ƒ“ƒhƒAƒiƒ‰ƒCƒU‚Ìƒ†[ƒU[’è‹`•”•ª
+ * @brief  packet_handlerã®ã‚³ãƒãƒ³ãƒ‰ãƒ«ãƒ¼ã‚¿ãƒ¼ï¼Œã‚³ãƒãƒ³ãƒ‰ã‚¢ãƒŠãƒ©ã‚¤ã‚¶ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©éƒ¨åˆ†
  */
 #include "user_packet_handler.h"
 // #include "../Applications/DriverInstances/di_tobc.h"
 // #include "../Applications/DriverInstances/di_aobc.h"
 
-#define PH_AOBC_CMD_LIST_MAX   (16)          //!< AOBC CMD QUEUEƒTƒCƒY
-#define PH_TOBC_CMD_LIST_MAX   (16)          //!< TOBC CMD QUEUEƒTƒCƒY
+#define PH_AOBC_CMD_LIST_MAX   (16)          //!< AOBC CMD QUEUEã‚µã‚¤ã‚º
+#define PH_TOBC_CMD_LIST_MAX   (16)          //!< TOBC CMD QUEUEã‚µã‚¤ã‚º
 
 static PH_ACK PH_add_aobc_cmd_(const CTCP* packet);
 static PH_ACK PH_add_tobc_cmd_(const CTCP* packet);
@@ -37,9 +37,9 @@ PH_ACK PH_user_analyze_cmd(const CTCP* packet)
     return (PH_add_tobc_cmd_(packet) == PH_SUCCESS) ? PH_FORWARDED : PH_PL_LIST_FULL;
   default:
     // TCP_CMD_DEST_TYPE_TO_ME
-    // TCP_CMD_DEST_TYPE_TO_MOBC i©•ªj
-    // ˆ¶æ•s–¾
-    // ‚Í‚±‚±‚É
+    // TCP_CMD_DEST_TYPE_TO_MOBC ï¼ˆè‡ªåˆ†ï¼‰
+    // å®›å…ˆä¸æ˜
+    // ã¯ã“ã“ã«
     return PH_UNKNOWN;
   }
 }
@@ -50,13 +50,13 @@ CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet)
   switch (CCP_get_dest_id(packet))
   {
   case TCP_APID_AOBC_CMD:
-    // AOBC‚É”z‘—
+    // AOBCã«é…é€
     // return DI_AOBC_dispatch_command(packet);
   case TCP_APID_TOBC_CMD:
-    // TOBC‚É”z‘—
+    // TOBCã«é…é€
     // return DI_TOBC_dispatch_command(packet);
   default:
-    // ŠY“–‚·‚é”z‘—æ‚ª’è‹`‚³‚ê‚Ä‚¢‚È‚¢ê‡B
+    // è©²å½“ã™ã‚‹é…é€å…ˆãŒå®šç¾©ã•ã‚Œã¦ã„ãªã„å ´åˆã€‚
     return CCP_EXEC_ROUTING_FAILED;
   }
 }

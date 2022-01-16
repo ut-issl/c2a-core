@@ -4,21 +4,21 @@
 #include <src_core/TlmCmd/block_command_table.h>
 #include <src_core/TlmCmd/block_command_executor.h>
 
-#define BCUS_MRAM_BCT_BLOCKS (10) // MRAM‚ÉŠm•Û‚·‚é
+#define BCUS_MRAM_BCT_BLOCKS (10) // MRAMã«ç¢ºä¿ã™ã‚‹
 
 /**
- * @brief BCT, BCE ‚ÉŠÖ‚µ‚Ä‚Ìƒƒ‚ƒŠŠm•Û‚â getter, setter ‚ğ user settings ‚Æ‚µ‚Äã‘‚«‚·‚é
- * @param[in] block_command_table: ‰Šú‰»‚·‚é BlockCommandTable*
- * @param[in] block_command_executor: ‰Šú‰»‚·‚é BlockCommandExecutor*
- * @note SRAM, ’Pˆê‚Å‚Í‚È‚­ MRAMã, Odç’·‚Å’u‚­‚È‚Ç‚ÌÛ‚Éã‘‚«‚Åg—p
+ * @brief BCT, BCE ã«é–¢ã—ã¦ã®ãƒ¡ãƒ¢ãƒªç¢ºä¿ã‚„ getter, setter ã‚’ user settings ã¨ã—ã¦ä¸Šæ›¸ãã™ã‚‹
+ * @param[in] block_command_table: åˆæœŸåŒ–ã™ã‚‹ BlockCommandTable*
+ * @param[in] block_command_executor: åˆæœŸåŒ–ã™ã‚‹ BlockCommandExecutor*
+ * @note SRAM, å˜ä¸€ã§ã¯ãªã MRAMä¸Š, ä¸‰é‡å†—é•·ã§ç½®ããªã©ã®éš›ã«ä¸Šæ›¸ãã§ä½¿ç”¨
  */
 void BCUS_load_user_settings(BlockCommandTable* block_command_table, BlockCommandExecutor* block_command_executor);
 
 /**
- * @brief ‚»‚Ì block ‚ğƒNƒŠƒA‚·‚×‚«‚©‚Ç‚¤‚©”»•Ê‚·‚é
- * @param[in] block: BC ‚Ì id
+ * @brief ãã® block ã‚’ã‚¯ãƒªã‚¢ã™ã¹ãã‹ã©ã†ã‹åˆ¤åˆ¥ã™ã‚‹
+ * @param[in] block: BC ã® id
  * @return 0: No, 1: Yes
- * @note •sŠö”­‚Å‚ ‚ê‚Î clear ‚µ‚È‚¢. Šö”­‚Å‚ ‚ê‚Î clear ‚·‚é.
+ * @note ä¸æ®ç™ºã§ã‚ã‚Œã° clear ã—ãªã„. æ®ç™ºã§ã‚ã‚Œã° clear ã™ã‚‹.
  */
 int BCUS_bc_should_clear(const bct_id_t block);
 

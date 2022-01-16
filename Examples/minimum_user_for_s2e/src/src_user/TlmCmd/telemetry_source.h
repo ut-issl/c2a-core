@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  テレメトリ定義に必要なヘッダー
+ * @brief  繝�繝ｬ繝｡繝医Μ螳夂ｾｩ縺ｫ蠢�隕√↑繝倥ャ繝繝ｼ
  */
 #ifndef TELEMETRY_SOURCE_H_
 #define TELEMETRY_SOURCE_H_

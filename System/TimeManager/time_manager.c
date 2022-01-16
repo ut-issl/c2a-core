@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief OBC‚Ìî•ñ‚ğ TimeManager \‘¢‘Ì‚É•Û‚µƒJƒEƒ“ƒgƒAƒbƒv‚·‚é. ‚»‚Ì‘¼, ‰‰Z‚É•K—v‚ÈŠÖ”‚àÀ‘•‚·‚é
+ * @brief OBCã®æ™‚åˆ»æƒ…å ±ã‚’ TimeManager æ§‹é€ ä½“ã«ä¿æŒã—ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã™ã‚‹. ãã®ä»–, æ™‚åˆ»æ¼”ç®—ã«å¿…è¦ãªé–¢æ•°ã‚‚å®Ÿè£…ã™ã‚‹
  */
 #include "time_manager.h"
 #include <string.h>
@@ -13,14 +13,14 @@ static TimeManager time_manager_;
 const TimeManager* const time_manager = &time_manager_;
 
 /**
- * @brief TI (master_clock_.total_cycle) ‚Ì setter
+ * @brief TI (master_clock_.total_cycle) ã® setter
  * @param[in] total_cycle
  * @return void
  */
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 /**
- * @brief utl_unixtime_epoch_ ‚Ì setter
+ * @brief utl_unixtime_epoch_ ã® setter
  * @param[in] utl_unixtime_epoch
  * @return void
  */
@@ -46,8 +46,8 @@ void TMGR_clear_master_mode_cycle(void)
 }
 
 #pragma section _FIX_TMGR
-// PƒZƒNƒVƒ‡ƒ“‚µ‚©Š„‚è“–‚Ä‚Ä‚¢‚È‚¢‚Ì‚ÅC
-// D, BƒZƒNƒVƒ‡ƒ“‚Éæ‚é‚æ‚¤‚È•Ï”’è‹`‚Í‹Ö~III
+// Pã‚»ã‚¯ã‚·ãƒ§ãƒ³ã—ã‹å‰²ã‚Šå½“ã¦ã¦ã„ãªã„ã®ã§ï¼Œ
+// D, Bã‚»ã‚¯ã‚·ãƒ§ãƒ³ã«ä¹—ã‚‹ã‚ˆã†ãªå¤‰æ•°å®šç¾©ã¯ç¦æ­¢ï¼ï¼ï¼
 void TMGR_count_up_master_clock(void)
 {
   OBCT_count_up(&time_manager_.master_clock_);
@@ -124,21 +124,21 @@ double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 {
-  double diff = unixtime - TMGR_get_obct_unixtime_info().unixtime_at_ti0; // •b’PˆÊ
+  double diff = unixtime - TMGR_get_obct_unixtime_info().unixtime_at_ti0; // ç§’å˜ä½
   cycle_t cycle_diff;
   step_t step_diff;
   ObcTime res;
 
-  if (diff < 0)  // ‚ ‚è“¾‚È‚¢, ‚¨‚©‚µ‚¢
+  if (diff < 0)  // ã‚ã‚Šå¾—ãªã„, ãŠã‹ã—ã„
   {
     return OBCT_create(0, 0, 0);
   }
 
-  cycle_diff = (cycle_t)(diff * OBCT_CYCLES_PER_SEC); // cycle–¢–‚ÍØ‚èÌ‚Ä
-  step_diff = (step_t)((diff * OBCT_CYCLES_PER_SEC  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step–¢–‚ÍØ‚èÌ‚Ä
+  cycle_diff = (cycle_t)(diff * OBCT_CYCLES_PER_SEC); // cycleæœªæº€ã¯åˆ‡ã‚Šæ¨ã¦
+  step_diff = (step_t)((diff * OBCT_CYCLES_PER_SEC  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // stepæœªæº€ã¯åˆ‡ã‚Šæ¨ã¦
 
   res.total_cycle = cycle_diff;
-  res.mode_cycle = 0; // æ“¾o—ˆ‚È‚¢‚Ì‚Å0‚Æ‚·‚é
+  res.mode_cycle = 0; // å–å¾—å‡ºæ¥ãªã„ã®ã§0ã¨ã™ã‚‹
   res.step = step_diff;
 
   return res;
@@ -146,10 +146,10 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 
 cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime)
 {
-  // ‹IŒ³‚æ‚èÌ‚È‚Ì‚Í‚¨‚©‚µ‚¢
+  // ç´€å…ƒã‚ˆã‚Šæ˜”ãªã®ã¯ãŠã‹ã—ã„
   if (unixtime < time_manager_.utl_unixtime_epoch_) return 0;
 
-  // cycle –¢–‚ÍØ‚èÌ‚Ä
+  // cycle æœªæº€ã¯åˆ‡ã‚Šæ¨ã¦
   return (cycle_t)((unixtime - time_manager_.utl_unixtime_epoch_) * OBCT_CYCLES_PER_SEC);
 }
 
@@ -188,7 +188,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   double unixtime = CCP_get_param_from_packet(packet, 0, double);
   time.total_cycle = CCP_get_param_from_packet(packet, 1, cycle_t);
   time.step = CCP_get_param_from_packet(packet, 2, step_t);
-  time.mode_cycle = 0; // •K—v‚È‚¢‚Ì‚Å0‚Æ‚·‚é
+  time.mode_cycle = 0; // å¿…è¦ãªã„ã®ã§0ã¨ã™ã‚‹
 
   TMGR_update_unixtime_info(unixtime, &time);
 

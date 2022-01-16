@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief GS Driver ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰»
+ * @brief GS Driver ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
  */
 #ifndef DI_GS_H_
 #define DI_GS_H_
@@ -13,12 +13,12 @@
 
 /**
  * @struct DI_GS_TlmPacketHandler
- * @brief  ƒeƒŒƒ‚Ì‘—M
+ * @brief  ãƒ†ãƒ¬ãƒ¡ã®é€ä¿¡
  */
 typedef struct
 {
-  TcpToMPdu tc_packet_to_m_pdu; //!< PL ‚©‚çæ‚èo‚µ‚½ tc_packet ‚ğ M_PDU ‚É•ÏŠ·‚·‚é
-  VCDU vcdu;              //!< ‘—M‚·‚éVCDU
+  TcpToMPdu tc_packet_to_m_pdu; //!< PL ã‹ã‚‰å–ã‚Šå‡ºã—ãŸ tc_packet ã‚’ M_PDU ã«å¤‰æ›ã™ã‚‹
+  VCDU vcdu;              //!< é€ä¿¡ã™ã‚‹VCDU
   uint32_t vcdu_counter;  //!< VCDU counter
 } DI_GS_TlmPacketHandler;
 
@@ -26,7 +26,7 @@ extern const GS_Driver* const gs_driver;
 extern const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler;
 extern const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler;
 
-// ˆÈ‰ºƒCƒ“ƒXƒ^ƒ“ƒX‰»
+// ä»¥ä¸‹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
 AppInfo DI_GS_cmd_packet_handler(void);
 
 AppInfo DI_GS_mst_packet_handler(void);
