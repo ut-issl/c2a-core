@@ -80,6 +80,7 @@ typedef enum
 typedef struct
 {
   uint8_t          ch;              //!< 継承先の機器がつながっているポート番号
+  char*            dev_file_name;   //!< 継承先の機器がつながっているファイル名(ファイルシステム環境向け)
   uint32_t         baudrate;        //!< 継承先の機器のボーレート値
   PARITY_SETTINGS  parity_settings; //!< パリティ設定
   UART_DATA_LENGTH data_length;     //!< データ長
