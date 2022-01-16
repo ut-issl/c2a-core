@@ -17,7 +17,7 @@
 - https://github.com/ut-issl/c2a-core/tree/develop/Examples/minimum_user_for_s2e/src/src_user/Test 参照．
 
 ### ブランチ
-- `main`: リリース版
+- `main`: リリース版（[詳細](https://github.com/ut-issl/c2a-core/tree/develop/Docs/General/release.md)）
 - `develop`: 概ね検証された最新版（beta機能含む）
 - `feature/*` : 開発ブランチ
 - `hotfix/*` : 重大バグ修正用ブランチ
