@@ -157,22 +157,22 @@ jobs:
             -efm="%C%m" \
             < clang_tidy.log
 
-      # - name: reviewdog clang-tidy (github-check)
-      #   if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
-      #   env:
-      #     REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
-      #     reviewdog \
-      #       -name 'clang-tidy(Wextra)' \
-      #       -level warning \
-      #       -fail-on-error=true \
-      #       -filter-mode=nofilter \
-      #       -diff="git diff FETCH_HEAD" \
-      #       -reporter=github-check \
-      #       -efm="%-Gclang-tidy%s" \
-      #       -efm="%-GError while processing%s" \
-      #       -efm="%W%f:%l:%c: warning: %m" \
-      #       -efm="%E%f:%l:%c: error: %m" \
-      #       -efm="%C%m" \
-      #       < clang_tidy.log
+      - name: reviewdog clang-tidy (github-check)
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
+          reviewdog \
+            -name 'clang-tidy(Wextra)' \
+            -level warning \
+            -fail-on-error=true \
+            -filter-mode=nofilter \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-check \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
