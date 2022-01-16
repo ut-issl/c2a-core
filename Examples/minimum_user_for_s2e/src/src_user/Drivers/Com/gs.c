@@ -65,6 +65,9 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
 
   GS_validate_init();
 
+  gs_driver->driver_ccsds.ccsds_config.bitrate = 115200;
+  gs_driver->driver_ccsds.ccsds_config.ch = 0;
+
   gs_driver->driver_uart.uart_config.ch = uart_ch;
   gs_driver->driver_uart.uart_config.baudrate = 115200;
   gs_driver->driver_uart.uart_config.parity_settings = PARITY_SETTINGS_NONE;
