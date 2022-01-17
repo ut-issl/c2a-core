@@ -1,0 +1,17 @@
+name: python format check
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  python-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: check python format with black
+        uses: psf/black@stable
