@@ -25,27 +25,21 @@ def test_wdt_at_sils():
     assert tlm_HK["HK.WDT.IS_ENABLE"] == "ENA"
     assert tlm_HK["HK.WDT.IS_CLEAR_ENABLE"] == "ENA"
 
-    wings.util.send_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_WDT_DISABLE, (), c2a_enum.Tlm_CODE_HK
-    )
+    wings.util.send_cmd_and_confirm(ope, c2a_enum.Cmd_CODE_WDT_DISABLE, (), c2a_enum.Tlm_CODE_HK)
     tlm_HK = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
     assert tlm_HK["HK.WDT.IS_ENABLE"] == "DIS"
     assert tlm_HK["HK.WDT.IS_CLEAR_ENABLE"] == "ENA"
 
-    wings.util.send_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_WDT_ENABLE, (), c2a_enum.Tlm_CODE_HK
-    )
+    wings.util.send_cmd_and_confirm(ope, c2a_enum.Cmd_CODE_WDT_ENABLE, (), c2a_enum.Tlm_CODE_HK)
     tlm_HK = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
     assert tlm_HK["HK.WDT.IS_ENABLE"] == "ENA"
     assert tlm_HK["HK.WDT.IS_CLEAR_ENABLE"] == "ENA"
 
-    wings.util.send_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_WDT_STOP_CLEAR, (), c2a_enum.Tlm_CODE_HK
-    )
+    wings.util.send_cmd_and_confirm(ope, c2a_enum.Cmd_CODE_WDT_STOP_CLEAR, (), c2a_enum.Tlm_CODE_HK)
     tlm_HK = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )

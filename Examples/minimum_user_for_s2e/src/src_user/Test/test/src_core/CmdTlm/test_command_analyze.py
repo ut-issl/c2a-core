@@ -17,13 +17,14 @@ c2a_enum = c2a_enum_utils.get_c2a_enum()
 ope = wings_utils.get_wings_operation()
 
 # コードと整合をとる
-CA_TLM_PAGE_SIZE     = 32
-CA_TLM_PAGE_MAX      = 48
-CA_MAX_CMDS          = CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX
+CA_TLM_PAGE_SIZE = 32
+CA_TLM_PAGE_MAX = 48
+CA_MAX_CMDS = CA_TLM_PAGE_SIZE * CA_TLM_PAGE_MAX
 CA_MAX_CMD_PARAM_NUM = 6
 
 # 既存のコマンドIDと被らないように！！
 TEST_CMD_ID = CA_MAX_CMDS - CA_TLM_PAGE_SIZE
+
 
 @pytest.mark.real
 @pytest.mark.sils
@@ -45,6 +46,7 @@ def test_command_analyze_set_page():
         ope, c2a_enum.Cmd_CODE_CA_SET_PAGE_FOR_TLM, (CA_TLM_PAGE_MAX,), c2a_enum.Tlm_CODE_HK
     )
 
+
 @pytest.mark.real
 @pytest.mark.sils
 def test_command_analyze_add_cmd():
@@ -60,7 +62,10 @@ def test_command_analyze_add_cmd():
 
     test_cmd_adr = "0x12345678"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_CA_REGISTER_CMD, (TEST_CMD_ID, test_cmd_adr, "0x1234f0"), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_CA_REGISTER_CMD,
+        (TEST_CMD_ID, test_cmd_adr, "0x1234f0"),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     tlm_CA = wings.util.generate_and_receive_tlm(
@@ -77,7 +82,10 @@ def test_command_analyze_add_cmd():
     # 危ないので戻す
     test_cmd_adr = "0x00000000"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_CA_REGISTER_CMD, (TEST_CMD_ID, test_cmd_adr, "0x000000"), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_CA_REGISTER_CMD,
+        (TEST_CMD_ID, test_cmd_adr, "0x000000"),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     tlm_CA = wings.util.generate_and_receive_tlm(
@@ -92,10 +100,16 @@ def test_command_analyze_add_cmd():
     assert tlm_CA["CA.CMD0.PARAM5_SIZE"] == "NONE"
 
     assert "LEN" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_CA_REGISTER_CMD, (TEST_CMD_ID, test_cmd_adr, "0x0000"), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_CA_REGISTER_CMD,
+        (TEST_CMD_ID, test_cmd_adr, "0x0000"),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert "LEN" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_CA_REGISTER_CMD, (TEST_CMD_ID, test_cmd_adr, "0x00000000"), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_CA_REGISTER_CMD,
+        (TEST_CMD_ID, test_cmd_adr, "0x00000000"),
+        c2a_enum.Tlm_CODE_HK,
     )
 
 
