@@ -627,8 +627,6 @@ def test_event_handler_check_index():
         tlm_EH_INDEX,
     )
 
-    a
-
     # 後ろ
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST7,), c2a_enum.Tlm_CODE_HK

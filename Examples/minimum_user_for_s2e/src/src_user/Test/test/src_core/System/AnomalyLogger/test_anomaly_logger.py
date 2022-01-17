@@ -7,7 +7,7 @@ import sys
 # import time
 
 # import isslwings as wings
-# import pytest
+import pytest
 
 ROOT_PATH = "../../../../"
 sys.path.append(os.path.dirname(__file__) + "/" + ROOT_PATH + "utils")
@@ -19,6 +19,14 @@ ope = wings_utils.get_wings_operation()
 
 
 # 現在 AL は deprecated (後継は EL) なので，一旦コメントアウト
+
+
+# 他をコメントアウトしてると， pytest がコケるので
+@pytest.mark.sils
+@pytest.mark.real
+def test_al_nop():
+    pass
+
 
 # @pytest.mark.sils
 # @pytest.mark.real
