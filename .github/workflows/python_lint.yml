@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  flake8-lint:
+  flake8_lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,3 +25,4 @@ jobs:
           reporter: github-pr-review
           filter_mode: nofilter
           fail_on_error: true
+          level: warning
