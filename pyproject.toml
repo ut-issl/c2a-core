@@ -3,5 +3,6 @@ target-version = ['py38']
 line-length = 120
 include = '\.pyi?$'
 
-[tool.flake8]
-max-line-length = 120
+# TODO: .flake8 を消してこちらに移植する
+# [tool.flake8]
+# max-line-length = 120
