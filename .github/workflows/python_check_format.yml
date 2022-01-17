@@ -1,4 +1,4 @@
-name: python format check
+name: reviewdog / python format check
 
 on:
   push:
@@ -13,5 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: check python format with black
-        uses: psf/black@stable
+      # - name: check python format with black
+      #   uses: psf/black@stable
+
+      - uses: reviewdog/action-black@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_on_error: true
+          level: warning
+
