@@ -128,7 +128,7 @@ def preprocess_inner_(path: str, settings: dict):
     with open(path, encoding=settings["input_file_encoding"]) as f:
         code_lines = f.read().split("\n")
 
-    ptn_find_type = "^ *(\w+)\*? +\w+"
+    ptn_find_type = r"^ *(\w+)\*? +\w+"
     reptn_find_type = re.compile(ptn_find_type)
     ptn_replace_qualifier = (
         "^ *((const|static|extern|volatile|register)+ +)+"  # static const hoge も検出できるように
@@ -345,7 +345,7 @@ def check_newline_(path: str, code_lines: list) -> int:
         if all_text.find(target) == -1:
             continue
 
-        ptn = "^(|.*(\W))(" + re.escape(target) + ")(\W).*\{.*(" + re.escape("//|/*") + ")?"
+        ptn = r"^(|.*(\W))(" + re.escape(target) + r")(\W).*\{.*(" + re.escape("//|/*") + ")?"
         reptn = re.compile(ptn)
         for idx, line in enumerate(code_lines):
             if is_in_comment_context_in_multiline_(path, code_lines, idx):
@@ -364,7 +364,7 @@ def check_newline_(path: str, code_lines: list) -> int:
         if all_text.find(target) == -1:
             continue
 
-        ptn = "^.*\}.*(\W)(" + re.escape(target) + ")(\W.*|)$"
+        ptn = r"^.*\}.*(\W)(" + re.escape(target) + r")(\W.*|)$"
         reptn = re.compile(ptn)
         for idx, line in enumerate(code_lines):
             if is_in_comment_context_in_multiline_(path, code_lines, idx):
@@ -520,7 +520,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
         if all_text.find(target) == -1:
             continue
 
-        ptn = "(\W)" + "(" + re.escape(target) + ")"
+        ptn = r"(\W)" + "(" + re.escape(target) + ")"
         reptn = re.compile(ptn)
         for idx, line in enumerate(code_lines):
             if is_in_comment_context_in_multiline_(path, code_lines, idx):
@@ -546,7 +546,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
         if all_text.find(target) == -1:
             continue
 
-        ptn = "(\W)" + "(" + re.escape(target) + ")"
+        ptn = r"(\W)" + "(" + re.escape(target) + ")"
         reptn = re.compile(ptn)
         for idx, line in enumerate(code_lines):
             if is_in_comment_context_in_multiline_(path, code_lines, idx):
@@ -583,7 +583,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
     targets = ["<", ">", "=", "&", "|", "^", "~", "=", "?", ":", "!", "+", "-", "*", "/", "%"]
     for target in targets:
         ptn_before = (
-            "(\w+)("
+            r"(\w+)("
             + "["
             + re.escape("<>=&|^~=?:!+-*/&")
             + "]*"
@@ -601,12 +601,12 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             + re.escape(target)
             + "["
             + re.escape("<>=&|^~=?:!+-*/&")
-            + "]*)(\w+)"
+            + r"]*)(\w+)"
         )
         reptn_after = re.compile(ptn_after)
 
-        ptn_after_monadic_operator = "(\w+)( *)(" + re.escape(target) + ")(\w+)"
-        reptn_after_monadic_operator = re.compile(ptn_after_monadic_operator)
+        # ptn_after_monadic_operator = r"(\w+)( *)(" + re.escape(target) + r")(\w+)"
+        # reptn_after_monadic_operator = re.compile(ptn_after_monadic_operator)
 
         for idx, line in enumerate(code_lines):
             if is_in_comment_context_in_multiline_(path, code_lines, idx):
@@ -627,7 +627,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 ):  # #include <src_core/TlmCmd/command_dispatcher.h> など
                     continue
                 if match.group(2) in ["-", "+"]:  # 10.5e-10 -> 5e, - でひっかかる
-                    ptn = "\d+(e|E)"
+                    ptn = r"\d+(e|E)"
                     reptn = re.compile(ptn)
                     if not reptn.search(match.group(1)) is None:
                         continue
@@ -678,20 +678,20 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                         continue
                     if before_line[-6:] == "return":
                         continue
-                    ptn = "[\w\]\}]$"
+                    ptn = r"[\w\]\}]$"
                     reptn = re.compile(ptn)
                     # print(line)
                     # print(reptn.search(before_line))
                     if reptn.search(before_line) is None:
                         continue
                     if match.group(1) == "*":
-                        ptn = "\w+$"
+                        ptn = r"\w+$"
                         reptn = re.compile(ptn)
                         m = reptn.search(before_line).group()
                         if m == "else" or m in g_type_set:
                             continue
                     if match.group(1) in ["-", "+"]:
-                        ptn = "\d+(e|E)$"
+                        ptn = r"\d+(e|E)$"
                         reptn = re.compile(ptn)
                         if not reptn.search(before_line) is None:
                             continue
@@ -830,7 +830,7 @@ def has_started_with_list_after_target_(line: str, target: str, starts: list) ->
 def has_ended_with_list_before_target_(line: str, target: str, ends: list) -> int:
     pos = 0
     find_end = len(line)
-    target_len = len(target)
+    # target_len = len(target)
     while 1:
         pos = line.rfind(target, 0, find_end)
         if pos == -1:  # そもそも存在しない
@@ -906,9 +906,9 @@ def is_in_non_string_code(path: str, lines: list, line_no: int, pos: int) -> int
 # 単一行用
 def is_in_comment_context_in_line_(line: str, pos: int) -> int:
     before = line[:pos]  # pos より先の文字列
-    after = ""  # pos より後の文字列
-    if len(line) > pos:
-        after = line[pos + 1 :]
+    # after = ""  # pos より後の文字列
+    # if len(line) > pos:
+    #     after = line[pos + 1 :]
 
     find_begin = 0
     while 1:

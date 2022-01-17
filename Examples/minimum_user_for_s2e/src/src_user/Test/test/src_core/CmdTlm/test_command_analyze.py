@@ -3,7 +3,6 @@
 
 import os
 import sys
-import time
 
 import isslwings as wings
 import pytest
