@@ -156,6 +156,10 @@ cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime)
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
 {
   cycle_t utl_unixtime_at_ti0 = TMGR_get_utl_unixtime_from_unixtime(time_manager_.unixtime_info_.unixtime_at_ti0);
+
+  // unixtime_at_ti0 より小さい実行引数は無効なのでゼロを返す
+  if (utl_unixtime < utl_unixtime_at_ti0) return 0;
+
   return utl_unixtime - utl_unixtime_at_ti0;
 }
 
