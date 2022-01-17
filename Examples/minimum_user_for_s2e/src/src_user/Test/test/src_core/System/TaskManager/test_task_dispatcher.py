@@ -3,10 +3,9 @@
 
 import os
 import sys
-import time
 
-import isslwings as wings
-import pytest
+# import isslwings as wings
+# import pytest
 
 ROOT_PATH = "../../../../"
 sys.path.append(os.path.dirname(__file__) + "/" + ROOT_PATH + "utils")
