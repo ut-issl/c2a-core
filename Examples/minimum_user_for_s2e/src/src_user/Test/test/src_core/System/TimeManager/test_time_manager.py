@@ -113,6 +113,7 @@ def test_tmgr_utl_cmd():
 
     _test_utl_cmd(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL)
 
+
     # unixtime_at_ti0 < epoch の場合（意図した TI で UTL が打てない）
     unixtime_at_ti0 = TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL - 100
     assert "SUC" == wings.util.send_cmd_and_confirm(
@@ -123,6 +124,7 @@ def test_tmgr_utl_cmd():
     )
 
     _test_utl_cmd(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL)
+
 
     # epoch が変わった場合
     new_epoch = time.time()
@@ -139,51 +141,6 @@ def test_tmgr_utl_cmd():
     )
 
     _test_utl_cmd(unixtime_at_ti0, new_epoch)
-
-
-def _test_utl_cmd(unixtime_at_ti0, utl_unixtime_epoch):
-    # 最初にTL0をクリアしておく
-    assert "SUC" == wings.util.send_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (0, ),
-        c2a_enum.Tlm_CODE_HK,
-    )
-
-    tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
-    )
-
-    # NOP を10個, 未来のランダムな unixtime で登録する
-    ti_of_cmds = generate_random_tis(tlm_HK["HK.SH.TI"], 10)
-    send_utl_nops(ti_of_cmds, unixtime_at_ti0)
-
-    # 重複を削除して時刻順に並べ替え
-    ti_of_cmds = list(set(ti_of_cmds))
-    ti_of_cmds.sort()
-
-
-    # TL0 に正しく登録されているか確認
-    tlm_TL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
-    )
-    assert tlm_TL["TL.LINE_NO"] == 0
-
-    for i, ti in enumerate(ti_of_cmds):
-        tlm_name = "TL.CMD" + str(i) + "_TI"
-        ti = reflect_epoch_gap(ti, utl_unixtime_epoch, unixtime_at_ti0)
-
-        # TODO: wingsが改修されたら誤差範囲を狭くする
-        assert tlm_TL[tlm_name] <= ti
-        assert tlm_TL[tlm_name] >  ti - OBCT_CYCLES_PER_SEC
-
-    # 最後にTL0をもう一度クリアする
-    assert "SUC" == wings.util.send_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (0, ),
-        c2a_enum.Tlm_CODE_HK,
-    )
 
 
 @pytest.mark.sils
@@ -204,35 +161,80 @@ def test_tmgr_final_check():
     )
 
 
-# 未来のランダムな時刻の TI を n 個生成する
-# TODO: wingsがutl_cmdの時刻引数を0.1秒刻みで受け付けるように改修されたら, TIの10の倍数縛りをなくす
-def generate_random_tis(ti_now, n):
-    ti_future = (ti_now // OBCT_CYCLES_PER_SEC) * OBCT_CYCLES_PER_SEC + 10000
+def _test_utl_cmd(unixtime_at_ti0, utl_unixtime_epoch):
+    # 最初にTL0をクリアしておく
+    assert "SUC" == wings.util.send_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
+        (0, ),
+        c2a_enum.Tlm_CODE_HK,
+    )
 
-    return [ti_future + random.randrange(100) * OBCT_CYCLES_PER_SEC for i in range(n)]
+    tlm_HK = wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+    )
+    unixtime_now = unixtime_at_ti0 + tlm_HK["HK.SH.TI"] / OBCT_CYCLES_PER_SEC
+
+    # NOP を10個, 未来のランダムな unixtime で登録する
+    unixtime_of_cmds = generate_random_unixtime(unixtime_now)
+    send_utl_nops(unixtime_of_cmds)
+
+    # 重複を削除して時刻順に並べ替え
+    unixtime_of_cmds = list(set(unixtime_of_cmds))
+    unixtime_of_cmds.sort()
 
 
-def send_utl_nops(ti_of_cmds, unixtime_at_ti0):
-    unixtime_at_ti0 = (int)(unixtime_at_ti0)  # TODO: wingsが改修されたら整数縛りをなくす
+    # TL0 に正しく登録されているか確認
+    tlm_TL = wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+    )
+    assert tlm_TL["TL.LINE_NO"] == 0
 
-    for ti in ti_of_cmds:
+    for i, unixtime in enumerate(unixtime_of_cmds):
+        tlm_name = "TL.CMD" + str(i) + "_TI"
+        ti = calc_ti_from_unixtime(unixtime, unixtime_at_ti0, utl_unixtime_epoch)
+
+        assert tlm_TL[tlm_name] > ti - 1
+        assert tlm_TL[tlm_name] < ti + 1
+
+    # 最後にTL0をもう一度クリアする
+    assert "SUC" == wings.util.send_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
+        (0, ),
+        c2a_enum.Tlm_CODE_HK,
+    )
+
+
+# 未来のランダムな時刻の unixtime を 10 個生成する
+def generate_random_unixtime(unixtime_now):
+    # TODO: wingsがutl_cmdの時刻引数を0.1秒刻みで受け付けるように改修されたら, 整数縛りをなくす
+    unixtime_future = (int)(unixtime_now) + 1000
+
+    return [unixtime_future + random.randrange(100) for i in range(10)]
+
+
+def send_utl_nops(unixtime_of_cmds):
+    for unixtime in unixtime_of_cmds:
         # utl_cmd のwings側の時刻引数は一般の unixtime であることに注意
         wings.util.send_utl_cmd(
-            ope, unixtime_at_ti0 + ti // OBCT_CYCLES_PER_SEC, c2a_enum.Cmd_CODE_NOP, (),
+            ope, unixtime, c2a_enum.Cmd_CODE_NOP, (),
         )
 
 
-def reflect_epoch_gap(ti, epoch, unixtime_at_ti0):
+def calc_ti_from_unixtime(unixtime, unixtime_at_ti0, epoch):
+    ti = (unixtime - unixtime_at_ti0) * OBCT_CYCLES_PER_SEC  # 概算値なので小数でもOK
+
     # utl_unixtime_epoch をデフォルトから変更した場合, wings側とずれが生じる
-    # epoch が増えた分だけ, C2A 上では unixtime_at_ti0 が小さく見積もられ, 実行時刻 TI は大きくなる
-    ret = ti + (epoch - TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL) * OBCT_CYCLES_PER_SEC
+    # epoch が増えた分だけ, C2A 上では utl_unixtime_at_ti0 が小さくなり, 実行時刻 TI は大きく見積もられる
+    ti = ti + (epoch - TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL) * OBCT_CYCLES_PER_SEC
 
     if unixtime_at_ti0 >= epoch:
-        return ret
-    else: # unixtime_at_ti0 < epoch
-        # utl_unixtime_at_ti0 = unixtime_at_ti0 - epoch が負の値にならないように,
+        return ti
+    else:
+        # unixtime_at_ti0 < epoch の場合,
         # utl_unixtime_at_ti0 = 0 として例外処理され大きい値が返り, 実行時刻 TI は小さく見積もられる
-        return ret - (epoch - unixtime_at_ti0) * OBCT_CYCLES_PER_SEC
+        return ti - (epoch - unixtime_at_ti0) * OBCT_CYCLES_PER_SEC
 
 
 if __name__ == "__main__":
