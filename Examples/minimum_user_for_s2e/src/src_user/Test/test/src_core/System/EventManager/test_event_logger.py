@@ -97,7 +97,7 @@ g_clog_capacity_pre = g_clog_capacity
 def test_event_logger_init_check():
     update_all_tlm()
 
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -147,7 +147,7 @@ def test_event_logger_set_params():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_record_event():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -156,7 +156,7 @@ def test_event_logger_record_event():
     change_clog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_all_tlm()
 
-    ### Cmd_EL_RECORD_EVENT のアサーション
+    # ### Cmd_EL_RECORD_EVENT のアサーション
     local0 = 1
     local1 = 5
     note0 = 2
@@ -190,7 +190,7 @@ def test_event_logger_record_event():
     for err_level in range(EL_ERROR_LEVEL_MAX):
         assert g_counts_pre[err_level] == g_counts[err_level]
 
-    ### Cmd_EL_RECORD_EVENT での登録
+    # ### Cmd_EL_RECORD_EVENT での登録
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
@@ -241,7 +241,7 @@ def test_event_logger_record_event():
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.DELTA_RECORD_TIME.TOTAL_CYCLE"] == diff_cycle
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.DELTA_RECORD_TIME.STEP"] == diff_step
 
-    ### CLog のずらし
+    # ### CLog のずらし
     # 違うイベント
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
@@ -276,7 +276,7 @@ def test_event_logger_record_event():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_clear_log():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -286,7 +286,7 @@ def test_event_logger_clear_log():
     note0 = 2
     note1 = 3
 
-    ### Cmd_EL_RECORD_EVENT での登録
+    # ### Cmd_EL_RECORD_EVENT での登録
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
@@ -311,7 +311,7 @@ def test_event_logger_clear_log():
     assert assert_clog(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0, 0) == 1
     assert assert_clog(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1, 0) == 1
 
-    ### 全消去
+    # ### 全消去
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_CLEAR_LOG_ALL, (), c2a_enum.Tlm_CODE_HK
     )
@@ -328,7 +328,7 @@ def test_event_logger_clear_log():
     assert assert_clog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_HIGH, 0, 0) == 0
     assert assert_clog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_LOW, 0, 0) == 0
 
-    ### Cmd_EL_RECORD_EVENT での登録
+    # ### Cmd_EL_RECORD_EVENT での登録
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
@@ -345,7 +345,7 @@ def test_event_logger_clear_log():
     )
     assert_latest_log(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1)
 
-    ### エラーレベル消去
+    # ### エラーレベル消去
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL,
@@ -389,7 +389,7 @@ def test_event_logger_clear_log():
 
     # 本当はTLogを消したらCLogも消えてないことを書くにするとかやりたいが，面倒なので．．．
 
-    ### 統計情報削除
+    # ### 統計情報削除
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_CLEAR_STATISTICS, (), c2a_enum.Tlm_CODE_HK
     )
@@ -405,12 +405,12 @@ def test_event_logger_clear_log():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_tlog_overflow():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
 
-    ### 設定コマンドのアサーション確認
+    # ### 設定コマンドのアサーション確認
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
 
     ret = wings.util.send_rt_cmd_and_confirm(
@@ -461,7 +461,7 @@ def test_event_logger_tlog_overflow():
     update_el_tlog_tlm()
     assert g_tlog_is_enable_overwrite == 1
 
-    ### 上書き不可にする
+    # ### 上書き不可にする
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE,
@@ -471,11 +471,11 @@ def test_event_logger_tlog_overflow():
     update_el_tlog_tlm()
     assert g_tlog_is_enable_overwrite == 0
 
-    ### 半分埋める
+    # ### 半分埋める
     local0 = 1
-    local1 = 5
+    # local1 = 5
     note0 = 2
-    note1 = 3
+    # note1 = 3
 
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_tlog_tlm()
@@ -493,7 +493,7 @@ def test_event_logger_tlog_overflow():
     assert g_counts[EL_ERROR_LEVEL_HIGH] == g_tlog_capacity // 2 - 1
     assert g_tlog_wp == g_tlog_capacity // 2 - 1
 
-    ### 半分まで来た EL インベント確認
+    # ### 半分まで来た EL インベント確認
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
@@ -520,7 +520,7 @@ def test_event_logger_tlog_overflow():
 
     assert g_tlog_is_overflow == 0
 
-    ### 残１まで埋める
+    # ### 残１まで埋める
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_tlog_tlm()
     for i in range(g_tlog_wp, g_tlog_capacity - 1):
@@ -536,7 +536,7 @@ def test_event_logger_tlog_overflow():
     assert g_tlog_wp == g_tlog_capacity - 1
     assert g_tlog_is_overflow == 0
 
-    ### 溢れチェック
+    # ### 溢れチェック
     # ラスト１
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     ret = wings.util.send_rt_cmd_and_confirm(
@@ -565,7 +565,7 @@ def test_event_logger_tlog_overflow():
         == 1
     )
 
-    ### 溢れた場合のwpの位置など
+    # ### 溢れた場合のwpの位置など
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_tlm()
     update_el_tlog_tlm()
@@ -598,7 +598,7 @@ def test_event_logger_tlog_overflow():
     assert g_counts_pre[EL_ERROR_LEVEL_HIGH] + 1 == g_counts[EL_ERROR_LEVEL_HIGH]
     assert g_tlog_wp == 0
 
-    ### 追記OKに
+    # ### 追記OKに
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
@@ -630,19 +630,17 @@ def test_event_logger_tlog_overflow():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_clog_overflow():
-    ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
+    # ### 初期化
+    wings.util.send_rt_cmd_and_confirm(ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK)
 
     update_el_tlm()
     update_el_clog_tlm()
 
-    ### すべて埋める
+    # ### すべて埋める
     local0 = 1
-    local1 = 5
+    # local1 = 5
     note0 = 2
-    note1 = 3
+    # note1 = 3
 
     change_clog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_clog_tlm()
@@ -659,8 +657,8 @@ def test_event_logger_clog_overflow():
     # assert g_counts[EL_ERROR_LEVEL_EL] == 0           # TLog の Full event があるかもしれないので．
     assert g_count_total == g_counts[EL_ERROR_LEVEL_HIGH] + g_counts[EL_ERROR_LEVEL_EL]
 
-    ### 溢れチェック
-    ret = wings.util.send_rt_cmd_and_confirm(
+    # ### 溢れチェック
+    wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
         (EL_GROUP_TEST1, local0, EL_ERROR_LEVEL_HIGH, note0),
@@ -684,12 +682,12 @@ def test_event_logger_clog_overflow():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_logging_setting():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
 
-    ### 切り替え
+    # ### 切り替え
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_DISABLE_LOGGING_ALL, (), c2a_enum.Tlm_CODE_HK
     )
@@ -730,7 +728,7 @@ def test_event_logger_logging_setting():
     assert g_el_tlm["EL.IS_LOGGING_ENABLE" + str(EL_GROUP_TEST)] == 1
     assert g_el_tlm["EL.IS_LOGGING_ENABLE" + str(EL_GROUP_TEST1)] == 1
 
-    ### 無効化されたイベント記録
+    # ### 無効化されたイベント記録
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_DISABLE_LOGGING, (EL_GROUP_TEST,), c2a_enum.Tlm_CODE_HK
     )
@@ -746,7 +744,7 @@ def test_event_logger_logging_setting():
     assert g_count_total_pre == g_count_total
     assert g_counts_pre[EL_ERROR_LEVEL_HIGH] == g_counts[EL_ERROR_LEVEL_HIGH]
 
-    ### リセット
+    # ### リセット
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT_LOGGING_SETTINGS, (), c2a_enum.Tlm_CODE_HK
     )
@@ -762,7 +760,7 @@ def test_event_logger_logging_setting():
 def test_event_logger_final_check():
     update_all_tlm()
 
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -915,8 +913,12 @@ def update_el_tlm():
 
 
 def update_el_tlog_tlm():
-    global g_tlog_em_tlm, g_tlog_count_total, g_tlog_count, g_tlog_tlm_info, g_tlog_capacity, g_tlog_wp, g_tlog_is_enable_overwrite, g_tlog_is_overflow
-    global g_tlog_em_tlm_pre, g_tlog_count_total_pre, g_tlog_count_pre, g_tlog_tlm_info_pre, g_tlog_capacity_pre, g_tlog_wp_pre, g_tlog_is_enable_overwrite_pre, g_tlog_is_overflow_pre
+    global g_tlog_em_tlm, g_tlog_count_total, g_tlog_count, g_tlog_tlm_info
+    global g_tlog_capacity, g_tlog_wp
+    global g_tlog_is_enable_overwrite, g_tlog_is_overflow
+    global g_tlog_em_tlm_pre, g_tlog_count_total_pre, g_tlog_count_pre, g_tlog_tlm_info_pre
+    global g_tlog_capacity_pre, g_tlog_wp_pre
+    global g_tlog_is_enable_overwrite_pre, g_tlog_is_overflow_pre
 
     (
         g_tlog_em_tlm_pre,
@@ -956,8 +958,10 @@ def update_el_tlog_tlm():
 
 
 def update_el_clog_tlm():
-    global g_clog_em_tlm, g_clog_count_total, g_clog_count, g_clog_tlm_info, g_clog_capacity
-    global g_clog_em_tlm_pre, g_clog_count_total_pre, g_clog_count_pre, g_clog_tlm_info_pre, g_clog_capacity_pre
+    global g_clog_em_tlm, g_clog_count_total, g_clog_count
+    global g_clog_tlm_info, g_clog_capacity
+    global g_clog_em_tlm_pre, g_clog_count_total_pre, g_clog_count_pre
+    global g_clog_tlm_info_pre, g_clog_capacity_pre
 
     (
         g_clog_em_tlm_pre,

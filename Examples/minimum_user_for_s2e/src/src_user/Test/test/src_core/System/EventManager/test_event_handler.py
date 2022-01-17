@@ -65,7 +65,7 @@ EH_REGISTER_ACK_ILLEGAL_BCT_ID = 10
 EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG = 11
 EH_REGISTER_ACK_UNKNOWN_ERR = 12
 
-conv_to_err_level = {0: "HIGH", 1: "MIDDLE", 2: "LOW", 1: "EL"}
+conv_to_err_level = {0: "HIGH", 1: "MIDDLE", 2: "LOW", 3: "EL", 4: "EH"}
 conv_to_match_flag = {0: "NO", 1: "YES"}
 conv_to_active = {0: "INACTIVE", 1: "ACTIVE"}
 conv_to_condition_type = {0: "SINGLE", 1: "CONTINUOUS", 2: "CUMULATIVE"}
@@ -192,14 +192,14 @@ def test_event_handler_delete_rule():
 
     init_el_and_eh()
 
-    tlm_EH_INDEX = download_eh_index_tlm()
+    download_eh_index_tlm()  # 目視チェック用
 
     # ルールを消す
     print("Cmd_EH_DELETE_RULE")
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EH_DELETE_RULE, (EH_RULE_TEST2,), c2a_enum.Tlm_CODE_HK
     )
-    tlm_EH_INDEX = download_eh_index_tlm()
+    download_eh_index_tlm()  # 目視チェック用
     # FIXME: 自動化したい
     print("!!!!! 目視チェック：EH_RULE_TEST2 が EH_INDEX から消されつつ，ソートされているか確認 !!!!!")
     check_rule(

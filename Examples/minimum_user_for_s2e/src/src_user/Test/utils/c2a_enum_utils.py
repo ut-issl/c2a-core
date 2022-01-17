@@ -9,7 +9,7 @@ def get_c2a_enum():
     c2a_src_abs_path = os.environ.get("C2A_SRC_ABS_PATH")
 
     # このifは環境変数が設定されているならsettings.jsonを無視したいという意図
-    if c2a_src_abs_path == None:
+    if c2a_src_abs_path is None:
         with open(os.path.dirname(__file__).replace("\\", "/") + "/../settings.json") as f:
             json_dict = json.load(f)
         c2a_src_abs_path = (

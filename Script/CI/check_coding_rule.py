@@ -135,7 +135,9 @@ def preprocess_inner_(path: str, settings: dict):
     )
     reptn_replace_qualifier = re.compile(ptn_replace_qualifier)
 
-    # targets = ["for", "if", "while", "return", "switch", "case", "break", "else", "goto", "auto", "continue", "extern", "enum", "union", "register", "static", "struct", "typedef", "volatile"]
+    # targets = ["for", "if", "while", "return", "switch", "case", "break", "else", "goto",
+    #            "auto", "continue", "extern", "enum", "union", "register", "static",
+    #            "struct", "typedef", "volatile"]
 
     control_identifier = [
         "for",
@@ -302,9 +304,12 @@ def check_newline_(path: str, code_lines: list) -> int:
                     print(line)
                 flag = 1
         # 旧版
-        # # if not (line.find("[") != -1 and line.find("};") != -1):      # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
-        # # if line.find("};") == -1:                                   # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
-        # if line.find("[") == -1 and line.find("};") == -1:        # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
+        # # if not (line.find("[") != -1 and line.find("};") != -1):
+        #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
+        # # if line.find("};") == -1:
+        #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
+        # if line.find("[") == -1 and line.find("};") == -1:
+        #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
         #     if (has_line_ended_with_target_(line, "{") == 0):
         #         print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
         #         if IS_SHOW_CODE_AT_ERR:
