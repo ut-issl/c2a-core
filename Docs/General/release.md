@@ -32,7 +32,7 @@
 
 
 ## バージョニング
-Semantic Versioning を採用する．
+[Semantic Versioning](https://semver.org) を採用する．
 
 
 ## C2A Tools との互換性について
