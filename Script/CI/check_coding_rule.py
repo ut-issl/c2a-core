@@ -161,7 +161,7 @@ def preprocess_inner_(path: str, settings: dict):
         if non_qualifier_line.startswith(tuple(control_identifier)):
             continue
         match = reptn_find_type.search(non_qualifier_line)
-        if not match is None:
+        if match is not None:
             # print(match.group(1))
             g_type_set.add(match.group(1))
 
@@ -352,7 +352,7 @@ def check_newline_(path: str, code_lines: list) -> int:
                 continue
 
             match = reptn.search(line)
-            if not match is None:
+            if match is not None:
                 print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
                 if IS_SHOW_CODE_AT_ERR:
                     print(line)
@@ -371,7 +371,7 @@ def check_newline_(path: str, code_lines: list) -> int:
                 continue
 
             match = reptn.search(line)
-            if not match is None:
+            if match is not None:
                 print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
                 if IS_SHOW_CODE_AT_ERR:
                     print(line)

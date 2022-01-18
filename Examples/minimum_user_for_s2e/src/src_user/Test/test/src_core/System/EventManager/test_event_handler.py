@@ -73,6 +73,7 @@ conv_to_condition_type = {0: "SINGLE", 1: "CONTINUOUS", 2: "CUMULATIVE"}
 # TODO: カウンタのクリアを入れたら足す
 # TODO: EH対応EL発行を入れたら，色々変えないとダメ
 
+
 # 各種設定の確認など
 @pytest.mark.real
 @pytest.mark.sils
