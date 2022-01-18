@@ -89,22 +89,15 @@ def test_tmgr_set_utl_unixtime_epoch():
     )
     assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == new_epoch
 
-    # epoch をデフォルトに戻す
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,), c2a_enum.Tlm_CODE_HK
-    )
-
-    tlm_MOBC = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
-    )
-    assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL
-
 
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_utl_cmd():
 
     # unixtime_at_ti0 > epoch の場合（正常時）
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,), c2a_enum.Tlm_CODE_HK
+    )
     unixtime_at_ti0 = time.time()
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
@@ -116,7 +109,7 @@ def test_tmgr_utl_cmd():
     test_utl_cmd_ten_times(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL)
 
 
-    # unixtime_at_ti0 < epoch の場合（意図した TI で UTL が打てない）
+    # unixtime_at_ti0 < epoch の場合（TL0に登録されないことを確認する）
     unixtime_at_ti0 = TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL - 100
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
@@ -239,18 +232,16 @@ def send_utl_nops(unixtime_of_cmds):
 
 
 def calc_ti_from_unixtime(unixtime, unixtime_at_ti0, epoch):
-    ti = (unixtime - unixtime_at_ti0) * OBCT_CYCLES_PER_SEC  # 概算値なので小数でもOK
+    if unixtime_at_ti0 <= epoch:
+        # この場合, 意図した TI で登録できないので C2A では実行時刻 TI = 0 が返され, TL0 には登録されない
+        # TLM_TL の TI の値はデフォルト値のゼロになっているべきなので, 整合するようにゼロを返す
+        return 0
+
+    ti = (unixtime - unixtime_at_ti0) * OBCT_CYCLES_PER_SEC  # 概算値なので小数のまま
 
     # utl_unixtime_epoch をデフォルトから変更した場合, wings側とずれが生じる
     # epoch が増えた分だけ, C2A 上では utl_unixtime_at_ti0 が小さくなり, 実行時刻 TI は大きく見積もられる
-    ti = ti + (epoch - TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL) * OBCT_CYCLES_PER_SEC
-
-    if unixtime_at_ti0 >= epoch:
-        return ti
-    else:
-        # unixtime_at_ti0 < epoch の場合,
-        # utl_unixtime_at_ti0 = 0 として例外処理され大きい値が返り, 実行時刻 TI は小さく見積もられる
-        return ti - (epoch - unixtime_at_ti0) * OBCT_CYCLES_PER_SEC
+    return ti + (epoch - TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL) * OBCT_CYCLES_PER_SEC
 
 
 if __name__ == "__main__":

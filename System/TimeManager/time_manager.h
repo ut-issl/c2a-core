@@ -154,7 +154,7 @@ cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime);
  * @brief 引数で指定された utl_unixtime に対応する TI を返す
  * @note UTL_cmd で実行時刻情報を TI に変換する際に用いる
  * @param[in] utl_unixtime
- * @retval 0 : 引数の unixtime が unixtime_at_ti0 より小さい場合
+ * @retval 0 : "unixtime_at_ti0 <= utl_unixtime_epoch" or "utl_unixtime < utl_unixtime_at_ti0" の場合
  * @retval TI (total_cycleのこと) : それ以外の場合
  */
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
