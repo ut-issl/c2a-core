@@ -672,8 +672,12 @@ def test_event_logger_clog_overflow():
     assert g_counts_pre[EL_ERROR_LEVEL_EL] + 2 == g_counts[EL_ERROR_LEVEL_EL]
     assert g_count_total == g_counts[EL_ERROR_LEVEL_HIGH] + g_counts[EL_ERROR_LEVEL_EL]
 
-    # assert_tlog(EL_CORE_GROUP_EL_DROP_CLOG1, EL_GROUP_TEST, EL_ERROR_LEVEL_EL, 0, 0)      # TLog の Full event があるかもしれないので．
-    # assert_tlog(EL_CORE_GROUP_EL_DROP_CLOG2, 0, EL_ERROR_LEVEL_EL, 1, 1)      # TLog の Full event があるかもしれないので．
+    # assert_tlog(
+    #     EL_CORE_GROUP_EL_DROP_CLOG1, EL_GROUP_TEST, EL_ERROR_LEVEL_EL, 0, 0
+    # )  # TLog の Full event があるかもしれないので．
+    # assert_tlog(
+    #     EL_CORE_GROUP_EL_DROP_CLOG2, 0, EL_ERROR_LEVEL_EL, 1, 1
+    # )  # TLog の Full event があるかもしれないので．
     assert assert_clog(EL_CORE_GROUP_EL_DROP_CLOG1, EL_GROUP_TEST, EL_ERROR_LEVEL_EL, 0, 1) == 1
     assert assert_clog(EL_CORE_GROUP_EL_DROP_CLOG2, 0, EL_ERROR_LEVEL_EL, 1, 0) == 1
 

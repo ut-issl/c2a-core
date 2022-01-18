@@ -483,7 +483,12 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 flag = 1
         # if "{" in line:
         #     if not has_ended_with_list_before_target_(line, "{", [" ", "{"]):
-        #         print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED OR SPACE IS REQUIRED BEFORE '{'")
+        #         print(
+        #             path
+        #             + ": "
+        #             + str(idx + 1)
+        #             + ": ALLMAN STYLE IS REQUIRED OR SPACE IS REQUIRED BEFORE '{'"
+        #         )
         #         if IS_SHOW_CODE_AT_ERR:
         #             print(line)
         #         flag = 1
@@ -568,14 +573,58 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                     flag = 1
 
     # これは endif で ifとかがヒットするのでNG
-    # # targets = ["for", "if", "while", "return", "switch", "case", "break", "else", "goto", "auto", "continue", "extern", "enum", "union", "register", "static", "struct", "typedef", "volatile"]
-    # targets = ["for", "if", "while", "switch", "case", "else", "goto", "auto", "extern", "enum", "union", "register", "static", "struct", "typedef", "volatile"]
+    # # targets = [
+    # #     "for",
+    # #     "if",
+    # #     "while",
+    # #     "return",
+    # #     "switch",
+    # #     "case",
+    # #     "break",
+    # #     "else",
+    # #     "goto",
+    # #     "auto",
+    # #     "continue",
+    # #     "extern",
+    # #     "enum",
+    # #     "union",
+    # #     "register",
+    # #     "static",
+    # #     "struct",
+    # #     "typedef",
+    # #     "volatile",
+    # # ]
+    # targets = [
+    #     "for",
+    #     "if",
+    #     "while",
+    #     "switch",
+    #     "case",
+    #     "else",
+    #     "goto",
+    #     "auto",
+    #     "extern",
+    #     "enum",
+    #     "union",
+    #     "register",
+    #     "static",
+    #     "struct",
+    #     "typedef",
+    #     "volatile",
+    # ]
     # for idx, line in enumerate(code_lines):
     #     if is_in_comment_context_in_multiline_(path, code_lines, idx):
     #         continue
     #     for target in targets:
     #         if not is_there_space_befor_after_(line, target):
-    #             print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED BEFORE AND AFTER '" + target + "'")
+    #             print(
+    #                 path
+    #                 + ": "
+    #                 + str(idx + 1)
+    #                 + ": SPACE IS REQUIRED BEFORE AND AFTER '"
+    #                 + target
+    #                 + "'"
+    #             )
     #             if IS_SHOW_CODE_AT_ERR:
     #                 print(line)
     #             flag = 1
