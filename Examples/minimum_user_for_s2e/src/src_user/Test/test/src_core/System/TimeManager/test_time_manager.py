@@ -19,13 +19,14 @@ ope = wings_utils.get_wings_operation()
 
 
 # C2Aでのdefine値
-OBCT_STEP_IN_MSEC = 1                                                    # 1 step で何 ms か
-OBCT_STEPS_PER_CYCLE = 100                                               # 何 step で 1 cycle か
+OBCT_STEP_IN_MSEC = 1  # 1 step で何 ms か
+OBCT_STEPS_PER_CYCLE = 100  # 何 step で 1 cycle か
 OBCT_CYCLES_PER_SEC = 1000 // OBCT_STEP_IN_MSEC // OBCT_STEPS_PER_CYCLE  # 1 s で何 cycle か
 TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
 TL_ID_DEPLOY_FROM_GS = 0
 
 TL_DFAULT_PAGE_NO = 0
+
 
 @pytest.mark.sils
 @pytest.mark.real
@@ -58,7 +59,7 @@ def test_tmgr_set_unixtime():
     # unixtime_at_ti0 を current_unixtime とランダムな TI で更新
     current_unixtime = time.time()
     ti = random.randrange(1000)
-    step = random.randrange(OBCT_STEPS_PER_CYCLE) # step は OBCT_STEPS_PER_CYCLE 未満 とすること
+    step = random.randrange(OBCT_STEPS_PER_CYCLE)  # step は OBCT_STEPS_PER_CYCLE 未満 とすること
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TMGR_SET_UNIXTIME,
@@ -69,7 +70,11 @@ def test_tmgr_set_unixtime():
     tlm_HK = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
     )
-    unixtime_at_ti0 = current_unixtime - (ti / OBCT_CYCLES_PER_SEC) - (step / OBCT_CYCLES_PER_SEC / OBCT_STEPS_PER_CYCLE)
+    unixtime_at_ti0 = (
+        current_unixtime
+        - (ti / OBCT_CYCLES_PER_SEC)
+        - (step / OBCT_CYCLES_PER_SEC / OBCT_STEPS_PER_CYCLE)
+    )
     assert tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] < unixtime_at_ti0 + OBCT_STEP_IN_MSEC / 1000
     assert tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] > unixtime_at_ti0 - OBCT_STEP_IN_MSEC / 1000
 
@@ -96,7 +101,10 @@ def test_tmgr_utl_cmd():
 
     # unixtime_at_ti0 > epoch の場合（正常時）
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH,
+        (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,),
+        c2a_enum.Tlm_CODE_HK,
     )
     unixtime_at_ti0 = time.time()
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -108,7 +116,6 @@ def test_tmgr_utl_cmd():
 
     test_utl_cmd_ten_times(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL)
 
-
     # unixtime_at_ti0 < epoch の場合（TL0に登録されないことを確認する）
     unixtime_at_ti0 = TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL - 100
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -119,7 +126,6 @@ def test_tmgr_utl_cmd():
     )
 
     test_utl_cmd_ten_times(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL)
-
 
     # epoch が変わった場合
     new_epoch = time.time()
@@ -152,7 +158,10 @@ def test_tmgr_final_check():
 
     # epochをデフォルトに戻す
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH,
+        (TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL,),
+        c2a_enum.Tlm_CODE_HK,
     )
 
 
@@ -161,7 +170,7 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch):
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (TL_ID_DEPLOY_FROM_GS, ),
+        (TL_ID_DEPLOY_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -178,18 +187,17 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch):
     unixtime_of_cmds = list(set(unixtime_of_cmds))
     unixtime_of_cmds.sort()
 
-
     # TL0 に正しく登録されているか確認
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM,
-        (TL_ID_DEPLOY_FROM_GS, ),
+        (TL_ID_DEPLOY_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_PAGE_FOR_TLM,
-        (TL_DFAULT_PAGE_NO, ),
+        (TL_DFAULT_PAGE_NO,),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -210,7 +218,7 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch):
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (TL_ID_DEPLOY_FROM_GS, ),
+        (TL_ID_DEPLOY_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -227,7 +235,10 @@ def send_utl_nops(unixtime_of_cmds):
     for unixtime in unixtime_of_cmds:
         # utl_cmd のwings側の時刻引数は一般の unixtime であることに注意
         wings.util.send_utl_cmd(
-            ope, unixtime, c2a_enum.Cmd_CODE_NOP, (),
+            ope,
+            unixtime,
+            c2a_enum.Cmd_CODE_NOP,
+            (),
         )
 
 
