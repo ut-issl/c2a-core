@@ -20,7 +20,7 @@
 /**
  * @enum   CCP_EXEC_STS
  * @brief  コマンド実行結果コード
- * @note   intを想定
+ * @note   uint8_t を想定
  */
 typedef enum
 {
