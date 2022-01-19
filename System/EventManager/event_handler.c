@@ -619,7 +619,7 @@ static void EH_respond_(EH_RULE_ID rule_id)
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
                     EL_ERROR_LEVEL_HIGH,
-                    (uint32_t)(deploy_cmd_ack + 100));   // FIXME: CCP_EXEC_STS が負数も含むので．．．なんとかしたい
+                    deploy_cmd_ack);
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
