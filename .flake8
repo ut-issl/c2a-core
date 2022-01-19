@@ -1,3 +1,9 @@
 [flake8]
 max-line-length = 100
-ignore = E203,E402,W503,W504
+ignore =
+    # black と競合するので
+    E203,
+    W503,
+    W504,
+    # https://github.com/ut-issl/c2a-core/issues/195
+    E402
