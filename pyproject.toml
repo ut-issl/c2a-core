@@ -1,0 +1,8 @@
+[tool.black]
+target-version = ['py38']
+line-length = 100
+include = '\.pyi?$'
+
+# TODO: .flake8 を消してこちらに移植する
+# [tool.flake8]
+# max-line-length = 100

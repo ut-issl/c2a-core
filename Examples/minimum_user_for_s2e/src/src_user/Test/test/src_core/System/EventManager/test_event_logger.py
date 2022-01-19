@@ -18,36 +18,36 @@ ope = wings_utils.get_wings_operation()
 
 
 # コードと整合をとる
-EL_TLOG_TLM_PAGE_SIZE        = 36
-EL_TLOG_TLM_PAGE_MAX_HIGH    = 4
-EL_TLOG_TLM_PAGE_MAX_MIDDLE  = 4
-EL_TLOG_TLM_PAGE_MAX_LOW     = 4
-EL_CLOG_TLM_PAGE_SIZE        = 22
-EL_CLOG_TLM_PAGE_MAX_HIGH    = 4
-EL_CLOG_TLM_PAGE_MAX_MIDDLE  = 4
-EL_CLOG_TLM_PAGE_MAX_LOW     = 4
+EL_TLOG_TLM_PAGE_SIZE = 36
+EL_TLOG_TLM_PAGE_MAX_HIGH = 4
+EL_TLOG_TLM_PAGE_MAX_MIDDLE = 4
+EL_TLOG_TLM_PAGE_MAX_LOW = 4
+EL_CLOG_TLM_PAGE_SIZE = 22
+EL_CLOG_TLM_PAGE_MAX_HIGH = 4
+EL_CLOG_TLM_PAGE_MAX_MIDDLE = 4
+EL_CLOG_TLM_PAGE_MAX_LOW = 4
 
-EL_TLOG_LOG_SIZE_MAX_EL      = 16
-EL_CLOG_LOG_SIZE_MAX_EL      = 8
+EL_TLOG_LOG_SIZE_MAX_EL = 16
+EL_CLOG_LOG_SIZE_MAX_EL = 8
 
-EL_ERROR_LEVEL_HIGH    = 0
-EL_ERROR_LEVEL_MIDDLE  = 1
-EL_ERROR_LEVEL_LOW     = 2
-EL_ERROR_LEVEL_EL      = 3
-EL_ERROR_LEVEL_EH      = 4
-EL_ERROR_LEVEL_MAX     = 5
+EL_ERROR_LEVEL_HIGH = 0
+EL_ERROR_LEVEL_MIDDLE = 1
+EL_ERROR_LEVEL_LOW = 2
+EL_ERROR_LEVEL_EL = 3
+EL_ERROR_LEVEL_EH = 4
+EL_ERROR_LEVEL_MAX = 5
 EL_ERROR_LEVEL_TLM_DICT = ["HIGH", "MIDDLE", "LOW", "EL"]
 
-EL_CORE_GROUP_NULL          = c2a_enum.EL_CORE_GROUP_NULL
-EL_CORE_GROUP_EVENT_LOGGER  = c2a_enum.EL_CORE_GROUP_EVENT_LOGGER
+EL_CORE_GROUP_NULL = c2a_enum.EL_CORE_GROUP_NULL
+EL_CORE_GROUP_EVENT_LOGGER = c2a_enum.EL_CORE_GROUP_EVENT_LOGGER
 EL_CORE_GROUP_EL_DROP_CLOG1 = c2a_enum.EL_CORE_GROUP_EL_DROP_CLOG1
 EL_CORE_GROUP_EL_DROP_CLOG2 = c2a_enum.EL_CORE_GROUP_EL_DROP_CLOG2
-EL_GROUP_TEST  = c2a_enum.EL_GROUP_TEST
+EL_GROUP_TEST = c2a_enum.EL_GROUP_TEST
 EL_GROUP_TEST1 = c2a_enum.EL_GROUP_TEST1
-EL_GROUP_MAX   = c2a_enum.EL_GROUP_MAX
+EL_GROUP_MAX = c2a_enum.EL_GROUP_MAX
 
 EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL = 1
-EL_EVENT_LOCAL_TLOG_HIGH_FULL      = 2
+EL_EVENT_LOCAL_TLOG_HIGH_FULL = 2
 
 
 # 更新が頻繁にあるので，グローバルで
@@ -97,7 +97,7 @@ g_clog_capacity_pre = g_clog_capacity
 def test_event_logger_init_check():
     update_all_tlm()
 
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -147,7 +147,7 @@ def test_event_logger_set_params():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_record_event():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -156,22 +156,31 @@ def test_event_logger_record_event():
     change_clog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_all_tlm()
 
-    ### Cmd_EL_RECORD_EVENT のアサーション
+    # ### Cmd_EL_RECORD_EVENT のアサーション
     local0 = 1
     local1 = 5
-    note0  = 2
-    note1  = 3
+    note0 = 2
+    note1 = 3
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_MAX, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_MAX, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "PRM"
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_EL, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_EL, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "PRM"
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_MAX, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_MAX, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "PRM"
 
@@ -181,9 +190,12 @@ def test_event_logger_record_event():
     for err_level in range(EL_ERROR_LEVEL_MAX):
         assert g_counts_pre[err_level] == g_counts[err_level]
 
-    ### Cmd_EL_RECORD_EVENT での登録
+    # ### Cmd_EL_RECORD_EVENT での登録
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
 
@@ -204,11 +216,14 @@ def test_event_logger_record_event():
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.DELTA_RECORD_TIME.TOTAL_CYCLE"] == 0
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.DELTA_RECORD_TIME.STEP"] == 0
     last_log_time_cycle = g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.EVENT.TIME.TOTAL_CYCLE"]
-    last_log_time_step  = g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.EVENT.TIME.STEP"]
+    last_log_time_step = g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.EVENT.TIME.STEP"]
 
     # 同じイベント（note はわざと変えている）
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note1), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note1),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     assert_latest_log(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note1)
@@ -217,19 +232,22 @@ def test_event_logger_record_event():
     assert_tlog(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0, 0)
 
     diff_cycle = g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.EVENT.TIME.TOTAL_CYCLE"] - last_log_time_cycle
-    diff_step  = g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.EVENT.TIME.STEP"] - last_log_time_step
+    diff_step = g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.EVENT.TIME.STEP"] - last_log_time_step
 
     if diff_step < 0:
-        diff_step  += 100
+        diff_step += 100
         diff_cycle -= 1
 
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.DELTA_RECORD_TIME.TOTAL_CYCLE"] == diff_cycle
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG0.DELTA_RECORD_TIME.STEP"] == diff_step
 
-    ### CLog のずらし
+    # ### CLog のずらし
     # 違うイベント
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local1, EL_ERROR_LEVEL_HIGH, note1), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local1, EL_ERROR_LEVEL_HIGH, note1),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     assert_latest_tlog(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_HIGH, note1)
@@ -240,7 +258,10 @@ def test_event_logger_record_event():
 
     # 最初と同じイベント
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     assert_tlog(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0, 0)
@@ -255,24 +276,30 @@ def test_event_logger_record_event():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_clear_log():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
 
     local0 = 1
     local1 = 5
-    note0  = 2
-    note1  = 3
+    note0 = 2
+    note1 = 3
 
-    ### Cmd_EL_RECORD_EVENT での登録
+    # ### Cmd_EL_RECORD_EVENT での登録
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert_latest_log(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0)
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert_latest_log(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1)
 
@@ -284,7 +311,7 @@ def test_event_logger_clear_log():
     assert assert_clog(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0, 0) == 1
     assert assert_clog(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1, 0) == 1
 
-    ### 全消去
+    # ### 全消去
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_CLEAR_LOG_ALL, (), c2a_enum.Tlm_CODE_HK
     )
@@ -301,33 +328,50 @@ def test_event_logger_clear_log():
     assert assert_clog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_HIGH, 0, 0) == 0
     assert assert_clog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_LOW, 0, 0) == 0
 
-
-    ### Cmd_EL_RECORD_EVENT での登録
+    # ### Cmd_EL_RECORD_EVENT での登録
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert_latest_log(EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0)
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert_latest_log(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1)
 
-    ### エラーレベル消去
+    # ### エラーレベル消去
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL, (EL_ERROR_LEVEL_MAX,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL,
+        (EL_ERROR_LEVEL_MAX,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "PRM"
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL, (EL_ERROR_LEVEL_HIGH,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL,
+        (EL_ERROR_LEVEL_HIGH,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL, (EL_ERROR_LEVEL_MAX,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL,
+        (EL_ERROR_LEVEL_MAX,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "PRM"
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL, (EL_ERROR_LEVEL_LOW,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL,
+        (EL_ERROR_LEVEL_LOW,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
 
@@ -337,7 +381,7 @@ def test_event_logger_clear_log():
     assert g_counts[EL_ERROR_LEVEL_HIGH] != 0
     assert g_counts[EL_ERROR_LEVEL_LOW] != 0
 
-    assert_latest_log(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1)     # これは消えない
+    assert_latest_log(EL_GROUP_TEST, local1, EL_ERROR_LEVEL_LOW, note1)  # これは消えない
     assert_tlog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_HIGH, 0, 0)
     assert_tlog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_LOW, 0, 0)
     assert assert_clog(EL_CORE_GROUP_NULL, 0, EL_ERROR_LEVEL_HIGH, 0, 0) == 0
@@ -345,7 +389,7 @@ def test_event_logger_clear_log():
 
     # 本当はTLogを消したらCLogも消えてないことを書くにするとかやりたいが，面倒なので．．．
 
-    ### 統計情報削除
+    # ### 統計情報削除
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_CLEAR_STATISTICS, (), c2a_enum.Tlm_CODE_HK
     )
@@ -361,12 +405,12 @@ def test_event_logger_clear_log():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_tlog_overflow():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
 
-    ### 設定コマンドのアサーション確認
+    # ### 設定コマンドのアサーション確認
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
 
     ret = wings.util.send_rt_cmd_and_confirm(
@@ -383,46 +427,63 @@ def test_event_logger_tlog_overflow():
     assert g_tlog_is_enable_overwrite == 1
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE, (EL_ERROR_LEVEL_MAX,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE,
+        (EL_ERROR_LEVEL_MAX,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "PRM"
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE, (EL_ERROR_LEVEL_LOW,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE,
+        (EL_ERROR_LEVEL_LOW,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
     update_el_tlog_tlm()
     assert g_tlog_is_enable_overwrite == 1
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE, (EL_ERROR_LEVEL_HIGH,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE,
+        (EL_ERROR_LEVEL_HIGH,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
     update_el_tlog_tlm()
     assert g_tlog_is_enable_overwrite == 0
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_ENABLE_TLOG_OVERWRITE, (EL_ERROR_LEVEL_HIGH,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_ENABLE_TLOG_OVERWRITE,
+        (EL_ERROR_LEVEL_HIGH,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
     update_el_tlog_tlm()
     assert g_tlog_is_enable_overwrite == 1
 
-    ### 上書き不可にする
+    # ### 上書き不可にする
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE, (EL_ERROR_LEVEL_HIGH,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_DISABLE_TLOG_OVERWRITE,
+        (EL_ERROR_LEVEL_HIGH,),
+        c2a_enum.Tlm_CODE_HK,
     )
     update_el_tlog_tlm()
     assert g_tlog_is_enable_overwrite == 0
 
-    ### 半分埋める
+    # ### 半分埋める
     local0 = 1
-    local1 = 5
-    note0  = 2
-    note1  = 3
+    # local1 = 5
+    note0 = 2
+    # note1 = 3
 
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_tlog_tlm()
     assert g_tlog_wp == 0
     for i in range(g_tlog_wp, g_tlog_capacity // 2 - 1):
-        ope.send_rt_cmd(c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0))
+        ope.send_rt_cmd(
+            c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0)
+        )
         time.sleep(0.4)
 
     # 念の為チェック
@@ -432,9 +493,12 @@ def test_event_logger_tlog_overflow():
     assert g_counts[EL_ERROR_LEVEL_HIGH] == g_tlog_capacity // 2 - 1
     assert g_tlog_wp == g_tlog_capacity // 2 - 1
 
-    ### 半分まで来た EL インベント確認
+    # ### 半分まで来た EL インベント確認
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -444,16 +508,25 @@ def test_event_logger_tlog_overflow():
     assert g_counts[EL_ERROR_LEVEL_EL] == 1
     assert g_count_total == g_counts[EL_ERROR_LEVEL_HIGH] + g_counts[EL_ERROR_LEVEL_EL]
 
-    assert_latest_tlog(EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL, EL_ERROR_LEVEL_EL, 0)
-    assert assert_latest_clog(EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL, EL_ERROR_LEVEL_EL, 0) == 1
+    assert_latest_tlog(
+        EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL, EL_ERROR_LEVEL_EL, 0
+    )
+    assert (
+        assert_latest_clog(
+            EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL, EL_ERROR_LEVEL_EL, 0
+        )
+        == 1
+    )
 
     assert g_tlog_is_overflow == 0
 
-    ### 残１まで埋める
+    # ### 残１まで埋める
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_tlog_tlm()
     for i in range(g_tlog_wp, g_tlog_capacity - 1):
-        ope.send_rt_cmd(c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0))
+        ope.send_rt_cmd(
+            c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0)
+        )
         time.sleep(0.4)
 
     # 念の為チェック
@@ -463,11 +536,14 @@ def test_event_logger_tlog_overflow():
     assert g_tlog_wp == g_tlog_capacity - 1
     assert g_tlog_is_overflow == 0
 
-    ### 溢れチェック
+    # ### 溢れチェック
     # ラスト１
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -479,16 +555,26 @@ def test_event_logger_tlog_overflow():
     assert g_tlog_wp == 0
     assert g_tlog_is_overflow == 1
 
-    assert_latest_tlog(EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_FULL, EL_ERROR_LEVEL_EL, 0)
-    assert assert_latest_clog(EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_FULL, EL_ERROR_LEVEL_EL, 0) == 1
+    assert_latest_tlog(
+        EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_FULL, EL_ERROR_LEVEL_EL, 0
+    )
+    assert (
+        assert_latest_clog(
+            EL_CORE_GROUP_EVENT_LOGGER, EL_EVENT_LOCAL_TLOG_HIGH_FULL, EL_ERROR_LEVEL_EL, 0
+        )
+        == 1
+    )
 
-    ### 溢れた場合のwpの位置など
+    # ### 溢れた場合のwpの位置など
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_tlm()
     update_el_tlog_tlm()
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -499,7 +585,10 @@ def test_event_logger_tlog_overflow():
     assert g_tlog_wp == 0
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -509,10 +598,13 @@ def test_event_logger_tlog_overflow():
     assert g_counts_pre[EL_ERROR_LEVEL_HIGH] + 1 == g_counts[EL_ERROR_LEVEL_HIGH]
     assert g_tlog_wp == 0
 
-    ### 追記OKに
+    # ### 追記OKに
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_ENABLE_TLOG_OVERWRITE, (EL_ERROR_LEVEL_HIGH,), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_ENABLE_TLOG_OVERWRITE,
+        (EL_ERROR_LEVEL_HIGH,),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -520,7 +612,10 @@ def test_event_logger_tlog_overflow():
     assert g_tlog_is_enable_overwrite == 1
 
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -535,24 +630,24 @@ def test_event_logger_tlog_overflow():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_clog_overflow():
-    ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
+    # ### 初期化
+    wings.util.send_rt_cmd_and_confirm(ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK)
 
     update_el_tlm()
     update_el_clog_tlm()
 
-    ### すべて埋める
+    # ### すべて埋める
     local0 = 1
-    local1 = 5
-    note0  = 2
-    note1  = 3
+    # local1 = 5
+    note0 = 2
+    # note1 = 3
 
     change_clog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_el_clog_tlm()
     for i in range(0, g_clog_capacity):
-        ope.send_rt_cmd(c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, i, EL_ERROR_LEVEL_HIGH, note0))
+        ope.send_rt_cmd(
+            c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, i, EL_ERROR_LEVEL_HIGH, note0)
+        )
         time.sleep(0.4)
 
     update_el_tlm()
@@ -562,9 +657,12 @@ def test_event_logger_clog_overflow():
     # assert g_counts[EL_ERROR_LEVEL_EL] == 0           # TLog の Full event があるかもしれないので．
     assert g_count_total == g_counts[EL_ERROR_LEVEL_HIGH] + g_counts[EL_ERROR_LEVEL_EL]
 
-    ### 溢れチェック
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST1, local0, EL_ERROR_LEVEL_HIGH, note0), c2a_enum.Tlm_CODE_HK
+    # ### 溢れチェック
+    wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST1, local0, EL_ERROR_LEVEL_HIGH, note0),
+        c2a_enum.Tlm_CODE_HK,
     )
 
     update_el_tlm()
@@ -574,8 +672,12 @@ def test_event_logger_clog_overflow():
     assert g_counts_pre[EL_ERROR_LEVEL_EL] + 2 == g_counts[EL_ERROR_LEVEL_EL]
     assert g_count_total == g_counts[EL_ERROR_LEVEL_HIGH] + g_counts[EL_ERROR_LEVEL_EL]
 
-    # assert_tlog(EL_CORE_GROUP_EL_DROP_CLOG1, EL_GROUP_TEST, EL_ERROR_LEVEL_EL, 0, 0)      # TLog の Full event があるかもしれないので．
-    # assert_tlog(EL_CORE_GROUP_EL_DROP_CLOG2, 0, EL_ERROR_LEVEL_EL, 1, 1)      # TLog の Full event があるかもしれないので．
+    # assert_tlog(
+    #     EL_CORE_GROUP_EL_DROP_CLOG1, EL_GROUP_TEST, EL_ERROR_LEVEL_EL, 0, 0
+    # )  # TLog の Full event があるかもしれないので．
+    # assert_tlog(
+    #     EL_CORE_GROUP_EL_DROP_CLOG2, 0, EL_ERROR_LEVEL_EL, 1, 1
+    # )  # TLog の Full event があるかもしれないので．
     assert assert_clog(EL_CORE_GROUP_EL_DROP_CLOG1, EL_GROUP_TEST, EL_ERROR_LEVEL_EL, 0, 1) == 1
     assert assert_clog(EL_CORE_GROUP_EL_DROP_CLOG2, 0, EL_ERROR_LEVEL_EL, 1, 0) == 1
 
@@ -584,12 +686,12 @@ def test_event_logger_clog_overflow():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_logging_setting():
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
 
-    ### 切り替え
+    # ### 切り替え
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_DISABLE_LOGGING_ALL, (), c2a_enum.Tlm_CODE_HK
     )
@@ -630,20 +732,23 @@ def test_event_logger_logging_setting():
     assert g_el_tlm["EL.IS_LOGGING_ENABLE" + str(EL_GROUP_TEST)] == 1
     assert g_el_tlm["EL.IS_LOGGING_ENABLE" + str(EL_GROUP_TEST1)] == 1
 
-    ### 無効化されたイベント記録
+    # ### 無効化されたイベント記録
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_DISABLE_LOGGING, (EL_GROUP_TEST,), c2a_enum.Tlm_CODE_HK
     )
 
     update_el_tlm()
     ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_RECORD_EVENT, (EL_GROUP_TEST, 0, EL_ERROR_LEVEL_HIGH, 0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+        (EL_GROUP_TEST, 0, EL_ERROR_LEVEL_HIGH, 0),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "CNT"
     assert g_count_total_pre == g_count_total
     assert g_counts_pre[EL_ERROR_LEVEL_HIGH] == g_counts[EL_ERROR_LEVEL_HIGH]
 
-    ### リセット
+    # ### リセット
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT_LOGGING_SETTINGS, (), c2a_enum.Tlm_CODE_HK
     )
@@ -659,7 +764,7 @@ def test_event_logger_logging_setting():
 def test_event_logger_final_check():
     update_all_tlm()
 
-    ### 初期化
+    # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
     )
@@ -670,12 +775,12 @@ def test_event_logger_final_check():
 def assert_latest_log(group, local, err_level, note):
     update_el_tlm()
 
-    assert g_latest_event["group"      ] == group
-    assert g_latest_event["local"      ] == local
-    assert g_latest_event["err_level"  ] == EL_ERROR_LEVEL_TLM_DICT[err_level]
+    assert g_latest_event["group"] == group
+    assert g_latest_event["local"] == local
+    assert g_latest_event["err_level"] == EL_ERROR_LEVEL_TLM_DICT[err_level]
     # assert g_latest_event["total_cycle"] == total_cycle
     # assert g_latest_event["step"       ] == step
-    assert g_latest_event["note"       ] == note
+    assert g_latest_event["note"] == note
 
 
 def assert_latest_tlog(group, local, err_level, note):
@@ -703,7 +808,7 @@ def assert_tlog(group, local, err_level, note, idx):
     tlm_idx = idx % EL_TLOG_TLM_PAGE_SIZE
     assert g_tlog_em_tlm["EL_TLOG.TLOGS.EVENTS" + str(tlm_idx) + ".GROUP"] == group
     assert g_tlog_em_tlm["EL_TLOG.TLOGS.EVENTS" + str(tlm_idx) + ".LOCAL"] == local
-    assert g_tlog_em_tlm["EL_TLOG.TLOGS.EVENTS" + str(tlm_idx) + ".NOTE"]  == note
+    assert g_tlog_em_tlm["EL_TLOG.TLOGS.EVENTS" + str(tlm_idx) + ".NOTE"] == note
 
 
 def assert_latest_clog(group, local, err_level, note):
@@ -721,7 +826,7 @@ def assert_clog(group, local, err_level, note, idx):
 
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG" + str(idx) + ".EVENT.GROUP"] == group
     assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG" + str(idx) + ".EVENT.LOCAL"] == local
-    assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG" + str(idx) + ".EVENT.NOTE"]  == note
+    assert g_clog_em_tlm["EL_CLOG.CLOGS.LOG" + str(idx) + ".EVENT.NOTE"] == note
 
     return g_clog_em_tlm["EL_CLOG.CLOGS.LOG" + str(idx) + ".COUNT"]
 
@@ -770,8 +875,13 @@ def update_el_tlm():
     global g_el_tlm, g_count_total, g_counts, g_tlm_info, g_latest_event
     global g_el_tlm_pre, g_count_total_pre, g_counts_pre, g_tlm_info_pre, g_latest_event_pre
 
-    g_el_tlm_pre, g_count_total_pre, g_counts_pre, g_tlm_info_pre, g_latest_event_pre = \
-                    g_el_tlm, g_count_total, g_counts, g_tlm_info, g_latest_event
+    g_el_tlm_pre, g_count_total_pre, g_counts_pre, g_tlm_info_pre, g_latest_event_pre = (
+        g_el_tlm,
+        g_count_total,
+        g_counts,
+        g_tlm_info,
+        g_latest_event,
+    )
 
     el_tlm = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL
@@ -779,64 +889,110 @@ def update_el_tlm():
 
     g_el_tlm = el_tlm
     g_count_total = el_tlm["EL.STATISTICS.RECORD_COUNTER_TOTAL"]
-    g_counts =  [
-                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_HIGH"],
-                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_MIDDLE"],
-                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_LOW"],
-                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_EL"],
-                    el_tlm["EL.STATISTICS.RECORD_COUNTERS_EH"]
-                ]
+    g_counts = [
+        el_tlm["EL.STATISTICS.RECORD_COUNTERS_HIGH"],
+        el_tlm["EL.STATISTICS.RECORD_COUNTERS_MIDDLE"],
+        el_tlm["EL.STATISTICS.RECORD_COUNTERS_LOW"],
+        el_tlm["EL.STATISTICS.RECORD_COUNTERS_EL"],
+        el_tlm["EL.STATISTICS.RECORD_COUNTERS_EH"],
+    ]
     g_tlm_info = {
-                    "tlog"  : {"page_no" : el_tlm["EL.TLM_INFO.TLOG.PAGE_NO"], "err_level" : el_tlm["EL.TLM_INFO.TLOG.ERR_LEVEL"]},
-                    "clog"  : {"page_no" : el_tlm["EL.TLM_INFO.CLOG.PAGE_NO"], "err_level" : el_tlm["EL.TLM_INFO.CLOG.ERR_LEVEL"]}
-                 }
+        "tlog": {
+            "page_no": el_tlm["EL.TLM_INFO.TLOG.PAGE_NO"],
+            "err_level": el_tlm["EL.TLM_INFO.TLOG.ERR_LEVEL"],
+        },
+        "clog": {
+            "page_no": el_tlm["EL.TLM_INFO.CLOG.PAGE_NO"],
+            "err_level": el_tlm["EL.TLM_INFO.CLOG.ERR_LEVEL"],
+        },
+    }
     g_latest_event = {
-                        "group"       : el_tlm["EL.LATEST_EVENT.GROUP"],
-                        "local"       : el_tlm["EL.LATEST_EVENT.LOCAL"],
-                        "err_level"   : el_tlm["EL.LATEST_EVENT.ERR_LEVEL"],
-                        "total_cycle" : el_tlm["EL.LATEST_EVENT.TIME.TOTAL_CYCLE"],
-                        "step"        : el_tlm["EL.LATEST_EVENT.TIME.STEP"],
-                        "note"        : el_tlm["EL.LATEST_EVENT.NOTE"],
-                     }
+        "group": el_tlm["EL.LATEST_EVENT.GROUP"],
+        "local": el_tlm["EL.LATEST_EVENT.LOCAL"],
+        "err_level": el_tlm["EL.LATEST_EVENT.ERR_LEVEL"],
+        "total_cycle": el_tlm["EL.LATEST_EVENT.TIME.TOTAL_CYCLE"],
+        "step": el_tlm["EL.LATEST_EVENT.TIME.STEP"],
+        "note": el_tlm["EL.LATEST_EVENT.NOTE"],
+    }
 
 
 def update_el_tlog_tlm():
-    global g_tlog_em_tlm, g_tlog_count_total, g_tlog_count, g_tlog_tlm_info, g_tlog_capacity, g_tlog_wp, g_tlog_is_enable_overwrite, g_tlog_is_overflow
-    global g_tlog_em_tlm_pre, g_tlog_count_total_pre, g_tlog_count_pre, g_tlog_tlm_info_pre, g_tlog_capacity_pre, g_tlog_wp_pre, g_tlog_is_enable_overwrite_pre, g_tlog_is_overflow_pre
+    global g_tlog_em_tlm, g_tlog_count_total, g_tlog_count, g_tlog_tlm_info
+    global g_tlog_capacity, g_tlog_wp
+    global g_tlog_is_enable_overwrite, g_tlog_is_overflow
+    global g_tlog_em_tlm_pre, g_tlog_count_total_pre, g_tlog_count_pre, g_tlog_tlm_info_pre
+    global g_tlog_capacity_pre, g_tlog_wp_pre
+    global g_tlog_is_enable_overwrite_pre, g_tlog_is_overflow_pre
 
-    g_tlog_em_tlm_pre, g_tlog_count_total_pre, g_tlog_count_pre, g_tlog_tlm_info_pre, g_tlog_capacity_pre, g_tlog_wp_pre, g_tlog_is_enable_overwrite_pre, g_tlog_is_overflow_pre = \
-                    g_tlog_em_tlm, g_tlog_count_total, g_tlog_count, g_tlog_tlm_info, g_tlog_capacity, g_tlog_wp, g_tlog_is_enable_overwrite, g_tlog_is_overflow
+    (
+        g_tlog_em_tlm_pre,
+        g_tlog_count_total_pre,
+        g_tlog_count_pre,
+        g_tlog_tlm_info_pre,
+        g_tlog_capacity_pre,
+        g_tlog_wp_pre,
+        g_tlog_is_enable_overwrite_pre,
+        g_tlog_is_overflow_pre,
+    ) = (
+        g_tlog_em_tlm,
+        g_tlog_count_total,
+        g_tlog_count,
+        g_tlog_tlm_info,
+        g_tlog_capacity,
+        g_tlog_wp,
+        g_tlog_is_enable_overwrite,
+        g_tlog_is_overflow,
+    )
 
     el_tlog_tlm = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL_TLOG
     )
 
-    g_tlog_em_tlm              = el_tlog_tlm
-    g_tlog_count_total         = el_tlog_tlm["EL_TLOG.STATISTICS.RECORD_COUNTER_TOTAL"]
-    g_tlog_count               = el_tlog_tlm["EL_TLOG.STATISTICS.RECORD_COUNTERS_ERR_LEVEL"]
-    g_tlog_tlm_info            = {"page_no" : el_tlog_tlm["EL_TLOG.TLM_INFO.TLOG.PAGE_NO"], "err_level" : el_tlog_tlm["EL_TLOG.TLM_INFO.TLOG.ERR_LEVEL"]}
-    g_tlog_capacity            = el_tlog_tlm["EL_TLOG.TLOGS.LOG_CAPACITY"]
-    g_tlog_wp                  = el_tlog_tlm["EL_TLOG.TLOGS.LOG_WP"]
+    g_tlog_em_tlm = el_tlog_tlm
+    g_tlog_count_total = el_tlog_tlm["EL_TLOG.STATISTICS.RECORD_COUNTER_TOTAL"]
+    g_tlog_count = el_tlog_tlm["EL_TLOG.STATISTICS.RECORD_COUNTERS_ERR_LEVEL"]
+    g_tlog_tlm_info = {
+        "page_no": el_tlog_tlm["EL_TLOG.TLM_INFO.TLOG.PAGE_NO"],
+        "err_level": el_tlog_tlm["EL_TLOG.TLM_INFO.TLOG.ERR_LEVEL"],
+    }
+    g_tlog_capacity = el_tlog_tlm["EL_TLOG.TLOGS.LOG_CAPACITY"]
+    g_tlog_wp = el_tlog_tlm["EL_TLOG.TLOGS.LOG_WP"]
     g_tlog_is_enable_overwrite = el_tlog_tlm["EL_TLOG.TLOGS.IS_ENABLE_OVERWRITE"]
-    g_tlog_is_overflow         = el_tlog_tlm["EL_TLOG.TLOGS.IS_TABLE_OVERFLOW"]
+    g_tlog_is_overflow = el_tlog_tlm["EL_TLOG.TLOGS.IS_TABLE_OVERFLOW"]
 
 
 def update_el_clog_tlm():
-    global g_clog_em_tlm, g_clog_count_total, g_clog_count, g_clog_tlm_info, g_clog_capacity
-    global g_clog_em_tlm_pre, g_clog_count_total_pre, g_clog_count_pre, g_clog_tlm_info_pre, g_clog_capacity_pre
+    global g_clog_em_tlm, g_clog_count_total, g_clog_count
+    global g_clog_tlm_info, g_clog_capacity
+    global g_clog_em_tlm_pre, g_clog_count_total_pre, g_clog_count_pre
+    global g_clog_tlm_info_pre, g_clog_capacity_pre
 
-    g_clog_em_tlm_pre, g_clog_count_total_pre, g_clog_count_pre, g_clog_tlm_info_pre, g_clog_capacity_pre = \
-                    g_clog_em_tlm, g_clog_count_total, g_clog_count, g_clog_tlm_info, g_clog_capacity
+    (
+        g_clog_em_tlm_pre,
+        g_clog_count_total_pre,
+        g_clog_count_pre,
+        g_clog_tlm_info_pre,
+        g_clog_capacity_pre,
+    ) = (
+        g_clog_em_tlm,
+        g_clog_count_total,
+        g_clog_count,
+        g_clog_tlm_info,
+        g_clog_capacity,
+    )
 
     el_clog_tlm = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL_CLOG
     )
 
-    g_clog_em_tlm      = el_clog_tlm
+    g_clog_em_tlm = el_clog_tlm
     g_clog_count_total = el_clog_tlm["EL_CLOG.STATISTICS.RECORD_COUNTER_TOTAL"]
-    g_clog_count       = el_clog_tlm["EL_CLOG.STATISTICS.RECORD_COUNTERS_ERR_LEVEL"]
-    g_clog_tlm_info    = {"page_no" : el_clog_tlm["EL_CLOG.TLM_INFO.CLOG.PAGE_NO"], "err_level" : el_clog_tlm["EL_CLOG.TLM_INFO.CLOG.ERR_LEVEL"]}
-    g_clog_capacity    = el_clog_tlm["EL_CLOG.CLOGS.LOG_CAPACITY"]
+    g_clog_count = el_clog_tlm["EL_CLOG.STATISTICS.RECORD_COUNTERS_ERR_LEVEL"]
+    g_clog_tlm_info = {
+        "page_no": el_clog_tlm["EL_CLOG.TLM_INFO.CLOG.PAGE_NO"],
+        "err_level": el_clog_tlm["EL_CLOG.TLM_INFO.CLOG.ERR_LEVEL"],
+    }
+    g_clog_capacity = el_clog_tlm["EL_CLOG.CLOGS.LOG_CAPACITY"]
 
 
 if __name__ == "__main__":
