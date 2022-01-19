@@ -24,15 +24,15 @@
  */
 typedef enum
 {
-  CCP_EXEC_PACKET_FMT_ERR = -6,     //!< packet handler で用いる
-  CCP_EXEC_ROUTING_FAILED = -5,     //!< command router で用いる
-  CCP_EXEC_CMD_NOT_DEFINED = -4,    //!< cmdExec で用いる
-  CCP_EXEC_ILLEGAL_CONTEXT = -3,    //!< コマンド実行時のその他のエラー
-  CCP_EXEC_ILLEGAL_PARAMETER = -2,  //!< コマンド実行時のパラメタエラー
-  CCP_EXEC_ILLEGAL_LENGTH = -1,     //!< コマンド実行時のコマンド引数長エラー
-  CCP_EXEC_SUCCESS = 0,             /*!< コマンド実行成功
-                                         なお，コマンドの実行の結果なので，その後の処理が失敗しても，コマンドが実行されていればこれを返す */
-  CCP_EXEC_UNKNOWN                  //!< 内部処理用．使わない．
+  CCP_EXEC_SUCCESS = 0,         /*!< コマンド実行成功
+                                     なお，コマンドの実行の結果なので，その後の処理が失敗しても，コマンドが実行されていればこれを返す */
+  CCP_EXEC_ILLEGAL_LENGTH,      //!< コマンド実行時のコマンド引数長エラー
+  CCP_EXEC_ILLEGAL_PARAMETER,   //!< コマンド実行時のパラメタエラー
+  CCP_EXEC_ILLEGAL_CONTEXT,     //!< コマンド実行時のその他のエラー
+  CCP_EXEC_CMD_NOT_DEFINED,     //!< cmdExec で用いる
+  CCP_EXEC_ROUTING_FAILED,      //!< command router で用いる
+  CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler で用いる
+  CCP_EXEC_UNKNOWN              //!< 内部処理用．使わない．
 } CCP_EXEC_STS;
 
 
