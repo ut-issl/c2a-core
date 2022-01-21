@@ -14,7 +14,6 @@ set(C2A_SRCS
   Ccsds/m_pdu.c
   Ccsds/TCFrame.c
   Ccsds/tcp_to_m_pdu.c
-  Ccsds/TCPacket.c
   Ccsds/TCSegment.c
   Ccsds/vcdu.c
 )

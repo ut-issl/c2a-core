@@ -3,7 +3,7 @@
 
 #include "string.h" // for memcpy
 
-#include "TCPacket.h"
+#include <src_core/TlmCmd/Ccsds/TCPacket.h>
 
 static void M_PDU_clear_spare_(M_PDU* m_pdu);
 

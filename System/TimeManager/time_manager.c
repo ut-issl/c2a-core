@@ -5,7 +5,6 @@
  */
 #include "time_manager.h"
 #include <string.h>
-#include <src_user/TlmCmd/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
 #include "../../TlmCmd/common_tlm_cmd_packet_util.h"
 

@@ -11,16 +11,6 @@ set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
   c2a_core_main.c
-  TlmCmd/block_command_loader.c
-  TlmCmd/block_command_table.c
-  TlmCmd/block_command_executor.c
-  TlmCmd/command_analyze.c
-  TlmCmd/command_dispatcher.c
-  TlmCmd/common_tlm_cmd_packet_util.c
-  TlmCmd/packet_handler.c
-  TlmCmd/packet_list.c
-  TlmCmd/telemetry_frame.c
-  TlmCmd/telemetry_generator.c
   Drivers/Super/driver_super.c
   Drivers/Super/driver_super_issl_format.c
   System/AnomalyLogger/anomaly_logger.c
@@ -34,6 +24,17 @@ set(C2A_SRCS
   System/TimeManager/obc_time.c
   System/TimeManager/time_manager.c
   System/WatchdogTimer/watchdog_timer.c
+  TlmCmd/block_command_loader.c
+  TlmCmd/block_command_table.c
+  TlmCmd/block_command_executor.c
+  TlmCmd/command_analyze.c
+  TlmCmd/command_dispatcher.c
+  TlmCmd/common_tlm_cmd_packet_util.c
+  TlmCmd/packet_handler.c
+  TlmCmd/packet_list.c
+  TlmCmd/telemetry_frame.c
+  TlmCmd/telemetry_generator.c
+  TlmCmd/Ccsds/TCPacket.c
 )
 
 if(BUILD_C2A_AS_CXX)
