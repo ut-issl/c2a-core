@@ -14,7 +14,6 @@
 #include <src_user/Library/stdint.h>
 #include "../../Library/endian_memcpy.h"        // パスが不定な自動生成コード類で使えるように
 #include "../../System/TimeManager/time_manager.h"
-// #include <src_user/TlmCmd/CCSDS/TCPacket.h>
 
 #define DS_STREAM_MAX          (3)         /*!< DS_StreamConfigの最大数
                                                 uint8_t を想定          */

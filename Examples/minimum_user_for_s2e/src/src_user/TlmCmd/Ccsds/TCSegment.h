@@ -4,7 +4,7 @@
 #include <stddef.h> // for size_t
 
 #include "../../Library/stdint.h"
-#include "TCPacket.h"
+#include <src_core/TlmCmd/Ccsds/TCPacket.h>
 
 #define TCS_HEADER_SIZE (1u)
 
