@@ -117,7 +117,7 @@ static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment)
 
 static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet)
 {
-  TCP_APID apid;
+  APID apid;
 
   if (TCP_get_ver(tc_packet) != TCP_VER_1) return GS_VALIDATE_ERR_TCP_VER;
   if (TCP_get_2nd_hdr_flag(tc_packet) != TCP_2ND_HDR_PRESENT)
@@ -127,11 +127,11 @@ static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet)
   }
 
   apid = TCP_get_apid(tc_packet);
-  if ( !( apid == TCP_APID_MOBC_CMD
-       || apid == TCP_APID_AOBC_CMD
-       || apid == TCP_APID_TOBC_CMD ) )
+  if ( !( apid == APID_MOBC_CMD
+       || apid == APID_AOBC_CMD
+       || apid == APID_TOBC_CMD ) )
   {
-    return GS_VALIDATE_ERR_TCP_APID;
+    return GS_VALIDATE_ERR_APID;
   }
 
   return GS_VALIDATE_ERR_OK;

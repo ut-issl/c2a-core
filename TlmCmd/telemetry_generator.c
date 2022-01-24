@@ -44,7 +44,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CTCP* packet)
   if (len < 0) return CCP_EXEC_ILLEGAL_CONTEXT;     // TODO: lenがマイナスの値たちをどうするか？
 
   // TCPacketヘッダ設定
-  TCP_TLM_setup_primary_hdr(&tcp_, TCP_APID_MIS_TLM, (uint16_t)(len + 7));
+  TCP_TLM_setup_primary_hdr(&tcp_, APID_MIS_TLM, (uint16_t)(len + 7));
   TCP_TLM_set_ti(&tcp_, (uint32_t)(TMGR_get_master_total_cycle()));
   TCP_TLM_set_category(&tcp_, category); // パラメータによる指定
   TCP_TLM_set_packet_id(&tcp_, id);

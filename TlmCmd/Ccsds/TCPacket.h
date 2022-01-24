@@ -491,7 +491,7 @@ uint8_t* TCP_TLM_get_user_data_head(TCP* packet);
 /**
  * @brief  Primary Header を構築
  * @param[in,out] tcp:  TCP
- * @param[in]     apid: TCP_APID
+ * @param[in]     apid: APID
  * @param[in]     len:  Packet Length
  * @return void
  */
