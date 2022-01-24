@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief CTCPのリストとしてのデータ構造を定義. 片方向リストとして実装されている
+ * @brief CTCP, CTP, CCP のリストとしてのデータ構造を定義. 片方向リストとして実装されている
  */
 #ifndef PACKET_LIST_H_
 #define PACKET_LIST_H_
@@ -10,13 +10,18 @@
 #include "common_tlm_cmd_packet.h"
 #include "block_command_table.h"
 
+// !!!!!!!!!!!!!!!!!!!!
+// FIXME: CTCP, CTP, CCP 3つのパケットに対応させる大改修が必要．一旦 CTCP にしておくが，一時的
+//        https://github.com/ut-issl/c2a-core/pull/210
+// !!!!!!!!!!!!!!!!!!!!
+
 /**
  * @struct PL_NodeTag
  * @brief  片方向リストを構成する各ノード
  */
 struct PL_NodeTag
 {
-  CTCP packet;
+  CommonTlmCmdPacket packet;
   struct PL_NodeTag* next;
 };
 typedef struct PL_NodeTag PL_Node;
@@ -139,7 +144,7 @@ const PL_Node* PL_get_next(const PL_Node* node);
  * @param[in] packet: 挿入する packet
  * @return PL_ACK
  */
-PL_ACK PL_push_front(PacketList* pli, const CTCP* packet);
+PL_ACK PL_push_front(PacketList* pli, const CommonTlmCmdPacket* packet);
 
 /**
  * @brief PacketList の末尾に packet を挿入
@@ -147,7 +152,7 @@ PL_ACK PL_push_front(PacketList* pli, const CTCP* packet);
  * @param[in] packet: 挿入する packet
  * @return PL_ACK
  */
-PL_ACK PL_push_back(PacketList* pli, const CTCP* packet);
+PL_ACK PL_push_back(PacketList* pli, const CommonTlmCmdPacket* packet);
 
 /**
  * @brief ある Node の直後に packet を挿入
@@ -156,7 +161,7 @@ PL_ACK PL_push_back(PacketList* pli, const CTCP* packet);
  * @param[in] packet: 挿入する packet
  * @return PL_ACK
  */
-PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CTCP* packet);
+PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CommonTlmCmdPacket* packet);
 
 /**
  * @brief ある Node の直後に packet を挿入
@@ -166,7 +171,7 @@ PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CTCP* packet);
  * @return PL_ACK
  * @note TaskList も TimeLine もこれを使うので now は uint32_t
  */
-PL_ACK PL_insert_tl_cmd(PacketList* pli, const CTCP* packet, uint32_t now);
+PL_ACK PL_insert_tl_cmd(PacketList* pli, const CommonTlmCmdPacket* packet, uint32_t now);
 
 /**
  * @brief PacketList 上に BC を展開する

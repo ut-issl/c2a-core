@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief CTCPのリストとしてのデータ構造を定義. 片方向リストとして実装されている
+* @brief CTCP, CTP, CCP のリストとしてのデータ構造を定義. 片方向リストとして実装されている
  */
 #include "packet_list.h"
 
@@ -97,7 +97,7 @@ const PL_Node* PL_get_next(const PL_Node* node)
   return NULL;
 }
 
-PL_ACK PL_push_front(PacketList* pli, const CTCP* packet)
+PL_ACK PL_push_front(PacketList* pli, const CommonTlmCmdPacket* packet)
 {
   PL_Node* new_pl_node = PL_get_free_node_(pli);
 
@@ -118,7 +118,7 @@ PL_ACK PL_push_front(PacketList* pli, const CTCP* packet)
   return PL_SUCCESS;
 }
 
-PL_ACK PL_push_back(PacketList* pli, const CTCP* packet)
+PL_ACK PL_push_back(PacketList* pli, const CommonTlmCmdPacket* packet)
 {
   PL_Node* new_pl_node = PL_get_free_node_(pli);
 
@@ -151,7 +151,7 @@ PL_ACK PL_push_back(PacketList* pli, const CTCP* packet)
   return PL_SUCCESS;
 }
 
-PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CTCP* packet)
+PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CommonTlmCmdPacket* packet)
 {
   PL_Node* new_pl_node;
 
@@ -173,7 +173,7 @@ PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CTCP* packet)
   return PL_SUCCESS;
 }
 
-PL_ACK PL_insert_tl_cmd(PacketList* pli, const CTCP* packet, uint32_t now)
+PL_ACK PL_insert_tl_cmd(PacketList* pli, const CommonTlmCmdPacket* packet, uint32_t now)
 {
   cycle_t head, tail;
   cycle_t planed = CCP_get_ti(packet);
@@ -259,7 +259,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pli, const bct_id_t block, uint32_t start
 
   for (i = 0; i < length; ++i)
   {
-    static CTCP temp_; // サイズが大きいため静的領域に確保
+    static CommonTlmCmdPacket temp_; // サイズが大きいため静的領域に確保
     BCT_Pos pos;
     PL_ACK ack = PL_SUCCESS;
 
@@ -295,7 +295,7 @@ PL_ACK PL_check_tl_cmd(PacketList* pli, uint32_t time)
 {
   if (!PL_is_empty(pli)) // コマンドリストが空でない
   {
-    const CTCP* packet = &pli->active_list_head_->packet;
+    const CommonTlmCmdPacket* packet = &pli->active_list_head_->packet;
     uint32_t planed = CCP_get_ti(packet);
 
     if (time == planed) return PL_TLC_ON_TIME;
