@@ -13,7 +13,7 @@
  */
 #include "divided_cmd_utility.h"
 #include "../TlmCmd/packet_handler.h"
-#include "../TlmCmd/common_tlm_cmd_packet_util.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
 
@@ -205,14 +205,14 @@ DCU_STATUS DCU_check_in(CMD_CODE cmd_code, uint16_t* exec_counter)
 DCU_ACK DCU_register_next(CMD_CODE cmd_code, const uint8_t* param, uint16_t len)
 {
   uint8_t idx;
-  CTCP_UTIL_ACK ret;
+  CCP_UTIL_ACK ret;
 
   DCU_move_to_front_in_log_(cmd_code);
   idx = divided_cmd_utility_.exec_log_order[0];
   divided_cmd_utility_.exec_logs[idx].status = DCU_STATUS_PROGRESS;
 
   ret = CCP_form_rtc(&DCU_packet_, cmd_code, param, len);
-  if (ret != CTCP_UTIL_ACK_OK) return DCU_ACK_ERR;
+  if (ret != CCP_UTIL_ACK_OK) return DCU_ACK_ERR;
   if (PH_analyze_packet(&DCU_packet_) != PH_REGISTERED)
   {
     return DCU_ACK_ERR;

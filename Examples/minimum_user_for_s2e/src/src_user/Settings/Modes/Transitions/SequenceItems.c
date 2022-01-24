@@ -3,7 +3,7 @@
 #include "../../../TlmCmd/block_command_definitions.h"
 #include <src_core/Applications/timeline_command_dispatcher.h>
 #include <src_core/Library/endian_memcpy.h>
-#include <src_core/TlmCmd/common_tlm_cmd_packet_util.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../../Settings/AnomalyLogger/anomaly_group.h"
 #include "../mode_definitions.h"
 

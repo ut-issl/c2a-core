@@ -317,19 +317,19 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
   bct_id_t bc_id = telemetry_manager_.bc_info[bc_info_idx].bc_id;
   uint8_t  bc_cmd_pos = register_info->tlm_register_pointer_to_bc_cmd_idx;
   BCT_Pos  bc_register_pos;
-  CTCP_UTIL_ACK ctcp_util_ack;
+  CCP_UTIL_ACK ccp_util_ack;
   BCT_ACK  bct_ack;
 
   if (bc_cmd_pos >= TLM_MGR_MAX_TLM_NUM_PER_BC) return TLM_MGR_ERR_CODE_CMD_FULL;
 
   BCT_make_pos(&bc_register_pos, bc_id, bc_cmd_pos);
 
-  ctcp_util_ack = CCP_form_tlc(&TLM_MGR_packet_,
-                               (cycle_t)bc_cmd_pos,
-                               Cmd_CODE_GENERATE_TLM,
-                               param,
-                               CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
-  if (ctcp_util_ack != CTCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
+  ccp_util_ack = CCP_form_tlc(&TLM_MGR_packet_,
+                              (cycle_t)bc_cmd_pos,
+                              Cmd_CODE_GENERATE_TLM,
+                              param,
+                              CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
+  if (ccp_util_ack != CCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
 
   // すでに NOP で埋められており，かつ activate 済なので，直接 BCT にコマンドを挿入できる．
   bct_ack = BCT_overwrite_cmd(&bc_register_pos, &TLM_MGR_packet_);

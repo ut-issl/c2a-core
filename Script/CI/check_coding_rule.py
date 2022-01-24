@@ -685,7 +685,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 if match.group(2) == "*" and match.group(3) != "":
                     if match.group(3)[0] == ")":
                         continue
-                        # common_tlm_cmd_packet_util.h の `(*((type*)( \` が引っかからないように
+                        # common_cmd_packet_util.h の `(*((type*)( \` が引っかからないように
                 # print(line)
                 # print(match)
                 # print("#" + match.group(1) + "#")

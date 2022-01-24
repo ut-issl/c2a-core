@@ -5,7 +5,7 @@
 #include <src_user/Library/VT100.h>
 #include "../System/TimeManager/time_manager.h"
 #include "../Library/endian_memcpy.h"
-#include "../TlmCmd/common_tlm_cmd_packet_util.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 #include "timeline_command_dispatcher.h"
 // #include "../anomaly_group.h"
 // #include "../../TlmCmd/block_command_definitions.h"

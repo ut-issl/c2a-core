@@ -166,13 +166,14 @@ static PH_ACK PH_analyze_tlm_(const CTCP* packet)
 
 CCP_EXEC_STS PH_dispatch_command(const CTCP* packet)
 {
-  if (CTCP_get_tc_dsc(packet) != CTCP_TC_DSC_CMD)
+  if (CTCP_get_tc_dsc(packet) != CTCP_PACKET_TYPE_CMD)
   {
     // CMD以外のパケットが来たら異常判定。
     return CCP_EXEC_PACKET_FMT_ERR;
   }
 
-  if (CCP_get_dest_id(packet) == CTCP_MY_DST_ID)
+  // FIXME: CTCP, SpacePacket 整理で直す
+  if (CCP_get_apid(packet) == CTCP_MY_DST_ID)
   {
     // 自分宛てのコマンドの場合は対応処理を呼び出し。
     return CA_execute_cmd(packet);

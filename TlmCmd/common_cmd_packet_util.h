@@ -6,6 +6,7 @@
 #define COMMON_CMD_PACKET_UTIL_H_
 
 #include "common_cmd_packet.h"
+#include "block_command_table.h"
 #include <src_user/Applications/app_registry.h>
 
 /**

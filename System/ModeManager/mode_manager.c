@@ -12,7 +12,7 @@
 #include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
 #include "../../TlmCmd/block_command_executor.h"
-#include "../../TlmCmd/common_tlm_cmd_packet_util.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../TlmCmd/packet_handler.h"
 #include "../../Applications/timeline_command_dispatcher.h"

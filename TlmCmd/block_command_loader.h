@@ -11,6 +11,7 @@
 #include "./block_command_table.h"
 #include "../Applications/timeline_command_dispatcher.h"
 #include "../System/TimeManager/obc_time.h"
+#include <src_user/Applications/app_registry.h>
 
 
 /**
@@ -27,7 +28,6 @@ void BCL_load_bc(bct_id_t pos, void (*func)(void));
 void BCL_load_tl(bct_id_t pos, void (*func)(void));
 void BCL_load_sl(bct_id_t pos, void (*func)(void));
 #endif
-
 
 
 // register系列
@@ -81,7 +81,6 @@ void BCL_tool_register_deploy(cycle_t ti, bct_id_t bct_id, TL_ID tl_id);
  * @param  app_id     実行するアプリID
  */
 void BCL_tool_register_app(cycle_t ti, AR_APP_ID app_id);
-
 
 
 // add cmd param系列
@@ -140,4 +139,4 @@ void BCL_tool_prepare_param_float(float val);
 void BCL_tool_prepare_param_double(double val);
 #endif
 
-#endif // BLOCK_COMMAND_LOADER_H_
+#endif

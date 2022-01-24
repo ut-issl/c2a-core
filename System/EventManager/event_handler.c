@@ -7,7 +7,7 @@
 #include "event_handler.h"
 #include <string.h>
 #include <stdlib.h>
-#include "../../TlmCmd/common_tlm_cmd_packet_util.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 #include "../../Applications/timeline_command_dispatcher.h"
 #include "../TimeManager/time_manager.h"
 
@@ -598,11 +598,11 @@ static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
   CTCP packet;
-  CTCP_UTIL_ACK deploy_ack;
-  CCP_EXEC_STS  deploy_cmd_ack;
+  CCP_UTIL_ACK form_cmd_ack;
+  CCP_EXEC_STS deploy_cmd_ack;
 
-  deploy_ack = CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
-  if (deploy_ack != CTCP_UTIL_ACK_OK)
+  form_cmd_ack = CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
+  if (form_cmd_ack != CCP_UTIL_ACK_OK)
   {
     // BC 展開 Cmd の生成に失敗
     // 正しく組んでいる場合，ここに来るはずはない

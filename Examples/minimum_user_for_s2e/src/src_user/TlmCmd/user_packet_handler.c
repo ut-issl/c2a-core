@@ -47,7 +47,7 @@ PH_ACK PH_user_analyze_cmd(const CTCP* packet)
 
 CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet)
 {
-  switch (CCP_get_dest_id(packet))
+  switch (CCP_get_apid(packet))
   {
   case APID_AOBC_CMD:
     // AOBCに配送

@@ -14,7 +14,7 @@
 #include "packet_handler.h"
 #include "../Library/endian_memcpy.h"
 #include "../System/TimeManager/time_manager.h"
-#include "common_tlm_cmd_packet_util.h"
+#include "common_cmd_packet_util.h"
 
 static CTCP packet_;
 
