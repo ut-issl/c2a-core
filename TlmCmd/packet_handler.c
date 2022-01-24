@@ -174,6 +174,8 @@ static PH_ACK PH_analyze_tlm(const CommonTlmPacket* packet)
 
 CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
 {
+  if (packet == NULL) return CCP_EXEC_UNKNOWN;    // FIXME: 返り値変えたい
+
   // FIXME: CTCP, SpacePacket 整理で直す
   // if (CTCP_get_packet_type(packet) != CTCP_PACKET_TYPE_CMD)
   // {
