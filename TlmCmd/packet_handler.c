@@ -25,14 +25,12 @@ static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
 static PL_Node PH_st_tlm_stock_[PH_ST_TLM_LIST_MAX];
 static PL_Node PH_rp_tlm_stock_[PH_RP_TLM_LIST_MAX];
 
-static PH_ACK PH_analyze_cmd_(const CTCP* packet);
-static PH_ACK PH_analyze_block_cmd_(const CTCP* packet);
-static PH_ACK PH_analyze_tlm_(const CTCP* packet);
+static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet);
 
-static PH_ACK PH_add_gs_cmd_(const CTCP* packet);
-static PH_ACK PH_add_rt_cmd_(const CTCP* packet);
+static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet);
+static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_tl_cmd_(int line_no,
-                            const CTCP* packet,
+                            const CommonCmdPacket* packet,
                             cycle_t now);
 /**
  * @brief UTL_cmd を TL_cmd に変換して tl_cmd_list に追加する
@@ -40,10 +38,10 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
  * @param[in] packet
  * @return PH_ACK
  */
-static PH_ACK PH_add_utl_cmd_(const CTCP* packet);
-static PH_ACK PH_add_ms_tlm_(const CTCP* packet);
-static PH_ACK PH_add_st_tlm_(const CTCP* packet);
-static PH_ACK PH_add_rp_tlm_(const CTCP* packet);
+static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet);
+static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
+static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
+static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
 
 void PH_init(void)
 {
@@ -64,29 +62,36 @@ void PH_init(void)
 // パケット解析関数
 // GSTOSからのパケット以外もすべてここで処理される
 // Cmd_GENERATE_TLMとかも．
-PH_ACK PH_analyze_packet(const CTCP* packet)
+PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
 {
+  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+
   switch (CTCP_get_packet_type(packet))
   {
-  case CTCP_PACKET_TYPE_CMD:
-    return PH_analyze_cmd_(packet);
-
   case CTCP_PACKET_TYPE_TLM:
-    return PH_analyze_tlm_(packet);
+    // CTP 変換の NULL チェックは PH_analyze_tlm 内で
+    return PH_analyze_tlm(CTCP_convert_to_ctp(packet));
+
+  case CTCP_PACKET_TYPE_CMD:
+    // CCP 変換の NULL チェックは PH_analyze_cmd 内で
+    return PH_analyze_cmd(CTCP_convert_to_ccp(packet));
 
   default:
-    return PH_INVALID_DISCRIMINATOR;
+    return PH_INVALID_DISCRIMINATOR;    // FIXME: 返り値変えたい
   }
 
   return PH_UNKNOWN;
 }
 
-static PH_ACK PH_analyze_cmd_(const CTCP* packet)
+static PH_ACK PH_analyze_cmd(const CommonCmdPacket* packet)
 {
+  PH_ACK ack;
+  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+
   // ユーザー定義部
   // 基本的には，接続されているC2Aを搭載したボードに
   // この段階（キューイングされ，時刻調整され， PH_user_cmd_router で実行されるのではなく，この段階）で転送したいときに使う
-  PH_ACK ack = PH_user_analyze_cmd(packet);
+  ack = PH_user_analyze_cmd(packet);
   if (ack != PH_UNKNOWN)
   {
     return ack;
@@ -120,7 +125,7 @@ static PH_ACK PH_analyze_cmd_(const CTCP* packet)
   }
 }
 
-static PH_ACK PH_analyze_block_cmd_(const CTCP* packet)
+static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
 {
   switch (BCT_register_cmd(packet))
   {
@@ -144,9 +149,12 @@ static PH_ACK PH_analyze_block_cmd_(const CTCP* packet)
   }
 }
 
-static PH_ACK PH_analyze_tlm_(const CTCP* packet)
+static PH_ACK PH_analyze_tlm(const CommonTlmPacket* packet)
 {
-  CTP_DEST_FLAG flag = CTP_get_dest_flag(packet);
+  CTP_DEST_FLAG flag;
+  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+
+  flag = CTP_get_dest_flag(packet);
 
   // Housekeeping Telemetry
   if (flag & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
@@ -164,13 +172,14 @@ static PH_ACK PH_analyze_tlm_(const CTCP* packet)
   return PH_SUCCESS;
 }
 
-CCP_EXEC_STS PH_dispatch_command(const CTCP* packet)
+CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
 {
-  if (CTCP_get_packet_type(packet) != CTCP_PACKET_TYPE_CMD)
-  {
-    // CMD以外のパケットが来たら異常判定。
-    return CCP_EXEC_PACKET_FMT_ERR;
-  }
+  // FIXME: CTCP, SpacePacket 整理で直す
+  // if (CTCP_get_packet_type(packet) != CTCP_PACKET_TYPE_CMD)
+  // {
+  //   // CMD以外のパケットが来たら異常判定。
+  //   return CCP_EXEC_PACKET_FMT_ERR;
+  // }
 
   // FIXME: CTCP, SpacePacket 整理で直す
   if (CCP_get_apid(packet) == CTCP_MY_DST_ID)
@@ -185,7 +194,7 @@ CCP_EXEC_STS PH_dispatch_command(const CTCP* packet)
   }
 }
 
-static PH_ACK PH_add_gs_cmd_(const CTCP* packet)
+static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_gs_cmd_list, packet);
 
@@ -194,7 +203,7 @@ static PH_ACK PH_add_gs_cmd_(const CTCP* packet)
   return PH_SUCCESS;
 }
 
-static PH_ACK PH_add_rt_cmd_(const CTCP* packet)
+static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rt_cmd_list, packet);
 
@@ -204,7 +213,7 @@ static PH_ACK PH_add_rt_cmd_(const CTCP* packet)
 }
 
 static PH_ACK PH_add_tl_cmd_(int line_no,
-                            const CTCP* packet,
+                            const CommonCmdPacket* packet,
                             cycle_t now)
 {
   PL_ACK ack = PL_insert_tl_cmd(&(PH_tl_cmd_list[line_no]), packet, now);
@@ -228,9 +237,9 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
   }
 }
 
-static PH_ACK PH_add_utl_cmd_(const CTCP* packet)
+static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
 {
-  static CTCP temp_; // サイズが大きいため静的領域に確保
+  static CommonCmdPacket temp_; // サイズが大きいため静的領域に確保
 
   // utl_unixtime : time_manager.h の utl_unixtime_epoch_ を参照
   // UTL_cmd ではパケットヘッダーの ti の部分に utl_unixtime が格納されている
@@ -238,14 +247,14 @@ static PH_ACK PH_add_utl_cmd_(const CTCP* packet)
   cycle_t ti = TMGR_get_ti_from_utl_unixtime(utl_unixtime);
 
   // TL_cmd に変換して tl_cmd_list に追加する
-  CTCP_copy_packet(&temp_, packet);
+  CTCP_copy_packet(&temp_, packet);   // FIXME: CTCP, SpacePacket 整理で直す
   CCP_set_ti(&temp_, ti);
   CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0
 
   return PH_add_tl_cmd_(0, &temp_, TMGR_get_master_total_cycle());
 }
 
-static PH_ACK PH_add_ms_tlm_(const CTCP* packet)
+static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
 
@@ -254,7 +263,7 @@ static PH_ACK PH_add_ms_tlm_(const CTCP* packet)
   return PH_REGISTERED;
 }
 
-static PH_ACK PH_add_st_tlm_(const CTCP* packet)
+static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
 
@@ -263,7 +272,7 @@ static PH_ACK PH_add_st_tlm_(const CTCP* packet)
   return PH_REGISTERED;
 }
 
-static PH_ACK PH_add_rp_tlm_(const CTCP* packet)
+static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
 
