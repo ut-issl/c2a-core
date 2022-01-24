@@ -46,7 +46,7 @@ static CDIS_EXEC_INFO CEI_init_(void)
 void CDIS_dispatch_command(CommandDispatcher* cdis)
 {
   // パケットコピー用。サイズが大きいため静的変数として宣言。
-  static CTCP packet_;
+  static CommonCmdPacket packet_;
 
   if (cdis->lockout)
   {
