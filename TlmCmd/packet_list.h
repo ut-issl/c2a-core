@@ -10,51 +10,52 @@
 #include "common_tlm_cmd_packet.h"
 #include "block_command_table.h"
 
-// !!!!!!!!!!!!!!!!!!!!
-// FIXME: CTCP, CTP, CCP 3つのパケットに対応させる大改修が必要．一旦 CTCP にしておくが，一時的
-//        https://github.com/ut-issl/c2a-core/pull/210
-// !!!!!!!!!!!!!!!!!!!!
+
+// 自己参照用
+typedef struct PL_Node PL_Node;
 
 /**
- * @struct PL_NodeTag
- * @brief  片方向リストを構成する各ノード
+ * @struct PL_Node
+ * @brief  片方向リストを構成する各 Node
  */
-struct PL_NodeTag
+struct PL_Node
 {
-  CommonTlmCmdPacket packet;
-  struct PL_NodeTag* next;
+  void* packet;           //!< 片方向リストに格納される packet． どのような型でも良いように， void．（基本的には CTCP, CTP, CCP を想定）
+  struct PL_Node* next;   //!< 次の Node （片方向リスト）
 };
-typedef struct PL_NodeTag PL_Node;
 
 /**
  * @struct PacketList
  * @brief  パケットリスト本体
  * @note   データ構造としては 片方向リスト
- *         初期化では外部で事前に領域だけ確保しておいたPL_Node配列の先頭ポインタをstockに保存して連結リスト化, inactive_list_headにもコピーする.
-           使うときにはinactive_listからPL_Node一つを取り出して, その領域をactive_listに挿入する.
-           なおメンバーは全て private
+ *         初期化では外部で事前に領域だけ確保しておいた PL_Node 配列の先頭ポインタを stock に保存して連結リスト化, inactive_list_head にもコピーする.
+ *         使うときには inactive_list から PL_Node 一つを取り出して, その領域を active_list に挿入する.
+ *         なおメンバーは全て private
  */
 typedef struct
 {
   uint16_t total_nodes_;        //!< 全ノード数 (static 確保)
-  uint32_t executed_nodes_;     //!< 実行されたノード数
+  uint32_t executed_nodes_;     //!< 実行（コマンド） or 配送（テレメ）されたノード数     // FIXME: TODO: テレメのときもカウントアップしてるか確認
   uint16_t active_nodes_;       //!< 現在片方向リストに入っているノード数
+  uint16_t packet_size_;        //!< PL_Node->packet の型サイズ
 
-  PL_Node* stock_;              //!< 確保されている領域全体の先頭
-  PL_Node* inactive_list_head_; //!< 確保されている領域の内、使っていないものの先頭, stack
-  PL_Node* active_list_head_;   //!< 確保されている領域の内、使っているものの先頭
-  PL_Node* active_list_tail_;   //!< 確保されている領域の内、使っているものの末端
+  PL_Node* pl_node_stock_;      //!< 確保されている PL_Node 領域（配列）全体の先頭
+  void*    packet_stock_;       //!< 確保されている packet 領域（配列）全体の先頭
+  PL_Node* inactive_list_head_; //!< 確保されている領域の内，使っていないものの先頭
+  PL_Node* active_list_head_;   //!< 確保されている領域の内，使っているものの先頭
+  PL_Node* active_list_tail_;   //!< 確保されている領域の内，使っているものの末端
 } PacketList;
 
 /**
  * @enum  PL_ACK
  * @brief PacketList 関連操作のエラーコード
- * @note  uint8_t
+ * @note  uint8_t を想定
  */
 typedef enum
 {
   PL_SUCCESS,            //!< 成功
-  PL_LIST_FULL,          //!< PacketList が一杯 (inactive 無し)
+  PL_LIST_FULL,          //!< PacketList が満杯 (inactive 無し)
+  PL_LIST_EMPTY,         //!< PacketList が空 (active 無し)
   PL_TLC_PAST_TIME,      //!< 実行時間既に経過
   PL_TLC_ALREADY_EXISTS, //!< 同時刻に既に Node が存在
   PL_TLC_ON_TIME,        //!< 実行時刻丁度
@@ -65,147 +66,190 @@ typedef enum
   PL_NO_SUCH_NODE        //!< そんな Node は無い
 } PL_ACK;
 
+
 /**
  * @brief static に確保された PL_Node 配列を受け取りその領域を使用して PL を初期化
- * @param[in] stock: 使用する PL_Node 配列
- * @param[in] size_t: 配列のサイズ
- * @param[out] pli: 初期化する PacketList
+ * @param[in] pl_node_stock: 使用する PL_Node 配列
+ * @param[in] packet_stock: PL_Node として使用する packet の配列（メモリ確保用）
+ * @param[in] node_num: PL_Node の数
+ * @param[in] packet_size: 使用する packet の型サイズ
+ * @param[out] pl: 初期化する PacketList
  * @return void
  */
-void PL_initialize(PL_Node* stock, size_t size, PacketList* pli);
+void PL_initialize(PL_Node* pl_node_stock,
+                   void* packet_stock,
+                   uint16_t node_num,
+                   uint16_t packet_size,
+                   PacketList* pl);
 
 /**
  * @brief PacketList をクリア
- * @param[in] pli: クリアする PacketList
+ * @param[in] pl: クリアする PacketList
  * @return void
  * @note 全 active Node を削除して 全て inactive の stock にする
  */
-void PL_clear_list(PacketList* pli);
+void PL_clear_list(PacketList* pl);
 
 /**
- * @brief PacketList で実行されたノード数を返す
- * @param[in] pli: PacketList
- * @return uint32_t: 実行されたノード数
+ * @brief PacketList で実行された Node 数を返す
+ * @param[in] pl: PacketList
+ * @return 実行された Node 数
  */
-uint32_t PL_count_executed_nodes(const PacketList* pli);
+uint32_t PL_count_executed_nodes(const PacketList* pl);
 
 /**
- * @brief PacketList で有効な(実行待ち)ノード数を返す
- * @param[in] pli: PacketList
- * @return uint16_t: 有効な(実行待ち)ノード数
+ * @brief PacketList で有効な（実行待ち） Node 数を返す
+ * @param[in] pl: PacketList
+ * @return 有効な（実行待ち） Node 数
  */
-uint16_t PL_count_active_nodes(const PacketList* pli);
+uint16_t PL_count_active_nodes(const PacketList* pl);
 
 /**
- * @brief PacketList で使用されていないノード数を返す
- * @param[in] pli: PacketList
- * @return uint16_t: 使用されていないノード数
+ * @brief PacketList で使用されていない Node 数を返す
+ * @param[in] pl: PacketList
+ * @return 使用されていない Node 数
  */
-uint16_t PL_count_inactive_nodes(const PacketList* pli);
+uint16_t PL_count_inactive_nodes(const PacketList* pl);
+
+/**
+ * @brief PacketList の全 Node 数を返す
+ * @param[in] pl: PacketList
+ * @return 全 Node 数
+ */
+uint16_t PL_get_total_node_num(const PacketList* pl);
+
+/**
+ * @brief PacketList で使用される packet の型サイズを返す
+ * @param[in] pl: PacketList
+ * @return packet の型サイズ
+ */
+uint16_t PL_get_packet_size(const PacketList* pl);
 
 /**
  * @brief PacketList が空かどうか
- * @param[in] pli: PacketList
- * @return int 1: True 0: False
+ * @param[in] pl: PacketList
+ * @retval 1: True
+ * @retval 0: False
  */
-int PL_is_empty(const PacketList* pli);
+int PL_is_empty(const PacketList* pl);
 
 /**
- * @brief PacketList が一杯かどうか
- * @param[in] pli: PacketList
- * @return int 1: True 0: False
+ * @brief PacketList が満杯かどうか
+ * @param[in] pl: PacketList
+ * @retval 1: True
+ * @retval 0: False
  */
-int PL_is_full(const PacketList* pli);
+int PL_is_full(const PacketList* pl);
 
 /**
- * @brief PacketList の active 先頭ノードを取得
- * @param[in] pli: PacketList
- * @return const PL_Node*
+ * @brief PacketList の active な先頭 Node を取得
+ * @param[in] pl: PacketList
+ * @return active な先頭 Node
  */
-const PL_Node* PL_get_head(const PacketList* pli);
+const PL_Node* PL_get_head(const PacketList* pl);
 
 /**
- * @brief PacketList の active 末端ノードを取得
- * @param[in] pli: PacketList
- * @return const PL_Node*
+ * @brief PacketList の active な末端 Node を取得
+ * @param[in] pl: PacketList
+ * @return active な末端 Node
  */
-const PL_Node* PL_get_tail(const PacketList* pli);
+const PL_Node* PL_get_tail(const PacketList* pl);
 
 /**
- * @brief 次のNode を取得
- * @param[in] node: 現ノード
- * @return const PL_Node*
+ * @brief 現 Node から次の Node を取得
+ * @param[in] node: 現 Node
+ * @retval 次の Node
+ * @retval NULL （現 Node が末尾の場合）
  */
 const PL_Node* PL_get_next(const PL_Node* node);
 
 /**
  * @brief PacketList の先頭に packet を挿入
- * @param[in] pli: PacketList
+ * @param[in] pl: PacketList
  * @param[in] packet: 挿入する packet
- * @return PL_ACK
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_LIST_FULL: PacketList が満杯
  */
-PL_ACK PL_push_front(PacketList* pli, const CommonTlmCmdPacket* packet);
+PL_ACK PL_push_front(PacketList* pl, const void* packet);
 
 /**
  * @brief PacketList の末尾に packet を挿入
- * @param[in] pli: PacketList
+ * @param[in] pl: PacketList
  * @param[in] packet: 挿入する packet
- * @return PL_ACK
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_LIST_FULL: PacketList が満杯
  */
-PL_ACK PL_push_back(PacketList* pli, const CommonTlmCmdPacket* packet);
+PL_ACK PL_push_back(PacketList* pl, const void* packet);
 
 /**
  * @brief ある Node の直後に packet を挿入
- * @param[in] pli: PacketList
+ * @param[in] pl: PacketList
  * @param[in] pos: 直後に挿入される packet
  * @param[in] packet: 挿入する packet
- * @return PL_ACK
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_LIST_FULL: PacketList が満杯
+ * @retval PL_NO_SUCH_NODE: pos で指定したような Node は存在しない
  */
-PL_ACK PL_insert_after(PacketList* pli, PL_Node* pos, const CommonTlmCmdPacket* packet);
+PL_ACK PL_insert_after(PacketList* pl, PL_Node* pos, const void* packet);
 
 /**
- * @brief ある Node の直後に packet を挿入
- * @param[in] pli: PacketList
- * @param[in] packet: 挿入する packet
- * @param[in] now: これの指定実行時間
- * @return PL_ACK
- * @note TaskList も TimeLine もこれを使うので now は uint32_t
+ * @brief 先頭 Node を落とす
+ * @param[in] pl: PacketList
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_LIST_EMPTY: PacketList が空
  */
-PL_ACK PL_insert_tl_cmd(PacketList* pli, const CommonTlmCmdPacket* packet, uint32_t now);
+PL_ACK PL_drop_executed(PacketList* pl);
+
+/**
+ * @brief 指定された Node を落とす
+ * @param[in] pl: PacketList
+ * @param[in] prev: 落とす直前 Node． current が先頭の場合は NULL
+ * @param[in] current: 落とす Node
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_LIST_EMPTY: PacketList が空
+ * @retval PL_NO_SUCH_NODE: 引数で指定したような Node は存在しない
+ */
+PL_ACK PL_drop_node(PacketList* pl, PL_Node* prev, PL_Node* current);
+
+
+// 以下，特定の packet を想定した PacketList の関数
+
+/**
+ * @brief CCP が時系列に並ぶように CCP を挿入する
+ * @note TimeLine だけでなく TaskList もこれを使い，その場合， now は step_t になることに注意
+ * @param[in] pl: PacketList
+ * @param[in] packet: 挿入する CCP
+ * @param[in] now: 基準時刻 (TimeLine なら現在時刻， TaskList なら現在 step)
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_LIST_FULL: PacketList が満杯
+ * @retval PL_TLC_PAST_TIME: 実行時間がすでに過ぎている
+ * @retval PL_TLC_ALREADY_EXISTS: 指定した実行時間にはすでにコマンドが登録されている
+ * @retval PL_NO_SUCH_NODE: 何かがおかしい
+ */
+PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t now);
 
 /**
  * @brief PacketList 上に BC を展開する
- * @param[in] pli: PacketList
+ * @note TimeLine だけでなく TaskList もこれを使い，その場合， start_at は step_t になることに注意
+ * @param[in] pl: PacketList
  * @param[in] block: 展開する BC の ID
  * @param[in] start_at: 開始基準時刻
- * @return PL_ACK
- * @note TaskList も TimeLine もこれを使うので start_at は uint32_t
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_BC_INACTIVE_BLOCK: block が不正
+ * @retval PL_BC_LIST_CLEARED: PacketList の空き容量が不足していたため，強制的に clear した場合
+ * @retval PL_BC_TIME_ADJUSTED: 時間調整が施された場合
  */
-PL_ACK PL_deploy_block_cmd(PacketList* pli, const bct_id_t block, uint32_t start_at);
+PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_at);
 
 /**
  * @brief PacketList の先頭と time を比較
- * @param[in] pli: PacketList
+ * @note TimeLine だけでなく TaskList もこれを使い，その場合， time は step_t になることに注意
+ * @param[in] pl: PacketList
  * @param[in] time: 比較する時刻
- * @return PL_ACK
- * @note TaskList も TimeLine もこれを使うので start_at は time
+ * @retval PL_TLC_ON_TIME: ちょうど
+ * @retval PL_TLC_PAST_TIME: 過去
+ * @retval PL_TLC_NOT_YET: まだ指定時刻になっていない or PacketList が空
  */
-PL_ACK PL_check_tl_cmd(PacketList* pli, uint32_t time);
-
-/**
- * @brief 先頭ノードを落とす
- * @param[in] pli: PacketList
- * @return void
- */
-void PL_drop_executed(PacketList* pli);
-
-/**
- * @brief 指定されたノードを落とす
- * @param[in] pli: PacketList
- * @param[in] prev: 落とす直前 Node
- * @param[in] current: 落とす Node
- * @return void
- */
-void PL_drop_node(PacketList* pli, PL_Node* prev, PL_Node* current);
+PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time);
 
 #endif

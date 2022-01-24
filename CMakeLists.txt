@@ -31,6 +31,7 @@ set(C2A_SRCS
   TlmCmd/command_dispatcher.c
   TlmCmd/common_cmd_packet_util.c
   TlmCmd/packet_handler.c
+  TlmCmd/packet_list_util.c
   TlmCmd/packet_list.c
   TlmCmd/telemetry_frame.c
   TlmCmd/telemetry_generator.c
