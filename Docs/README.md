@@ -35,6 +35,7 @@ C2A に関する説明の棲み分けは，次のようになっています．
 	1. How to add a application
 1. Core Layer
 	1. Overview
+	1. [Communication](./Core/communication.md)
 	1. [Tips](./Core/tips.md)
 1. Driver
 	1. [Overview](./Driver/overview.md)
