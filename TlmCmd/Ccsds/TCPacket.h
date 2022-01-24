@@ -12,8 +12,11 @@
 #define TCP_CMD_USER_HDR_LEN   (8u)
 
 // TCP_MAX_LEN を再定義
-// TCP_APID, TCP_CMD_DEST_TYPE を定義する
+// TCP_CMD_DEST_TYPE を定義する
 #include <src_user/Settings/TlmCmd/Ccsds/tcpacket_params.h>
+// ここで APID を定義する
+// 詳細は common_tlm_cmd_packet.h を参照
+#include <src_user/Settings/TlmCmd/Ccsds/apid_define.h>
 
 
 /**
@@ -171,9 +174,9 @@ void TCP_set_2nd_hdr_flag(TCP* tcp, TCP_2ND_HDR_FLAG flag);
 /**
  * @brief  APID を取得
  * @param  tcp: TCP
- * @return TCP_APID
+ * @return APID
  */
-TCP_APID TCP_get_apid(const TCP* tcp);
+APID TCP_get_apid(const TCP* tcp);
 
 /**
  * @brief  APID を設定
@@ -181,7 +184,7 @@ TCP_APID TCP_get_apid(const TCP* tcp);
  * @param[in]     apid: APID
  * @return void
  */
-void TCP_set_apid(TCP* tcp, TCP_APID apid);
+void TCP_set_apid(TCP* tcp, APID apid);
 
 /**
  * @brief  Sequence Flag を取得
@@ -492,7 +495,7 @@ uint8_t* TCP_TLM_get_user_data_head(TCP* packet);
  * @param[in]     len:  Packet Length
  * @return void
  */
-void TCP_TLM_setup_primary_hdr(TCP* tcp, TCP_APID apid, uint16_t len);
+void TCP_TLM_setup_primary_hdr(TCP* tcp, APID apid, uint16_t len);
 
 /**
  * @brief  共通部分の Header を構築
@@ -509,5 +512,4 @@ void TCP_TLM_set_common_hdr(TCP* tcp);
  */
 void TCP_TLM_setup_fill_packet(TCP* tcp, uint16_t fill_size);
 
-
-#endif // TC_PACKET_H_
+#endif
