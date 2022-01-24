@@ -166,7 +166,7 @@ BCT_ACK BCT_check_position(const BCT_Pos* pos)
   return BCT_SUCCESS;
 }
 
-BCT_ACK BCT_register_cmd(const CTCP* packet)
+BCT_ACK BCT_register_cmd(const CommonCmdPacket* packet)
 {
   BCT_ACK ack = BCT_check_position(&block_command_table_.pos);
   uint8_t length;
@@ -408,7 +408,7 @@ CCP_EXEC_STS BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_ACK ack)
   }
 }
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK  ack;
@@ -441,7 +441,7 @@ BCT_ACK BCT_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   BCT_Pos pos;
@@ -462,7 +462,7 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CTCP* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   uint16_t dst_block, src_block;
@@ -476,7 +476,7 @@ CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_id = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
   cycle_t  ti     = (cycle_t)CCP_get_param_from_packet(packet, 1, uint32_t);

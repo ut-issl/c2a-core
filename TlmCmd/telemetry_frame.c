@@ -139,7 +139,7 @@ void TF_copy_double(uint8_t* ptr,
   }
 }
 
-CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t index;
@@ -159,7 +159,7 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 

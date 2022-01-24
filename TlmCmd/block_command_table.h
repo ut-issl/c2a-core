@@ -217,7 +217,7 @@ BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CTCP* packet);
  * @param[in] packet: 登録する Cmd の内容
  * @return BCT_ACK
  */
-BCT_ACK BCT_register_cmd(const CTCP* packet);
+BCT_ACK BCT_register_cmd(const CommonCmdPacket* packet);
 
 /**
  * @brief 既に登録されている BC の Cmd の中身を外部から上書きする
@@ -292,9 +292,9 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
  */
 CCP_EXEC_STS BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_ACK ack);
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet);
+CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet);
 
 #endif

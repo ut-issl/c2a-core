@@ -83,7 +83,7 @@ void MM_clear_transition_table_(void)
  * @brief
  * モード遷移後にタスクリストとして実行するブロックコマンドを設定するコマンド
  */
-CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CTCP* packet)
+CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
 {
   MD_MODEID mode;
   bct_id_t  bc_index;
@@ -135,7 +135,7 @@ MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
  * @brief
  * モード遷移時に実行するブロックコマンドを設定するコマンド
  */
-CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CTCP* packet)
+CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
 {
   unsigned char from, to;
   bct_id_t bc_index;
@@ -190,7 +190,7 @@ MM_ACK MM_set_transition_table(MD_MODEID from,
  * @brief
  * モード遷移を開始するコマンド
  */
-CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
 {
   MD_MODEID id;
 
@@ -258,7 +258,7 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
  * モード遷移のブロックコマンドの最後に入れて使う
  * 入っていない場合、タスクリストが遷移先のモードに置き換わらないので注意
  */
-CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -316,7 +316,7 @@ static void MM_deploy_block_cmd_(bct_id_t bc_index)
   PH_dispatch_command(&packet);
 }
 
-CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
   MM_update_transition_table_for_tlm();

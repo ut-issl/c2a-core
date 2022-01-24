@@ -183,7 +183,7 @@ void TDSP_resync_internal_counter(void)
   TDSP_info_.activated_at = TMGR_get_master_total_cycle();
 }
 
-CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CTCP* packet)
+CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
 {
   // FIXME: u8 でいいのか？ まあ，いい気もする．
   TDSP_ACK ack = TDSP_set_task_list_id((bct_id_t)(CCP_get_param_head(packet)[0]));

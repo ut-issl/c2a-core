@@ -9,8 +9,8 @@ extern const CommandDispatcher* const realtime_command_dispatcher;
 
 AppInfo RTCD_create_app(void);
 
-CCP_EXEC_STS Cmd_RTCD_CLEAR_ALL_REALTIME(const CTCP* packet);
+CCP_EXEC_STS Cmd_RTCD_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_RTCD_CLEAR_ERR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_RTCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

@@ -43,7 +43,7 @@ static void GSCD_dispatch_(void)
   CDIS_dispatch_command(&gs_command_dispatcher_);
 }
 
-CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 

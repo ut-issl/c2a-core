@@ -109,34 +109,34 @@ AppInfo TLM_MGR_create_app(void);
 /**
  * @brief 初期化
  */
-CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet);
 
 /**
  * @brief master bc の初期化
  */
-CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet);
 
 /**
  * @brief HKテレメを初期化
  */
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief systemテレメを初期化
  */
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief high_freq_tlm, low_freq_tlm を初期化
  * @note  便宜上 TLM_MGR_BC_TYPE_RESERVE の BC も初期化してしまう
  */
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief TLM送出開始
  * @note  master bc の末尾を Cmd_TLCD_DEPLOY_BLOCK にして deploy block しているだけ
  */
-CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief TLM送出一時停止
@@ -144,38 +144,38 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet);
  * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE / Cmd_TLM_MGR_CLEAR_TLM_TL だと他のものも消えてしまう
  * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE / Cmd_TLM_MGR_CLEAR_TLM_TL のほうが適切な場合もあるのでよく考えること
  */
-CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief TLM送出用TLをクリア
  * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE しているだけ
  * @note  Cmd_TLCD_CLEAR_ALL_TIMELINE をGSから送ってもいいが， TL No がマジックナンバーになるので．
  */
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet);
 
 /**
  * @brief HKテレメを登録
  */
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief systemテレメを登録
  */
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief high_freq_tlm を登録
  */
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief low_freq_tlm を登録
  */
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet);
 
 
 // TODO: いきなり設定が変わるのではなく，設定変更 → 反映，にしたい．
-// CCP_EXEC_STS Cmd_TLM_MGR_APPLY(const CTCP* packet);
+// CCP_EXEC_STS Cmd_TLM_MGR_APPLY(const CommonCmdPacket* packet);
 
 
 // *** HOW TO USE ***

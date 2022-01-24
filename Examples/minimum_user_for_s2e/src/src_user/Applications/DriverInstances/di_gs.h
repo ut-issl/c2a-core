@@ -32,16 +32,16 @@ AppInfo DI_GS_cmd_packet_handler(void);
 AppInfo DI_GS_mst_packet_handler(void);
 AppInfo DI_GS_rpt_packet_handler(void);
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CTCP* packet);
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CTCP* packet);
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CTCP* packet);
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet);
 
 #endif

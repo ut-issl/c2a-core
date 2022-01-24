@@ -50,7 +50,7 @@ static void MEM_init_(void)
   memory_dump_.adu_counter = 0;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t begin, end, span;
@@ -84,7 +84,7 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -104,7 +104,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CTCP* packet)
   return MEM_dump_region_(category, num_dumps);
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -142,7 +142,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -188,7 +188,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_LOAD(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t param_len = CCP_get_param_len(packet);
@@ -207,7 +207,7 @@ CCP_EXEC_STS Cmd_MEM_LOAD(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t dest;
@@ -227,7 +227,7 @@ CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t copy_width, wp;

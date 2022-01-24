@@ -3,6 +3,6 @@
 
 #include "common_tlm_cmd_packet.h"
 
-CCP_EXEC_STS Cmd_GENERATE_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet);
 
 #endif

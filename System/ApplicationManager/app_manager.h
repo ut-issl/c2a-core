@@ -34,16 +34,16 @@ AM_ACK AM_register_ai(size_t id,
 
 void AM_initialize_all_apps(void);
 
-CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
 // 2019-07-18 追加
 // min, max, prevのみ消す．initはそのまま
-CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet);
 
 #endif

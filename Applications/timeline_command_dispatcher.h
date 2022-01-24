@@ -41,13 +41,13 @@ AppInfo TLCD2_create_app(void);
  */
 uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no);
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

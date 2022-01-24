@@ -126,15 +126,15 @@ BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
 
 // 以下 作成された各種 CMDFILE と整合性を取るため改名されていない
 // FIXME: BCT -> BCE
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_INACTIVATE_BLOCK_BY_ID(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_ROTATE_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_COMBINE_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_TIMELIMIT_COMBINE_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CTCP* packet);
-CCP_EXEC_STS Cmd_BCT_SET_ROTATE_INTERVAL(const CTCP* packet);
+CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_ROTATE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_COMBINE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet);
 
 #endif

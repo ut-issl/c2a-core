@@ -32,7 +32,7 @@ void PH_user_init(void);
  * @retval PH_PL_LIST_FULL: PL LIST FULL
  * @retval PH_FORWARDED以外（PH_UNKNOWNを想定）: ユーザー処理に引っかからなかった場合．Core側の処理に回される
  */
-PH_ACK PH_user_analyze_cmd(const CTCP* packet);
+PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet);
 
 /**
  * @brief  PHのcmd_router_のユーザー処理関数
@@ -44,6 +44,6 @@ PH_ACK PH_user_analyze_cmd(const CTCP* packet);
  * @retval CCP_EXEC_SUCCESS など:   無事に転送された．転送先の結果を返す
  * @retval CCP_EXEC_ROUTING_FAILED: 転送失敗（詳細エラーはDriverSuperを参照）
  */
-CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet);
+CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet);
 
 #endif

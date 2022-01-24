@@ -70,7 +70,7 @@ void TDSP_resync_internal_counter(void);
 /**
  * @brief 指定したブロックコマンドを、次にタスクリストに展開するものとして登録するコマンド
  */
-CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CTCP* packet);
+CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet);
 
 AppInfo print_tdsp_status(void);
 

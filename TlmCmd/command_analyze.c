@@ -53,7 +53,7 @@ void CA_initialize(void)
   CA_load_cmd_table(command_analyze_.cmd_table);
 }
 
-CCP_EXEC_STS CA_execute_cmd(const CTCP* packet)
+CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_code = CCP_get_id(packet);
   CCP_EXEC_STS (*cmd_func)(const CTCP*) = NULL;
@@ -180,7 +180,7 @@ static CA_PARAM_SIZE_TYPE CA_get_param_size_type_(CMD_CODE cmd_code, uint8_t n)
   }
 }
 
-CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
+CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
 {
   uint8_t param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];
   CMD_CODE cmd_code = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
@@ -211,7 +211,7 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 

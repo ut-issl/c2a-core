@@ -171,7 +171,7 @@ void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time)
 }
 
 
-CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
+CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
 {
   cycle_t set_value = CCP_get_param_from_packet(packet, 0, cycle_t);
 
@@ -187,7 +187,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
+CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CommonCmdPacket* packet)
 {
   ObcTime time;
 
@@ -201,7 +201,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CTCP* packet)
+CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
 {
   double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
   TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);

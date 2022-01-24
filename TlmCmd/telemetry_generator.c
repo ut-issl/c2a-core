@@ -10,7 +10,7 @@
 
 static uint8_t TG_get_next_adu_counter_(void);
 
-CCP_EXEC_STS Cmd_GENERATE_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
 {
   static TCP tcp_;
   const uint8_t* param = CCP_get_param_head(packet);

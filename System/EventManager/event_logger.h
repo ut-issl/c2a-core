@@ -509,50 +509,50 @@ int EL_is_tlog_overwrite_enable(EL_ERROR_LEVEL err_level);
 const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, uint16_t n);
 #endif
 
-CCP_EXEC_STS Cmd_EL_INIT(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet);
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet);
 #endif
 
-CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 #endif
 
-CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
 #endif
 
 #endif
