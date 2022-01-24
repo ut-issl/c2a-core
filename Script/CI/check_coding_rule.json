@@ -14,9 +14,13 @@
     "src_user/TlmCmd/telemetry_definitions.c"
   ],
   "additional_type" : [
-    "PL_NodeTag"
+    "PL_NodeTag",
+    "CommonTlmCmdPacket",
+    "CommonTlmPacket",
+    "CommonCmdPacket"
   ],
   "comment_additional_type" : [
-    "現状， struct PL_NodeTag* next; は型として引っ掛けられない"
+    "現状， struct PL_NodeTag* next; は型として引っ掛けられない",
+    "FIXME: CTCP, CTP, CCP については，整理が終わり次第，消して大丈夫になるはず"
   ]
 }
