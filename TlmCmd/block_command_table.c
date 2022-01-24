@@ -214,8 +214,9 @@ BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CTCP* packet)
   return BCT_save_cmd_(pos, packet);
 }
 
-// FIXME: 以下複数関数にわたって BlockCmdCmdData と CTCPの変換が，現在castによって行われているが，CTCPはユーザー定義なため，それ（=TCP以外）に対応できるようにする
+// FIXME: 以下複数関数にわたって BlockCmdCmdData と CommonCmdPacket の変換が，現在castによって行われているが， CommonCmdPacket はユーザー定義なため，それ（=TCP以外）に対応できるようにする
 //        同様の理由で memcpy なども対応する必要がある．
+// FIXME: CTCP, SpacePacket 整理で直す
 static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CTCP* packet)
 {
   // FIXME: TCPに依存しない，つまりCTCPに依存するコードにする

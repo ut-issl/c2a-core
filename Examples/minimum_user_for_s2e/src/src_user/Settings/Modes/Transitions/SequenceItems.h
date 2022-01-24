@@ -10,12 +10,12 @@
 // 普通のBCを使うこと！！！！
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-void SI_finish_transition(CTCP* packet);
+void SI_finish_transition(CommonCmdPacket* packet);
 
-void SI_start_hk_tlm(CTCP* packet);
+void SI_start_hk_tlm(CommonCmdPacket* packet);
 
 // BC展開
-void SI_deploy_block(CTCP* packet, int line_no, bct_id_t block_no);
+void SI_deploy_block(CommonCmdPacket* packet, int line_no, bct_id_t block_no);
 
 
 #endif // SEQUENCE_ITEMS_H_

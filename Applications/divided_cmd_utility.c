@@ -70,7 +70,7 @@ static void DCU_create_log_on_front_(CMD_CODE cmd_code);
 static DividedCmdUtility divided_cmd_utility_;
 const DividedCmdUtility* const divided_cmd_utility = &divided_cmd_utility_;
 
-static CTCP DCU_packet_;
+static CommonCmdPacket DCU_packet_;
 
 
 AppInfo DCU_create_app(void)
@@ -213,7 +213,7 @@ DCU_ACK DCU_register_next(CMD_CODE cmd_code, const uint8_t* param, uint16_t len)
 
   ret = CCP_form_rtc(&DCU_packet_, cmd_code, param, len);
   if (ret != CCP_UTIL_ACK_OK) return DCU_ACK_ERR;
-  if (PH_analyze_packet(&DCU_packet_) != PH_REGISTERED)
+  if (PH_analyze_packet(&DCU_packet_) != PH_REGISTERED)     // FIXME: CTCP, SpacePacket 整理で直す
   {
     return DCU_ACK_ERR;
   }

@@ -16,8 +16,8 @@ static int TLCD_line_no_for_tlm_;
 const int* TLCD_line_no_for_tlm;
 static cycle_t TLCD_tl_tlm_updated_at_;
 const cycle_t* TLCD_tl_tlm_updated_at;
-static CTCP TLCD_null_packet_;
-const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0が最長なのでそれに合わせる。
+static CommonCmdPacket TLCD_null_packet_;
+const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0が最長なのでそれに合わせる。
 static int TLCD_page_no_;
 const int* TLCD_page_no;
 

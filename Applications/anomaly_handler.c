@@ -201,7 +201,7 @@ static void AH_respond_to_anomaly_(size_t id)
   // これが呼ばれてるには，anomaly_handler_.elements[].is_active == 1は保証されている．
 
   // 対応ブロックコマンドをリアルタイムコマンドで展開
-  CTCP packet;
+  CommonCmdPacket packet;
   // 通常BCなのでTLC1に展開
   CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
   PH_dispatch_command(&packet);

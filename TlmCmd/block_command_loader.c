@@ -26,7 +26,7 @@ static void BCL_clear_info_(void);
  */
 typedef struct
 {
-  CTCP packet;                                //!< 登録中のコマンドを一時保存するためのバッファ
+  CommonCmdPacket packet;                     //!< 登録中のコマンドを一時保存するためのバッファ
   uint8_t params[BCL_PARAM_MAX_LENGTH];       /*!< 登録中のパラメータを一時保存するためのバッファ
                                                    初期化を楽にするために一コマンド分静的に確保している
                                                    TODO: サイズが過剰かもしれないので時間あれば調整 */

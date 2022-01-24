@@ -16,7 +16,7 @@
 #include "../System/TimeManager/time_manager.h"
 #include "common_cmd_packet_util.h"
 
-static CTCP packet_;
+static CommonCmdPacket BCE_packet_;
 
 static BlockCommandExecutor block_command_executor_;
 const BlockCommandExecutor* const block_command_executor = &block_command_executor_;
@@ -250,8 +250,8 @@ static CCP_EXEC_STS BCT_rotate_block_cmd_(bct_id_t block)
   BCE_set_bc_exe_params_(block, bc_exe_params);
 
   BCT_make_pos(&pos, block, bc_exe_params->rotate.next_cmd);
-  BCT_load_cmd(&pos, &packet_);
-  ack = PH_dispatch_command(&packet_);
+  BCT_load_cmd(&pos, &BCE_packet_);
+  ack = PH_dispatch_command(&BCE_packet_);
 
   return ack;
 }
@@ -289,8 +289,8 @@ static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block)
     BCT_Pos pos;
     pos.block = block;
     pos.cmd = cmd;
-    BCT_load_cmd(&pos, &packet_);
-    ack = PH_dispatch_command(&packet_);
+    BCT_load_cmd(&pos, &BCE_packet_);
+    ack = PH_dispatch_command(&BCE_packet_);
 
     if (ack != CCP_EXEC_SUCCESS) return ack;
   }
@@ -352,8 +352,8 @@ static CCP_EXEC_STS BCT_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
     BCT_Pos pos;
     pos.block = block;
     pos.cmd = cmd;
-    BCT_load_cmd(&pos, &packet_);
-    ack = PH_dispatch_command(&packet_);
+    BCT_load_cmd(&pos, &BCE_packet_);
+    ack = PH_dispatch_command(&BCE_packet_);
     if (ack != CCP_EXEC_SUCCESS)
     {
       BCE_set_bc_exe_params_(block, bc_exe_params);
@@ -507,8 +507,8 @@ CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
 
   for (ti = 11 - num_nop; ti < 11; ++ti)
   {
-    CCP_form_tlc(&packet_, ti, Cmd_CODE_NOP, NULL, 0);
-    BCT_register_cmd(&packet_);
+    CCP_form_tlc(&BCE_packet_, ti, Cmd_CODE_NOP, NULL, 0);
+    BCT_register_cmd(&BCE_packet_);
   }
 
   return CCP_EXEC_SUCCESS;

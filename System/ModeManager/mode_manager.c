@@ -309,7 +309,7 @@ static MM_ACK MM_finish_transition_(void)
 
 static void MM_deploy_block_cmd_(bct_id_t bc_index)
 {
-  CTCP packet;
+  CommonCmdPacket packet;
 
   CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, bc_index);
 

@@ -597,7 +597,7 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
 static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
-  CTCP packet;
+  CommonCmdPacket packet;
   CCP_UTIL_ACK form_cmd_ack;
   CCP_EXEC_STS deploy_cmd_ack;
 

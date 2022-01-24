@@ -26,7 +26,7 @@ typedef enum
 extern const CommandDispatcher* const timeline_command_dispatcher;
 extern const int* TLCD_line_no_for_tlm;
 extern const cycle_t* TLCD_tl_tlm_updated_at;
-extern const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
+extern const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
 extern const int* TLCD_page_no;
 
 AppInfo TLCD0_create_app(void);

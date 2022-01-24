@@ -106,7 +106,7 @@ static void TLM_MGR_load_nop_bc_(void);
 static TelemetryManager telemetry_manager_;
 const TelemetryManager* const telemetry_manager = &telemetry_manager_;
 
-static CTCP TLM_MGR_packet_;
+static CommonCmdPacket TLM_MGR_packet_;
 
 AppInfo TLM_MGR_create_app(void)
 {
@@ -567,7 +567,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 
   // master bc 展開
   CCP_form_block_deploy_cmd(&TLM_MGR_packet_, TL_ID_DEPLOY_TLM, master_bc_id);
-  PH_analyze_packet(&TLM_MGR_packet_);
+  PH_analyze_packet(&TLM_MGR_packet_); // FIXME: CTCP, SpacePacket 整理で直す
 
   return CCP_EXEC_SUCCESS;
 }
@@ -614,7 +614,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 
   param[0] = TL_ID_DEPLOY_TLM;
   CCP_form_rtc(&TLM_MGR_packet_, Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, param, 1);
-  PH_analyze_packet(&TLM_MGR_packet_);
+  PH_analyze_packet(&TLM_MGR_packet_); // FIXME: CTCP, SpacePacket 整理で直す
 
   return CCP_EXEC_SUCCESS;
 }
