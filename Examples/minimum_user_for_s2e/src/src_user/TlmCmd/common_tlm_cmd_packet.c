@@ -9,9 +9,9 @@
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 
 
-CTCP_PACKET_TYPE CTCP_get_tc_dsc(const CommonTlmCmdPacket* packet)
+CTCP_PACKET_TYPE CTCP_get_packet_type(const CommonTlmCmdPacket* packet)
 {
-  switch (CTCP_get_packet_type(packet))
+  switch (TCP_get_type(packet))
   {
   case TCP_TYPE_TLM:
     return CTCP_PACKET_TYPE_TLM;

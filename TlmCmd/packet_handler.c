@@ -66,12 +66,12 @@ void PH_init(void)
 // Cmd_GENERATE_TLMとかも．
 PH_ACK PH_analyze_packet(const CTCP* packet)
 {
-  switch (CTCP_get_tc_dsc(packet))
+  switch (CTCP_get_packet_type(packet))
   {
-  case CTCP_TC_DSC_CMD:
+  case CTCP_PACKET_TYPE_CMD:
     return PH_analyze_cmd_(packet);
 
-  case CTCP_TC_DSC_TLM:
+  case CTCP_PACKET_TYPE_TLM:
     return PH_analyze_tlm_(packet);
 
   default:
@@ -166,7 +166,7 @@ static PH_ACK PH_analyze_tlm_(const CTCP* packet)
 
 CCP_EXEC_STS PH_dispatch_command(const CTCP* packet)
 {
-  if (CTCP_get_tc_dsc(packet) != CTCP_PACKET_TYPE_CMD)
+  if (CTCP_get_packet_type(packet) != CTCP_PACKET_TYPE_CMD)
   {
     // CMD以外のパケットが来たら異常判定。
     return CCP_EXEC_PACKET_FMT_ERR;
