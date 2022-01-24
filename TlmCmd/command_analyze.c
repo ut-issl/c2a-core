@@ -56,7 +56,7 @@ void CA_initialize(void)
 CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_code = CCP_get_id(packet);
-  CCP_EXEC_STS (*cmd_func)(const CTCP*) = NULL;
+  CCP_EXEC_STS (*cmd_func)(const CommonCmdPacket*) = NULL;
 
   if (cmd_code >= CA_MAX_CMDS)
   {
@@ -201,7 +201,7 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
   }
 
   // ローレベルコマンドなので，アサーションしない
-  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CTCP*))cmd_func;
+  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CommonCmdPacket*))cmd_func;
   for (i = 0; i < sizeof(param_size_infos); ++i)
   {
     command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.first = ( param_size_infos[i] & 0xf0 ) >> 4;

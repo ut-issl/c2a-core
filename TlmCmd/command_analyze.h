@@ -67,7 +67,7 @@ typedef enum
  */
 typedef struct
 {
-  CCP_EXEC_STS (*cmd_func)(const CTCP*);                                    //!< コマンドとなる関数
+  CCP_EXEC_STS (*cmd_func)(const CommonCmdPacket*);                         //!< コマンドとなる関数
   CA_PackedParamSizeInfo param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];  //!< パラメタサイズ情報
 } CA_CmdInfo;
 

@@ -203,14 +203,14 @@ BCT_ACK BCT_check_position(const BCT_Pos* pos);
 BCT_ACK BCT_make_pos(BCT_Pos* pos, const bct_id_t block, const uint8_t cmd);
 
 /**
- * @brief 保存データをCTCPにコピーする.
+ * @brief 保存データを CCP にコピーする.
  * @param[in]  pos: コピー元のpacketの位置
- * @param[out] packet: コピーされる CTCP*
+ * @param[out] packet: コピーされる packet
  * @return BCT_ACK
  * @note  コマンド長は気にせず最大長を読み出すこととする.
  *        実際の長さ情報はコピーされているヘッダに格納されている.
  */
-BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CTCP* packet);
+BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CommonCmdPacket* packet);
 
 /**
  * @brief Cmd を block_command_table->pos に登録する
@@ -225,7 +225,7 @@ BCT_ACK BCT_register_cmd(const CommonCmdPacket* packet);
  * @param[in] packet: 上書きされる packet
  * @return BCT_ACK
  */
-BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CTCP* packet);
+BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CommonCmdPacket* packet);
 
 /**
  * @brief BCT の中身を 他の BCT に COPY する
