@@ -81,4 +81,40 @@ void CTCP_set_apid(CommonTlmCmdPacket* packet, APID apid);
  */
 void CTCP_copy_packet(CommonTlmCmdPacket* dest, const CommonTlmCmdPacket* src);
 
+/**
+ * @brief  CTCP を CTP に変換（キャスト）
+ * @note   NULL が返る可能性があるので，呼び出し元でしっかりアサーションすること！
+ * @param[in] ctcp: CTCP
+ * @retval CTP: 変換成功時
+ * @retval NULL: エラー時
+ */
+const CommonTlmPacket* CTCP_convert_to_ctp(const CommonTlmCmdPacket* ctcp);
+
+/**
+ * @brief  CTP を CTCP に変換（キャスト）
+ * @note   NULL が返る可能性があるので，呼び出し元でしっかりアサーションすること！
+ * @param[in] ctcp: CTP
+ * @retval CTCP: 変換成功時
+ * @retval NULL: エラー時
+ */
+const CommonTlmCmdPacket* CTCP_convert_from_ctp(const CommonTlmPacket* ctp);
+
+/**
+ * @brief  CTCP を CCP に変換（キャスト）
+ * @note   NULL が返る可能性があるので，呼び出し元でしっかりアサーションすること！
+ * @param[in] ctcp: CTCP
+ * @retval CCP: 変換成功時
+ * @retval NULL: エラー時
+ */
+const CommonCmdPacket* CTCP_convert_to_ccp(const CommonTlmCmdPacket* ctcp);
+
+/**
+ * @brief  CCP を CTCP に変換（キャスト）
+ * @note   NULL が返る可能性があるので，呼び出し元でしっかりアサーションすること！
+ * @param[in] ctcp: CCP
+ * @retval CTCP: 変換成功時
+ * @retval NULL: エラー時
+ */
+const CommonTlmCmdPacket* CTCP_convert_from_ccp(const CommonCmdPacket* ccp);
+
 #endif
