@@ -36,6 +36,7 @@ typedef enum
   TDSP_UNKNOWN
 } TDSP_ACK;
 
+// FIXME: extern const TaskDsipatcher* const task_dispathcer; に直す
 extern const TDSP_Info* const TDSP_info;
 
 /**
@@ -47,7 +48,7 @@ void TDSP_initialize(void);
 /**
  * @brief 指定した BC を TaskList に展開するものとして登録
  * @param[in] id: BC の id
- * @note 展開自体はTDSP_deploy_block_as_task_list_で行う
+ * @note 展開自体は TDSP_deploy_block_as_task_list_ で行う
  *       "BC を TaskList に展開" とは `src_user\Settings\Modes\TaskLists\InitialTL.c` などを参照.
  */
 TDSP_ACK TDSP_set_task_list_id(bct_id_t id);
@@ -55,10 +56,10 @@ TDSP_ACK TDSP_set_task_list_id(bct_id_t id);
 /**
  * @brief 現在時刻に応じて、TaskList から Cmd を一つ実行する or TaskList を再展開する
  *
- *        展開されているタスクリストの実行時刻 (cycle レベル) を比較し, task_list_ に登録されているタスクを順番に実行する.
- *        1つタスクを消化すると return する. (while(1) で回っているのですぐ戻ってくる.)
- *        実行 cycle が現在だった場合, 各タスクの step によって実行する, しないを switch に合わせて処理する.
- *        実際にタスクを処理する場合, CDIS_dispatch_command -> PH_dispatch_command -> cmdExec の順に実行される(真の Executer は cmdExec).
+ *        展開されているタスクリストの実行時刻 (cycle レベル) を比較し, task_list_ に登録されているタスクを順番に実行する．
+ *        1つタスクを消化すると return する． (while(1) で回っているのですぐ戻ってくる．)
+ *        実行 cycle が現在だった場合, 各タスクの step によって実行する, しないを switch に合わせて処理する．
+ *        実際にタスクを処理する場合, CDIS_dispatch_command -> PH_dispatch_command -> cmdExec の順に実行される(真の Executer は cmdExec)．
  */
 void TDSP_execute_pl_as_task_list(void);
 
