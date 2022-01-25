@@ -69,7 +69,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   }
 
   // 実行すべきコマンドパケットを取得。
-  packet_ = PL_get_head(cdis->pli)->packet;
+  packet_ = *(const CommonCmdPacket*)(PL_get_head(cdis->pli)->packet);
 
   // ここで実行種別を変更するのをやめた．
   // - MOBCから配送される第二OBCにも，GS cmdやTL cmdを送信したいため

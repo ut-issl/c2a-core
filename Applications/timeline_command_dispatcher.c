@@ -113,7 +113,7 @@ static void tlc_dispatcher_(int line_no)
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_PAST_TIME,
                       (uint32_t)line_no,
                       EL_ERROR_LEVEL_LOW,
-                      (uint32_t)CCP_get_ti(&PL_get_head(&PH_tl_cmd_list[line_no])->packet));
+                      (uint32_t)CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(&PH_tl_cmd_list[line_no])->packet) ));
 
       if (timeline_command_dispatcher_[line_no].stop_on_error == 1)
       {
@@ -144,7 +144,7 @@ uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
 
   if (line_no >= TL_ID_MAX) return TL_ID_MAX;
 
-  pos = (PL_Node*)PL_get_head(&(PH_tl_cmd_list[line_no]));
+  pos = (PL_Node*)PL_get_head(&(PH_tl_cmd_list[line_no]));    // const_cast
   // テレメ情報生成時刻を記録
   TLCD_tl_tlm_updated_at_ = TMGR_get_master_total_cycle();
 
@@ -157,7 +157,7 @@ uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
   // 登録されているTLコマンドをリストに書き込み
   for (i = 0; pos != NULL; ++i)
   {
-    TLCD_tl_list_for_tlm[i] = &(pos->packet);
+    TLCD_tl_list_for_tlm[i] = (const CommonCmdPacket*)(pos->packet);
     pos = pos->next;
   }
 
@@ -220,7 +220,7 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
 
   for (i = 0; i < active_nodes_num; ++i)
   {
-    if (CCP_get_ti(&(current->packet)) == time)
+    if (CCP_get_ti( (const CommonCmdPacket*)(current->packet) ) == time)
     {
       PL_drop_node(&(PH_tl_cmd_list[line_no]), prev, current);
       break;

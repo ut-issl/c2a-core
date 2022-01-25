@@ -106,8 +106,8 @@ static int Tlm_MOBC_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[121], (uint32_t)(timeline_command_dispatcher[0].error_counter));
   TF_copy_u8(&contents[125], (uint8_t)(timeline_command_dispatcher[0].stop_on_error));
   TF_copy_u8(&contents[126], (uint8_t)(timeline_command_dispatcher[0].lockout));
-  TF_copy_u32(&contents[127], (PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : (uint32_t)CCP_get_ti(&(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
-  TF_copy_u16(&contents[131], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : CCP_get_id(&(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
+  TF_copy_u32(&contents[127], (PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
+  TF_copy_u16(&contents[131], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
   TF_copy_u32(&contents[133], PL_count_executed_nodes(&PH_tl_cmd_list[1]));
   TF_copy_u8(&contents[137], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[1])));
   TF_copy_u32(&contents[138], (uint32_t)(timeline_command_dispatcher[1].prev.time.total_cycle));
@@ -119,8 +119,8 @@ static int Tlm_MOBC_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[158], (uint32_t)(timeline_command_dispatcher[1].error_counter));
   TF_copy_u8(&contents[162], (uint8_t)(timeline_command_dispatcher[1].stop_on_error));
   TF_copy_u8(&contents[163], (uint8_t)(timeline_command_dispatcher[1].lockout));
-  TF_copy_u32(&contents[164], (PL_is_empty(&(PH_tl_cmd_list[1])) ? 0 : (uint32_t)CCP_get_ti(&(PL_get_head(&(PH_tl_cmd_list[1]))->packet))));
-  TF_copy_u16(&contents[168], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[1])) ? 0 : CCP_get_id(&(PL_get_head(&(PH_tl_cmd_list[1]))->packet))));
+  TF_copy_u32(&contents[164], (PL_is_empty(&(PH_tl_cmd_list[1])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[1]))->packet))));
+  TF_copy_u16(&contents[168], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[1])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[1]))->packet))));
   TF_copy_u32(&contents[170], PL_count_executed_nodes(&PH_tl_cmd_list[2]));
   TF_copy_u8(&contents[174], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[2])));
   TF_copy_u32(&contents[175], (uint32_t)(timeline_command_dispatcher[2].prev.time.total_cycle));
@@ -132,8 +132,8 @@ static int Tlm_MOBC_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[195], (uint32_t)(timeline_command_dispatcher[2].error_counter));
   TF_copy_u8(&contents[199], (uint8_t)(timeline_command_dispatcher[2].stop_on_error));
   TF_copy_u8(&contents[200], (uint8_t)(timeline_command_dispatcher[2].lockout));
-  TF_copy_u32(&contents[201], (PL_is_empty(&(PH_tl_cmd_list[2])) ? 0 : (uint32_t)CCP_get_ti(&(PL_get_head(&(PH_tl_cmd_list[2]))->packet))));
-  TF_copy_u16(&contents[205], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[2])) ? 0 : CCP_get_id(&(PL_get_head(&(PH_tl_cmd_list[2]))->packet))));
+  TF_copy_u32(&contents[201], (PL_is_empty(&(PH_tl_cmd_list[2])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[2]))->packet))));
+  TF_copy_u16(&contents[205], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[2])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[2]))->packet))));
   TF_copy_u8(&contents[207], (uint8_t)(block_command_table->pos.block));
   TF_copy_u8(&contents[208], (uint8_t)(block_command_table->pos.cmd));
   TF_copy_u32(&contents[209], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
@@ -3229,8 +3229,8 @@ static int Tlm_HK_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[52], timeline_command_dispatcher[0].prev_err.time.total_cycle);
   TF_copy_u16(&contents[56], (uint16_t)(timeline_command_dispatcher[0].prev_err.code));
   TF_copy_i8(&contents[58], (int8_t)(timeline_command_dispatcher[0].prev_err.sts));
-  TF_copy_u32(&contents[59], (PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : (uint32_t)CCP_get_ti(&(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
-  TF_copy_u16(&contents[63], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : CCP_get_id(&(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
+  TF_copy_u32(&contents[59], (PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
+  TF_copy_u16(&contents[63], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet))));
   TF_copy_u8(&contents[65], (uint8_t)(((uint8_t)timeline_command_dispatcher[0].stop_on_error << 7 & 0x80) | ((uint8_t)timeline_command_dispatcher[0].lockout << 6 & 0x40) | ((uint8_t)timeline_command_dispatcher[1].stop_on_error << 5 & 0x20) | ((uint8_t)timeline_command_dispatcher[1].lockout << 4 & 0x10) | ((uint8_t)timeline_command_dispatcher[2].stop_on_error << 3 & 0x08) | ((uint8_t)timeline_command_dispatcher[2].lockout << 2 & 0x04) | (wdt_config->is_wdt_enable << 1 & 0x02) | (wdt_config->is_clear_enable & 0x01) ));
   TF_copy_u16(&contents[66], block_command_table->pos.block);
   TF_copy_u8(&contents[68], (uint8_t)(block_command_table->pos.cmd));

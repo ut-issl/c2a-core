@@ -100,7 +100,7 @@ void TDSP_execute_pl_as_task_list(void)
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_STEP_OVERRUN,
                       EL_ERROR_LEVEL_LOW,
-                      (uint32_t)CCP_get_ti(&PL_get_head(&task_list_)->packet));
+                      (uint32_t)CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(&task_list_)->packet) ));
 
       // FALL THROUGH
 

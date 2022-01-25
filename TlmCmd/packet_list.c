@@ -277,8 +277,8 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
   if (PL_is_empty(pl)) return PL_push_front(pl, packet);
 
   // 以下，他コマンドが登録されているとき
-  head = CCP_get_ti((PL_get_head(pl)->packet));
-  tail = CCP_get_ti((PL_get_tail(pl)->packet));
+  head = CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(pl)->packet) );
+  tail = CCP_get_ti( (const CommonCmdPacket*)(PL_get_tail(pl)->packet) );
 
   if (tail < planed) // 他のどれより遅い
   {
@@ -301,7 +301,7 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
     // 挿入場所探索
     for (i = 1; i < pl->active_nodes_; ++i)
     {
-      cycle_t curr_ti = CCP_get_ti(curr->packet);
+      cycle_t curr_ti = CCP_get_ti( (const CommonCmdPacket*)(curr->packet) );
 
       if (curr_ti < planed)
       {
@@ -388,7 +388,7 @@ PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time)
 
   if (!PL_is_empty(pl))
   {
-    const CommonCmdPacket* packet = pl->active_list_head_->packet;
+    const CommonCmdPacket* packet = (const CommonCmdPacket*)(pl->active_list_head_->packet);
     cycle_t planed = CCP_get_ti(packet);
 
     if (time == planed) return PL_TLC_ON_TIME;
