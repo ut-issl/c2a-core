@@ -257,7 +257,12 @@ def check_newline_(path: str, code_lines: list) -> int:
 
         if line.find("for") == -1:  # TODO: for があると文途中に ; があるので．今後治す
             if has_line_ended_with_target_(line, ";") == 0:
-                print_err_(path, idx + 1, "THE END OF A STATEMENT SHOULD BE A COMMENT OR A LINE BREAK", line)
+                print_err_(
+                    path,
+                    idx + 1,
+                    "THE END OF A STATEMENT SHOULD BE A COMMENT OR A LINE BREAK",
+                    line,
+                )
                 flag = 1
 
         if has_line_ended_with_target_(line, "{") == 0:
@@ -432,7 +437,9 @@ def check_operator_space_(path: str, code_lines: list) -> int:
         targets = ["}{", "){", "}("]
         for target in targets:
             if is_contained_pattern_(line, target):
-                print_err_(path, idx + 1, "PROHIBITED PATTERNS:'" + target + "' (SPACE IS REQUIRED)", line)
+                print_err_(
+                    path, idx + 1, "PROHIBITED PATTERNS:'" + target + "' (SPACE IS REQUIRED)", line
+                )
                 flag = 1
 
         targets = ["for", "if", "while", "switch", "case", "else", "do"]
@@ -459,7 +466,12 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             poss = [x.start() for x in reptn.finditer(line)]
             for pos in poss:
                 if not is_in_comment_context_in_line_(line, pos):
-                    print_err_(path, idx + 1, "'*' MUST BE PLACED TO THE SIDE OF TYPE AT '" + target + "'", line)
+                    print_err_(
+                        path,
+                        idx + 1,
+                        "'*' MUST BE PLACED TO THE SIDE OF TYPE AT '" + target + "'",
+                        line,
+                    )
                     flag = 1
     targets = [x + " &" for x in g_type_set]
     for target in targets:
@@ -476,7 +488,12 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             poss = [x.start() for x in reptn.finditer(line)]
             for pos in poss:
                 if not is_in_comment_context_in_line_(line, pos):
-                    print_err_(path, idx + 1, "'&' MUST BE PLACED TO THE SIDE OF TYPE AT '" + target + "'", line)
+                    print_err_(
+                        path,
+                        idx + 1,
+                        "'&' MUST BE PLACED TO THE SIDE OF TYPE AT '" + target + "'",
+                        line,
+                    )
                     flag = 1
 
     # これは endif で ifとかがヒットするのでNG
@@ -589,7 +606,9 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 # print("#" + match.group(1) + "#")
                 # print("#" + match.group(2) + "#")
 
-                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR", line)
+                print_err_(
+                    path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR", line
+                )
                 flag = 1
 
             matches = reptn_after.finditer(line)
@@ -641,7 +660,9 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 # print("#" + match.group(1) + "#")
                 # print("#" + match.group(2) + "#")
 
-                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR", line)
+                print_err_(
+                    path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR", line
+                )
                 flag = 1
 
     return flag
@@ -923,9 +944,9 @@ remove_comment_and_strip_.reptn2 = re.compile(remove_comment_and_strip_.pnt2)
 
 
 def print_err_(path: str, line_number: int, err_msg: str, code_line: str):
-        print(path + ": " + str(line_number) + ": " + err_msg)
-        if IS_SHOW_CODE_AT_ERR:
-            print(code_line)
+    print(path + ": " + str(line_number) + ": " + err_msg)
+    if IS_SHOW_CODE_AT_ERR:
+        print(code_line)
 
 
 if __name__ == "__main__":
