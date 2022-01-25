@@ -270,7 +270,7 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
   cycle_t head, tail;
   cycle_t planed = CCP_get_ti(packet);
 
-  if (pl->packet_type_ != PL_PACKET_TYPE_CTP) return PL_PACKET_TYPE_ERR;
+  if (pl->packet_type_ != PL_PACKET_TYPE_CCP) return PL_PACKET_TYPE_ERR;
 
   if (now > planed) return PL_TLC_PAST_TIME;
   if (PL_is_full(pl)) return PL_LIST_FULL;
@@ -333,7 +333,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
   uint32_t adj = 0;   // 時刻調整の累積量保存用変数
   uint8_t bc_length;
 
-  if (pl->packet_type_ != PL_PACKET_TYPE_CTP) return PL_PACKET_TYPE_ERR;
+  if (pl->packet_type_ != PL_PACKET_TYPE_CCP) return PL_PACKET_TYPE_ERR;
 
   if (block >= BCT_MAX_BLOCKS) return PL_BC_INACTIVE_BLOCK;
   if (!BCE_is_active(block)) return PL_BC_INACTIVE_BLOCK;
@@ -384,7 +384,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
 
 PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time)
 {
-  if (pl->packet_type_ != PL_PACKET_TYPE_CTP) return PL_PACKET_TYPE_ERR;
+  if (pl->packet_type_ != PL_PACKET_TYPE_CCP) return PL_PACKET_TYPE_ERR;
 
   if (!PL_is_empty(pl))
   {
