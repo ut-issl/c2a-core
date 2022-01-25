@@ -31,6 +31,27 @@ typedef enum
 } PL_PACKET_TYPE;
 
 /**
+ * @enum  PL_ACK
+ * @brief PacketList 関連操作のエラーコード
+ * @note  uint8_t を想定
+ */
+typedef enum
+{
+  PL_SUCCESS,            //!< 成功
+  PL_LIST_FULL,          //!< PacketList が満杯 (inactive 無し)
+  PL_LIST_EMPTY,         //!< PacketList が空 (active 無し)
+  PL_PACKET_TYPE_ERR,    //!< PL_PACKET_TYPE 関連エラー
+  PL_TLC_PAST_TIME,      //!< 実行時間既に経過
+  PL_TLC_ALREADY_EXISTS, //!< 同時刻に既に Node が存在
+  PL_TLC_ON_TIME,        //!< 実行時刻丁度
+  PL_TLC_NOT_YET,        //!< まだ実行時刻ではない
+  PL_BC_INACTIVE_BLOCK,  //!< 無効な BC
+  PL_BC_LIST_CLEARED,    //!< PL クリア (初期化, active 全削除) された
+  PL_BC_TIME_ADJUSTED,   //!< 同時刻に Node があったため調整せれた
+  PL_NO_SUCH_NODE        //!< そんな Node は無い
+} PL_ACK;
+
+/**
  * @struct PL_Node
  * @brief  片方向リストを構成する各 Node
  */
@@ -63,37 +84,17 @@ typedef struct
   PL_Node* active_list_tail_;   //!< 確保されている領域の内，使っているものの末端
 } PacketList;
 
-/**
- * @enum  PL_ACK
- * @brief PacketList 関連操作のエラーコード
- * @note  uint8_t を想定
- */
-typedef enum
-{
-  PL_SUCCESS,            //!< 成功
-  PL_LIST_FULL,          //!< PacketList が満杯 (inactive 無し)
-  PL_LIST_EMPTY,         //!< PacketList が空 (active 無し)
-  PL_PACKET_TYPE_ERR,    //!< PL_PACKET_TYPE 関連エラー
-  PL_TLC_PAST_TIME,      //!< 実行時間既に経過
-  PL_TLC_ALREADY_EXISTS, //!< 同時刻に既に Node が存在
-  PL_TLC_ON_TIME,        //!< 実行時刻丁度
-  PL_TLC_NOT_YET,        //!< まだ実行時刻ではない
-  PL_BC_INACTIVE_BLOCK,  //!< 無効な BC
-  PL_BC_LIST_CLEARED,    //!< PL クリア (初期化, active 全削除) された
-  PL_BC_TIME_ADJUSTED,   //!< 同時刻に Node があったため調整せれた
-  PL_NO_SUCH_NODE        //!< そんな Node は無い
-} PL_ACK;
-
 
 /**
- * @brief static に確保された PL_Node 配列を受け取りその領域を使用して PL を初期化
+ * @brief static に確保された PL_Node 配列と packet 配列を受け取りその領域を使用して PL を初期化
  * @param[in] pl_node_stock: 使用する PL_Node 配列
  * @param[in] packet_stock: PL_Node として使用する packet の配列（メモリ確保用）
- * @param[in] packet_type: 保持する packet の型情報．PL_PACKET_TYPE を参照
  * @param[in] node_num: PL_Node の数
+ * @param[in] packet_type: 保持する packet の型情報．PL_PACKET_TYPE を参照
  * @param[in] packet_size: 使用する packet の型サイズ
  * @param[out] pl: 初期化する PacketList
- * @return void
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_PACKET_TYPE_ERR: 型関連エラー
  */
 PL_ACK PL_initialize(PL_Node* pl_node_stock,
                      void* packet_stock,
