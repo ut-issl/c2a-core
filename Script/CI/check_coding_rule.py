@@ -209,42 +209,30 @@ def check_comment_(path: str, code_lines: list) -> int:
             continue
         if "//" in line:
             if not has_started_with_list_after_target_(line, "//", [" ", "!< "]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER '//' OR '//!<'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER '//' OR '//!<'", line)
                 flag = 1
         if "/*" in line:
             if not has_started_with_list_after_target_(
                 line, "/*", [" ", "!< ", "*"]
             ):  # TODO: "*" を許すの．．．
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER '/*' OR '/*!<'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER '/*' OR '/*!<'", line)
                 flag = 1
         if "*/" in line:
             if not has_started_with_list_after_target_(line, "*/", [" "]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER '*/'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER '*/'", line)
                 flag = 1
 
         if "//" in line:
             if not has_ended_with_list_before_target_(line, "//", [" "]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED BEFORE '//'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE '//'", line)
                 flag = 1
         if "/*" in line:
             if not has_ended_with_list_before_target_(line, "/*", [" "]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED BEFORE '/*'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE '/*'", line)
                 flag = 1
         if "*/" in line:
             if not has_ended_with_list_before_target_(line, "*/", [" ", "*"]):  # TODO: "*" を許すの．．．
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED BEFORE '*/'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE '*/'", line)
                 flag = 1
 
     return flag
@@ -260,9 +248,7 @@ def check_newline_(path: str, code_lines: list) -> int:
         else:
             counter = 0
         if counter >= 4:
-            print(path + ": " + str(idx + 1) + ": TOO MANY CONSECUTIVE LINE BREAKS")
-            if IS_SHOW_CODE_AT_ERR:
-                print(line)
+            print_err_(path, idx + 1, "TOO MANY CONSECUTIVE LINE BREAKS", line)
             flag = 1
 
     for idx, line in enumerate(code_lines):
@@ -271,14 +257,7 @@ def check_newline_(path: str, code_lines: list) -> int:
 
         if line.find("for") == -1:  # TODO: for があると文途中に ; があるので．今後治す
             if has_line_ended_with_target_(line, ";") == 0:
-                print(
-                    path
-                    + ": "
-                    + str(idx + 1)
-                    + ": THE END OF A STATEMENT SHOULD BE A COMMENT OR A LINE BREAK"
-                )
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "THE END OF A STATEMENT SHOULD BE A COMMENT OR A LINE BREAK", line)
                 flag = 1
 
         if has_line_ended_with_target_(line, "{") == 0:
@@ -299,9 +278,7 @@ def check_newline_(path: str, code_lines: list) -> int:
             elif non_comment_line[-2:] == "};":  # uint8_t command_id[3] = {0x76, 0x61, 0x73};
                 pass
             else:
-                print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
                 flag = 1
         # 旧版
         # # if not (line.find("[") != -1 and line.find("};") != -1):
@@ -311,18 +288,14 @@ def check_newline_(path: str, code_lines: list) -> int:
         # if line.find("[") == -1 and line.find("};") == -1:
         #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
         #     if (has_line_ended_with_target_(line, "{") == 0):
-        #         print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
-        #         if IS_SHOW_CODE_AT_ERR:
-        #             print(line)
+        #         print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
         #         flag = 1
 
         # # targets = ["class", "enum", "struct", "else"]
         # targets = [" class ", " enum ", " struct "]
         # for target in targets:
         #     if (has_line_ended_with_target_(line, target) == 0):
-        #         print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
-        #         if IS_SHOW_CODE_AT_ERR:
-        #             print(line)
+        #         print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
         #         flag = 1
 
         # TODO: だいぶ雑
@@ -334,9 +307,7 @@ def check_newline_(path: str, code_lines: list) -> int:
             elif line[0:7] == "#define":  # TODO: これは改行すると怖いので許す？
                 pass
             else:
-                print(path + ": " + str(idx + 1) + ": ONE LINE (EXCLUDING COMMENTS) IS TOO LONG")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "ONE LINE (EXCLUDING COMMENTS) IS TOO LONG", line)
                 flag = 1
 
     targets = ["class", "enum", "struct", "if", "for", "else", "while", "switch", "case"]
@@ -353,9 +324,7 @@ def check_newline_(path: str, code_lines: list) -> int:
 
             match = reptn.search(line)
             if match is not None:
-                print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
                 flag = 1
 
     targets = ["else"]
@@ -372,9 +341,7 @@ def check_newline_(path: str, code_lines: list) -> int:
 
             match = reptn.search(line)
             if match is not None:
-                print(path + ": " + str(idx + 1) + ": ALLMAN STYLE IS REQUIRED")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
                 flag = 1
 
     return flag
@@ -389,19 +356,13 @@ def check_eof_(path: str, code_lines: list) -> int:
         if code_lines[-1] == "":
             return 0
         else:
-            print(path + ": 1: NO NEW LINE AT EOF")
-            if IS_SHOW_CODE_AT_ERR:
-                print(code_lines[-1])
+            print_err_(path, 1, "NO NEW LINE AT EOF", code_lines[-1])
             return 1
     if code_lines[-1] != "":
-        print(path + ": " + str(max_line) + ": NO NEW LINE AT EOF")
-        if IS_SHOW_CODE_AT_ERR:
-            print(code_lines[-1])
+        print_err_(path, max_line, "NO NEW LINE AT EOF", code_lines[-1])
         return 1
     if code_lines[-1] == "" and code_lines[-2] == "":
-        print(path + ": " + str(max_line - 2) + ": TOO MANY LINE BREAKS AT EOF")
-        if IS_SHOW_CODE_AT_ERR:
-            print(code_lines[-2])
+        print_err_(path, max_line - 2, "TOO MANY LINE BREAKS AT EOF", code_lines[-2])
         return 1
     return 0
 
@@ -411,20 +372,14 @@ def check_space_(path: str, code_lines: list) -> int:
     flag = 0
     for idx, line in enumerate(code_lines):
         if "\t" in line:
-            print(path + ": " + str(idx + 1) + ": TAB IS NOT PERMITTED")
-            if IS_SHOW_CODE_AT_ERR:
-                print(line)
+            print_err_(path, idx + 1, "TAB IS NOT PERMITTED", line)
             flag = 1
         if "　" in line:
-            print(path + ": " + str(idx + 1) + ": ZENKAKU SPACE IS NOT PERMITTED")
-            if IS_SHOW_CODE_AT_ERR:
-                print(line)
+            print_err_(path, idx + 1, "ZENKAKU SPACE IS NOT PERMITTED", line)
             flag = 1
         if len(line) != 0:
             if line[-1] == " ":
-                print(path + ": " + str(idx + 1) + ": ANY SPACE AT EOL NEEDS TO BE REMOVED")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "ANY SPACE AT EOL NEEDS TO BE REMOVED", line)
                 flag = 1
 
     return flag
@@ -439,16 +394,12 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             continue
         if "," in line:
             if not has_started_with_list_after_target_(line, ",", [" "]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER ','")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER ','", line)
                 flag = 1
 
         if ";" in line:
             if not has_started_with_list_after_target_(line, ";", [" "]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER ';'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER ';'", line)
                 flag = 1
 
         # ↓hoge_point * 10 などが int * で引っかかった
@@ -458,54 +409,30 @@ def check_operator_space_(path: str, code_lines: list) -> int:
         #            "void *", "int *", "short *", "char *", "long *", "float *", "double *"]
         # for target in targets:
         #     if is_contained_pattern_(line, target):
-        #         print(path + ": " + str(idx + 1) + ": PROHIBITED PATTERNS:'" + target + "'")
-        #         if IS_SHOW_CODE_AT_ERR:
-        #             print(line)
+        #         print_err_(path, idx + 1, "PROHIBITED PATTERNS:'" + target + "'", line)
         #         flag = 1
 
         # if ")" in line:
         #     if not has_started_with_list_after_target_(line, ")", [" ", ")", ";"]):
-        #         print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER ')'")
-        #         if IS_SHOW_CODE_AT_ERR:
-        #             print(line)
+        #         print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER ')'", line)
         #         flag = 1
         # if "(" in line:
         #     if not has_ended_with_list_before_target_(line, "(", [" "]):
-        #         print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED BEFORE '('")
-        #         if IS_SHOW_CODE_AT_ERR:
-        #             print(line)
+        #         print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE '('", line)
         #         flag = 1
         if "}" in line:
             if not has_started_with_list_after_target_(line, "}", [" ", ";", ","]):
-                print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER '}'")
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER '}'", line)
                 flag = 1
         # if "{" in line:
         #     if not has_ended_with_list_before_target_(line, "{", [" ", "{"]):
-        #         print(
-        #             path
-        #             + ": "
-        #             + str(idx + 1)
-        #             + ": ALLMAN STYLE IS REQUIRED OR SPACE IS REQUIRED BEFORE '{'"
-        #         )
-        #         if IS_SHOW_CODE_AT_ERR:
-        #             print(line)
+        #         print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED OR SPACE IS REQUIRED BEFORE '{'", line)
         #         flag = 1
 
         targets = ["}{", "){", "}("]
         for target in targets:
             if is_contained_pattern_(line, target):
-                print(
-                    path
-                    + ": "
-                    + str(idx + 1)
-                    + ": PROHIBITED PATTERNS:'"
-                    + target
-                    + "' (SPACE IS REQUIRED)"
-                )
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "PROHIBITED PATTERNS:'" + target + "' (SPACE IS REQUIRED)", line)
                 flag = 1
 
         targets = ["for", "if", "while", "switch", "case", "else", "do"]
@@ -514,9 +441,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             if strip_line.startswith(target) and len(strip_line) > len(target):
                 next_char = strip_line[len(target)]
                 if next_char in ["(", "{"]:
-                    print(path + ": " + str(idx + 1) + ": SPACE IS REQUIRED AFTER '" + target + "'")
-                    if IS_SHOW_CODE_AT_ERR:
-                        print(line)
+                    print_err_(path, idx + 1, "SPACE IS REQUIRED AFTER '" + target + "'", line)
                     flag = 1
 
     targets = [x + " *" for x in g_type_set]
@@ -534,16 +459,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             poss = [x.start() for x in reptn.finditer(line)]
             for pos in poss:
                 if not is_in_comment_context_in_line_(line, pos):
-                    print(
-                        path
-                        + ": "
-                        + str(idx + 1)
-                        + ": '*' MUST BE PLACED TO THE SIDE OF TYPE AT '"
-                        + target
-                        + "'"
-                    )
-                    if IS_SHOW_CODE_AT_ERR:
-                        print(line)
+                    print_err_(path, idx + 1, "'*' MUST BE PLACED TO THE SIDE OF TYPE AT '" + target + "'", line)
                     flag = 1
     targets = [x + " &" for x in g_type_set]
     for target in targets:
@@ -560,16 +476,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
             poss = [x.start() for x in reptn.finditer(line)]
             for pos in poss:
                 if not is_in_comment_context_in_line_(line, pos):
-                    print(
-                        path
-                        + ": "
-                        + str(idx + 1)
-                        + ": '&' MUST BE PLACED TO THE SIDE OF TYPE AT '"
-                        + target
-                        + "'"
-                    )
-                    if IS_SHOW_CODE_AT_ERR:
-                        print(line)
+                    print_err_(path, idx + 1, "'&' MUST BE PLACED TO THE SIDE OF TYPE AT '" + target + "'", line)
                     flag = 1
 
     # これは endif で ifとかがヒットするのでNG
@@ -617,16 +524,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
     #         continue
     #     for target in targets:
     #         if not is_there_space_befor_after_(line, target):
-    #             print(
-    #                 path
-    #                 + ": "
-    #                 + str(idx + 1)
-    #                 + ": SPACE IS REQUIRED BEFORE AND AFTER '"
-    #                 + target
-    #                 + "'"
-    #             )
-    #             if IS_SHOW_CODE_AT_ERR:
-    #                 print(line)
+    #             print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER '" + target + "'", line)
     #             flag = 1
 
     targets = ["<", ">", "=", "&", "|", "^", "~", "=", "?", ":", "!", "+", "-", "*", "/", "%"]
@@ -691,14 +589,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 # print("#" + match.group(1) + "#")
                 # print("#" + match.group(2) + "#")
 
-                print(
-                    path
-                    + ": "
-                    + str(idx + 1)
-                    + ": SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR"
-                )
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR", line)
                 flag = 1
 
             matches = reptn_after.finditer(line)
@@ -750,14 +641,7 @@ def check_operator_space_(path: str, code_lines: list) -> int:
                 # print("#" + match.group(1) + "#")
                 # print("#" + match.group(2) + "#")
 
-                print(
-                    path
-                    + ": "
-                    + str(idx + 1)
-                    + ": SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR"
-                )
-                if IS_SHOW_CODE_AT_ERR:
-                    print(line)
+                print_err_(path, idx + 1, "SPACE IS REQUIRED BEFORE AND AFTER BINARY OPERATOR", line)
                 flag = 1
 
     return flag
@@ -776,11 +660,7 @@ def check_preprocessor_(path: str, code_lines: list) -> int:
             if is_in_non_string_code(path, code_lines, idx, pos):
                 continue
 
-            print(
-                path + ": " + str(idx + 1) + ": PREPROCESSOR DIRECTIVES DO NOT REQUIRE INDENTATION"
-            )
-            if IS_SHOW_CODE_AT_ERR:
-                print(line)
+            print_err_(path, idx + 1, "PREPROCESSOR DIRECTIVES DO NOT REQUIRE INDENTATION", line)
             flag = 1
 
     return flag
@@ -1040,6 +920,12 @@ remove_comment_and_strip_.pnt1 = re.escape("/*") + ".*" + re.escape("*/")
 remove_comment_and_strip_.reptn1 = re.compile(remove_comment_and_strip_.pnt1)
 remove_comment_and_strip_.pnt2 = re.escape("//") + ".*$"
 remove_comment_and_strip_.reptn2 = re.compile(remove_comment_and_strip_.pnt2)
+
+
+def print_err_(path: str, line_number: int, err_msg: str, code_line: str):
+        print(path + ": " + str(line_number) + ": " + err_msg)
+        if IS_SHOW_CODE_AT_ERR:
+            print(code_line)
 
 
 if __name__ == "__main__":
