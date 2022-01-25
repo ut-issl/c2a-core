@@ -28,6 +28,12 @@ jobs:
       - name: install reviewdog
         uses: reviewdog/action-setup@v1.0.3
 
+      - name: fix error log source file path
+        run: |
+          sed 's/.\/src_core\///g' < /tmp/coding-rule.log \
+          | > ./coding-rule.log \
+            sed 's/.\/src_user/Examples\/minimum_user_for_s2e\/src\/src_user/g'
+
       - name: reviewdog
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,4 +48,4 @@ jobs:
             -efm="%-GThe above files are invalid coding rule." \
             -efm="%E%f: %l: %m" \
             -efm="%Z%s" \
-            < /tmp/coding-rule.log
+            < coding-rule.log
