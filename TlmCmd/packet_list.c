@@ -29,19 +29,35 @@ static PL_Node* PL_get_free_node_(PacketList* pl);
 static PL_ACK PL_drop_head_(PacketList* pl);
 
 
-void PL_initialize(PL_Node* pl_node_stock,
-                   void* packet_stock,
-                   uint16_t node_num,
-                   uint16_t packet_size,
-                   PacketList* pl)
+PL_ACK PL_initialize(PL_Node* pl_node_stock,
+                     void* packet_stock,
+                     uint16_t node_num,
+                     PL_PACKET_TYPE packet_type,
+                     uint16_t packet_size,
+                     PacketList* pl)
 {
   pl->total_nodes_ = node_num;
+  pl->packet_type_ = packet_type;
   pl->packet_size_ = packet_size;
   pl->executed_nodes_ = 0;
+
+  switch (pl->packet_type_)
+  {
+  case PL_PACKET_TYPE_CTCP:
+    if (pl->packet_size_ != (uint16_t)sizeof(CommonTlmCmdPacket)) return PL_PACKET_TYPE_ERR;
+  case PL_PACKET_TYPE_CTP:
+    if (pl->packet_size_ != (uint16_t)sizeof(CommonTlmPacket)) return PL_PACKET_TYPE_ERR;
+  case PL_PACKET_TYPE_CCP:
+    if (pl->packet_size_ != (uint16_t)sizeof(CommonCmdPacket)) return PL_PACKET_TYPE_ERR;
+  default:
+    // その他の場合は， assertion できない
+    break;
+  }
 
   pl->pl_node_stock_ = pl_node_stock;
   pl->packet_stock_ = packet_stock;
   PL_clear_list(pl);
+  return PL_SUCCESS;
 }
 
 
@@ -55,7 +71,7 @@ void PL_clear_list(PacketList* pl)
   // PL_Node と packet の関連をつける
   for (i = 0; i < node_num; ++i)
   {
-    pl->pl_node_stock_[i].packet = packet_stock_head + packet_size * i;
+    pl->pl_node_stock_[i].packet = (void*)(packet_stock_head + packet_size * i);
   }
 
   // PL_node の配列を連結リストとして再定義
@@ -144,7 +160,7 @@ PL_ACK PL_push_front(PacketList* pl, const void* packet)
 
   // TODO: 本当は CTCP_copy_packet などを使って，必要最低限だけコピーしたい．高速化のために．
   //       現在， packet になにがくるか不明なので使えない
-  memcpy(&new_pl_node->packet, packet, pl->packet_size_);
+  memcpy(new_pl_node->packet, packet, pl->packet_size_);
 
   new_pl_node->next = pl->active_list_head_;
   pl->active_list_head_ = new_pl_node;
@@ -165,7 +181,7 @@ PL_ACK PL_push_back(PacketList* pl, const void* packet)
   PL_Node* new_pl_node = PL_get_free_node_(pl);
   if (new_pl_node == NULL) return PL_LIST_FULL;
 
-  memcpy(&new_pl_node->packet, packet, pl->packet_size_);
+  memcpy(new_pl_node->packet, packet, pl->packet_size_);
 
   new_pl_node->next = NULL;
 
@@ -196,7 +212,7 @@ PL_ACK PL_insert_after(PacketList* pl, PL_Node* pos, const void* packet)
   new_pl_node = PL_get_free_node_(pl);
   if (new_pl_node == NULL) return PL_LIST_FULL;
 
-  memcpy(&new_pl_node->packet, packet, pl->packet_size_);
+  memcpy(new_pl_node->packet, packet, pl->packet_size_);
 
   new_pl_node->next = pos->next;
   pos->next = new_pl_node;
@@ -254,13 +270,15 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
   cycle_t head, tail;
   cycle_t planed = CCP_get_ti(packet);
 
+  if (pl->packet_type_ != PL_PACKET_TYPE_CTP) return PL_PACKET_TYPE_ERR;
+
   if (now > planed) return PL_TLC_PAST_TIME;
   if (PL_is_full(pl)) return PL_LIST_FULL;
   if (PL_is_empty(pl)) return PL_push_front(pl, packet);
 
   // 以下，他コマンドが登録されているとき
-  head = CCP_get_ti(&(PL_get_head(pl)->packet));
-  tail = CCP_get_ti(&(PL_get_tail(pl)->packet));
+  head = CCP_get_ti((PL_get_head(pl)->packet));
+  tail = CCP_get_ti((PL_get_tail(pl)->packet));
 
   if (tail < planed) // 他のどれより遅い
   {
@@ -283,7 +301,7 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
     // 挿入場所探索
     for (i = 1; i < pl->active_nodes_; ++i)
     {
-      cycle_t curr_ti = CCP_get_ti(&(curr->packet));
+      cycle_t curr_ti = CCP_get_ti(curr->packet);
 
       if (curr_ti < planed)
       {
@@ -314,6 +332,8 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
   int is_cleared = 0; // リスト強制クリアの記録用変数
   uint32_t adj = 0;   // 時刻調整の累積量保存用変数
   uint8_t bc_length;
+
+  if (pl->packet_type_ != PL_PACKET_TYPE_CTP) return PL_PACKET_TYPE_ERR;
 
   if (block >= BCT_MAX_BLOCKS) return PL_BC_INACTIVE_BLOCK;
   if (!BCE_is_active(block)) return PL_BC_INACTIVE_BLOCK;
@@ -364,9 +384,11 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
 
 PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time)
 {
+  if (pl->packet_type_ != PL_PACKET_TYPE_CTP) return PL_PACKET_TYPE_ERR;
+
   if (!PL_is_empty(pl))
   {
-    const CommonCmdPacket* packet = &pl->active_list_head_->packet;
+    const CommonCmdPacket* packet = pl->active_list_head_->packet;
     cycle_t planed = CCP_get_ti(packet);
 
     if (time == planed) return PL_TLC_ON_TIME;

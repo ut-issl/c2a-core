@@ -14,6 +14,22 @@
 // 自己参照用
 typedef struct PL_Node PL_Node;
 
+
+/**
+ * @enum  PL_PACKET_TYPE
+ * @brief PacketList に格納される packet の型情報
+ * @note  uint8_t を想定
+ * @note  基本的に PacketList は任意の packet 型を格納できるようにしているが，特定のメソッドが特定の型を要求するため，作っている
+ *        以下で定義されている型については，それを指定して PL_initialize を呼び出すことを推奨する（内部でアサーションなどもかかるので）
+ */
+typedef enum
+{
+  PL_PACKET_TYPE_CTCP,    //!< CommonTlmCmdPacket
+  PL_PACKET_TYPE_CTP,     //!< CommonTlmPacket
+  PL_PACKET_TYPE_CCP,     //!< CommonCmdPacket
+  PL_PACKET_TYPE_OTHER,   //!< その他のパケット
+} PL_PACKET_TYPE;
+
 /**
  * @struct PL_Node
  * @brief  片方向リストを構成する各 Node
@@ -38,6 +54,7 @@ typedef struct
   uint32_t executed_nodes_;     //!< 実行（コマンド） or 配送（テレメ）されたノード数     // FIXME: TODO: テレメのときもカウントアップしてるか確認
   uint16_t active_nodes_;       //!< 現在片方向リストに入っているノード数
   uint16_t packet_size_;        //!< PL_Node->packet の型サイズ
+  PL_PACKET_TYPE packet_type_;  //!< 保持する packet の型情報．PL_PACKET_TYPE を参照
 
   PL_Node* pl_node_stock_;      //!< 確保されている PL_Node 領域（配列）全体の先頭
   void*    packet_stock_;       //!< 確保されている packet 領域（配列）全体の先頭
@@ -56,6 +73,7 @@ typedef enum
   PL_SUCCESS,            //!< 成功
   PL_LIST_FULL,          //!< PacketList が満杯 (inactive 無し)
   PL_LIST_EMPTY,         //!< PacketList が空 (active 無し)
+  PL_PACKET_TYPE_ERR,    //!< PL_PACKET_TYPE 関連エラー
   PL_TLC_PAST_TIME,      //!< 実行時間既に経過
   PL_TLC_ALREADY_EXISTS, //!< 同時刻に既に Node が存在
   PL_TLC_ON_TIME,        //!< 実行時刻丁度
@@ -71,21 +89,24 @@ typedef enum
  * @brief static に確保された PL_Node 配列を受け取りその領域を使用して PL を初期化
  * @param[in] pl_node_stock: 使用する PL_Node 配列
  * @param[in] packet_stock: PL_Node として使用する packet の配列（メモリ確保用）
+ * @param[in] packet_type: 保持する packet の型情報．PL_PACKET_TYPE を参照
  * @param[in] node_num: PL_Node の数
  * @param[in] packet_size: 使用する packet の型サイズ
  * @param[out] pl: 初期化する PacketList
  * @return void
  */
-void PL_initialize(PL_Node* pl_node_stock,
-                   void* packet_stock,
-                   uint16_t node_num,
-                   uint16_t packet_size,
-                   PacketList* pl);
+PL_ACK PL_initialize(PL_Node* pl_node_stock,
+                     void* packet_stock,
+                     uint16_t node_num,
+                     PL_PACKET_TYPE packet_type,
+                     uint16_t packet_size,
+                     PacketList* pl);
 
 /**
  * @brief PacketList をクリア
  * @param[in] pl: クリアする PacketList
- * @return void
+ * @retval PL_SUCCESS: 成功
+ * @retval PL_PACKET_TYPE_ERR: 型関連エラー
  * @note 全 active Node を削除して 全て inactive の stock にする
  */
 void PL_clear_list(PacketList* pl);
@@ -225,6 +246,7 @@ PL_ACK PL_drop_node(PacketList* pl, PL_Node* prev, PL_Node* current);
  * @retval PL_TLC_PAST_TIME: 実行時間がすでに過ぎている
  * @retval PL_TLC_ALREADY_EXISTS: 指定した実行時間にはすでにコマンドが登録されている
  * @retval PL_NO_SUCH_NODE: 何かがおかしい
+ * @retval PL_PACKET_TYPE_ERR: 指定した PacketList の packet が CCP ではない
  */
 PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t now);
 
@@ -238,6 +260,7 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
  * @retval PL_BC_INACTIVE_BLOCK: block が不正
  * @retval PL_BC_LIST_CLEARED: PacketList の空き容量が不足していたため，強制的に clear した場合
  * @retval PL_BC_TIME_ADJUSTED: 時間調整が施された場合
+ * @retval PL_PACKET_TYPE_ERR: 指定した PacketList の packet が CCP ではない
  */
 PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_at);
 
@@ -249,6 +272,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
  * @retval PL_TLC_ON_TIME: ちょうど
  * @retval PL_TLC_PAST_TIME: 過去
  * @retval PL_TLC_NOT_YET: まだ指定時刻になっていない or PacketList が空
+ * @retval PL_PACKET_TYPE_ERR: 指定した PacketList の packet が CCP ではない
  */
 PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time);
 
