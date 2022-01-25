@@ -375,7 +375,7 @@ static void MEM_setup_header_(TCP* packet,
   uint8_t* data;
 
   // TCPacketヘッダを設定
-  TCP_TLM_setup_primary_hdr(packet, TCP_APID_DUMP_TLM, (uint16_t)(data_len + 12));
+  TCP_TLM_setup_primary_hdr(packet, APID_DUMP_TLM, (uint16_t)(data_len + 12));
   TCP_TLM_set_ti(packet, (uint32_t)( TMGR_get_master_total_cycle() ));
   TCP_TLM_set_category(packet, category); // パラメータによる指定
   TCP_TLM_set_packet_id(packet, (uint8_t)MEM_TLM_ID);

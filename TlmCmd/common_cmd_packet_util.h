@@ -1,64 +1,66 @@
 /**
  * @file
- * @brief  CTCP の汎用Util
+ * @brief  CCP の汎用 Utility
  */
-#ifndef COMMON_TLM_CMD_PACKET_UTIL_H_
-#define COMMON_TLM_CMD_PACKET_UTIL_H_
+#ifndef COMMON_CMD_PACKET_UTIL_H_
+#define COMMON_CMD_PACKET_UTIL_H_
 
-#include "common_tlm_cmd_packet.h"
+#include "common_cmd_packet.h"
+#include "block_command_table.h"
+#include <src_user/Applications/app_registry.h>
 
 /**
- * @enum   CTCP_UTIL_ACK
- * @brief  CTCP Utility の汎用返り値
+ * @enum   CCP_UTIL_ACK
+ * @brief  CCP Utility の汎用返り値
  * @note   uint8_t を想定
  */
 typedef enum
 {
-  CTCP_UTIL_ACK_OK = 0,       //!< 正常終了
-  CTCP_UTIL_ACK_PARAM_ERR     //!< パラメタエラー
-} CTCP_UTIL_ACK;
+  CCP_UTIL_ACK_OK = 0,       //!< 正常終了
+  CCP_UTIL_ACK_PARAM_ERR     //!< パラメタエラー
+} CCP_UTIL_ACK;
 
 /**
- * @brief  App実行コマンドを生成
- * @param[in,out] packet: CTCP
+ * @brief  App 実行コマンドを生成
+ * @param[in,out] packet: CCP
  * @param[in]     ti: TI
  * @param[in]     id: AR_APP_ID
  * @return void
  */
-void CCP_form_app_cmd(CTCP* packet, cycle_t ti, AR_APP_ID id);
+void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
 
 /**
  * @brief  Realtime command を生成
  * @note   引数が不正なとき， packet は NOP RTC を返す
- * @param[in,out] packet: CTCP
+ * @param[in,out] packet: CCP
  * @param[in]     packet: CMD_CODE
- * @param[in]     *param: パラメタ
+ * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
- * @return CTCP_UTIL_ACK
+ * @return CCP_UTIL_ACK
  */
-CTCP_UTIL_ACK CCP_form_rtc(CTCP* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief  Timeline command を生成
  * @note   引数が不正なとき， packet は NOP TLC を返す
- * @param[in,out] packet: CTCP
+ * @param[in,out] packet: CCP
  * @param[in]     ti:     TI
  * @param[in]     packet: CMD_CODE
- * @param[in]     *param: パラメタ
+ * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
- * @return CTCP_UTIL_ACK
+ * @return CCP_UTIL_ACK
  */
-CTCP_UTIL_ACK CCP_form_tlc(CTCP* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief  BC展開 command を生成
  * @note   引数が不正なとき， packet は NOP RTC を返す
- * @param[in,out] packet: CTCP
+ * @param[in,out] packet: CCP
  * @param[in]     tl_no: Timeline no
  * @param[in]     block_no: BC ID
- * @return CTCP_UTIL_ACK
+ * @return CCP_UTIL_ACK
  */
-CTCP_UTIL_ACK CCP_form_block_deploy_cmd(CTCP* packet, uint8_t tl_no, bct_id_t block_no);
+CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, bct_id_t block_no);
 
 /**
  * @brief  Realtime Command から Timeline Command へ変換
@@ -66,7 +68,7 @@ CTCP_UTIL_ACK CCP_form_block_deploy_cmd(CTCP* packet, uint8_t tl_no, bct_id_t bl
  * @param[in]     ti:     TI
  * @return void
  */
-void CCP_convert_rtc_to_tlc(CTCP* packet, cycle_t ti);
+void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
 
 /**
  * @brief  CCP packet から，サイズが 1 byte のコマンド引数を取得する
@@ -76,7 +78,7 @@ void CCP_convert_rtc_to_tlc(CTCP* packet, cycle_t ti);
  * @param[in] n: N番目の引数 （0起算）
  * @return パラメタを保持したポインタ（型は意味をもってない）
  */
-uint8_t* CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n);
+uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n);
 
 /**
  * @brief  CCP packet から，サイズが 2 byte のコマンド引数を取得する
@@ -86,7 +88,7 @@ uint8_t* CCP_get_1byte_param_from_packet(const CTCP* packet, uint8_t n);
  * @param[in] n: N番目の引数 （0起算）
  * @return パラメタを保持したポインタ（型は意味をもってない）
  */
-uint16_t* CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n);
+uint16_t* CCP_get_2byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n);
 
 /**
  * @brief  CCP packet から，サイズが 4 byte のコマンド引数を取得する
@@ -96,7 +98,7 @@ uint16_t* CCP_get_2byte_param_from_packet(const CTCP* packet, uint8_t n);
  * @param[in] n: N番目の引数 （0起算）
  * @return パラメタを保持したポインタ（型は意味をもってない）
  */
-uint32_t* CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n);
+uint32_t* CCP_get_4byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n);
 
 /**
  * @brief  CCP packet から，サイズが 8 byte のコマンド引数を取得する
@@ -106,7 +108,7 @@ uint32_t* CCP_get_4byte_param_from_packet(const CTCP* packet, uint8_t n);
  * @param[in] n: N番目の引数 （0起算）
  * @return パラメタを保持したポインタ（型は意味をもってない）
  */
-uint64_t* CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n);
+uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n);
 
 /**
  * @brief  CCP packet から，RAW コマンド引数を取得する
@@ -116,7 +118,7 @@ uint64_t* CCP_get_8byte_param_from_packet(const CTCP* packet, uint8_t n);
  * @param[in]  max_copy_len : コピーする最大長． 0 の場合，無制限
  * @return コピーした長さ
  */
-uint16_t CCP_get_raw_param_from_packet(const CTCP* packet, void* dest, uint16_t max_copy_len);
+uint16_t CCP_get_raw_param_from_packet(const CommonCmdPacket* packet, void* dest, uint16_t max_copy_len);
 
 /**
  * @def    CCP_get_param_from_packet(packet, n, type)

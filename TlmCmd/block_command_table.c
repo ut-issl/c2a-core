@@ -18,7 +18,7 @@
 #include "../System/TimeManager/time_manager.h"
 #include "../Library/endian_memcpy.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
-#include "common_tlm_cmd_packet_util.h"
+#include "common_cmd_packet_util.h"
 
 static BlockCommandTable block_command_table_;
 const BlockCommandTable* const block_command_table = &block_command_table_;

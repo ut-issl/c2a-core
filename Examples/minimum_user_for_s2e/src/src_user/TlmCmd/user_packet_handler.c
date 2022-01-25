@@ -47,12 +47,12 @@ PH_ACK PH_user_analyze_cmd(const CTCP* packet)
 
 CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet)
 {
-  switch (CCP_get_dest_id(packet))
+  switch (CCP_get_apid(packet))
   {
-  case TCP_APID_AOBC_CMD:
+  case APID_AOBC_CMD:
     // AOBCに配送
     // return DI_AOBC_dispatch_command(packet);
-  case TCP_APID_TOBC_CMD:
+  case APID_TOBC_CMD:
     // TOBCに配送
     // return DI_TOBC_dispatch_command(packet);
   default:

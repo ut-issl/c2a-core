@@ -95,27 +95,27 @@ void TCP_set_2nd_hdr_flag(TCP* tcp, TCP_2ND_HDR_FLAG flag)
   tcp->packet[TCP_pp_2nd_hdr_flag_.pos] |= (uint8_t)(val & TCP_pp_2nd_hdr_flag_.mask);
 }
 
-TCP_APID TCP_get_apid(const TCP* tcp)
+APID TCP_get_apid(const TCP* tcp)
 {
-  TCP_APID apid = (TCP_APID)(tcp->packet[TCP_pp_apid_.pos] & TCP_pp_apid_.mask);
-  apid = (TCP_APID)(apid << 8);
-  apid = (TCP_APID)(apid + tcp->packet[TCP_pp_apid_.pos + 1]);
+  APID apid = (APID)(tcp->packet[TCP_pp_apid_.pos] & TCP_pp_apid_.mask);
+  apid = (APID)(apid << 8);
+  apid = (APID)(apid + tcp->packet[TCP_pp_apid_.pos + 1]);
 
   switch (apid)
   {
-  case TCP_APID_MOBC_CMD:         // FALLTHROUGH
-  case TCP_APID_AOBC_CMD:         // FALLTHROUGH
-  case TCP_APID_TOBC_CMD:         // FALLTHROUGH
-  case TCP_APID_MIS_TLM:          // FALLTHROUGH
-  case TCP_APID_DUMP_TLM:
+  case APID_MOBC_CMD:         // FALLTHROUGH
+  case APID_AOBC_CMD:         // FALLTHROUGH
+  case APID_TOBC_CMD:         // FALLTHROUGH
+  case APID_MIS_TLM:          // FALLTHROUGH
+  case APID_DUMP_TLM:
     return apid;
 
   default:
-    return TCP_APID_UNKNOWN;
+    return APID_UNKNOWN;
   }
 }
 
-void TCP_set_apid(TCP* tcp, TCP_APID apid)
+void TCP_set_apid(TCP* tcp, APID apid)
 {
   uint8_t val = (uint8_t)((apid >> 8) & TCP_pp_apid_.mask);
 
@@ -492,7 +492,7 @@ uint8_t* TCP_TLM_get_user_data_head(TCP* tcp)
   return &(tcp->packet[TCP_PRM_HDR_LEN + TCP_TLM_2ND_HDR_LEN]);
 }
 
-void TCP_TLM_setup_primary_hdr(TCP* tcp, TCP_APID apid, uint16_t len)
+void TCP_TLM_setup_primary_hdr(TCP* tcp, APID apid, uint16_t len)
 {
   TCP_TLM_set_common_hdr(tcp);
   TCP_set_apid(tcp, apid);
@@ -523,7 +523,7 @@ void TCP_TLM_setup_fill_packet(TCP* tcp, uint16_t fill_size)
     // 穴埋め領域がTC Packet Primary Header長より大きい場合。
     // 穴埋め領域にピッタリハマるFill Packetを生成する。
     TCP_TLM_setup_primary_hdr(tcp,
-                              TCP_APID_FILL_PKT,
+                              APID_FILL_PKT,
                               (uint16_t)(fill_size - TCP_PRM_HDR_LEN));
   }
   else
@@ -532,7 +532,7 @@ void TCP_TLM_setup_fill_packet(TCP* tcp, uint16_t fill_size)
     // 領域ピッタリのFill Packetの生成は不可能なので、データ長1
     // のFill Packetを生成する。
     TCP_TLM_setup_primary_hdr(tcp,
-                              TCP_APID_FILL_PKT,
+                              APID_FILL_PKT,
                               1);
   }
 }

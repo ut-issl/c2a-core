@@ -12,7 +12,7 @@
 #include "../Applications/timeline_command_dispatcher.h"
 #include "block_command_executor.h"
 #include <src_user/TlmCmd/command_definitions.h> // for rotate/combine block
-#include "common_tlm_cmd_packet_util.h"
+#include "common_cmd_packet_util.h"
 
 #define BCL_PARAM_MAX_LENGTH BCT_CMD_MAX_LENGTH
 
