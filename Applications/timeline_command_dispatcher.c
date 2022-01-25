@@ -16,8 +16,8 @@ static int TLCD_line_no_for_tlm_;
 const int* TLCD_line_no_for_tlm;
 static cycle_t TLCD_tl_tlm_updated_at_;
 const cycle_t* TLCD_tl_tlm_updated_at;
-static CTCP TLCD_null_packet_;
-const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0が最長なのでそれに合わせる。
+static CommonCmdPacket TLCD_null_packet_;
+const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0が最長なのでそれに合わせる。
 static int TLCD_page_no_;
 const int* TLCD_page_no;
 
@@ -164,7 +164,7 @@ uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
   return line_no;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
 {
   int line_no;
 
@@ -180,7 +180,7 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   int line_no;
@@ -235,7 +235,7 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
 }
 
 
-CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   uint8_t line_no;
@@ -263,7 +263,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   uint8_t line_no;
@@ -291,7 +291,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet)
 {
   int line_no;
 
@@ -310,7 +310,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet)
 }
 
 // FIXME: ELのイベント記録を追加する
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 {
   int      line_no;
   bct_id_t block_no;
@@ -355,7 +355,7 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -371,7 +371,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   uint8_t line_no;
 

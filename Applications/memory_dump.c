@@ -10,7 +10,7 @@
 static MemoryDump memory_dump_;
 const MemoryDump* const memory_dump = &memory_dump_;
 
-static CTCP MEM_ctcp_; // データサイズが大きいのでstatic確保
+static CommonTlmPacket MEM_ctp_; // データサイズが大きいのでstatic確保
 
 static void MEM_init_(void);
 
@@ -33,7 +33,7 @@ static void MEM_setup_header_(TCP* packet,
                               uint16_t adu_seq_cnt,
                               uint32_t adu_len);
 
-static void MEM_send_packet_(const CTCP* packet,
+static void MEM_send_packet_(const CommonTlmPacket* packet,
                              uint8_t num_dumps);
 
 AppInfo MEM_create_app(void)
@@ -50,7 +50,7 @@ static void MEM_init_(void)
   memory_dump_.adu_counter = 0;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t begin, end, span;
@@ -84,7 +84,7 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -104,7 +104,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CTCP* packet)
   return MEM_dump_region_(category, num_dumps);
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -142,7 +142,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -170,7 +170,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet)
   // Packet Sequence Counter for each ADUは単パケットなので0固定。
   // ADU分割形式にしなければ5Bytes分ダンプ領域を増やせるが、
   // Packet IDも別にする必要が生じるのでひとまず形式を合わせて実装する。
-  MEM_setup_header_(&MEM_ctcp_,
+  MEM_setup_header_(&MEM_ctp_,
                     MEM_DUMP_WIDTH,              // 1パケットの最大長をダンプする
                     category,                    // 送出カテゴリはパラメータで指定
                     MEM_get_next_adu_counter_(), // 単ADUなのでADUカウント値を直接割り当て
@@ -179,16 +179,17 @@ CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet)
                     MEM_DUMP_WIDTH);             // ADU長はDUMP長と同一
 
   // ダンプデータを設定
-  data = TCP_TLM_get_user_data_head(&MEM_ctcp_) + 5; // ADU分割によりヘッダ長が5Bytes増える
+    // FIXME: CTCP, SpacePacket 整理で直す． TCP依存性もやめる
+  data = TCP_TLM_get_user_data_head(&MEM_ctp_) + 5; // ADU分割によりヘッダ長が5Bytes増える
   memcpy(data, (const void*)start_addr, MEM_DUMP_WIDTH);
 
   // 生成したパケットを送出
-  MEM_send_packet_(&MEM_ctcp_, num_dumps);
+  MEM_send_packet_(&MEM_ctp_, num_dumps);
 
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_LOAD(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t param_len = CCP_get_param_len(packet);
@@ -207,7 +208,7 @@ CCP_EXEC_STS Cmd_MEM_LOAD(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t dest;
@@ -227,7 +228,7 @@ CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t copy_width, wp;
@@ -271,13 +272,13 @@ static CCP_EXEC_STS MEM_dump_region_(uint8_t category,
   MEM_ACK ack;
 
   // 設定値にもとづき送出すべきパケットを構築
-  ack = MEM_form_packet_(&MEM_ctcp_, category);
+  ack = MEM_form_packet_(&MEM_ctp_, category);
 
   switch (ack)
   {
   case MEM_SUCCESS:
     // 生成したパケットを送出し、ADU Sequence Counterの値を更新
-    MEM_send_packet_(&MEM_ctcp_, num_dumps);
+    MEM_send_packet_(&MEM_ctp_, num_dumps);
     ++memory_dump_.adu_seq;
     return CCP_EXEC_SUCCESS;
 
@@ -320,7 +321,7 @@ static MEM_ACK MEM_form_packet_(TCP* packet,
   seq_flag = MEM_judge_seq_flag_(rp, len);
 
   // メモリダンプパケットのヘッダを設定
-  MEM_setup_header_(&MEM_ctcp_,
+  MEM_setup_header_(&MEM_ctp_,
                     len,
                     category,
                     memory_dump_.adu_counter,
@@ -393,7 +394,7 @@ static void MEM_setup_header_(TCP* packet,
   data[2] = (uint8_t)(adu_len);
 }
 
-static void MEM_send_packet_(const CTCP* packet,
+static void MEM_send_packet_(const CommonTlmPacket* packet,
                              uint8_t num_dumps)
 {
   int i;
@@ -402,7 +403,7 @@ static void MEM_send_packet_(const CTCP* packet,
   for (i = 0; i < num_dumps; ++i)
   {
     // num_dumpsの回数だけ生成したパケットを配送処理へ渡す
-    PH_analyze_packet(packet);
+    PH_analyze_packet(packet);      // FIXME: CTCP, SpacePacket 整理で直す
   }
 }
 

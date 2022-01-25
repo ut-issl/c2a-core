@@ -92,18 +92,18 @@ void AH_inactivate_rule(size_t id);
 // こいつは初期化時に使われるので，選択制にした
 void AH_add_rule(size_t id, const AH_Rule* ahr, uint8_t is_active);
 
-CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AH_ACTIVATE_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_AH_ACTIVATE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AH_INACTIVATE_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_AH_INACTIVATE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AH_CLEAR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_AH_CLEAR_LOG(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AH_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_AH_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AHRES_LOG_CLEAR(const CTCP* packet);
+CCP_EXEC_STS Cmd_AHRES_LOG_CLEAR(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
 #endif

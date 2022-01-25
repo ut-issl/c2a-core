@@ -106,7 +106,7 @@ static void TLM_MGR_load_nop_bc_(void);
 static TelemetryManager telemetry_manager_;
 const TelemetryManager* const telemetry_manager = &telemetry_manager_;
 
-static CTCP TLM_MGR_packet_;
+static CommonCmdPacket TLM_MGR_packet_;
 
 AppInfo TLM_MGR_create_app(void)
 {
@@ -389,7 +389,7 @@ static void TLM_MGR_load_nop_bc_(void)
 
 // FIXME: 実行時間やばい： 21ms
 // 適当に分割しないと
-CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 {
   uint8_t ret;
   uint16_t exec_counter;
@@ -448,7 +448,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -463,7 +463,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -475,7 +475,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -489,7 +489,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CTCP* packet)
 
 // FIXME: 実行時間チェック :9ms
 // 結局，NOP BC作るのが重い
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
 {
   uint16_t exec_counter;
   (void)packet;
@@ -533,7 +533,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -567,13 +567,13 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet)
 
   // master bc 展開
   CCP_form_block_deploy_cmd(&TLM_MGR_packet_, TL_ID_DEPLOY_TLM, master_bc_id);
-  PH_analyze_packet(&TLM_MGR_packet_);
+  PH_analyze_packet(&TLM_MGR_packet_); // FIXME: CTCP, SpacePacket 整理で直す
 
   return CCP_EXEC_SUCCESS;
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -604,7 +604,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 {
   uint8_t param[1];
 
@@ -614,13 +614,13 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CTCP* packet)
 
   param[0] = TL_ID_DEPLOY_TLM;
   CCP_form_rtc(&TLM_MGR_packet_, Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, param, 1);
-  PH_analyze_packet(&TLM_MGR_packet_);
+  PH_analyze_packet(&TLM_MGR_packet_); // FIXME: CTCP, SpacePacket 整理で直す
 
   return CCP_EXEC_SUCCESS;
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -639,7 +639,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -658,7 +658,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -677,7 +677,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;

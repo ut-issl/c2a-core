@@ -112,10 +112,10 @@ MM_ACK MM_set_transition_table(MD_MODEID from, MD_MODEID to, bct_id_t bc_index);
  */
 bct_id_t MM_get_tasklist_id_of_mode(MD_MODEID mode);
 
-CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
 #endif

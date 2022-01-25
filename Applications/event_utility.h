@@ -22,8 +22,8 @@ typedef struct
 
 extern const EventUtility* const event_utility;
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CTCP* packet);
-CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CTCP* packet);
-CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CTCP* packet);
+CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CommonCmdPacket* packet);
 
 #endif

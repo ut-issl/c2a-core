@@ -597,7 +597,7 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
 static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
-  CTCP packet;
+  CommonCmdPacket packet;
   CCP_UTIL_ACK form_cmd_ack;
   CCP_EXEC_STS deploy_cmd_ack;
 
@@ -1183,7 +1183,7 @@ const EH_Log* EH_get_the_nth_log_from_the_latest(uint16_t n)
 }
 
 
-CCP_EXEC_STS Cmd_EH_INIT(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_initialize();
@@ -1191,7 +1191,7 @@ CCP_EXEC_STS Cmd_EH_INIT(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_clear_rules_();
@@ -1199,7 +1199,7 @@ CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_load_default_rules();
@@ -1207,7 +1207,7 @@ CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet)
 {
   // 登録する瞬間にしかわからないので，ここでは値のアサーションはせず，
   // Cmd_EH_REGISTER_RULE でアサーションする
@@ -1222,7 +1222,7 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* packet)
 {
   // 登録する瞬間にしかわからないので，ここでは値のアサーションはせず，
   // Cmd_EH_REGISTER_RULE でアサーションする
@@ -1235,7 +1235,7 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
 {
   (void)packet;
   event_handler_.reg_from_cmd.register_ack =
@@ -1265,7 +1265,7 @@ CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_RULE_SORTED_INDEX_ACK ack = EH_delete_rule_table_(rule_id);
@@ -1284,7 +1284,7 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_activate_rule(rule_id);
@@ -1303,7 +1303,7 @@ CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule(rule_id);
@@ -1322,7 +1322,7 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_activate_rule_for_multi_level(rule_id);
@@ -1341,7 +1341,7 @@ CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule_for_multi_level(rule_id);
@@ -1360,7 +1360,7 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   uint16_t counter = CCP_get_param_from_packet(packet, 1, uint16_t);
@@ -1380,7 +1380,7 @@ CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_clear_rule_counter(rule_id);
@@ -1399,7 +1399,7 @@ CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   uint32_t local = (EL_GROUP)CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -1410,7 +1410,7 @@ CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_clear_log_();
@@ -1418,21 +1418,21 @@ CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet)
 {
   event_handler_.max_response_num = CCP_get_param_from_packet(packet, 0, uint8_t);
   return CCP_EXEC_SUCCESS;
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet)
 {
   event_handler_.max_check_event_num = CCP_get_param_from_packet(packet, 0, uint16_t);
   return CCP_EXEC_SUCCESS;
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -1441,7 +1441,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -1450,7 +1450,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
   if (page >= EH_LOG_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -1458,7 +1458,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
 
@@ -1471,7 +1471,7 @@ CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_match_event_counter_to_el();

@@ -167,10 +167,10 @@ cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
  */
 void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
 
-CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet);
+CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet);
+CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CTCP* packet);
+CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet);
 
 #endif

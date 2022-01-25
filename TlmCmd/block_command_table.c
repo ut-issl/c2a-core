@@ -49,7 +49,7 @@ static BCT_ACK BCT_set_position_(const BCT_Pos* pos);
 /**
  * @brief pos の指す場所に packet の内容を保存 (TCP_PRM_HDR_LEN の長さも考慮)
  */
-static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CTCP* packet);
+static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CommonCmdPacket* packet);
 
 void BCT_initialize(void)
 {
@@ -166,7 +166,7 @@ BCT_ACK BCT_check_position(const BCT_Pos* pos)
   return BCT_SUCCESS;
 }
 
-BCT_ACK BCT_register_cmd(const CTCP* packet)
+BCT_ACK BCT_register_cmd(const CommonCmdPacket* packet)
 {
   BCT_ACK ack = BCT_check_position(&block_command_table_.pos);
   uint8_t length;
@@ -204,7 +204,7 @@ BCT_ACK BCT_register_cmd(const CTCP* packet)
   return BCT_SUCCESS;
 }
 
-BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CTCP* packet)
+BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CommonCmdPacket* packet)
 {
   BCT_ACK ack = BCT_check_position(pos);
 
@@ -214,9 +214,10 @@ BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CTCP* packet)
   return BCT_save_cmd_(pos, packet);
 }
 
-// FIXME: 以下複数関数にわたって BlockCmdCmdData と CTCPの変換が，現在castによって行われているが，CTCPはユーザー定義なため，それ（=TCP以外）に対応できるようにする
+// FIXME: 以下複数関数にわたって BlockCmdCmdData と CommonCmdPacket の変換が，現在castによって行われているが， CommonCmdPacket はユーザー定義なため，それ（=TCP以外）に対応できるようにする
 //        同様の理由で memcpy なども対応する必要がある．
-static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CTCP* packet)
+// FIXME: CTCP, SpacePacket 整理で直す
+static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CommonCmdPacket* packet)
 {
   // FIXME: TCPに依存しない，つまりCTCPに依存するコードにする
   BCT_ACK ack = BCT_check_position(pos);
@@ -231,7 +232,7 @@ static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CTCP* packet)
   return BCT_SUCCESS;
 }
 
-BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CTCP* packet)
+BCT_ACK BCT_load_cmd(const BCT_Pos* pos, CommonCmdPacket* packet)
 {
   BCT_ACK ack = BCT_check_position(pos);
   BCT_CmdData* bc_cmddata;
@@ -270,7 +271,7 @@ CMD_CODE BCT_get_id(const bct_id_t block, const uint8_t cmd)
   BCT_make_pos(&pos, block, cmd);
   if (BCT_check_position(&pos) != BCT_SUCCESS) return Cmd_CODE_MAX;
 
-  return CCP_get_id((CTCP*)BCT_get_bc_cmd_data_(&pos));
+  return CCP_get_id((CommonCmdPacket*)BCT_get_bc_cmd_data_(&pos));
 }
 
 cycle_t BCT_get_ti(const bct_id_t block, const uint8_t cmd)
@@ -279,7 +280,7 @@ cycle_t BCT_get_ti(const bct_id_t block, const uint8_t cmd)
   BCT_make_pos(&pos, block, cmd);
   if (BCT_check_position(&pos) != BCT_SUCCESS) return 0;
 
-  return CCP_get_ti((CTCP*)BCT_get_bc_cmd_data_(&pos));
+  return CCP_get_ti((CommonCmdPacket*)BCT_get_bc_cmd_data_(&pos));
 }
 
 const uint8_t* BCT_get_param_head(const bct_id_t block, const uint8_t cmd)
@@ -289,10 +290,10 @@ const uint8_t* BCT_get_param_head(const bct_id_t block, const uint8_t cmd)
   if (BCT_check_position(&pos) != BCT_SUCCESS)
   {
     BCT_make_pos(&pos, 0, 0);
-    return CCP_get_param_head((CTCP*)BCT_get_bc_cmd_data_(&pos));
+    return CCP_get_param_head((CommonCmdPacket*)BCT_get_bc_cmd_data_(&pos));
   }
 
-  return CCP_get_param_head((CTCP*)BCT_get_bc_cmd_data_(&pos));
+  return CCP_get_param_head((CommonCmdPacket*)BCT_get_bc_cmd_data_(&pos));
 }
 
 /* 2018/11/27
@@ -408,7 +409,7 @@ CCP_EXEC_STS BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_ACK ack)
   }
 }
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK  ack;
@@ -441,7 +442,7 @@ BCT_ACK BCT_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   BCT_Pos pos;
@@ -462,7 +463,7 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CTCP* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   uint16_t dst_block, src_block;
@@ -476,7 +477,7 @@ CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CTCP* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_id = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
   cycle_t  ti     = (cycle_t)CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -498,8 +499,8 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CTCP* packet)
   CCP_get_raw_param_from_packet(packet, new_cmd_param, cmd_param_len);
 
   BCT_make_pos(&pos, block, cmd);
-  CCP_form_tlc((CTCP*)&new_bct_cmddata, ti, cmd_id, new_cmd_param, cmd_param_len);
-  BCT_overwrite_cmd(&pos, (CTCP*)&new_bct_cmddata);
+  CCP_form_tlc((CommonCmdPacket*)&new_bct_cmddata, ti, cmd_id, new_cmd_param, cmd_param_len);
+  BCT_overwrite_cmd(&pos, (CommonCmdPacket*)&new_bct_cmddata);
 
   return CCP_EXEC_SUCCESS;
 }

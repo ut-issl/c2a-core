@@ -166,8 +166,8 @@ C言語は名前空間を切ることができず，各種命名がglobal空間�
 例：
 ```cpp
 uint32_t head_block;
-static int FLASH_dump_region_rnd_(const CTCP* packet);
-int Cmd_APP_DR_SET_PARAMS(const CTCP* packet);
+static int FLASH_dump_region_rnd_(const CommonCmdPacket* packet);
+int Cmd_APP_DR_SET_PARAMS(const CommonCmdPacket* packet);
 static int Tlm_MOBC_(unsigned char* contents, int max_len);
 extern const uint32_t FLASH_kMeiseiBlockBegin;
 ```
@@ -242,7 +242,7 @@ typedef struct
   APP_DR_Partition partitions[APP_DR_MAX_PARTITIONS];
 } DataRecorder;
 
-int Cmd_APP_DR_SET_PARAMS(const CTCP* packet);
+int Cmd_APP_DR_SET_PARAMS(const CommonCmdPacket* packet);
 ```
 
 

@@ -13,12 +13,12 @@
 // 普通のBCを使うこと！！！！
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-void SI_finish_transition(CTCP* packet)
+void SI_finish_transition(CommonCmdPacket* packet)
 {
   CCP_form_rtc(packet, Cmd_CODE_MM_FINISH_TRANSITION, NULL, 0);
 }
 
-void SI_start_hk_tlm(CTCP* packet)
+void SI_start_hk_tlm(CommonCmdPacket* packet)
 {
   unsigned char param[1 + SIZE_OF_BCT_ID_T];
   bct_id_t bc_id;
@@ -31,7 +31,7 @@ void SI_start_hk_tlm(CTCP* packet)
 
 
 // BC展開
-void SI_deploy_block(CTCP* packet, int line_no, bct_id_t block_no)
+void SI_deploy_block(CommonCmdPacket* packet, int line_no, bct_id_t block_no)
 {
   unsigned char param[1 + SIZE_OF_BCT_ID_T];
 

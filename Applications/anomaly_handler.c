@@ -201,7 +201,7 @@ static void AH_respond_to_anomaly_(size_t id)
   // これが呼ばれてるには，anomaly_handler_.elements[].is_active == 1は保証されている．
 
   // 対応ブロックコマンドをリアルタイムコマンドで展開
-  CTCP packet;
+  CommonCmdPacket packet;
   // 通常BCなのでTLC1に展開
   CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
   PH_dispatch_command(&packet);
@@ -253,7 +253,7 @@ static void AH_print_ah_status_(void)
 }
 
 
-CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_AH_REGISTER_RULE(const CommonCmdPacket* packet)
 {
   enum
   {
@@ -298,7 +298,7 @@ static void AH_add_rule_(size_t id, const AH_Rule* ahr)
 }
 
 
-CCP_EXEC_STS Cmd_AH_ACTIVATE_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_AH_ACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
@@ -322,7 +322,7 @@ void AH_activate_rule(size_t id)
 }
 
 
-CCP_EXEC_STS Cmd_AH_INACTIVATE_RULE(const CTCP* packet)
+CCP_EXEC_STS Cmd_AH_INACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
@@ -345,7 +345,7 @@ void AH_inactivate_rule(size_t id)
 }
 
 
-CCP_EXEC_STS Cmd_AH_CLEAR_LOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_AH_CLEAR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
   AH_clear_log_();
@@ -367,7 +367,7 @@ static void AH_clear_log_(void)
 }
 
 
-CCP_EXEC_STS Cmd_AH_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_AH_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -396,7 +396,7 @@ static void AH_respond_log_clear(void)
 }
 
 
-CCP_EXEC_STS Cmd_AHRES_LOG_CLEAR(const CTCP* packet)
+CCP_EXEC_STS Cmd_AHRES_LOG_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
   AH_respond_log_clear();
@@ -404,7 +404,7 @@ CCP_EXEC_STS Cmd_AHRES_LOG_CLEAR(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 

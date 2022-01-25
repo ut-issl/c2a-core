@@ -14,11 +14,11 @@ extern const UART_TEST_Driver* uart_test_instance;
 // アプリケーション
 AppInfo UART_TEST_update(void);
 
-CCP_EXEC_STS Cmd_UART_TEST_INIT_DI(const CTCP* packet);
+CCP_EXEC_STS Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_UART_TEST_UPDATE(const CTCP* packet);
+CCP_EXEC_STS Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_UART_TEST_SEND_TEST(const CTCP* packet);
+CCP_EXEC_STS Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet);
 
 
 #endif

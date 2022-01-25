@@ -748,7 +748,7 @@ const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, ui
 #endif
 
 
-CCP_EXEC_STS Cmd_EL_INIT(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_initialize();
@@ -756,7 +756,7 @@ CCP_EXEC_STS Cmd_EL_INIT(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -775,7 +775,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -794,7 +794,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_clear_statistics_();
@@ -803,7 +803,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -818,7 +818,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -832,7 +832,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
 #endif
 
 
-CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   uint32_t local = CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -861,7 +861,7 @@ CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -900,7 +900,7 @@ CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -938,7 +938,7 @@ CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 #endif
 
 
-CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_all_logging();
@@ -947,7 +947,7 @@ CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
@@ -965,7 +965,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
@@ -983,7 +983,7 @@ CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_all_logging();
@@ -991,7 +991,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_disable_all_logging();
@@ -1000,7 +1000,7 @@ CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -1018,7 +1018,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -1036,7 +1036,7 @@ CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_tlog_overwrite_all();
@@ -1044,7 +1044,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_disable_tlog_overwrite_all();

@@ -44,7 +44,7 @@ void AL_initialize(void)
   AL_load_default_settings();
 }
 
-CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group, local;
@@ -118,7 +118,7 @@ int AL_add_anomaly(uint32_t group, uint32_t local)
   return AL_ADD_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_clear();
@@ -151,7 +151,7 @@ static int AC_is_equal_(const AL_AnomalyCode* lhs,
   return ((lhs->group == rhs->group) && (lhs->local == rhs->local));
 }
 
-CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -171,7 +171,7 @@ CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
 // 2019-01-18
 // 追加
 
-CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_init_logging_ena_flag_();
@@ -188,7 +188,7 @@ static void AL_init_logging_ena_flag_(void)
   }
 }
 
-CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group;
@@ -214,7 +214,7 @@ CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group;
@@ -309,7 +309,7 @@ static int  AL_disable_logging_(uint32_t group)
 }
 
 
-CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint16_t thres;

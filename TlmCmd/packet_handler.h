@@ -22,6 +22,7 @@
 #include "packet_list.h"
 #include "../Applications/timeline_command_dispatcher.h"
 
+// FIXME: 整理したい
 typedef enum
 {
   PH_SUCCESS,
@@ -61,8 +62,10 @@ extern PacketList PH_rp_tlm_list;
 
 void PH_init(void);
 
-PH_ACK PH_analyze_packet(const CTCP* packet);
+PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet);
+static PH_ACK PH_analyze_tlm(const CommonTlmPacket* packet);
+static PH_ACK PH_analyze_cmd(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS PH_dispatch_command(const CTCP* packet);
+CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet);
 
 #endif

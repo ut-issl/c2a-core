@@ -19,7 +19,7 @@ static void NOP_nop_() {
   // no operation
 }
 
-CCP_EXEC_STS Cmd_NOP(const CTCP* packet)
+CCP_EXEC_STS Cmd_NOP(const CommonCmdPacket* packet)
 {
   (void)packet;
   return CCP_EXEC_SUCCESS;

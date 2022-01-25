@@ -58,7 +58,7 @@ void AM_initialize_all_apps(void)
   }
 }
 
-CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
@@ -85,7 +85,7 @@ CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
 {
   size_t id = AM_MAX_APPS;
 
@@ -139,7 +139,7 @@ static AM_ACK AM_initialize_app_(size_t id)
   return AM_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
 {
   size_t id = AM_MAX_APPS;
 
@@ -206,7 +206,7 @@ static AM_ACK AM_execute_app_(size_t id)
   return AM_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -222,7 +222,7 @@ CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
 {
   int i;
   (void)packet;

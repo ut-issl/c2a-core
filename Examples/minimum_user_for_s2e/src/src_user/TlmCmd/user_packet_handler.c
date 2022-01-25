@@ -10,8 +10,8 @@
 #define PH_AOBC_CMD_LIST_MAX   (16)          //!< AOBC CMD QUEUEサイズ
 #define PH_TOBC_CMD_LIST_MAX   (16)          //!< TOBC CMD QUEUEサイズ
 
-static PH_ACK PH_add_aobc_cmd_(const CTCP* packet);
-static PH_ACK PH_add_tobc_cmd_(const CTCP* packet);
+static PH_ACK PH_add_aobc_cmd_(const CommonCmdPacket* packet);
+static PH_ACK PH_add_tobc_cmd_(const CommonCmdPacket* packet);
 
 PacketList PH_aobc_cmd_list;
 PacketList PH_tobc_cmd_list;
@@ -27,7 +27,7 @@ void PH_user_init(void)
 }
 
 
-PH_ACK PH_user_analyze_cmd(const CTCP* packet)
+PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
 {
   switch (CCP_get_dest_type(packet))
   {
@@ -45,7 +45,7 @@ PH_ACK PH_user_analyze_cmd(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet)
+CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet)
 {
   switch (CCP_get_apid(packet))
   {
@@ -62,7 +62,7 @@ CCP_EXEC_STS PH_user_cmd_router(const CTCP* packet)
 }
 
 
-static PH_ACK PH_add_aobc_cmd_(const CTCP* packet)
+static PH_ACK PH_add_aobc_cmd_(const CommonCmdPacket* packet)
 {
   (void)packet;
 #if 0
@@ -74,7 +74,7 @@ static PH_ACK PH_add_aobc_cmd_(const CTCP* packet)
 }
 
 
-static PH_ACK PH_add_tobc_cmd_(const CTCP* packet)
+static PH_ACK PH_add_tobc_cmd_(const CommonCmdPacket* packet)
 {
   (void)packet;
 #if 0

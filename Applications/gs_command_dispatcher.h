@@ -17,6 +17,6 @@ extern const CommandDispatcher* const gs_command_dispatcher;
  */
 AppInfo GSCD_create_app(void);
 
-CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

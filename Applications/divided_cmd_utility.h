@@ -161,17 +161,17 @@ DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec
  * @brief 実行中の分割コマンドを停止する
  * @note  もし，指定した Cmd が実行中ではなくても CCP_EXEC_SUCCESS を返す
  */
-CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet);
+CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CommonCmdPacket* packet);
 
 /**
  * @brief エラー，またはコマンドによって中断ステータスとなっているコマンドを，実行可能状態に戻す
  * @note  もし，指定した Cmd が中断ステータスではなくても CCP_EXEC_SUCCESS を返す
  */
-CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CTCP* packet);
+CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CommonCmdPacket* packet);
 
 /**
  * @brief ログをクリアする
  */
-CCP_EXEC_STS Cmd_DCU_CLEAR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_DCU_CLEAR_LOG(const CommonCmdPacket* packet);
 
 #endif

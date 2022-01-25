@@ -26,7 +26,7 @@ typedef enum
 extern const CommandDispatcher* const timeline_command_dispatcher;
 extern const int* TLCD_line_no_for_tlm;
 extern const cycle_t* TLCD_tl_tlm_updated_at;
-extern const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
+extern const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
 extern const int* TLCD_page_no;
 
 AppInfo TLCD0_create_app(void);
@@ -41,13 +41,13 @@ AppInfo TLCD2_create_app(void);
  */
 uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no);
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

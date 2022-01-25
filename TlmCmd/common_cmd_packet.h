@@ -38,8 +38,8 @@ typedef enum
  * @brief  コマンド実行種別
  * @note   0x0*を想定（上位4bitは他のC2Aを搭載したボード用に転送するために使うため）
  *         その定義はTCP_DEST_TYPEにある
- * @note   TCP_CMD_EXEC_TYPE と CCP_EXEC_TYPE の定義は一致 (正確には、前者は後者に含まれている)
- *         CCP_EXEC_TYPE CCP_get_exec_type(const CTCP* packet) を参照
+ * @note   TCP_CMD_EXEC_TYPE と CCP_EXEC_TYPE の定義は一致 (正確には、前者は後者に含まれている)    FIXME: TCPの整理で直す
+ *         CCP_EXEC_TYPE CCP_get_exec_type(const CommonCmdPacket* packet) を参照
  * @note   GSからのOBC.TLや，C2A内のCCP_form_tlcはすべてTL0扱いになる
  */
 typedef enum

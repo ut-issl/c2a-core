@@ -16,7 +16,7 @@
 #include "../System/TimeManager/time_manager.h"
 #include "common_cmd_packet_util.h"
 
-static CTCP packet_;
+static CommonCmdPacket BCE_packet_;
 
 static BlockCommandExecutor block_command_executor_;
 const BlockCommandExecutor* const block_command_executor = &block_command_executor_;
@@ -115,7 +115,7 @@ BCT_ACK BCE_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
 {
   BCT_ACK ack;
   (void)packet;
@@ -146,7 +146,7 @@ BCT_ACK BCE_activate_block(void)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -163,7 +163,7 @@ CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CTCP* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_INACTIVATE_BLOCK_BY_ID(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -207,7 +207,7 @@ BCT_ACK BCE_inactivate_block_by_id(bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_ROTATE_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_ROTATE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -250,13 +250,13 @@ static CCP_EXEC_STS BCT_rotate_block_cmd_(bct_id_t block)
   BCE_set_bc_exe_params_(block, bc_exe_params);
 
   BCT_make_pos(&pos, block, bc_exe_params->rotate.next_cmd);
-  BCT_load_cmd(&pos, &packet_);
-  ack = PH_dispatch_command(&packet_);
+  BCT_load_cmd(&pos, &BCE_packet_);
+  ack = PH_dispatch_command(&BCE_packet_);
 
   return ack;
 }
 
-CCP_EXEC_STS Cmd_BCT_COMBINE_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -289,8 +289,8 @@ static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block)
     BCT_Pos pos;
     pos.block = block;
     pos.cmd = cmd;
-    BCT_load_cmd(&pos, &packet_);
-    ack = PH_dispatch_command(&packet_);
+    BCT_load_cmd(&pos, &BCE_packet_);
+    ack = PH_dispatch_command(&BCE_packet_);
 
     if (ack != CCP_EXEC_SUCCESS) return ack;
   }
@@ -301,7 +301,7 @@ static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block)
 // 2019/10/01 追加
 // 時間制限付きコンバイナ
 // （時間が来たら打ち切り．したがって，必ず設定時間はすぎる）
-CCP_EXEC_STS Cmd_BCT_TIMELIMIT_COMBINE_BLOCK(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   bct_id_t block;
@@ -352,8 +352,8 @@ static CCP_EXEC_STS BCT_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
     BCT_Pos pos;
     pos.block = block;
     pos.cmd = cmd;
-    BCT_load_cmd(&pos, &packet_);
-    ack = PH_dispatch_command(&packet_);
+    BCT_load_cmd(&pos, &BCE_packet_);
+    ack = PH_dispatch_command(&BCE_packet_);
     if (ack != CCP_EXEC_SUCCESS)
     {
       BCE_set_bc_exe_params_(block, bc_exe_params);
@@ -461,7 +461,7 @@ BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -477,7 +477,7 @@ CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CTCP* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(BCE_reset_rotator_info(block));
 }
 
-CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -495,7 +495,7 @@ CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CTCP* packet)
 
 // 長さ10のBCにNOPを登録するコマンド. 使用前提が狭すぎるか??
 // パス運用時に使用するので, 一応厳密にしておいたほうがいい気もする.
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
 {
   cycle_t num_nop;
   cycle_t ti;
@@ -507,14 +507,14 @@ CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CTCP* packet)
 
   for (ti = 11 - num_nop; ti < 11; ++ti)
   {
-    CCP_form_tlc(&packet_, ti, Cmd_CODE_NOP, NULL, 0);
-    BCT_register_cmd(&packet_);
+    CCP_form_tlc(&BCE_packet_, ti, Cmd_CODE_NOP, NULL, 0);
+    BCT_register_cmd(&BCE_packet_);
   }
 
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_SET_ROTATE_INTERVAL(const CTCP* packet)
+CCP_EXEC_STS Cmd_BCT_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   bct_id_t block;
