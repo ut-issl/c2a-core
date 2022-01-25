@@ -7,6 +7,14 @@
 #include <src_core/TlmCmd/common_cmd_packet.h>
 
 
+int CCP_is_valid_packet(const CommonCmdPacket* packet)
+{
+  if (packet == NULL) return 0;
+  if ( CCP_get_packet_len(packet) > (uint16_t)sizeof(CommonCmdPacket) ) return 0;
+
+  return 1;
+}
+
 cycle_t CCP_get_ti(const CommonCmdPacket* packet)
 {
   return (cycle_t)TCP_CMD_get_ti(packet);

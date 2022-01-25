@@ -44,6 +44,16 @@ typedef enum
 
 
 /**
+ * @brief  有効なパケットかチェックする
+ * @note   NULL チェックも行う
+ * @note   OBC の外から来たパケットな可能性もあるので，このC2Aで扱えるサイズかもチェックする
+ * @param  packet: CTCP
+ * @retval 1: True
+ * @retval 0: False
+ */
+int CTCP_is_valid_packet(const CommonTlmCmdPacket* packet);
+
+/**
  * @brief  tlm か cmd かを判断
  * @param  packet: CTCP
  * @return CTCP_PACKET_TYPE

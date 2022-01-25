@@ -28,6 +28,17 @@ typedef enum
 } CTP_DEST_FLAG;
 
 
+
+/**
+ * @brief  有効なパケットかチェックする
+ * @note   NULL チェックも行う
+ * @note   OBC の外から来たパケットな可能性もあるので，このC2Aで扱えるサイズかもチェックする
+ * @param  packet: CTP
+ * @retval 1: True
+ * @retval 0: False
+ */
+int CTP_is_valid_packet(const CommonTlmPacket* packet);
+
 /**
  * @brief  CTP_DEST_FLAG を取得
  * @param  packet: CTP
@@ -42,6 +53,13 @@ CTP_DEST_FLAG CTP_get_dest_flag(const CommonTlmPacket* packet);
  * @return void
  */
 void CTP_set_dest_flag(CommonTlmPacket* packet, CTP_DEST_FLAG flag);
+
+/**
+ * @brief  パケット長を取得
+ * @param  packet: CTP
+ * @return packet len
+ */
+uint16_t CTP_get_packet_len(const CommonTlmPacket* packet);
 
 /**
  * @brief  ADU 分割なしの場合の User Data 先頭のポインタを取得

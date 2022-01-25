@@ -56,6 +56,16 @@ typedef enum
 
 
 /**
+ * @brief  有効なパケットかチェックする
+ * @note   NULL チェックも行う
+ * @note   OBC の外から来たパケットな可能性もあるので，このC2Aで扱えるサイズかもチェックする
+ * @param  packet: CCP
+ * @retval 1: True
+ * @retval 0: False
+ */
+int CCP_is_valid_packet(const CommonCmdPacket* packet);
+
+/**
  * @brief  TI を取得
  * @param  packet: CCP
  * @return ti

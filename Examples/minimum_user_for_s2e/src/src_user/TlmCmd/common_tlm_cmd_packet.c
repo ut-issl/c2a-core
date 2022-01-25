@@ -9,6 +9,14 @@
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 
 
+int CTCP_is_valid_packet(const CommonTlmCmdPacket* packet)
+{
+  if (packet == NULL) return 0;
+  if ( CTCP_get_packet_len(packet) > (uint16_t)sizeof(CommonTlmCmdPacket) ) return 0;
+
+  return 1;
+}
+
 CTCP_PACKET_TYPE CTCP_get_packet_type(const CommonTlmCmdPacket* packet)
 {
   switch (TCP_get_type(packet))
@@ -38,10 +46,10 @@ void CTCP_copy_packet(CommonTlmCmdPacket* dest, const CommonTlmCmdPacket* src)
 // {
 // }
 
-
-// uint16_t CTCP_get_packet_len(const CommonTlmCmdPacket* packet)
-// {
-// }
+uint16_t CTCP_get_packet_len(const CommonTlmCmdPacket* packet)
+{
+  return (uint16_t)(TCP_get_packet_len(packet) + TCP_PRM_HDR_LEN);
+}
 
 // FIXME: 以下4関数について， Space Packet が整備されたら， `if len(ctcp) > CCP_MAX_LEN return NULL;` のようなアサーションをいれる！
 const CommonTlmPacket* CTCP_convert_to_ctp(const CommonTlmCmdPacket* ctcp)
