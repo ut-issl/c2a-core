@@ -79,12 +79,12 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
   switch (CTCP_get_packet_type(packet))
   {
   case CTCP_PACKET_TYPE_TLM:
-    // CTP 変換の NULL チェックは PH_analyze_tlm 内で
-    return PH_analyze_tlm(CTCP_convert_to_ctp(packet));
+    // CTP 変換の NULL チェックは PH_analyze_tlm_packet 内で
+    return PH_analyze_tlm_packet(CTCP_convert_to_ctp(packet));
 
   case CTCP_PACKET_TYPE_CMD:
-    // CCP 変換の NULL チェックは PH_analyze_cmd 内で
-    return PH_analyze_cmd(CTCP_convert_to_ccp(packet));
+    // CCP 変換の NULL チェックは PH_analyze_cmd_packet 内で
+    return PH_analyze_cmd_packet(CTCP_convert_to_ccp(packet));
 
   default:
     return PH_INVALID_DISCRIMINATOR;    // FIXME: 返り値変えたい
@@ -93,7 +93,7 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
   return PH_UNKNOWN;
 }
 
-static PH_ACK PH_analyze_cmd(const CommonCmdPacket* packet)
+static PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
 {
   PH_ACK ack;
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
@@ -159,7 +159,7 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
   }
 }
 
-static PH_ACK PH_analyze_tlm(const CommonTlmPacket* packet)
+static PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 {
   CTP_DEST_FLAG flag;
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
