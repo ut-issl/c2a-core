@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h> // for memcpy
 
-#include "../../TlmCmd/packet_list.h"
+#include "../../TlmCmd/packet_list_util.h"
 #include "../../TlmCmd/block_command_executor.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
@@ -35,7 +35,8 @@ static void print_tdsp_status_(void);
 void TDSP_initialize(void)
 {
   static PL_Node task_stock_[TDSP_TASK_MAX];
-  PL_initialize(task_stock_, TDSP_TASK_MAX, &task_list_);
+  static CommonCmdPacket packet_stock_[TDSP_TASK_MAX];
+  PL_initialize_with_ccp(task_stock_, packet_stock_, TDSP_TASK_MAX, &task_list_);
 
   // タスクリストを初期化し、INITIALモードのブロックコマンドを展開する
   TDSP_info_.tskd = CDIS_init(&task_list_);
@@ -99,7 +100,7 @@ void TDSP_execute_pl_as_task_list(void)
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_STEP_OVERRUN,
                       EL_ERROR_LEVEL_LOW,
-                      (uint32_t)CCP_get_ti(&PL_get_head(&task_list_)->packet));
+                      (uint32_t)CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(&task_list_)->packet) ));
 
       // FALL THROUGH
 

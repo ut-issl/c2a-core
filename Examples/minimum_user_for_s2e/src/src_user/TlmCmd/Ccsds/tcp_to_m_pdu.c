@@ -67,7 +67,7 @@ T2M_ACK T2M_form_m_pdu(TcpToMPdu* tcp_to_m_pdu, PacketList* pl, M_PDU* m_pdu)
 
     // Queue先頭のTC Packetを取得
     // 有効パケットまたはFillパケットが必ず入っている。
-    packet = &(PL_get_head(pl)->packet);
+    packet = (const TCP*)(PL_get_head(pl)->packet);   // FIXME: Space Packet 実装でなおす
 
     // 書き込むデータ長を計算
     tcp_len = TCP_TLM_get_packet_len(packet);

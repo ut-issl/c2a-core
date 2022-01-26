@@ -63,8 +63,8 @@ extern PacketList PH_rp_tlm_list;
 void PH_init(void);
 
 PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet);
-static PH_ACK PH_analyze_tlm(const CommonTlmPacket* packet);
-static PH_ACK PH_analyze_cmd(const CommonCmdPacket* packet);
+static PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet);
+static PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet);
 

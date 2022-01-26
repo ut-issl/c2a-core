@@ -4,6 +4,7 @@
  * @brief  packet_handlerのコマンドルーター，コマンドアナライザのユーザー定義部分
  */
 #include "user_packet_handler.h"
+#include <src_core/TlmCmd/packet_list_util.h>
 // #include "../Applications/DriverInstances/di_tobc.h"
 // #include "../Applications/DriverInstances/di_aobc.h"
 
@@ -18,12 +19,14 @@ PacketList PH_tobc_cmd_list;
 
 static PL_Node PH_aobc_cmd_stock_[PH_AOBC_CMD_LIST_MAX];
 static PL_Node PH_tobc_cmd_stock_[PH_TOBC_CMD_LIST_MAX];
+static CommonCmdPacket PH_aobc_ccp_stock_[PH_AOBC_CMD_LIST_MAX];
+static CommonCmdPacket PH_tobc_ccp_stock_[PH_TOBC_CMD_LIST_MAX];
 
 
 void PH_user_init(void)
 {
-  PL_initialize(PH_aobc_cmd_stock_, PH_AOBC_CMD_LIST_MAX, &PH_aobc_cmd_list);
-  PL_initialize(PH_tobc_cmd_stock_, PH_TOBC_CMD_LIST_MAX, &PH_tobc_cmd_list);
+  PL_initialize_with_ccp(PH_aobc_cmd_stock_, PH_aobc_ccp_stock_, PH_AOBC_CMD_LIST_MAX, &PH_aobc_cmd_list);
+  PL_initialize_with_ccp(PH_tobc_cmd_stock_, PH_tobc_ccp_stock_, PH_TOBC_CMD_LIST_MAX, &PH_tobc_cmd_list);
 }
 
 

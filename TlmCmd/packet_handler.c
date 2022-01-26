@@ -8,6 +8,7 @@
 #include "command_analyze.h"
 #include "block_command_table.h"
 #include <src_user/TlmCmd/user_packet_handler.h>
+#include "packet_list_util.h"
 
 PacketList PH_gs_cmd_list;
 PacketList PH_rt_cmd_list;
@@ -24,6 +25,15 @@ static PL_Node PH_tl2_cmd_stock_[PH_TL2_CMD_LIST_MAX];
 static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
 static PL_Node PH_st_tlm_stock_[PH_ST_TLM_LIST_MAX];
 static PL_Node PH_rp_tlm_stock_[PH_RP_TLM_LIST_MAX];
+
+static CommonCmdPacket PH_gs_cmd_ccp_stock_[PH_GS_CMD_LIST_MAX];
+static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RT_CMD_LIST_MAX];
+static CommonCmdPacket PH_tl0_cmd_ccp_stock_[PH_TL0_CMD_LIST_MAX];
+static CommonCmdPacket PH_tl1_cmd_ccp_stock_[PH_TL1_CMD_LIST_MAX];
+static CommonCmdPacket PH_tl2_cmd_ccp_stock_[PH_TL2_CMD_LIST_MAX];
+static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
+static CommonTlmPacket PH_st_tlm_ctp_stock_[PH_ST_TLM_LIST_MAX];
+static CommonTlmPacket PH_rp_tlm_ctp_stock_[PH_RP_TLM_LIST_MAX];
 
 static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet);
 
@@ -45,16 +55,16 @@ static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
 
 void PH_init(void)
 {
-  PL_initialize(PH_gs_cmd_stock_, PH_GS_CMD_LIST_MAX, &PH_gs_cmd_list);
-  PL_initialize(PH_rt_cmd_stock_, PH_RT_CMD_LIST_MAX, &PH_rt_cmd_list);
+  PL_initialize_with_ccp(PH_gs_cmd_stock_, PH_gs_cmd_ccp_stock_, PH_GS_CMD_LIST_MAX, &PH_gs_cmd_list);
+  PL_initialize_with_ccp(PH_rt_cmd_stock_, PH_rt_cmd_ccp_stock_, PH_RT_CMD_LIST_MAX, &PH_rt_cmd_list);
 
-  PL_initialize(PH_tl0_cmd_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[0]);
-  PL_initialize(PH_tl1_cmd_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[1]);
-  PL_initialize(PH_tl2_cmd_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[2]);
+  PL_initialize_with_ccp(PH_tl0_cmd_stock_, PH_tl0_cmd_ccp_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[0]);
+  PL_initialize_with_ccp(PH_tl1_cmd_stock_, PH_tl1_cmd_ccp_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[1]);
+  PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[2]);
 
-  PL_initialize(PH_ms_tlm_stock_, PH_MS_TLM_LIST_MAX, &PH_ms_tlm_list);
-  PL_initialize(PH_st_tlm_stock_, PH_ST_TLM_LIST_MAX, &PH_st_tlm_list);
-  PL_initialize(PH_rp_tlm_stock_, PH_RP_TLM_LIST_MAX, &PH_rp_tlm_list);
+  PL_initialize_with_ctp(PH_ms_tlm_stock_, PH_ms_tlm_ctp_stock_, PH_MS_TLM_LIST_MAX, &PH_ms_tlm_list);
+  PL_initialize_with_ctp(PH_st_tlm_stock_, PH_st_tlm_ctp_stock_, PH_ST_TLM_LIST_MAX, &PH_st_tlm_list);
+  PL_initialize_with_ctp(PH_rp_tlm_stock_, PH_rp_tlm_ctp_stock_, PH_RP_TLM_LIST_MAX, &PH_rp_tlm_list);
 
   PH_user_init();
 }
@@ -69,12 +79,12 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
   switch (CTCP_get_packet_type(packet))
   {
   case CTCP_PACKET_TYPE_TLM:
-    // CTP 変換の NULL チェックは PH_analyze_tlm 内で
-    return PH_analyze_tlm(CTCP_convert_to_ctp(packet));
+    // CTP 変換の NULL チェックは PH_analyze_tlm_packet 内で
+    return PH_analyze_tlm_packet(CTCP_convert_to_ctp(packet));
 
   case CTCP_PACKET_TYPE_CMD:
-    // CCP 変換の NULL チェックは PH_analyze_cmd 内で
-    return PH_analyze_cmd(CTCP_convert_to_ccp(packet));
+    // CCP 変換の NULL チェックは PH_analyze_cmd_packet 内で
+    return PH_analyze_cmd_packet(CTCP_convert_to_ccp(packet));
 
   default:
     return PH_INVALID_DISCRIMINATOR;    // FIXME: 返り値変えたい
@@ -83,7 +93,7 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
   return PH_UNKNOWN;
 }
 
-static PH_ACK PH_analyze_cmd(const CommonCmdPacket* packet)
+static PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
 {
   PH_ACK ack;
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
@@ -149,7 +159,7 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
   }
 }
 
-static PH_ACK PH_analyze_tlm(const CommonTlmPacket* packet)
+static PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 {
   CTP_DEST_FLAG flag;
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
