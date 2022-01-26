@@ -115,7 +115,7 @@ BCT_ACK BCE_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
 {
   BCT_ACK ack;
   (void)packet;
@@ -146,7 +146,7 @@ BCT_ACK BCE_activate_block(void)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -163,7 +163,7 @@ CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -207,7 +207,7 @@ BCT_ACK BCE_inactivate_block_by_id(bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_ROTATE_BLOCK(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -256,7 +256,7 @@ static CCP_EXEC_STS BCT_rotate_block_cmd_(bct_id_t block)
   return ack;
 }
 
-CCP_EXEC_STS Cmd_BCT_COMBINE_BLOCK(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -301,7 +301,7 @@ static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block)
 // 2019/10/01 追加
 // 時間制限付きコンバイナ
 // （時間が来たら打ち切り．したがって，必ず設定時間はすぎる）
-CCP_EXEC_STS Cmd_BCT_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   bct_id_t block;
@@ -461,7 +461,7 @@ BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -477,7 +477,7 @@ CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(BCE_reset_rotator_info(block));
 }
 
-CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -493,28 +493,7 @@ CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ctcp_exec_sts(BCE_reset_combiner_info(block));
 }
 
-// 長さ10のBCにNOPを登録するコマンド. 使用前提が狭すぎるか??
-// パス運用時に使用するので, 一応厳密にしておいたほうがいい気もする.
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
-{
-  cycle_t num_nop;
-  cycle_t ti;
-
-  num_nop = (cycle_t)CCP_get_param_head(packet)[0];
-
-  if (num_nop > 10 || num_nop < 1) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (block_command_table->pos.cmd + num_nop != 10) return CCP_EXEC_ILLEGAL_CONTEXT;
-
-  for (ti = 11 - num_nop; ti < 11; ++ti)
-  {
-    CCP_form_tlc(&BCE_packet_, ti, Cmd_CODE_NOP, NULL, 0);
-    BCT_register_cmd(&BCE_packet_);
-  }
-
-  return CCP_EXEC_SUCCESS;
-}
-
-CCP_EXEC_STS Cmd_BCT_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   bct_id_t block;

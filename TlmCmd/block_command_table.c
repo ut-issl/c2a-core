@@ -505,4 +505,24 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
+// 長さ10のBCにNOPを登録するコマンド. 使用前提が狭すぎるか??
+// パス運用時に使用するので, 一応厳密にしておいたほうがいい気もする.
+CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
+{
+  static CommonCmdPacket temp_packet_;
+  cycle_t ti;
+  uint8_t num_nop = CCP_get_param_from_packet(packet, 0, uint8_t);
+
+  if (num_nop > 10 || num_nop < 1) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (block_command_table_.pos.cmd + num_nop != 10) return CCP_EXEC_ILLEGAL_CONTEXT;
+
+  for (ti = 11 - (cycle_t)num_nop; ti < 11; ++ti)
+  {
+    CCP_form_tlc(&temp_packet_, ti, Cmd_CODE_NOP, NULL, 0);
+    BCT_register_cmd(&temp_packet_);
+  }
+
+  return CCP_EXEC_SUCCESS;
+}
+
 #pragma section

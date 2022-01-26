@@ -27,7 +27,7 @@ typedef struct
   } rotate;
   struct
   {
-    uint16_t call_num;              //!< Cmd_BCT_TIMELIMIT_COMBINE_BLOCKが呼ばれるたびにインクリメント
+    uint16_t call_num;              //!< Cmd_BCE_TIMELIMIT_COMBINE_BLOCKが呼ばれるたびにインクリメント
     uint16_t timeover_num;          //!< 時間制限に引っかかったらインクリメント
     uint8_t  last_timeover_cmd_pos; //!< 前回時間制限に引っかかったときのcmd pos
     uint8_t  worst_cmd_pos;         //!< 最悪ケースのcmd pos
@@ -124,17 +124,14 @@ BCT_ACK BCE_swap_address(const bct_id_t block_a, const bct_id_t block_b);
  */
 BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
 
-// 以下 作成された各種 CMDFILE と整合性を取るため改名されていない
-// FIXME: BCT -> BCE
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_ROTATE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_COMBINE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_RESET_ROTATOR_INFO(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_RESET_COMBINER_INFO(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet);
 
 #endif
