@@ -158,8 +158,6 @@ PL_ACK PL_push_front(PacketList* pl, const void* packet)
   PL_Node* new_pl_node = PL_get_free_node_(pl);
   if (new_pl_node == NULL) return PL_LIST_FULL;
 
-  // TODO: 本当は CTCP_copy_packet などを使って，必要最低限だけコピーしたい．高速化のために．
-  //       現在， packet になにがくるか不明なので使えない
   memcpy(new_pl_node->packet, packet, pl->packet_size_);
 
   new_pl_node->next = pl->active_list_head_;
@@ -265,6 +263,7 @@ PL_ACK PL_drop_node(PacketList* pl, PL_Node* prev, PL_Node* current)
 }
 
 
+// FIXME: PL にあるのがおかしくて， TL 周りのどこかで検索して， insert を実行すべき
 PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t now)
 {
   cycle_t head, tail;
@@ -325,6 +324,7 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
 }
 
 
+// FIXME: PL にあるのがおかしくて， BC 周りのどこかでやるべき
 PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_at)
 {
   uint8_t i;
