@@ -193,24 +193,4 @@ void OBCT_print(const ObcTime* time)
   Printf("Time: <total, mode, step> = <%d, %d, %d>\n", time->total_cycle, time->mode_cycle, time->step);
 }
 
-OBCT_UnixtimeInfo OBCT_create_unixtime_info(const double unixtime, const ObcTime* time)
-{
-  OBCT_UnixtimeInfo uti;
-  OBCT_update_unixtime_info(&uti, unixtime, time);
-  return uti;
-}
-
-void OBCT_clear_unixtime_info(OBCT_UnixtimeInfo* uti)
-{
-  uti->unixtime_at_ti0 = 0.0;
-  uti->ti_at_last_update = 0;
-}
-
-void OBCT_update_unixtime_info(OBCT_UnixtimeInfo* uti, const double unixtime, const ObcTime* time)
-{
-  double ti_sec = OBCT_get_total_cycle_in_sec(time);
-  uti->unixtime_at_ti0 = unixtime - ti_sec;
-  uti->ti_at_last_update = OBCT_get_total_cycle(time);
-}
-
 #pragma section

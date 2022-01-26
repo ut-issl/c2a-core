@@ -19,24 +19,30 @@ const TimeManager* const time_manager = &time_manager_;
 static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
 
 /**
- * @brief utl_unixtime_epoch_ の setter
+ * @brief time_manager_.unixtime_info_.utl_unixtime_epoch の setter
  * @param[in] utl_unixtime_epoch
  * @return void
  */
 static void TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch);
+
+/**
+ * @brief time_manager_.unixtime_info_.cycle_correction の setter
+ * @param[in] cycle_correction
+ * @return void
+ */
+static void TMGR_set_cycle_correction_(double cycle_correction);
 
 void TMGR_init(void)
 {
   OBCT_clear(&time_manager_.init_info_.initializing_time);
   time_manager_.init_info_.initializing_flag = 1;
   TMGR_clear();
-  TMGR_set_utl_unixtime_epoch_(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL);
 }
 
 void TMGR_clear(void)
 {
   OBCT_clear(&time_manager_.master_clock_);
-  OBCT_clear_unixtime_info(&time_manager_.unixtime_info_);
+  TMGR_clear_unixtime_info();
 }
 
 void TMGR_clear_master_mode_cycle(void)
@@ -101,29 +107,51 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void)
   return OBCT_get_mode_cycle_in_msec(&time_manager_.master_clock_);
 }
 
-static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
+void TMGR_clear_unixtime_info(void)
 {
-  time_manager_.master_clock_.total_cycle = total_cycle;
+  time_manager_.unixtime_info_.unixtime_at_ti0 = 0.0;
+  time_manager_.unixtime_info_.ti_at_last_update = 0;
+  TMGR_set_utl_unixtime_epoch_(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL);
+  TMGR_set_cycle_correction_(1.0);
 }
 
-static void TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch)
+void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time)
 {
-  time_manager_.utl_unixtime_epoch_ = utl_unixtime_epoch;
+  double ti_sec = TMGR_get_precice_ti_in_sec(time);
+  time_manager_.unixtime_info_.unixtime_at_ti0 = unixtime - ti_sec;
+  time_manager_.unixtime_info_.ti_at_last_update = OBCT_get_total_cycle(time);
 }
 
-OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
+double TMGR_get_unixtime_at_ti0(void)
 {
-  return time_manager_.unixtime_info_;
+  return time_manager_.unixtime_info_.unixtime_at_ti0;
+}
+
+double TMGR_get_utl_unixtime_epoch(void)
+{
+  return time_manager_.unixtime_info_.utl_unixtime_epoch;
+}
+
+double TMGR_get_precice_cycles_per_sec(void)
+{
+  return OBCT_CYCLES_PER_SEC * time_manager_.unixtime_info_.cycle_correction;
+}
+
+double TMGR_get_precice_ti_in_sec(const ObcTime* time)
+{
+  double cycle_in_sec = time->total_cycle / TMGR_get_precice_cycles_per_sec();
+  double step_in_sec = 0.001 * time->step * OBCT_STEP_IN_MSEC;
+  return cycle_in_sec + step_in_sec;
 }
 
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  return TMGR_get_obct_unixtime_info().unixtime_at_ti0 + OBCT_get_total_cycle_in_sec(time);
+  return TMGR_get_unixtime_at_ti0() + TMGR_get_precice_ti_in_sec(time);
 }
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 {
-  double diff = unixtime - TMGR_get_obct_unixtime_info().unixtime_at_ti0; // 秒単位
+  double diff = unixtime - TMGR_get_unixtime_at_ti0(); // 秒単位
   cycle_t cycle_diff;
   step_t step_diff;
   ObcTime res;
@@ -133,8 +161,8 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
     return OBCT_create(0, 0, 0);
   }
 
-  cycle_diff = (cycle_t)(diff * OBCT_CYCLES_PER_SEC); // cycle未満は切り捨て
-  step_diff = (step_t)((diff * OBCT_CYCLES_PER_SEC  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
+  cycle_diff = (cycle_t)(diff * TMGR_get_precice_cycles_per_sec() ); // cycle未満は切り捨て
+  step_diff = (step_t)((diff * TMGR_get_precice_cycles_per_sec()  - cycle_diff) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
 
   res.total_cycle = cycle_diff;
   res.mode_cycle = 0; // 取得出来ないので0とする
@@ -143,31 +171,35 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
   return res;
 }
 
-cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime)
+double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime)
 {
-  // 紀元より昔なのはおかしい
-  if (unixtime < time_manager_.utl_unixtime_epoch_) return 0;
-
-  // cycle 未満は切り捨て
-  return (cycle_t)((unixtime - time_manager_.utl_unixtime_epoch_) * OBCT_CYCLES_PER_SEC);
+  return TMGR_get_utl_unixtime_epoch() + (double)utl_unixtime / OBCT_CYCLES_PER_SEC;
 }
 
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
 {
-  cycle_t utl_unixtime_at_ti0 = TMGR_get_utl_unixtime_from_unixtime(time_manager_.unixtime_info_.unixtime_at_ti0);
-
-  // unixtime_at_ti0 <= epoch となるのはおかしいのでゼロを返す
-  if (utl_unixtime_at_ti0 == 0) return 0;
+  double unixtime = TMGR_get_unixtime_from_utl_unixtime(utl_unixtime);
+  double ti_in_sec = unixtime - TMGR_get_unixtime_at_ti0();
 
   // unixtime_at_ti0 より小さい実行時刻は無効なのでゼロを返す
-  if (utl_unixtime < utl_unixtime_at_ti0) return 0;
+  if (ti_in_sec < 0) return 0;
 
-  return utl_unixtime - utl_unixtime_at_ti0;
+  return (cycle_t)(ti_in_sec * TMGR_get_precice_cycles_per_sec() );
 }
 
-void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time)
+static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
 {
-  OBCT_update_unixtime_info(&time_manager_.unixtime_info_, unixtime, time);
+  time_manager_.master_clock_.total_cycle = total_cycle;
+}
+
+static void TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch)
+{
+  time_manager_.unixtime_info_.utl_unixtime_epoch = utl_unixtime_epoch;
+}
+
+static void TMGR_set_cycle_correction_(double cycle_correction)
+{
+  time_manager_.unixtime_info_.cycle_correction = cycle_correction;
 }
 
 
@@ -205,6 +237,18 @@ CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
 {
   double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
   TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);
+
+  return CCP_EXEC_SUCCESS;
+}
+
+CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
+{
+  double cycle_correction = CCP_get_param_from_packet(packet, 0, double);
+
+  // 比なので、負数はおかしい
+  if (cycle_correction <= 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+
+  TMGR_set_cycle_correction_(cycle_correction);
 
   return CCP_EXEC_SUCCESS;
 }

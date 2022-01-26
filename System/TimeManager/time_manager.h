@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief OBCの時刻情報を TimeManager 構造体に保持しカウントアップする. その他, 時刻演算に必要な関数も実装する
+ * @brief OBC時刻のカウントアップと, unixtime との変換
  */
 #ifndef TIME_MANAGER_H_
 #define TIME_MANAGER_H_
@@ -18,10 +18,16 @@
 typedef struct
 {
   ObcTime master_clock_;
-  OBCT_UnixtimeInfo unixtime_info_;
-  double utl_unixtime_epoch_; /*!< これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義する.
-                                   cycle 未満の精度は切り捨てられるので utl_unixtime は整数値となる.
-                                   UTL_cmd の実行時刻情報として用いる. */
+  struct
+  {
+    double unixtime_at_ti0;    //!< 観測情報から計算した, master_clock が {0, 0, 0} の時の unixtime
+    cycle_t ti_at_last_update; //!< "unixtime_info_ を最後に更新した (GPSなどの) 時刻情報" を観測した時点の total_cycle
+    double utl_unixtime_epoch; /*!< これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義する.
+                                    cycle 未満の精度は切り捨てられるので utl_unixtime は整数値となる.
+                                    UTL_cmd の実行時刻情報として用いる. */
+    double cycle_correction;   /*!< CYCLES_PER_SEC の補正項. unixtime <> OBCTime の変換で使う
+                                    CYCLES_PER_SEC * cycle_correction = OBC のクロック誤差を反映した実際の値 */
+  } unixtime_info_;
   struct
   {
     ObcTime initializing_time;
@@ -121,11 +127,47 @@ uint32_t TMGR_get_master_total_cycle_in_msec(void);
 uint32_t TMGR_get_master_mode_cycle_in_msec(void);
 
 /**
- * @brief unixtime_info_ を取得する
+ * @brief unixtime_info_ を初期化する
  * @param void
- * @return unixtime_info_
+ * @return void
  */
-OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void);
+void TMGR_clear_unixtime_info(void);
+
+/**
+ * @brief unixtime_info_ を観測情報を用いて更新する
+ * @param[in] unixtime (GPS 等から観測した) unixtime
+ * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
+ * @return void
+ */
+void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
+
+/**
+ * @brief unixtime_at_ti0 を取得する
+ * @param void
+ * @return unixtime_at_ti0
+ */
+double TMGR_get_unixtime_at_ti0(void);
+
+/**
+ * @brief utl_unixtime_epoch を取得する
+ * @param void
+ * @return utl_unixtime_epoch
+ */
+double TMGR_get_utl_unixtime_epoch(void);
+
+/**
+ * @brief OBC のクロック誤差を反映した cycles_per_sec を返す
+ * @param void
+ * @return cycles_per_sec
+ */
+double TMGR_get_precice_cycles_per_sec(void);
+
+/**
+ * @brief OBC のクロック誤差を反映した正確な ti を秒単位で返す
+ * @param[in] time ti を保持している OBCTime
+ * @return ti（秒単位, 小数点以下も保持）
+ */
+double TMGR_get_precice_ti_in_sec(const ObcTime* time);
 
 /**
  * @brief ObcTime を unixtime に変換する
@@ -143,34 +185,28 @@ double TMGR_get_unixtime_from_obc_time(const ObcTime* time);
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
 
 /**
- * @brief 一般的なunixtimeを, UTL_cmdで用いる utl_unixtime に変換する
- * @param[in] unixtime 変換したい unixtime
- * @retval 0 : 引数の unixtime が utl_unixtime_epoch_ より小さい場合
- * @retval utl_unixtime : それ以外の場合
+ * @brief UTL_cmdで用いる utl_unixtime を 一般的なunixtimeに変換する
+ * @note utl_unixtime の単位としての cycle は, OBC のクロック誤差を含まない定義通りの値であることに注意
+ * @param[in] utl_unixtime
+ * @return unixtime
  */
-cycle_t TMGR_get_utl_unixtime_from_unixtime(const double unixtime);
+double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime);
 
 /**
  * @brief 引数で指定された utl_unixtime に対応する TI を返す
  * @note UTL_cmd で実行時刻情報を TI に変換する際に用いる
  * @param[in] utl_unixtime
- * @retval 0 : "unixtime_at_ti0 <= utl_unixtime_epoch" or "utl_unixtime < utl_unixtime_at_ti0" の場合
+ * @retval 0 : 引数の utl_unixtime が unixtime_at_ti0 より小さい場合
  * @retval TI (total_cycleのこと) : それ以外の場合
  */
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
-
-/**
- * @brief unixtime_info_ を観測情報を用いて更新する
- * @param[in] unixtime (GPS 等から観測した) unixtime
- * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
- * @return void
- */
-void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet);
 
 #endif
