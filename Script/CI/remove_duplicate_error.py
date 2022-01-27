@@ -15,7 +15,6 @@ with open(file) as f:
         (cmd, err) = l.split("\n", 1)
         if err in errors:
             print("duplicate: " + cmd, file=sys.stderr)
-            pass
         else:
             errors.append(err)
             print(compiler + l, end="")
