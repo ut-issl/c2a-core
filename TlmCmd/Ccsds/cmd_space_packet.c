@@ -5,7 +5,6 @@
  * @brief C ではテンプレートが使えないため，別で定義する
  * @note  詳細は space_packet.h を参照
  */
-
 #include "cmd_space_packet.h"
 #include <stddef.h>
 
@@ -155,10 +154,10 @@ void CSP_set_cmd_type(CmdSpacePacket* csp, CSP_CMD_TYPE cmd_type)
 
 CMD_CODE CSP_get_cmd_id(const CmdSpacePacket* csp)
 {
-  uint16_t cmd_id;
+  uint16_t id;
 
-  SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_cmd_id_, &cmd_id);
-  return (CMD_CODE)cmd_id;
+  SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_cmd_id_, &id);
+  return (CMD_CODE)id;
 }
 
 

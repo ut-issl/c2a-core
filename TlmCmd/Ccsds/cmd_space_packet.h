@@ -39,8 +39,6 @@
 #ifndef CMD_SPACE_PACKET_H_
 #define CMD_SPACE_PACKET_H_
 
-#include <src_core/TlmCmd/common_cmd_packet.h>
-
 // はじめにバージョン型だけ定義
 /**
  * @enum   CSP_2ND_HDR_VER
@@ -64,6 +62,7 @@ typedef enum
 // TODO: 上に持ってきて，コンパイルが通らないことを確認する！！！！！！！！！！！！！！！！！！
 // space_packet.h と相互 include になってしまっているので，最後のここで include する
 #include "space_packet.h"
+#include <src_core/TlmCmd/common_cmd_packet.h>
 
 #if CSP_MAX_LEN <= SP_PRM_HDR_LEN
 #error CSP_MAX_LEN is too small
