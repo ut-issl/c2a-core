@@ -29,19 +29,37 @@ FIXME: 2021/12/04現在，だいぶ情報が古いので更新する．
 ## C2Aのメモリ使用量に大きく影響する設定
 ### block_command_table_params
 C2Aでもっともメモリサイズを消費するであろう箇所．  
-`BCT_Info` のサイズを規定．
+コマンドのポインタデータ `BlockCommandTable` のサイズと実行情報のデータ `BlockCommandExecutor` のサイズ，コマンド, パラメーター実体 `BCT_Table`, `BCE_Params` のサイズを規定．
 
-現時点では，`BCT_Info`のサイズはおおよそ，以下Byte．
+現時点では`BlockCommandTable`のサイズはおおよそ以下の通り.
 ```
-  ((BCT_CMD_MAX_LENGTH + a) * BCT_MAX_BLOCK_LENGTH + b) * BCT_MAX_BLOCKS + c
+  (a + b) * BCT_MAX_BLOCKS + c = 7668 Byte
 
-  a: 0
-  b: 14
-  c: 2 * (sizeof(size_t) + sizeof(bct_id_t))
+  a: sizeof(BCT_Table*)
+  b: sizeof(BCT_Func)
+  c: 2 * sizeof(BCT_Pos)
+```
+`BlockCommandExecutor` のサイズは
+```
+  (a + b) * BCT_MAX_BLOCKS = 4596 Byte
+
+  a: sizeof(BCE_Params*)
+  b: sizeof(BCE_Func)
+```
+各実体 `BCT_Table`, `BCE_Params` のサイズは
+```
+  BCT_Table:
+    (a + b) * BCT_MAX_BLOCKS = 784767 Byte
+
+    a: 1, b: BC_CMD_MAX_LENGTH * BC_MAX_CMD_NUM
+  BCE_Params:
+    a * BCT_MAX_BLOCKS = 5362 Byte
+
+    a: sizeof(BCE_Params)
 ```
 NOTE: おおよそと言っているのは，structのpaddingサイズはコンパイラ依存であるため．
 
-たとえば，以下の設定では，端数（a,b,c）を無視して，およそ200 KB．
+たとえば，以下の設定ではおよそ200 KB．
 ```cpp
 #define BC_CMD_MAX_LENGTH (64) 
 #define BC_MAX_CMD_NUM    (32) 
@@ -54,8 +72,7 @@ NOTE: おおよそと言っているのは，structのpaddingサイズはコン�
 したがって，最大コマンド長に合わせるか，メモリ使用量と対応コマンド種類のトレードオフをとることになる．
 
 NOTE:  
-コマンドの情報自体は `/src_core/TlmCmd/block_command_table.h` に, BC の実行パラメーター, 状態などは `block_command_executor.h` に保存されている.  
-コマンドの最大サイズやフォーマットなどの定義はuser依存である．  
+コマンドの情報自体は `/src_core/TlmCmd/block_command_table.h` に, BC の実行パラメーター, 状態などは `block_command_executor.h` に保存されている．コマンドの最大サイズやフォーマットなどの定義はuser依存である．更に言えばコマンドの実体自体は `/src_user/TlmCmd/block_command_user_settings.c` で定義されているため実体をどこに置くかはuser側で自由に定義出来る．そのため例えば普通の揮発メモリ上だけでなく不揮発メモリ上やFLASH上に載せることも可能．  
 IFはCommonTlmCmdPacket.hなどで策定される．  
 （現状，coreとuserの分離が雑なので，近いうちに改良予定）
 
@@ -63,7 +80,7 @@ NOTE: `sizeof(bct_id_t)` は `SIZE_OF_BCT_ID_T` にて設定可能である．
 
 #### 定義
 - core: [`/src_core/TlmCmd/block_command_table.h`](https://github.com/ut-issl/c2a-core/blob/develop/TlmCmd/block_command_table.h), [`/src_core/TlmCmd/block_command_executor.h`](https://github.com/ut-issl/c2a-core/blob/develop/TlmCmd/block_command_executor.h)
-- user: `/src_user/Settings/TlmCmd/block_command_table_params.h`
+- user: `/src_user/Settings/TlmCmd/block_command_table_params.h`, `/src_user/TlmCmd/block_command_user_settings.h`
 
 #### 詳細説明
 [`/src_core/TlmCmd/block_command_table.h`](https://github.com/ut-issl/c2a-core/blob/develop/TlmCmd/block_command_table.h), [`/src_core/TlmCmd/block_command_executor.h`](https://github.com/ut-issl/c2a-core/blob/develop/TlmCmd/block_command_executor.h) を参照．
