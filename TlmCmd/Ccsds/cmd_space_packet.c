@@ -32,7 +32,7 @@ SP_VER CSP_get_ver(const CmdSpacePacket* csp)
 
 void CSP_set_ver(CmdSpacePacket* csp, SP_VER ver)
 {
-  return SP_set_ver(CSP_CAST_TO_NON_CONSTSP(csp), ver);
+  SP_set_ver(CSP_CAST_TO_NON_CONSTSP(csp), ver);
 }
 
 
@@ -44,7 +44,7 @@ SP_TYPE CSP_get_type(const CmdSpacePacket* csp)
 
 void CSP_set_type(CmdSpacePacket* csp, SP_TYPE type)
 {
-  return SP_set_type(CSP_CAST_TO_NON_CONSTSP(csp), type);
+  SP_set_type(CSP_CAST_TO_NON_CONSTSP(csp), type);
 }
 
 
@@ -56,7 +56,7 @@ SP_2ND_HDR_FLAG CSP_get_2nd_hdr_flag(const CmdSpacePacket* csp)
 
 void CSP_set_2nd_hdr_flag(CmdSpacePacket* csp, SP_2ND_HDR_FLAG flag)
 {
-  return SP_set_2nd_hdr_flag(CSP_CAST_TO_NON_CONSTSP(csp), flag);
+  SP_set_2nd_hdr_flag(CSP_CAST_TO_NON_CONSTSP(csp), flag);
 }
 
 
@@ -68,7 +68,7 @@ APID CSP_get_apid(const CmdSpacePacket* csp)
 
 void CSP_set_apid(CmdSpacePacket* csp, APID apid)
 {
-  return SP_set_apid(CSP_CAST_TO_NON_CONSTSP(csp), apid);
+  SP_set_apid(CSP_CAST_TO_NON_CONSTSP(csp), apid);
 }
 
 
@@ -80,7 +80,7 @@ SP_SEQ_FLAG CSP_get_seq_flag(const CmdSpacePacket* csp)
 
 void CSP_set_seq_flag(CmdSpacePacket* csp, SP_SEQ_FLAG flag)
 {
-  return SP_set_seq_flag(CSP_CAST_TO_NON_CONSTSP(csp), flag);
+  SP_set_seq_flag(CSP_CAST_TO_NON_CONSTSP(csp), flag);
 }
 
 
@@ -92,7 +92,7 @@ uint16_t CSP_get_seq_count(const CmdSpacePacket* csp)
 
 void CSP_set_seq_count(CmdSpacePacket* csp, uint16_t count)
 {
-  return SP_set_seq_count(CSP_CAST_TO_NON_CONSTSP(csp), count);
+  SP_set_seq_count(CSP_CAST_TO_NON_CONSTSP(csp), count);
 }
 
 
@@ -104,7 +104,7 @@ uint16_t CSP_get_packet_data_len(const CmdSpacePacket* csp)
 
 void CSP_set_packet_data_len(CmdSpacePacket* csp, uint16_t len)
 {
-  return SP_set_packet_data_len(CSP_CAST_TO_NON_CONSTSP(csp), len);
+  SP_set_packet_data_len(CSP_CAST_TO_NON_CONSTSP(csp), len);
 }
 
 

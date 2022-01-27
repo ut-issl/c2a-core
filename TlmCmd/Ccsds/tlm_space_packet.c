@@ -33,7 +33,7 @@ SP_VER TSP_get_ver(const TlmSpacePacket* tsp)
 
 void TSP_set_ver(TlmSpacePacket* tsp, SP_VER ver)
 {
-  return SP_set_ver(TSP_CAST_TO_NON_CONSTSP(tsp), ver);
+  SP_set_ver(TSP_CAST_TO_NON_CONSTSP(tsp), ver);
 }
 
 
@@ -45,7 +45,7 @@ SP_TYPE TSP_get_type(const TlmSpacePacket* tsp)
 
 void TSP_set_type(TlmSpacePacket* tsp, SP_TYPE type)
 {
-  return SP_set_type(TSP_CAST_TO_NON_CONSTSP(tsp), type);
+  SP_set_type(TSP_CAST_TO_NON_CONSTSP(tsp), type);
 }
 
 
@@ -57,7 +57,7 @@ SP_2ND_HDR_FLAG TSP_get_2nd_hdr_flag(const TlmSpacePacket* tsp)
 
 void TSP_set_2nd_hdr_flag(TlmSpacePacket* tsp, SP_2ND_HDR_FLAG flag)
 {
-  return SP_set_2nd_hdr_flag(TSP_CAST_TO_NON_CONSTSP(tsp), flag);
+  SP_set_2nd_hdr_flag(TSP_CAST_TO_NON_CONSTSP(tsp), flag);
 }
 
 
@@ -69,7 +69,7 @@ APID TSP_get_apid(const TlmSpacePacket* tsp)
 
 void TSP_set_apid(TlmSpacePacket* tsp, APID apid)
 {
-  return SP_set_apid(TSP_CAST_TO_NON_CONSTSP(tsp), apid);
+  SP_set_apid(TSP_CAST_TO_NON_CONSTSP(tsp), apid);
 }
 
 
@@ -81,7 +81,7 @@ SP_SEQ_FLAG TSP_get_seq_flag(const TlmSpacePacket* tsp)
 
 void TSP_set_seq_flag(TlmSpacePacket* tsp, SP_SEQ_FLAG flag)
 {
-  return SP_set_seq_flag(TSP_CAST_TO_NON_CONSTSP(tsp), flag);
+  SP_set_seq_flag(TSP_CAST_TO_NON_CONSTSP(tsp), flag);
 }
 
 
@@ -93,7 +93,7 @@ uint16_t TSP_get_seq_count(const TlmSpacePacket* tsp)
 
 void TSP_set_seq_count(TlmSpacePacket* tsp, uint16_t count)
 {
-  return SP_set_seq_count(TSP_CAST_TO_NON_CONSTSP(tsp), count);
+  SP_set_seq_count(TSP_CAST_TO_NON_CONSTSP(tsp), count);
 }
 
 
@@ -105,7 +105,7 @@ uint16_t TSP_get_packet_data_len(const TlmSpacePacket* tsp)
 
 void TSP_set_packet_data_len(TlmSpacePacket* tsp, uint16_t len)
 {
-  return SP_set_packet_data_len(TSP_CAST_TO_NON_CONSTSP(tsp), len);
+  SP_set_packet_data_len(TSP_CAST_TO_NON_CONSTSP(tsp), len);
 }
 
 
