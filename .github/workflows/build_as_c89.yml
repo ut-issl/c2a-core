@@ -122,12 +122,16 @@ jobs:
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cat clang_tidy.log
 
+      - name: remove duplicate error
+        if: matrix.compiler == 'clang'
+        run: |
+          python Script/CI/remove_duplicate_error.py ./Examples/minimum_user_for_s2e/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
+
       - name: reviewdog clang-tidy (github-pr-review)
         if: matrix.compiler == 'clang' && matrix.warning == 'Werror'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
           reviewdog \
             -name 'clang-tidy(Werror)' \
             -level warning \
@@ -147,7 +151,6 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
           reviewdog \
             -name 'clang-tidy(Wextra)' \
             -level warning \
