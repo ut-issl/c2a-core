@@ -73,7 +73,6 @@ typedef enum
 
 // 相互参照問題があるので，この順番で include
 #include <src_user/Library/stdint.h>
-#include "space_packet_len.h"
 #include "space_packet_typedef.h"
 #include "space_packet.h"
 #include "../common_tlm_packet.h"
@@ -81,18 +80,6 @@ typedef enum
 #if TSP_MAX_LEN <= SP_PRM_HDR_LEN
 #error TSP_MAX_LEN is too small
 #endif
-
-
-/**
- * @struct TlmSpacePacket
- * @brief  Space Packet (テレメ用)
- * @note   C ではテンプレートが使えないため，別で定義する
- *         https://github.com/ut-issl/c2a-core/issues/204
- */
-struct TlmSpacePacket
-{
-  uint8_t packet[TSP_MAX_LEN];
-};
 
 
 // ******************************

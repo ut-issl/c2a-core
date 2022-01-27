@@ -36,7 +36,6 @@
 #define SPACE_PACKET_H_
 
 #include <src_user/Library/stdint.h>
-#include "space_packet_len.h"
 #include "space_packet_typedef.h"
 #include "../common_tlm_cmd_packet.h"
 
@@ -90,15 +89,6 @@ typedef enum
   SP_SEQ_FLAG_LAST   = 2,   //!< 10b: Last component of higher data structure
   SP_SEQ_FLAG_SINGLE = 3    //!< 11b: Standalone packet
 } SP_SEQ_FLAG;
-
-/**
- * @struct SpacePacket
- * @brief  Space Packet
- */
-struct SpacePacket
-{
-  uint8_t packet[SP_MAX_LEN];
-};
 
 /**
  * @struct SP_ParamExtractionInfo

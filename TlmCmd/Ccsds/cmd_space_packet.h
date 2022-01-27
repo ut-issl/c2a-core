@@ -60,7 +60,6 @@ typedef enum
 
 // 相互参照問題があるので，この順番で include
 #include <src_user/Library/stdint.h>
-#include "space_packet_len.h"
 #include "space_packet_typedef.h"
 #include "space_packet.h"
 #include "../common_cmd_packet.h"
@@ -80,17 +79,6 @@ typedef enum
 {
   CSP_CMD_TYPE_UNKNOWN
 } CSP_CMD_TYPE;
-
-/**
- * @struct CmdSpacePacket
- * @brief  Space Packet (コマンド用)
- * @note   C ではテンプレートが使えないため，別で定義する
- *         https://github.com/ut-issl/c2a-core/issues/204
- */
-struct CmdSpacePacket
-{
-  uint8_t packet[CSP_MAX_LEN];
-};
 
 
 // ******************************
