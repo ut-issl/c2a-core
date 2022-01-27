@@ -35,14 +35,10 @@
 #ifndef SPACE_PACKET_H_
 #define SPACE_PACKET_H_
 
-#include "tlm_space_packet.h"
-#include "cmd_space_packet.h"
-
-#if TSP_MAX_LEN > CSP_MAX_LEN
-#define SP_MAX_LEN    TSP_MAX_LEN
-#else
-#define SP_MAX_LEN    CSP_MAX_LEN
-#endif
+#include <src_user/Library/stdint.h>
+#include "space_packet_len.h"
+#include "space_packet_typedef.h"
+#include "../common_tlm_cmd_packet.h"
 
 #define SP_PRM_HDR_LEN   (6)   //!< Packet Primary Header 長
 
@@ -99,10 +95,10 @@ typedef enum
  * @struct SpacePacket
  * @brief  Space Packet
  */
-typedef struct
+struct SpacePacket
 {
   uint8_t packet[SP_MAX_LEN];
-} SpacePacket;
+};
 
 /**
  * @struct SP_ParamExtractionInfo

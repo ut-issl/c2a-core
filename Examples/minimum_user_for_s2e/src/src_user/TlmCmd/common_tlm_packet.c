@@ -18,7 +18,7 @@ int CTP_is_valid_packet(const CommonTlmPacket* packet)
 
 CTP_DEST_FLAG CTP_get_dest_flags(const CommonTlmPacket* packet)
 {
-  return TSP_get_dest_flgas(packet)
+  return TSP_get_dest_flgas(packet);
 }
 
 void CTP_set_dest_flags(CommonTlmPacket* packet, CTP_DEST_FLAG flags)

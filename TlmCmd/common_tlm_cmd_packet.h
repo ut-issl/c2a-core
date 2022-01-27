@@ -8,6 +8,7 @@
 #ifndef COMMON_TLM_CMD_PACKET_H_
 #define COMMON_TLM_CMD_PACKET_H_
 
+#include <src_user/Library/stdint.h>
 // ここで， CTCP_MAX_LEN, CommonTlmCmdPacket として使うパケット型を指定する
 #include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_define.h>
 #include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_params.h>

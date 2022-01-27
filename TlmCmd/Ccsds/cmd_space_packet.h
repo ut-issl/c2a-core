@@ -52,17 +52,18 @@ typedef enum
 } CSP_2ND_HDR_VER;
 
 
-#define CSP_MAX_LEN             (128)                 //!< CmdSpacePacket の最大パケット長．値は適当においている
 #define CSP_SND_HDR_LEN         (9)                   //!< Secondary Header 長
 #define CSP_2ND_HDR_VER_TO_USE  (CSP_2ND_HDR_VER_1)   //!< 使う Sec. HDR Ver
 
 // CSP_MAX_LEN, CSP_2ND_HDR_VER_TO_USE を再定義
 #include <src_user/Settings/TlmCmd/Ccsds/cmd_space_packet_params.h>
 
-// TODO: 上に持ってきて，コンパイルが通らないことを確認する！！！！！！！！！！！！！！！！！！
-// space_packet.h と相互 include になってしまっているので，最後のここで include する
+// 相互参照問題があるので，この順番で include
+#include <src_user/Library/stdint.h>
+#include "space_packet_len.h"
+#include "space_packet_typedef.h"
 #include "space_packet.h"
-#include <src_core/TlmCmd/common_cmd_packet.h>
+#include "../common_cmd_packet.h"
 
 #if CSP_MAX_LEN <= SP_PRM_HDR_LEN
 #error CSP_MAX_LEN is too small
@@ -86,10 +87,10 @@ typedef enum
  * @note   C ではテンプレートが使えないため，別で定義する
  *         https://github.com/ut-issl/c2a-core/issues/204
  */
-typedef struct
+struct CmdSpacePacket
 {
   uint8_t packet[CSP_MAX_LEN];
-} CmdSpacePacket;
+};
 
 
 // ******************************

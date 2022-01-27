@@ -172,7 +172,7 @@ uint16_t SP_get_packet_len(const SpacePacket* sp)
 void SP_set_packet_len(SpacePacket* sp, uint16_t len)
 {
   if (len <= SP_PRM_HDR_LEN) return;
-  SP_set_packet_data_len(sp, (uint16_t)(len - SP_PRM_HDR_LEN))
+  SP_set_packet_data_len(sp, (uint16_t)(len - SP_PRM_HDR_LEN));
 }
 
 
