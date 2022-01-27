@@ -8,6 +8,7 @@
 #ifndef COMMON_TLM_CMD_PACKET_H_
 #define COMMON_TLM_CMD_PACKET_H_
 
+// ここで， CTCP_MAX_LEN, CommonTlmCmdPacket として使うパケット型を指定する
 #include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_define.h>
 #include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_params.h>
 #include "./common_tlm_packet.h"
@@ -16,6 +17,7 @@
 // ここで APID を定義する
 /* 例
 // FIXME: CCSDS JAXA 標準になおす
+// FIXME: APID は Space Packet なので， CTCP にあるのは不適切？ 抽象化してもいいかも
 typedef enum
 {
   APID_MOBC_CMD = 0x210,         // 01000010000b:
