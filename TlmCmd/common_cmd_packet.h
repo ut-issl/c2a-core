@@ -8,6 +8,20 @@
 
 #include "../System/TimeManager/obc_time.h"
 #include <src_user/TlmCmd/command_definitions.h>
+
+// ここで CCP_DEST_TYPE を定義する
+// 詳細は /Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h 参照
+/* 例
+typedef enum
+{
+  CCP_DEST_TYPE_TO_ME     = 0,
+  CCP_DEST_TYPE_TO_MOBC   = 1,
+  CCP_DEST_TYPE_TO_AOBC   = 2,
+  CCP_DEST_TYPE_TO_TOBC   = 3,
+  CCP_DEST_TYPE_TO_UNKOWN = 4
+} CCP_DEST_TYPE;
+*/
+// さらに， CCP_APID_TO_ME と， CommonCmdPacket として使うパケット型を指定する
 #include <src_user/Settings/TlmCmd/common_cmd_packet_define.h>
 
 // ここで APID を定義する
@@ -36,19 +50,16 @@ typedef enum
 /**
  * @enum   CCP_EXEC_TYPE
  * @brief  コマンド実行種別
- * @note   0x0*を想定（上位4bitは他のC2Aを搭載したボード用に転送するために使うため）
- *         その定義はTCP_DEST_TYPEにある
- * @note   TCP_CMD_EXEC_TYPE と CCP_EXEC_TYPE の定義は一致 (正確には、前者は後者に含まれている)    FIXME: TCPの整理で直す
- *         CCP_EXEC_TYPE CCP_get_exec_type(const CommonCmdPacket* packet) を参照
- * @note   GSからのOBC.TLや，C2A内のCCP_form_tlcはすべてTL0扱いになる
+ * @note   4bit を想定
+ * @note   GS (WINGS) からの OBC_TL や， C2A 内の CCP_form_tlc はすべて TL0 扱いとすること！
  */
 typedef enum
 {
-  CCP_EXEC_TYPE_GS,  //!< GS : Ground Station Command
-  CCP_EXEC_TYPE_TL0, //!< TL : Timeline Command
-  CCP_EXEC_TYPE_BC,  //!< BC : Block Command
-  CCP_EXEC_TYPE_RT,  //!< RT : Realtime Command
-  CCP_EXEC_TYPE_UTL, //!< UTL: Unixtime Timeline Command
+  CCP_EXEC_TYPE_GS,     //!< GS : Ground Station Command
+  CCP_EXEC_TYPE_TL0,    //!< TL : Timeline Command
+  CCP_EXEC_TYPE_BC,     //!< BC : Block Command
+  CCP_EXEC_TYPE_RT,     //!< RT : Realtime Command
+  CCP_EXEC_TYPE_UTL,    //!< UTL: Unixtime Timeline Command
   CCP_EXEC_TYPE_TL1,
   CCP_EXEC_TYPE_TL2,
   CCP_EXEC_TYPE_UNKNOWN
@@ -114,7 +125,6 @@ void CCP_set_exec_type(CommonCmdPacket* packet, CCP_EXEC_TYPE type);
  * @brief  DEST_TYPE を取得
  * @param  packet: CCP
  * @return CCP_DEST_TYPE
- * @note   2021/01/22に CCP_EXEC_TYPE の上位4bitを拝借する形で追加実装 FIXME: ドキュメント化
  */
 CCP_DEST_TYPE CCP_get_dest_type(const CommonCmdPacket* packet);
 
@@ -123,7 +133,6 @@ CCP_DEST_TYPE CCP_get_dest_type(const CommonCmdPacket* packet);
  * @param[in,out] packet: CCP
  * @param[in]     type: DEST_TYPE
  * @return void
- * @note   2021/01/22に CCP_EXEC_TYPE の上位4bitを拝借する形で追加実装 FIXME: ドキュメント化
  */
 void CCP_set_dest_type(CommonCmdPacket* packet, CCP_DEST_TYPE type);
 
