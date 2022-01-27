@@ -10,6 +10,8 @@
 // CommonCmdPacket として CmdSpacePacket をつかう
 typedef CmdSpacePacket CommonCmdPacket;
 
+#define CCP_MAX_LEN (CSP_MAX_LEN)
+
 // 自分宛て CMD を示す AIPD を定義
 // FIXME: Space Packet が整備されたら直す
 #define CCP_APID_TO_ME (APID_MOBC_CMD)

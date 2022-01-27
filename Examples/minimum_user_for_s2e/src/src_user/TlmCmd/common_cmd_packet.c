@@ -11,7 +11,7 @@
 int CCP_is_valid_packet(const CommonCmdPacket* packet)
 {
   if (packet == NULL) return 0;
-  if ( CCP_get_packet_len(packet) > (uint16_t)sizeof(CommonCmdPacket) ) return 0;
+  if ( CCP_get_packet_len(packet) > CCP_MAX_LEN ) return 0;
 
   return 1;
 }
