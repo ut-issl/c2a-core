@@ -35,7 +35,9 @@ set(C2A_SRCS
   TlmCmd/packet_list.c
   TlmCmd/telemetry_frame.c
   TlmCmd/telemetry_generator.c
-  TlmCmd/Ccsds/TCPacket.c
+  TlmCmd/Ccsds/cmd_space_packet.c
+  TlmCmd/Ccsds/space_packet.c
+  TlmCmd/Ccsds/tlm_space_packet.c
 )
 
 if(BUILD_C2A_AS_CXX)
