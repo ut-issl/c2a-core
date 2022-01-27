@@ -11,7 +11,7 @@ with open(file) as f:
     # print(log)
 
     errors = []
-    for l in log:
+    for l in log:  # noqa: E741
         (cmd, err) = l.split("\n", 1)
         if err in errors:
             print("duplicate: " + cmd, file=sys.stderr)
