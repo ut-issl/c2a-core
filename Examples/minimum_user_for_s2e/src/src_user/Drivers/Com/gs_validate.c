@@ -12,7 +12,7 @@
 static GS_VALIDATE_ERR GS_check_tcf_header_(const TCF* tc_frame);
 static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame);
 static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment);
-static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet);
+static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp);
 static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len);
 
 static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame);
@@ -77,25 +77,13 @@ static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame)
 {
   GS_VALIDATE_ERR ack;
 
-  // TCSegment Headerの固定値部分が妥当か確認する
+  // TCSegment Header の固定値部分が妥当か確認する
   ack = GS_check_tcs_headers_(&tc_frame->tcs);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
-  // TCPacektのヘッダのうちTLM/CMD共通部分が妥当か確認する
-  ack = GS_check_tcp_headers_(&tc_frame->tcs.tcp);
+  // CmdSpacePacket のヘッダのうち共通部分が妥当か確認する
+  ack = GS_check_cmd_space_packet_headers_(&tc_frame->tcs.tcp);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
-
-  // TCPacketのPackte TypeがCommandかどうか確認する
-  if (TCP_get_type(&tc_frame->tcs.tcp) != TCP_TYPE_CMD)
-  {
-    return GS_VALIDATE_ERR_TCP_TYPE_IS_NOT_CMD;
-  }
-
-  // TCPacketのSequence Flagが単パケットか確認する
-  if (TCP_get_seq_flag(&tc_frame->tcs.tcp) != TCP_SEQ_SINGLE)
-  {
-    return GS_VALIDATE_ERR_TCP_SEQ_IS_NOT_SINGLE;
-  }
 
   return GS_VALIDATE_ERR_OK;
 }
@@ -115,23 +103,35 @@ static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet)
+static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp)
 {
   APID apid;
+  // FIXME: 他の部分のチェックも入れる
 
-  if (TCP_get_ver(tc_packet) != TCP_VER_1) return GS_VALIDATE_ERR_TCP_VER;
-  if (TCP_get_2nd_hdr_flag(tc_packet) != TCP_2ND_HDR_PRESENT)
+  if (CSP_get_ver(csp) != SP_VER_1) return GS_VALIDATE_ERR_TCP_VER;
+  if (CSP_get_2nd_hdr_flag(csp) != SP_2ND_HDR_FLAG_PRESENT)
   {
     // ここではSecondary Headerが必須。
     return GS_VALIDATE_ERR_TCP_2ND_HDR_FLAG;
   }
 
-  apid = TCP_get_apid(tc_packet);
+  if (CSP_get_type(csp) != SP_TYPE_CMD)
+  {
+    return GS_VALIDATE_ERR_TCP_TYPE_IS_NOT_CMD;
+  }
+
+  apid = CSP_get_apid(csp);
   if ( !( apid == APID_MOBC_CMD
        || apid == APID_AOBC_CMD
        || apid == APID_TOBC_CMD ) )
   {
     return GS_VALIDATE_ERR_APID;
+  }
+
+  // Sequence Flag が単パケットか確認する
+  if (CSP_get_seq_flag(csp) != SP_SEQ_FLAG_SINGLE)
+  {
+    return GS_VALIDATE_ERR_TCP_SEQ_IS_NOT_SINGLE;
   }
 
   return GS_VALIDATE_ERR_OK;

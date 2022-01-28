@@ -7,6 +7,8 @@
  * @note   CCP:  CommonCmdPacket
  */
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/Ccsds/space_packet.h>
+#include <string.h>
 
 
 int CTCP_is_valid_packet(const CommonTlmCmdPacket* packet)

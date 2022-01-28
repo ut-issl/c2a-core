@@ -5,6 +5,7 @@
  * @note   CCP:  CommonCmdPacket
  */
 #include <src_core/TlmCmd/common_cmd_packet.h>
+#include <src_core/TlmCmd/Ccsds/cmd_space_packet.h>
 #include <string.h>
 
 
@@ -94,6 +95,11 @@ void CCP_set_param(CommonCmdPacket* packet, const uint8_t* param, uint16_t len)
 void CCP_set_common_hdr(CommonCmdPacket* packet)
 {
   CSP_set_common_hdr(packet);
+}
+
+void CCP_copy_packet(CommonCmdPacket* dest, const CommonCmdPacket* src)
+{
+  CSP_copy_packet(dest, src);
 }
 
 #pragma section

@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief SpacePacket 類 と CommonTlmCmdPacket 類が相互参照するのを回避するためのヘッダ
- * @note  C2A Core 部が知って良い情報はこれだけ
+ * @note  C2A Core のヘッダが知って良い情報はこれだけ
  */
 #ifndef SPACE_PACKET_TYPEDEF_H_
 #define SPACE_PACKET_TYPEDEF_H_

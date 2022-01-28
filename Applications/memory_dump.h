@@ -34,6 +34,9 @@ AppInfo MEM_create_app(void);
 // 自分の解釈をコメントとして追加
 CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet);
 
+// FIXME: CTCP 大改修が終わったら直す
+// https://github.com/ut-issl/c2a-core/pull/217
+#if 0
 CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet);
 // 1パケットに入り切らない場合は，最初のADU分割された最初のパケットのみダンプ
 // もう一度送ると，その次のパケットがダンプ
@@ -45,6 +48,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet);
 // アドレスを指定して，ダンプ？
 // Cmd_MEM_SET_REGION は無視？
+#endif
 
 CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet);
 // MEMにアップリンクして書き込み

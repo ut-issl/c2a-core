@@ -20,6 +20,10 @@
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include "common_cmd_packet_util.h"
 
+// FIXME: この include は依存的にダメなので， TCP → Space Packet 大工事が終わったら直す
+#include "./Ccsds/space_packet.h"
+#include "./Ccsds/cmd_space_packet.h"
+
 static BlockCommandTable block_command_table_;
 const BlockCommandTable* const block_command_table = &block_command_table_;
 
@@ -486,7 +490,9 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
 
   BCT_Pos  pos;
   BCT_CmdData new_bct_cmddata; // FIXME: BCT_CmdData <-> CTCP
-  uint8_t new_cmd_param[sizeof(BCT_CmdData) - TCP_PRM_HDR_LEN - TCP_CMD_2ND_HDR_LEN - TCP_CMD_USER_HDR_LEN];   // いったんここにparamをコピーする, FIXME: TCPに依存させないように
+  // FIXME: TCP → SpacePacket 大工事が終わったら直す
+  //        CCP ならまだしも CSP 依存はやばい
+  uint8_t new_cmd_param[BCT_CMD_MAX_LENGTH - SP_PRM_HDR_LEN - CSP_SND_HDR_LEN];   // いったんここにparamをコピーする, FIXME: TCPに依存させないように
   uint16_t real_param_len = CCP_get_param_len(packet);
   uint16_t min_cmd_param_len = CA_get_cmd_param_min_len(Cmd_CODE_BCT_OVERWRITE_CMD);
   uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(new_cmd_param);

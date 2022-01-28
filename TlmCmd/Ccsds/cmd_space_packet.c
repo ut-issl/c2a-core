@@ -7,9 +7,10 @@
  */
 #include "cmd_space_packet.h"
 #include <stddef.h>
+#include <string.h>
 
 #define CSP_CAST_TO_SP(csp)           ((const SpacePacket*)(csp))   //!< SPへのキャスト． SPのほうが広いので，これは可能
-#define CSP_CAST_TO_NON_CONSTSP(csp)  ((SpacePacket*)(csp))         //!< SPへのキャスト． SPのほうが広いので，これは可能
+#define CSP_CAST_TO_NON_CONST_SP(csp) ((SpacePacket*)(csp))         //!< SPへのキャスト． SPのほうが広いので，これは可能
 
 
 static const SP_ParamExtractionInfo CSP_pei_2nd_hdr_ver_ = { 6, 0xff, 0, 1};  // 11111111b
@@ -32,7 +33,7 @@ SP_VER CSP_get_ver(const CmdSpacePacket* csp)
 
 void CSP_set_ver(CmdSpacePacket* csp, SP_VER ver)
 {
-  SP_set_ver(CSP_CAST_TO_NON_CONSTSP(csp), ver);
+  SP_set_ver(CSP_CAST_TO_NON_CONST_SP(csp), ver);
 }
 
 
@@ -44,7 +45,7 @@ SP_TYPE CSP_get_type(const CmdSpacePacket* csp)
 
 void CSP_set_type(CmdSpacePacket* csp, SP_TYPE type)
 {
-  SP_set_type(CSP_CAST_TO_NON_CONSTSP(csp), type);
+  SP_set_type(CSP_CAST_TO_NON_CONST_SP(csp), type);
 }
 
 
@@ -56,7 +57,7 @@ SP_2ND_HDR_FLAG CSP_get_2nd_hdr_flag(const CmdSpacePacket* csp)
 
 void CSP_set_2nd_hdr_flag(CmdSpacePacket* csp, SP_2ND_HDR_FLAG flag)
 {
-  SP_set_2nd_hdr_flag(CSP_CAST_TO_NON_CONSTSP(csp), flag);
+  SP_set_2nd_hdr_flag(CSP_CAST_TO_NON_CONST_SP(csp), flag);
 }
 
 
@@ -68,7 +69,7 @@ APID CSP_get_apid(const CmdSpacePacket* csp)
 
 void CSP_set_apid(CmdSpacePacket* csp, APID apid)
 {
-  SP_set_apid(CSP_CAST_TO_NON_CONSTSP(csp), apid);
+  SP_set_apid(CSP_CAST_TO_NON_CONST_SP(csp), apid);
 }
 
 
@@ -80,7 +81,7 @@ SP_SEQ_FLAG CSP_get_seq_flag(const CmdSpacePacket* csp)
 
 void CSP_set_seq_flag(CmdSpacePacket* csp, SP_SEQ_FLAG flag)
 {
-  SP_set_seq_flag(CSP_CAST_TO_NON_CONSTSP(csp), flag);
+  SP_set_seq_flag(CSP_CAST_TO_NON_CONST_SP(csp), flag);
 }
 
 
@@ -92,7 +93,7 @@ uint16_t CSP_get_seq_count(const CmdSpacePacket* csp)
 
 void CSP_set_seq_count(CmdSpacePacket* csp, uint16_t count)
 {
-  SP_set_seq_count(CSP_CAST_TO_NON_CONSTSP(csp), count);
+  SP_set_seq_count(CSP_CAST_TO_NON_CONST_SP(csp), count);
 }
 
 
@@ -104,7 +105,7 @@ uint16_t CSP_get_packet_data_len(const CmdSpacePacket* csp)
 
 void CSP_set_packet_data_len(CmdSpacePacket* csp, uint16_t len)
 {
-  SP_set_packet_data_len(CSP_CAST_TO_NON_CONSTSP(csp), len);
+  SP_set_packet_data_len(CSP_CAST_TO_NON_CONST_SP(csp), len);
 }
 
 
@@ -133,7 +134,7 @@ CSP_2ND_HDR_VER CSP_get_2nd_hdr_ver(const CmdSpacePacket* csp)
 void CSP_set_2nd_hdr_ver(CmdSpacePacket* csp, CSP_2ND_HDR_VER ver)
 {
   uint8_t tmp = (uint8_t)ver;
-  SP_insert_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_2nd_hdr_ver_, &tmp);
+  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_2nd_hdr_ver_, &tmp);
 }
 
 
@@ -148,7 +149,7 @@ CSP_CMD_TYPE CSP_get_cmd_type(const CmdSpacePacket* csp)
 void CSP_set_cmd_type(CmdSpacePacket* csp, CSP_CMD_TYPE cmd_type)
 {
   uint8_t tmp = (uint8_t)cmd_type;
-  SP_insert_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_cmd_type_, &tmp);
+  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_cmd_type_, &tmp);
 }
 
 
@@ -164,7 +165,7 @@ CMD_CODE CSP_get_cmd_id(const CmdSpacePacket* csp)
 void CSP_set_cmd_id(CmdSpacePacket* csp, CMD_CODE id)
 {
   uint16_t tmp = (uint16_t)id;
-  SP_insert_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_cmd_id_, &tmp);
+  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_cmd_id_, &tmp);
 }
 
 
@@ -192,7 +193,7 @@ CCP_DEST_TYPE CSP_get_dest_type(const CmdSpacePacket* csp)
 void CSP_set_dest_type(CmdSpacePacket* csp, CCP_DEST_TYPE dest_type)
 {
   uint8_t tmp = (uint8_t)dest_type;
-  SP_insert_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_dest_type_, &tmp);
+  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_dest_type_, &tmp);
 }
 
 
@@ -223,7 +224,7 @@ CCP_EXEC_TYPE CSP_get_exec_type(const CmdSpacePacket* csp)
 void CSP_set_exec_type(CmdSpacePacket* csp, CCP_EXEC_TYPE exec_type)
 {
   uint8_t tmp = (uint8_t)exec_type;
-  SP_insert_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_exec_type_, &tmp);
+  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_exec_type_, &tmp);
 }
 
 
@@ -238,7 +239,7 @@ uint32_t CSP_get_ti(const CmdSpacePacket* csp)
 
 void CSP_set_ti(CmdSpacePacket* csp, uint32_t ti)
 {
-  SP_insert_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_ti_, &ti);
+  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_ti_, &ti);
 }
 
 
@@ -254,13 +255,13 @@ uint16_t CSP_get_packet_len(const CmdSpacePacket* csp)
 
 void CSP_set_packet_len(CmdSpacePacket* csp, uint16_t len)
 {
-  return SP_set_packet_len(CSP_CAST_TO_NON_CONSTSP(csp), len);
+  SP_set_packet_len(CSP_CAST_TO_NON_CONST_SP(csp), len);
 }
 
 
 void CSP_copy_packet(CmdSpacePacket* dest, const CmdSpacePacket* src)
 {
-  return SP_copy_packet(CSP_CAST_TO_NON_CONSTSP(dest), CSP_CAST_TO_SP(src));
+  SP_copy_packet(CSP_CAST_TO_NON_CONST_SP(dest), CSP_CAST_TO_SP(src));
 }
 
 
@@ -280,15 +281,16 @@ void CSP_set_param(CmdSpacePacket* csp, const uint8_t* param, uint16_t len)
 {
   // パラメータをパケットにコピー
   // paramは既に成形されているのでここは endian_memcpy ではなく memcpy (paramの数, 種類などがこの関数からは不明)
-  memcpy(CSP_get_param_head(csp), param, (size_t)len);
+  // const ではダメなので， CSP_get_param_head が使えない
+  memcpy(&(csp->packet[SP_PRM_HDR_LEN + CSP_SND_HDR_LEN]), param, (size_t)len);
 
   // パラメータ長に合わせパケット長を設定
   // パケット長はヘッダ分が加算される
-  SP_set_packet_len(csp, (uint16_t)(SP_PRM_HDR_LEN + CSP_SND_HDR_LEN + len));
+  CSP_set_packet_len(csp, (uint16_t)(SP_PRM_HDR_LEN + CSP_SND_HDR_LEN + len));
 }
 
 
-void TCP_CMD_set_common_hdr(CmdSpacePacket* csp)
+void CSP_set_common_hdr(CmdSpacePacket* csp)
 {
   // ここでは Version Number は Version-1 固定
   CSP_set_ver(csp, SP_VER_1);

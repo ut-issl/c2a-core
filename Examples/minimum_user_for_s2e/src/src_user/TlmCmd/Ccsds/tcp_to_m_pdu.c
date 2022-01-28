@@ -5,6 +5,8 @@
  */
 
 #include "tcp_to_m_pdu.h"
+// FIXME: CTP ではなく TSP を使ってしまっている．できれば抽象化するべき
+#include <src_core/TlmCmd/Ccsds/tlm_space_packet.h>
 
 void T2M_initialize(TcpToMPdu* tcp_to_m_pdu)
 {
@@ -26,7 +28,7 @@ T2M_ACK T2M_form_m_pdu(TcpToMPdu* tcp_to_m_pdu, PacketList* pl, M_PDU* m_pdu)
   // M_PDUが完成する or TC Packetがなくなるまで実施
   while (tcp_to_m_pdu->m_pdu_wp != M_PDU_DATA_SIZE)
   {
-    const TCP* packet;
+    const TlmSpacePacket* packet;
     size_t tcp_len, tcp_left, m_pdu_left, write_len;
 
     if (PL_is_empty(pl))
@@ -58,19 +60,19 @@ T2M_ACK T2M_form_m_pdu(TcpToMPdu* tcp_to_m_pdu, PacketList* pl, M_PDU* m_pdu)
         // この場合、生成されたFill Packetは次M_PDUにまたがる。
         // この状態で追加のテレメトリが生成されない場合は、Fill
         // Packetのみで構成されたM_PDUが一度送出されることになる。
-        static TCP fill_; // サイズが大きいため静的確保(スタック保護)
+        static TlmSpacePacket fill_; // サイズが大きいため静的確保(スタック保護)
         size_t fill_size = M_PDU_DATA_SIZE - tcp_to_m_pdu->m_pdu_wp;
-        TCP_TLM_setup_fill_packet(&fill_, (uint16_t)fill_size);
+        TSP_setup_fill_packet(&fill_, (uint16_t)fill_size);
         PL_push_back(pl, &fill_);
       }
     }
 
     // Queue先頭のTC Packetを取得
     // 有効パケットまたはFillパケットが必ず入っている。
-    packet = (const TCP*)(PL_get_head(pl)->packet);   // FIXME: Space Packet 実装でなおす
+    packet = (const TlmSpacePacket*)(PL_get_head(pl)->packet);   // FIXME: Space Packet 実装でなおす
 
     // 書き込むデータ長を計算
-    tcp_len = TCP_TLM_get_packet_len(packet);
+    tcp_len = TSP_get_packet_len(packet);
     tcp_left = tcp_len - tcp_to_m_pdu->tcp_rp;
     m_pdu_left = M_PDU_DATA_SIZE - tcp_to_m_pdu->m_pdu_wp;
     write_len = (tcp_left > m_pdu_left) ? m_pdu_left : tcp_left;

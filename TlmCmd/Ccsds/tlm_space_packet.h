@@ -337,6 +337,7 @@ void TSP_copy_packet(TlmSpacePacket* dest, const TlmSpacePacket* src);
  * @param  tsp: TlmSpacePacket
  * @return *user_data_head
  * @note   FIXME: この関数で取得したポインタ経由で tlm のデータをセットする事があるため， const をつけていない
+ *                引数の const を外しても良いかも？
  */
 uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp);
 
@@ -347,7 +348,7 @@ uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp);
  * @param[in]     packet_data_len: Packet Data Length
  * @return void
  */
-void TSP_setup_primary_hdr(const TlmSpacePacket* tsp, APID apid, uint16_t packet_data_len);
+void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_data_len);
 
 /**
  * @brief  共通部分の Header を構築

@@ -6,7 +6,6 @@
 #include "telemetry_frame.h"
 
 #include <src_user/Library/stdint.h>
-#include <src_user/TlmCmd/telemetry_definitions.h>
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
 #include <src_user/Settings/build_settings.h>
@@ -17,7 +16,7 @@ static TelemetryFrame telemetry_frame_;
 const TelemetryFrame* const telemetry_frame = &telemetry_frame_;
 
 
-int TF_generate_contents(int packet_id,
+int TF_generate_contents(TLM_CODE packet_id,
                          unsigned char* contents,
                          int max_len)
 {

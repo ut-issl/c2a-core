@@ -5,7 +5,8 @@
  * @note  詳細は space_packet.h を参照
  */
 #include "space_packet.h"
-#include <src_core/Library/endian_memcpy.h>
+#include "../../Library/endian_memcpy.h"
+#include <string.h>
 
 
 static const SP_ParamExtractionInfo SP_pei_ver_           = { 0, 0xe0, 5, 1};  // 11100000b
@@ -46,7 +47,7 @@ void SP_set_ver(SpacePacket* sp, SP_VER ver)
 }
 
 
-SP_TYPE TCP_get_type(const SpacePacket* sp)
+SP_TYPE SP_get_type(const SpacePacket* sp)
 {
   uint8_t type;
 
@@ -55,7 +56,7 @@ SP_TYPE TCP_get_type(const SpacePacket* sp)
 }
 
 
-void TCP_set_type(SpacePacket* sp, SP_TYPE type)
+void SP_set_type(SpacePacket* sp, SP_TYPE type)
 {
   uint8_t tmp = (uint8_t)type;
   SP_insert_param_from_packet(sp, &SP_pei_type_, &tmp);
@@ -81,7 +82,7 @@ void SP_set_2nd_hdr_flag(SpacePacket* sp, SP_2ND_HDR_FLAG flag)
 APID SP_get_apid(const SpacePacket* sp)
 {
   uint16_t tmp;
-  SP_VER apid;
+  APID apid;
 
   SP_extract_param_from_packet(sp, &SP_pei_apid_, &tmp);
   apid = (APID)tmp;
@@ -155,7 +156,7 @@ void SP_set_packet_data_len(SpacePacket* sp, uint16_t len)
 
   // Data Length は 0 起算表記なので 1 起算を変換
   len--;
-  SP_insert_param_from_packet(sp, &SP_pei_seq_count_, &len);
+  SP_insert_param_from_packet(sp, &SP_pei_pckt_data_len_, &len);
 }
 
 

@@ -7,9 +7,10 @@
  */
 #include "tlm_space_packet.h"
 #include <stddef.h>
+#include <string.h>
 
 #define TSP_CAST_TO_SP(tsp)           ((const SpacePacket*)(tsp))   //!< SPへのキャスト． SPのほうが広いので，これは可能
-#define TSP_CAST_TO_NON_CONSTSP(tsp)  ((SpacePacket*)(tsp))         //!< SPへのキャスト． SPのほうが広いので，これは可能
+#define TSP_CAST_TO_NON_CONST_SP(tsp) ((SpacePacket*)(tsp))         //!< SPへのキャスト． SPのほうが広いので，これは可能
 
 
 static const SP_ParamExtractionInfo TSP_pei_2nd_hdr_ver_ = { 6, 0xff, 0, 1};  // 11111111b
@@ -17,7 +18,7 @@ static const SP_ParamExtractionInfo TSP_pei_board_time_  = { 7, 0xff, 0, 4};  //
 static const SP_ParamExtractionInfo TSP_pei_global_time_ = {11, 0xff, 0, 8};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_ob_sn_time_  = {19, 0xff, 0, 4};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_tlm_id_      = {23, 0xff, 0, 1};  // 11111111b
-static const SP_ParamExtractionInfo TSP_pei_dest_flags_  = {24, 0xf0, 0, 1};  // 11111111b
+static const SP_ParamExtractionInfo TSP_pei_dest_flags_  = {24, 0xff, 0, 1};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_dr_ptn_      = {25, 0x0f, 0, 1};  // 11111111b
 
 
@@ -33,7 +34,7 @@ SP_VER TSP_get_ver(const TlmSpacePacket* tsp)
 
 void TSP_set_ver(TlmSpacePacket* tsp, SP_VER ver)
 {
-  SP_set_ver(TSP_CAST_TO_NON_CONSTSP(tsp), ver);
+  SP_set_ver(TSP_CAST_TO_NON_CONST_SP(tsp), ver);
 }
 
 
@@ -45,7 +46,7 @@ SP_TYPE TSP_get_type(const TlmSpacePacket* tsp)
 
 void TSP_set_type(TlmSpacePacket* tsp, SP_TYPE type)
 {
-  SP_set_type(TSP_CAST_TO_NON_CONSTSP(tsp), type);
+  SP_set_type(TSP_CAST_TO_NON_CONST_SP(tsp), type);
 }
 
 
@@ -57,7 +58,7 @@ SP_2ND_HDR_FLAG TSP_get_2nd_hdr_flag(const TlmSpacePacket* tsp)
 
 void TSP_set_2nd_hdr_flag(TlmSpacePacket* tsp, SP_2ND_HDR_FLAG flag)
 {
-  SP_set_2nd_hdr_flag(TSP_CAST_TO_NON_CONSTSP(tsp), flag);
+  SP_set_2nd_hdr_flag(TSP_CAST_TO_NON_CONST_SP(tsp), flag);
 }
 
 
@@ -69,7 +70,7 @@ APID TSP_get_apid(const TlmSpacePacket* tsp)
 
 void TSP_set_apid(TlmSpacePacket* tsp, APID apid)
 {
-  SP_set_apid(TSP_CAST_TO_NON_CONSTSP(tsp), apid);
+  SP_set_apid(TSP_CAST_TO_NON_CONST_SP(tsp), apid);
 }
 
 
@@ -81,7 +82,7 @@ SP_SEQ_FLAG TSP_get_seq_flag(const TlmSpacePacket* tsp)
 
 void TSP_set_seq_flag(TlmSpacePacket* tsp, SP_SEQ_FLAG flag)
 {
-  SP_set_seq_flag(TSP_CAST_TO_NON_CONSTSP(tsp), flag);
+  SP_set_seq_flag(TSP_CAST_TO_NON_CONST_SP(tsp), flag);
 }
 
 
@@ -93,7 +94,7 @@ uint16_t TSP_get_seq_count(const TlmSpacePacket* tsp)
 
 void TSP_set_seq_count(TlmSpacePacket* tsp, uint16_t count)
 {
-  SP_set_seq_count(TSP_CAST_TO_NON_CONSTSP(tsp), count);
+  SP_set_seq_count(TSP_CAST_TO_NON_CONST_SP(tsp), count);
 }
 
 
@@ -105,7 +106,7 @@ uint16_t TSP_get_packet_data_len(const TlmSpacePacket* tsp)
 
 void TSP_set_packet_data_len(TlmSpacePacket* tsp, uint16_t len)
 {
-  SP_set_packet_data_len(TSP_CAST_TO_NON_CONSTSP(tsp), len);
+  SP_set_packet_data_len(TSP_CAST_TO_NON_CONST_SP(tsp), len);
 }
 
 
@@ -134,7 +135,7 @@ TSP_2ND_HDR_VER TSP_get_2nd_hdr_ver(const TlmSpacePacket* tsp)
 void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, TSP_2ND_HDR_VER ver)
 {
   uint8_t tmp = (uint8_t)ver;
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_2nd_hdr_ver_, &tmp);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_2nd_hdr_ver_, &tmp);
 }
 
 
@@ -149,7 +150,7 @@ uint32_t TSP_get_board_time(const TlmSpacePacket* tsp)
 
 void TSP_set_board_time(TlmSpacePacket* tsp, uint32_t time)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_board_time_, &time);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_board_time_, &time);
 }
 
 
@@ -164,7 +165,7 @@ double TSP_get_global_time(const TlmSpacePacket* tsp)
 
 void TSP_set_global_time(TlmSpacePacket* tsp, double time)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_global_time_, &time);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_global_time_, &time);
 }
 
 
@@ -179,7 +180,7 @@ uint32_t TSP_get_on_board_subnet_time(const TlmSpacePacket* tsp)
 
 void TSP_set_on_board_subnet_time(TlmSpacePacket* tsp, uint32_t time)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_ob_sn_time_, &time);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_ob_sn_time_, &time);
 }
 
 
@@ -195,7 +196,7 @@ TLM_CODE TSP_get_tlm_id(const TlmSpacePacket* tsp)
 void TSP_set_tlm_id(TlmSpacePacket* tsp, TLM_CODE id)
 {
   uint8_t tmp = (uint8_t)id;
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_tlm_id_, &tmp);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_tlm_id_, &tmp);
 }
 
 
@@ -210,7 +211,7 @@ ctp_dest_flags_t TSP_get_dest_flgas(const TlmSpacePacket* tsp)
 
 void TSP_set_dest_flgas(TlmSpacePacket* tsp, ctp_dest_flags_t flags)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_dest_flags_, &flags);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dest_flags_, &flags);
 }
 
 
@@ -225,7 +226,7 @@ uint8_t TSP_get_dr_partition(const TlmSpacePacket* tsp)
 
 void TSP_set_dr_partition(TlmSpacePacket* tsp, uint8_t ptn)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_dr_ptn_, &ptn);
+  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dr_ptn_, &ptn);
 }
 
 
@@ -241,25 +242,25 @@ uint16_t TSP_get_packet_len(const TlmSpacePacket* tsp)
 
 void TSP_set_packet_len(TlmSpacePacket* tsp, uint16_t len)
 {
-  return SP_set_packet_len(TSP_CAST_TO_NON_CONSTSP(tsp), len);
+  SP_set_packet_len(TSP_CAST_TO_NON_CONST_SP(tsp), len);
 }
 
 
 void TSP_copy_packet(TlmSpacePacket* dest, const TlmSpacePacket* src)
 {
-  return SP_copy_packet(TSP_CAST_TO_NON_CONSTSP(dest), TSP_CAST_TO_SP(src));
+  SP_copy_packet(TSP_CAST_TO_NON_CONST_SP(dest), TSP_CAST_TO_SP(src));
 }
 
 
 uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp)
 {
-  return &(tsp->packet[SP_PRM_HDR_LEN + TSP_SND_HDR_LEN]);    // const_cast
+  return (uint8_t*)&(tsp->packet[SP_PRM_HDR_LEN + TSP_SND_HDR_LEN]);    // const_cast
 }
 
 
 // FIXME: TCP 時代の len と変わってることに注意！！！！！！
 // これを呼ぶ関数でなおす！！！！
-void TSP_setup_primary_hdr(const TlmSpacePacket* tsp, APID apid, uint16_t packet_data_len)
+void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_data_len)
 {
   TSP_set_common_hdr(tsp);
   TSP_set_apid(tsp, apid);
@@ -277,8 +278,9 @@ void TSP_set_common_hdr(TlmSpacePacket* tsp)
   TSP_set_2nd_hdr_flag(tsp, SP_2ND_HDR_FLAG_PRESENT);
   // ここでは Sequence Flag は Standalone Packet に固定     // FIXME: きちんとやる
   TSP_set_seq_flag(tsp, SP_SEQ_FLAG_SINGLE);
-  // ここでは Sequence Count は 0 固定     // FIXME: きちんとやる
-  TSP_set_seq_count(tsp, 0);
+  // FIXME: 一時的に Cmd_GENERATE_TLM で適当にやってるので，後で直す
+  // // ここでは Sequence Count は 0 固定     // FIXME: きちんとやる
+  // TSP_set_seq_count(tsp, 0);
 }
 
 

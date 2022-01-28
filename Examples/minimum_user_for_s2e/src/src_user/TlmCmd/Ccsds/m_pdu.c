@@ -3,8 +3,6 @@
 
 #include "string.h" // for memcpy
 
-#include <src_core/TlmCmd/Ccsds/TCPacket.h>
-
 static void M_PDU_clear_spare_(M_PDU* m_pdu);
 
 void M_PDU_generate_byte_stream(const M_PDU* m_pdu,

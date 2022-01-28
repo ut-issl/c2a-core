@@ -194,4 +194,13 @@ void CCP_set_param(CommonCmdPacket* packet, const uint8_t* param, uint16_t len);
  */
 void CCP_set_common_hdr(CommonCmdPacket* packet);
 
+/**
+ * @brief  CommonCmdPacket をコピー
+ * @note   user 実装次第だが，高速化のためすすべてではなく必要最低限しかコピーしない場合もある
+ * @param[in,out] dest: コピー先 CCP
+ * @param[in]     src:  コピー元 CCP
+ * @return void
+ */
+void CCP_copy_packet(CommonCmdPacket* dest, const CommonCmdPacket* src);
+
 #endif

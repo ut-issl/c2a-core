@@ -4,14 +4,16 @@
 #include <stddef.h> // for size_t
 
 #include "../../Library/stdint.h"
-#include <src_core/TlmCmd/Ccsds/TCPacket.h>
+#include <src_core/TlmCmd/Ccsds/cmd_space_packet.h>
+
+// FIXME: TCP から CmdSpacePacket にしたことによる整理をする！！！
 
 #define TCS_HEADER_SIZE (1u)
 
 typedef struct
 {
   uint8_t header[TCS_HEADER_SIZE];
-  TCP tcp;
+  CmdSpacePacket tcp;      // FIXME: TCP から CSP に諸々直す！
 } TCS;
 
 typedef enum

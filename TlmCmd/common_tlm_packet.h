@@ -73,8 +73,17 @@ uint16_t CTP_get_packet_len(const CommonTlmPacket* packet);
  * @brief  ADU 分割なしの場合の User Data 先頭のポインタを取得
  * @param  packet: CTP
  * @note   FIXME: この関数で取得したポインタ経由で tlm のデータをセットする事があるため， const をつけていない
+ *                引数の const を外しても良いかも？
  */
 uint8_t* CTP_get_user_data_head(CommonTlmPacket* packet);
 
+/**
+ * @brief  CommonTlmPacket をコピー
+ * @note   user 実装次第だが，高速化のためすすべてではなく必要最低限しかコピーしない場合もある
+ * @param[in,out] dest: コピー先 CTP
+ * @param[in]     src:  コピー元 CTP
+ * @return void
+ */
+void CTP_copy_packet(CommonTlmPacket* dest, const CommonTlmPacket* src);
 
 #endif
