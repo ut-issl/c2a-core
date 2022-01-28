@@ -5,7 +5,7 @@ Comment,,,,,Type,Description,Type,Description,Type,Description,Type,Description,
 * C2A_CORE,基幹機能コマンド,,,,,,,,,,,,,,,,,,,
 ,Cmd_NOP,OBC,0x0000,0,,,,,,,,,,,,,,,ダミーコマンド,
 ,Cmd_TMGR_SET_TIME,OBC,0x0001,1,uint32_t,TI,,,,,,,,,,,,,MOBC時刻設定コマンド,
-,Cmd_TMGR_SET_UNIXTIME,OBC,0x0002,3,double,unixtime,uint32_t,total_cycle,uint32_t,step,,,,,,,,,MOBC UNIXTIME修正コマンド,
+,Cmd_TMGR_UPDATE_UNIXTIME,OBC,0x0002,3,double,unixtime,uint32_t,total_cycle,uint32_t,step,,,,,,,,,MOBC UNIXTIME修正コマンド,
 ,Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH,OBC,0x0003,1,double,ult_unixtime_epoch,,,,,,,,,,,,,UTL_cmdで用いるunixtimeの紀元を変更する,utl_unixtime_epoch [s]
 ,Cmd_TMGR_SET_CYCLE_CORRECTION,OBC,0x0004,1,double,cycle_correction,,,,,,,,,,,,,CYCLES_PER_SECの補正倍率を変更する@@ 初期値は1.0,
 ,Cmd_TMGR_RESET_CYCLE_CORRECTION,OBC,0x0005,0,,,,,,,,,,,,,,,CYCLES_PER_SECの補正倍率を1.0に初期化する,

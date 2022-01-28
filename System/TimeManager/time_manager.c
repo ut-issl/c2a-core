@@ -33,11 +33,11 @@ static TMGR_ACK TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch);
 static TMGR_ACK TMGR_set_cycle_correction_(double cycle_correction);
 
 /**
- * @brief enum変換用関数
+ * @brief enum 変換用関数
  * @param[in] ack: TMGR_ACK
  * @return CCP_EXEC_STS
  */
-static CCP_EXEC_STS TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(TMGR_ACK ack);
+static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack);
 
 void TMGR_init(void)
 {
@@ -131,7 +131,7 @@ void TMGR_clear_unixtime_info(void)
   TMGR_set_cycle_correction_(1.0);
 }
 
-TMGR_ACK TMGR_update_unixtime_info(const double unixtime, const ObcTime* time)
+TMGR_ACK TMGR_update_unixtime(const double unixtime, const ObcTime* time)
 {
   double ti_sec = TMGR_get_precice_ti_in_sec(time);
 
@@ -228,7 +228,7 @@ static TMGR_ACK TMGR_set_cycle_correction_(double cycle_correction)
   return TMGR_ACK_OK;
 }
 
-static CCP_EXEC_STS TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(TMGR_ACK ack)
+static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
 {
   switch (ack)
   {
@@ -237,7 +237,7 @@ static CCP_EXEC_STS TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(TMGR_ACK ack)
   case TMGR_ACK_PARAM_ERR:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
-    return CCP_EXEC_UNKNOWN;
+    return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 }
 
@@ -246,32 +246,28 @@ CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
   cycle_t set_value = CCP_get_param_from_packet(packet, 0, cycle_t);
   TMGR_ACK ack = TMGR_set_master_total_cycle_(set_value);
 
-  return TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CommonCmdPacket* packet)
+CCP_EXEC_STS Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
 {
   ObcTime time;
-  cycle_t total_cycle;
-  step_t step;
+  double unixtime = CCP_get_param_from_packet(packet, 0, double);
+  cycle_t total_cycle = CCP_get_param_from_packet(packet, 1, cycle_t);
+  step_t step = CCP_get_param_from_packet(packet, 2, cycle_t);
   TMGR_ACK ack;
 
-  double unixtime = CCP_get_param_from_packet(packet, 0, double);
   if (unixtime < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
-
-  total_cycle = CCP_get_param_from_packet(packet, 1, cycle_t);
   if (total_cycle >= OBCT_MAX_CYCLE) return CCP_EXEC_ILLEGAL_PARAMETER;
-
-  step = CCP_get_param_from_packet(packet, 2, cycle_t);
   if (step >= OBCT_STEPS_PER_CYCLE) return CCP_EXEC_ILLEGAL_PARAMETER;
 
   time.total_cycle = total_cycle;
   time.step = step;
   time.mode_cycle = 0; // 必要ないので0とする
 
-  ack = TMGR_update_unixtime_info(unixtime, &time);
+  ack = TMGR_update_unixtime(unixtime, &time);
 
-  return TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
 CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
@@ -279,7 +275,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
   double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
   TMGR_ACK ack = TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);
 
-  return TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
 CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
@@ -287,7 +283,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
   double cycle_correction = CCP_get_param_from_packet(packet, 0, double);
   TMGR_ACK ack = TMGR_set_cycle_correction_(cycle_correction);
 
-  return TMGR_conv_TMGR_ACK_to_CCP_EXEC_STS(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
 CCP_EXEC_STS Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)

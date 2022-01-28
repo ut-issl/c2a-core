@@ -146,12 +146,12 @@ uint32_t TMGR_get_master_mode_cycle_in_msec(void);
 void TMGR_clear_unixtime_info(void);
 
 /**
- * @brief unixtime_info_ を観測情報を用いて更新する
+ * @brief unixtime と TI の紐づき情報を更新する
  * @param[in] unixtime (GPS 等から観測した) unixtime
  * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
- * @return void
+ * @return TMGR_ACK
  */
-TMGR_ACK TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
+TMGR_ACK TMGR_update_unixtime(const double unixtime, const ObcTime* time);
 
 /**
  * @brief unixtime_at_ti0 を取得する
@@ -184,14 +184,14 @@ double TMGR_get_precice_ti_in_sec(const ObcTime* time);
 /**
  * @brief 現在の unixtime を OBC の ti をもとに計算して返す
  * @param void
- * @return ti（秒単位, 小数点以下も保持）
+ * @return unixtime
  */
 double TMGR_get_current_unixtime(void);
 
 /**
  * @brief ObcTime を unixtime に変換する
  * @param[in] ObcTime
- * @return unixtime (秒単位, 小数点以下も保持)
+ * @return unixtime
  */
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time);
 
@@ -222,7 +222,7 @@ cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
 
 CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet);
 
