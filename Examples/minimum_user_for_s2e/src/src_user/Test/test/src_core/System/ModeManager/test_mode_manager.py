@@ -36,7 +36,7 @@ def test_mm_nop():
 #     # ===== 存在しないモード =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -62,7 +62,7 @@ def test_mm_nop():
 #     # ===== 無効化されているブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_INACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_INACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -78,7 +78,7 @@ def test_mm_nop():
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -138,7 +138,7 @@ def test_mm_nop():
 #     # ===== 無効化されているブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_INACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_INACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -154,7 +154,7 @@ def test_mm_nop():
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )

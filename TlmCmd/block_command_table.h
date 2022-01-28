@@ -296,5 +296,6 @@ CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
 
 #endif
