@@ -147,10 +147,8 @@ def test_tmgr_utl_cmd():
     unixtime_at_ti0 = time.time()
     test_utl_cmd_ten_times(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, 1.0)
 
-
     # ===== 実行unixtime < unixtime_at_ti0 の場合 =====
     # TODO: TL0に登録されないことを確認する
-
 
     # ===== CYCLES_PER_SEC を補正した場合 =====
     # 0.5 <= set_value <= 2.0 でランダムに補正倍率をセットする
@@ -164,11 +162,9 @@ def test_tmgr_utl_cmd():
         ope, c2a_enum.Cmd_CODE_TMGR_RESET_CYCLE_CORRECTION, (), c2a_enum.Tlm_CODE_HK
     )
 
-
     # ===== epoch が変わった場合 =====
     new_epoch = time.time()
     test_utl_cmd_ten_times(unixtime_at_ti0, new_epoch, 1.0)
-
 
     # ===== epoch を変えて CYCLES_PER_SEC も補正した場合 =====
     set_value = random.uniform(0.5, 2.0)
@@ -204,7 +200,6 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction
         (utl_unixtime_epoch,),
         c2a_enum.Tlm_CODE_HK,
     )
-
 
     # 最初にTL0をクリアしておく
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
