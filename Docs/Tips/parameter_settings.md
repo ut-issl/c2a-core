@@ -33,7 +33,7 @@ C2Aでもっともメモリサイズを消費するであろう箇所．
 
 現時点では`BlockCommandTable`のサイズはおおよそ以下の通り.
 ```
-  (a + b) * BCT_MAX_BLOCKS + c = 7668 Byte
+  (a + b) * BCT_MAX_BLOCKS + c
 
   a: sizeof(BCT_Table*)
   b: sizeof(BCT_Func)
@@ -41,7 +41,7 @@ C2Aでもっともメモリサイズを消費するであろう箇所．
 ```
 `BlockCommandExecutor` のサイズは
 ```
-  (a + b) * BCT_MAX_BLOCKS = 4596 Byte
+  (a + b) * BCT_MAX_BLOCKS
 
   a: sizeof(BCE_Params*)
   b: sizeof(BCE_Func)
@@ -49,11 +49,11 @@ C2Aでもっともメモリサイズを消費するであろう箇所．
 各実体 `BCT_Table`, `BCE_Params` のサイズは
 ```
   BCT_Table:
-    (a + b) * BCT_MAX_BLOCKS = 784767 Byte
+    (a + b) * BCT_MAX_BLOCKS
 
     a: 1, b: BC_CMD_MAX_LENGTH * BC_MAX_CMD_NUM
   BCE_Params:
-    a * BCT_MAX_BLOCKS = 5362 Byte
+    a * BCT_MAX_BLOCKS
 
     a: sizeof(BCE_Params)
 ```
