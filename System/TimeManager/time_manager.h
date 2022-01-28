@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief OBC時刻のカウントアップと, unixtime との変換
+ * @brief OBC時刻のカウントアップと，各種衛星時刻関連処理
  */
 #ifndef TIME_MANAGER_H_
 #define TIME_MANAGER_H_
@@ -9,7 +9,18 @@
 #include "../../TlmCmd/common_tlm_cmd_packet.h"
 
 #define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z 時点の unixtime.
-                                                                 utl_unixtime_epoch_ のデフォルト値 */
+                                                                 utl_unixtime_epoch のデフォルト値 */
+
+/**
+ * @enum   TMGR_ACK
+ * @brief  Time Manager の汎用返り値
+ * @note   uint8_t を想定
+ */
+typedef enum
+{
+  TMGR_ACK_OK = 0,       //!< 正常終了
+  TMGR_ACK_PARAM_ERR     //!< パラメタエラー
+} TMGR_ACK;
 
 /**
  * @struct TimeManager
@@ -20,13 +31,14 @@ typedef struct
   ObcTime master_clock_;
   struct
   {
-    double unixtime_at_ti0;    //!< 観測情報から計算した, master_clock が {0, 0, 0} の時の unixtime
+    double unixtime_at_ti0;    //!< master_clock が {0, 0, 0} の時の unixtime
     cycle_t ti_at_last_update; //!< "unixtime_info_ を最後に更新した (GPSなどの) 時刻情報" を観測した時点の total_cycle
     double utl_unixtime_epoch; /*!< これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義する.
                                     cycle 未満の精度は切り捨てられるので utl_unixtime は整数値となる.
                                     UTL_cmd の実行時刻情報として用いる. */
     double cycle_correction;   /*!< CYCLES_PER_SEC の補正項. unixtime <> OBCTime の変換で使う
-                                    CYCLES_PER_SEC * cycle_correction = OBC のクロック誤差を反映した実際の値 */
+                                    CYCLES_PER_SEC * cycle_correction = OBC のクロック誤差を反映した実際の値
+                                    初期値は 1.0 */
   } unixtime_info_;
   struct
   {
@@ -139,7 +151,7 @@ void TMGR_clear_unixtime_info(void);
  * @param[in] time (GPS 等から) unixtime を観測した時の ObcTime
  * @return void
  */
-void TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
+TMGR_ACK TMGR_update_unixtime_info(const double unixtime, const ObcTime* time);
 
 /**
  * @brief unixtime_at_ti0 を取得する
@@ -168,6 +180,13 @@ double TMGR_get_precice_cycles_per_sec(void);
  * @return ti（秒単位, 小数点以下も保持）
  */
 double TMGR_get_precice_ti_in_sec(const ObcTime* time);
+
+/**
+ * @brief 現在の unixtime を OBC の ti をもとに計算して返す
+ * @param void
+ * @return ti（秒単位, 小数点以下も保持）
+ */
+double TMGR_get_current_unixtime(void);
 
 /**
  * @brief ObcTime を unixtime に変換する
@@ -208,5 +227,9 @@ CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet);
 
 #endif

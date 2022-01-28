@@ -14,6 +14,9 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TMGR_SET_TIME].cmd_func = Cmd_TMGR_SET_TIME;
   cmd_table[Cmd_CODE_TMGR_SET_UNIXTIME].cmd_func = Cmd_TMGR_SET_UNIXTIME;
   cmd_table[Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH].cmd_func = Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH;
+  cmd_table[Cmd_CODE_TMGR_SET_CYCLE_CORRECTION].cmd_func = Cmd_TMGR_SET_CYCLE_CORRECTION;
+  cmd_table[Cmd_CODE_TMGR_RESET_CYCLE_CORRECTION].cmd_func = Cmd_TMGR_RESET_CYCLE_CORRECTION;
+  cmd_table[Cmd_CODE_TMGR_CLEAR_UNIXTIME_INFO].cmd_func = Cmd_TMGR_CLEAR_UNIXTIME_INFO;
   cmd_table[Cmd_CODE_AM_REGISTER_APP].cmd_func = Cmd_AM_REGISTER_APP;
   cmd_table[Cmd_CODE_AM_INITIALIZE_APP].cmd_func = Cmd_AM_INITIALIZE_APP;
   cmd_table[Cmd_CODE_AM_EXECUTE_APP].cmd_func = Cmd_AM_EXECUTE_APP;
@@ -164,6 +167,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TMGR_SET_UNIXTIME].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_TMGR_SET_UNIXTIME].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_8BYTE;
+  cmd_table[Cmd_CODE_TMGR_SET_CYCLE_CORRECTION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_8BYTE;
   cmd_table[Cmd_CODE_AM_REGISTER_APP].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_AM_REGISTER_APP].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_AM_REGISTER_APP].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
