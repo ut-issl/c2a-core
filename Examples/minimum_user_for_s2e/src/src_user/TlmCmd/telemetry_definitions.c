@@ -2238,7 +2238,7 @@ static int Tlm_EL_TLOG_(unsigned char* contents, int max_len)
   uint16_t offset = EL_TLOG_TLM_PAGE_SIZE * event_logger->tlm_info.tlog.page_no;
   const EL_Event* events = event_logger->tlogs[err_level].events;
 
-  if (410 > max_len) return TF_TOO_SHORT_LEN;
+  if (366 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_logger->tlm_info.tlog.page_no);
@@ -2407,29 +2407,9 @@ static int Tlm_EL_TLOG_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[360], events[offset+31].time.total_cycle);
   TF_copy_u8(&contents[364], (uint8_t)events[offset+31].time.step);
   TF_copy_u8(&contents[365], (uint8_t)events[offset+31].note);
-  TF_copy_u8(&contents[366], (uint8_t)events[offset+32].group);
-  TF_copy_u32(&contents[367], events[offset+32].local);
-  TF_copy_u32(&contents[371], events[offset+32].time.total_cycle);
-  TF_copy_u8(&contents[375], (uint8_t)events[offset+32].time.step);
-  TF_copy_u8(&contents[376], (uint8_t)events[offset+32].note);
-  TF_copy_u8(&contents[377], (uint8_t)events[offset+33].group);
-  TF_copy_u32(&contents[378], events[offset+33].local);
-  TF_copy_u32(&contents[382], events[offset+33].time.total_cycle);
-  TF_copy_u8(&contents[386], (uint8_t)events[offset+33].time.step);
-  TF_copy_u8(&contents[387], (uint8_t)events[offset+33].note);
-  TF_copy_u8(&contents[388], (uint8_t)events[offset+34].group);
-  TF_copy_u32(&contents[389], events[offset+34].local);
-  TF_copy_u32(&contents[393], events[offset+34].time.total_cycle);
-  TF_copy_u8(&contents[397], (uint8_t)events[offset+34].time.step);
-  TF_copy_u8(&contents[398], (uint8_t)events[offset+34].note);
-  TF_copy_u8(&contents[399], (uint8_t)events[offset+35].group);
-  TF_copy_u32(&contents[400], events[offset+35].local);
-  TF_copy_u32(&contents[404], events[offset+35].time.total_cycle);
-  TF_copy_u8(&contents[408], (uint8_t)events[offset+35].time.step);
-  TF_copy_u8(&contents[409], (uint8_t)events[offset+35].note);
 #endif
 
-  return 410;
+  return 366;
 }
 
 static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
@@ -2439,7 +2419,7 @@ static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
   const uint16_t* log_orders = event_logger->clogs[err_level].log_orders;
   const EL_CLogElement* logs = event_logger->clogs[err_level].logs;
 
-  if (408 > max_len) return TF_TOO_SHORT_LEN;
+  if (372 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&contents[0], event_logger->tlm_info.clog.page_no);
@@ -2607,25 +2587,9 @@ static int Tlm_EL_CLOG_(unsigned char* contents, int max_len)
   TF_copy_u16(&contents[365], logs[log_orders[offset+19]].count);
   TF_copy_u32(&contents[367], logs[log_orders[offset+19]].delta_record_time.total_cycle);
   TF_copy_u8(&contents[371], (uint8_t)logs[log_orders[offset+19]].delta_record_time.step);
-  TF_copy_u8(&contents[372], (uint8_t)logs[log_orders[offset+20]].event.group);
-  TF_copy_u32(&contents[373], logs[log_orders[offset+20]].event.local);
-  TF_copy_u32(&contents[377], logs[log_orders[offset+20]].event.time.total_cycle);
-  TF_copy_u8(&contents[381], (uint8_t)logs[log_orders[offset+20]].event.time.step);
-  TF_copy_u8(&contents[382], (uint8_t)logs[log_orders[offset+20]].event.note);
-  TF_copy_u16(&contents[383], logs[log_orders[offset+20]].count);
-  TF_copy_u32(&contents[385], logs[log_orders[offset+20]].delta_record_time.total_cycle);
-  TF_copy_u8(&contents[389], (uint8_t)logs[log_orders[offset+20]].delta_record_time.step);
-  TF_copy_u8(&contents[390], (uint8_t)logs[log_orders[offset+21]].event.group);
-  TF_copy_u32(&contents[391], logs[log_orders[offset+21]].event.local);
-  TF_copy_u32(&contents[395], logs[log_orders[offset+21]].event.time.total_cycle);
-  TF_copy_u8(&contents[399], (uint8_t)logs[log_orders[offset+21]].event.time.step);
-  TF_copy_u8(&contents[400], (uint8_t)logs[log_orders[offset+21]].event.note);
-  TF_copy_u16(&contents[401], logs[log_orders[offset+21]].count);
-  TF_copy_u32(&contents[403], logs[log_orders[offset+21]].delta_record_time.total_cycle);
-  TF_copy_u8(&contents[407], (uint8_t)logs[log_orders[offset+21]].delta_record_time.step);
 #endif
 
-  return 408;
+  return 372;
 }
 
 static int Tlm_EH_(unsigned char* contents, int max_len)
@@ -3204,7 +3168,7 @@ static int Tlm_GS_(unsigned char* contents, int max_len)
 
 static int Tlm_HK_(unsigned char* contents, int max_len)
 {
-  if (415 > max_len) return TF_TOO_SHORT_LEN;
+  if (403 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&contents[0], TMGR_get_master_clock().mode_cycle);
@@ -3338,12 +3302,9 @@ static int Tlm_HK_(unsigned char* contents, int max_len)
   TF_copy_u32(&contents[391], 0);
   TF_copy_u32(&contents[395], 0);
   TF_copy_u32(&contents[399], 0);
-  TF_copy_u32(&contents[403], 0);
-  TF_copy_u32(&contents[407], 0);
-  TF_copy_u32(&contents[411], 0);
 #endif
 
-  return 415;
+  return 403;
 }
 
 static int Tlm_GIT_REV_(unsigned char* contents, int max_len)
