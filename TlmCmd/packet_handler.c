@@ -169,6 +169,8 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 
   flags = CTP_get_dest_flags(packet);
 
+  // FIXME: flag の match は関数化したい
+
   // Housekeeping Telemetry
   if (flags & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
 

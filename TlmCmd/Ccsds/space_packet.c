@@ -87,6 +87,7 @@ APID SP_get_apid(const SpacePacket* sp)
   SP_extract_param_from_packet(sp, &SP_pei_apid_, &tmp);
   apid = (APID)tmp;
 
+  // FIXME: ここはユーザー依存部分なので直す
   switch (apid)
   {
   case APID_MOBC_CMD:         // FALLTHROUGH
