@@ -48,7 +48,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   TSP_setup_primary_hdr(&ctp_, APID_MIS_TLM, (uint16_t)(len + TSP_SND_HDR_LEN));
   TSP_set_board_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
   // FIXME: 他の時刻も入れる
-  TSP_set_board_time(&ctp_, 0.0);
+  TSP_set_global_time(&ctp_, 0.0);
   TSP_set_on_board_subnet_time(&ctp_, 0);
   // FIXME: 他 OBC からのパケットは別処理する
   // FIXME: 一旦雑に category を処理してるが後でちゃんと直す
