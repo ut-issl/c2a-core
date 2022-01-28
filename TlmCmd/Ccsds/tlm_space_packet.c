@@ -15,9 +15,9 @@
 
 static const SP_ParamExtractionInfo TSP_pei_2nd_hdr_ver_ = { 6, 0xff, 0, 1};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_board_time_  = { 7, 0xff, 0, 4};  // 11111111b
-static const SP_ParamExtractionInfo TSP_pei_global_time_ = {11, 0xff, 0, 8};  // 11111111b
-static const SP_ParamExtractionInfo TSP_pei_ob_sn_time_  = {19, 0xff, 0, 4};  // 11111111b
-static const SP_ParamExtractionInfo TSP_pei_tlm_id_      = {23, 0xff, 0, 1};  // 11111111b
+static const SP_ParamExtractionInfo TSP_pei_tlm_id_      = {11, 0xff, 0, 1};  // 11111111b
+static const SP_ParamExtractionInfo TSP_pei_global_time_ = {12, 0xff, 0, 8};  // 11111111b
+static const SP_ParamExtractionInfo TSP_pei_ob_sn_time_  = {20, 0xff, 0, 4};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_dest_flags_  = {24, 0xff, 0, 1};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_dr_ptn_      = {25, 0x0f, 0, 1};  // 11111111b
 
