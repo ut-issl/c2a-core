@@ -256,14 +256,14 @@ void SP_extract_param_from_packet(const SpacePacket* sp,
                                   void* dst);
 
 /**
- * @brief  packet に格納された param を設定
+ * @brief  packet に param を格納
  * @param sp[in,out]: SpacePacket
  * @param pei[in]:    SP_ParamExtractionInfo
  * @param src[in]:    格納元のポインタ
  * @return void
  */
-void SP_insert_param_from_packet(SpacePacket* sp,
-                                 const SP_ParamExtractionInfo* pei,
-                                 const void* src);
+void SP_insert_param_to_packet(SpacePacket* sp,
+                               const SP_ParamExtractionInfo* pei,
+                               const void* src);
 
 #endif

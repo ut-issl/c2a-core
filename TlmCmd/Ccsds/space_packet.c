@@ -43,7 +43,7 @@ SP_VER SP_get_ver(const SpacePacket* sp)
 void SP_set_ver(SpacePacket* sp, SP_VER ver)
 {
   uint8_t tmp = (uint8_t)ver;
-  SP_insert_param_from_packet(sp, &SP_pei_ver_, &tmp);
+  SP_insert_param_to_packet(sp, &SP_pei_ver_, &tmp);
 }
 
 
@@ -59,7 +59,7 @@ SP_TYPE SP_get_type(const SpacePacket* sp)
 void SP_set_type(SpacePacket* sp, SP_TYPE type)
 {
   uint8_t tmp = (uint8_t)type;
-  SP_insert_param_from_packet(sp, &SP_pei_type_, &tmp);
+  SP_insert_param_to_packet(sp, &SP_pei_type_, &tmp);
 }
 
 
@@ -75,7 +75,7 @@ SP_2ND_HDR_FLAG SP_get_2nd_hdr_flag(const SpacePacket* sp)
 void SP_set_2nd_hdr_flag(SpacePacket* sp, SP_2ND_HDR_FLAG flag)
 {
   uint8_t tmp = (uint8_t)flag;
-  SP_insert_param_from_packet(sp, &SP_pei_2nd_hdr_flag_, &tmp);
+  SP_insert_param_to_packet(sp, &SP_pei_2nd_hdr_flag_, &tmp);
 }
 
 
@@ -105,7 +105,7 @@ APID SP_get_apid(const SpacePacket* sp)
 void SP_set_apid(SpacePacket* sp, APID apid)
 {
   uint16_t tmp = (uint16_t)apid;
-  SP_insert_param_from_packet(sp, &SP_pei_apid_, &tmp);
+  SP_insert_param_to_packet(sp, &SP_pei_apid_, &tmp);
 }
 
 
@@ -121,7 +121,7 @@ SP_SEQ_FLAG SP_get_seq_flag(const SpacePacket* sp)
 void SP_set_seq_flag(SpacePacket* sp, SP_SEQ_FLAG flag)
 {
   uint8_t tmp = (uint8_t)flag;
-  SP_insert_param_from_packet(sp, &SP_pei_seq_flag_, &tmp);
+  SP_insert_param_to_packet(sp, &SP_pei_seq_flag_, &tmp);
 }
 
 
@@ -136,7 +136,7 @@ uint16_t SP_get_seq_count(const SpacePacket* sp)
 
 void SP_set_seq_count(SpacePacket* sp, uint16_t count)
 {
-  SP_insert_param_from_packet(sp, &SP_pei_seq_count_, &count);
+  SP_insert_param_to_packet(sp, &SP_pei_seq_count_, &count);
 }
 
 
@@ -156,7 +156,7 @@ void SP_set_packet_data_len(SpacePacket* sp, uint16_t len)
 
   // Data Length は 0 起算表記なので 1 起算を変換
   len--;
-  SP_insert_param_from_packet(sp, &SP_pei_pckt_data_len_, &len);
+  SP_insert_param_to_packet(sp, &SP_pei_pckt_data_len_, &len);
 }
 
 
@@ -219,9 +219,9 @@ void SP_extract_param_from_packet(const SpacePacket* sp,
 }
 
 
-void SP_insert_param_from_packet(SpacePacket* sp,
-                                 const SP_ParamExtractionInfo* pei,
-                                 const void* src)
+void SP_insert_param_to_packet(SpacePacket* sp,
+                               const SP_ParamExtractionInfo* pei,
+                               const void* src)
 {
   uint8_t buffer[8];
   uint8_t i;

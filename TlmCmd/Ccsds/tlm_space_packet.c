@@ -135,7 +135,7 @@ TSP_2ND_HDR_VER TSP_get_2nd_hdr_ver(const TlmSpacePacket* tsp)
 void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, TSP_2ND_HDR_VER ver)
 {
   uint8_t tmp = (uint8_t)ver;
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_2nd_hdr_ver_, &tmp);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_2nd_hdr_ver_, &tmp);
 }
 
 
@@ -150,7 +150,7 @@ uint32_t TSP_get_board_time(const TlmSpacePacket* tsp)
 
 void TSP_set_board_time(TlmSpacePacket* tsp, uint32_t time)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_board_time_, &time);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_board_time_, &time);
 }
 
 
@@ -165,7 +165,7 @@ double TSP_get_global_time(const TlmSpacePacket* tsp)
 
 void TSP_set_global_time(TlmSpacePacket* tsp, double time)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_global_time_, &time);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_global_time_, &time);
 }
 
 
@@ -180,7 +180,7 @@ uint32_t TSP_get_on_board_subnet_time(const TlmSpacePacket* tsp)
 
 void TSP_set_on_board_subnet_time(TlmSpacePacket* tsp, uint32_t time)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_ob_sn_time_, &time);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_ob_sn_time_, &time);
 }
 
 
@@ -196,7 +196,7 @@ TLM_CODE TSP_get_tlm_id(const TlmSpacePacket* tsp)
 void TSP_set_tlm_id(TlmSpacePacket* tsp, TLM_CODE id)
 {
   uint8_t tmp = (uint8_t)id;
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_tlm_id_, &tmp);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_tlm_id_, &tmp);
 }
 
 
@@ -211,7 +211,7 @@ ctp_dest_flags_t TSP_get_dest_flgas(const TlmSpacePacket* tsp)
 
 void TSP_set_dest_flgas(TlmSpacePacket* tsp, ctp_dest_flags_t flags)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dest_flags_, &flags);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dest_flags_, &flags);
 }
 
 
@@ -226,7 +226,7 @@ uint8_t TSP_get_dr_partition(const TlmSpacePacket* tsp)
 
 void TSP_set_dr_partition(TlmSpacePacket* tsp, uint8_t ptn)
 {
-  SP_insert_param_from_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dr_ptn_, &ptn);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dr_ptn_, &ptn);
 }
 
 

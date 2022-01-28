@@ -134,7 +134,7 @@ CSP_2ND_HDR_VER CSP_get_2nd_hdr_ver(const CmdSpacePacket* csp)
 void CSP_set_2nd_hdr_ver(CmdSpacePacket* csp, CSP_2ND_HDR_VER ver)
 {
   uint8_t tmp = (uint8_t)ver;
-  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_2nd_hdr_ver_, &tmp);
+  SP_insert_param_to_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_2nd_hdr_ver_, &tmp);
 }
 
 
@@ -149,7 +149,7 @@ CSP_CMD_TYPE CSP_get_cmd_type(const CmdSpacePacket* csp)
 void CSP_set_cmd_type(CmdSpacePacket* csp, CSP_CMD_TYPE cmd_type)
 {
   uint8_t tmp = (uint8_t)cmd_type;
-  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_cmd_type_, &tmp);
+  SP_insert_param_to_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_cmd_type_, &tmp);
 }
 
 
@@ -165,7 +165,7 @@ CMD_CODE CSP_get_cmd_id(const CmdSpacePacket* csp)
 void CSP_set_cmd_id(CmdSpacePacket* csp, CMD_CODE id)
 {
   uint16_t tmp = (uint16_t)id;
-  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_cmd_id_, &tmp);
+  SP_insert_param_to_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_cmd_id_, &tmp);
 }
 
 
@@ -193,7 +193,7 @@ CCP_DEST_TYPE CSP_get_dest_type(const CmdSpacePacket* csp)
 void CSP_set_dest_type(CmdSpacePacket* csp, CCP_DEST_TYPE dest_type)
 {
   uint8_t tmp = (uint8_t)dest_type;
-  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_dest_type_, &tmp);
+  SP_insert_param_to_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_dest_type_, &tmp);
 }
 
 
@@ -224,7 +224,7 @@ CCP_EXEC_TYPE CSP_get_exec_type(const CmdSpacePacket* csp)
 void CSP_set_exec_type(CmdSpacePacket* csp, CCP_EXEC_TYPE exec_type)
 {
   uint8_t tmp = (uint8_t)exec_type;
-  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_exec_type_, &tmp);
+  SP_insert_param_to_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_exec_type_, &tmp);
 }
 
 
@@ -239,7 +239,7 @@ uint32_t CSP_get_ti(const CmdSpacePacket* csp)
 
 void CSP_set_ti(CmdSpacePacket* csp, uint32_t ti)
 {
-  SP_insert_param_from_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_ti_, &ti);
+  SP_insert_param_to_packet(CSP_CAST_TO_NON_CONST_SP(csp), &CSP_pei_ti_, &ti);
 }
 
 
