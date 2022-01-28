@@ -36,7 +36,7 @@ typedef struct
     double utl_unixtime_epoch; /*!< これを時刻ゼロとして起算した cycle 刻みの時刻を utl_unixtime と定義する.
                                     cycle 未満の精度は切り捨てられるので utl_unixtime は整数値となる.
                                     UTL_cmd の実行時刻情報として用いる. */
-    double cycle_correction;   /*!< CYCLES_PER_SEC の補正項. unixtime <> OBCTime の変換で使う
+    double cycle_correction;   /*!< CYCLES_PER_SEC の補正倍率. unixtime <> OBCTime の変換で使う
                                     CYCLES_PER_SEC * cycle_correction = OBC のクロック誤差を反映した実際の値
                                     初期値は 1.0 */
   } unixtime_info_;
