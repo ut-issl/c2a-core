@@ -49,6 +49,7 @@ static void DI_AOBC_update_(void)
 
   // [TODO]
   // 必要があればここに処理を
+  (void)ret;
 }
 
 

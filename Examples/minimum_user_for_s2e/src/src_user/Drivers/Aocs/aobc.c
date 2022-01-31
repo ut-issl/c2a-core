@@ -33,10 +33,10 @@ int AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
   DS_ERR_CODE ret;
 
   memset(aobc_driver, 0x00, sizeof(*aobc_driver));
-  AOBC_buffer_init();
+  AOBC_init_tlm_buffer(aobc_driver);
 
-  aobc_driver->driver.uart_config.ch         = ch;
-  aobc_driver->driver.uart_config.baudrate   = 115200;
+  aobc_driver->driver.uart_config.ch = ch;
+  aobc_driver->driver.uart_config.baudrate = 115200;
   aobc_driver->driver.uart_config.parity_settings = PARITY_SETTINGS_NONE;
   aobc_driver->driver.uart_config.data_length = UART_DATA_LENGTH_8BIT;
   aobc_driver->driver.uart_config.stop_bit = UART_STOP_BIT_1BIT;
@@ -67,11 +67,10 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   DSSC_set_rx_header(p_stream_config, AOBC_stx_, DS_ISSLFMT_STX_SIZE);
   DSSC_set_rx_footer(p_stream_config, AOBC_etx_, DS_ISSLFMT_ETX_SIZE);
   DSSC_set_rx_frame_size(p_stream_config, -1);    // 可変
-  DSSC_set_rx_framelength_pos(p_stream_config, DS_ISSLFMT_COMMON_HEADER_SIZE + 4);
+  DSSC_set_rx_framelength_pos(p_stream_config, DS_ISSLFMT_STX_SIZE);
   DSSC_set_rx_framelength_type_size(p_stream_config, 2);
-  // [TODO] これはちょっと要確認． CCSDS は 1 起算？
   DSSC_set_rx_framelength_offset(p_stream_config,
-                                 DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE + DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE + 1);
+                                 DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE);
   DSSC_set_data_analyzer(p_stream_config, AOBC_analyze_rec_data_);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
@@ -110,7 +109,7 @@ static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
   // [TODO] ここに CRC チェックをいれる
   // AOBC_RX_ERR_CODE_CRC_ERR を入れる
 
-  return AOBC_buffer_tlm_contents(p_stream_config, aobc_driver);
+  return AOBC_buffer_tlm_packet(p_stream_config, aobc_driver);
 }
 
 

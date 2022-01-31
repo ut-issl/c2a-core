@@ -3,8 +3,8 @@
 * @brief  AOBC の DI と AOBC の cmd dispatcher
 * @note   C2A 間通信のデモ用であり， AOBC も C2A 搭載を仮定する
 */
-#ifndef INCLUDED_DI_AOBC_H
-#define INCLUDED_DI_AOBC_H
+#ifndef DI_AOBC_H_
+#define DI_AOBC_H_
 
 #include "../../Drivers/Aocs/aobc.h"
 #include "../../Drivers/Aocs/aobc_command_definitions.h"

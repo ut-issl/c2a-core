@@ -4,45 +4,48 @@
  * @brief  テレメトリバッファー（テレメ中継）
  * @note   このコードは自動生成されています！
  */
-
 #include "./aobc_telemetry_definitions.h"
 #include "./aobc_telemetry_buffer.h"
-#include <string.h> // for memcpy
+#include "./aobc.h"
+#include <string.h>
 
-static AOBC_Buffer aobc_buffer_;
-const AOBC_Buffer* const aobc_buffer = &aobc_buffer_;
+static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(const CommonTlmPacket* packet, AOBC_TLM_CODE tlm_id, AOBC_Driver* aobc_driver);
+static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(const CommonTlmPacket* packet, AOBC_TLM_CODE tlm_id, AOBC_Driver* aobc_driver);
 
-static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver);
-static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver);
+static CommonTlmPacket AOBC_ctp_;
 
-void AOBC_buffer_init(void)
+void AOBC_init_tlm_buffer(AOBC_Driver* aobc_driver)
 {
-  aobc_buffer_.aobc_aobc.size = 0;
-  aobc_buffer_.aobc_hk.size = 0;
+  // packet などは，上位の driver の初期化で driver もろとも memset 0x00 されていると期待して，ここではしない
+  int i = 0;
+  for (i = 0; i < AOBC_MAX_TLMS; ++i)
+  {
+    aobc_driver->tlm_buffer.tlm[i].is_null_packet = 1;
+  }
 }
 
-DS_ERR_CODE AOBC_buffer_tlm_contents(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver)
+DS_ERR_CODE AOBC_buffer_tlm_packet(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver)
 {
-  uint8_t tlm_id  = DS_C2AFMT_get_tlm_id(p_stream_config);
+  AOBC_TLM_CODE tlm_id;
+
+  DS_C2AFMT_get_ctp(p_stream_config, &AOBC_ctp_);
+  tlm_id  = (AOBC_TLM_CODE)CTP_get_id(&AOBC_ctp_);
 
   switch (tlm_id)
   {
   case AOBC_Tlm_CODE_AOBC_AOBC:
-    return AOBC_analyze_tlm_aobc_aobc_(p_stream_config, aobc_driver);
+    return AOBC_analyze_tlm_aobc_aobc_(&AOBC_ctp_, tlm_id, aobc_driver);
   case AOBC_Tlm_CODE_AOBC_HK:
-    return AOBC_analyze_tlm_aobc_hk_(p_stream_config, aobc_driver);
+    return AOBC_analyze_tlm_aobc_hk_(&AOBC_ctp_, tlm_id, aobc_driver);
   default:
     aobc_driver->info.comm.rx_err_code = AOBC_RX_ERR_CODE_TLM_NOT_FOUND;
     return DS_ERR_CODE_ERR;
   }
 }
 
-static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver)
+static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(const CommonTlmPacket* packet, AOBC_TLM_CODE tlm_id, AOBC_Driver* aobc_driver)
 {
-  uint32_t tlm_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
-  const uint8_t* f = DSSC_get_rx_frame(p_stream_config) + DS_ISSLFMT_COMMON_HEADER_SIZE;
-  uint32_t contents_len = tlm_len - DS_C2AFMT_TCP_TLM_SECONDARY_HEADER_SIZE - 1;      // FIXME: CCSDSは1起算？
-  const uint8_t* contents_pos = f + DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE + DS_C2AFMT_TCP_TLM_SECONDARY_HEADER_SIZE;
+  const uint8_t* f = packet->packet;
   int8_t temp_i8 = 0;
   int16_t temp_i16 = 0;
   int32_t temp_i32 = 0;
@@ -52,34 +55,34 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(DS_StreamConfig* p_stream_config,
   float temp_f = 0.0f;
   double temp_d = 0.0;
 
-  // GSへのテレメ中継のためのバッファーへのコピー
-  if (contents_len > AOBC_TELEMETRY_BUFFE_SIZE) return DS_ERR_CODE_ERR;
-  memcpy(aobc_buffer_.aobc_aobc.buffer, contents_pos, (size_t)contents_len);
-  aobc_buffer_.aobc_aobc.size = (int)contents_len;
+  // GS へのテレメ中継のためのバッファーへのコピー
+  CTP_copy_packet(&(aobc_driver->tlm_buffer.tlm[tlm_id].packet), packet);
+  aobc_driver->tlm_buffer.tlm[tlm_id].is_null_packet = 0;
+  // TODO: CRC チェック
 
-  // MOBC内部でテレメデータへアクセスしやすいようにするための構造体へのパース
+  // MOBC 内部でテレメデータへアクセスしやすいようにするための構造体へのパース
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 7;
+  temp_u16 >>= 13;
   temp_u16 &= 0x7;
   aobc_driver->tlm_data.aobc_aobc.ph.ver = temp_u16;
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 4;
+  temp_u16 >>= 12;
   temp_u16 &= 0x1;
   aobc_driver->tlm_data.aobc_aobc.ph.type = temp_u16;
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 3;
+  temp_u16 >>= 11;
   temp_u16 &= 0x1;
   aobc_driver->tlm_data.aobc_aobc.ph.sh_flag = temp_u16;
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 2;
+  temp_u16 >>= 0;
   temp_u16 &= 0x7ff;
   aobc_driver->tlm_data.aobc_aobc.ph.apid = temp_u16;
   endian_memcpy(&temp_u16, &(f[2]), 2);
-  temp_u16 >>= 7;
+  temp_u16 >>= 14;
   temp_u16 &= 0x3;
   aobc_driver->tlm_data.aobc_aobc.ph.seq_flag = temp_u16;
   endian_memcpy(&temp_u16, &(f[2]), 2);
-  temp_u16 >>= 5;
+  temp_u16 >>= 0;
   temp_u16 &= 0x3fff;
   aobc_driver->tlm_data.aobc_aobc.ph.seq_count = temp_u16;
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.ph.packet_len), &(f[4]), 2);
@@ -195,12 +198,9 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(DS_StreamConfig* p_stream_config,
   return DS_ERR_CODE_OK;
 }
 
-static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver)
+static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(const CommonTlmPacket* packet, AOBC_TLM_CODE tlm_id, AOBC_Driver* aobc_driver)
 {
-  uint32_t tlm_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
-  const uint8_t* f = DSSC_get_rx_frame(p_stream_config) + DS_ISSLFMT_COMMON_HEADER_SIZE;
-  uint32_t contents_len = tlm_len - DS_C2AFMT_TCP_TLM_SECONDARY_HEADER_SIZE - 1;      // FIXME: CCSDSは1起算？
-  const uint8_t* contents_pos = f + DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE + DS_C2AFMT_TCP_TLM_SECONDARY_HEADER_SIZE;
+  const uint8_t* f = packet->packet;
   int8_t temp_i8 = 0;
   int16_t temp_i16 = 0;
   int32_t temp_i32 = 0;
@@ -210,34 +210,34 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(DS_StreamConfig* p_stream_config, A
   float temp_f = 0.0f;
   double temp_d = 0.0;
 
-  // GSへのテレメ中継のためのバッファーへのコピー
-  if (contents_len > AOBC_TELEMETRY_BUFFE_SIZE) return DS_ERR_CODE_ERR;
-  memcpy(aobc_buffer_.aobc_hk.buffer, contents_pos, (size_t)contents_len);
-  aobc_buffer_.aobc_hk.size = (int)contents_len;
+  // GS へのテレメ中継のためのバッファーへのコピー
+  CTP_copy_packet(&(aobc_driver->tlm_buffer.tlm[tlm_id].packet), packet);
+  aobc_driver->tlm_buffer.tlm[tlm_id].is_null_packet = 0;
+  // TODO: CRC チェック
 
-  // MOBC内部でテレメデータへアクセスしやすいようにするための構造体へのパース
+  // MOBC 内部でテレメデータへアクセスしやすいようにするための構造体へのパース
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 7;
+  temp_u16 >>= 13;
   temp_u16 &= 0x7;
   aobc_driver->tlm_data.aobc_hk.ph.ver = temp_u16;
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 4;
+  temp_u16 >>= 12;
   temp_u16 &= 0x1;
   aobc_driver->tlm_data.aobc_hk.ph.type = temp_u16;
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 3;
+  temp_u16 >>= 11;
   temp_u16 &= 0x1;
   aobc_driver->tlm_data.aobc_hk.ph.sh_flag = temp_u16;
   endian_memcpy(&temp_u16, &(f[0]), 2);
-  temp_u16 >>= 2;
+  temp_u16 >>= 0;
   temp_u16 &= 0x7ff;
   aobc_driver->tlm_data.aobc_hk.ph.apid = temp_u16;
   endian_memcpy(&temp_u16, &(f[2]), 2);
-  temp_u16 >>= 7;
+  temp_u16 >>= 14;
   temp_u16 &= 0x3;
   aobc_driver->tlm_data.aobc_hk.ph.seq_flag = temp_u16;
   endian_memcpy(&temp_u16, &(f[2]), 2);
-  temp_u16 >>= 5;
+  temp_u16 >>= 0;
   temp_u16 &= 0x3fff;
   aobc_driver->tlm_data.aobc_hk.ph.seq_count = temp_u16;
   endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.ph.packet_len), &(f[4]), 2);
@@ -256,7 +256,7 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(DS_StreamConfig* p_stream_config, A
   temp_u8 &= 0x1;
   aobc_driver->tlm_data.aobc_hk.obc_mm_sts = temp_u8;
   endian_memcpy(&temp_u8, &(f[39]), 1);
-  temp_u8 >>= 6;
+  temp_u8 >>= 0;
   temp_u8 &= 0x7f;
   aobc_driver->tlm_data.aobc_hk.obc_mm_opsmode_prev = temp_u8;
   endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tdsp_current_id), &(f[40]), 2);
@@ -374,6 +374,20 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(DS_StreamConfig* p_stream_config, A
   (void)temp_d;
 
   return DS_ERR_CODE_OK;
+}
+
+int AOBC_pick_up_tlm_buffer(const AOBC_Driver* aobc_driver, AOBC_TLM_CODE tlm_id, uint8_t* packet, int max_len)
+{
+  const CommonTlmPacket* buffered_packet;
+
+  if (tlm_id >= AOBC_MAX_TLMS) return TF_NOT_DEFINED;
+  if (aobc_driver->tlm_buffer.tlm[tlm_id].is_null_packet) return TF_NULL_PACKET;
+
+  buffered_packet = &(aobc_driver->tlm_buffer.tlm[tlm_id].packet);
+
+  if (CTP_get_packet_len(buffered_packet) > max_len) return TF_TOO_SHORT_LEN;
+
+  memcpy(packet, &buffered_packet->packet, (size_t)CTP_get_packet_len(buffered_packet));
 }
 
 #pragma section

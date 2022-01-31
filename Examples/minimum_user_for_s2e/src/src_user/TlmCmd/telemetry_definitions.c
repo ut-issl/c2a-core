@@ -3431,24 +3431,12 @@ static int Tlm_UART_TEST_(unsigned char* contents, int max_len)
 
 static int Tlm_AOBC_AOBC_(unsigned char* contents, int max_len)
 {
-  int buffer_size = aobc_buffer->aobc_aobc.size;
-
-  if (buffer_size > max_len) { return TF_TOO_SHORT_LEN; }
-
-  memcpy(contents, aobc_buffer->aobc_aobc.buffer, (size_t)buffer_size);
-
-  return buffer_size;
+  return AOBC_pick_up_tlm_buffer(aobc_driver, AOBC_Tlm_CODE_AOBC_AOBC, contents, max_len);
 }
 
 static int Tlm_AOBC_HK_(unsigned char* contents, int max_len)
 {
-  int buffer_size = aobc_buffer->aobc_hk.size;
-
-  if (buffer_size > max_len) { return TF_TOO_SHORT_LEN; }
-
-  memcpy(contents, aobc_buffer->aobc_hk.buffer, (size_t)buffer_size);
-
-  return buffer_size;
+  return AOBC_pick_up_tlm_buffer(aobc_driver, AOBC_Tlm_CODE_AOBC_HK, contents, max_len);
 }
 
 #pragma section

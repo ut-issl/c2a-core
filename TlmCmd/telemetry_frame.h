@@ -34,6 +34,7 @@ typedef enum
   TF_SUCCESS = 0,
   TF_TOO_SHORT_LEN = -1,
   TF_NOT_DEFINED = -2,
+  TF_NULL_PACKET = -3,
   TF_UNKNOWN = -3
 } TF_ACK;
 
