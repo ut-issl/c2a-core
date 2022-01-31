@@ -36,8 +36,8 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   // ADU分割が発生しない場合に限定したコードになっている。
   // TLM定義シート上で定義するADUはADU長をADU分割が発生しない長さに制限する。
   len = TF_generate_contents(id,
-                             CTP_get_user_data_head(&ctp_),
-                             TSP_MAX_LEN - SP_PRM_HDR_LEN - TSP_SND_HDR_LEN);    // FIXME: Space Packet 依存を直す
+                             ctp_.packet,
+                             TSP_MAX_LEN);
 
   // 範囲外のTLM IDを除外
   if (len == TF_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -45,7 +45,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
 
   // TCPacketヘッダ設定
   // FIXME: Space Packet 依存を直す
-  TSP_setup_primary_hdr(&ctp_, APID_MIS_TLM, (uint16_t)(len + TSP_SND_HDR_LEN));
+  TSP_setup_primary_hdr(&ctp_, APID_MIS_TLM, (uint16_t)len);
   TSP_set_board_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
   // FIXME: 他の時刻も入れる
   TSP_set_global_time(&ctp_, 0.0);

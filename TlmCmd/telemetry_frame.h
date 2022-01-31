@@ -21,7 +21,7 @@
  */
 typedef struct
 {
-  int (*tlm_func)(unsigned char*, int);
+  int (*tlm_func)(uint8_t*, int);
 } TF_TlmInfo;
 
 /**
@@ -61,12 +61,12 @@ void TF_initialize(void);
 /**
  * @brief  テレメを実際に生成する関数
  * @param  packet_id: Tlm ID
- * @param  contents:  テレメを作る body へのポインタ
+ * @param  packet:    テレメを作る uint8_t にシリアライズされた packet へのポインタ
  * @param  max_len:   テレメの body として使える最大長
  * @return 成功時はテレメ長，失敗時は TF_ACK
  */
 int TF_generate_contents(TLM_CODE packet_id,
-                         unsigned char* contents,
+                         uint8_t* packet,
                          int max_len);
 
 /**

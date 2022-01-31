@@ -343,12 +343,12 @@ uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp);
 
 /**
  * @brief  Primary Header を構築
- * @param[in,out] tsp:             TlmSpacePacket
- * @param[in]     apid:            APID
- * @param[in]     packet_data_len: Packet Data Length
+ * @param[in,out] tsp:        TlmSpacePacket
+ * @param[in]     apid:       APID
+ * @param[in]     packet_len: Packet Length
  * @return void
  */
-void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_data_len);
+void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_len);
 
 /**
  * @brief  共通部分の Header を構築

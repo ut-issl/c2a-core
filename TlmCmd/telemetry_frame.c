@@ -17,14 +17,14 @@ const TelemetryFrame* const telemetry_frame = &telemetry_frame_;
 
 
 int TF_generate_contents(TLM_CODE packet_id,
-                         unsigned char* contents,
+                         uint8_t* packet,
                          int max_len)
 {
-  int (*tlm_func)(unsigned char*, int) = telemetry_frame->tlm_table[packet_id].tlm_func;
+  int (*tlm_func)(uint8_t*, int) = telemetry_frame->tlm_table[packet_id].tlm_func;
 
   if (tlm_func != NULL)
   {
-    return tlm_func(contents, max_len);
+    return tlm_func(packet, max_len);
   }
   else
   {
