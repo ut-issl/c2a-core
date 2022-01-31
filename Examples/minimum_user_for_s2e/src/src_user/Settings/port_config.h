@@ -4,8 +4,8 @@
 // ============================================== //
 // =            UART関連のポート設定             = //
 // ============================================== //
-#define  PORT_CH_RS422_MOBC_EXT            (0)  //!< RS-422 UART ch2
-#define  PORT_CH_RS422_SAMPLE1             (1)  //!< RS-422 UART ch2
+#define  PORT_CH_RS422_MOBC_EXT            (0)  //!< RS-422 UART ch1
+#define  PORT_CH_RS422_AOBC                (1)  //!< RS-422 UART ch2
 #define  PORT_CH_RS422_SAMPLE2             (2)  //!< RS-422 UART ch3
 #define  PORT_CH_RS422_SAMPLE3             (3)  //!< RS-422 UART ch4
 #define  PORT_CH_RS422_SAMPLE4             (4)  //!< RS-422 UART ch5

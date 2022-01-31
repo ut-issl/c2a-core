@@ -31,6 +31,10 @@ static int Tlm_HK_(unsigned char* contents, int max_len);
 static int Tlm_GIT_REV_(unsigned char* contents, int max_len);
 static int Tlm_UART_TEST_(unsigned char* contents, int max_len);
 
+// AOBC TLM
+static int Tlm_AOBC_AOBC_(unsigned char* contents, int max_len);
+static int Tlm_AOBC_HK_(unsigned char* contents, int max_len);
+
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
   tlm_table[Tlm_CODE_MOBC].tlm_func = Tlm_MOBC_;
@@ -55,6 +59,10 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_HK].tlm_func = Tlm_HK_;
   tlm_table[Tlm_CODE_GIT_REV].tlm_func = Tlm_GIT_REV_;
   tlm_table[Tlm_CODE_UART_TEST].tlm_func = Tlm_UART_TEST_;
+
+  // AOBC TLM
+  tlm_table[Tlm_CODE_AOBC_AOBC].tlm_func = Tlm_AOBC_AOBC_;
+  tlm_table[Tlm_CODE_AOBC_HK].tlm_func = Tlm_AOBC_HK_;
 }
 
 static int Tlm_MOBC_(unsigned char* contents, int max_len)
@@ -3419,6 +3427,28 @@ static int Tlm_UART_TEST_(unsigned char* contents, int max_len)
 #endif
 
   return 25;
+}
+
+static int Tlm_AOBC_AOBC_(unsigned char* contents, int max_len)
+{
+  int buffer_size = aobc_buffer->aobc_aobc.size;
+
+  if (buffer_size > max_len) { return TF_TOO_SHORT_LEN; }
+
+  memcpy(contents, aobc_buffer->aobc_aobc.buffer, (size_t)buffer_size);
+
+  return buffer_size;
+}
+
+static int Tlm_AOBC_HK_(unsigned char* contents, int max_len)
+{
+  int buffer_size = aobc_buffer->aobc_hk.size;
+
+  if (buffer_size > max_len) { return TF_TOO_SHORT_LEN; }
+
+  memcpy(contents, aobc_buffer->aobc_hk.buffer, (size_t)buffer_size);
+
+  return buffer_size;
 }
 
 #pragma section

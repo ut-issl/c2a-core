@@ -28,6 +28,7 @@
 
 
 // [TODO] 以下は本当はTCPの定義から持ってきたい．TCPの整理が終わったらそうする
+// FIXME: Space Packet 大工事が終わったら整合を取る！
 #define DS_C2AFMT_TCP_CMD_PRIMARY_HEADER_SIZE     (6)     //!< C2A間通信のTCPCMDののPrimary header size
 #define DS_C2AFMT_TCP_CMD_SECONDARY_HEADER_SIZE   (1)     //!< C2A間通信のTCPCMDののSecondary header size
 #define DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE     (6)     //!< C2A間通信のTCPのTLMのPrimary header size

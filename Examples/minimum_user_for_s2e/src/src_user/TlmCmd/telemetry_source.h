@@ -16,6 +16,7 @@
 #include <src_core/TlmCmd/block_command_executor.h>
 #include "../Applications/app_headers.h"
 #include "../Library/git_revision.h"
+#include "../Drivers/Aocs/aobc_telemetry_buffer.h"
 #include "../Drivers/Com/gs_validate.h"
 #include "../Settings/build_settings.h"
 

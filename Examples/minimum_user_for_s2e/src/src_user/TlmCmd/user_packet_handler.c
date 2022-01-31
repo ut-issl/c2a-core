@@ -5,8 +5,8 @@
  */
 #include "user_packet_handler.h"
 #include <src_core/TlmCmd/packet_list_util.h>
+#include "../Applications/DriverInstances/di_aobc.h"
 // #include "../Applications/DriverInstances/di_tobc.h"
-// #include "../Applications/DriverInstances/di_aobc.h"
 
 #define PH_AOBC_CMD_LIST_MAX   (16)          //!< AOBC CMD QUEUEサイズ
 #define PH_TOBC_CMD_LIST_MAX   (16)          //!< TOBC CMD QUEUEサイズ
@@ -54,7 +54,7 @@ CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet)
   {
   case APID_AOBC_CMD:
     // AOBCに配送
-    // return DI_AOBC_dispatch_command(packet);
+    return DI_AOBC_dispatch_command(packet);
   case APID_TOBC_CMD:
     // TOBCに配送
     // return DI_TOBC_dispatch_command(packet);
@@ -67,12 +67,9 @@ CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet)
 
 static PH_ACK PH_add_aobc_cmd_(const CommonCmdPacket* packet)
 {
-  (void)packet;
-#if 0
   PL_ACK ack = PL_push_back(&PH_aobc_cmd_list, packet);
 
   if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
-#endif
   return PH_SUCCESS;
 }
 
