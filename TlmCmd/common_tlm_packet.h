@@ -63,6 +63,21 @@ ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet);
 void CTP_set_dest_flags(CommonTlmPacket* packet, ctp_dest_flags_t flags);
 
 /**
+ * @brief  TLM ID を取得
+ * @param  packet: CTP
+ * @return TLM_CODE
+ */
+TLM_CODE CTP_get_id(const CommonTlmPacket* packet);
+
+/**
+ * @brief  TLM ID を設定
+ * @param[in,out] packet: CTP
+ * @param[in]     id: TLM_CODE
+ * @return void
+ */
+void CTP_set_id(CommonTlmPacket* packet, TLM_CODE id);
+
+/**
  * @brief  パケット長を取得
  * @param  packet: CTP
  * @return packet len
