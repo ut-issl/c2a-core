@@ -6,23 +6,23 @@
 #include "telemetry_frame.h"
 #include "packet_handler.h"
 #include "../System/TimeManager/time_manager.h"
+#include "common_cmd_packet_util.h"
 #include <src_user/TlmCmd/telemetry_definitions.h>
+#include "./Ccsds/tlm_space_packet.h"   // FIXME: TSP 依存性はNGなので， TCP → SP 大工事終わったら直す
 
 static uint8_t TG_get_next_adu_counter_(void);
 
 CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
 {
-  static TCP tcp_;
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t category;
-  uint8_t id;
-  uint8_t num_dumps;
+  static CommonTlmPacket ctp_;
+  uint8_t category = CCP_get_param_from_packet(packet, 0, uint8_t);
+  TLM_CODE id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+  uint8_t num_dumps = CCP_get_param_from_packet(packet, 2, uint8_t);
   int len;
-
-  // パラメータ読み出し
-  category = param[0];
-  id = param[1];
-  num_dumps = param[2];
+  uint8_t dr_partition_mask = 0x1f; // 00011111b        // FIXME: 一時的な対応
+  uint8_t dest_flags_mask = 0xe0; // 11100000b        // FIXME: 一時的な対応
+  uint8_t dr_partition;
+  ctp_dest_flags_t dest_flags;
 
   if (num_dumps >= 8)
   {
@@ -35,32 +35,45 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   // ADU生成
   // ADU分割が発生しない場合に限定したコードになっている。
   // TLM定義シート上で定義するADUはADU長をADU分割が発生しない長さに制限する。
-  len = TF_generate_contents((int)id,
-                             TCP_TLM_get_user_data_head(&tcp_),
-                             TCP_MAX_LEN - TCP_PRM_HDR_LEN - TCP_TLM_2ND_HDR_LEN);
+  len = TF_generate_contents(id,
+                             CTP_get_user_data_head(&ctp_),
+                             TSP_MAX_LEN - SP_PRM_HDR_LEN - TSP_SND_HDR_LEN);    // FIXME: Space Packet 依存を直す
 
   // 範囲外のTLM IDを除外
   if (len == TF_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (len < 0) return CCP_EXEC_ILLEGAL_CONTEXT;     // TODO: lenがマイナスの値たちをどうするか？
 
   // TCPacketヘッダ設定
-  TCP_TLM_setup_primary_hdr(&tcp_, APID_MIS_TLM, (uint16_t)(len + 7));
-  TCP_TLM_set_ti(&tcp_, (uint32_t)(TMGR_get_master_total_cycle()));
-  TCP_TLM_set_category(&tcp_, category); // パラメータによる指定
-  TCP_TLM_set_packet_id(&tcp_, id);
-  TCP_TLM_set_adu_seq_flag(&tcp_, TCP_SEQ_SINGLE);
-  TCP_TLM_set_adu_cnt(&tcp_, TG_get_next_adu_counter_());
+  // FIXME: Space Packet 依存を直す
+  TSP_setup_primary_hdr(&ctp_, APID_MIS_TLM, (uint16_t)(len + TSP_SND_HDR_LEN));
+  TSP_set_board_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
+  // FIXME: 他の時刻も入れる
+  TSP_set_global_time(&ctp_, 0.0);
+  TSP_set_on_board_subnet_time(&ctp_, 0);
+  // FIXME: 他 OBC からのパケットは別処理する
+  // FIXME: 一旦雑に category を処理してるが後でちゃんと直す
+  dr_partition = (uint8_t)(category & dr_partition_mask);
+  dest_flags = (uint8_t)( (category & dest_flags_mask) >> 5 );
+  if (dest_flags == 0)
+  {
+    dest_flags = CTP_DEST_FLAG_RP;
+  }
+  TSP_set_dest_flgas(&ctp_, dest_flags);
+  TSP_set_dr_partition(&ctp_, dr_partition);
+  TSP_set_tlm_id(&ctp_, id);
+  TSP_set_seq_count(&ctp_, TG_get_next_adu_counter_());
 
   // 生成したパケットを指定された回数配送処理へ渡す
   while (num_dumps != 0)
   {
-    PH_analyze_packet(&tcp_);
+    PH_analyze_tlm_packet(&ctp_);
     --num_dumps;
   }
 
   return CCP_EXEC_SUCCESS;
 }
 
+// FIXME: space packet 大工事でビット幅が変わってるので直す！
 static uint8_t TG_get_next_adu_counter_(void)
 {
   // インクリメントした値を返すため初期値は0xffとする

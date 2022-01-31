@@ -81,7 +81,9 @@ static void DI_GS_mst_packet_handler_(void)
   // 本当なら max(今の FIFO の空き, 残り時間で実行可能な数) とかしたい
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
-    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu, &PH_ms_tlm_list, &DI_GS_ms_tlm_packet_handler_.vcdu.m_pdu);
+    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu,
+                                 &PH_ms_tlm_list,
+                                 &DI_GS_ms_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
     // Realtime VCDU カウンタの設定
@@ -111,7 +113,9 @@ static void DI_GS_rpt_packet_handler_(void)
   // 本当なら max(今の FIFO の空き, 残り時間で実行可能な数) とかしたい
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
-    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_rp_tlm_packet_handler_.tc_packet_to_m_pdu, &PH_rp_tlm_list, &DI_GS_rp_tlm_packet_handler_.vcdu.m_pdu);
+    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_rp_tlm_packet_handler_.tc_packet_to_m_pdu,
+                                 &PH_rp_tlm_list,
+                                 &DI_GS_rp_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
     // Replay VCDU カウンタの設定

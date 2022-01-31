@@ -5,6 +5,8 @@
 #ifndef TCP_TO_M_PDU_H_
 #define TCP_TO_M_PDU_H_
 
+// FIXME: TCP から TlmSpacePacket に直す！！！
+
 #include <stddef.h> // for size_t
 
 #include <src_core/TlmCmd/packet_list.h>

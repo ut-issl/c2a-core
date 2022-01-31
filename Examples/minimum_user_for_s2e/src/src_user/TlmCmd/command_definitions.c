@@ -55,9 +55,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_RTCD_CLEAR_ALL_REALTIME].cmd_func = Cmd_RTCD_CLEAR_ALL_REALTIME;
   cmd_table[Cmd_CODE_RTCD_CLEAR_ERR_LOG].cmd_func = Cmd_RTCD_CLEAR_ERR_LOG;
   cmd_table[Cmd_CODE_MEM_SET_REGION].cmd_func = Cmd_MEM_SET_REGION;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_SEQ].cmd_func = Cmd_MEM_DUMP_REGION_SEQ;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_RND].cmd_func = Cmd_MEM_DUMP_REGION_RND;
-  cmd_table[Cmd_CODE_MEM_DUMP_SINGLE].cmd_func = Cmd_MEM_DUMP_SINGLE;
   cmd_table[Cmd_CODE_MEM_LOAD].cmd_func = Cmd_MEM_LOAD;
   cmd_table[Cmd_CODE_MEM_SET_DESTINATION].cmd_func = Cmd_MEM_SET_DESTINATION;
   cmd_table[Cmd_CODE_MEM_COPY_REGION_SEQ].cmd_func = Cmd_MEM_COPY_REGION_SEQ;
@@ -217,14 +214,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_BCE_SET_ROTATE_INTERVAL].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_MEM_SET_REGION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_MEM_SET_REGION].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_SEQ].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_SEQ].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_RND].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_RND].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_REGION_RND].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_SINGLE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_SINGLE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_MEM_DUMP_SINGLE].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_MEM_LOAD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_MEM_LOAD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_RAW;
   cmd_table[Cmd_CODE_MEM_SET_DESTINATION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;

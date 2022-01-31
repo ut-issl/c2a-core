@@ -52,7 +52,7 @@
 #define EL_TLOG_TLM_PAGE_MAX_HIGH     (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_HIGH)
 #define EL_TLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_MIDDLE)
 #define EL_TLOG_TLM_PAGE_MAX_LOW      (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_LOW)
-#define EL_CLOG_TLM_PAGE_SIZE         (32)    //!< CLogにて，テレメ１ページにおろせるlog数
+#define EL_CLOG_TLM_PAGE_SIZE         (20)    //!< CLogにて，テレメ１ページにおろせるlog数
 #define EL_CLOG_TLM_PAGE_MAX_HIGH     (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_HIGH)
 #define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_MIDDLE)
 #define EL_CLOG_TLM_PAGE_MAX_LOW      (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_LOW)

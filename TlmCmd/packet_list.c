@@ -45,10 +45,13 @@ PL_ACK PL_initialize(PL_Node* pl_node_stock,
   {
   case PL_PACKET_TYPE_CTCP:
     if (pl->packet_size_ != (uint16_t)sizeof(CommonTlmCmdPacket)) return PL_PACKET_TYPE_ERR;
+    break;
   case PL_PACKET_TYPE_CTP:
     if (pl->packet_size_ != (uint16_t)sizeof(CommonTlmPacket)) return PL_PACKET_TYPE_ERR;
+    break;
   case PL_PACKET_TYPE_CCP:
     if (pl->packet_size_ != (uint16_t)sizeof(CommonCmdPacket)) return PL_PACKET_TYPE_ERR;
+    break;
   default:
     // その他の場合は， assertion できない
     break;

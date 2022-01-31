@@ -213,11 +213,17 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   const uint8_t* gs_rx_data = DSSC_get_rx_frame(p_stream_config);
   const TCF* tc_frame = (const TCF*)gs_rx_data; // 非自明なcast
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
-  int driver_index;
+  GS_PORT_TYPE driver_index;
 
   // アドレス計算で CCSDS か UART か判別
-  if ((uint32_t)p_stream_config < (uint32_t)&gs_driver->driver_uart) driver_index = GS_PORT_TYPE_CCSDS;
-  else                                           driver_index = GS_PORT_TYPE_UART;
+  if ((uint32_t)p_stream_config < (uint32_t)&gs_driver->driver_uart)
+  {
+    driver_index = GS_PORT_TYPE_CCSDS;
+  }
+  else
+  {
+    driver_index = GS_PORT_TYPE_UART;
+  }
 
   gs_driver->info[driver_index].tc_frame_validate_status = GS_validate_tc_frame(tc_frame);
   if (gs_driver->info[driver_index].tc_frame_validate_status != GS_VALIDATE_ERR_OK)
@@ -225,7 +231,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     return DS_ERR_CODE_ERR;
   }
 
-  gs_driver->info[driver_index].cmd_ack = PH_analyze_packet(&tc_frame->tcs.tcp); // 受信コマンドパケット解析
+  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(&tc_frame->tcs.tcp);  // 受信コマンドパケット解析
 
   return DS_ERR_CODE_OK;
 }

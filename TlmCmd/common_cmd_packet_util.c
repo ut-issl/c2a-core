@@ -63,7 +63,7 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
   CCP_set_common_hdr(packet);
   CCP_set_id(packet, cmd_id);
   CCP_set_exec_type(packet, CCP_EXEC_TYPE_RT);
-  CCP_set_dest_type(packet, TCP_CMD_DEST_TYPE_TO_ME);
+  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
   CCP_set_ti(packet, 0); // RTの場合、TIは0固定。
   CCP_set_param(packet, param, len);
 
@@ -89,7 +89,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
   CCP_set_common_hdr(packet);
   CCP_set_id(packet, cmd_id);
   CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL0);
-  CCP_set_dest_type(packet, TCP_CMD_DEST_TYPE_TO_ME);
+  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
   CCP_set_ti(packet, ti);
   CCP_set_param(packet, param, len);
 

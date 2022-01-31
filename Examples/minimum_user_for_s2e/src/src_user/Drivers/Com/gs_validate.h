@@ -34,6 +34,7 @@ typedef enum
   GS_VALIDATE_ERR_FARM1_SAME_NUMBER,
   GS_VALIDATE_ERR_INVALID_BC_CMD
 } GS_VALIDATE_ERR;
+// FIXME: TCP → SpacePacket 大工事後に TCP を直す
 
 /**
  * @struct GS_ValidateInfo

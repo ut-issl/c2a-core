@@ -72,6 +72,7 @@ void PH_init(void)
 // パケット解析関数
 // GSTOSからのパケット以外もすべてここで処理される
 // Cmd_GENERATE_TLMとかも．
+// FIXME: 外の OBC からコマンドが飛んでくることもあるので，長さが足りているかのチェックを入れる！ PH_analyze_tlm_packet, PH_analyze_cmd_packet でも
 PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
 {
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
@@ -93,9 +94,10 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
   return PH_UNKNOWN;
 }
 
-static PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
+PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
 {
   PH_ACK ack;
+  // FIXME: CommonCmdPacket としての妥当性チェックを入れる！！！
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
 
   // ユーザー定義部
@@ -159,24 +161,27 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
   }
 }
 
-static PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
+PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 {
-  CTP_DEST_FLAG flag;
+  ctp_dest_flags_t flags;
+  // FIXME: CommonTlmPacket としての妥当性チェックを入れる！！！
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
 
-  flag = CTP_get_dest_flag(packet);
+  flags = CTP_get_dest_flags(packet);
+
+  // FIXME: flag の match は関数化したい
 
   // Housekeeping Telemetry
-  if (flag & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
+  if (flags & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
 
   // Mission Telemetry
-  if (flag & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
 
   // Stored Telemetry
-  if (flag & CTP_DEST_FLAG_ST) PH_add_st_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_ST) PH_add_st_tlm_(packet);
 
   // Replay Telemetry
-  if (flag & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
 
   // [TODO] 要検討:各Queue毎の登録エラー判定は未実装
   return PH_SUCCESS;
@@ -194,7 +199,7 @@ CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
   // }
 
   // FIXME: CTCP, SpacePacket 整理で直す
-  if (CCP_get_apid(packet) == CTCP_MY_DST_ID)
+  if (CCP_get_apid(packet) == CCP_APID_TO_ME)
   {
     // 自分宛てのコマンドの場合は対応処理を呼び出し。
     return CA_execute_cmd(packet);
@@ -259,7 +264,7 @@ static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
   cycle_t ti = TMGR_get_ti_from_utl_unixtime(utl_unixtime);
 
   // TL_cmd に変換して tl_cmd_list に追加する
-  CTCP_copy_packet(&temp_, packet);   // FIXME: CTCP, SpacePacket 整理で直す
+  CCP_copy_packet(&temp_, packet);
   CCP_set_ti(&temp_, ti);
   CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0
 

@@ -16,7 +16,10 @@
   "additional_type" : [
     "CommonTlmCmdPacket",
     "CommonTlmPacket",
-    "CommonCmdPacket"
+    "CommonCmdPacket",
+    "SpacePacket",
+    "TlmSpacePacket",
+    "CmdSpacePacket"
   ],
   "comment_additional_type" : [
     "FIXME: CTCP, CTP, CCP については，整理が終わり次第，消して大丈夫になるはず"

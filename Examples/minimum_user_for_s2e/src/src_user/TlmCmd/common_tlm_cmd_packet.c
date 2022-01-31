@@ -7,24 +7,26 @@
  * @note   CCP:  CommonCmdPacket
  */
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/Ccsds/space_packet.h>
+#include <string.h>
 
 
 int CTCP_is_valid_packet(const CommonTlmCmdPacket* packet)
 {
   if (packet == NULL) return 0;
-  if ( CTCP_get_packet_len(packet) > (uint16_t)sizeof(CommonTlmCmdPacket) ) return 0;
+  if ( CTCP_get_packet_len(packet) > CTCP_MAX_LEN ) return 0;
 
   return 1;
 }
 
 CTCP_PACKET_TYPE CTCP_get_packet_type(const CommonTlmCmdPacket* packet)
 {
-  switch (TCP_get_type(packet))
+  switch (SP_get_type(packet))
   {
-  case TCP_TYPE_TLM:
+  case SP_TYPE_TLM:
     return CTCP_PACKET_TYPE_TLM;
 
-  case TCP_TYPE_CMD:
+  case SP_TYPE_CMD:
     return CTCP_PACKET_TYPE_CMD;
 
   default:
@@ -32,23 +34,24 @@ CTCP_PACKET_TYPE CTCP_get_packet_type(const CommonTlmCmdPacket* packet)
   }
 }
 
-void CTCP_copy_packet(CommonTlmCmdPacket* dest, const CommonTlmCmdPacket* src)
-{
-  TCP_copy_packet(dest, src);
-}
-
-// FIXME: Space Packet が整備されたら実装する
-// APID CTCP_get_apid(const CommonTlmCmdPacket* packet)
-// {
-// }
-
-// void CTCP_set_apid(CommonTlmCmdPacket* packet, APID apid)
-// {
-// }
-
 uint16_t CTCP_get_packet_len(const CommonTlmCmdPacket* packet)
 {
-  return (uint16_t)(TCP_get_packet_len(packet) + TCP_PRM_HDR_LEN);
+  return SP_get_packet_len(packet);
+}
+
+APID CTCP_get_apid(const CommonTlmCmdPacket* packet)
+{
+  return SP_get_apid(packet);
+}
+
+void CTCP_set_apid(CommonTlmCmdPacket* packet, APID apid)
+{
+  SP_set_apid(packet, apid);
+}
+
+void CTCP_copy_packet(CommonTlmCmdPacket* dest, const CommonTlmCmdPacket* src)
+{
+  SP_copy_packet(dest, src);
 }
 
 // FIXME: 以下4関数について， Space Packet が整備されたら， `if len(ctcp) > CCP_MAX_LEN return NULL;` のようなアサーションをいれる！

@@ -6,6 +6,7 @@
 #define TELEMETRY_FRAME_H_
 
 #include "./common_tlm_cmd_packet.h"
+#include <src_user/TlmCmd/telemetry_definitions.h>
 
 #define TF_TLM_PAGE_SIZE (64)                                    //!< テレメテーブルの1テレメトリパケット(=1ページ)に格納されるテレメ数
 #define TF_TLM_PAGE_MAX  (4)                                     //!< テレメテーブルページ数（ページネーション用）
@@ -63,7 +64,7 @@ void TF_initialize(void);
  * @param  max_len:   テレメの body として使える最大長
  * @return 成功時はテレメ長，失敗時は TF_ACK
  */
-int TF_generate_contents(int packet_id,
+int TF_generate_contents(TLM_CODE packet_id,
                          unsigned char* contents,
                          int max_len);
 

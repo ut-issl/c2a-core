@@ -8,14 +8,16 @@
 #ifndef COMMON_TLM_CMD_PACKET_H_
 #define COMMON_TLM_CMD_PACKET_H_
 
+#include <src_user/Library/stdint.h>
+// ここで， CTCP_MAX_LEN, CommonTlmCmdPacket として使うパケット型を指定する
 #include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_define.h>
-#include <src_user/Settings/TlmCmd/common_tlm_cmd_packet_params.h>
 #include "./common_tlm_packet.h"
 #include "./common_cmd_packet.h"
 
 // ここで APID を定義する
 /* 例
 // FIXME: CCSDS JAXA 標準になおす
+// FIXME: APID は Space Packet なので， CTCP にあるのは不適切？ 抽象化してもいいかも
 typedef enum
 {
   APID_MOBC_CMD = 0x210,         // 01000010000b:
@@ -84,7 +86,7 @@ void CTCP_set_apid(CommonTlmCmdPacket* packet, APID apid);
 
 /**
  * @brief  CommonTlmCmdPacket をコピー
- * @note   user実装次第だが，高速化のためすすべてではなく必要最低限しかコピーしない場合もある
+ * @note   user 実装次第だが，高速化のためすすべてではなく必要最低限しかコピーしない場合もある
  * @param[in,out] dest: コピー先 CTCP
  * @param[in]     src:  コピー元 CTCP
  * @return void
