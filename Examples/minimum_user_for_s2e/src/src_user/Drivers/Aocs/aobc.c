@@ -141,7 +141,7 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
   AOBC_CMD_CODE cmd_code;
-  uint16_t      ctcp_len;
+  uint16_t      ccp_len;
   uint16_t      crc;
   size_t        pos;
   size_t        size;
@@ -149,18 +149,18 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
   p_stream_config = &(aobc_driver->driver.super.stream_config[AOBC_STREAM_TLM_CMD]);
 
   // tx_frameの設定
-  ctcp_len = CCP_get_packet_len(packet);
+  ccp_len = CCP_get_packet_len(packet);
   DSSC_set_tx_frame_size(p_stream_config,
-                         (uint16_t)(ctcp_len + DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE));
+                         (uint16_t)(ccp_len + DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE));
 
   pos  = 0;
   size = DS_ISSLFMT_STX_SIZE;
   memcpy(&(AOBC_tx_frame_[pos]), AOBC_stx_, size);
   pos += size;
   size = DS_ISSLFMT_LEN_SIZE;
-  endian_memcpy(&(AOBC_tx_frame_[pos]), &ctcp_len, size);       // ここはエンディアンを気にする！
+  endian_memcpy(&(AOBC_tx_frame_[pos]), &ccp_len, size);       // ここはエンディアンを気にする！
   pos += size;
-  size = (size_t)ctcp_len;
+  size = (size_t)ccp_len;
   memcpy(&(AOBC_tx_frame_[pos]), packet->packet, size);
   pos += size;
 
