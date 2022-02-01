@@ -18,7 +18,7 @@ void AOBC_init_tlm_buffer(AOBC_Driver* aobc_driver)
 {
   // packet などは，上位の driver の初期化で driver もろとも memset 0x00 されていると期待して，ここではしない
   int i = 0;
-  for (i = 0; i < AOBC_MAX_TLMS; ++i)
+  for (i = 0; i < AOBC_MAX_TLM_NUM; ++i)
   {
     aobc_driver->tlm_buffer.tlm[i].is_null_packet = 1;
   }
@@ -384,7 +384,7 @@ int AOBC_pick_up_tlm_buffer(const AOBC_Driver* aobc_driver, AOBC_TLM_CODE tlm_id
   const CommonTlmPacket* buffered_packet;
   uint16_t packet_len;
 
-  if (tlm_id >= AOBC_MAX_TLMS) return TF_NOT_DEFINED;
+  if (tlm_id >= AOBC_MAX_TLM_NUM) return TF_NOT_DEFINED;
   if (aobc_driver->tlm_buffer.tlm[tlm_id].is_null_packet) return TF_NULL_PACKET;
 
   buffered_packet = &(aobc_driver->tlm_buffer.tlm[tlm_id].packet);

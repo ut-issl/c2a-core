@@ -13,7 +13,7 @@
 
 typedef struct AOBC_Driver AOBC_Driver;
 
-#define AOBC_MAX_TLMS (256)
+#define AOBC_MAX_TLM_NUM (256)
 
 typedef struct
 {
@@ -23,7 +23,7 @@ typedef struct
 
 typedef struct
 {
-  AOBC_TlmBufferElem tlm[AOBC_MAX_TLMS];   //!< TLM ID ごとに保持
+  AOBC_TlmBufferElem tlm[AOBC_MAX_TLM_NUM];   //!< TLM ID ごとに保持
 } AOBC_TlmBuffer;
 
 void AOBC_init_tlm_buffer(AOBC_Driver* aobc_driver);
