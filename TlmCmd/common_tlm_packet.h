@@ -48,6 +48,21 @@ typedef enum
 int CTP_is_valid_packet(const CommonTlmPacket* packet);
 
 /**
+ * @brief  APID を取得
+ * @param  packet: CTP
+ * @return APID
+ */
+APID CTP_get_apid(const CommonTlmPacket* packet);
+
+/**
+ * @brief  APID を設定
+ * @param[in,out] packet: CTP
+ * @param[in]     apid: APID
+ * @return void
+ */
+void CTP_set_apid(CommonTlmPacket* packet, APID apid);
+
+/**
  * @brief  CTP_DEST_FLAG の & を取った flags を取得
  * @param  packet: CTP
  * @return Dest Flags
