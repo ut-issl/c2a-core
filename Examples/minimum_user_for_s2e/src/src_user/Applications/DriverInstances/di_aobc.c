@@ -77,7 +77,7 @@ CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   CommonCmdPacket* pckt = (CommonCmdPacket*)packet; // const_cast
-  // ここで TCP_CMD_DEST_TYPE を宛先で受理できるように変更（なので const cast が発生している．．．）
+  // ここで CCP_DEST_TYPE を宛先で受理できるように変更（なので const cast が発生している．．．）
 
   if (CCP_get_dest_type(pckt) != CCP_DEST_TYPE_TO_ME)
   {

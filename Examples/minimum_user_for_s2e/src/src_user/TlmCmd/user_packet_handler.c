@@ -39,8 +39,8 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
   case CCP_DEST_TYPE_TO_TOBC:
     return (PH_add_tobc_cmd_(packet) == PH_SUCCESS) ? PH_FORWARDED : PH_PL_LIST_FULL;
   default:
-    // TCP_CMD_DEST_TYPE_TO_ME
-    // TCP_CMD_DEST_TYPE_TO_MOBC （自分）
+    // CCP_DEST_TYPE_TO_ME
+    // CCP_DEST_TYPE_TO_MOBC （自分）
     // 宛先不明
     // はここに
     return PH_UNKNOWN;
