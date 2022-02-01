@@ -88,10 +88,21 @@ const uint8_t* DS_C2AFMT_get_user_data_head(const DS_StreamConfig* p_stream_conf
  * @note   フレームが確定しているときに呼び出すこと
  * @note   これは C2A 形式で使われる TLM HEADER 仕様である
  * @param[in]  p_stream_config: DriverSuper 構造体の DS_StreamConfig
- * @param[out] ctp: DriverSuper 構造体の DS_StreamConfig
+ * @param[out] ctp: 抽出したパケット
  * @retval DS_ERR_CODE_OK:  正常終了
- * @retval DS_ERR_CODE_ERR: テレメ長が異常など，エラーでコピーできない
+ * @retval DS_ERR_CODE_ERR: パケット長が異常など，エラーでコピーできない
  */
 DS_ERR_CODE DS_C2AFMT_get_ctp(const DS_StreamConfig* p_stream_config, CommonTlmPacket* ctp);
+
+/**
+ * @brief  CommonCmdPacket を受信データからコピーして取得する
+ * @note   フレームが確定しているときに呼び出すこと
+ * @note   これは C2A 形式で使われる TLM HEADER 仕様である
+ * @param[in]  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @param[out] ccp: 抽出したパケット
+ * @retval DS_ERR_CODE_OK:  正常終了
+ * @retval DS_ERR_CODE_ERR: パケット長が異常など，エラーでコピーできない
+ */
+DS_ERR_CODE DS_C2AFMT_get_ccp(const DS_StreamConfig* p_stream_config, CommonCmdPacket* ccp);
 
 #endif

@@ -66,11 +66,24 @@ DS_ERR_CODE DS_C2AFMT_get_ctp(const DS_StreamConfig* p_stream_config, CommonTlmP
   uint32_t issl_fmt_user_data_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
   if (issl_fmt_user_data_len > CTP_MAX_LEN) return DS_ERR_CODE_ERR;
 
-  // まず， CTP 最大長だけコピーしてから，アサーションする（効率のため）
+  // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
   memcpy(&ctp->packet, DS_C2AFMT_get_user_data_head(p_stream_config), (size_t)issl_fmt_user_data_len);
 
   if (CTP_get_packet_len(ctp) != issl_fmt_user_data_len) return DS_ERR_CODE_ERR;
   if (!CTP_is_valid_packet(ctp)) return DS_ERR_CODE_ERR;
+  return DS_ERR_CODE_OK;
+}
+
+DS_ERR_CODE DS_C2AFMT_get_ccp(const DS_StreamConfig* p_stream_config, CommonCmdPacket* ccp)
+{
+  uint32_t issl_fmt_user_data_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
+  if (issl_fmt_user_data_len > CCP_MAX_LEN) return DS_ERR_CODE_ERR;
+
+  // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
+  memcpy(&ccp->packet, DS_C2AFMT_get_user_data_head(p_stream_config), (size_t)issl_fmt_user_data_len);
+
+  if (CCP_get_packet_len(ccp) != issl_fmt_user_data_len) return DS_ERR_CODE_ERR;
+  if (!CCP_is_valid_packet(ccp)) return DS_ERR_CODE_ERR;
   return DS_ERR_CODE_OK;
 }
 

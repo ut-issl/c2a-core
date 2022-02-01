@@ -27,8 +27,11 @@ void AOBC_init_tlm_buffer(AOBC_Driver* aobc_driver)
 DS_ERR_CODE AOBC_buffer_tlm_packet(DS_StreamConfig* p_stream_config, AOBC_Driver* aobc_driver)
 {
   AOBC_TLM_CODE tlm_id;
+  DS_ERR_CODE ret;
 
-  DS_C2AFMT_get_ctp(p_stream_config, &AOBC_ctp_);
+  ret = DS_C2AFMT_get_ctp(p_stream_config, &AOBC_ctp_);
+  if (ret != DS_ERR_CODE_OK) return ret;
+
   tlm_id  = (AOBC_TLM_CODE)CTP_get_id(&AOBC_ctp_);
 
   switch (tlm_id)

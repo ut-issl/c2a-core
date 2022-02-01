@@ -100,7 +100,7 @@ int AOBC_rec(AOBC_Driver* aobc_driver)
 
 
 static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
-                                                    void* p_driver)
+                                          void* p_driver)
 {
   AOBC_Driver* aobc_driver = (AOBC_Driver*)p_driver;
 
