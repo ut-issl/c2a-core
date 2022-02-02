@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include <src_user/Library/git_revision.h> //!< 設定ないしcommit hashを読み込む
+#include <src_user/Settings/git_revision_config.h> //!< 設定ないしcommit hashを読み込む
 
 /*! @brief コンパイルオプションないしuserの設定で定義されたcommit hashを読み込んで埋め込みます
  * git revisionの埋め込みは，以下の定数を通して行われます(経緯: #82)．
@@ -16,24 +16,24 @@
  *   GIT_REVISION_C2A_USER          C2A userのcommit hash(文字列)
  *   GIT_REVISION_C2A_USER_SHORT    C2A userのcommit hash short(0xから始まる数値)
  * これらの定数は，Cコンパイラの引数からdefine(-Dなど)してもよいですし，
- * src_user/Library/git_revision.hでdefineしてもよいです．
+ * src_user/Settings/git_revision_config.hでdefineしてもよいです．
  */
 
 /**
  * @note CMakeを使う場合はコマンドラインオプションからのdefineを推奨します．
- *   この場合，src_user/Library/git_revision.hでC2A_GIT_REVISION_FROM_OPTIONをdefineしてください(他には何も要りません)．
+ *   この場合，src_user/Settings/git_revision_config.hでC2A_GIT_REVISION_FROM_OPTIONをdefineしてください(他には何も要りません)．
  */
 
 /**
  * @note コマンドラインオプションからのdefineが開発環境の都合などにより困難な場合は，
  *   src_user/Script/Git/revision.sh/batをビルドパイプライン上で実行するようにします．
- *   このスクリプトは上記の定数群をdefineしたsrc_user/Library/git_revision.hを自動生成します．
- *   この場合，src_user/Library/git_revision.hはcommit・ビルドの度に変更されるため，gitignoreしておいた方がよいでしょう．
+ *   このスクリプトは上記の定数群をdefineしたsrc_user/Settings/git_revision_config.hを自動生成します．
+ *   この場合，src_user/Settings/git_revision_config.hはcommit・ビルドの度に変更されるため，gitignoreしておいた方がよいでしょう．
  */
 
 /**
  * @note ビルドパイプラインをうまく組めないなど，上記２つの手段が使えない，かつ，revisionを埋め込まなくてもよい場合は，
- *   src_user/Library/git_revision.hでC2A_GIT_REVISION_IGNOREをdefineしてください．
+ *   src_user/Settings/git_revision_config.hでC2A_GIT_REVISION_IGNOREをdefineしてください．
  *   こうすると，0が埋め込まれます．
  */
 
@@ -47,9 +47,9 @@
 
 #else
 
-// commit hashを埋め込むはずなのにsrc_user/Library/git_revision.hで設定されていない
+// commit hashを埋め込むはずなのにsrc_user/Settings/git_revision_config.hで設定されていない
 #if !defined(C2A_GIT_REVISION_FROM_OPTION) && !defined(C2A_GIT_REVISION_GENERATED)
-#error "please specify git revision config in src_user/Library/git_revision.h"
+#error "please specify git revision config in src_user/Settings/git_revision_config.h"
 #endif // error
 
 #endif // C2A_GIT_REVISION_IGNORE
