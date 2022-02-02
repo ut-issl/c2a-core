@@ -51,7 +51,7 @@
 	- 本 Release 後最初の Pre-release の場合， `C2A_CORE_VER_*` をインクリメントする．
 	- PR 名は以下のようにする．
 		- `Pre Release (v3.5.0-beta.0): 通常のPRのタイトル`
-	- 例: TBA
+	- 例: https://github.com/ut-issl/c2a-core/pulls?q=is%3Apr+Pre+Release
 1. [tag](https://github.com/ut-issl/c2a-core/tags) を打ち， [release](https://github.com/ut-issl/c2a-core/releases) を Pre-release として発行する．
 	- tag 名は `v3.5.0-beta.0` のようにする．
 	- release 名は `v3.5.0-beta.0` のようにする．
@@ -74,5 +74,9 @@ Tool のリリースには，以下に注意する．
 	- 対応する最小 C2A Core バージョン
 	- この Tool に適合させたときの C2A Core の PR へのリンク
 
-例: TBA
+例:
 
+- https://github.com/ut-issl/c2a-tlm-cmd-code-generator/releases
+- https://github.com/ut-issl/python-wings-interface/releases
+- https://github.com/ut-issl/c2a-enum-loader/releases
+- https://github.com/ut-issl/tlm-cmd-db/releases
