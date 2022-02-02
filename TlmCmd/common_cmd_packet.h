@@ -167,6 +167,7 @@ uint16_t CCP_get_param_len(const CommonCmdPacket* packet);
 
 /**
  * @brief  CMD パラメタ長の最大値を取得
+ * @param  void
  * @return max param len
  */
 uint16_t CCP_get_max_param_len(void);

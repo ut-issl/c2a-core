@@ -179,7 +179,6 @@ BCT_ACK BCT_register_cmd(const CommonCmdPacket* packet)
 
   length = BCT_get_bc_length(block_command_table_.pos.block);
 
-  // 2018/06/20 コメント追記
   // 現在登録されているコマンド数よりも大きければエラー
   // つまり，登録されているテーブルの上書きはできるが，
   // 未登録のセルを飛ばして，不連続に登録することはできない，はず．
@@ -218,7 +217,8 @@ BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CommonCmdPacket* packet)
   return BCT_save_cmd_(pos, packet);
 }
 
-// FIXME: 以下複数関数にわたって BlockCmdCmdData と CommonCmdPacket の変換が，現在castによって行われているが， CommonCmdPacket はユーザー定義なため，それ（=TCP以外）に対応できるようにする
+// FIXME: 以下複数関数にわたって BlockCmdCmdData と CommonCmdPacket の変換が，現在 cast によって行われているが，
+//        CommonCmdPacket はユーザー定義なため，それ（= CmdSpacePacket （旧 TCP）以外）に対応できるようにする
 //        同様の理由で memcpy なども対応する必要がある．
 // FIXME: CTCP, SpacePacket 整理で直す
 static BCT_ACK BCT_save_cmd_(const BCT_Pos* pos, const CommonCmdPacket* packet)
@@ -383,7 +383,7 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_ACK ack)
+CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
 {
   switch (ack)
   {
@@ -430,7 +430,7 @@ CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
   // 指定されたブロック番号のクリアを実行。
   ack = BCT_clear_block(block);
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
 BCT_ACK BCT_clear_block(const bct_id_t block)
@@ -464,7 +464,7 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 
   ack = BCT_set_position_(&pos);
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
 CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
@@ -478,7 +478,7 @@ CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
   endian_memcpy(&src_block, param + SIZE_OF_BCT_ID_T, SIZE_OF_BCT_ID_T);
 
   ack = BCT_copy_bct(dst_block, src_block);
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
 CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
@@ -492,7 +492,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   BCT_CmdData new_bct_cmddata; // FIXME: BCT_CmdData <-> CTCP
   // FIXME: TCP → SpacePacket 大工事が終わったら直す
   //        CCP ならまだしも CSP 依存はやばい
-  uint8_t new_cmd_param[BCT_CMD_MAX_LENGTH - SP_PRM_HDR_LEN - CSP_SND_HDR_LEN];   // いったんここにparamをコピーする, FIXME: TCPに依存させないように
+  uint8_t new_cmd_param[BCT_CMD_MAX_LENGTH - SP_PRM_HDR_LEN - CSP_SND_HDR_LEN];   // いったんここにparamをコピーする
   uint16_t real_param_len = CCP_get_param_len(packet);
   uint16_t min_cmd_param_len = CA_get_cmd_param_min_len(Cmd_CODE_BCT_OVERWRITE_CMD);
   uint16_t max_cmd_param_len = min_cmd_param_len + sizeof(new_cmd_param);
@@ -511,7 +511,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-// 長さ10のBCにNOPを登録するコマンド. 使用前提が狭すぎるか??
+// 長さ 10 の BC に NOP を登録するコマンド. 使用前提が狭すぎるか??
 // パス運用時に使用するので, 一応厳密にしておいたほうがいい気もする.
 CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
 {
