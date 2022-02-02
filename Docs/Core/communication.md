@@ -138,7 +138,7 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
 - Time Indicator
   - TLC や BC における実行時刻を示す TI
 
-## コマンド配送におけるルーティングについて
+#### コマンド配送におけるルーティングについて
 - コマンドの最終的な配送先，つまり実行されるボードは APID によって規定される
 - 一方で， BC や TLC などでのキューイングは， Destination Type によって決定される
 - 具体例
