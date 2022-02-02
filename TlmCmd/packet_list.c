@@ -14,7 +14,8 @@
 
 /**
  * @brief 未使用 Node を新規に取得
- * @param[in] pl: PacketList
+ * @note  取得されたものは使われることを想定（引数として与えられた pl の内部状態は更新される）
+ * @param[in,out] pl: PacketList
  * @retval 未使用 Node
  * @retval NULL （PacketListが満杯の時）
  */
@@ -22,7 +23,7 @@ static PL_Node* PL_get_free_node_(PacketList* pl);
 
 /**
  * @brief 先頭 Node を落とす
- * @param[in] pl: PacketList
+ * @param[in,out] pl: PacketList
  * @retval PL_SUCCESS: 成功
  * @retval PL_LIST_EMPTY: PacketList が空
  */
@@ -385,7 +386,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
 }
 
 
-PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time)
+PL_ACK PL_check_tl_cmd(const PacketList* pl, cycle_t time)
 {
   if (pl->packet_type_ != PL_PACKET_TYPE_CCP) return PL_PACKET_TYPE_ERR;
 

@@ -92,7 +92,7 @@ typedef struct
  * @param[in] node_num: PL_Node の数
  * @param[in] packet_type: 保持する packet の型情報．PL_PACKET_TYPE を参照
  * @param[in] packet_size: 使用する packet の型サイズ
- * @param[out] pl: 初期化する PacketList
+ * @param[in,out] pl: 初期化する PacketList
  * @retval PL_SUCCESS: 成功
  * @retval PL_PACKET_TYPE_ERR: 型関連エラー
  */
@@ -105,9 +105,8 @@ PL_ACK PL_initialize(PL_Node* pl_node_stock,
 
 /**
  * @brief PacketList をクリア
- * @param[in] pl: クリアする PacketList
- * @retval PL_SUCCESS: 成功
- * @retval PL_PACKET_TYPE_ERR: 型関連エラー
+ * @param[in,out] pl: クリアする PacketList
+ * @return void
  * @note 全 active Node を削除して 全て inactive の stock にする
  */
 void PL_clear_list(PacketList* pl);
@@ -239,7 +238,7 @@ PL_ACK PL_drop_node(PacketList* pl, PL_Node* prev, PL_Node* current);
 /**
  * @brief CCP が時系列に並ぶように CCP を挿入する
  * @note TimeLine だけでなく TaskList もこれを使い，その場合， now は step_t になることに注意
- * @param[in] pl: PacketList
+ * @param[in,out] pl: CCP を挿入する PacketList
  * @param[in] packet: 挿入する CCP
  * @param[in] now: 基準時刻 (TimeLine なら現在時刻， TaskList なら現在 step)
  * @retval PL_SUCCESS: 成功
@@ -254,7 +253,7 @@ PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t n
 /**
  * @brief PacketList 上に BC を展開する
  * @note TimeLine だけでなく TaskList もこれを使い，その場合， start_at は step_t になることに注意
- * @param[in] pl: PacketList
+ * @param[in,out] pl: BC を展開する PacketList
  * @param[in] block: 展開する BC の ID
  * @param[in] start_at: 開始基準時刻
  * @retval PL_SUCCESS: 成功
@@ -275,6 +274,6 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
  * @retval PL_TLC_NOT_YET: まだ指定時刻になっていない or PacketList が空
  * @retval PL_PACKET_TYPE_ERR: 指定した PacketList の packet が CCP ではない
  */
-PL_ACK PL_check_tl_cmd(PacketList* pl, cycle_t time);
+PL_ACK PL_check_tl_cmd(const PacketList* pl, cycle_t time);
 
 #endif
