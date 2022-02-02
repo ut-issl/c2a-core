@@ -1,16 +1,17 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  DriverのためのISSLフォーマット通信のための公開定義，関数など
+ * @brief  Driver のための ISSL フォーマット通信のための公開定義，関数など
  */
 
 #include "driver_super_issl_format.h"
 #include "../../Library/crc.h"
+#include <string.h>
 
 
 uint32_t DS_ISSLFMT_get_tlm_version(const DS_StreamConfig* p_stream_config)
 {
-  // [TODO] 現状はVersion番号が8bitのもののみしか対応していない
+  // [TODO] 現状は Version 番号が 8bit のもののみしか対応していない
   return (uint32_t)(DSSC_get_rx_frame(p_stream_config)[DS_ISSLFMT_COMMON_HEADER_SIZE]);
 }
 
@@ -43,7 +44,7 @@ uint32_t DS_ISSLFMT_get_tlm_id(const uint32_t version, const DS_StreamConfig* p_
 
 uint32_t DS_ISSLFMT_get_tlm_length(const DS_StreamConfig* p_stream_config)
 {
-  // [TODO] 2bitのもののみしか対応していない
+  // TODO: 2bit のもののみしか対応していない
   uint16_t length = DSSC_get_rx_frame(p_stream_config)[2];
   length <<= 8;
   length  |= DSSC_get_rx_frame(p_stream_config)[3];
@@ -55,14 +56,35 @@ uint16_t DS_ISSLFMT_calc_crc(const unsigned char* c, size_t n)
   return crc_16_ibm_right(0x0000, c, n, 0);
 }
 
-uint8_t DS_C2AFMT_get_tlm_id(const DS_StreamConfig* p_stream_config)
+const uint8_t* DS_C2AFMT_get_user_data_head(const DS_StreamConfig* p_stream_config)
 {
-  uint16_t offset = DS_ISSLFMT_COMMON_HEADER_SIZE + DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE + 5;
-  uint8_t  tlm_id = DSSC_get_rx_frame(p_stream_config)[offset];
-  return tlm_id;
+  return &(DSSC_get_rx_frame(p_stream_config)[DS_ISSLFMT_COMMON_HEADER_SIZE]);
+}
 
-  // [TODO] 本当は以下の関数を使いたいが，TPC型にmemcpyしないとこの関数が使えない．．．
-  // return TCP_TLM_get_packet_id();
+DS_ERR_CODE DS_C2AFMT_get_ctp(const DS_StreamConfig* p_stream_config, CommonTlmPacket* ctp)
+{
+  uint32_t issl_fmt_user_data_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
+  if (issl_fmt_user_data_len > CTP_MAX_LEN) return DS_ERR_CODE_ERR;
+
+  // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
+  memcpy(&ctp->packet, DS_C2AFMT_get_user_data_head(p_stream_config), (size_t)issl_fmt_user_data_len);
+
+  if (CTP_get_packet_len(ctp) != issl_fmt_user_data_len) return DS_ERR_CODE_ERR;
+  if (!CTP_is_valid_packet(ctp)) return DS_ERR_CODE_ERR;
+  return DS_ERR_CODE_OK;
+}
+
+DS_ERR_CODE DS_C2AFMT_get_ccp(const DS_StreamConfig* p_stream_config, CommonCmdPacket* ccp)
+{
+  uint32_t issl_fmt_user_data_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
+  if (issl_fmt_user_data_len > CCP_MAX_LEN) return DS_ERR_CODE_ERR;
+
+  // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
+  memcpy(&ccp->packet, DS_C2AFMT_get_user_data_head(p_stream_config), (size_t)issl_fmt_user_data_len);
+
+  if (CCP_get_packet_len(ccp) != issl_fmt_user_data_len) return DS_ERR_CODE_ERR;
+  if (!CCP_is_valid_packet(ccp)) return DS_ERR_CODE_ERR;
+  return DS_ERR_CODE_OK;
 }
 
 #pragma section

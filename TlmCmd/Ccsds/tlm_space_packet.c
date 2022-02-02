@@ -260,11 +260,11 @@ uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp)
 
 // FIXME: TCP 時代の len と変わってることに注意！！！！！！
 // これを呼ぶ関数でなおす！！！！
-void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_data_len)
+void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_len)
 {
   TSP_set_common_hdr(tsp);
   TSP_set_apid(tsp, apid);
-  TSP_set_packet_data_len(tsp, packet_data_len);
+  TSP_set_packet_len(tsp, packet_len);
 }
 
 
@@ -295,7 +295,7 @@ void TSP_setup_fill_packet(TlmSpacePacket* tsp, uint16_t fill_size)
     // Fill領域に ピッタリハマる Fill Packet を生成する
     TSP_setup_primary_hdr(tsp,
                           APID_FILL_PKT,
-                          (uint16_t)(fill_size - SP_PRM_HDR_LEN));
+                          (uint16_t)fill_size);
   }
   else
   {
@@ -303,7 +303,7 @@ void TSP_setup_fill_packet(TlmSpacePacket* tsp, uint16_t fill_size)
     // 領域ピッタリの Fill Packet の生成は不可能なので，データ長 1 のFill Packetを生成する。
     TSP_setup_primary_hdr(tsp,
                           APID_FILL_PKT,
-                          1);
+                          SP_PRM_HDR_LEN + 1);
   }
 }
 

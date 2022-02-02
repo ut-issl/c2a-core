@@ -17,6 +17,16 @@ int CTP_is_valid_packet(const CommonTlmPacket* packet)
   return 1;
 }
 
+APID CTP_get_apid(const CommonTlmPacket* packet)
+{
+  return TSP_get_apid(packet);
+}
+
+void CTP_set_apid(CommonTlmPacket* packet, APID apid)
+{
+  TSP_set_apid(packet, apid);
+}
+
 ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet)
 {
   return TSP_get_dest_flgas(packet);
@@ -25,6 +35,16 @@ ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet)
 void CTP_set_dest_flags(CommonTlmPacket* packet, ctp_dest_flags_t flags)
 {
   TSP_set_dest_flgas(packet, flags);
+}
+
+TLM_CODE CTP_get_id(const CommonTlmPacket* packet)
+{
+  return TSP_get_tlm_id(packet);
+}
+
+void CTP_set_id(CommonTlmPacket* packet, TLM_CODE id)
+{
+  TSP_set_tlm_id(packet, id);
 }
 
 uint16_t CTP_get_packet_len(const CommonTlmPacket* packet)
