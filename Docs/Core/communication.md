@@ -139,8 +139,8 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
   - TLC や BC における実行時刻を示す TI
 
 ## コマンド配送におけるルーティングについて
-- コマンドの配送先，つまり実行されるボードは APID によって規定される
-- 一方で， BC や TLC などでのキューイングは， Destination Type によってキューイングされる
+- コマンドの最終的な配送先，つまり実行されるボードは APID によって規定される
+- 一方で， BC や TLC などでのキューイングは， Destination Type によって決定される
 - 具体例
   - APID: MOBC, Destination Type: MOBC or 自分宛
     - GSC: GS から MOBC に届き， MOBC で GSC としてエンキューされる．デキューした後， MOBC 内で GSC として実行される．
