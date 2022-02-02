@@ -45,7 +45,7 @@ jobs:
             -name 'check_coding_rule' \
             -level error \
             -fail-on-error=true \
-            -filter-mode=added \
+            -filter-mode=nofilter \
             -diff="git diff FETCH_HEAD" \
             -reporter=github-pr-review \
             -efm="%-GThe above files are invalid coding rule." \
