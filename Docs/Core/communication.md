@@ -20,13 +20,40 @@ C2A 内部を流れるパケットは以下の 3 つである．
 C2A 標準として， Space Packet が Core 内で定義されており，基本的にはこれを用いることを想定している．
 
 
-
-FIXME: 2022/01/24現在  
-現在， CTCP 大改修中 (https://github.com/ut-issl/c2a-core/issues/205) であり，現時点では，すべてのパケットの実体は TCP である．
-近いうちに整備される予定．
-
 ## C2A 標準 Space Packet 定義
-TBA
+現在，C2A 標準 Space Packet として，テレメパケット，コマンドパケットともに， Ver.1 のみ策定している．  
+ここでは， Ver.1 について記載する．
+
+後方互換性を保つために，バージョン情報は， Secondary Header に埋め込まれている．
+
+### Primary Header
+- Primary Header はテレメパケット，コマンドパケットともに共通であり，また， CCSDS の規定する Space Packet と同一である．
+- 本ドキュメント更新時の実装は，以下である．ヘッダ構造は以下を参照すること．
+  - https://github.com/ut-issl/c2a-core/blob/217c3156a07ec503cd60fc7b75978a3234ec2c5d/TlmCmd/Ccsds/space_packet.h#L1-L35
+- Packet Version Number
+  - `0b000` Space Packet 固定
+- Packet Identification
+  - Packet Type
+    - `0b0`: Telemetry
+    - `0b1`: Command
+  - Secondary Hreader Flag
+    - `0b0`: Secondary Header Absent
+    - `0b1`: Secondary Header Present
+  - Application Process Identifier (APID)
+    - ユーザー定義
+    - 以下は CCSDS で規定
+      - `0b11111111000` - `0b11111111110`: CCSDS Reserved
+      - `0b11111111111`: Idle Packet
+  - Sequence Flag
+    - `0b00`: Continuation component of higher data structure
+    - `0b01`: First component of higher data structure
+    - `0b10`: Last component of higher data structure
+    - `0b11`: Standalone Packet
+  - Sequence Count
+    - APID ごとにパケットの伝送順番を示すカウンタ
+  - Packet Data Length
+    - パケット全長から Primary Header 長を引き，さらに 1 を引いたもの
+    - つまり，これが 0 の時， Secondary Header + User Data Field 長は 1 byte である
 
 
 ## Common Packet の定義方法
