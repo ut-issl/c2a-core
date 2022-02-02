@@ -188,8 +188,8 @@ def check_file_(path: str, settings: dict) -> int:
         flag = 1
     if check_preprocessor_(path, code_lines) != 0:
         flag = 1
-    # if check_include_guard_(path, code_lines) != 0:
-    #     flag = 1
+    if check_include_guard_(path, code_lines) != 0:
+        flag = 1
 
     return flag
 
@@ -687,40 +687,51 @@ def check_preprocessor_(path: str, code_lines: list) -> int:
     return flag
 
 
-# TODO: すべてのファイルがキャメルケースになったら追加する
 # 0: OK, 1: NG
-# def check_include_guard_(path: str, code_lines: list) -> int:
-#     basename, ext = os.path.splitext(os.path.basename(path))
-#     if not (ext == ".h" or ext == ".hpp"):
-#         return 0
-#     # print(path)
-#     # print(basename)
-#     # print(ext)
-#
-#     # 最初に発見したプリプロセッサディレクティブがインクルードガードであること，
-#     # さらにそれが適切な識別子であることを判断
-#
-#     for idx, line in enumerate(code_lines):
-#         if line.startswith("#"):
-#             # 初めて "#" を検出したものがインクルードガードでないとNG
-#             if idx + 1 >= len(code_lines):
-#                 return 1
-#
-#             line_ifndef = line
-#             line_define = code_lines[idx + 1]
-#             # print(line_ifndef)
-#             # print(line_define)
-#
-#             if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
-#                 return 1
-#
-#             include_guard = basename.upper() + "_H_"
-#             return 0
-#
-#         else:
-#             continue
-#
-#     return 1
+def check_include_guard_(path: str, code_lines: list) -> int:
+    basename, ext = os.path.splitext(os.path.basename(path))
+    if not (ext == ".h" or ext == ".hpp"):
+        return 0
+    # print(path)
+    # print(basename)
+    # print(ext)
+
+    # 最初に発見したプリプロセッサディレクティブがインクルードガードであること，
+    # さらにそれが適切な識別子であることを判断
+
+    for idx, line in enumerate(code_lines):
+        if line.startswith("#"):
+            # 初めて "#" を検出したものがインクルードガードでないと NG
+
+            # 次の行 (#define) も存在するかチェック
+            if idx + 1 >= len(code_lines):
+                print_err_(path, idx + 1, "INCLUDE GUARD IS REQUIRED", line)
+                return 1
+
+            line_ifndef = line
+            line_define = code_lines[idx + 1]
+            # print(line_ifndef)
+            # print(line_define)
+
+            if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
+                print_err_(path, idx + 1, "INCLUDE GUARD IS NEEDED AT THE BEGINNING OF CODE", line)
+                return 1
+
+            if ext == ".h":
+                include_guard = basename.upper() + "_H_"
+            else:
+                include_guard = basename.upper() + "_HPP_"
+            # print(include_guard)
+
+            if line_ifndef[8:] != include_guard:
+                print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
+                return 1
+            if line_define[8:] != include_guard:
+                return 1
+            return 0
+
+    print_err_(path, 1, "INCLUDE GUARD IS REQUIRED", code_lines[0])
+    return 1
 
 
 # 1: target が含まれる, 0: なし

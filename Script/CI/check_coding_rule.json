@@ -23,7 +23,7 @@
     "CmdSpacePacket"
   ],
   "comment_additional_type" : [
-    "FIXME: TCPについてはいずれ消す",
+    "FIXME: TCP はもう存在しないはずなので，どこかで消す",
     "FIXME: CTCP, CTP, CCP については，整理が終わり次第，消して大丈夫になるはず"
   ]
 }
