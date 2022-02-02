@@ -2,17 +2,17 @@
 
 ## Application
 - Application とは，以下の4つに分類される．
-	- Core
-	- User Defined
-	- Middleware
-	- Driver Instance
+  - Core
+  - User Defined
+  - Middleware
+  - Driver Instance
 - Application は，以下の要素によって構成される．
-	- Application 実体
-		- 内部状態を保存する AppInfo 構造体
-		- 初期化関数 (initializer)
-		- 実行関数 (executor)
-	- コマンド
-	- テレメトリ
+  - Application 実体
+    - 内部状態を保存する AppInfo 構造体
+    - 初期化関数 (initializer)
+    - 実行関数 (executor)
+  - コマンド
+  - テレメトリ
 
 ## Application実体
 ### 内部状態を保存する AppInfo構造体
@@ -28,8 +28,8 @@
 ## コマンド
 - 処理の最小単位
 - 以下のような処理をする
-	- アプリケーションの一部処理を単独で行う
-	- アプリケーションの内部状態を更新する
+  - アプリケーションの一部処理を単独で行う
+  - アプリケーションの内部状態を更新する
 
 
 ## テレメトリ
