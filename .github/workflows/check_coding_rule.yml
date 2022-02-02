@@ -35,6 +35,7 @@ jobs:
           sed 's/.\/src_core\///g' < /tmp/coding-rule.log \
           | > ./coding-rule.log \
             sed 's/.\/src_user/Examples\/minimum_user_for_s2e\/src\/src_user/g'
+          cat ./coding-rule.log
 
       - name: reviewdog(github-pr-review)
         env:
