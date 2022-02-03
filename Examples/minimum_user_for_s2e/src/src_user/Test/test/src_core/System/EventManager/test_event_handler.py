@@ -46,6 +46,7 @@ EL_ERROR_LEVEL_HIGH = 0
 EL_ERROR_LEVEL_MIDDLE = 1
 EL_ERROR_LEVEL_LOW = 2
 EL_ERROR_LEVEL_EL = 3
+EL_ERROR_LEVEL_EH = 4
 
 EH_RESPONSE_CONDITION_SINGLE = 0
 EH_RESPONSE_CONDITION_CONTINUOUS = 1
@@ -267,6 +268,15 @@ def test_event_handler_register_rule():
     assert cmd_ret == "PRM"
     assert reg_ack == EH_REGISTER_ACK_ILLEGAL_CONDITION_TYPE
 
+    # 不正な多段
+    settings_invalid = copy.deepcopy(settings)
+    settings_invalid["event"]["group"] = c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    settings_invalid["event"]["err_level"] = EL_ERROR_LEVEL_EH
+    set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST1, settings_invalid)
+    (cmd_ret, reg_ack) = register_rule()
+    assert cmd_ret == "PRM"
+    assert reg_ack == EH_REGISTER_ACK_ILLEGAL_GROUP
+
     # 一旦リセット
     print("Cmd_EH_CLEAR_ALL_RULE")
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -294,7 +304,7 @@ def test_event_handler_register_rule():
         ope, c2a_enum.Cmd_CODE_EH_CLEAR_ALL_RULE, (), c2a_enum.Tlm_CODE_HK
     )
 
-    # 最大重複数チェック（後ろに登録なしあるバージョン）
+    # 最大重複数チェック（後ろに登録なしバージョン）
     settings_later_group = copy.deepcopy(settings)
     settings_later_group["event"]["group"] = EL_GROUP_TEST_EH + 1
     set_param_of_reg_from_cmd_eh_rule(
