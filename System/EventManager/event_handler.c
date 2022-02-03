@@ -992,6 +992,11 @@ EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings)
   {
     return EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG;
   }
+  if (settings->event.err_level == EL_ERROR_LEVEL_EH)
+  {
+    // 多段対応以外で EL_ERROR_LEVEL_EH の設定は不可
+    if (settings->event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE) return EH_REGISTER_ACK_ILLEGAL_GROUP;
+  }
 
   rule.settings = *settings;
   rule.counter = 0;
