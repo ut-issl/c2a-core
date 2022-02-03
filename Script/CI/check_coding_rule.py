@@ -78,13 +78,10 @@ def check_coding_rule(settings: dict) -> int:
                     continue
 
                 ext = (os.path.splitext(file))[1]
-                # print(ext)
                 if ext != ".h" and ext != ".c" and ext != ".hpp" and ext != ".cpp":
                     continue
                 path = root + r"/" + file
                 path = path.replace("\\", "/")
-
-                # print(path)
 
                 if path in ignore_files:
                     if DEBUG:
@@ -94,7 +91,6 @@ def check_coding_rule(settings: dict) -> int:
 
                 ret = check_file_(path, settings)
                 if ret != 0:
-                    # print(path)
                     flag = 1
     return flag
 
@@ -173,9 +169,6 @@ def check_file_(path: str, settings: dict) -> int:
     with open(path, encoding=settings["input_file_encoding"]) as f:
         code_lines = f.read().split("\n")
 
-    # print(path)
-    # pprint.pprint(code_lines)
-
     if check_comment_(path, code_lines) != 0:
         flag = 1
     if check_newline_(path, code_lines) != 0:
@@ -197,7 +190,6 @@ def check_file_(path: str, settings: dict) -> int:
 # TODO
 # 演算子の位置
 # 演算子前後のスペース
-# インクルードガード
 # ファイル名
 
 
@@ -692,9 +684,6 @@ def check_include_guard_(path: str, code_lines: list) -> int:
     basename, ext = os.path.splitext(os.path.basename(path))
     if not (ext == ".h" or ext == ".hpp"):
         return 0
-    # print(path)
-    # print(basename)
-    # print(ext)
 
     # 最初に発見したプリプロセッサディレクティブがインクルードガードであること，
     # さらにそれが適切な識別子であることを判断
@@ -710,8 +699,6 @@ def check_include_guard_(path: str, code_lines: list) -> int:
 
             line_ifndef = line
             line_define = code_lines[idx + 1]
-            # print(line_ifndef)
-            # print(line_define)
 
             if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
                 print_err_(path, idx + 1, "INCLUDE GUARD IS NEEDED AT THE BEGINNING OF CODE", line)
@@ -721,7 +708,6 @@ def check_include_guard_(path: str, code_lines: list) -> int:
                 include_guard = basename.upper() + "_H_"
             else:
                 include_guard = basename.upper() + "_HPP_"
-            # print(include_guard)
 
             if line_ifndef[8:] != include_guard:
                 print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
