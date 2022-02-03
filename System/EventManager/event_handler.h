@@ -31,6 +31,28 @@
  *          - EL_UART が 5 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
  *        となるので，実質的に， EH_Rule2 で EH_Rule1 をオーバーライドすることができる．
  *        このように，下位のルールを，上位の発火条件を変えることで，柔軟にオーバーライドできる．
+ * @note  上記の多段の EH 対応の場合に発行される EH Event は，次のようになる．
+ *        group / local / err_level / note の順に記す．また，時系列降順でしるす（上が新しい）
+ *          1. EL_UART が 5 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          2. EL_UART が 10 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          3. EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *                EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE / EH_Rule1 / EH / 1
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule2 / EH / err_level
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          4. EL_UART が 20 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          5. EL_UART が 25 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          6. EL_UART が 30 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 も発火せずに， EH_Rule3 が発火
+ *                EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE / EH_Rule1 / EH / 1
+ *                EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE / EH_Rule2 / EH / 1
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule3 / EH / err_level
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule2 / EH / err_level
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ * @note  多段の EH 対応のため， EL_ERROR_LEVEL_EH の Event をルールに設定することは，
+ *        多段対応時 (つまり group == EL_CORE_GROUP_EH_MATCH_RULE) を除いてできない
  * @note  EH での Event 発行は以下
  *          - EL_CORE_GROUP_EVENT_HANDLER
  *            - EH に関する様々なエラー
