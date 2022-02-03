@@ -26,9 +26,9 @@ static BCE_Params* BCE_get_bc_exe_params_default_(const bct_id_t block);
 static void BCE_set_bc_exe_params_default_(const bct_id_t block, const BCE_Params* bc_exe_params);
 
 // BlockCmdExeFunc をラップした static getter, setter
-// staticであるので，const をつけていない
-// user実装次第では，三重冗長化された不揮発メモリ上のBCTを扱う可能性もあるため，
-// 取得したポインタを介して値を更新した場合，setterを呼び出す．
+// static であるので，const をつけていない
+// user 実装次第では，三重冗長化された不揮発メモリ上の BCT を扱う可能性もあるため，
+// 取得したポインタを介して値を更新した場合， setter を呼び出す．
 // block の引数アサーションはしていない
 static BCE_Params* BCE_get_bc_exe_params_(const bct_id_t block);
 static void BCE_set_bc_exe_params_(const bct_id_t block, const BCE_Params* bc_exe_params);
@@ -40,7 +40,7 @@ static void BCE_set_bc_exe_params_(const bct_id_t block, const BCE_Params* bc_ex
  * @note  rotator はひたすらその BC に含まれる Cmd をループで実行し続ける
  *        interval[cycle] ごとに 1つの Cmd が実行される.
  */
-static CCP_EXEC_STS BCT_rotate_block_cmd_(bct_id_t block);
+static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block);
 
 /**
  * @brief BC をまとめて一括で実行する
@@ -48,7 +48,7 @@ static CCP_EXEC_STS BCT_rotate_block_cmd_(bct_id_t block);
  * @return CCP_EXEC_STS
  * @note  BC の内部で BC を実行する時など
  */
-static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block);
+static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block);
 
 /**
  * @brief BC をまとめて一括で実行する
@@ -57,7 +57,7 @@ static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block);
  * @return CCP_EXEC_STS
  * @note 時間を制限を設けてBCを実行したい時など
  */
-static CCP_EXEC_STS BCT_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step);
+static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step);
 
 /**
  * @brief 時間制限付きの combiner
@@ -122,7 +122,7 @@ CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
 
   ack = BCE_activate_block();
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
 BCT_ACK BCE_activate_block(void)
@@ -160,7 +160,7 @@ CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
   ack = BCE_activate_block_by_id(block);
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
 CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
@@ -178,7 +178,7 @@ CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 
   ack = BCE_inactivate_block_by_id(block);
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
 BCT_ACK BCE_activate_block_by_id(bct_id_t block)
@@ -220,16 +220,16 @@ CCP_EXEC_STS Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
   // パラメータを読み出し。
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_rotate_block_cmd_(block);
+  return BCE_rotate_block_cmd_(block);
 }
 
-static CCP_EXEC_STS BCT_rotate_block_cmd_(bct_id_t block)
+static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
 {
   CCP_EXEC_STS ack;
   BCE_Params* bc_exe_params;
   BCT_Pos pos;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
   if (!bc_exe_params->is_active) return CCP_EXEC_ILLEGAL_CONTEXT;
@@ -269,16 +269,16 @@ CCP_EXEC_STS Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
   // パラメータを読み出し。
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_combine_block_cmd_(block);
+  return BCE_combine_block_cmd_(block);
 }
 
-static CCP_EXEC_STS BCT_combine_block_cmd_(bct_id_t block)
+static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
 {
   uint8_t cmd;
   CCP_EXEC_STS ack;
   uint8_t length;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
 
   length = BCT_get_bc_length(block);
 
@@ -317,10 +317,10 @@ CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
   endian_memcpy(&block, param, SIZE_OF_BCT_ID_T);
   limit_step = param[SIZE_OF_BCT_ID_T];
 
-  return BCT_timelimit_combine_block_cmd_(block, limit_step);
+  return BCE_timelimit_combine_block_cmd_(block, limit_step);
 }
 
-static CCP_EXEC_STS BCT_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step)
+static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step)
 {
   uint8_t cmd;
   uint8_t length;
@@ -331,7 +331,7 @@ static CCP_EXEC_STS BCT_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
   ObcTime finish;
   step_t diff;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ctcp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
   if (!bc_exe_params->is_active) return CCP_EXEC_ILLEGAL_CONTEXT;
@@ -339,6 +339,7 @@ static CCP_EXEC_STS BCT_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
   ++bc_exe_params->timelimit_combine.call_num;
   length = BCT_get_bc_length(block);
 
+  // TODO:
   // ↓ちょっとこれ微妙かも...
   // 値が増えないように，割合が変わらないように適当に下げてる感じ
   if (bc_exe_params->timelimit_combine.call_num >= 0xFFFF - 16)
@@ -474,7 +475,7 @@ CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
   // パラメータを読み出し。
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(BCE_reset_rotator_info(block));
+  return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_rotator_info(block));
 }
 
 CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
@@ -490,7 +491,7 @@ CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
   // パラメータを読み出し。
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_convert_bct_ack_to_ctcp_exec_sts(BCE_reset_combiner_info(block));
+  return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_combiner_info(block));
 }
 
 CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
