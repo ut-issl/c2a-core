@@ -1011,7 +1011,36 @@ EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings)
   if (settings->event.err_level == EL_ERROR_LEVEL_EH)
   {
     // 多段対応以外で EL_ERROR_LEVEL_EH の設定は不可
-    if (settings->event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE) return EH_REGISTER_ACK_ILLEGAL_GROUP;
+    if (settings->event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE) return EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL;
+  }
+  if (settings->event.group == (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+  {
+    // 多段設定の最大値を超えてないかチェック
+    uint8_t multi_level_num;
+    EH_RULE_ID lower_level_rule = (EH_RULE_ID)(settings->event.local);
+
+    // 1段以下なら，そもそも多段が組めない
+    if (event_handler_.exec_settings.max_multi_level_num <= 1) return EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL;
+
+    // 無限ループ回避のために EH_RULE_MAX で抑える
+    for (multi_level_num = 0; multi_level_num < EH_RULE_MAX; ++multi_level_num)
+    {
+      EH_RuleSettings* rule_settings;
+      EH_CHECK_RULE_ACK ack;
+
+      ack = EH_check_rule_id_(lower_level_rule);
+      if (ack == EH_CHECK_RULE_ACK_INVALID_RULE_ID) return EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL;
+      if (ack == EH_CHECK_RULE_ACK_UNREGISTERED) break;
+
+      rule_settings = &event_handler_.rule_table.rules[lower_level_rule].settings;
+
+      if (rule_settings->event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE) break;
+
+      // 更に多段になっている
+      lower_level_rule = (EH_RULE_ID)rule_settings->event.local;
+
+      if (multi_level_num >= (event_handler_.exec_settings.max_multi_level_num - 2)) return EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL;
+    }
   }
 
   rule.settings = *settings;
@@ -1274,6 +1303,7 @@ CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
   case EH_REGISTER_ACK_ILLEGAL_COUNT_THRESHOLD:
   case EH_REGISTER_ACK_ILLEGAL_BCT_ID:
   case EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG:
+  case EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL:
     return CCP_EXEC_ILLEGAL_PARAMETER;    // 正確にはこのコマンドのパラメタではないが．．．
   case EH_REGISTER_ACK_ERR_FULL:
   case EH_REGISTER_ACK_ERR_RULE_OVERWRITE:

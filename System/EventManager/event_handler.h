@@ -130,6 +130,7 @@ typedef enum
   EH_REGISTER_ACK_ILLEGAL_COUNT_THRESHOLD,  //!< 不正な condition.count_threshold
   EH_REGISTER_ACK_ILLEGAL_BCT_ID,           //!< 不正な deploy_bct_id
   EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG,      //!< 不正な is_active
+  EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL,      //!< 多段 EH 対応での不正な設定
   EH_REGISTER_ACK_UNKNOWN_ERR               //!< 不明なエラー
 } EH_REGISTER_ACK;
 
