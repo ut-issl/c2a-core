@@ -26,6 +26,7 @@ typedef enum
   EH_EL_LOCAL_ID_FAIL_FORM_CTCP,            //!< BC 展開 Cmd の生成に失敗
   EH_EL_LOCAL_ID_LOG_TABLE_FULL,            //!< EH_LogTable が満杯になり， wp が 0 に戻った
   EH_EL_LOCAL_ID_SEARCH_ERR,                //!< EH_search_rule_table_index_ の返り値不正
+  EH_EL_LOCAL_ID_RECURSION_ERR,             //!< 多段対応時に再帰呼び出し回数が設定値を超えた
   EH_EL_LOCAL_ID_UNKNOWN_ERR                //!< 不明なエラー
 } EH_EL_LOCAL_ID;
 
@@ -262,8 +263,10 @@ void EH_initialize(void)
   EH_clear_log_();
 
   EH_match_event_counter_to_el();
-  event_handler_.max_response_num = EH_MAX_RESPONSE_NUM_DEFAULT;
-  event_handler_.max_check_event_num = EH_MAX_CHECK_EVENT_NUM_DEFAULT;
+  event_handler_.exec_settings.max_response_num = EH_MAX_RESPONSE_NUM_DEFAULT;
+  event_handler_.exec_settings.max_check_event_num = EH_MAX_CHECK_EVENT_NUM_DEFAULT;
+  event_handler_.exec_settings.max_multi_level_num = EH_MAX_MULTI_LEVEL_NUM_DEFAULT;
+  event_handler_.exec_info.current_multi_level = 0;
 
   EH_load_default_rules();
 }
@@ -311,7 +314,7 @@ void EH_execute(void)
   ack = EH_check_el_event_counter_();
   if (ack != EH_ACK_OK) return;
 
-  for (i = 0; i < event_handler_.max_check_event_num; ++i)
+  for (i = 0; i < event_handler_.exec_settings.max_check_event_num; ++i)
   {
     const EL_Event* event = EH_get_event_to_check_rule_();
     if (event == NULL)
@@ -320,8 +323,9 @@ void EH_execute(void)
       break;
     }
 
+    event_handler_.exec_info.current_multi_level = 0;
     responded_count += EH_check_event_and_respond_(event);
-    if (responded_count >= event_handler_.max_response_num) break;
+    if (responded_count >= event_handler_.exec_settings.max_response_num) break;
   }
 }
 
@@ -482,6 +486,18 @@ static uint8_t EH_check_higher_level_rule_and_respond_(EH_RULE_ID rule_id)
   const EL_Event* higher_level_trigger_event = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 0);
   int32_t delta_counter = event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH] -
                           event_handler_.el_event_counter.counters[EL_ERROR_LEVEL_EH];
+
+  event_handler_.exec_info.current_multi_level++;
+
+  if (event_handler_.exec_info.current_multi_level >= event_handler_.exec_settings.max_multi_level_num)
+  {
+    // これ以上の再帰回数は認められない
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                    EH_EL_LOCAL_ID_RECURSION_ERR,
+                    EL_ERROR_LEVEL_HIGH,
+                    0);
+    return 0;
+  }
 
   if (delta_counter < 1)
   {
@@ -1425,14 +1441,21 @@ CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet)
 {
-  event_handler_.max_response_num = CCP_get_param_from_packet(packet, 0, uint8_t);
+  event_handler_.exec_settings.max_response_num = CCP_get_param_from_packet(packet, 0, uint8_t);
   return CCP_EXEC_SUCCESS;
 }
 
 
 CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet)
 {
-  event_handler_.max_check_event_num = CCP_get_param_from_packet(packet, 0, uint16_t);
+  event_handler_.exec_settings.max_check_event_num = CCP_get_param_from_packet(packet, 0, uint16_t);
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet)
+{
+  event_handler_.exec_settings.max_multi_level_num = CCP_get_param_from_packet(packet, 0, uint8_t);
   return CCP_EXEC_SUCCESS;
 }
 

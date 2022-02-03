@@ -97,6 +97,7 @@
 #define EH_MAX_RESPONSE_NUM_DEFAULT           (8)     //!< 一度の実行で対応する最大数（初期値）
 #define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< 一度の実行でチェックする event_logger の event log の最大値（初期値）
                                                            TL内での実行時間を調整するために設定する． */
+#define EH_MAX_MULTI_LEVEL_NUM_DEFAULT        (4)     //!< 多段の EH 対応の設定可能な最大段数（初期値）
 
 // 以下のファイルにて，次のパラメタを上書き設定できる
 // EH_RULE_TLM_PAGE_SIZE
@@ -106,6 +107,7 @@
 // EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
 // EH_MAX_RESPONSE_NUM_DEFAULT
 // EH_MAX_CHECK_EVENT_NUM_DEFAULT
+// EH_MAX_MULTI_LEVEL_NUM_DEFAULT
 #include <src_user/Settings/System/event_handler_params.h>
 
 
@@ -252,6 +254,30 @@ typedef struct
 } EH_ElEventCounter;
 
 /**
+ * @struct EH_ExecSettings
+ * @brief  EH 実行時設定
+ */
+typedef struct
+{
+  uint8_t  max_response_num;      /*!< 一度の EH_execute の実行で対応する最大数
+                                       初期値は EH_MAX_RESPONSE_NUM_DEFAULT
+                                       EL_Event のIDが重複した EH_Rule もあるので，実際の対応数はこれを上回る可能性がある */
+  uint16_t max_check_event_num;   /*!< 一度の実行でチェックする event_logger の event log の最大値
+                                       初期値は EH_MAX_CHECK_EVENT_NUM_DEFAULT */
+  uint8_t  max_multi_level_num;   /*!< 多段の EH 対応の設定可能な最大段数
+                                       初期値は EH_MAX_MULTI_LEVEL_NUM_DEFAULT */
+} EH_ExecSettings;
+
+/**
+ * @struct EH_ExecInfo
+ * @brief  EH 実行時情報
+ */
+typedef struct
+{
+  uint8_t current_multi_level;   //!< 現在処理してる多段 EH 対応レベル
+} EH_ExecInfo;
+
+/**
  * @struct EH_RegisterFromCmd
  * @brief  コマンド経由で EH_Rule を登録するときに使う内部状態変数
  */
@@ -293,11 +319,8 @@ typedef struct
   EH_RuleSortedIndex sorted_idxes[EH_RULE_MAX]; //!< rules の二分探索用 idx
   EH_LogTable        log_table;                 //!< EH 対応ログテーブル
   EH_ElEventCounter  el_event_counter;          //!< EH_ElEventCounter
-  uint8_t            max_response_num;          /*!< 一度の EH_execute の実行で対応する最大数
-                                                     初期値は EH_MAX_RESPONSE_NUM_DEFAULT
-                                                     EL_Event のIDが重複した EH_Rule もあるので，実際の対応数はこれを上回る可能性がある */
-  uint16_t           max_check_event_num;       /*!< 一度の実行でチェックする event_logger の event log の最大値
-                                                     初期値は EH_MAX_CHECK_EVENT_NUM_DEFAULT */
+  EH_ExecSettings    exec_settings;             //!< 実行時設定
+  EH_ExecInfo        exec_info;                 //!< 実行時情報
   EH_RegisterFromCmd reg_from_cmd;              //!< コマンド経由で EH_Rule を登録するときに使う内部状態変数
   EH_TlmInfo         tlm_info;                  //!< tlmのための情報
 } EventHandler;
@@ -444,6 +467,8 @@ CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet);   // FIXME: DB登録 & test
 
 CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
