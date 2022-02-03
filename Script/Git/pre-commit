@@ -13,7 +13,7 @@ my @Targets = (
 		"Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/DataBase/TLM_DB/SAMPLE_MOBC_TLM_DB.xlsm",
 		"Examples/minimum_user_for_s2e/src/src_user/Settings/sils_define.h",
 		"Examples/minimum_user_for_s2e/src/src_user/Settings/build_settings.h",
-		"Examples/minimum_user_for_s2e/src/src_user/Library/git_revision.c"
+		"Examples/minimum_user_for_s2e/src/src_user/Settings/git_revision_config.h"
 	);
 
 print "[] pwd\n" if $DEBUG;

@@ -45,6 +45,21 @@ if(SHOW_DEBUG_PRINT_ON_SILS)
   message("Show debug print")
 endif()
 
+execute_process(
+  COMMAND git log -1 --format=%H
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_REVISION_C2A_USER
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+  COMMAND git log -1 --format=%h
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_REVISION_C2A_USER_SHORT
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+add_definitions("-DGIT_REVISION_C2A_USER=\"${GIT_REVISION_C2A_USER}\"")
+add_definitions("-DGIT_REVISION_C2A_USER_SHORT=0x${GIT_REVISION_C2A_USER_SHORT}")
+
 add_subdirectory(${C2A_CORE_DIR})
 
 add_subdirectory(${C2A_USER_DIR}/Applications)
@@ -92,18 +107,6 @@ else()
     ${C2A_USER_MODULES}
     -lm
   )
-endif()
-
-if(WIN32)
-  add_custom_command(TARGET ${PROJECT_NAME}
-    PRE_BUILD
-    COMMAND git_revision.bat
-    WORKING_DIRECTORY ${C2A_USER_DIR}/Script)
-else()
-  add_custom_command(TARGET ${PROJECT_NAME}
-    PRE_BUILD
-    COMMAND ./git_revision.sh
-    WORKING_DIRECTORY ${C2A_USER_DIR}/Script)
 endif()
 
 include(${C2A_USER_DIR}/common.cmake)
