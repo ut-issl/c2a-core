@@ -18,7 +18,7 @@ typedef enum
 
 // 循環参照を防ぐためにここでinclude
 #include "../TlmCmd/command_dispatcher.h"
-#include "../TlmCmd/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_cmd_packet.h"
 #include "../TlmCmd/packet_handler.h"
 #include "../System/ApplicationManager/app_info.h"
 

@@ -7,6 +7,7 @@
 
 #include "driver_super.h"
 #include <src_user/Library/stdint.h>
+#include "../../TlmCmd/common_tlm_cmd_packet.h"
 
 #define DS_ISSLFMT_STX_SIZE             (2)          //!< ISSL 標準フォーマットの STX のサイズ
 #define DS_ISSLFMT_ETX_SIZE             (2)          //!< ISSL 標準フォーマットの ETX のサイズ

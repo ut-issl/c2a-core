@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 
-#include "common_tlm_cmd_packet.h"
+#include "common_cmd_packet.h"
 #include "block_command_table.h"
 
 

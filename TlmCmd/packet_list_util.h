@@ -6,6 +6,7 @@
 #define PACKET_LIST_UTIL_H_
 
 #include "packet_list.h"
+#include "common_tlm_cmd_packet.h"
 
 /**
  * @brief static に確保された PL_Node 配列と CTCP 配列を受け取りその領域を使用して PL を初期化
