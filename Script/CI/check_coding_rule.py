@@ -709,10 +709,10 @@ def check_include_guard_(path: str, code_lines: list) -> int:
             else:
                 include_guard = basename.upper() + "_HPP_"
 
-            if line_ifndef[8:] != include_guard:
+            if line_ifndef.split(" ")[1] != include_guard:
                 print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
                 return 1
-            if line_define[8:] != include_guard:
+            if line_define.split(" ")[1] != include_guard:
                 return 1
             return 0
 
