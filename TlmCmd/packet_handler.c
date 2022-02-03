@@ -1,8 +1,12 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief C2A 全体を流れる Common Packet の配送を制御する
+ */
 #include "packet_handler.h"
 
-#include <stddef.h> // for NULL
-#include <string.h> // for memcpy
+#include <stddef.h>
+#include <string.h>
 
 #include "../System/TimeManager/time_manager.h"
 #include "command_analyze.h"
@@ -40,8 +44,8 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_tl_cmd_(int line_no,
-                            const CommonCmdPacket* packet,
-                            cycle_t now);
+                             const CommonCmdPacket* packet,
+                             cycle_t now);
 /**
  * @brief UTL_cmd を TL_cmd に変換して tl_cmd_list に追加する
  * @note TODO：const cast でもいいか検討する
@@ -52,6 +56,7 @@ static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
+
 
 void PH_init(void)
 {
@@ -69,10 +74,7 @@ void PH_init(void)
   PH_user_init();
 }
 
-// パケット解析関数
-// GSTOSからのパケット以外もすべてここで処理される
-// Cmd_GENERATE_TLMとかも．
-// FIXME: 外の OBC からコマンドが飛んでくることもあるので，長さが足りているかのチェックを入れる！ PH_analyze_tlm_packet, PH_analyze_cmd_packet でも
+
 PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
 {
   if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
@@ -94,11 +96,11 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
   return PH_UNKNOWN;
 }
 
+
 PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
 {
   PH_ACK ack;
-  // FIXME: CommonCmdPacket としての妥当性チェックを入れる！！！
-  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CCP_is_valid_packet(packet)) return PH_UNKNOWN;    // FIXME: 返り値変えたい
 
   // ユーザー定義部
   // 基本的には，接続されているC2Aを搭載したボードに
@@ -137,6 +139,7 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   }
 }
 
+
 static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
 {
   switch (BCT_register_cmd(packet))
@@ -161,11 +164,11 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
   }
 }
 
+
 PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 {
   ctp_dest_flags_t flags;
-  // FIXME: CommonTlmPacket としての妥当性チェックを入れる！！！
-  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CTP_is_valid_packet(packet)) return PH_UNKNOWN;    // FIXME: 返り値変えたい
 
   flags = CTP_get_dest_flags(packet);
 
@@ -187,16 +190,10 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
   return PH_SUCCESS;
 }
 
+
 CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
 {
-  if (packet == NULL) return CCP_EXEC_UNKNOWN;    // FIXME: 返り値変えたい
-
-  // FIXME: CTCP, SpacePacket 整理で直す
-  // if (CTCP_get_packet_type(packet) != CTCP_PACKET_TYPE_CMD)
-  // {
-  //   // CMD以外のパケットが来たら異常判定。
-  //   return CCP_EXEC_PACKET_FMT_ERR;
-  // }
+  if (!CCP_is_valid_packet(packet)) return CCP_EXEC_UNKNOWN;    // FIXME: 返り値変えたい
 
   // FIXME: CTCP, SpacePacket 整理で直す
   if (CCP_get_apid(packet) == CCP_APID_TO_ME)
@@ -207,9 +204,10 @@ CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
   else
   {
     // 別機器宛コマンドの場合はパケット分配処理へ
-    return PH_user_cmd_router(packet);              // 当初，coreにcmd_router_が存在したが，coreにあっても意味がないのでuserのみにした
+    return PH_user_cmd_router(packet);
   }
 }
+
 
 static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet)
 {
@@ -220,6 +218,7 @@ static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet)
   return PH_SUCCESS;
 }
 
+
 static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rt_cmd_list, packet);
@@ -228,6 +227,7 @@ static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet)
 
   return PH_REGISTERED;
 }
+
 
 static PH_ACK PH_add_tl_cmd_(int line_no,
                             const CommonCmdPacket* packet,
@@ -254,6 +254,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
   }
 }
 
+
 static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
 {
   static CommonCmdPacket temp_; // サイズが大きいため静的領域に確保
@@ -271,6 +272,7 @@ static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
   return PH_add_tl_cmd_(0, &temp_, TMGR_get_master_total_cycle());
 }
 
+
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
@@ -280,6 +282,7 @@ static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
   return PH_REGISTERED;
 }
 
+
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
@@ -288,6 +291,7 @@ static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 
   return PH_REGISTERED;
 }
+
 
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
