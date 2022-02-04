@@ -313,7 +313,9 @@ def test_event_handler_register_rule():
         assert reg_ack == EH_REGISTER_ACK_OK
         assert cmd_ret == "SUC"
 
-    mutli_level_settings["event"]["local"] = EH_RULE_TEST0 + (EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - 1)
+    mutli_level_settings["event"]["local"] = EH_RULE_TEST0 + (
+        EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - 1
+    )
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, settings)
     check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + i, settings)
     (cmd_ret, reg_ack) = register_rule()
