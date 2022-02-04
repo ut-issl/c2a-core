@@ -21,7 +21,7 @@ jobs:
         run: ./setup.sh
       - name: check coding rule
         id: check
-        shell: bash
+        shell: bash -e {0}
         continue-on-error: true
         working-directory: ./Examples/minimum_user_for_s2e/src
         run: |
