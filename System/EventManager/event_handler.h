@@ -469,7 +469,7 @@ CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet);   // FIXME: DB登録 & test
+CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
