@@ -2,8 +2,8 @@
  * @file
  * @brief  3重冗長用汎用多数決関数
  */
-#ifndef MAJORITY_VOTE_FOR3_
-#define MAJORITY_VOTE_FOR3_
+#ifndef MAJORITY_VOTE_FOR3_H_
+#define MAJORITY_VOTE_FOR3_H_
 
 #include <stdio.h>
 #include <src_user/Library/stdint.h>

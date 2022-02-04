@@ -1,6 +1,6 @@
-#ifndef INITIAL_SL_H_
-#define INITIAL_SL_H_
+#ifndef INITIALSL_H_
+#define INITIALSL_H_
 
 void BCL_load_start_up_to_initial(void);
 
-#endif // INITIAL_SL_H_
+#endif

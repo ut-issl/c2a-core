@@ -1,6 +1,5 @@
-#ifndef PRINT_INCLUDE_
-#define PRINT_INCLUDE_
-
+#ifndef PRINT_H_
+#define PRINT_H_
 
 // #include "../Settings/sils_define.h" //ここでincludeしておくと，Printf系のものは全てOKになる
 
@@ -46,7 +45,6 @@
 // #define NG    -1
 // #define OK    0
 
-
 void Printf(char* format, ...);
 
-#endif // PRINT_INCLUDE_
+#endif

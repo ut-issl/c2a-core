@@ -1,5 +1,5 @@
-#ifndef TC_FRAME_H_
-#define TC_FRAME_H_
+#ifndef TCFRAME_H_
+#define TCFRAME_H_
 
 #include <stddef.h> // for size_t
 
@@ -63,4 +63,4 @@ uint16_t TCF_get_fecw(const TCF* tcf);
 
 uint16_t TCF_calc_fecw(const TCF* tcf);
 
-#endif // TC_FRAME_H_
+#endif

@@ -1,5 +1,5 @@
-#ifndef SEQUENCE_ITEMS_H_
-#define SEQUENCE_ITEMS_H_
+#ifndef SEQUENCEITEMS_H_
+#define SEQUENCEITEMS_H_
 
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include "../../../TlmCmd/command_definitions.h"
@@ -18,4 +18,4 @@ void SI_start_hk_tlm(CommonCmdPacket* packet);
 void SI_deploy_block(CommonCmdPacket* packet, int line_no, bct_id_t block_no);
 
 
-#endif // SEQUENCE_ITEMS_H_
+#endif

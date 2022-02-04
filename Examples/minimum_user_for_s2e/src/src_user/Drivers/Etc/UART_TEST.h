@@ -2,13 +2,11 @@
 * @file   UART_TEST.h
 * @brief  テスト用UARTのDriver
 */
-
-#ifndef UART_TEST_H
-#define UART_TEST_H
+#ifndef UART_TEST_H_
+#define UART_TEST_H_
 
 #include <src_core/IfWrapper/uart.h>
 #include <src_core/Drivers/Super/driver_super.h>
-
 
 /**
  * @struct UART_TEST_Info
@@ -18,7 +16,6 @@ typedef struct
 {
   uint8_t flag;
 } UART_TEST_Info;
-
 
 /**
  * @struct  UART_TEST_Driver
@@ -47,14 +44,12 @@ typedef struct
  */
 DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, unsigned char ch);
 
-
 /**
  * @brief  UART_TESTのデータ（テレメ）受信
  * @param  *uart_test_instance : UART_TEST_Driver構造体へのポインタ
  * @return DS_REC_ERR_CODE
  */
 DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance);
-
 
 /**
  * @brief  UART_TESTへのコマンド送信
@@ -63,6 +58,5 @@ DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance);
  * @return DS_CMD_ERR_CODE
  */
 DS_CMD_ERR_CODE UART_TEST_send(UART_TEST_Driver* uart_test_instance, uint8_t id);
-
 
 #endif

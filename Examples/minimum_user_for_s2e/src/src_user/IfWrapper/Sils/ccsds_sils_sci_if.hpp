@@ -5,8 +5,8 @@
             Windows上でcom0comを使うことを想定
             SCIComPort classは基本的にEQU ZEUSのコードを流用
  */
-#ifndef CCSDS_SILS_SIC_IF_H_
-#define CCSDS_SILS_SIC_IF_H_
+#ifndef CCSDS_SILS_SCI_IF_HPP_
+#define CCSDS_SILS_SCI_IF_HPP_
 
 #include <Windows.h>
 

@@ -1,5 +1,5 @@
-#ifndef TC_SEGMENT_H_
-#define TC_SEGMENT_H_
+#ifndef TCSEGMENT_H_
+#define TCSEGMENT_H_
 
 #include <stddef.h> // for size_t
 
@@ -36,4 +36,4 @@ TCS_SEQ_FLAG TCS_get_seq_flag(const TCS* tcs);
 
 TCS_MAP_ID TCS_get_map_id(const TCS* tcs);
 
-#endif // TC_SEGMENT_H_
+#endif
