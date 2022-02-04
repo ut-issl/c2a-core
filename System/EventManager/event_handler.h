@@ -1,23 +1,34 @@
 /**
  * @file
  * @brief イベント発火型処理を行う
- * @note  event_logger の情報を元に BC を展開する ( Event 発火に応じて対応を行う )
+ * @note  event_logger の情報を元に指定した BC (対応 BC) を展開する (Event 発火に応じて対応を行う)
  * @note  EH のベストプラクティス
  *          - いろんな箇所で FDIR を組むと，何が発動しているかわかりにくかったり，ログが散逸するので，
  *            できる限りすべての対応を EH で行うと良い
- *          - EH で対応を行う，ということは，以下のログが必ず取れている，ということになる
- *            - EH 対応をトリガするための Event 発行ログ
- *            - EH にマッチしたという Event ログ
- *            - EH 対応したという EH 対応ログと対応結果
- *          - ただし， EH 対応を行うためには， Block Cmd を消費するため，メモリ制約の厳しい OBC の場合は，難しい可能性もある
- *            - その場合は， EH_RESPONSE_CONDITION_SINGLE のもの（つまり，ステートレスな対応）を優先して， App 内部でハードコードすることを推奨する
- *            - EH_RESPONSE_CONDITION_SINGLE でないものは，カウンタを実装しなくてはいけないため， EH で処理するほうが望ましい
+ *            - EH で対応を行う，ということは，以下のログが必ず取れている，ということになる
+ *              - EH 対応をトリガするための Event 発行ログ
+ *              - EH にマッチしたという Event ログ
+ *              - EH 対応したという EH 対応ログと対応結果
+ *            - ただし， EH 対応を行うためには， Block Cmd を消費するため，メモリ制約の厳しい OBC の場合は，難しい可能性もある
+ *              - その場合は， EH_RESPONSE_CONDITION_SINGLE のもの（つまり，ステートレスな対応）を優先して， App 内部でハードコードすることを推奨する
+ *              - EH_RESPONSE_CONDITION_SINGLE でないものは，カウンタを実装しなくてはいけないため， EH で処理するほうが望ましい
+ *          - activate と inactivate
+ *            - その EH Rule を 使う前に， activate することをおすすめする
+ *            - activate 時に，内部のカウンタ (EH_Rule.counter) がリセットされるため， EH_RESPONSE_CONDITION_CONTINUOUS, EH_RESPONSE_CONDITION_CUMULATIVE において適切な状態からスタートできる
+ *            - モード線維持の SL や，コンポーネントを ON する BC などで activate cmd を仕込ませておくと良い
+ *          - 対応 BC 展開後の activate について
+ *            - EH Rule がマッチし，対応 BC が展開された時，その EH_RULE_ID は自動的に inactivate される
+ *            - そのため，常に対応し続けたいような Rule については，その対応 BC のどこか（基本的には不感時間などを考慮して末尾など）で activate する cmd を仕込ませておくと良い
  * @note  多段の EH 対応の組み方
- *        多段の EH を組む場合， EH_RuleSettings.event.group は EL_CORE_GROUP_EH_MATCH_RULE を指定する．
+ *        多段の EH を組む場合，
+ *          EH_RuleSettings.event.group: EL_CORE_GROUP_EH_MATCH_RULE
+ *          EH_RuleSettings.event.local: 下位の EH_RULE_ID
+ *          EH_RuleSettings.event.err_level: EL_ERROR_LEVEL_EH
+ *        を指定する．
  *        そうすると，上位のルールがマッチした場合，該当するルール対応は実行されなくなる
  *        例えば， UART 不通を考える
  *        設定として
- *          - UART不通が発生したら EL_UART を発行する
+ *          - UART 不通が発生したら EL_UART Event を発行する (Event Logger)
  *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
  *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
  *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 3 回発生したら UART 回路リセットを行う EH_Rule2 を設定する

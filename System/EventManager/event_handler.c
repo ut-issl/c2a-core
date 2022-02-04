@@ -2,7 +2,7 @@
 /**
  * @file
  * @brief イベント発火型処理を行う
- * @note  event_logger の情報を元に BC を展開する ( Event 発火に応じて対応を行う )
+ * @note  event_logger の情報を元に指定した BC (対応 BC) を展開する (Event 発火に応じて対応を行う)
  */
 #include "event_handler.h"
 #include <string.h>
