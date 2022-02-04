@@ -9,7 +9,7 @@
 #ifndef BLOCK_COMMAND_EXECUTOR_H_
 #define BLOCK_COMMAND_EXECUTOR_H_
 
-#include "common_tlm_cmd_packet.h"
+#include "common_cmd_packet.h"
 #include "block_command_table.h"
 
 /**

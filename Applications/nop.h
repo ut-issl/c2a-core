@@ -8,7 +8,7 @@
 #define NOP_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../TlmCmd/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_cmd_packet.h"
 
 AppInfo NOP_create_app(void);
 

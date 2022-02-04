@@ -5,7 +5,7 @@
 #ifndef TELEMETRY_FRAME_H_
 #define TELEMETRY_FRAME_H_
 
-#include "./common_tlm_cmd_packet.h"
+#include "./common_cmd_packet.h"
 #include <src_user/TlmCmd/telemetry_definitions.h>
 
 #define TF_TLM_PAGE_SIZE (64)                                    //!< テレメテーブルの1テレメトリパケット(=1ページ)に格納されるテレメ数

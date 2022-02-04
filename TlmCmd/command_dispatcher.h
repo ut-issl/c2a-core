@@ -2,7 +2,7 @@
 #define COMMAND_DISPATCHER_H_
 
 #include "../System/TimeManager/obc_time.h"
-#include "common_tlm_cmd_packet.h"
+#include "common_cmd_packet.h"
 #include "packet_list.h"
 #include <src_user/TlmCmd/command_definitions.h>
 

@@ -11,7 +11,7 @@
 #include "../../Drivers/Aocs/aobc_telemetry_definitions.h"
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/command_dispatcher.h>
-#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_cmd_packet.h>
 
 extern const AOBC_Driver* const aobc_driver;            //!< AOBC driver
 extern const CommandDispatcher* const DI_AOBC_cdis;     //!< AOBC cmd dispatcher

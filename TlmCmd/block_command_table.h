@@ -35,7 +35,7 @@ typedef uint32_t bct_id_t;
 #error Illegal value for SIZE_OF_BCT_ID_T
 #endif
 
-#include "common_tlm_cmd_packet.h" // bct_id_t の定義よりあとにinclude
+#include "common_cmd_packet.h" // bct_id_t の定義よりあとにinclude
 
 /*
 Block Command Table は
