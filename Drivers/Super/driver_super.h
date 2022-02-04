@@ -22,11 +22,8 @@
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
-// (*load_init_setting)(DriverSuper* p_super); の DriverSuper が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
 typedef struct DriverSuper DriverSuper;
-// (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver); の DS_StreamConfig が前方参照できないので，こういう書き方しているが，，，もっと良い書き方ありそう．
 typedef struct DS_StreamConfig DS_StreamConfig;
-
 
 /**
  * @enum   DS_DRIVER_ERR_CODE
@@ -50,7 +47,6 @@ typedef enum
   DS_DRIVER_ERR_CODE_UNKNOWN_ERR = 255      //!< UNKNOWN ERR
 } DS_DRIVER_ERR_CODE;
 
-
 /**
  * @enum   DS_INIT_ERR_CODE
  * @brief  Driver の初期化関数のエラーコード
@@ -65,7 +61,6 @@ typedef enum
   DS_INIT_UNKNOWN_ERR = 255     //!< UNKNOWN ERR
 } DS_INIT_ERR_CODE;
 
-
 /**
  * @enum   DS_REC_ERR_CODE
  * @brief  Driver の受信関数のエラーコード
@@ -79,7 +74,6 @@ typedef enum
   DS_REC_OTHER_ERR,             //!< その他のエラー
   DS_REC_UNKNOWN_ERR = 255      //!< UNKNOWN ERR
 } DS_REC_ERR_CODE;
-
 
 /**
  * @enum   DS_CMD_ERR_CODE
@@ -98,7 +92,6 @@ typedef enum
   DS_CMD_UNKNOWN_ERR        = 255
 } DS_CMD_ERR_CODE;
 
-
 /**
  * @enum   DS_ERR_CODE
  * @brief  DriverSuper の汎用エラーコード
@@ -111,7 +104,6 @@ typedef enum
   DS_ERR_CODE_ERR  = 1
 } DS_ERR_CODE;
 
-
 /**
  * @enum   DS_RX_DISRUPTION_STATUS_CODE
  * @brief  受信途絶判定コード
@@ -123,7 +115,6 @@ typedef enum
   DS_RX_DISRUPTION_STATUS_LOST = 1   //!< 受信途絶検出
 } DS_RX_DISRUPTION_STATUS_CODE;
 
-
 /**
  * @struct DS_RecStatus
  * @brief  IF 受信状況
@@ -133,7 +124,6 @@ typedef struct
   int                          ret_from_if_rx;       //!< IF_RX の返り値
   DS_RX_DISRUPTION_STATUS_CODE rx_disruption_status; //!< 受信途絶判定
 } DS_RecStatus;
-
 
 /**
  * @enum   DS_STREAM_SEND_STATUS_CODE
@@ -149,7 +139,6 @@ typedef enum
   DS_STREAM_SEND_STATUS_OTHER_ERR
 } DS_STREAM_SEND_STATUS_CODE;
 
-
 /**
  * @struct DS_StreamSendStatus
  * @brief  フレーム送信状況
@@ -160,7 +149,6 @@ typedef struct
   int                        ret_from_if_tx;    //!< IF_TX の返り値
   // 今後詳細情報を拡張するなら，ここに入れる
 } DS_StreamSendStatus;
-
 
 /**
  * @enum   DS_STREAM_REC_STATUS_CODE
@@ -185,7 +173,6 @@ typedef enum
   DS_STREAM_REC_STATUS_OTHER_ERR
 } DS_STREAM_REC_STATUS_CODE;
 
-
 /**
  * @enum   DS_STREAM_RX_DISRUPTION_STATUS_CODE
  * @brief  テレメ途絶判定コード
@@ -196,7 +183,6 @@ typedef enum
   DS_STREAM_TLM_DISRUPTION_STATUS_OK   = 0,  //!< テレメ途絶していない or テレメ途絶判定をしない状態
   DS_STREAM_TLM_DISRUPTION_STATUS_LOST = 1   //!< テレメ途絶検出
 } DS_STREAM_TLM_DISRUPTION_STATUS_CODE;
-
 
 /**
  * @struct DS_StreamRecStatus
@@ -211,7 +197,6 @@ typedef struct
                                                                            DS_receive の呼び出し頻度がおそすぎることが原因 */
   // 今後詳細情報を拡張するなら，ここに入れる（ref. EQU Driver Super の DRIVE_Super_recなど）
 } DS_StreamRecStatus;
-
 
 /**
  * @struct DS_Config
@@ -240,7 +225,6 @@ typedef struct
                                                                  返り値は DS_ERR_CODE */
 } DS_Config;
 
-
 /**
  * @struct DS_StreamConfig
  * @brief  DriverSuperStreamの設定
@@ -262,7 +246,7 @@ struct DS_StreamConfig
                                                                     ヘッダを見つけて，フレーム候補を見つけた後，次のフレームは，見つけたヘッダ先頭の次バイトから探索する
                                                                     実行時間は長くなる
                                                                  複数streamやノイズが入ってしまった場合など，本来ヘッダでない部分をヘッダとして認識してしまう場合に有効化すると，
-                                                                 論理的なフレーム受信漏れの確率を限りなく０に近づけることができる．
+                                                                 論理的なフレーム受信漏れの確率を限りなく 0 に近づけることができる．
                                                                  ヘッダがあるフレームの場合のみ，有効にできる */
 
   DS_StreamSendStatus send_status_;                         //!< フレーム送信状況
@@ -345,7 +329,6 @@ struct DS_StreamConfig
                                                                  次の受信時にまとめて処理させる */
 };
 
-
 /**
  * @struct DriverSuper
  * @brief  DriverSuperの設定
@@ -366,7 +349,6 @@ struct DriverSuper
                                                                  が，まあ自由に使ってもらえたら */
 };
 
-
 // ###### DriverSuper基本関数 ######
 
 /**
@@ -376,9 +358,9 @@ struct DriverSuper
  *         そして，構造体内の初期化が必要な変数を初期化する．
  *         デフォルト値の上書きは load_init_setting で行う
  * @note   DriverSuperを使用する時は起動時に必ず実施すること
- * @param  *p_super           初期化するDriverSuper構造体へのポインタ
- * @param  *if_config         初期化するDriverで用いられているIFのconfig構造体
- * @param  *load_init_setting DriverSuperの初期設定ロード関数ポインタ
+ * @param  p_super:           初期化するDriverSuper構造体へのポインタ
+ * @param  if_config:         初期化するDriverで用いられているIFのconfig構造体
+ * @param  load_init_setting: DriverSuperの初期設定ロード関数ポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_init(DriverSuper* p_super,
@@ -388,7 +370,7 @@ DS_ERR_CODE DS_init(DriverSuper* p_super,
 /**
  * @brief  DriverSuperのリセット
  * @note   DS_init内で呼ばれている．
- * @param  *p_super DriverSuper構造体へのポインタ
+ * @param  p_super: DriverSuper構造体へのポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_reset(DriverSuper* p_super);
@@ -399,7 +381,7 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super);
  *         Driverの設定を変えた場合は毎回呼び出すことを推奨する
  * @note   DS_init内で呼ばれている．
  * @note   内部の管理フラグを変更しているので， p_super に厳密なconst性はない
- * @param  *p_super DriverSuper構造体へのポインタ
+ * @param  p_super: DriverSuper構造体へのポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_validate_config(DriverSuper* p_super);
@@ -410,7 +392,7 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super);
  *         例えば，ヘッダなしテレメの場合，途中でゴミデータが入ると以後すべてのフレームがずれてしまう．
  *         そのようなとき（CRCエラーがでるとか，受信データが明らかにおかしい場合）に，bufferを一度クリアし，
  *         次に届くデータからフレーム解析を先頭から行うようにするために用いる．
- * @param  *p_super DriverSuper構造体へのポインタ
+ * @param  p_super: DriverSuper構造体へのポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super);
@@ -421,9 +403,9 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super);
  *         フレームを確定させて，rx_frame_にいれるまで．解析 (data_analyzer_) はしないのでドライバで DS_analyze_rec_data を呼び出すこと
  *         これは，同じstreamでもテレメ内部のIDなどで解析を変えたいときなどが想定されるため
  * @note   継承先の機器のデータ出力周期より早い周期で定期的に実行すること
- * @param  *p_super DriverSuper構造体へのポインタ
- * @retval DS_ERR_CODE_OK  : IF_RX でのエラーなし
- * @retval DS_ERR_CODE_ERR : IF_RX でのエラーあり
+ * @param  p_super: DriverSuper構造体へのポインタ
+ * @retval DS_ERR_CODE_OK:  IF_RX でのエラーなし
+ * @retval DS_ERR_CODE_ERR: IF_RX でのエラーあり
  * @note   受信状況やエラー情報は rec_status_ に格納されている
  */
 DS_ERR_CODE DS_receive(DriverSuper* p_super);
@@ -432,10 +414,10 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super);
  * @brief  data_analyzer_ を呼び出し，受信データを解析する．
  *
  *         DS_receive にてデータを受信した後， DSSC_get_rec_status(p_stream_config)->status_code が DS_STREAM_REC_STATUS_FIXED_FRAME ならば呼び出す．
- * @param  *p_super DriverSuper構造体へのポインタ
- * @param  stream   どのstream_configを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
- * @param  p_driver 継承先機器のドライバ構造体など．data_analyzer_ の第二引数．
- * @return DS_ERR_CODE : data_analyzer_ の返り値をそのまま返す
+ * @param  p_super:  DriverSuper構造体へのポインタ
+ * @param  stream:   どのstream_configを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
+ * @param  p_driver: 継承先機器のドライバ構造体など．data_analyzer_ の第二引数．
+ * @return DS_ERR_CODE: data_analyzer_ の返り値をそのまま返す
  * @note   data_analyzer_ の返り値は， ret_from_data_analyzer_ にも保存される．
  */
 DS_ERR_CODE DS_analyze_rec_data(DriverSuper* p_super, uint8_t stream, void* p_driver);
@@ -446,10 +428,10 @@ DS_ERR_CODE DS_analyze_rec_data(DriverSuper* p_super, uint8_t stream, void* p_dr
  *         このコマンドを送ったことによってレスポンスが返ってくることを想定していない（その場合は DS_send_req_tlm_cmd を使う）
  * @note   この関数の実行前に，tx_frame, tx_frame_sizeの設定が必要である
  * @note   これは基底クラスなため，アノマリ発行は行わない．継承先で返り値を見て適切にアノマリ発行すること
- * @param  *p_super DriverSuper構造体へのポインタ
- * @param  stream   どのstream_configを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
- * @retval DS_ERR_CODE_OK  : 正常終了
- * @retval DS_ERR_CODE_ERR : IF_TX でのエラーあり
+ * @param  p_super: DriverSuper構造体へのポインタ
+ * @param  stream:  どのstream_configを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
+ * @retval DS_ERR_CODE_OK:  正常終了
+ * @retval DS_ERR_CODE_ERR: IF_TX でのエラーあり
  * @note   受信状況やエラー情報は send_status_ に格納されている
  */
 DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
@@ -459,10 +441,10 @@ DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
  *
  *         テレメについては DS_receive で受け取る．
  * @note   この関数の実行前に，tx_frame, tx_frame_sizeの設定が必要である
- * @param  *p_super DriverSuper構造体へのポインタ
- * @param  stream   どのstream_configを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
- * @retval DS_ERR_CODE_OK  : 正常終了
- * @retval DS_ERR_CODE_ERR : IF_TX でのエラーあり
+ * @param  p_super: DriverSuper構造体へのポインタ
+ * @param  stream:  どのstream_configを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
+ * @retval DS_ERR_CODE_OK:  正常終了
+ * @retval DS_ERR_CODE_ERR: IF_TX でのエラーあり
  * @note   受信状況やエラー情報は send_status_ に格納されている
  */
 DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
