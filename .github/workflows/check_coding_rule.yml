@@ -19,13 +19,17 @@ jobs:
       - name: setup
         shell: bash
         run: ./setup.sh
-      - name: check_coding_rule
+      - name: check coding rule
+        id: check
         shell: bash
         continue-on-error: true
         working-directory: ./Examples/minimum_user_for_s2e/src
         run: |
           python ./src_core/Script/CI/check_coding_rule.py ./src_core/Script/CI/check_coding_rule.json | tee /tmp/coding-rule.log
-          exit "${PIPESTATUS[0]}"
+          status="${PIPESTATUS[0]}"
+          echo "status: ${status}"
+          echo "::set-output name=status::${status}"
+          exit "${status}"
 
       - name: install reviewdog
         uses: reviewdog/action-setup@v1.0.3
@@ -52,3 +56,8 @@ jobs:
             -efm="%E%f: %l: %m" \
             -efm="%Z%s" \
             < coding-rule.log
+
+      - name: exit
+        shell: bash
+        run: |
+          exit $(( "${{ steps.check.outputs.status }}" ))
