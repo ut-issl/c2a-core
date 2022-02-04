@@ -1,4 +1,4 @@
-#ifndef INITIAL_SETTING_H_
-#define INITIAL_SETTING_H_
+#ifndef INITIAL_SETTINGS_H_
+#define INITIAL_SETTINGS_H_
 
 #endif

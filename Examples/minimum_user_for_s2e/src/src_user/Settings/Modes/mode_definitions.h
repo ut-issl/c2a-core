@@ -2,8 +2,8 @@
  * @file
  * @brief モード定義とモード遷移定義
  */
-#ifndef MODE_DEFINISIION_H_
-#define MODE_DEFINISIION_H_
+#ifndef MODE_DEFINITIONS_H_
+#define MODE_DEFINITIONS_H_
 
 typedef enum
 {

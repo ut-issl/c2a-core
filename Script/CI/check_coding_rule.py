@@ -78,13 +78,10 @@ def check_coding_rule(settings: dict) -> int:
                     continue
 
                 ext = (os.path.splitext(file))[1]
-                # print(ext)
                 if ext != ".h" and ext != ".c" and ext != ".hpp" and ext != ".cpp":
                     continue
                 path = root + r"/" + file
                 path = path.replace("\\", "/")
-
-                # print(path)
 
                 if path in ignore_files:
                     if DEBUG:
@@ -94,7 +91,6 @@ def check_coding_rule(settings: dict) -> int:
 
                 ret = check_file_(path, settings)
                 if ret != 0:
-                    # print(path)
                     flag = 1
     return flag
 
@@ -173,9 +169,6 @@ def check_file_(path: str, settings: dict) -> int:
     with open(path, encoding=settings["input_file_encoding"]) as f:
         code_lines = f.read().split("\n")
 
-    # print(path)
-    # pprint.pprint(code_lines)
-
     if check_comment_(path, code_lines) != 0:
         flag = 1
     if check_newline_(path, code_lines) != 0:
@@ -188,8 +181,8 @@ def check_file_(path: str, settings: dict) -> int:
         flag = 1
     if check_preprocessor_(path, code_lines) != 0:
         flag = 1
-    # if check_include_guard_(path, code_lines) != 0:
-    #     flag = 1
+    if check_include_guard_(path, code_lines) != 0:
+        flag = 1
 
     return flag
 
@@ -197,7 +190,6 @@ def check_file_(path: str, settings: dict) -> int:
 # TODO
 # 演算子の位置
 # 演算子前後のスペース
-# インクルードガード
 # ファイル名
 
 
@@ -687,40 +679,44 @@ def check_preprocessor_(path: str, code_lines: list) -> int:
     return flag
 
 
-# TODO: すべてのファイルがキャメルケースになったら追加する
 # 0: OK, 1: NG
-# def check_include_guard_(path: str, code_lines: list) -> int:
-#     basename, ext = os.path.splitext(os.path.basename(path))
-#     if not (ext == ".h" or ext == ".hpp"):
-#         return 0
-#     # print(path)
-#     # print(basename)
-#     # print(ext)
-#
-#     # 最初に発見したプリプロセッサディレクティブがインクルードガードであること，
-#     # さらにそれが適切な識別子であることを判断
-#
-#     for idx, line in enumerate(code_lines):
-#         if line.startswith("#"):
-#             # 初めて "#" を検出したものがインクルードガードでないとNG
-#             if idx + 1 >= len(code_lines):
-#                 return 1
-#
-#             line_ifndef = line
-#             line_define = code_lines[idx + 1]
-#             # print(line_ifndef)
-#             # print(line_define)
-#
-#             if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
-#                 return 1
-#
-#             include_guard = basename.upper() + "_H_"
-#             return 0
-#
-#         else:
-#             continue
-#
-#     return 1
+def check_include_guard_(path: str, code_lines: list) -> int:
+    basename, ext = os.path.splitext(os.path.basename(path))
+    if not (ext == ".h" or ext == ".hpp"):
+        return 0
+
+    # 最初に発見したプリプロセッサディレクティブがインクルードガードであること，
+    # さらにそれが適切な識別子であることを判断
+    for idx, line in enumerate(code_lines):
+        if not line.startswith("#"):
+            continue
+        # 初めて "#" を検出したものがインクルードガードでないと NG
+        # 次の行 (#define) も存在するかチェック
+        if idx + 1 >= len(code_lines):
+            print_err_(path, idx + 1, "INCLUDE GUARD IS REQUIRED", line)
+            return 1
+
+        line_ifndef = line
+        line_define = code_lines[idx + 1]
+
+        if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
+            print_err_(path, idx + 1, "INCLUDE GUARD IS NEEDED AT THE BEGINNING OF CODE", line)
+            return 1
+
+        if ext == ".h":
+            include_guard = basename.upper() + "_H_"
+        else:
+            include_guard = basename.upper() + "_HPP_"
+
+        if len(line_ifndef.split(" ")) != 2 or line_ifndef.split(" ")[1] != include_guard:
+            print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
+            return 1
+        if len(line_define.split(" ")) != 2 or line_define.split(" ")[1] != include_guard:
+            return 1
+        return 0
+
+    print_err_(path, 1, "INCLUDE GUARD IS REQUIRED", code_lines[0])
+    return 1
 
 
 # 1: target が含まれる, 0: なし

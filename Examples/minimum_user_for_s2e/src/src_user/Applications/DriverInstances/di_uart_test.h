@@ -2,8 +2,8 @@
 * @file   di_uart_test.h
 * @brief  UARTとDriverSuperテスト用
 */
-#ifndef INCLUDED_DI_UART_TEST_H
-#define INCLUDED_DI_UART_TEST_H
+#ifndef DI_UART_TEST_H_
+#define DI_UART_TEST_H_
 
 #include "../../Drivers/Etc/UART_TEST.h"
 #include <src_core/System/ApplicationManager/app_info.h>

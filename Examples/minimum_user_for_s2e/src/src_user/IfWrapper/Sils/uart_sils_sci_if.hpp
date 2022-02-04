@@ -4,8 +4,8 @@
  * @details SILSでDriverのテストをするように作った
             ccsds_sils_sci_if.c/hのほぼコピー
  */
-#ifndef uart_sils_sci_if_H_
-#define uart_sils_sci_if_H_
+#ifndef UART_SILS_SCI_IF_HPP_
+#define UART_SILS_SCI_IF_HPP_
 
 #include <Windows.h>
 
