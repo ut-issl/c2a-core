@@ -1015,6 +1015,12 @@ EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings)
   }
   if (settings->event.group == (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
   {
+    // 多段の時は EL_ERROR_LEVEL_EH が必須
+    if (settings->event.err_level != EL_ERROR_LEVEL_EH) return EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL;
+    if (settings->should_match_err_level != 1) return EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL;
+  }
+  if (settings->event.group == (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+  {
     // 多段設定の最大値を超えてないかチェック
     uint8_t multi_level_num;
     EH_RULE_ID lower_level_rule = (EH_RULE_ID)(settings->event.local);

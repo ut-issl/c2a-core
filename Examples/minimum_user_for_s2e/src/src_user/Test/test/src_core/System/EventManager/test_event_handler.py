@@ -101,8 +101,9 @@ def test_event_handler_init_check():
     assert tlm_EH["EH.TLM_INFO.RULE.TARGET_RULE_ID"] == 0
     assert tlm_EH["EH.TLM_INFO.RULE_SORTED_INDEX.PAGE_NO"] == 0
     assert tlm_EH["EH.TLM_INFO.LOG.PAGE_NO"] == 0
-    assert tlm_EH["EH.MAX_RESPONSE_NUM"] == 8
-    assert tlm_EH["EH.MAX_CHECK_EVENT_NUM"] == 64
+    assert tlm_EH["EH.EXEC_SETTINGS.MAX_RESPONSE_NUM"] == 8
+    assert tlm_EH["EH.EXEC_SETTINGS.MAX_CHECK_EVENT_NUM"] == 64
+    assert tlm_EH["EH.EXEC_SETTINGS.MAX_MULTI_LEVEL_NUM"] == 4
 
 
 @pytest.mark.real
@@ -278,8 +279,16 @@ def test_event_handler_register_rule():
 
     # 不正な多段
     settings_invalid = copy.deepcopy(settings)
-    settings_invalid["event"]["group"] = c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    settings_invalid["event"]["group"] = c2a_enum.EL_CORE_GROUP_EVENT_LOGGER
     settings_invalid["event"]["err_level"] = EL_ERROR_LEVEL_EH
+    set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST1, settings_invalid)
+    (cmd_ret, reg_ack) = register_rule()
+    assert cmd_ret == "PRM"
+    assert reg_ack == EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL
+
+    settings_invalid = copy.deepcopy(settings)
+    settings_invalid["event"]["group"] = c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    settings_invalid["event"]["err_level"] = EL_ERROR_LEVEL_HIGH
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST1, settings_invalid)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "PRM"
@@ -307,8 +316,8 @@ def test_event_handler_register_rule():
     mutli_level_settings["event"]["err_level"] = EL_ERROR_LEVEL_EH
     for i in range(1, EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES):
         mutli_level_settings["event"]["local"] = EH_RULE_TEST0 + (i - 1)
-        set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, settings)
-        check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + i, settings)
+        set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, mutli_level_settings)
+        check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + i, mutli_level_settings)
         (cmd_ret, reg_ack) = register_rule()
         assert reg_ack == EH_REGISTER_ACK_OK
         assert cmd_ret == "SUC"
@@ -316,8 +325,8 @@ def test_event_handler_register_rule():
     mutli_level_settings["event"]["local"] = EH_RULE_TEST0 + (
         EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - 1
     )
-    set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, settings)
-    check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + i, settings)
+    set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES, mutli_level_settings)
+    check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES, mutli_level_settings)
     (cmd_ret, reg_ack) = register_rule()
     assert reg_ack == EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL
     assert cmd_ret == "PRM"
