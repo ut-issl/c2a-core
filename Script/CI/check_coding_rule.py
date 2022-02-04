@@ -687,34 +687,33 @@ def check_include_guard_(path: str, code_lines: list) -> int:
 
     # 最初に発見したプリプロセッサディレクティブがインクルードガードであること，
     # さらにそれが適切な識別子であることを判断
-
     for idx, line in enumerate(code_lines):
-        if line.startswith("#"):
-            # 初めて "#" を検出したものがインクルードガードでないと NG
+        if not line.startswith("#"):
+            continue
+        # 初めて "#" を検出したものがインクルードガードでないと NG
+        # 次の行 (#define) も存在するかチェック
+        if idx + 1 >= len(code_lines):
+            print_err_(path, idx + 1, "INCLUDE GUARD IS REQUIRED", line)
+            return 1
 
-            # 次の行 (#define) も存在するかチェック
-            if idx + 1 >= len(code_lines):
-                print_err_(path, idx + 1, "INCLUDE GUARD IS REQUIRED", line)
-                return 1
+        line_ifndef = line
+        line_define = code_lines[idx + 1]
 
-            line_ifndef = line
-            line_define = code_lines[idx + 1]
+        if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
+            print_err_(path, idx + 1, "INCLUDE GUARD IS NEEDED AT THE BEGINNING OF CODE", line)
+            return 1
 
-            if not (line_ifndef.startswith("#ifndef ") and line_define.startswith("#define ")):
-                print_err_(path, idx + 1, "INCLUDE GUARD IS NEEDED AT THE BEGINNING OF CODE", line)
-                return 1
+        if ext == ".h":
+            include_guard = basename.upper() + "_H_"
+        else:
+            include_guard = basename.upper() + "_HPP_"
 
-            if ext == ".h":
-                include_guard = basename.upper() + "_H_"
-            else:
-                include_guard = basename.upper() + "_HPP_"
-
-            if line_ifndef.split(" ")[1] != include_guard:
-                print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
-                return 1
-            if line_define.split(" ")[1] != include_guard:
-                return 1
-            return 0
+        if len(line_ifndef.split(" ")) != 2 or line_ifndef.split(" ")[1] != include_guard:
+            print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
+            return 1
+        if len(line_define.split(" ")) != 2 or line_define.split(" ")[1] != include_guard:
+            return 1
+        return 0
 
     print_err_(path, 1, "INCLUDE GUARD IS REQUIRED", code_lines[0])
     return 1
