@@ -20,6 +20,7 @@ ope = wings_utils.get_wings_operation()
 # コードと整合をとる
 EH_RULE_MAX = 20 * 8
 EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES = 4
+EH_MAX_MULTI_LEVEL_NUM_DEFAULT = 4
 
 EH_RULE_TEST0 = c2a_enum.EH_RULE_TEST0
 EH_RULE_TEST1 = c2a_enum.EH_RULE_TEST1
@@ -64,7 +65,8 @@ EH_REGISTER_ACK_ILLEGAL_CONDITION_TYPE = 8
 EH_REGISTER_ACK_ILLEGAL_COUNT_THRESHOLD = 9
 EH_REGISTER_ACK_ILLEGAL_BCT_ID = 10
 EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG = 11
-EH_REGISTER_ACK_UNKNOWN_ERR = 12
+EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL = 12
+EH_REGISTER_ACK_UNKNOWN_ERR = 13
 
 conv_to_err_level = {0: "HIGH", 1: "MIDDLE", 2: "LOW", 3: "EL", 4: "EH"}
 conv_to_match_flag = {0: "NO", 1: "YES"}
@@ -151,10 +153,16 @@ def test_event_handler_check_ah_exec_settings():
         ope, c2a_enum.Cmd_CODE_EH_SET_MAX_CHECK_EVENT_NUM, (3,), c2a_enum.Tlm_CODE_HK
     )
 
+    print("Cmd_EH_SET_MAX_MULTI_LEVEL_NUM")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_SET_MAX_MULTI_LEVEL_NUM, (5,), c2a_enum.Tlm_CODE_HK
+    )
+
     # 本当は１個ずつアサーションするべきだが，手抜き
     tlm_EH = download_eh_tlm()
-    assert tlm_EH["EH.MAX_RESPONSE_NUM"] == 1
-    assert tlm_EH["EH.MAX_CHECK_EVENT_NUM"] == 3
+    assert tlm_EH["EH.EXEC_SETTINGS.MAX_RESPONSE_NUM"] == 1
+    assert tlm_EH["EH.EXEC_SETTINGS.MAX_CHECK_EVENT_NUM"] == 3
+    assert tlm_EH["EH.EXEC_SETTINGS.MAX_MULTI_LEVEL_NUM"] == 5
 
 
 @pytest.mark.real
@@ -275,7 +283,7 @@ def test_event_handler_register_rule():
     set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST1, settings_invalid)
     (cmd_ret, reg_ack) = register_rule()
     assert cmd_ret == "PRM"
-    assert reg_ack == EH_REGISTER_ACK_ILLEGAL_GROUP
+    assert reg_ack == EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL
 
     # 一旦リセット
     print("Cmd_EH_CLEAR_ALL_RULE")
@@ -283,7 +291,42 @@ def test_event_handler_register_rule():
         ope, c2a_enum.Cmd_CODE_EH_CLEAR_ALL_RULE, (), c2a_enum.Tlm_CODE_HK
     )
 
-    # 最大重複数チェック（後ろに登録ありバージョン）
+    # 多段 EH 対応の段数が多すぎる不正
+    print("EH_MAX_MULTI_LEVEL_NUM_DEFAULT check")
+    # まず Lv.1 登録
+    mutli_level_settings = copy.deepcopy(settings)
+    set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0, mutli_level_settings)
+    check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0, mutli_level_settings)
+    (cmd_ret, reg_ack) = register_rule()
+    assert cmd_ret == "SUC"
+    assert reg_ack == EH_REGISTER_ACK_OK
+
+    # まず Lv.2 ~ Lv. EH_MAX_MULTI_LEVEL_NUM_DEFAULT 登録
+    mutli_level_settings = copy.deepcopy(settings)
+    mutli_level_settings["event"]["group"] = c2a_enum.EL_CORE_GROUP_EH_MATCH_RULE
+    mutli_level_settings["event"]["err_level"] = EL_ERROR_LEVEL_EH
+    for i in range(1, EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES):
+        mutli_level_settings["event"]["local"] = EH_RULE_TEST0 + (i - 1)
+        set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, settings)
+        check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + i, settings)
+        (cmd_ret, reg_ack) = register_rule()
+        assert reg_ack == EH_REGISTER_ACK_OK
+        assert cmd_ret == "SUC"
+
+    mutli_level_settings["event"]["local"] = EH_RULE_TEST0 + (EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES - 1)
+    set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, settings)
+    check_reg_from_cmd_eh_rule_param(EH_RULE_TEST0 + i, settings)
+    (cmd_ret, reg_ack) = register_rule()
+    assert reg_ack == EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL
+    assert cmd_ret == "PRM"
+
+    # 一旦リセット
+    print("Cmd_EH_CLEAR_ALL_RULE")
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_CLEAR_ALL_RULE, (), c2a_enum.Tlm_CODE_HK
+    )
+
+    # 最大重複数チェック（後ろに登録なしバージョン）
     for i in range(EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES):
         print("DUPLICATE check: " + str(i))
         set_param_of_reg_from_cmd_eh_rule(EH_RULE_TEST0 + i, settings)
@@ -304,7 +347,7 @@ def test_event_handler_register_rule():
         ope, c2a_enum.Cmd_CODE_EH_CLEAR_ALL_RULE, (), c2a_enum.Tlm_CODE_HK
     )
 
-    # 最大重複数チェック（後ろに登録なしバージョン）
+    # 最大重複数チェック（後ろに登録ありバージョン）
     settings_later_group = copy.deepcopy(settings)
     settings_later_group["event"]["group"] = EL_GROUP_TEST_EH + 1
     set_param_of_reg_from_cmd_eh_rule(
