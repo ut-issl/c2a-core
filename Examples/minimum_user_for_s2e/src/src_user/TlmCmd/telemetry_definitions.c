@@ -2602,7 +2602,7 @@ static int Tlm_EL_CLOG_(uint8_t* packet, int max_len)
 
 static int Tlm_EH_(uint8_t* packet, int max_len)
 {
-  if (100 > max_len) return TF_TOO_SHORT_LEN;
+  if (101 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], event_utility->is_enabled_eh_execution);
@@ -2614,31 +2614,32 @@ static int Tlm_EH_(uint8_t* packet, int max_len)
   TF_copy_u32(&packet[47], event_handler->el_event_counter.counters[EL_ERROR_LEVEL_EH]);
   TF_copy_u32(&packet[51], event_handler->log_table.respond_counter);
   TF_copy_u16(&packet[55], event_handler->log_table.log_wp);
-  TF_copy_u8(&packet[57], event_handler->max_response_num);
-  TF_copy_u16(&packet[58], event_handler->max_check_event_num);
-  TF_copy_u8(&packet[60], (uint8_t)event_handler->reg_from_cmd.rule_id);
-  TF_copy_u8(&packet[61], (uint8_t)event_handler->reg_from_cmd.settings.event.group);
-  TF_copy_u32(&packet[62], event_handler->reg_from_cmd.settings.event.local);
-  TF_copy_u8(&packet[66], (uint8_t)((((uint8_t)event_handler->reg_from_cmd.settings.event.err_level) << 5 & 0xe0) | (event_handler->reg_from_cmd.settings.should_match_err_level << 4 & 0x10) | (event_handler->reg_from_cmd.settings.is_active << 3 & 0x08) | (((uint8_t)event_handler->reg_from_cmd.settings.condition.type) & 0x07)));
-  TF_copy_u16(&packet[67], event_handler->reg_from_cmd.settings.condition.count_threshold);
-  TF_copy_u32(&packet[69], event_handler->reg_from_cmd.settings.condition.time_threshold_ms);
-  TF_copy_u16(&packet[73], (uint16_t)event_handler->reg_from_cmd.settings.deploy_bct_id);
-  TF_copy_u8(&packet[75], (uint8_t)event_handler->reg_from_cmd.register_ack);
-  TF_copy_u8(&packet[76], event_handler->tlm_info.rule.page_no);
-  TF_copy_u8(&packet[77], (uint8_t)event_handler->tlm_info.rule.target_rule_id);
-  TF_copy_u8(&packet[78], event_handler->tlm_info.rule_sorted_index.page_no);
-  TF_copy_u8(&packet[79], event_handler->tlm_info.log.page_no);
-  TF_copy_u8(&packet[80], (uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.group);
-  TF_copy_u32(&packet[81], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.local);
-  TF_copy_u8(&packet[85], (uint8_t)((((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.err_level) << 5 & 0xe0) | (event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.should_match_err_level << 4 & 0x10) | (event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.is_active << 3 & 0x08) | (((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.type) & 0x07)));
-  TF_copy_u16(&packet[86], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.count_threshold);
-  TF_copy_u32(&packet[88], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.time_threshold_ms);
-  TF_copy_u16(&packet[92], (uint16_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.deploy_bct_id);
-  TF_copy_u16(&packet[94], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].counter);
-  TF_copy_u32(&packet[96], (uint32_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].last_event_time.total_cycle);
+  TF_copy_u8(&packet[57], event_handler->exec_settings.max_response_num);
+  TF_copy_u16(&packet[58], event_handler->exec_settings.max_check_event_num);
+  TF_copy_u8(&packet[60], event_handler->exec_settings.max_multi_level_num);
+  TF_copy_u8(&packet[61], (uint8_t)event_handler->reg_from_cmd.rule_id);
+  TF_copy_u8(&packet[62], (uint8_t)event_handler->reg_from_cmd.settings.event.group);
+  TF_copy_u32(&packet[63], event_handler->reg_from_cmd.settings.event.local);
+  TF_copy_u8(&packet[67], (uint8_t)((((uint8_t)event_handler->reg_from_cmd.settings.event.err_level) << 5 & 0xe0) | (event_handler->reg_from_cmd.settings.should_match_err_level << 4 & 0x10) | (event_handler->reg_from_cmd.settings.is_active << 3 & 0x08) | (((uint8_t)event_handler->reg_from_cmd.settings.condition.type) & 0x07)));
+  TF_copy_u16(&packet[68], event_handler->reg_from_cmd.settings.condition.count_threshold);
+  TF_copy_u32(&packet[70], event_handler->reg_from_cmd.settings.condition.time_threshold_ms);
+  TF_copy_u16(&packet[74], (uint16_t)event_handler->reg_from_cmd.settings.deploy_bct_id);
+  TF_copy_u8(&packet[76], (uint8_t)event_handler->reg_from_cmd.register_ack);
+  TF_copy_u8(&packet[77], event_handler->tlm_info.rule.page_no);
+  TF_copy_u8(&packet[78], (uint8_t)event_handler->tlm_info.rule.target_rule_id);
+  TF_copy_u8(&packet[79], event_handler->tlm_info.rule_sorted_index.page_no);
+  TF_copy_u8(&packet[80], event_handler->tlm_info.log.page_no);
+  TF_copy_u8(&packet[81], (uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.group);
+  TF_copy_u32(&packet[82], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.local);
+  TF_copy_u8(&packet[86], (uint8_t)((((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.err_level) << 5 & 0xe0) | (event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.should_match_err_level << 4 & 0x10) | (event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.is_active << 3 & 0x08) | (((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.type) & 0x07)));
+  TF_copy_u16(&packet[87], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.count_threshold);
+  TF_copy_u32(&packet[89], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.time_threshold_ms);
+  TF_copy_u16(&packet[93], (uint16_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.deploy_bct_id);
+  TF_copy_u16(&packet[95], event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].counter);
+  TF_copy_u32(&packet[97], (uint32_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].last_event_time.total_cycle);
 #endif
 
-  return 100;
+  return 101;
 }
 
 static int Tlm_EH_RULE_(uint8_t* packet, int max_len)
