@@ -216,7 +216,7 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
   PL_Node* current = (PL_Node*)PL_get_head(&(PH_tl_cmd_list[line_no])); // const_cast
   int active_nodes_num = PL_count_active_nodes(&PH_tl_cmd_list[line_no]);
 
-  if (current == NULL) return PH_TLC_NOT_FOUND;
+  if (current == NULL) return PH_PACKET_NOT_FOUND;
 
   for (i = 0; i < active_nodes_num; ++i)
   {
@@ -225,7 +225,7 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
       PL_drop_node(&(PH_tl_cmd_list[line_no]), prev, current);
       break;
     }
-    if (PL_get_next(current) == NULL) return PH_TLC_NOT_FOUND;
+    if (PL_get_next(current) == NULL) return PH_PACKET_NOT_FOUND;
 
     prev = current;
     current = current->next;

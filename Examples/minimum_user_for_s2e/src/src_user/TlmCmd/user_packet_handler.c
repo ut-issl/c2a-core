@@ -35,9 +35,9 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
   switch (CCP_get_dest_type(packet))
   {
   case CCP_DEST_TYPE_TO_AOBC:
-    return (PH_add_aobc_cmd_(packet) == PH_SUCCESS) ? PH_FORWARDED : PH_PL_LIST_FULL;
+    return (PH_add_aobc_cmd_(packet) == PH_SUCCESS) ? PH_SUCCESS : PH_PL_LIST_FULL;
   case CCP_DEST_TYPE_TO_TOBC:
-    return (PH_add_tobc_cmd_(packet) == PH_SUCCESS) ? PH_FORWARDED : PH_PL_LIST_FULL;
+    return (PH_add_tobc_cmd_(packet) == PH_SUCCESS) ? PH_SUCCESS : PH_PL_LIST_FULL;
   default:
     // CCP_DEST_TYPE_TO_ME
     // CCP_DEST_TYPE_TO_MOBC （自分）

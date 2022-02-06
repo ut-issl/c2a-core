@@ -213,7 +213,7 @@ DCU_ACK DCU_register_next(CMD_CODE cmd_code, const uint8_t* param, uint16_t len)
 
   ret = CCP_form_rtc(&DCU_packet_, cmd_code, param, len);
   if (ret != CCP_UTIL_ACK_OK) return DCU_ACK_ERR;
-  if (PH_analyze_cmd_packet(&DCU_packet_) != PH_REGISTERED)
+  if (PH_analyze_cmd_packet(&DCU_packet_) != PH_SUCCESS)
   {
     return DCU_ACK_ERR;
   }
