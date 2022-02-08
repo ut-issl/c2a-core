@@ -10,7 +10,11 @@
 static MemoryDump memory_dump_;
 const MemoryDump* const memory_dump = &memory_dump_;
 
+// FIXME: CTCP 大改修が終わったら直す
+// https://github.com/ut-issl/c2a-core/pull/217
+#if 0
 static CommonTlmPacket MEM_ctp_; // データサイズが大きいのでstatic確保
+#endif
 
 static void MEM_init_(void);
 

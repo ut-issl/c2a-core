@@ -27,7 +27,7 @@ typedef enum
   PL_PACKET_TYPE_CTCP,    //!< CommonTlmCmdPacket
   PL_PACKET_TYPE_CTP,     //!< CommonTlmPacket
   PL_PACKET_TYPE_CCP,     //!< CommonCmdPacket
-  PL_PACKET_TYPE_OTHER,   //!< その他のパケット
+  PL_PACKET_TYPE_OTHER    //!< その他のパケット
 } PL_PACKET_TYPE;
 
 /**

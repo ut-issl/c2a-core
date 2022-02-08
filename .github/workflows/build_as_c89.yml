@@ -164,3 +164,8 @@ jobs:
             -efm="%E%f:%l:%c: error: %m" \
             -efm="%C%m" \
             < clang_tidy.log
+
+      - name: build failed
+        if: steps.build.outcome == 'failure'
+        shell: bash
+        run: exit 1
