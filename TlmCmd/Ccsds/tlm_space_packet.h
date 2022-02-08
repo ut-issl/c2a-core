@@ -61,7 +61,7 @@
 typedef enum
 {
   TSP_2ND_HDR_VER_UNKNOWN = 0,  //!< バージョン不定
-  TSP_2ND_HDR_VER_1 = 1,        //!< Version-1
+  TSP_2ND_HDR_VER_1 = 1         //!< Version-1
 } TSP_2ND_HDR_VER;
 
 
