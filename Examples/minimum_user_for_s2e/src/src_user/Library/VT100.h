@@ -19,4 +19,4 @@ void VT100_set_color(VT100_ColorMode color);
 void VT100_reset_color(void);
 void VT100_reset_cursor(void);
 
-#endif // VT100_H_
+#endif

@@ -5,7 +5,7 @@ project(C2A_USER_LIB)
 set(C2A_SRCS
   git_revision.c
   print.c
-  VT100.c
+  vt100.c
 )
 
 if(BUILD_C2A_AS_CXX)
