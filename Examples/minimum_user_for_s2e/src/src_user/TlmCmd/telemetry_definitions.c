@@ -3119,7 +3119,7 @@ static int Tlm_EH_INDEX_(uint8_t* packet, int max_len)
 
 static int Tlm_GS_(uint8_t* packet, int max_len)
 {
-  if (137 > max_len) return TF_TOO_SHORT_LEN;
+  if (139 > max_len) return TF_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], gs_driver->driver_uart.uart_config.ch);
@@ -3135,44 +3135,46 @@ static int Tlm_GS_(uint8_t* packet, int max_len)
   TF_copy_u8(&packet[39], (uint8_t)(gs_driver->info[0].tc_frame_validate_status));
   TF_copy_i32(&packet[40], (int32_t)gs_driver->info[0].ret_from_if_rx);
   TF_copy_u32(&packet[44], (uint32_t)gs_driver->info[0].last_rec_time);
-  TF_copy_u8(&packet[48], (uint8_t)gs_driver->info[0].cmd_ack);
-  TF_copy_u32(&packet[49], (uint32_t)gs_driver->info[0].send_cycle);
-  TF_copy_u8(&packet[53], (uint8_t)gs_driver->info[0].vcid);
-  TF_copy_u32(&packet[54], gs_driver->info[0].vcdu_counter);
-  TF_copy_u8(&packet[58], gs_driver->ccsds_info.buffer_num);
-  TF_copy_u8(&packet[59], (uint8_t)gs_driver->info[1].rec_status);
-  TF_copy_u8(&packet[60], (uint8_t)gs_driver->info[1].last_rec_tcf_type);
-  TF_copy_u8(&packet[61], (uint8_t)gs_driver->info[1].ad_rec_status);
-  TF_copy_u8(&packet[62], (uint8_t)gs_driver->info[1].bc_rec_status);
-  TF_copy_u8(&packet[63], (uint8_t)gs_driver->info[1].bd_rec_status);
-  TF_copy_u8(&packet[64], (uint8_t)(gs_driver->info[1].tc_frame_validate_status));
-  TF_copy_i32(&packet[65], (int32_t)gs_driver->info[1].ret_from_if_rx);
-  TF_copy_u32(&packet[69], (uint32_t)gs_driver->info[1].last_rec_time);
-  TF_copy_u8(&packet[73], (uint8_t)gs_driver->info[1].cmd_ack);
-  TF_copy_u32(&packet[74], (uint32_t)gs_driver->info[1].send_cycle);
-  TF_copy_u8(&packet[78], (uint8_t)gs_driver->info[1].vcid);
-  TF_copy_u32(&packet[79], gs_driver->info[1].vcdu_counter);
-  TF_copy_u8(&packet[83], gs_driver->is_ccsds_tx_valid);
-  TF_copy_u32(&packet[84], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
-  TF_copy_u32(&packet[88], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
-  TF_copy_u32(&packet[92], (uint32_t)DI_GS_ms_tlm_packet_handler->vcdu_counter);
-  TF_copy_u32(&packet[96], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
-  TF_copy_u32(&packet[100], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
-  TF_copy_u32(&packet[104], (uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter);
-  TF_copy_u8(&packet[108], gs_validate_info->type_a_counter);
-  TF_copy_u8(&packet[109], gs_validate_info->type_b_counter);
-  TF_copy_u8(&packet[110], gs_validate_info->lockout_flag);
-  TF_copy_u8(&packet[111], gs_validate_info->retransmit_flag);
-  TF_copy_u8(&packet[112], gs_validate_info->positive_window_width);
-  TF_copy_u32(&packet[113], gs_driver->ccsds_info.uip_stat[0]);
-  TF_copy_u32(&packet[117], gs_driver->ccsds_info.uip_stat[1]);
-  TF_copy_u32(&packet[121], gs_driver->ccsds_info.uip_stat[2]);
-  TF_copy_u32(&packet[125], gs_driver->ccsds_info.uip_stat[3]);
-  TF_copy_u32(&packet[129], gs_driver->ccsds_info.uip_stat[4]);
-  TF_copy_u32(&packet[133], gs_driver->ccsds_info.uip_stat[5]);
+  TF_copy_u8(&packet[48], (uint8_t)gs_driver->info[0].last_dest_type);
+  TF_copy_u8(&packet[49], (uint8_t)gs_driver->info[0].cmd_ack);
+  TF_copy_u32(&packet[50], (uint32_t)gs_driver->info[0].send_cycle);
+  TF_copy_u8(&packet[54], (uint8_t)gs_driver->info[0].vcid);
+  TF_copy_u32(&packet[55], gs_driver->info[0].vcdu_counter);
+  TF_copy_u8(&packet[59], gs_driver->ccsds_info.buffer_num);
+  TF_copy_u8(&packet[60], (uint8_t)gs_driver->info[1].rec_status);
+  TF_copy_u8(&packet[61], (uint8_t)gs_driver->info[1].last_rec_tcf_type);
+  TF_copy_u8(&packet[62], (uint8_t)gs_driver->info[1].ad_rec_status);
+  TF_copy_u8(&packet[63], (uint8_t)gs_driver->info[1].bc_rec_status);
+  TF_copy_u8(&packet[64], (uint8_t)gs_driver->info[1].bd_rec_status);
+  TF_copy_u8(&packet[65], (uint8_t)(gs_driver->info[1].tc_frame_validate_status));
+  TF_copy_i32(&packet[66], (int32_t)gs_driver->info[1].ret_from_if_rx);
+  TF_copy_u32(&packet[70], (uint32_t)gs_driver->info[1].last_rec_time);
+  TF_copy_u8(&packet[74], (uint8_t)gs_driver->info[1].last_dest_type);
+  TF_copy_u8(&packet[75], (uint8_t)gs_driver->info[1].cmd_ack);
+  TF_copy_u32(&packet[76], (uint32_t)gs_driver->info[1].send_cycle);
+  TF_copy_u8(&packet[80], (uint8_t)gs_driver->info[1].vcid);
+  TF_copy_u32(&packet[81], gs_driver->info[1].vcdu_counter);
+  TF_copy_u8(&packet[85], gs_driver->is_ccsds_tx_valid);
+  TF_copy_u32(&packet[86], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
+  TF_copy_u32(&packet[90], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
+  TF_copy_u32(&packet[94], (uint32_t)DI_GS_ms_tlm_packet_handler->vcdu_counter);
+  TF_copy_u32(&packet[98], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
+  TF_copy_u32(&packet[102], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
+  TF_copy_u32(&packet[106], (uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter);
+  TF_copy_u8(&packet[110], gs_validate_info->type_a_counter);
+  TF_copy_u8(&packet[111], gs_validate_info->type_b_counter);
+  TF_copy_u8(&packet[112], gs_validate_info->lockout_flag);
+  TF_copy_u8(&packet[113], gs_validate_info->retransmit_flag);
+  TF_copy_u8(&packet[114], gs_validate_info->positive_window_width);
+  TF_copy_u32(&packet[115], gs_driver->ccsds_info.uip_stat[0]);
+  TF_copy_u32(&packet[119], gs_driver->ccsds_info.uip_stat[1]);
+  TF_copy_u32(&packet[123], gs_driver->ccsds_info.uip_stat[2]);
+  TF_copy_u32(&packet[127], gs_driver->ccsds_info.uip_stat[3]);
+  TF_copy_u32(&packet[131], gs_driver->ccsds_info.uip_stat[4]);
+  TF_copy_u32(&packet[135], gs_driver->ccsds_info.uip_stat[5]);
 #endif
 
-  return 137;
+  return 139;
 }
 
 static int Tlm_HK_(uint8_t* packet, int max_len)
