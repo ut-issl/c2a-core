@@ -28,17 +28,17 @@
 // FIXME: 整理したい
 typedef enum
 {
-  PH_SUCCESS,             //!< OK
-  PH_PL_LIST_FULL,        //!< PL が一杯だった
-  PH_PACKET_NOT_FOUND,    //!< パケットが無い
-  PH_INVALID_PACKET,      //!< 無効な Packet
-  PH_INVALID_TYPE,        //!< 無効な Type
-  PH_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
-  PH_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
-  PH_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
-  PH_BC_ISORATED_CMD,     //!< 飛ばして BC 登録しようとした
-  PH_BC_CMD_TOO_LONG,     //!< CMD が BC には長すぎる
-  PH_UNKNOWN
+  PH_ACK_SUCCESS,             //!< OK
+  PH_ACK_PL_LIST_FULL,        //!< PL が一杯だった
+  PH_ACK_PACKET_NOT_FOUND,    //!< パケットが無い
+  PH_ACK_INVALID_PACKET,      //!< 無効な Packet
+  PH_ACK_INVALID_TYPE,        //!< 無効な Type
+  PH_ACK_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
+  PH_ACK_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
+  PH_ACK_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
+  PH_ACK_BC_ISORATED_CMD,     //!< 飛ばして BC 登録しようとした
+  PH_ACK_BC_CMD_TOO_LONG,     //!< CMD が BC には長すぎる
+  PH_ACK_UNKNOWN
 } PH_ACK;
 
 extern PacketList PH_gs_cmd_list;

@@ -30,8 +30,8 @@ void PH_user_init(void);
  *         つまり，本OBCにとってはRTCだが，転送対象OBCにとっては各種Cmd扱いなCmdを転送する処理
  * @param  packet: CCP
  * @retval PH_FORWARDED: 無事に転送するキューに追加された
- * @retval PH_PL_LIST_FULL: PL LIST FULL
- * @retval PH_FORWARDED以外（PH_UNKNOWNを想定）: ユーザー処理に引っかからなかった場合．Core側の処理に回される
+ * @retval PH_ACK_PL_LIST_FULL: PL LIST FULL
+ * @retval PH_FORWARDED以外（PH_ACK_UNKNOWNを想定）: ユーザー処理に引っかからなかった場合．Core側の処理に回される
  */
 PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet);
 
