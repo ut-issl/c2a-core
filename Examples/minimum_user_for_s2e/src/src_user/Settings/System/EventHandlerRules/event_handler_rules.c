@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  EH ‚Ì Rule ‹¤’ÊƒR[ƒh
+ * @brief  EH ã® Rule å…±é€šã‚³ãƒ¼ãƒ‰
  */
 #include "event_handler_rules.h"
 

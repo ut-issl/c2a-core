@@ -1,14 +1,14 @@
 /**
  * @file
- * @brief C2A‘S‘Ì‚ÌƒCƒxƒ“ƒg‚ğŠÇ—‚·‚é
- * @note  event_logger ‚Æ event_handler ‚ğŠÇ—‚·‚é
+ * @brief C2Aå…¨ä½“ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç®¡ç†ã™ã‚‹
+ * @note  event_logger ã¨ event_handler ã‚’ç®¡ç†ã™ã‚‹
  */
 #ifndef EVENT_MANAGER_H_
 #define EVENT_MANAGER_H_
 
 /**
- * @brief  event_manager ‚Ì‰Šú‰»
- * @note   event_logger ‚Æ event_handler ‚à‰Šú‰»‚³‚ê‚é
+ * @brief  event_manager ã®åˆæœŸåŒ–
+ * @note   event_logger ã¨ event_handler ã‚‚åˆæœŸåŒ–ã•ã‚Œã‚‹
  * @param  void
  * @return void
  */

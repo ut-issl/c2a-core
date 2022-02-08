@@ -1,9 +1,9 @@
 /**
  * @file
- * @brief  AMのCoreパラメタのオーバーライド用ヘッダー
+ * @brief  AM縺ｮCore繝代Λ繝｡繧ｿ縺ｮ繧ｪ繝ｼ繝舌�ｼ繝ｩ繧､繝臥畑繝倥ャ繝繝ｼ
  */
-#ifndef APP_MANAGER_PARAMS_H_
-#define APP_MANAGER_PARAMS_H_
+#ifndef APPMANAGERPARAMS_H_
+#define APPMANAGERPARAMS_H_
 
 #undef AM_TLM_PAGE_SIZE
 #undef AM_TLM_PAGE_MAX

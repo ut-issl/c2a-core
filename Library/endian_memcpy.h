@@ -1,19 +1,17 @@
 /**
  * @file
- * @brief  memcpy‚ÌƒGƒ“ƒfƒBƒAƒ“‘Îô
+ * @brief  memcpyã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å¯¾ç­–
  */
-
 /*
-memcpy‚ÅƒGƒ“ƒfƒBƒAƒ“‚Ì‚¹‚¢‚Å€‚Ê‚±‚Æ‚ª‚ ‚é‚Ì‚ÅC
-OBC‚Å‚ÍmemcpyCSLISŠÂ‹«‚Å‚Íendian conv‚ª“ü‚é‚æ‚¤‚ÉƒXƒCƒbƒ`‚³‚¹‚éD
+memcpyã§ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã®ã›ã„ã§æ­»ã¬ã“ã¨ãŒã‚ã‚‹ã®ã§ï¼Œ
+OBCã§ã¯memcpyï¼ŒSLISç’°å¢ƒã§ã¯endian convãŒå…¥ã‚‹ã‚ˆã†ã«ã‚¹ã‚¤ãƒƒãƒã•ã›ã‚‹ï¼
 
 memcpy(&sci_.sib_rev, CCP_get_param_head(packet), 2);
-«
+â†“
 endina_memcpy(&sci_.sib_rev, CCP_get_param_head(packet), 2);
 */
-
-#ifndef ENDIAN_MEMCPY_INCLUDE_
-#define ENDIAN_MEMCPY_INCLUDE_
+#ifndef ENDIAN_MEMCPY_H_
+#define ENDIAN_MEMCPY_H_
 
 
 #include <stddef.h> // for size_t
@@ -21,4 +19,4 @@ endina_memcpy(&sci_.sib_rev, CCP_get_param_head(packet), 2);
 // #pragma inline  endian_memcpy
 void* endian_memcpy(void* dest, const void* src, size_t count);
 
-#endif // ENDIAN_MEMCPY_INCLUDE_
+#endif

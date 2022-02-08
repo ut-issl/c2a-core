@@ -1,5 +1,6 @@
 {
   "c2a_root_dir" : "./",
+  "input_file_encoding" : "utf-8",
   "target_dirs" : [
     "src_core/",
     "src_user/"
@@ -10,12 +11,19 @@
     "src_core/Script"
   ],
   "ignore_files" : [
-    "src_user/CmdTlm/telemetry_definitions.c"
+    "src_user/TlmCmd/telemetry_definitions.c"
   ],
   "additional_type" : [
-    "PL_NodeTag"
+    "TCP",
+    "CommonTlmCmdPacket",
+    "CommonTlmPacket",
+    "CommonCmdPacket",
+    "SpacePacket",
+    "TlmSpacePacket",
+    "CmdSpacePacket"
   ],
   "comment_additional_type" : [
-    "現状， struct PL_NodeTag* next; は型として引っ掛けられない"
+    "FIXME: TCP はもう存在しないはずなので，どこかで消す",
+    "FIXME: CTCP, CTP, CCP については，整理が終わり次第，消して大丈夫になるはず"
   ]
 }

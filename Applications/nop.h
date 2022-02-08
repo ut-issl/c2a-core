@@ -1,17 +1,17 @@
 /**
  * @file
  * @brief NOP (No Operation) App
- * @note  C2A‚Í NOP ‚ª‚ ‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚µ‚Ä‚¢‚é
- *        ‚±‚Ì App ‚Í•K‚¸ App “o˜^‚µC Cmd_NOP ‚à•K‚¸ƒRƒ}ƒ“ƒh“o˜^‚µ‚Ä‚¨‚­‚±‚Æ
+ * @note  C2Aã¯ NOP ãŒã‚ã‚‹ã“ã¨ã‚’å‰æã¨ã—ã¦ã„ã‚‹
+ *        ã“ã® App ã¯å¿…ãš App ç™»éŒ²ã—ï¼Œ Cmd_NOP ã‚‚å¿…ãšã‚³ãƒãƒ³ãƒ‰ç™»éŒ²ã—ã¦ãŠãã“ã¨
  */
 #ifndef NOP_H_
 #define NOP_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_cmd_packet.h"
 
 AppInfo NOP_create_app(void);
 
-CCP_EXEC_STS Cmd_NOP(const CTCP* packet);
+CCP_EXEC_STS Cmd_NOP(const CommonCmdPacket* packet);
 
 #endif

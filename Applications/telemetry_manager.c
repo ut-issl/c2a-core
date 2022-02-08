@@ -1,32 +1,32 @@
 #pragma section REPRO
 /**
  * @file
- * @brief user‚ªƒeƒŒƒƒgƒŠ‹l‚Ü‚è‚ğ‚âTLˆì‚ê‚ğ–h‚¬‚Â‚ÂC‚Ü‚½CDH‚È‚Ç‚ªƒeƒŒƒƒgƒŠ‚ğŠÇ—‚µ‚â‚·‚­‚·‚é‚½‚ß‚ÌApp
- * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 ‚â telemetry_manager.h ‚ÌÅ‰º•”‚ğQÆiFIXME: ‚ ‚Æ‚Ådocument‚ÉˆÚ‚·j
+ * @brief userãŒãƒ†ãƒ¬ãƒ¡ãƒˆãƒªè©°ã¾ã‚Šã‚’ã‚„TLæº¢ã‚Œã‚’é˜²ãã¤ã¤ï¼Œã¾ãŸCDHãªã©ãŒãƒ†ãƒ¬ãƒ¡ãƒˆãƒªã‚’ç®¡ç†ã—ã‚„ã™ãã™ã‚‹ãŸã‚ã®App
+ * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 ã‚„ telemetry_manager.h ã®æœ€ä¸‹éƒ¨ã‚’å‚ç…§ï¼ˆFIXME: ã‚ã¨ã§documentã«ç§»ã™ï¼‰
  */
 #include "telemetry_manager.h"
 
-#include <string.h>     // for memset‚È‚Ç‚ÌmemŒn
+#include <string.h>     // for memsetãªã©ã®memç³»
 
 #include "./divided_cmd_utility.h"
-#include "../CmdTlm/block_command_loader.h"
-#include "../CmdTlm/block_command_executor.h"
-#include "../CmdTlm/command_analyze.h"
+#include "../TlmCmd/block_command_loader.h"
+#include "../TlmCmd/block_command_executor.h"
+#include "../TlmCmd/command_analyze.h"
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
-#include <src_user/CmdTlm/block_command_definitions.h>
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 
 /**
- * @brief  App‰Šú‰»ŠÖ”
+ * @brief  AppåˆæœŸåŒ–é–¢æ•°
  * @param  void
  * @return void
  */
 static void TLM_MGR_init_by_am_(void);
 /**
- * @brief  ‰Šú‰»
- * @note   ÀsŠÔ‚Ì–â‘è‚©‚ç‚µ•ªŠ„‚µ‚Ä‚¢‚é
+ * @brief  åˆæœŸåŒ–
+ * @note   å®Ÿè¡Œæ™‚é–“ã®å•é¡Œã‹ã‚‰ã—åˆ†å‰²ã—ã¦ã„ã‚‹
  * @param  void
  * @return 0:OK, 1:NG
  */
@@ -35,68 +35,68 @@ static uint8_t TLM_MGR_init_2_(void);
 static uint8_t TLM_MGR_init_3_(void);
 static uint8_t TLM_MGR_init_4_(void);
 /**
- * @brief  AppInfo\‘¢‘Ì‚ÌƒNƒŠƒA
+ * @brief  AppInfoæ§‹é€ ä½“ã®ã‚¯ãƒªã‚¢
  * @param  void
  * @return void
  */
 static void TLM_MGR_clear_info_(void);
 /**
- * @brief  ‚·‚×‚Ä‚ÌTLM_MGR_RegisterInfo‚ÌƒNƒŠƒA
+ * @brief  ã™ã¹ã¦ã®TLM_MGR_RegisterInfoã®ã‚¯ãƒªã‚¢
  * @param  void
  * @return void
  */
 static void TLM_MGR_clear_register_info_all_(void);
 /**
- * @brief  TLM_MGR_RegisterInfo‚ÌƒNƒŠƒA
- * @param  register_info: ƒNƒŠƒA‚µ‚½‚¢ TLM_MGR_RegisterInfo
+ * @brief  TLM_MGR_RegisterInfoã®ã‚¯ãƒªã‚¢
+ * @param  register_info: ã‚¯ãƒªã‚¢ã—ãŸã„ TLM_MGR_RegisterInfo
  * @return void
  */
 static void TLM_MGR_clear_register_info_(TLM_MGR_RegisterInfo* register_info);
 /**
- * @brief  ‚·‚×‚Ä‚ÌBC‚ğ NOP x TLM_MGR_MAX_TLM_NUM_PER_BC ‚Å–„‚ß‚é
+ * @brief  ã™ã¹ã¦ã®BCã‚’ NOP x TLM_MGR_MAX_TLM_NUM_PER_BC ã§åŸ‹ã‚ã‚‹
  * @param  void
  * @return void
  */
 static void TLM_MGR_clear_bc_to_nop_all_(void);
 /**
- * @brief  w’è‚µ‚½BC‚ğ NOP x TLM_MGR_MAX_TLM_NUM_PER_BC ‚Å–„‚ß‚é
- * @param  bc_id: NOP‚Å‚¤‚ß‚éBC ID
+ * @brief  æŒ‡å®šã—ãŸBCã‚’ NOP x TLM_MGR_MAX_TLM_NUM_PER_BC ã§åŸ‹ã‚ã‚‹
+ * @param  bc_id: NOPã§ã†ã‚ã‚‹BC ID
  * @return void
  */
 static void TLM_MGR_clear_bc_to_nop_(bct_id_t bc_id);
 /**
- * @brief  İ’è‚³‚ê‚½ TLM_MGR_BcInfo ‚©‚ç“à•”‚Åg‚¤î•ñ TLM_MGR_RegisterInfo ‚Ì\’z
+ * @brief  è¨­å®šã•ã‚ŒãŸ TLM_MGR_BcInfo ã‹ã‚‰å†…éƒ¨ã§ä½¿ã†æƒ…å ± TLM_MGR_RegisterInfo ã®æ§‹ç¯‰
  * @param  void
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void);
 /**
- * @brief  TLM_MGR_RegisterInfo ‚Ég‚¤ BC î•ñ‚ğ“o˜^
- * @param  register_info: “o˜^æ‚Ì TLM_MGR_RegisterInfo
+ * @brief  TLM_MGR_RegisterInfo ã«ä½¿ã† BC æƒ…å ±ã‚’ç™»éŒ²
+ * @param  register_info: ç™»éŒ²å…ˆã® TLM_MGR_RegisterInfo
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterInfo* register_info, uint8_t bc_info_idx);
 /**
- * @brief  TLM_MGR_RegisterInfo “o˜^‚³‚ê‚Ä‚¢‚é BC ‚ğƒNƒŠƒA‚µ‚Ä NOP ‚Å–„‚ß‚é
- * @param  register_info: Á‚· BC ‚ª“o˜^‚³‚ê‚Ä‚¢‚é TLM_MGR_RegisterInfo
+ * @brief  TLM_MGR_RegisterInfo ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ BC ã‚’ã‚¯ãƒªã‚¢ã—ã¦ NOP ã§åŸ‹ã‚ã‚‹
+ * @param  register_info: æ¶ˆã™ BC ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ TLM_MGR_RegisterInfo
  * @return void
  */
 static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_info);
 /**
- * @brief  TLM_MGR_RegisterInfo ‚É ƒeƒŒƒ¶¬ƒRƒ}ƒ“ƒh‚ğ“o˜^‚·‚é
- * @param  register_info: ƒRƒ}ƒ“ƒh“o˜^æ BC ‚ª“o˜^‚³‚ê‚Ä‚¢‚é TLM_MGR_RegisterInfo
- * @param  param: Cmd_GENERATE_TLM ‚ÌƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^
+ * @brief  TLM_MGR_RegisterInfo ã« ãƒ†ãƒ¬ãƒ¡ç”Ÿæˆã‚³ãƒãƒ³ãƒ‰ã‚’ç™»éŒ²ã™ã‚‹
+ * @param  register_info: ã‚³ãƒãƒ³ãƒ‰ç™»éŒ²å…ˆ BC ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ TLM_MGR_RegisterInfo
+ * @param  param: Cmd_GENERATE_TLM ã®ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* register_info, const uint8_t* param);
 /**
- * @brief  BC‘S‘Ì‚ğ“WŠJ‚µ‚Ä‚¢‚­master BC‚Ì\’z
+ * @brief  BCå…¨ä½“ã‚’å±•é–‹ã—ã¦ã„ãmaster BCã®æ§‹ç¯‰
  * @param  void
  * @return void
  */
 static void TLM_MGR_load_master_bc_(void);
 /**
- * @brief  NOP ‚Å–„‚ß‚ç‚ê‚½ BC‚Ì\’z
+ * @brief  NOP ã§åŸ‹ã‚ã‚‰ã‚ŒãŸ BCã®æ§‹ç¯‰
  * @param  void
  * @return void
  */
@@ -106,7 +106,7 @@ static void TLM_MGR_load_nop_bc_(void);
 static TelemetryManager telemetry_manager_;
 const TelemetryManager* const telemetry_manager = &telemetry_manager_;
 
-static CTCP TLM_MGR_packet_;
+static CommonCmdPacket TLM_MGR_packet_;
 
 AppInfo TLM_MGR_create_app(void)
 {
@@ -120,15 +120,15 @@ static void TLM_MGR_init_by_am_(void)
 }
 
 
-// FIXME: ÀsŠÔ‚â‚Î‚¢D Cmd_TLM_MGR_INIT ‚ğ’¼‚·‚É’¼‚·
-// BCT‚Ì‰Šú‰»‚æ‚è‘O‚È‚Ì‚ÅCAppInit‚É‚Å‚«‚È‚¢D
+// FIXME: å®Ÿè¡Œæ™‚é–“ã‚„ã°ã„ï¼ Cmd_TLM_MGR_INIT ã‚’ç›´ã™æ™‚ã«ç›´ã™
+// BCTã®åˆæœŸåŒ–ã‚ˆã‚Šå‰ãªã®ã§ï¼ŒAppInitã«ã§ããªã„ï¼
 static uint8_t TLM_MGR_init_1_(void)
 {
   telemetry_manager_.is_inited = 0;
 
   TLM_MGR_clear_info_();
 
-  // BC‚Ìİ’è
+  // BCã®è¨­å®š
   telemetry_manager_.bc_info[0].bc_id = BC_TLM_MGR0;
   telemetry_manager_.bc_info[1].bc_id = BC_TLM_MGR1;
   telemetry_manager_.bc_info[2].bc_id = BC_TLM_MGR2;
@@ -144,7 +144,7 @@ static uint8_t TLM_MGR_init_1_(void)
   telemetry_manager_.bc_info[2].bc_type = TLM_MGR_BC_TYPE_SYSTEM_TLM;
   telemetry_manager_.bc_info[3].bc_type = TLM_MGR_BC_TYPE_SYSTEM_TLM;
   telemetry_manager_.bc_info[4].bc_type = TLM_MGR_BC_TYPE_SYSTEM_TLM;
-  // telemetry_manager_.bc_info[4].bc_type = TLM_MGR_BC_TYPE_RESERVE;       // reserve ‚Å‚¤‚ß‚Ä‚à—Ç‚¢
+  // telemetry_manager_.bc_info[4].bc_type = TLM_MGR_BC_TYPE_RESERVE;       // reserve ã§ã†ã‚ã¦ã‚‚è‰¯ã„
   telemetry_manager_.bc_info[5].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
   telemetry_manager_.bc_info[6].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
   telemetry_manager_.bc_info[7].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
@@ -159,11 +159,11 @@ static uint8_t TLM_MGR_init_2_(void)
 {
   TLM_MGR_ERR_CODE ret;
 
-  // BCİ’è‚©‚ç“à•”‚Åg‚¤î•ñ‚Ì\’z
+  // BCè¨­å®šã‹ã‚‰å†…éƒ¨ã§ä½¿ã†æƒ…å ±ã®æ§‹ç¯‰
   ret = TLM_MGR_calc_register_info_from_bc_info_();
   if (ret != TLM_MGR_ERR_CODE_OK)
   {
-    // ‰Šú‰»¸”s
+    // åˆæœŸåŒ–å¤±æ•—
     // Printf("TLM MGR init Failed at calc_register_info !\n");
     return 1;
   }
@@ -227,14 +227,14 @@ static void TLM_MGR_clear_bc_to_nop_all_(void)
   for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
   {
     TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_info[bc_info_idx].bc_id);
-    WDT_clear_wdt();      // TODO: ÀsŠÔ‚ğŠm”F‚µ‚ÄÁ‚·
+    WDT_clear_wdt();      // TODO: å®Ÿè¡Œæ™‚é–“ã‚’ç¢ºèªã—ã¦æ¶ˆã™
   }
 }
 
 static void TLM_MGR_clear_bc_to_nop_(bct_id_t bc_id)
 {
   BCL_load_bc(bc_id, TLM_MGR_load_nop_bc_);
-  // ‚±‚Ì’†‚Å BCT_activate_block() ‚à‚³‚ê‚é‚±‚Æ‚É’ˆÓ
+  // ã“ã®ä¸­ã§ BCT_activate_block() ã‚‚ã•ã‚Œã‚‹ã“ã¨ã«æ³¨æ„
 }
 
 
@@ -243,7 +243,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void)
   uint8_t bc_info_idx;
   TLM_MGR_RegisterInfo* register_info_master;
 
-  TLM_MGR_clear_register_info_all_();    // TODO: ‚‘¬‰»‚Ì‚½‚ß‚ÉÁ‚µ‚Ä‚à‚¢‚¢‚©‚àH
+  TLM_MGR_clear_register_info_all_();    // TODO: é«˜é€ŸåŒ–ã®ãŸã‚ã«æ¶ˆã—ã¦ã‚‚ã„ã„ã‹ã‚‚ï¼Ÿ
 
   for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
   {
@@ -317,21 +317,21 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
   bct_id_t bc_id = telemetry_manager_.bc_info[bc_info_idx].bc_id;
   uint8_t  bc_cmd_pos = register_info->tlm_register_pointer_to_bc_cmd_idx;
   BCT_Pos  bc_register_pos;
-  CTCP_UTIL_ACK ctcp_util_ack;
+  CCP_UTIL_ACK ccp_util_ack;
   BCT_ACK  bct_ack;
 
   if (bc_cmd_pos >= TLM_MGR_MAX_TLM_NUM_PER_BC) return TLM_MGR_ERR_CODE_CMD_FULL;
 
   BCT_make_pos(&bc_register_pos, bc_id, bc_cmd_pos);
 
-  ctcp_util_ack = CCP_form_tlc(&TLM_MGR_packet_,
-                               (cycle_t)bc_cmd_pos,
-                               Cmd_CODE_GENERATE_TLM,
-                               param,
-                               CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
-  if (ctcp_util_ack != CTCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
+  ccp_util_ack = CCP_form_tlc(&TLM_MGR_packet_,
+                              (cycle_t)bc_cmd_pos,
+                              Cmd_CODE_GENERATE_TLM,
+                              param,
+                              CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
+  if (ccp_util_ack != CCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
 
-  // ‚·‚Å‚É NOP ‚Å–„‚ß‚ç‚ê‚Ä‚¨‚èC‚©‚Â activate Ï‚È‚Ì‚ÅC’¼Ú BCT ‚ÉƒRƒ}ƒ“ƒh‚ğ‘}“ü‚Å‚«‚éD
+  // ã™ã§ã« NOP ã§åŸ‹ã‚ã‚‰ã‚Œã¦ãŠã‚Šï¼Œã‹ã¤ activate æ¸ˆãªã®ã§ï¼Œç›´æ¥ BCT ã«ã‚³ãƒãƒ³ãƒ‰ã‚’æŒ¿å…¥ã§ãã‚‹ï¼
   bct_ack = BCT_overwrite_cmd(&bc_register_pos, &TLM_MGR_packet_);
   if (bct_ack != BCT_SUCCESS) return TLM_MGR_ERR_CODE_OTHER_ERR;
 
@@ -348,7 +348,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
 
 static void TLM_MGR_load_master_bc_(void)
 {
-  cycle_t ti = 1;   // 1 - 9 ‚Ü‚Å‚Ì 9 ŒÂ“o˜^‚·‚éD 10 ‚Ídeploy
+  cycle_t ti = 1;   // 1 - 9 ã¾ã§ã® 9 å€‹ç™»éŒ²ã™ã‚‹ï¼ 10 ã¯deploy
   uint8_t bc_info_idx;
 
   for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
@@ -367,7 +367,7 @@ static void TLM_MGR_load_master_bc_(void)
       ti++;
       break;
     default:
-      // TLM_MGR_BC_TYPE_MASTER ‚ª‚±‚±‚É
+      // TLM_MGR_BC_TYPE_MASTER ãŒã“ã“ã«
       break;
     }
   }
@@ -387,9 +387,9 @@ static void TLM_MGR_load_nop_bc_(void)
 }
 
 
-// FIXME: ÀsŠÔ‚â‚Î‚¢F 21ms
-// “K“–‚É•ªŠ„‚µ‚È‚¢‚Æ
-CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
+// FIXME: å®Ÿè¡Œæ™‚é–“ã‚„ã°ã„ï¼š 21ms
+// é©å½“ã«åˆ†å‰²ã—ãªã„ã¨
+CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 {
   uint8_t ret;
   uint16_t exec_counter;
@@ -403,7 +403,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
   default:
     // DCU_STATUS_ABORTED_BY_ERR
     // DCU_STATUS_ABORTED_BY_CMD
-    // ‚ª‚±‚±‚É
+    // ãŒã“ã“ã«
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
@@ -416,7 +416,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
     ret = TLM_MGR_init_2_();
     break;
   case 2:
-    ret = TLM_MGR_init_3_();    // ‚±‚ê‚ª21msDNOP BC‚ğì‚é‚Ì‚ªd‚¢
+    ret = TLM_MGR_init_3_();    // ã“ã‚ŒãŒ21msï¼NOP BCã‚’ä½œã‚‹ã®ãŒé‡ã„
     break;
   case 3:
     ret = TLM_MGR_init_4_();
@@ -437,7 +437,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
     return CCP_EXEC_SUCCESS;
   }
 
-  // Ä‹AÀs
+  // å†å¸°å®Ÿè¡Œ
   if (DCU_register_next(Cmd_CODE_TLM_MGR_INIT, NULL, 0) != DCU_ACK_OK)
   {
     DCU_report_err(Cmd_CODE_TLM_MGR_INIT, CCP_EXEC_ILLEGAL_CONTEXT);
@@ -448,14 +448,14 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
 
-  // TODO: TLM_MGR_calc_register_info_from_bc_info_ ‚Í“ü‚ê‚È‚­‚Ä‚¢‚¢‚©ŒŸ“¢‚·‚é
-  //       ‚Æ‚è‚ ‚¦‚¸‚Í‚È‚­‚Ä‚¢‚¢‹C‚ª‚·‚é
+  // TODO: TLM_MGR_calc_register_info_from_bc_info_ ã¯å…¥ã‚Œãªãã¦ã„ã„ã‹æ¤œè¨ã™ã‚‹
+  //       ã¨ã‚Šã‚ãˆãšã¯ãªãã¦ã„ã„æ°—ãŒã™ã‚‹
 
   BCL_load_bc(telemetry_manager_.master_bc_id, TLM_MGR_load_master_bc_);
 
@@ -463,7 +463,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -475,7 +475,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -487,9 +487,9 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CTCP* packet)
 }
 
 
-// FIXME: ÀsŠÔƒ`ƒFƒbƒN :9ms
-// Œ‹‹ÇCNOP BCì‚é‚Ì‚ªd‚¢
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet)
+// FIXME: å®Ÿè¡Œæ™‚é–“ãƒã‚§ãƒƒã‚¯ :9ms
+// çµå±€ï¼ŒNOP BCä½œã‚‹ã®ãŒé‡ã„
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
 {
   uint16_t exec_counter;
   (void)packet;
@@ -504,7 +504,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet)
   default:
     // DCU_STATUS_ABORTED_BY_ERR
     // DCU_STATUS_ABORTED_BY_CMD
-    // ‚ª‚±‚±‚É
+    // ãŒã“ã“ã«
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
@@ -517,12 +517,12 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet)
     TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.low_freq_tlm);
     break;
   default:
-    TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.reserve);     // •Ö‹Xã‚±‚±‚Å
+    TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.reserve);     // ä¾¿å®œä¸Šã“ã“ã§
     DCU_report_finish(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_SUCCESS);
     return CCP_EXEC_SUCCESS;
   }
 
-  // Ä‹AÀs
+  // å†å¸°å®Ÿè¡Œ
   if (DCU_register_next(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, NULL, 0) != DCU_ACK_OK)
   {
     DCU_report_err(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_ILLEGAL_CONTEXT);
@@ -533,7 +533,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -544,13 +544,13 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
 
-  // master BC ‚ª 1‚Â‚Å‚È‚¢‚Ì‚Í‰½‚©‚ª‚¨‚©‚µ‚¢
+  // master BC ãŒ 1ã¤ã§ãªã„ã®ã¯ä½•ã‹ãŒãŠã‹ã—ã„
   if (telemetry_manager_.register_info.master.bc_info_idx_used_num != 1)
   {
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
-  // master bc ‚Ì––”ö‚Ì nop ‚ğ deploy ‚É·‚µ‘Ö‚¦‚é
+  // master bc ã®æœ«å°¾ã® nop ã‚’ deploy ã«å·®ã—æ›¿ãˆã‚‹
   master_bc_id = telemetry_manager_.master_bc_id;
   bc_cmd_pos = TLM_MGR_USE_BC_NUM - 1;
 
@@ -565,15 +565,15 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CTCP* packet)
                1 + SIZE_OF_BCT_ID_T);
   BCT_overwrite_cmd(&bc_register_pos, &TLM_MGR_packet_);
 
-  // master bc “WŠJ
+  // master bc å±•é–‹
   CCP_form_block_deploy_cmd(&TLM_MGR_packet_, TL_ID_DEPLOY_TLM, master_bc_id);
-  PH_analyze_packet(&TLM_MGR_packet_);
+  PH_analyze_cmd_packet(&TLM_MGR_packet_);
 
   return CCP_EXEC_SUCCESS;
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -583,13 +583,13 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
 
-  // master BC ‚ª 1‚Â‚Å‚È‚¢‚Ì‚Í‰½‚©‚ª‚¨‚©‚µ‚¢
+  // master BC ãŒ 1ã¤ã§ãªã„ã®ã¯ä½•ã‹ãŒãŠã‹ã—ã„
   if (telemetry_manager_.register_info.master.bc_info_idx_used_num != 1)
   {
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
-  // master bc ‚Ì––”ö‚Ì deploy ‚ğ nop ‚É·‚µ‘Ö‚¦‚é‚±‚Æ‚Å~‚ß‚é
+  // master bc ã®æœ«å°¾ã® deploy ã‚’ nop ã«å·®ã—æ›¿ãˆã‚‹ã“ã¨ã§æ­¢ã‚ã‚‹
   master_bc_id = telemetry_manager_.master_bc_id;
   bc_cmd_pos = TLM_MGR_USE_BC_NUM - 1;
 
@@ -604,7 +604,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 {
   uint8_t param[1];
 
@@ -614,13 +614,13 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CTCP* packet)
 
   param[0] = TL_ID_DEPLOY_TLM;
   CCP_form_rtc(&TLM_MGR_packet_, Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, param, 1);
-  PH_analyze_packet(&TLM_MGR_packet_);
+  PH_analyze_cmd_packet(&TLM_MGR_packet_);
 
   return CCP_EXEC_SUCCESS;
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -639,7 +639,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -658,7 +658,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -677,7 +677,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;

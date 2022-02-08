@@ -1,14 +1,14 @@
 /**
  * @file
- * @brief ƒ‚[ƒh‘JˆÚ‚Ì§Œä‚Ì’è‹`
+ * @brief ãƒ¢ãƒ¼ãƒ‰é·ç§»ã®åˆ¶å¾¡ã®å®šç¾©
  */
 #ifndef MODE_MANAGER_H_
 #define MODE_MANAGER_H_
 
 #include "../TimeManager/obc_time.h"
 #include <src_user/Settings/Modes/mode_definitions.h>
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
-#include "../../CmdTlm/block_command_table.h"
+#include "../../TlmCmd/common_cmd_packet.h"
+#include "../../TlmCmd/block_command_table.h"
 
 #define MM_NOT_DEFINED (BCT_MAX_BLOCKS)
 
@@ -16,106 +16,106 @@
 
 /**
  * @enum  MM_ACK
- * @brief ModeManager ŠÖ˜AŠÖ”‚Ì•Ô‚è’l
- * @note  uint8_t ‚ğ‘z’è
+ * @brief ModeManager é–¢é€£é–¢æ•°ã®è¿”ã‚Šå€¤
+ * @note  uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  MM_SUCCESS,         //!< ¬Œ÷
-  MM_BAD_ID,          //!< ƒ‚[ƒh”Ô†ˆÙí
-  MM_BAD_BC_INDEX,    //!< ƒ‚[ƒh—p‚Ì BC ‚Ì ID ˆÙí
-  MM_INACTIVE_BLOCK,  //!< ƒ‚[ƒh—p BC ‚ª –³Œø
-  MM_OVERWRITE,       //!< •Ê‚Ìƒ‚[ƒh‘JˆÚÀs’†
-  MM_ILLEGAL_MOVE,    //!< ƒ‚[ƒh‘JˆÚ—p‚Ì BC ‚ª‘¶İ‚µ‚È‚¢
-  MM_NOT_IN_PROGRESS, //!< ƒ‚[ƒh‘JˆÚ’†‚Å‚Í‚È‚¢
-  MM_TL_LOAD_FAILED   //!< Task List ‚Ö‚Ìƒ‚[ƒh BC “o˜^¸”s
+  MM_SUCCESS,         //!< æˆåŠŸ
+  MM_BAD_ID,          //!< ãƒ¢ãƒ¼ãƒ‰ç•ªå·ç•°å¸¸
+  MM_BAD_BC_INDEX,    //!< ãƒ¢ãƒ¼ãƒ‰ç”¨ã® BC ã® ID ç•°å¸¸
+  MM_INACTIVE_BLOCK,  //!< ãƒ¢ãƒ¼ãƒ‰ç”¨ BC ãŒ ç„¡åŠ¹
+  MM_OVERWRITE,       //!< åˆ¥ã®ãƒ¢ãƒ¼ãƒ‰é·ç§»å®Ÿè¡Œä¸­
+  MM_ILLEGAL_MOVE,    //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»ç”¨ã® BC ãŒå­˜åœ¨ã—ãªã„
+  MM_NOT_IN_PROGRESS, //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»ä¸­ã§ã¯ãªã„
+  MM_TL_LOAD_FAILED   //!< Task List ã¸ã®ãƒ¢ãƒ¼ãƒ‰ BC ç™»éŒ²å¤±æ•—
 } MM_ACK;
 
 /**
  * @enum MM_STATUS
- * @brief ƒ‚[ƒh‘JˆÚó‘Ô
- * @note  uint8_t ‚ğ‘z’è
+ * @brief ãƒ¢ãƒ¼ãƒ‰é·ç§»çŠ¶æ…‹
+ * @note  uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  MM_STATUS_FINISHED,   //!< ƒ‚[ƒh‘JˆÚI—¹
-  MM_STATUS_IN_PROGRESS //!< ƒ‚[ƒh‘JˆÚÀs’†
+  MM_STATUS_FINISHED,   //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»çµ‚äº†
+  MM_STATUS_IN_PROGRESS //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»å®Ÿè¡Œä¸­
 } MM_STATUS;
 
 /**
  * @struct MM_TransitionEdge
- * @brief MM TLM —p‚Ì\‘¢‘Ì
- * @note TransitionTable ‘S‘Ì‚ğÚ‚¹‚é‚Æ Tlm ‚Ì 1ƒy[ƒW‚Éû‚Ü‚ç‚È‚¢‚½‚ß
+ * @brief MM TLM ç”¨ã®æ§‹é€ ä½“
+ * @note TransitionTable å…¨ä½“ã‚’è¼‰ã›ã‚‹ã¨ Tlm ã® 1ãƒšãƒ¼ã‚¸ã«åã¾ã‚‰ãªã„ãŸã‚
  */
 typedef struct
 {
-  uint8_t  from;     //!< ƒ‚[ƒh‘JˆÚŒ³
-  uint8_t  to;       //!< ƒ‚[ƒh‘JˆÚæ
-  bct_id_t bc_index; //!< ƒ‚[ƒh‘JˆÚ‚ÉŠY“–‚·‚é bc id
+  uint8_t  from;     //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»å…ƒ
+  uint8_t  to;       //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»å…ˆ
+  bct_id_t bc_index; //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»ã«è©²å½“ã™ã‚‹ bc id
 } MM_TransitionEdge;
 
 /**
  * @struct ModeManager
- * @brief ModeManager –{‘Ì
+ * @brief ModeManager æœ¬ä½“
  */
 typedef struct
 {
-  bct_id_t mode_list[MD_MODEID_MODE_MAX];                            //!< Šeƒ‚[ƒhID‚É‘Î‰‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒhID‚ğ•Û‘¶‚·‚é
-  bct_id_t transition_table[MD_MODEID_MODE_MAX][MD_MODEID_MODE_MAX]; //!< Šeƒ‚[ƒh‘JˆÚ(‚ ‚éƒ‚[ƒhID‚©‚ç‚ ‚éƒ‚[ƒhID‚Ö‚Ì‘JˆÚ)‚É‘Î‰‚·‚éƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğ•Û‘¶‚·‚é
-  MM_STATUS stat;                                                    //!< ƒ‚[ƒh‘JˆÚó‘Ô
-  MD_MODEID previous_id;                                             //!< ‚Ğ‚Æ‚Â‘O‚Ìƒ‚[ƒhID
-  MD_MODEID current_id;                                              //!< Œ»İ‚Ìƒ‚[ƒhID
-  MM_ACK mm_ack;                                                     //!< ƒGƒ‰[î•ñ•Û‘¶—p
+  bct_id_t mode_list[MD_MODEID_MODE_MAX];                            //!< å„ãƒ¢ãƒ¼ãƒ‰IDã«å¯¾å¿œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰IDã‚’ä¿å­˜ã™ã‚‹
+  bct_id_t transition_table[MD_MODEID_MODE_MAX][MD_MODEID_MODE_MAX]; //!< å„ãƒ¢ãƒ¼ãƒ‰é·ç§»(ã‚ã‚‹ãƒ¢ãƒ¼ãƒ‰IDã‹ã‚‰ã‚ã‚‹ãƒ¢ãƒ¼ãƒ‰IDã¸ã®é·ç§»)ã«å¯¾å¿œã™ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’ä¿å­˜ã™ã‚‹
+  MM_STATUS stat;                                                    //!< ãƒ¢ãƒ¼ãƒ‰é·ç§»çŠ¶æ…‹
+  MD_MODEID previous_id;                                             //!< ã²ã¨ã¤å‰ã®ãƒ¢ãƒ¼ãƒ‰ID
+  MD_MODEID current_id;                                              //!< ç¾åœ¨ã®ãƒ¢ãƒ¼ãƒ‰ID
+  MM_ACK mm_ack;                                                     //!< ã‚¨ãƒ©ãƒ¼æƒ…å ±ä¿å­˜ç”¨
 
-  MM_TransitionEdge transition_table_for_tlm[MD_MODEID_MODE_MAX * MD_MODEID_MODE_MAX]; //!< ƒeƒŒƒ—p‚Ìƒe[ƒuƒ‹
+  MM_TransitionEdge transition_table_for_tlm[MD_MODEID_MODE_MAX * MD_MODEID_MODE_MAX]; //!< ãƒ†ãƒ¬ãƒ¡ç”¨ã®ãƒ†ãƒ¼ãƒ–ãƒ«
 } ModeManager;
 
 extern const ModeManager* const mode_manager;
 
 /**
- * @brief ƒ‚[ƒh‘JˆÚ‚ğŠÇ—‚·‚é ModeManager \‘¢‘Ì (mode_manager_) ‚Ì‰Šú‰»
+ * @brief ãƒ¢ãƒ¼ãƒ‰é·ç§»ã‚’ç®¡ç†ã™ã‚‹ ModeManager æ§‹é€ ä½“ (mode_manager_) ã®åˆæœŸåŒ–
  * @param void
  * @return void
  */
 void MM_initialize(void);
 
 /**
- * @brief TLM —pî•ñ‚Ì¶¬
+ * @brief TLM ç”¨æƒ…å ±ã®ç”Ÿæˆ
  * @param void
- * @return uint8_t: ‘JˆÚ Edge –{”
- * @note ƒeƒŒƒ‚Ìã•”‚ÅŒÄ‚Ño‚³‚ê‚é‚æ‚¤‚É‚·‚é‚ÆƒeƒŒƒ¶¬‚ÉŸè‚Éî•ñ‚ªXV‚³‚ê‚Ä•Ö—˜ (tlm update cmd ‚ğ‘Å‚Â•K—v‚ª–³‚¢)
+ * @return uint8_t: é·ç§» Edge æœ¬æ•°
+ * @note ãƒ†ãƒ¬ãƒ¡ã®ä¸Šéƒ¨ã§å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹ã¨ãƒ†ãƒ¬ãƒ¡ç”Ÿæˆæ™‚ã«å‹æ‰‹ã«æƒ…å ±ãŒæ›´æ–°ã•ã‚Œã¦ä¾¿åˆ© (tlm update cmd ã‚’æ‰“ã¤å¿…è¦ãŒç„¡ã„)
  */
 uint16_t MM_update_transition_table_for_tlm(void);
 
 /**
- * @brief Cmd_MM_SET_MODE_LIST‚ÌÀ‘Ì
- * @param[in] mode: ‘Î‰ Mode ID
- * @param[in] bc_index: Mode ‚É‘Î‰‚·‚é BC ID
+ * @brief Cmd_MM_SET_MODE_LISTã®å®Ÿä½“
+ * @param[in] mode: å¯¾å¿œ Mode ID
+ * @param[in] bc_index: Mode ã«å¯¾å¿œã™ã‚‹ BC ID
  * @return MM_ACK
  */
 MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t bc_index);
 
 /**
- * @brief Cmd_MM_SET_TRANSITION_TABLE‚ÌÀ‘Ì
- * @param[in] from: ‘JˆÚŒ³
- * @param[in] to: ‘JˆÚæ
- * @param[in] bc_index: ‘JˆÚ‚É‘Î‰‚·‚é BC ID
+ * @brief Cmd_MM_SET_TRANSITION_TABLEã®å®Ÿä½“
+ * @param[in] from: é·ç§»å…ƒ
+ * @param[in] to: é·ç§»å…ˆ
+ * @param[in] bc_index: é·ç§»ã«å¯¾å¿œã™ã‚‹ BC ID
  * @return MM_ACK
  */
 MM_ACK MM_set_transition_table(MD_MODEID from, MD_MODEID to, bct_id_t bc_index);
 
 /**
- * @brief mode ‚É‘Î‰‚µ‚½ TL ‚Ì BCT ID ‚ğæ“¾‚·‚é
- * @note ˆø”ƒAƒT[ƒVƒ‡ƒ“‚Ís‚í‚È‚¢D•s³‚È mode ‚Ìê‡‚Í 0 ‚ğ•Ô‚·D
- * @param[in] mode: ‘Î‰‚·‚éƒ‚[ƒh
- * @return ƒ‚[ƒh‘Î‰‚·‚é BC ID
+ * @brief mode ã«å¯¾å¿œã—ãŸ TL ã® BCT ID ã‚’å–å¾—ã™ã‚‹
+ * @note å¼•æ•°ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã¯è¡Œã‚ãªã„ï¼ä¸æ­£ãª mode ã®å ´åˆã¯ 0 ã‚’è¿”ã™ï¼
+ * @param[in] mode: å¯¾å¿œã™ã‚‹ãƒ¢ãƒ¼ãƒ‰
+ * @return ãƒ¢ãƒ¼ãƒ‰å¯¾å¿œã™ã‚‹ BC ID
  */
 bct_id_t MM_get_tasklist_id_of_mode(MD_MODEID mode);
 
-CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CTCP* packet);
-CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
 #endif

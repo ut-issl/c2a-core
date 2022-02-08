@@ -1,6 +1,6 @@
 #pragma section REPRO
 #include <src_core/Applications/anomaly_handler.h>
-// ah_rules.h ‚Í‚±‚±‚Å‚Íinclude‚µ‚È‚¢I
+// ah_rules.h ã¯ã“ã“ã§ã¯includeã—ãªã„ï¼
 
 void AH_Rule_default_load(void)
 {

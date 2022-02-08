@@ -1,22 +1,22 @@
 /**
  * @file
- * @brief ’nã‹Ç‚©‚ç”­s‚³‚ê‚½ RTC (Real Time Cmd) ‚ğÀs‚·‚é
+ * @brief åœ°ä¸Šå±€ã‹ã‚‰ç™ºè¡Œã•ã‚ŒãŸ RTC (Real Time Cmd) ã‚’å®Ÿè¡Œã™ã‚‹
  */
 #ifndef GS_COMMAND_DISPATCHER_H_
 #define GS_COMMAND_DISPATCHER_H_
 
-#include "../CmdTlm/command_dispatcher.h"
+#include "../TlmCmd/command_dispatcher.h"
 #include "../System/ApplicationManager/app_info.h"
 
 extern const CommandDispatcher* const gs_command_dispatcher;
 
 /**
- * @brief  GSCD App ¶¬ŠÖ”
+ * @brief  GSCD App ç”Ÿæˆé–¢æ•°
  * @param  void
  * @return GSCD AppInfo
  */
 AppInfo GSCD_create_app(void);
 
-CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

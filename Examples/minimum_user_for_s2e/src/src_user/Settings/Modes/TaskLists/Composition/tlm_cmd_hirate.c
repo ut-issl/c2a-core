@@ -2,9 +2,9 @@
 #include "tlm_cmd_hirate.h"
 
 #include "../../../../Applications/app_registry.h"
-#include "../../../../CmdTlm/block_command_definitions.h"
+#include "../../../../TlmCmd/block_command_definitions.h"
 
-#include <src_core/CmdTlm/block_command_loader.h>
+#include <src_core/TlmCmd/block_command_loader.h>
 
 
 void BCL_load_tlm_cmd_hirate(void)

@@ -1,40 +1,40 @@
 /**
  * @file
  * @brief watchdog timer
- * @note  ‚±‚¢‚Â‚àBootLoader‚É”z’u‚·‚é‚Ì‚ÅCƒŠƒvƒ‰Â”\—Ìˆæ‚Ì‚à‚Ì‚ğinclude‚µ‚È‚¢‚±‚ÆII
- *        ‚È‚¨CCMD‚ÍƒŠƒvƒ‘ÎÛ“àII
+ * @note  ã“ã„ã¤ã‚‚BootLoaderã«é…ç½®ã™ã‚‹ã®ã§ï¼Œãƒªãƒ—ãƒ­å¯èƒ½é ˜åŸŸã®ã‚‚ã®ã‚’includeã—ãªã„ã“ã¨ï¼ï¼
+ *        ãªãŠï¼ŒCMDã¯ãƒªãƒ—ãƒ­å¯¾è±¡å†…ï¼ï¼
  */
 #ifndef WATCHDOG_TIMER_H_
 #define WATCHDOG_TIMER_H_
 
 #include "../../IfWrapper/wdt.h"
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_cmd_packet.h"
 
 extern const WDT_Config* const wdt_config;
 
 /**
- * @brief  WDT‚Ì‰Šú‰»
+ * @brief  WDTã®åˆæœŸåŒ–
  * @param  void
  * @return void
- * @note   IF_wapper‚Å‚Í‚È‚­C‚±‚ÌŠÖ”‚ªglobal‚ÉŒöŠJ‚³‚ê‚é
+ * @note   IF_wapperã§ã¯ãªãï¼Œã“ã®é–¢æ•°ãŒglobalã«å…¬é–‹ã•ã‚Œã‚‹
  */
 void WDT_init(void);
 
 /**
- * @brief  WDT‚ÌƒNƒŠƒA
+ * @brief  WDTã®ã‚¯ãƒªã‚¢
  * @param  void
  * @return void
- * @note   IF_wapper‚Å‚Í‚È‚­C‚±‚ÌŠÖ”‚ªglobal‚ÉŒöŠJ‚³‚ê‚é
+ * @note   IF_wapperã§ã¯ãªãï¼Œã“ã®é–¢æ•°ãŒglobalã«å…¬é–‹ã•ã‚Œã‚‹
  */
 void WDT_clear_wdt(void);
 
-// ª‘SÄƒvƒ‘ÎÛŠO
-// «‘SÄƒvƒ‘ÎÛ“à
+// â†‘å…¨å†ãƒ—ãƒ­å¯¾è±¡å¤–
+// â†“å…¨å†ãƒ—ãƒ­å¯¾è±¡å†…
 
-CCP_EXEC_STS Cmd_WDT_INIT(const CTCP* packet);
-CCP_EXEC_STS Cmd_WDT_ENABLE(const CTCP* packet);
-CCP_EXEC_STS Cmd_WDT_DISABLE(const CTCP* packet);
-CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CTCP* packet);
-CCP_EXEC_STS Cmd_WDT_START_CLEAR(const CTCP* packet);
+CCP_EXEC_STS Cmd_WDT_INIT(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_WDT_ENABLE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_WDT_DISABLE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet);
 
 #endif

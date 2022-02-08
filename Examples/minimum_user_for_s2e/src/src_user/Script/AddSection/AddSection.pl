@@ -105,7 +105,7 @@ sub ProcFile {
 sub ReadHeadLine {
 	my $file = $_[0];
 	# open (FH, "<:encoding(cp932)", $file) || die "can't open $file: $!";
-	open (FH, "<:encoding(sjis)", $file) or die "can't open $file: $!";
+	open (FH, "<:encoding(".$SETTING{'FILE_ENCODING'}.")", $file) or die "can't open $file: $!";
 	my $line = <FH>;
 	# $line =~ s/ /_/g;
 	# seek FH, 0, 0; # go back to the start of the file
@@ -118,7 +118,7 @@ sub ReadHeadLine {
 sub ReadLastLine {
 	my $file = $_[0];
 	# print $_[0], "\n";
-	open (FH, "<:encoding(sjis)", $file) or die "can't open $file: $!";
+	open (FH, "<:encoding(".$SETTING{'FILE_ENCODING'}.")", $file) or die "can't open $file: $!";
 	my $line;
 	while (<FH>) {
 		eof $_ and $line = $_;
@@ -130,7 +130,7 @@ sub ReadLastLine {
 
 sub EraseHeadLine {
 	my $file = $_[0];
-	open (FH, "+<:encoding(sjis)", $file) or die "can't open $file: $!";
+	open (FH, "+<:encoding(".$SETTING{'FILE_ENCODING'}.")", $file) or die "can't open $file: $!";
 	my @lines=<FH>;
 	shift(@lines);
 	seek(FH, 0, 0);
@@ -141,7 +141,7 @@ sub EraseHeadLine {
 
 sub EraseLastLine {
 	my $file = $_[0];
-	open (FH, "+<:encoding(sjis)", $file) or die "can't update $file: $!";
+	open (FH, "+<:encoding(".$SETTING{'FILE_ENCODING'}.")", $file) or die "can't update $file: $!";
 	my $addr;
 	while (<FH>) {
 		$addr = tell(FH) unless eof(FH);
@@ -153,7 +153,7 @@ sub EraseLastLine {
 sub AddHeadLine {
 	my $str  = $_[0];
 	my $file = $_[1];
-	open (FH, "+<:encoding(sjis)", $file) or die "can't update $file: $!";
+	open (FH, "+<:encoding(".$SETTING{'FILE_ENCODING'}.")", $file) or die "can't update $file: $!";
 
 	my @orig = <FH>;
 	seek(FH, 0, 0);
@@ -165,7 +165,7 @@ sub AddHeadLine {
 sub AddLastLine {
 	my $str  = $_[0];
 	my $file = $_[1];
-	open (FH, ">>:encoding(sjis)", $file) or die "can't update $file: $!";
+	open (FH, ">>:encoding(".$SETTING{'FILE_ENCODING'}.")", $file) or die "can't update $file: $!";
 	print FH $str;
 	close FH;
 }

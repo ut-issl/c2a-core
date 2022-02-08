@@ -1,11 +1,11 @@
 /**
  * @file
  * @brief   uart_sils_sci_if
- * @details SILS‚ÅDriver‚ÌƒeƒXƒg‚ğ‚·‚é‚æ‚¤‚Éì‚Á‚½
-            ccsds_sils_sci_if.c/h‚Ì‚Ù‚ÚƒRƒs[
+ * @details SILSã§Driverã®ãƒ†ã‚¹ãƒˆã‚’ã™ã‚‹ã‚ˆã†ã«ä½œã£ãŸ
+            ccsds_sils_sci_if.c/hã®ã»ã¼ã‚³ãƒ”ãƒ¼
  */
-#ifndef uart_sils_sci_if_H_
-#define uart_sils_sci_if_H_
+#ifndef UART_SILS_SCI_IF_HPP_
+#define UART_SILS_SCI_IF_HPP_
 
 #include <Windows.h>
 

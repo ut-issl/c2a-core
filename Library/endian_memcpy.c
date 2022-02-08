@@ -1,15 +1,15 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  memcpy‚ÌƒGƒ“ƒfƒBƒAƒ“‘Îô
+ * @brief  memcpyã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å¯¾ç­–
  */
 
 /*
-memcpy‚ÅƒGƒ“ƒfƒBƒAƒ“‚Ì‚¹‚¢‚Å€‚Ê‚±‚Æ‚ª‚ ‚é‚Ì‚ÅC
-OBC‚Å‚ÍmemcpyCSLISŠÂ‹«‚Å‚Íendian conv‚ª“ü‚é‚æ‚¤‚ÉƒXƒCƒbƒ`‚³‚¹‚éD
+memcpyã§ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã®ã›ã„ã§æ­»ã¬ã“ã¨ãŒã‚ã‚‹ã®ã§ï¼Œ
+OBCã§ã¯memcpyï¼ŒSLISç’°å¢ƒã§ã¯endian convãŒå…¥ã‚‹ã‚ˆã†ã«ã‚¹ã‚¤ãƒƒãƒã•ã›ã‚‹ï¼
 
 memcpy(&sci_.sib_rev, CCP_get_param_head(packet), 2);
-«
+â†“
 endina_memcpy(&sci_.sib_rev, CCP_get_param_head(packet), 2);
 */
 
@@ -25,7 +25,7 @@ endina_memcpy(&sci_.sib_rev, CCP_get_param_head(packet), 2);
 void* endian_memcpy(void* dest, const void* src, size_t count)
 {
 #ifdef IS_LITTLE_ENDIAN
-  // “à•”‚Åcopy‚Æ“¯“™‚Ì‚±‚Æ‚ğs‚Á‚Ä‚¢‚é
+  // å†…éƒ¨ã§copyã¨åŒç­‰ã®ã“ã¨ã‚’è¡Œã£ã¦ã„ã‚‹
   endian_conv(src, dest, (int)count);
 #else
   memcpy(dest, src, count);

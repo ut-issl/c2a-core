@@ -1,16 +1,16 @@
 /**
  * @file
- * @brief óM‚µ‚½ TC Frame ‚ÌŒŸØ‚ğs‚¤
+ * @brief å—ä¿¡ã—ãŸ TC Frame ã®æ¤œè¨¼ã‚’è¡Œã†
  */
 #ifndef GS_VALIDATE_H_
 #define GS_VALIDATE_H_
 
-#include "../../CmdTlm/Ccsds/TCFrame.h"
+#include "../../TlmCmd/Ccsds/TCFrame.h"
 #include "../../Library/stdint.h"
 
 /**
  * @enum GS_VALIDATE_ERR
- * @brief gs_validate ŠÖ”‚Ì•Ô‚è’l
+ * @brief gs_validate é–¢æ•°ã®è¿”ã‚Šå€¤
  */
 typedef enum
 {
@@ -24,7 +24,7 @@ typedef enum
   GS_VALIDATE_ERR_TCS_SEQ_FLAG,
   GS_VALIDATE_ERR_TCP_VER,
   GS_VALIDATE_ERR_TCP_2ND_HDR_FLAG,
-  GS_VALIDATE_ERR_TCP_APID,
+  GS_VALIDATE_ERR_APID,
   GS_VALIDATE_ERR_TCP_TYPE_IS_NOT_CMD,
   GS_VALIDATE_ERR_TCP_SEQ_IS_NOT_SINGLE,
   GS_VALIDATE_ERR_FECW_MISSMATCH,
@@ -34,17 +34,18 @@ typedef enum
   GS_VALIDATE_ERR_FARM1_SAME_NUMBER,
   GS_VALIDATE_ERR_INVALID_BC_CMD
 } GS_VALIDATE_ERR;
+// FIXME: TCP â†’ SpacePacket å¤§å·¥äº‹å¾Œã« TCP ã‚’ç›´ã™
 
 /**
  * @struct GS_ValidateInfo
- * @brief  ’¼‹ß‚ÉóM‚µ‚½ƒpƒPƒbƒg‚ÌŒŸØŒ‹‰Ê‚ğŠi”[
+ * @brief  ç›´è¿‘ã«å—ä¿¡ã—ãŸãƒ‘ã‚±ãƒƒãƒˆã®æ¤œè¨¼çµæœã‚’æ ¼ç´
  */
 typedef struct
 {
-  // FARM-A,B—p‚ÌƒJƒEƒ“ƒ^’l
+  // FARM-A,Bç”¨ã®ã‚«ã‚¦ãƒ³ã‚¿å€¤
   uint8_t type_a_counter;
   uint8_t type_b_counter;
-  // FARM-1—p‚Ìî•ñ
+  // FARM-1ç”¨ã®æƒ…å ±
   uint8_t lockout_flag;
   uint8_t retransmit_flag;
   uint8_t positive_window_width;
@@ -53,25 +54,25 @@ typedef struct
 extern const GS_ValiateInfo* const gs_validate_info;
 
 /**
- * @brief GS_ValiateInfo ‚Ì‰Šú‰»
+ * @brief GS_ValiateInfo ã®åˆæœŸåŒ–
  */
 void GS_validate_init(void);
 
 /**
- * @brief tc_frame ‚ÌŒŸØ
- * @param[in] tc_frame: ŒŸØ‚·‚é tc frame
+ * @brief tc_frame ã®æ¤œè¨¼
+ * @param[in] tc_frame: æ¤œè¨¼ã™ã‚‹ tc frame
  * @return GS_VALIDATE_ERR
  */
 GS_VALIDATE_ERR GS_validate_tc_frame(const TCF* tc_frame);
 
 /**
- * @brief ƒeƒŒƒ—p‚Ì clcw ‚Ìì¬
+ * @brief ãƒ†ãƒ¬ãƒ¡ç”¨ã® clcw ã®ä½œæˆ
  * @return clcw
  */
 uint32_t GS_form_clcw(void);
 
 /**
- * @brief positive_window_width ‚Ìİ’è
+ * @brief positive_window_width ã®è¨­å®š
  * @param[in] positive_window_width
  * @return GS_VALIDATE_ERR
  */

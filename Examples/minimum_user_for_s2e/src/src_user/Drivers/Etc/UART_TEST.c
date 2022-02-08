@@ -1,19 +1,19 @@
 #pragma section REPRO
 /**
 * @file   UART_TEST.h
-* @brief  ƒeƒXƒg—pUART‚ÌDriver
+* @brief  ãƒ†ã‚¹ãƒˆç”¨UARTã®Driver
 */
 
 #include "UART_TEST.h"
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
 #include <src_core/Library/print.h>
 #include "../../Settings/sils_define.h"
 #include "string.h"   // for memcpy
-#include <stdio.h>    // SILS‚Å‚Ìprint
+#include <stdio.h>    // SILSã§ã®print
 
 
-// ƒwƒbƒ_[ƒtƒbƒ^[
+// ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ãƒƒã‚¿ãƒ¼
 #define UART_TEST_HEADER_SIZE        8
 #define UART_TEST_FOOTER_SIZE        2
 #define UART_TEST_TX_FRAME_SIZE_MAX  16
@@ -22,8 +22,8 @@
 static const uint8_t UART_TEST_header_[UART_TEST_HEADER_SIZE] = {0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7};
 static const uint8_t UART_TEST_footer_[UART_TEST_FOOTER_SIZE] = {0xBF, 0xBE};
 
-#define UART_TEST_STREAM_FIX   (0)   //!< ŒÅ’è’·
-#define UART_TEST_STREAM_VAR   (1)   //!< ‰Â•Ï’·
+#define UART_TEST_STREAM_FIX   (0)   //!< å›ºå®šé•·
+#define UART_TEST_STREAM_VAR   (1)   //!< å¯å¤‰é•·
 
 
 static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_super);
@@ -55,39 +55,39 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
 
   p_super->interface = UART;
 
-  // stream0‚Ìİ’è
+  // stream0ã®è¨­å®š
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_FIX]);
   DSSC_enable(p_stream_config);
   DSSC_enable_strict_frame_search(p_stream_config);
 
-  // ‘—M‚Í‚·‚é
-  DSSC_set_tx_frame(p_stream_config, UART_TEST_tx_frame_);  // ‘—‚é’¼‘O‚É’†g‚ğmemcpy‚·‚é
-  DSSC_set_tx_frame_size(p_stream_config, 0);               // ‘—‚é’¼‘O‚É’l‚ğƒZƒbƒg‚·‚é
+  // é€ä¿¡ã¯ã™ã‚‹
+  DSSC_set_tx_frame(p_stream_config, UART_TEST_tx_frame_);  // é€ã‚‹ç›´å‰ã«ä¸­èº«ã‚’memcpyã™ã‚‹
+  DSSC_set_tx_frame_size(p_stream_config, 0);               // é€ã‚‹ç›´å‰ã«å€¤ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 
-  // ’èŠú“I‚ÈóM‚Í‚·‚é
+  // å®šæœŸçš„ãªå—ä¿¡ã¯ã™ã‚‹
   DSSC_set_rx_header(p_stream_config, UART_TEST_header_, UART_TEST_HEADER_SIZE);
   DSSC_set_rx_footer(p_stream_config, UART_TEST_footer_, UART_TEST_FOOTER_SIZE);
   DSSC_set_rx_frame_size(p_stream_config, 12);
   DSSC_set_data_analyzer(p_stream_config, UART_TEST_analyze_rec_data_);
 
 
-  // stream1‚Ìİ’è
+  // stream1ã®è¨­å®š
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_VAR]);
   DSSC_enable(p_stream_config);
   DSSC_enable_strict_frame_search(p_stream_config);
 
-  // ‘—M‚Í‚µ‚È‚¢
+  // é€ä¿¡ã¯ã—ãªã„
 
-  // ’èŠú“I‚ÈóM‚Í‚·‚é
+  // å®šæœŸçš„ãªå—ä¿¡ã¯ã™ã‚‹
   DSSC_set_rx_header(p_stream_config, UART_TEST_header_, UART_TEST_HEADER_SIZE);
   DSSC_set_rx_footer(p_stream_config, UART_TEST_footer_, UART_TEST_FOOTER_SIZE);
-  DSSC_set_rx_frame_size(p_stream_config, -1);    // ‰Â•Ï
+  DSSC_set_rx_frame_size(p_stream_config, -1);    // å¯å¤‰
   DSSC_set_rx_framelength_pos(p_stream_config, UART_TEST_HEADER_SIZE);
   DSSC_set_rx_framelength_type_size(p_stream_config, 2);
   DSSC_set_rx_framelength_offset(p_stream_config, UART_TEST_HEADER_SIZE + UART_TEST_FOOTER_SIZE);
   DSSC_set_data_analyzer(p_stream_config, UART_TEST_analyze_rec_data_);
 
-  // ’èŠúTLM‚ÌŠÄ‹‹@”\‚Ì—LŒø‰»‚µ‚È‚¢ ¨ ‚Ì‚Åİ’èã‘‚«‚È‚µ
+  // å®šæœŸTLMã®ç›£è¦–æ©Ÿèƒ½ã®æœ‰åŠ¹åŒ–ã—ãªã„ â†’ ã®ã§è¨­å®šä¸Šæ›¸ããªã—
 
   return DS_ERR_CODE_OK;
 }
@@ -114,7 +114,7 @@ DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance)
     ret = DS_analyze_rec_data(&(uart_test_instance->driver.super), UART_TEST_STREAM_VAR, uart_test_instance);
   }
 
-  // •Ô‚è’l‚®‚¾‚®‚¾‚¾‚¯‚ÇC‚Ü‚ ƒeƒXƒgƒR[ƒh‚È‚Ì‚ÅDDD
+  // è¿”ã‚Šå€¤ãã ãã ã ã‘ã©ï¼Œã¾ã‚ãƒ†ã‚¹ãƒˆã‚³ãƒ¼ãƒ‰ãªã®ã§ï¼ï¼ï¼
   if (ret != DS_ERR_CODE_OK) return DS_REC_ANALYZE_ERR;
 
   return DS_REC_OK;

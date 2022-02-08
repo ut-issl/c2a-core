@@ -1,6 +1,6 @@
 #pragma section REPRO
 #include "utility_counter.h"
-#include "../CmdTlm/packet_handler.h"
+#include "../TlmCmd/packet_handler.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include <string.h>   // for memcpy
 
@@ -11,7 +11,7 @@ static void UTIL_COUNTER_all_init_(void);
 static void UTIL_COUNTER_clear_(UTIL_COUNTER_NAME num);
 static void UTIL_COUNTER_incl_(UTIL_COUNTER_NAME num);
 
-// ”Ä—pƒJƒEƒ“ƒ^ŠÖ˜A‚±‚±‚©‚ç
+// æ±ç”¨ã‚«ã‚¦ãƒ³ã‚¿é–¢é€£ã“ã“ã‹ã‚‰
 AppInfo UTIL_COUNTER_create_app(void)
 {
   return AI_create_app_info("utility_counter", UTIL_COUNTER_all_init_, NULL);
@@ -47,27 +47,27 @@ static void UTIL_COUNTER_incl_(UTIL_COUNTER_NAME num)
   {
     if (utility_counter_.cnt[num].anomaly_active)
     {
-      // FIXME: utility counter ‚Ì‚èƒtƒ@ƒNƒ^‚É’¼‚·
+      // FIXME: utility counter ã®ã‚Šãƒ•ã‚¡ã‚¯ã‚¿æ™‚ã«ç›´ã™
 // #ifndef AL_DISALBE_AT_C2A_CORE
-      AL_add_anomaly(AL_GROUP_UTIL_CNT, (uint32_t)num);  // ƒJƒEƒ“ƒ^‚ªè‡’l’´‚¦‚½‚±‚Æ‚ğ¦‚µ‚ÄƒAƒmƒ}ƒŠ‚ğ”­¶‚³‚¹‚é
+      AL_add_anomaly(AL_GROUP_UTIL_CNT, (uint32_t)num);  // ã‚«ã‚¦ãƒ³ã‚¿ãŒé–¾å€¤è¶…ãˆãŸã“ã¨ã‚’ç¤ºã—ã¦ã‚¢ãƒãƒãƒªã‚’ç™ºç”Ÿã•ã›ã‚‹
 // #endif
-      utility_counter_.cnt[num].anomaly_active = 0;  // ƒAƒmƒ}ƒŠ‚ğ”­¶‚³‚¹‚½‚ç–³Œø‰»‚·‚é
+      utility_counter_.cnt[num].anomaly_active = 0;  // ã‚¢ãƒãƒãƒªã‚’ç™ºç”Ÿã•ã›ãŸã‚‰ç„¡åŠ¹åŒ–ã™ã‚‹
     }
   }
 
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CTCP* packet)
+CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
-  // ‚±‚Ì‘ã“ü•û–@‚ÍˆÀ‘S??
+  // ã“ã®ä»£å…¥æ–¹æ³•ã¯å®‰å…¨??
   // index = (int32_t)(CCP_get_param_head(packet)[0] << 24 | CCP_get_param_head(packet)[1] << 16 | CCP_get_param_head(packet)[2] << 8 | CCP_get_param_head(packet)[3]);
   memcpy(&index, &CCP_get_param_head(packet)[0], 4);
 
   if (index < UTIL_COUNTER_MAX)
   {
-    // ”ÍˆÍ“à‚È‚çƒCƒ“ƒNƒŠƒƒ“ƒg
+    // ç¯„å›²å†…ãªã‚‰ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
     UTIL_COUNTER_incl_(index);
   }
   else
@@ -78,22 +78,22 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CTCP* packet)
 
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CTCP* packet)
+CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
-  // ‚±‚Ì‘ã“ü•û–@‚ÍˆÀ‘S??
+  // ã“ã®ä»£å…¥æ–¹æ³•ã¯å®‰å…¨??
   // index = (int32_t)(CCP_get_param_head(packet)[0] << 24 | CCP_get_param_head(packet)[1] << 16 | CCP_get_param_head(packet)[2] << 8 | CCP_get_param_head(packet)[3]);
   memcpy(&index, &CCP_get_param_head(packet)[0], 4);
 
   if (index < UTIL_COUNTER_MAX)
   {
-    // ”ÍˆÍ“à‚È‚çŠY“–‚Ì‚à‚Ì‚ğƒNƒŠƒA
+    // ç¯„å›²å†…ãªã‚‰è©²å½“ã®ã‚‚ã®ã‚’ã‚¯ãƒªã‚¢
     UTIL_COUNTER_clear_(index);
   }
   else if (index == 0xff)
   {
-    // 0xffw’è‚È‚ç‘SƒNƒŠƒA
+    // 0xffæŒ‡å®šãªã‚‰å…¨ã‚¯ãƒªã‚¢
     UTIL_COUNTER_all_init_();
   }
   else
@@ -103,11 +103,11 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CTCP* packet)
+CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
-  // ‚±‚Ì‘ã“ü•û–@‚ÍˆÀ‘S??
+  // ã“ã®ä»£å…¥æ–¹æ³•ã¯å®‰å…¨??
   // index = (int32_t)(CCP_get_param_head(packet)[0] << 24 | CCP_get_param_head(packet)[1] << 16 | CCP_get_param_head(packet)[2] << 8 | CCP_get_param_head(packet)[3]);
   memcpy(&index, &CCP_get_param_head(packet)[0], 4);
 

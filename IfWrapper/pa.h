@@ -1,12 +1,12 @@
 /**
  * @file
- * @brief PA(PassiveAnalog)���b�p�[�̃N���X�ł��B(MOBC�p)
+ * @brief PA(PassiveAnalog)ラッパーのクラスです。(MOBC用)
  *
- * PA(PassiveAnalog)���b�p�[�́A
- * PA�̃C���^�[�t�F�[�X���������A
- * PA�|�[�g�̏������A�d���l�擾���s���A
- * PA���b�p�[�̃N���X�ł��B
- * �X�̋@��̃C���^�[�t�F�[�X���W���[���Ɍp��?�����Ďg�p���܂��B
+ * PA(PassiveAnalog)ラッパーは、
+ * PAのインターフェースを実現し、
+ * PAポートの初期化、電流値取得を行う、
+ * PAラッパーのクラスです。
+ * 個々の機器のインターフェースモジュールに継承?せさて使用します。
  */
 
 #ifndef PA_H_
@@ -16,11 +16,11 @@
 
 /**
  * @class PA_Config
- * @brief PA�|�[�g�̏������A�d���l�擾�̍ۂɕK�v�ƂȂ�ݒ�����i�[����\���̂ł��B
+ * @brief PAポートの初期化、電流値取得の際に必要となる設定情報を格納する構造体です。
  */
 typedef struct
 {
-  uint16_t  ch; /**< @protected @brief  �`���l���w���bit0���|�[�g1�ɁAbit15���|�[�g16�ɑΉ����A1��ݒ肵���|�[�g�̓d���l�������擾���܂��B*/
+  uint16_t  ch; /**< @protected @brief  チャネル指定のbit0がポート1に、bit15がポート16に対応し、1を設定したポートの電圧値だけを取得します。*/
 } PA_Config;
 
 

@@ -3,9 +3,8 @@
 
 import os
 import sys
-import time
 
-import isslwings as wings
+# import isslwings as wings
 import pytest
 
 ROOT_PATH = "../../../../"
@@ -15,6 +14,13 @@ import wings_utils
 
 c2a_enum = c2a_enum_utils.get_c2a_enum()
 ope = wings_utils.get_wings_operation()
+
+
+# 他をコメントアウトしてると， pytest がコケるので
+@pytest.mark.sils
+@pytest.mark.real
+def test_obct_nop():
+    pass
 
 
 if __name__ == "__main__":

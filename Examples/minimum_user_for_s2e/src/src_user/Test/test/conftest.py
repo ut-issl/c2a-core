@@ -4,8 +4,6 @@
 import os
 import sys
 import time
-import json
-import isslwings as wings
 import pytest
 
 ROOT_PATH = "../"
@@ -46,7 +44,7 @@ def _increase_hk_frequency():
     )
     time.sleep(0.1)
 
-    ope.send_rt_cmd(c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK, ())
+    ope.send_rt_cmd(c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK, ())
     time.sleep(0.1)
 
     ope.send_rt_cmd(

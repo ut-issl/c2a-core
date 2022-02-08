@@ -1,10 +1,9 @@
-#ifndef PRINT_INCLUDE_
-#define PRINT_INCLUDE_
+#ifndef PRINT_H_
+#define PRINT_H_
 
+// #include "../Settings/sils_define.h" //ã“ã“ã§includeã—ã¦ãŠãã¨ï¼ŒPrintfç³»ã®ã‚‚ã®ã¯å…¨ã¦OKã«ãªã‚‹
 
-// #include "../Settings/sils_define.h" //‚±‚±‚Åinclude‚µ‚Ä‚¨‚­‚ÆCPrintfŒn‚Ì‚à‚Ì‚Í‘S‚ÄOK‚É‚È‚é
-
-// ‚©‚È‚èŠëŒ¯‚È’è‹`‚È‚Ì‚ÅCˆê’UƒRƒƒ“ƒgƒAƒEƒg 2020/08/22
+// ã‹ãªã‚Šå±é™ºãªå®šç¾©ãªã®ã§ï¼Œä¸€æ—¦ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ 2020/08/22
 // typedef unsigned  char  u_char;
 // typedef unsigned  short u_short;
 // typedef unsigned  int   u_int;
@@ -46,7 +45,6 @@
 // #define NG    -1
 // #define OK    0
 
-
 void Printf(char* format, ...);
 
-#endif // PRINT_INCLUDE_
+#endif

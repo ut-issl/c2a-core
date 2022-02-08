@@ -1,92 +1,92 @@
 /**
  * @file
- * @brief ƒRƒ}ƒ“ƒh•ªŠ„‚ğƒTƒ|[ƒg‚·‚éUtil
+ * @brief ã‚³ãƒãƒ³ãƒ‰åˆ†å‰²ã‚’ã‚µãƒãƒ¼ãƒˆã™ã‚‹Util
  * @note  HOW TO USE
- *        1. ŠeCmd‚É‚Ä‰‚ß‚É DCU_check_in ‚ğÀs‚µCŒ»İ‚ÌÀsó‹µ‚ğæ“¾‚·‚é
- *        2. Às‚ªI—¹‚µ Ä“xÄ‹A‚³‚¹‚é•K—v‚ª‚ ‚éê‡‚Í DCU_register_next ‚Å“o˜^‚·‚é
- *        3. ‚·‚×‚Ä‚Ìˆ—‚ªI—¹‚µ‚½ê‡‚Í DCU_report_finish ‚ğÀs‚·‚é
- *        4. Às’†‚ÌƒGƒ‰[‚Í DCU_report_err ‚Å•ñ‚·‚éD‚·‚é‚Æ’†’f‚³‚ê‚é
- *        5. ’†’f‚µ‚½‚¢‚Æ‚«‚Í DCU_abort_cmd ‚ğÀs‚·‚é
- *        6. ’†’f‚³‚ê‚½ó‘Ô‚ğƒŠƒZƒbƒg‚·‚éê‡‚Í DCU_donw_abort_flag ‚ğÀs‚·‚é
- * @note  telemetry_manager ‚È‚Ç‚Åg‚Á‚Ä‚¢‚é‚Ì‚ÅC‚»‚ê‚ğQÆ‚Ì‚±‚Æ
+ *        1. å„Cmdã«ã¦åˆã‚ã« DCU_check_in ã‚’å®Ÿè¡Œã—ï¼Œç¾åœ¨ã®å®Ÿè¡ŒçŠ¶æ³ã‚’å–å¾—ã™ã‚‹
+ *        2. å®Ÿè¡ŒãŒçµ‚äº†ã— å†åº¦å†å¸°ã•ã›ã‚‹å¿…è¦ãŒã‚ã‚‹å ´åˆã¯ DCU_register_next ã§ç™»éŒ²ã™ã‚‹
+ *        3. ã™ã¹ã¦ã®å‡¦ç†ãŒçµ‚äº†ã—ãŸå ´åˆã¯ DCU_report_finish ã‚’å®Ÿè¡Œã™ã‚‹
+ *        4. å®Ÿè¡Œä¸­ã®ã‚¨ãƒ©ãƒ¼ã¯ DCU_report_err ã§å ±å‘Šã™ã‚‹ï¼ã™ã‚‹ã¨ä¸­æ–­ã•ã‚Œã‚‹
+ *        5. ä¸­æ–­ã—ãŸã„ã¨ãã¯ DCU_abort_cmd ã‚’å®Ÿè¡Œã™ã‚‹
+ *        6. ä¸­æ–­ã•ã‚ŒãŸçŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹å ´åˆã¯ DCU_donw_abort_flag ã‚’å®Ÿè¡Œã™ã‚‹
+ * @note  telemetry_manager ãªã©ã§ä½¿ã£ã¦ã„ã‚‹ã®ã§ï¼Œãã‚Œã‚’å‚ç…§ã®ã“ã¨
  */
 #ifndef DIVIDED_CMD_UTILITY_H_
 #define DIVIDED_CMD_UTILITY_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_cmd_packet.h"
 #include "../System/TimeManager/obc_time.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 
-#define DCU_LOG_MAX    (16)    //!< •Û‘¶‚·‚éƒƒO‚ÌÅ‘å”
+#define DCU_LOG_MAX    (16)    //!< ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®æœ€å¤§æ•°
 
 #include <src_user/Settings/Applications/divided_cmd_utility_params.h>
 
-// key ‚ª uint8_t ‚È‚Ì‚ÅC‚»‚êˆÈ‰º‚ğ—v¿‚·‚é
+// key ãŒ uint8_t ãªã®ã§ï¼Œãã‚Œä»¥ä¸‹ã‚’è¦è«‹ã™ã‚‹
 #if DCU_LOG_MAX > 255
 #error "err at divided_cmd_utility"
 #endif
 
 /**
  * @enum   DCU_ACK
- * @note   uint8_t ‚ğ‘z’è
- * @brief  ”Ä—p•Ô‚è’l
+ * @note   uint8_t ã‚’æƒ³å®š
+ * @brief  æ±ç”¨è¿”ã‚Šå€¤
  */
 typedef enum
 {
-  DCU_ACK_OK = 0,       //!< ³íI—¹
-  DCU_ACK_ERR           //!< ƒGƒ‰[
+  DCU_ACK_OK = 0,       //!< æ­£å¸¸çµ‚äº†
+  DCU_ACK_ERR           //!< ã‚¨ãƒ©ãƒ¼
 } DCU_ACK;
 
 
 /**
  * @enum   DCU_STATUS
- * @note   uint8_t ‚ğ‘z’è
- * @brief  Àsó‹µ
+ * @note   uint8_t ã‚’æƒ³å®š
+ * @brief  å®Ÿè¡ŒçŠ¶æ³
  */
 typedef enum
 {
-  DCU_STATUS_FINISHED = 0,        //!< ÀsI—¹ or –¢Às
-  DCU_STATUS_PROGRESS,            //!< Às’†
-  DCU_STATUS_ABORTED_BY_ERR,      //!< ƒGƒ‰[‚É‚æ‚è’†’f
-  DCU_STATUS_ABORTED_BY_CMD       //!< ƒRƒ}ƒ“ƒh‚É‚æ‚è’†’f
+  DCU_STATUS_FINISHED = 0,        //!< å®Ÿè¡Œçµ‚äº† or æœªå®Ÿè¡Œ
+  DCU_STATUS_PROGRESS,            //!< å®Ÿè¡Œä¸­
+  DCU_STATUS_ABORTED_BY_ERR,      //!< ã‚¨ãƒ©ãƒ¼ã«ã‚ˆã‚Šä¸­æ–­
+  DCU_STATUS_ABORTED_BY_CMD       //!< ã‚³ãƒãƒ³ãƒ‰ã«ã‚ˆã‚Šä¸­æ–­
 } DCU_STATUS;
 
 
 /**
  * @enum   DCU_LOG_ACK
- * @note   uint8_t ‚ğ‘z’è
- * @brief  ƒƒO‘€ì‚Ì•Ô‚è’l
+ * @note   uint8_t ã‚’æƒ³å®š
+ * @brief  ãƒ­ã‚°æ“ä½œã®è¿”ã‚Šå€¤
  */
 typedef enum
 {
-  DCU_LOG_ACK_OK = 0,           //!< ³íI—¹
-  DCU_LOG_ACK_NOT_FOUND         //!< w’èƒƒO‚ªŒ©‚Â‚©‚ç‚¸
+  DCU_LOG_ACK_OK = 0,           //!< æ­£å¸¸çµ‚äº†
+  DCU_LOG_ACK_NOT_FOUND         //!< æŒ‡å®šãƒ­ã‚°ãŒè¦‹ã¤ã‹ã‚‰ãš
 } DCU_LOG_ACK;
 
 
 /**
  * @struct DCU_ExecStatus
- * @brief  Àsó‹µ
+ * @brief  å®Ÿè¡ŒçŠ¶æ³
  */
 typedef struct
 {
-  CMD_CODE     cmd_code;          //!< ÀsƒRƒ}ƒ“ƒh
-  DCU_STATUS   status;            //!< Àsó‹µ
-  uint16_t     exec_counter;      //!< ÀsƒJƒEƒ“ƒ^D‰½“x–Ú‚ÌÀs‚©H
-  CCP_EXEC_STS last_exec_sts;     //!< ÅIÀsŒ‹‰Ê
-  ObcTime      last_exec_time;    //!< ÅIÀs
+  CMD_CODE     cmd_code;          //!< å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰
+  DCU_STATUS   status;            //!< å®Ÿè¡ŒçŠ¶æ³
+  uint16_t     exec_counter;      //!< å®Ÿè¡Œã‚«ã‚¦ãƒ³ã‚¿ï¼ä½•åº¦ç›®ã®å®Ÿè¡Œã‹ï¼Ÿ
+  CCP_EXEC_STS last_exec_sts;     //!< æœ€çµ‚å®Ÿè¡Œçµæœ
+  ObcTime      last_exec_time;    //!< æœ€çµ‚å®Ÿè¡Œæ™‚åˆ»
 } DCU_ExecStatus;
 
 
 /**
  * @struct DividedCmdUtility
- * @brief  DividedCmdUtility ‚Ì AppInfo \‘¢‘Ì
+ * @brief  DividedCmdUtility ã® AppInfo æ§‹é€ ä½“
  */
 typedef struct
 {
-  DCU_ExecStatus exec_logs[DCU_LOG_MAX];        //!< ÀsƒƒOD[exec_log_order[0]] ‚ªÅ‚àV‚µ‚¢DŒÃ‚¢‚à‚Ì‚ÍÌ‚Ä‚ç‚ê‚Ä‚¢‚­D
-  uint8_t        exec_log_order[DCU_LOG_MAX];   //!< ÀsƒƒO‚Ìƒ\[ƒgƒL[D exec_logs ‚ğÅV‡‚É•À‚×‘Ö‚¦‚é‚½‚ß‚Ég‚¤D
+  DCU_ExecStatus exec_logs[DCU_LOG_MAX];        //!< å®Ÿè¡Œãƒ­ã‚°ï¼[exec_log_order[0]] ãŒæœ€ã‚‚æ–°ã—ã„ï¼å¤ã„ã‚‚ã®ã¯æ¨ã¦ã‚‰ã‚Œã¦ã„ãï¼
+  uint8_t        exec_log_order[DCU_LOG_MAX];   //!< å®Ÿè¡Œãƒ­ã‚°ã®ã‚½ãƒ¼ãƒˆã‚­ãƒ¼ï¼ exec_logs ã‚’æœ€æ–°é †ã«ä¸¦ã¹æ›¿ãˆã‚‹ãŸã‚ã«ä½¿ã†ï¼
 } DividedCmdUtility;
 
 extern const DividedCmdUtility* const divided_cmd_utility;
@@ -95,83 +95,83 @@ AppInfo DCU_create_app(void);
 
 
 /**
- * @brief  DCU‚Éƒ`ƒFƒbƒNƒCƒ“‚·‚éD•ªŠ„ƒRƒ}ƒ“ƒhÀsCÅ‰‚ÉŒÄ‚Ño‚·ŠÖ”D
- * @param[in]  cmd_code:     ©g‚Ì CMD_CODE
- * @param[out] exec_counter: Ÿ‚ÌÀs‰ñ”‚ª‰½‰ñ–Ú‚©H
- * @retval DCU_STATUS_FINISHED:       ‰‰ñÀs‚Å‚ ‚éD exec_counter ‚Í 0 ‚ğ•Ô‚·D
- * @retval DCU_STATUS_PROGRESS:       •ªŠ„2‰ñ–ÚˆÈ~‚ÌÀs‚Å‚ ‚é
- * @retval DCU_STATUS_ABORTED_BY_ERR: ƒGƒ‰[‚ª”­¶‚µ‚Ä‚¢‚é‚Ì‚ÅCÀs‚ğ’†~‚·‚×‚«i CCP_EXEC_ILLEGAL_CONTEXT ‚ğ•Ô‚·‚×‚« j
- * @retval DCU_STATUS_ABORTED_BY_CMD: Às’†’fƒRƒ}ƒ“ƒh‚ğóM‚µ‚Ä‚¢‚é‚Ì‚ÅCÀs‚ğ’†~‚·‚×‚«i CCP_EXEC_ILLEGAL_CONTEXT ‚ğ•Ô‚·‚×‚« j
+ * @brief  DCUã«ãƒã‚§ãƒƒã‚¯ã‚¤ãƒ³ã™ã‚‹ï¼åˆ†å‰²ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œæ™‚ï¼Œæœ€åˆã«å‘¼ã³å‡ºã™é–¢æ•°ï¼
+ * @param[in]  cmd_code:     è‡ªèº«ã® CMD_CODE
+ * @param[out] exec_counter: æ¬¡ã®å®Ÿè¡Œå›æ•°ãŒä½•å›ç›®ã‹ï¼Ÿ
+ * @retval DCU_STATUS_FINISHED:       åˆå›å®Ÿè¡Œã§ã‚ã‚‹ï¼ exec_counter ã¯ 0 ã‚’è¿”ã™ï¼
+ * @retval DCU_STATUS_PROGRESS:       åˆ†å‰²2å›ç›®ä»¥é™ã®å®Ÿè¡Œã§ã‚ã‚‹
+ * @retval DCU_STATUS_ABORTED_BY_ERR: ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¦ã„ã‚‹ã®ã§ï¼Œå®Ÿè¡Œã‚’ä¸­æ­¢ã™ã¹ãï¼ˆ CCP_EXEC_ILLEGAL_CONTEXT ã‚’è¿”ã™ã¹ã ï¼‰
+ * @retval DCU_STATUS_ABORTED_BY_CMD: å®Ÿè¡Œä¸­æ–­ã‚³ãƒãƒ³ãƒ‰ã‚’å—ä¿¡ã—ã¦ã„ã‚‹ã®ã§ï¼Œå®Ÿè¡Œã‚’ä¸­æ­¢ã™ã¹ãï¼ˆ CCP_EXEC_ILLEGAL_CONTEXT ã‚’è¿”ã™ã¹ã ï¼‰
  */
 DCU_STATUS DCU_check_in(CMD_CODE cmd_code, uint16_t* exec_counter);
 
 /**
- * @brief  Ÿ‚Ì•ªŠ„‚ÌÀs‚ğ“o˜^
- * @param[in] cmd_code: ©g‚Ì CMD_CODE
- * @param[in] param:    ƒRƒ}ƒ“ƒhƒpƒ‰ƒƒ^
- * @param[in] len:      ƒpƒ‰ƒƒ^’·
+ * @brief  æ¬¡ã®åˆ†å‰²ã®å®Ÿè¡Œã‚’ç™»éŒ²
+ * @param[in] cmd_code: è‡ªèº«ã® CMD_CODE
+ * @param[in] param:    ã‚³ãƒãƒ³ãƒ‰ãƒ‘ãƒ©ãƒ¡ã‚¿
+ * @param[in] len:      ãƒ‘ãƒ©ãƒ¡ã‚¿é•·
  * @return DCU_ACK
  */
 DCU_ACK DCU_register_next(CMD_CODE cmd_code, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  DCU‚ÉC•ªŠ„ƒRƒ}ƒ“ƒh‚ªÀsI—¹‚µ‚½‚±‚Æ‚ğ“`‚¦‚é
- * @param[in] cmd_code: ©g‚Ì CMD_CODE
- * @param[in] last_exec_sts: ƒRƒ}ƒ“ƒhÀsŒ‹‰Ê
+ * @brief  DCUã«ï¼Œåˆ†å‰²ã‚³ãƒãƒ³ãƒ‰ãŒå®Ÿè¡Œçµ‚äº†ã—ãŸã“ã¨ã‚’ä¼ãˆã‚‹
+ * @param[in] cmd_code: è‡ªèº«ã® CMD_CODE
+ * @param[in] last_exec_sts: ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œçµæœ
  * @return void
  */
 void DCU_report_finish(CMD_CODE cmd_code, CCP_EXEC_STS last_exec_sts);
 
 /**
- * @brief  DCU‚ÉC“r’†‚ÅƒGƒ‰[‚ª”­¶‚µ‚½‚±‚Æ‚ğ“`‚¦‚é
- * @note   ˆÈŒã‚ÌÀs‚Í’†’f‚³‚ê‚é
- * @param[in] cmd_code: ©g‚Ì CMD_CODE
- * @param[in] last_exec_sts: ƒRƒ}ƒ“ƒhÀsŒ‹‰Ê
+ * @brief  DCUã«ï¼Œé€”ä¸­ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã“ã¨ã‚’ä¼ãˆã‚‹
+ * @note   ä»¥å¾Œã®å®Ÿè¡Œã¯ä¸­æ–­ã•ã‚Œã‚‹
+ * @param[in] cmd_code: è‡ªèº«ã® CMD_CODE
+ * @param[in] last_exec_sts: ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œçµæœ
  * @return void
  */
 void DCU_report_err(CMD_CODE cmd_code, CCP_EXEC_STS last_exec_sts);
 
 /**
- * @brief  ƒGƒ‰[C‚Ü‚½‚ÍƒRƒ}ƒ“ƒh‚É‚æ‚Á‚Ä’†’fƒXƒe[ƒ^ƒX‚Æ‚È‚Á‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ğCÀs‰Â”\ó‘Ô‚É–ß‚·
- * @param[in] cmd_code: Às‰Â”\ó‘Ô‚É–ß‚·ƒRƒ}ƒ“ƒh‚Ì CMD_CODE
+ * @brief  ã‚¨ãƒ©ãƒ¼ï¼Œã¾ãŸã¯ã‚³ãƒãƒ³ãƒ‰ã«ã‚ˆã£ã¦ä¸­æ–­ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã¨ãªã£ã¦ã„ã‚‹ã‚³ãƒãƒ³ãƒ‰ã‚’ï¼Œå®Ÿè¡Œå¯èƒ½çŠ¶æ…‹ã«æˆ»ã™
+ * @param[in] cmd_code: å®Ÿè¡Œå¯èƒ½çŠ¶æ…‹ã«æˆ»ã™ã‚³ãƒãƒ³ãƒ‰ã® CMD_CODE
  * @return void
  */
 void DCU_donw_abort_flag(CMD_CODE cmd_code);
 
 /**
- * @brief  Às’†‚Ì•ªŠ„ƒRƒ}ƒ“ƒh‚ğŠO•”‚©‚ç‹­§“I‚É’†’f‚³‚¹‚é
- * @note   “à•”ƒGƒ‰[‚Í DCU_report_err ‚ğg‚¤‚×‚«‚ÅCŠî–{“I‚É‚Íg‚í‚È‚¢‚Í‚¸
- * @note   abort ‚©‚ç‚Ì•œ‹A‚ÍC‰Šú‰»‚³‚ê‚éi“r’†‚©‚ç‚ÌÄŠJ‚Í•s‰Âj
- * @param[in] cmd_code: ’â~‚³‚¹‚éƒRƒ}ƒ“ƒh‚Ì CMD_CODE
+ * @brief  å®Ÿè¡Œä¸­ã®åˆ†å‰²ã‚³ãƒãƒ³ãƒ‰ã‚’å¤–éƒ¨ã‹ã‚‰å¼·åˆ¶çš„ã«ä¸­æ–­ã•ã›ã‚‹
+ * @note   å†…éƒ¨ã‚¨ãƒ©ãƒ¼ã¯ DCU_report_err ã‚’ä½¿ã†ã¹ãã§ï¼ŒåŸºæœ¬çš„ã«ã¯ä½¿ã‚ãªã„ã¯ãš
+ * @note   abort ã‹ã‚‰ã®å¾©å¸°ã¯ï¼ŒåˆæœŸåŒ–ã•ã‚Œã‚‹ï¼ˆé€”ä¸­ã‹ã‚‰ã®å†é–‹ã¯ä¸å¯ï¼‰
+ * @param[in] cmd_code: åœæ­¢ã•ã›ã‚‹ã‚³ãƒãƒ³ãƒ‰ã® CMD_CODE
  * @return void
  */
 void DCU_abort_cmd(CMD_CODE cmd_code);
 
 /**
- * @brief  ƒƒO‚ğ’T‚µ‚ÄCw’è‚µ‚½ƒRƒ}ƒ“ƒhƒƒO‚ğæ“¾‚·‚é
- * @note   exec_log ‚Í divided_cmd_utility ‚ÌŠY“–‚ÌƒƒO‚Ö‚Ìƒ|ƒCƒ“ƒ^‚É·‚µ‘Ö‚¦‚éD
- * @param[in] cmd_code: ’T‚·ƒRƒ}ƒ“ƒh
- * @param[out] exec_log: æ“¾‚µ‚½ƒƒODconstƒ|ƒCƒ“ƒ^‚ÅCQÆæ‚ğ‘‚«Š·‚¦‚é‚½‚ßCNULLƒ|ƒCƒ“ƒ^‚ğ“n‚·‚Ì‚àOK
- * @retval DCU_LOG_ACK_OK:        Œ©‚Â‚©‚Á‚½
- * @retval DCU_LOG_ACK_NOT_FOUND: Œ©‚Â‚©‚ç‚¸
+ * @brief  ãƒ­ã‚°ã‚’æ¢ã—ã¦ï¼ŒæŒ‡å®šã—ãŸã‚³ãƒãƒ³ãƒ‰ãƒ­ã‚°ã‚’å–å¾—ã™ã‚‹
+ * @note   exec_log ã¯ divided_cmd_utility ã®è©²å½“ã®ãƒ­ã‚°ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã«å·®ã—æ›¿ãˆã‚‹ï¼
+ * @param[in] cmd_code: æ¢ã™ã‚³ãƒãƒ³ãƒ‰
+ * @param[out] exec_log: å–å¾—ã—ãŸãƒ­ã‚°ï¼constãƒã‚¤ãƒ³ã‚¿ã§ï¼Œå‚ç…§å…ˆã‚’æ›¸ãæ›ãˆã‚‹ãŸã‚ï¼ŒNULLãƒã‚¤ãƒ³ã‚¿ã‚’æ¸¡ã™ã®ã‚‚OK
+ * @retval DCU_LOG_ACK_OK:        è¦‹ã¤ã‹ã£ãŸ
+ * @retval DCU_LOG_ACK_NOT_FOUND: è¦‹ã¤ã‹ã‚‰ãš
  */
 DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec_log);
 
 /**
- * @brief Às’†‚Ì•ªŠ„ƒRƒ}ƒ“ƒh‚ğ’â~‚·‚é
- * @note  ‚à‚µCw’è‚µ‚½ Cmd ‚ªÀs’†‚Å‚Í‚È‚­‚Ä‚à CCP_EXEC_SUCCESS ‚ğ•Ô‚·
+ * @brief å®Ÿè¡Œä¸­ã®åˆ†å‰²ã‚³ãƒãƒ³ãƒ‰ã‚’åœæ­¢ã™ã‚‹
+ * @note  ã‚‚ã—ï¼ŒæŒ‡å®šã—ãŸ Cmd ãŒå®Ÿè¡Œä¸­ã§ã¯ãªãã¦ã‚‚ CCP_EXEC_SUCCESS ã‚’è¿”ã™
  */
-CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CTCP* packet);
+CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CommonCmdPacket* packet);
 
 /**
- * @brief ƒGƒ‰[C‚Ü‚½‚ÍƒRƒ}ƒ“ƒh‚É‚æ‚Á‚Ä’†’fƒXƒe[ƒ^ƒX‚Æ‚È‚Á‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ğCÀs‰Â”\ó‘Ô‚É–ß‚·
- * @note  ‚à‚µCw’è‚µ‚½ Cmd ‚ª’†’fƒXƒe[ƒ^ƒX‚Å‚Í‚È‚­‚Ä‚à CCP_EXEC_SUCCESS ‚ğ•Ô‚·
+ * @brief ã‚¨ãƒ©ãƒ¼ï¼Œã¾ãŸã¯ã‚³ãƒãƒ³ãƒ‰ã«ã‚ˆã£ã¦ä¸­æ–­ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã¨ãªã£ã¦ã„ã‚‹ã‚³ãƒãƒ³ãƒ‰ã‚’ï¼Œå®Ÿè¡Œå¯èƒ½çŠ¶æ…‹ã«æˆ»ã™
+ * @note  ã‚‚ã—ï¼ŒæŒ‡å®šã—ãŸ Cmd ãŒä¸­æ–­ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã§ã¯ãªãã¦ã‚‚ CCP_EXEC_SUCCESS ã‚’è¿”ã™
  */
-CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CTCP* packet);
+CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CommonCmdPacket* packet);
 
 /**
- * @brief ƒƒO‚ğƒNƒŠƒA‚·‚é
+ * @brief ãƒ­ã‚°ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
  */
-CCP_EXEC_STS Cmd_DCU_CLEAR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_DCU_CLEAR_LOG(const CommonCmdPacket* packet);
 
 #endif

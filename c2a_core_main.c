@@ -9,10 +9,10 @@
 #include "./System/TimeManager/time_manager.h"
 #include "./System/ModeManager/mode_manager.h"
 #include "./System/WatchdogTimer/watchdog_timer.h"
-#include "./CmdTlm/packet_handler.h"
-#include "./CmdTlm/block_command_table.h"
-#include "./CmdTlm/command_analyze.h"
-#include "./CmdTlm/telemetry_frame.h"
+#include "./TlmCmd/packet_handler.h"
+#include "./TlmCmd/block_command_table.h"
+#include "./TlmCmd/command_analyze.h"
+#include "./TlmCmd/telemetry_frame.h"
 
 #include <src_user/Applications/app_registry.h>
 
@@ -24,26 +24,26 @@ void C2A_core_init(void)
   Printf("C2A_init: TF_initialize done.\n");
   PH_init();                  // Packet Handler
   Printf("C2A_init: PH_init done.\n");
-  EM_initialize();            // Event ManagerDApp Manager‚æ‚èæ‚É‰Šú‰»‚·‚é‚×‚«
+  EM_initialize();            // Event Managerï¼App Managerã‚ˆã‚Šå…ˆã«åˆæœŸåŒ–ã™ã‚‹ã¹ã
   Printf("C2A_init: EM_initialize done.\n");
-  AL_initialize();            // Anomaly LoggerDApp Manager‚æ‚èæ‚É‰Šú‰»‚·‚é‚×‚«
+  AL_initialize();            // Anomaly Loggerï¼App Managerã‚ˆã‚Šå…ˆã«åˆæœŸåŒ–ã™ã‚‹ã¹ã
   Printf("C2A_init: AL_initialize done.\n");
   AM_initialize();            // App Manager
   Printf("C2A_init: AM_initialize done.\n");
   AR_load_initial_settings(); // App Registry
   Printf("C2A_init: AR_load_initial_settings done.\n");
-  AM_initialize_all_apps();   // App Manager‚É“o˜^‚³‚ê‚Ä‚é‘SƒAƒvƒŠ‚Ì‰Šú‰»
+  AM_initialize_all_apps();   // App Managerã«ç™»éŒ²ã•ã‚Œã¦ã‚‹å…¨ã‚¢ãƒ—ãƒªã®åˆæœŸåŒ–
   Printf("C2A_init: AM_initialize_all_apps done.\n");
   BCT_initialize();           // Block Cmd Table
-                              // BC_load_defaults() ‚à‚±‚±‚ÅŒÄ‚Î‚ê‚é
+                              // BC_load_defaults() ã‚‚ã“ã“ã§å‘¼ã°ã‚Œã‚‹
   Printf("C2A_init: BCT_initialize done.\n");
   MM_initialize();            // Mode Manager
-                              // ‚±‚±‚ÅSTART UP to INITIAL‚Ìƒ‚[ƒh‘JˆÚ‚às‚í‚ê‚é
+                              // ã“ã“ã§START UP to INITIALã®ãƒ¢ãƒ¼ãƒ‰é·ç§»ã‚‚è¡Œã‚ã‚Œã‚‹
   Printf("C2A_init: MM_initialize done.\n");
   TDSP_initialize();          // Task Dispatcher
-                              // MM‰Šú‰»‚æ‚è‚à‚ ‚Æ‚És‚í‚ê‚é•K—v‚ª‚ ‚é
+                              // MMåˆæœŸåŒ–ã‚ˆã‚Šã‚‚ã‚ã¨ã«è¡Œã‚ã‚Œã‚‹å¿…è¦ãŒã‚ã‚‹
   Printf("C2A_init: TDSP_initialize done.\n");
-  // DebugOutInit();             // Debug‚Ìinit          // LVTTL UART ch1‚Å‚Ìo—ÍD×–‚‚È‚Ì‚ÅPrintf‚Ì’†g‚Æ‚Æ‚à‚É–³Œø‰» (2019-04-09)
+  // DebugOutInit();             // Debugã®init          // LVTTL UART ch1ã§ã®å‡ºåŠ›ï¼é‚ªé­”ãªã®ã§Printfã®ä¸­èº«ã¨ã¨ã‚‚ã«ç„¡åŠ¹åŒ– (2019-04-09)
   // Printf("C2A_init: DebugOutInit done.\n");
 
   TMGR_down_initializing_flag();
@@ -51,10 +51,10 @@ void C2A_core_init(void)
 
 void C2A_core_main(void)
 {
-  // ‚±‚±‚Å‚¢‚¤task dispatcher‚ÍCTL0‚Æ‚©‚Å‚Í‚È‚­C
-  // task list‚ÌBlockCommand‚ğdispatch‚µ‚Ä‚¢‚éD
-  // TL0‚È‚Ç‚ÌPL‚ğdispatch‚µ‚Ä‚¢‚é‚Ì‚ÍCtlc_dispatcher @ App/timeline_command_dispatcher ‚Å‚ ‚éD
-  // ‚È‚¨CPL (packetList) ‚ÌPL_info‚Æ‚ÍC‡Ÿdispatch‚µ‚Ä‚¢‚­ƒpƒPƒbƒg‚ğŒn—ñ‚É‚È‚ç‚×‚½linked list‚Å‚ ‚éD
+  // ã“ã“ã§ã„ã†task dispatcherã¯ï¼ŒTL0ã¨ã‹ã§ã¯ãªãï¼Œ
+  // task listã®BlockCommandã‚’dispatchã—ã¦ã„ã‚‹ï¼
+  // TL0ãªã©ã®PLã‚’dispatchã—ã¦ã„ã‚‹ã®ã¯ï¼Œtlc_dispatcher @ App/timeline_command_dispatcher ã§ã‚ã‚‹ï¼
+  // ãªãŠï¼ŒPL (packetList) ã®PL_infoã¨ã¯ï¼Œé †æ¬¡dispatchã—ã¦ã„ããƒ‘ã‚±ãƒƒãƒˆã‚’æ™‚ç³»åˆ—ã«ãªã‚‰ã¹ãŸlinked listã§ã‚ã‚‹ï¼
   TDSP_execute_pl_as_task_list();
   WDT_clear_wdt();
 }

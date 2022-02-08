@@ -1,12 +1,12 @@
 #pragma section REPRO
 /**
  * @file
- * @brief GS Driver ÇÃÉCÉìÉXÉ^ÉìÉXâª
+ * @brief GS Driver „ÅÆ„Ç§„É≥„Çπ„Çø„É≥„ÇπÂåñ
  */
 
 #include "di_gs.h"
 
-#include <src_core/CmdTlm/packet_handler.h>
+#include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/Library/print.h>
 #include "../../Drivers/Com/gs_validate.h"
 #include "../../Settings/port_config.h"
@@ -19,7 +19,7 @@ const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler = &DI_GS_ms_tlm_
 static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_; // replay tlm
 const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler = &DI_GS_rp_tlm_packet_handler_;
 
-// à»â∫ init Ç∆ update ÇÃíËã`
+// ‰ª•‰∏ã init „Å® update „ÅÆÂÆöÁæ©
 static void DI_GS_cmd_packet_handler_init_(void);
 static void DI_GS_cmd_packet_handler_(void);
 
@@ -61,12 +61,12 @@ static void DI_GS_cmd_packet_handler_(void)
 
   GS_rec_tcf(&gs_driver_);
 
-  // TlmçXêV
+  // TlmÊõ¥Êñ∞
   for (select = 0; select < CCSDS_SELECT_NUM; ++select)
   {
     CCSDS_read_sequence((uint32_t)select, &gs_driver_.ccsds_info.uip_stat[select]);
   }
-  // TODO: ÉGÉâÅ[èàóù
+  // TODO: „Ç®„É©„ÉºÂá¶ÁêÜ
 }
 
 static void DI_GS_mst_packet_handler_init_(void)
@@ -78,23 +78,25 @@ static void DI_GS_mst_packet_handler_(void)
 {
   int i;
 
-  // ñ{ìñÇ»ÇÁ max(ç°ÇÃ FIFO ÇÃãÛÇ´, écÇËéûä‘Ç≈é¿çsâ¬î\Ç»êî) Ç∆Ç©ÇµÇΩÇ¢
+  // Êú¨ÂΩì„Å™„Çâ max(‰ªä„ÅÆ FIFO „ÅÆÁ©∫„Åç, ÊÆã„ÇäÊôÇÈñì„ÅßÂÆüË°åÂèØËÉΩ„Å™Êï∞) „Å®„Åã„Åó„Åü„ÅÑ
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
-    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu, &PH_ms_tlm_list, &DI_GS_ms_tlm_packet_handler_.vcdu.m_pdu);
+    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu,
+                                 &PH_ms_tlm_list,
+                                 &DI_GS_ms_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
-    // Realtime VCDU ÉJÉEÉìÉ^ÇÃê›íË
+    // Realtime VCDU „Ç´„Ç¶„É≥„Çø„ÅÆË®≠ÂÆö
     VCDU_setup_realtime_vcdu_hdr(&DI_GS_ms_tlm_packet_handler_.vcdu, DI_GS_ms_tlm_packet_handler_.vcdu_counter);
     DI_GS_ms_tlm_packet_handler_.vcdu_counter = VCDU_calc_next_counter(DI_GS_ms_tlm_packet_handler_.vcdu_counter);
 
-    // CLCW ÇÃê›íË
-    // CMD ÇÃ VCID Ç∆ TLM ÇÃ VCID ÇÕì∆óßÇ≈ä÷åWÇ™Ç»Ç¢
-    // TLM ÇÃ VCID éÌï ÅiRealtime, Replay)Ç…ÇÊÇÁÇ∏ CLCW Çê›íËÇµÇƒó«Ç¢
-    // CLCW Ç™ëŒâûÇ∑ÇÈ CMD ÇÃ VCID ÇÕ CLCW ÇÃì‡ïîÇ≈éwíËÇ≥ÇÍÇÈ
+    // CLCW „ÅÆË®≠ÂÆö
+    // CMD „ÅÆ VCID „Å® TLM „ÅÆ VCID „ÅØÁã¨Á´ã„ÅßÈñ¢‰øÇ„Åå„Å™„ÅÑ
+    // TLM „ÅÆ VCID Á®ÆÂà•ÔºàRealtime, Replay)„Å´„Çà„Çâ„Åö CLCW „ÇíË®≠ÂÆö„Åó„Å¶ËâØ„ÅÑ
+    // CLCW „ÅåÂØæÂøú„Åô„Çã CMD „ÅÆ VCID „ÅØ CLCW „ÅÆÂÜÖÈÉ®„ÅßÊåáÂÆö„Åï„Çå„Çã
     VCDU_set_clcw(&DI_GS_ms_tlm_packet_handler_.vcdu, GS_form_clcw());
 
-    // äÆê¨ÇµÇΩ VCDU Ç MS VCDU Ç∆ÇµÇƒëóèo
+    // ÂÆåÊàê„Åó„Åü VCDU „Çí MS VCDU „Å®„Åó„Å¶ÈÄÅÂá∫
     GS_send_vcdu(&gs_driver_, &DI_GS_ms_tlm_packet_handler_.vcdu);
   }
 }
@@ -108,23 +110,25 @@ static void DI_GS_rpt_packet_handler_(void)
 {
   int i;
 
-  // ñ{ìñÇ»ÇÁ max(ç°ÇÃ FIFO ÇÃãÛÇ´, écÇËéûä‘Ç≈é¿çsâ¬î\Ç»êî) Ç∆Ç©ÇµÇΩÇ¢
+  // Êú¨ÂΩì„Å™„Çâ max(‰ªä„ÅÆ FIFO „ÅÆÁ©∫„Åç, ÊÆã„ÇäÊôÇÈñì„ÅßÂÆüË°åÂèØËÉΩ„Å™Êï∞) „Å®„Åã„Åó„Åü„ÅÑ
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
-    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_rp_tlm_packet_handler_.tc_packet_to_m_pdu, &PH_rp_tlm_list, &DI_GS_rp_tlm_packet_handler_.vcdu.m_pdu);
+    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_rp_tlm_packet_handler_.tc_packet_to_m_pdu,
+                                 &PH_rp_tlm_list,
+                                 &DI_GS_rp_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
-    // Replay VCDU ÉJÉEÉìÉ^ÇÃê›íË
+    // Replay VCDU „Ç´„Ç¶„É≥„Çø„ÅÆË®≠ÂÆö
     VCDU_setup_replay_vcdu_hdr(&DI_GS_rp_tlm_packet_handler_.vcdu, DI_GS_rp_tlm_packet_handler_.vcdu_counter);
     DI_GS_rp_tlm_packet_handler_.vcdu_counter = VCDU_calc_next_counter(DI_GS_rp_tlm_packet_handler_.vcdu_counter);
 
-    // CLCW ÇÃê›íË
-    // CMD ÇÃ VCIDÇ∆ TLM ÇÃ VCID ÇÕì∆óßÇ≈ä÷åWÇ™Ç»Ç¢
-    // TLM ÇÃ VCID éÌï ÅiRealtime, Replay) Ç…ÇÊÇÁÇ∏ CLCW Çê›íËÇµÇƒó«Ç¢
-    // CLCW Ç™ëŒâûÇ∑ÇÈ CMD ÇÃ VCID ÇÕ CLCW ÇÃì‡ïîÇ≈éwíËÇ≥ÇÍÇÈ
+    // CLCW „ÅÆË®≠ÂÆö
+    // CMD „ÅÆ VCID„Å® TLM „ÅÆ VCID „ÅØÁã¨Á´ã„ÅßÈñ¢‰øÇ„Åå„Å™„ÅÑ
+    // TLM „ÅÆ VCID Á®ÆÂà•ÔºàRealtime, Replay) „Å´„Çà„Çâ„Åö CLCW „ÇíË®≠ÂÆö„Åó„Å¶ËâØ„ÅÑ
+    // CLCW „ÅåÂØæÂøú„Åô„Çã CMD „ÅÆ VCID „ÅØ CLCW „ÅÆÂÜÖÈÉ®„ÅßÊåáÂÆö„Åï„Çå„Çã
     VCDU_set_clcw(&DI_GS_rp_tlm_packet_handler_.vcdu, GS_form_clcw());
 
-    // äÆê¨ÇµÇΩ VCDU Ç RP VCDU Ç∆ÇµÇƒëóèo
+    // ÂÆåÊàê„Åó„Åü VCDU „Çí RP VCDU „Å®„Åó„Å¶ÈÄÅÂá∫
     GS_send_vcdu(&gs_driver_, &DI_GS_rp_tlm_packet_handler_.vcdu);
   }
 }
@@ -134,7 +138,7 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
   gs_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval = flush_interval;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.is_ccsds_tx_valid = 1;
@@ -142,7 +146,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.is_ccsds_tx_valid = 0;
@@ -150,7 +154,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
   if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_EXEC_ILLEGAL_CONTEXT;
@@ -158,7 +162,7 @@ CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   endian_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
@@ -168,7 +172,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   endian_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
@@ -178,7 +182,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet)
 {
   uint8_t pw = CCP_get_param_head(packet)[0];
   if (pw < 1 || pw > 127) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -187,7 +191,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
 {
   uint8_t which = CCP_get_param_head(packet)[0];
   if (which >= GS_PORT_TYPE_NUM) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -197,7 +201,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CommonCmdPacket* packet)
 {
   uint32_t select;
   (void)packet;
@@ -209,7 +213,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.ccsds_info.buffer_num = CCSDS_get_buffer_num();
@@ -217,7 +221,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CTCP* packet)
+CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet)
 {
   uint32_t ui_rate = (uint32_t)CCP_get_param_head(packet)[0];
   if (ui_rate == 0) return CCP_EXEC_ILLEGAL_PARAMETER;

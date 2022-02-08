@@ -18,5 +18,5 @@ jobs:
           architecture: 'x64'
       - run: pip install chardet
       - name: check_encoding
-        run: python check_encoding.py
+        run: python ./check_encoding.py ./check_encoding.json
         working-directory: ./Script/CI

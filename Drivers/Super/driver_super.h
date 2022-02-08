@@ -1,178 +1,165 @@
 /**
  * @file
- * @brief  Љeђ§ЊдѓZѓ“ѓTЃEѓAѓNѓ`ѓ…ѓGЃ[ѓ^“™‚Ж‚МѓCѓ“ѓ^Ѓ[ѓtѓFЃ[ѓXѓhѓ‰ѓCѓoЊQ‚МѓXЃ[ѓpЃ[ѓNѓ‰ѓX
+ * @brief  еђ„е€¶еѕЎг‚»гѓіг‚µгѓ»г‚ўг‚ЇгѓЃгѓҐг‚Ёгѓјг‚їз­‰гЃЁгЃ®г‚¤гѓіг‚їгѓјгѓ•г‚§гѓјг‚№гѓ‰гѓ©г‚¤гѓђзѕ¤гЃ®г‚№гѓјгѓ‘гѓјг‚Їгѓ©г‚№
  *
- *         DriverSuper Class ‚Н
- *         Љeђ§ЊдѓZѓ“ѓTЃEѓAѓNѓ`ѓ…ѓGЃ[ѓ^“™‚Ж‚МѓCѓ“ѓ^Ѓ[ѓtѓFЃ[ѓX‚рЋАЊ»‚µЃC
- *         Џ‰Љъ‰»ЃCѓRѓ}ѓ“ѓh”­ЌsЃCѓeѓЊѓЃѓgѓЉѓЉѓNѓGѓXѓgЃCѓeѓЊѓЃѓgѓЉЋуђMЃCѓeѓЊѓЃѓgѓЉ‰рђН‚И‚З‚рЌs‚¤ЃCѓhѓ‰ѓCѓoЊQ‚МѓXЃ[ѓpЃ[ѓNѓ‰ѓX‚Е‚·ЃD
- *         ЊВЃX‚М‹@Љн‚МѓCѓ“ѓ^Ѓ[ѓtѓFЃ[ѓXѓhѓ‰ѓCѓo‚ЙЊpЏі‚і‚№‚ДЋg—p‚µ‚Ь‚·ЃD
+ *         DriverSuper Class гЃЇ
+ *         еђ„е€¶еѕЎг‚»гѓіг‚µгѓ»г‚ўг‚ЇгѓЃгѓҐг‚Ёгѓјг‚їз­‰гЃЁгЃ®г‚¤гѓіг‚їгѓјгѓ•г‚§гѓјг‚№г‚’е®џзЏѕгЃ—пјЊ
+ *         е€ќжњџеЊ–пјЊг‚ігѓћгѓігѓ‰з™єиЎЊпјЊгѓ†гѓ¬гѓЎгѓ€гѓЄгѓЄг‚Їг‚Ёг‚№гѓ€пјЊгѓ†гѓ¬гѓЎгѓ€гѓЄеЏ—дїЎпјЊгѓ†гѓ¬гѓЎгѓ€гѓЄи§ЈжћђгЃЄгЃ©г‚’иЎЊгЃ†пјЊгѓ‰гѓ©г‚¤гѓђзѕ¤гЃ®г‚№гѓјгѓ‘гѓјг‚Їгѓ©г‚№гЃ§гЃ™пјЋ
+ *         еЂ‹гЂ…гЃ®ж©џе™ЁгЃ®г‚¤гѓіг‚їгѓјгѓ•г‚§гѓјг‚№гѓ‰гѓ©г‚¤гѓђгЃ«з¶™ж‰їгЃ•гЃ›гЃ¦дЅїз”ЁгЃ—гЃѕгЃ™пјЋ
  */
 #ifndef DRIVER_SUPER_H_
 #define DRIVER_SUPER_H_
 
 #include <src_user/IfWrapper/if_list.h>
 #include <src_user/Library/stdint.h>
-#include "../../Library/endian_memcpy.h"        // ѓpѓX‚Є•s’и‚ИЋ©“®ђ¶ђ¬ѓRЃ[ѓh—Ю‚ЕЋg‚¦‚й‚ж‚¤‚Й
+#include "../../Library/endian_memcpy.h"        // гѓ‘г‚№гЃЊдёЌе®љгЃЄи‡Єе‹•з”џж€ђг‚ігѓјгѓ‰йЎћгЃ§дЅїгЃ€г‚‹г‚€гЃ†гЃ«
 #include "../../System/TimeManager/time_manager.h"
-// #include <src_user/CmdTlm/CCSDS/TCPacket.h>
 
-#define DS_STREAM_MAX          (3)         /*!< DS_StreamConfig‚МЌЕ‘еђ”
-                                                uint8_t ‚р‘z’и          */
-#define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< ЋуђMѓfЃ[ѓ^ѓoѓbѓtѓ@‚МЌЕ‘е’·
-#define DS_RX_FRAME_SIZE_MAX   (1024)      //!< ЋуђMѓfЃ[ѓ^ѓtѓЊЃ[ѓЂ‚МЌЕ‘е’·
+#define DS_STREAM_MAX          (3)         /*!< DS_StreamConfigгЃ®жњЂе¤§ж•°
+                                                uint8_t г‚’жѓіе®љ          */
+#define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< еЏ—дїЎгѓ‡гѓјг‚їгѓђгѓѓгѓ•г‚ЎгЃ®жњЂе¤§й•·
+#define DS_RX_FRAME_SIZE_MAX   (1024)      //!< еЏ—дїЎгѓ‡гѓјг‚їгѓ•гѓ¬гѓјгѓ гЃ®жњЂе¤§й•·
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
-// (*load_init_setting)(DriverSuper* p_super); ‚М DriverSuper ‚Є‘O•ыЋQЏЖ‚Е‚«‚И‚ў‚М‚ЕЃC‚±‚¤‚ў‚¤Џ‘‚«•ы‚µ‚Д‚ў‚й‚ЄЃCЃCЃC‚а‚Б‚Ж—З‚ўЏ‘‚«•ы‚ ‚и‚»‚¤ЃD
 typedef struct DriverSuper DriverSuper;
-// (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver); ‚М DS_StreamConfig ‚Є‘O•ыЋQЏЖ‚Е‚«‚И‚ў‚М‚ЕЃC‚±‚¤‚ў‚¤Џ‘‚«•ы‚µ‚Д‚ў‚й‚ЄЃCЃCЃC‚а‚Б‚Ж—З‚ўЏ‘‚«•ы‚ ‚и‚»‚¤ЃD
 typedef struct DS_StreamConfig DS_StreamConfig;
-
 
 /**
  * @enum   DS_DRIVER_ERR_CODE
- * @brief  Driver ‚М”Д—pѓGѓ‰Ѓ[ѓRЃ[ѓh
+ * @brief  Driver гЃ®ж±Ћз”Ёг‚Ёгѓ©гѓјг‚ігѓјгѓ‰
  *
- *         Driver “а‚МЉeЋнsetter “™‚МЉЦђ”•Ф‚и’l‚ЕЋg‚н‚к‚й‚±‚Ж‚р‘z’и
- * @note   uint8_t ‚р‘z’и
- * @note   Џ‰Љъ‰»ЉЦђ”ЊД‚СЏo‚µЋћ‚Й‚В‚ў‚Д‚НЃC DS_INIT_ERR_CODE ‚р—p‚ў‚й‚±‚Ж
- * @note   ЋуђMЉЦђ”ЊД‚СЏo‚µЋћ‚Й‚В‚ў‚Д‚НЃC DS_REC_ERR_CODE ‚р—p‚ў‚й‚±‚Ж
- * @note   ђЪ‘±ђж‹@Љн‚Ц‘—‚йCmdЊД‚СЏo‚µЋћ‚Й‚В‚ў‚Д‚НЃC DS_CMD_ERR_CODE ‚р—p‚ў‚й‚±‚Ж
- * @note   DI ‚М Cmd ‚М•Ф‚и’l‚Е‚ ‚й CCP_EXEC_STS ‚Ж‚Мђ®Ќ‡ђ«‚р‘ЅЏ­€УЋЇ‚µ‚Д‚ў‚й
- * @note   CCP_EXEC_STS ‚Ц‚М•ПЉ·‚Н DS_conv_driver_err_to_ccp_exec_sts ‚р—p‚ў‚й
- * @note   ‚ж‚иЏЪЌЧ‚ИѓGѓ‰Ѓ[Џо•с‚р•Ф‚µ‚Ѕ‚ўЏкЌ‡‚НЃC Driver ‚І‚Ж‚Й“ЖЋ© enum ‚р’и‹`‚µ‚Д—З‚ў
+ *         Driver е†…гЃ®еђ„зЁ®setter з­‰гЃ®й–ўж•°иї”г‚ЉеЂ¤гЃ§дЅїг‚Џг‚Њг‚‹гЃ“гЃЁг‚’жѓіе®љ
+ * @note   uint8_t г‚’жѓіе®љ
+ * @note   е€ќжњџеЊ–й–ўж•°е‘јгЃіе‡єгЃ—ж™‚гЃ«гЃ¤гЃ„гЃ¦гЃЇпјЊ DS_INIT_ERR_CODE г‚’з”ЁгЃ„г‚‹гЃ“гЃЁ
+ * @note   еЏ—дїЎй–ўж•°е‘јгЃіе‡єгЃ—ж™‚гЃ«гЃ¤гЃ„гЃ¦гЃЇпјЊ DS_REC_ERR_CODE г‚’з”ЁгЃ„г‚‹гЃ“гЃЁ
+ * @note   жЋҐз¶ље…€ж©џе™ЁгЃёйЂЃг‚‹Cmdе‘јгЃіе‡єгЃ—ж™‚гЃ«гЃ¤гЃ„гЃ¦гЃЇпјЊ DS_CMD_ERR_CODE г‚’з”ЁгЃ„г‚‹гЃ“гЃЁ
+ * @note   DI гЃ® Cmd гЃ®иї”г‚ЉеЂ¤гЃ§гЃ‚г‚‹ CCP_EXEC_STS гЃЁгЃ®ж•ґеђ€жЂ§г‚’е¤ље°‘ж„Џи­гЃ—гЃ¦гЃ„г‚‹
+ * @note   CCP_EXEC_STS гЃёгЃ®е¤‰жЏ›гЃЇ DS_conv_driver_err_to_ccp_exec_sts г‚’з”ЁгЃ„г‚‹
+ * @note   г‚€г‚Љи©ізґ°гЃЄг‚Ёгѓ©гѓјжѓ…е ±г‚’иї”гЃ—гЃџгЃ„е ґеђ€гЃЇпјЊ Driver гЃ”гЃЁгЃ«з‹¬и‡Є enum г‚’е®љзѕ©гЃ—гЃ¦и‰ЇгЃ„
  */
 typedef enum
 {
   DS_DRIVER_ERR_CODE_OK = 0,                //!< OK
-  DS_DRIVER_ERR_CODE_ILLEGAL_CONTEXT,       //!< CCP_EXEC_ILLEGAL_CONTEXT ‚Й‘О‰ћ
-  DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER,     //!< CCP_EXEC_ILLEGAL_PARAMETER ‚Й‘О‰ћ
-  DS_DRIVER_ERR_CODE_ILLEGAL_LENGTH,        //!< CCP_EXEC_ILLEGAL_PARAMETER ‚Й‘О‰ћ
+  DS_DRIVER_ERR_CODE_ILLEGAL_CONTEXT,       //!< CCP_EXEC_ILLEGAL_CONTEXT гЃ«еЇѕеїњ
+  DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER,     //!< CCP_EXEC_ILLEGAL_PARAMETER гЃ«еЇѕеїњ
+  DS_DRIVER_ERR_CODE_ILLEGAL_LENGTH,        //!< CCP_EXEC_ILLEGAL_PARAMETER гЃ«еЇѕеїњ
   DS_DRIVER_ERR_CODE_UNKNOWN_ERR = 255      //!< UNKNOWN ERR
 } DS_DRIVER_ERR_CODE;
 
-
 /**
  * @enum   DS_INIT_ERR_CODE
- * @brief  Driver ‚МЏ‰Љъ‰»ЉЦђ”‚МѓGѓ‰Ѓ[ѓRЃ[ѓh
- * @note   uint8_t ‚р‘z’и
+ * @brief  Driver гЃ®е€ќжњџеЊ–й–ўж•°гЃ®г‚Ёгѓ©гѓјг‚ігѓјгѓ‰
+ * @note   uint8_t г‚’жѓіе®љ
  */
 typedef enum
 {
   DS_INIT_OK = 0,               //!< OK
-  DS_INIT_DS_INIT_ERR,          //!< DS_init ‚Е‚МѓGѓ‰Ѓ[
-  DS_INIT_PARAMETER_ERR,        //!< Џ‰Љъ‰»ѓpѓ‰ѓЃѓ^ѓGѓ‰Ѓ[
-  DS_INIT_OTHER_ERR,            //!< ‚»‚М‘ј‚МѓGѓ‰Ѓ[
+  DS_INIT_DS_INIT_ERR,          //!< DS_init гЃ§гЃ®г‚Ёгѓ©гѓј
+  DS_INIT_PARAMETER_ERR,        //!< е€ќжњџеЊ–гѓ‘гѓ©гѓЎг‚їг‚Ёгѓ©гѓј
+  DS_INIT_OTHER_ERR,            //!< гЃќгЃ®д»–гЃ®г‚Ёгѓ©гѓј
   DS_INIT_UNKNOWN_ERR = 255     //!< UNKNOWN ERR
 } DS_INIT_ERR_CODE;
 
-
 /**
  * @enum   DS_REC_ERR_CODE
- * @brief  Driver ‚МЋуђMЉЦђ”‚МѓGѓ‰Ѓ[ѓRЃ[ѓh
- * @note   uint8_t ‚р‘z’и
+ * @brief  Driver гЃ®еЏ—дїЎй–ўж•°гЃ®г‚Ёгѓ©гѓјг‚ігѓјгѓ‰
+ * @note   uint8_t г‚’жѓіе®љ
  */
 typedef enum
 {
   DS_REC_OK = 0,                //!< OK
-  DS_REC_DS_RECEIVE_ERR,        //!< DS_receive ‚Е‚МѓGѓ‰Ѓ[
-  DS_REC_ANALYZE_ERR,           //!< DS_analyze_rec_data ‚Е‚МѓGѓ‰Ѓ[
-  DS_REC_OTHER_ERR,             //!< ‚»‚М‘ј‚МѓGѓ‰Ѓ[
+  DS_REC_DS_RECEIVE_ERR,        //!< DS_receive гЃ§гЃ®г‚Ёгѓ©гѓј
+  DS_REC_ANALYZE_ERR,           //!< DS_analyze_rec_data гЃ§гЃ®г‚Ёгѓ©гѓј
+  DS_REC_OTHER_ERR,             //!< гЃќгЃ®д»–гЃ®г‚Ёгѓ©гѓј
   DS_REC_UNKNOWN_ERR = 255      //!< UNKNOWN ERR
 } DS_REC_ERR_CODE;
 
-
 /**
  * @enum   DS_CMD_ERR_CODE
- * @brief  ЉeDI‚Є Driver ‚ЙѓRѓ}ѓ“ѓh‚р‘—‚й‚Ж‚«‚ЙЃC“ќ€к“I‚ЙЋg‚¤ѓRЃ[ѓh
- * @note   uint8_t ‚р‘z’и
- * @note   DI ‚М Cmd ‚М•Ф‚и’l‚Е‚ ‚й CCP_EXEC_STS ‚Ж‚Мђ®Ќ‡ђ«‚р‘ЅЏ­€УЋЇ‚µ‚Д‚ў‚й
- * @note   CCP_EXEC_STS ‚Ц‚М•ПЉ·‚Н DS_conv_cmd_err_to_ccp_exec_sts ‚р—p‚ў‚й
+ * @brief  еђ„DIгЃЊ Driver гЃ«г‚ігѓћгѓігѓ‰г‚’йЂЃг‚‹гЃЁгЃЌгЃ«пјЊзµ±дёЂзљ„гЃ«дЅїгЃ†г‚ігѓјгѓ‰
+ * @note   uint8_t г‚’жѓіе®љ
+ * @note   DI гЃ® Cmd гЃ®иї”г‚ЉеЂ¤гЃ§гЃ‚г‚‹ CCP_EXEC_STS гЃЁгЃ®ж•ґеђ€жЂ§г‚’е¤ље°‘ж„Џи­гЃ—гЃ¦гЃ„г‚‹
+ * @note   CCP_EXEC_STS гЃёгЃ®е¤‰жЏ›гЃЇ DS_conv_cmd_err_to_ccp_exec_sts г‚’з”ЁгЃ„г‚‹
  */
 typedef enum
 {
-  DS_CMD_OK                 = 0,   //!< OK‚Н0‚Е‚ ‚й‚±‚Ж‚р•ЫЏШ‚·‚й
-  DS_CMD_ILLEGAL_CONTEXT    = 1,   //!< CCP_EXEC_ILLEGAL_CONTEXT ‚Й‘О‰ћЃDDI‚Е‚Э‚й‚±‚Ж‚а‘Ѕ‚ў‚Н‚ёЃDHW€Л‘¶•”‚НDriver‚Е‚Э‚й
-  DS_CMD_ILLEGAL_PARAMETER  = 2,   //!< CCP_EXEC_ILLEGAL_PARAMETER ‚Й‘О‰ћЃDѓqЃ[ѓ^Ѓ[‚МЊВђ”‚И‚ЗЃCHW€Л‘¶•”‚НDrivre‚Е‚Э‚й
-  DS_CMD_ILLEGAL_LENGTH     = 3,   //!< CCP_EXEC_ILLEGAL_LENGTH ‚Й‘О‰ћЃD‚±‚к‚НЉо–{“I‚Й‚НDI‚ЕЊ©‚й‚Н‚ё‚И‚М‚ЕЃCЋg‚н‚к‚И‚ў‚±‚Ж‚р‘z’и
-  DS_CMD_DRIVER_SUPER_ERR   = 4,   //!< DriverSuper‘¤ЃC‚В‚Ь‚и”z‘—‚М’бѓЊѓCѓ„Ѓ[‚ЕѓGѓ‰Ѓ[‚Є‹N‚«‚ЅЏкЌ‡
+  DS_CMD_OK                 = 0,   //!< OKгЃЇ0гЃ§гЃ‚г‚‹гЃ“гЃЁг‚’дїќиЁјгЃ™г‚‹
+  DS_CMD_ILLEGAL_CONTEXT    = 1,   //!< CCP_EXEC_ILLEGAL_CONTEXT гЃ«еЇѕеїњпјЋDIгЃ§гЃїг‚‹гЃ“гЃЁг‚‚е¤љгЃ„гЃЇгЃљпјЋHWдѕќе­йѓЁгЃЇDriverгЃ§гЃїг‚‹
+  DS_CMD_ILLEGAL_PARAMETER  = 2,   //!< CCP_EXEC_ILLEGAL_PARAMETER гЃ«еЇѕеїњпјЋгѓ’гѓјг‚їгѓјгЃ®еЂ‹ж•°гЃЄгЃ©пјЊHWдѕќе­йѓЁгЃЇDrivreгЃ§гЃїг‚‹
+  DS_CMD_ILLEGAL_LENGTH     = 3,   //!< CCP_EXEC_ILLEGAL_LENGTH гЃ«еЇѕеїњпјЋгЃ“г‚ЊгЃЇеџєжњ¬зљ„гЃ«гЃЇDIгЃ§и¦‹г‚‹гЃЇгЃљгЃЄгЃ®гЃ§пјЊдЅїг‚Џг‚ЊгЃЄгЃ„гЃ“гЃЁг‚’жѓіе®љ
+  DS_CMD_DRIVER_SUPER_ERR   = 4,   //!< DriverSuperеЃґпјЊгЃ¤гЃѕг‚Љй…ЌйЂЃгЃ®дЅЋгѓ¬г‚¤гѓ¤гѓјгЃ§г‚Ёгѓ©гѓјгЃЊиµ·гЃЌгЃџе ґеђ€
   DS_CMD_UNKNOWN_ERR        = 255
 } DS_CMD_ERR_CODE;
 
-
 /**
  * @enum   DS_ERR_CODE
- * @brief  DriverSuper ‚М”Д—pѓGѓ‰Ѓ[ѓRЃ[ѓh
- * @note   uint8_t ‚р‘z’и
- * @note   DriverSuper ‚Е—p‚ўЃC Drive ‚Е‚Н—p‚ў‚И‚ў
+ * @brief  DriverSuper гЃ®ж±Ћз”Ёг‚Ёгѓ©гѓјг‚ігѓјгѓ‰
+ * @note   uint8_t г‚’жѓіе®љ
+ * @note   DriverSuper гЃ§з”ЁгЃ„пјЊ Drive гЃ§гЃЇз”ЁгЃ„гЃЄгЃ„
  */
 typedef enum
 {
-  DS_ERR_CODE_OK   = 0,     //!< •Ф‚и’l‚НЊpЏіђж‚вIFђж‚ЕЏгЏ‘‚«‚і‚к‚й‚Ѕ‚ЯЃCOK‚Н0‚Е‚ ‚й‚±‚Ж‚Є•Kђ{
+  DS_ERR_CODE_OK   = 0,     //!< иї”г‚ЉеЂ¤гЃЇз¶™ж‰їе…€г‚„IFе…€гЃ§дёЉж›ёгЃЌгЃ•г‚Њг‚‹гЃџг‚ЃпјЊOKгЃЇ0гЃ§гЃ‚г‚‹гЃ“гЃЁгЃЊеї…й €
   DS_ERR_CODE_ERR  = 1
 } DS_ERR_CODE;
 
-
 /**
  * @enum   DS_RX_DISRUPTION_STATUS_CODE
- * @brief  ЋуђM“rђв”»’иѓRЃ[ѓh
- * @note   uint8_t ‚р‘z’и
+ * @brief  еЏ—дїЎйЂ”зµ¶е€¤е®љг‚ігѓјгѓ‰
+ * @note   uint8_t г‚’жѓіе®љ
  */
 typedef enum
 {
-  DS_RX_DISRUPTION_STATUS_OK   = 0,  //!< ЋуђM“rђв‚µ‚Д‚ў‚И‚ў or ЋуђM“rђв”»’и‚р‚µ‚И‚ўЏу‘Ф
-  DS_RX_DISRUPTION_STATUS_LOST = 1   //!< ЋуђM“rђвЊџЏo
+  DS_RX_DISRUPTION_STATUS_OK   = 0,  //!< еЏ—дїЎйЂ”зµ¶гЃ—гЃ¦гЃ„гЃЄгЃ„ or еЏ—дїЎйЂ”зµ¶е€¤е®љг‚’гЃ—гЃЄгЃ„зЉ¶ж…‹
+  DS_RX_DISRUPTION_STATUS_LOST = 1   //!< еЏ—дїЎйЂ”зµ¶ж¤ње‡є
 } DS_RX_DISRUPTION_STATUS_CODE;
-
 
 /**
  * @struct DS_RecStatus
- * @brief  IF ЋуђMЏу‹µ
+ * @brief  IF еЏ—дїЎзЉ¶жіЃ
  */
 typedef struct
 {
-  int                          ret_from_if_rx;       //!< IF_RX ‚М•Ф‚и’l
-  DS_RX_DISRUPTION_STATUS_CODE rx_disruption_status; //!< ЋуђM“rђв”»’и
+  int                          ret_from_if_rx;       //!< IF_RX гЃ®иї”г‚ЉеЂ¤
+  DS_RX_DISRUPTION_STATUS_CODE rx_disruption_status; //!< еЏ—дїЎйЂ”зµ¶е€¤е®љ
 } DS_RecStatus;
-
 
 /**
  * @enum   DS_STREAM_SEND_STATUS_CODE
- * @brief  DS_StreamSendStatus ‚Е‚В‚©‚¤ЃDѓRѓ}ѓ“ѓhЋуђM‚МЏу‘Ф‚рЋ¦‚·
- * @note   uint8_t ‚р‘z’и
+ * @brief  DS_StreamSendStatus гЃ§гЃ¤гЃ‹гЃ†пјЋг‚ігѓћгѓігѓ‰еЏ—дїЎгЃ®зЉ¶ж…‹г‚’з¤єгЃ™
+ * @note   uint8_t г‚’жѓіе®љ
  */
 typedef enum
 {
   DS_STREAM_SEND_STATUS_OK,
   DS_STREAM_SEND_STATUS_DISABLE,
-  DS_STREAM_SEND_STATUS_TX_ERR,                //!< IF_TX‚ЕѓGѓ‰Ѓ[
-  DS_STREAM_SEND_STATUS_VALIDATE_ERR,          //!< ‘—ђM‘O‚Йvalidate_config‚ЕѓGѓ‰Ѓ[
+  DS_STREAM_SEND_STATUS_TX_ERR,                //!< IF_TXгЃ§г‚Ёгѓ©гѓј
+  DS_STREAM_SEND_STATUS_VALIDATE_ERR,          //!< йЂЃдїЎе‰ЌгЃ«validate_configгЃ§г‚Ёгѓ©гѓј
   DS_STREAM_SEND_STATUS_OTHER_ERR
 } DS_STREAM_SEND_STATUS_CODE;
 
-
 /**
  * @struct DS_StreamSendStatus
- * @brief  ѓtѓЊЃ[ѓЂ‘—ђMЏу‹µ
+ * @brief  гѓ•гѓ¬гѓјгѓ йЂЃдїЎзЉ¶жіЃ
  */
 typedef struct
 {
   DS_STREAM_SEND_STATUS_CODE status_code;       //!< status
-  int                        ret_from_if_tx;    //!< IF_TX ‚М•Ф‚и’l
-  // ЌЎЊгЏЪЌЧЏо•с‚рЉg’Ј‚·‚й‚И‚зЃC‚±‚±‚Й“ь‚к‚й
+  int                        ret_from_if_tx;    //!< IF_TX гЃ®иї”г‚ЉеЂ¤
+  // д»ЉеѕЊи©ізґ°жѓ…е ±г‚’ж‹ЎејµгЃ™г‚‹гЃЄг‚‰пјЊгЃ“гЃ“гЃ«е…Ґг‚Њг‚‹
 } DS_StreamSendStatus;
-
 
 /**
  * @enum   DS_STREAM_REC_STATUS_CODE
- * @brief  DS_StreamRecStatus ‚Е‚В‚©‚¤ЃDѓeѓЊѓЃЋуђM‚МЏу‘Ф‘J€Ъ‚рЋ¦‚·
- * @note   uint8_t‚р‘z’и
+ * @brief  DS_StreamRecStatus гЃ§гЃ¤гЃ‹гЃ†пјЋгѓ†гѓ¬гѓЎеЏ—дїЎгЃ®зЉ¶ж…‹йЃ·з§»г‚’з¤єгЃ™
+ * @note   uint8_tг‚’жѓіе®љ
  */
 typedef enum
 {
   DS_STREAM_REC_STATUS_FINDING_HEADER,
   DS_STREAM_REC_STATUS_RECEIVING_HEADER,
-  DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH, //!< ‰В•П’·ѓtѓЊЃ[ѓЂ‚Е‚МЃCѓtѓЊЃ[ѓЂ’·ѓfЃ[ѓ^‚рЋуђM’†
+  DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH, //!< еЏЇе¤‰й•·гѓ•гѓ¬гѓјгѓ гЃ§гЃ®пјЊгѓ•гѓ¬гѓјгѓ й•·гѓ‡гѓјг‚їг‚’еЏ—дїЎдё­
   DS_STREAM_REC_STATUS_RECEIVING_DATA,
   DS_STREAM_REC_STATUS_RECEIVING_FOOTER,
   DS_STREAM_REC_STATUS_FIXED_FRAME,
@@ -181,205 +168,199 @@ typedef enum
   DS_STREAM_REC_STATUS_FOOTER_MISMATCH,
   DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG,
   DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT,
-  DS_STREAM_REC_STATUS_RX_ERR,                //!< IF_RX ‚ЕѓGѓ‰Ѓ[
-  DS_STREAM_REC_STATUS_VALIDATE_ERR,          //!< ЋуђM‘O‚Йvalidate_config‚ЕѓGѓ‰Ѓ[
+  DS_STREAM_REC_STATUS_RX_ERR,                //!< IF_RX гЃ§г‚Ёгѓ©гѓј
+  DS_STREAM_REC_STATUS_VALIDATE_ERR,          //!< еЏ—дїЎе‰ЌгЃ«validate_configгЃ§г‚Ёгѓ©гѓј
   DS_STREAM_REC_STATUS_OTHER_ERR
 } DS_STREAM_REC_STATUS_CODE;
 
-
 /**
  * @enum   DS_STREAM_RX_DISRUPTION_STATUS_CODE
- * @brief  ѓeѓЊѓЃ“rђв”»’иѓRЃ[ѓh
- * @note   uint8_t ‚р‘z’и
+ * @brief  гѓ†гѓ¬гѓЎйЂ”зµ¶е€¤е®љг‚ігѓјгѓ‰
+ * @note   uint8_t г‚’жѓіе®љ
  */
 typedef enum
 {
-  DS_STREAM_TLM_DISRUPTION_STATUS_OK   = 0,  //!< ѓeѓЊѓЃ“rђв‚µ‚Д‚ў‚И‚ў or ѓeѓЊѓЃ“rђв”»’и‚р‚µ‚И‚ўЏу‘Ф
-  DS_STREAM_TLM_DISRUPTION_STATUS_LOST = 1   //!< ѓeѓЊѓЃ“rђвЊџЏo
+  DS_STREAM_TLM_DISRUPTION_STATUS_OK   = 0,  //!< гѓ†гѓ¬гѓЎйЂ”зµ¶гЃ—гЃ¦гЃ„гЃЄгЃ„ or гѓ†гѓ¬гѓЎйЂ”зµ¶е€¤е®љг‚’гЃ—гЃЄгЃ„зЉ¶ж…‹
+  DS_STREAM_TLM_DISRUPTION_STATUS_LOST = 1   //!< гѓ†гѓ¬гѓЎйЂ”зµ¶ж¤ње‡є
 } DS_STREAM_TLM_DISRUPTION_STATUS_CODE;
-
 
 /**
  * @struct DS_StreamRecStatus
- * @brief  ѓtѓЊЃ[ѓЂЋуђMЏу‹µ
+ * @brief  гѓ•гѓ¬гѓјгѓ еЏ—дїЎзЉ¶жіЃ
  */
 typedef struct
 {
   DS_STREAM_REC_STATUS_CODE            status_code;                   //!< status
-  uint16_t                             fixed_frame_len;               //!< ѓtѓЊЃ[ѓЂЉm’и‚µ‚Ѕ‚Ж‚«‚МѓtѓЊЃ[ѓЂ’·‚і
-  DS_STREAM_TLM_DISRUPTION_STATUS_CODE tlm_disruption_status;         //!< ѓeѓЊѓЃ“rђв”»’и
-  uint32_t                             count_of_carry_over_failures;  /*!< ЋуђMѓoѓbѓtѓ@‚МЊJ‰z‚ЙЋё”s‚µ‚Ѕ‰сђ”
-                                                                           DS_receive ‚МЊД‚СЏo‚µ•p“x‚Є‚Ё‚»‚·‚¬‚й‚±‚Ж‚ЄЊґ€ц */
-  // ЌЎЊгЏЪЌЧЏо•с‚рЉg’Ј‚·‚й‚И‚зЃC‚±‚±‚Й“ь‚к‚йЃiref. EQU Driver Super ‚М DRIVE_Super_rec‚И‚ЗЃj
+  uint16_t                             fixed_frame_len;               //!< гѓ•гѓ¬гѓјгѓ зўєе®љгЃ—гЃџгЃЁгЃЌгЃ®гѓ•гѓ¬гѓјгѓ й•·гЃ•
+  DS_STREAM_TLM_DISRUPTION_STATUS_CODE tlm_disruption_status;         //!< гѓ†гѓ¬гѓЎйЂ”зµ¶е€¤е®љ
+  uint32_t                             count_of_carry_over_failures;  /*!< еЏ—дїЎгѓђгѓѓгѓ•г‚ЎгЃ®з№°и¶ЉгЃ«е¤±ж•—гЃ—гЃџе›ћж•°
+                                                                           DS_receive гЃ®е‘јгЃіе‡єгЃ—й »еє¦гЃЊгЃЉгЃќгЃ™гЃЋг‚‹гЃ“гЃЁгЃЊеЋџе›  */
+  // д»ЉеѕЊи©ізґ°жѓ…е ±г‚’ж‹ЎејµгЃ™г‚‹гЃЄг‚‰пјЊгЃ“гЃ“гЃ«е…Ґг‚Њг‚‹пј€ref. EQU Driver Super гЃ® DRIVE_Super_recгЃЄгЃ©пј‰
 } DS_StreamRecStatus;
-
 
 /**
  * @struct DS_Config
- * @brief  DriverSuper ‚МђЭ’и
+ * @brief  DriverSuper гЃ®иЁ­е®љ
  *
- *         ЉeIF‚Н‚±‚к‚рЊpЏі‚µ‚Д‚В‚©‚¤ЃD
+ *         еђ„IFгЃЇгЃ“г‚Њг‚’з¶™ж‰їгЃ—гЃ¦гЃ¤гЃ‹гЃ†пјЋ
  */
 typedef struct
 {
-  // Ѓyѓ†Ѓ[ѓUЃ[ђЭ’иЃ^Ћж“ѕ’lЃzЃiDS_Config‚М•Пђ”‚Н‚·‚Ч‚Д‚МDriver‚©‚з”сЊцЉJ‚Ж‚·‚йЃj
-  DS_RecStatus rec_status_;                                 //!< IFЋуђMЏу‹µ
+  // гЂђгѓ¦гѓјг‚¶гѓјиЁ­е®љпјЏеЏ–еѕ—еЂ¤гЂ‘пј€DS_ConfigгЃ®е¤‰ж•°гЃЇгЃ™гЃ№гЃ¦гЃ®DriverгЃ‹г‚‰йќће…¬й–‹гЃЁгЃ™г‚‹пј‰
+  DS_RecStatus rec_status_;                                 //!< IFеЏ—дїЎзЉ¶жіЃ
 
-  uint32_t rx_count_;                                       //!< ‚И‚Й‚©‚µ‚з‚МѓfЃ[ѓ^‚МЋуђM‰сђ”
-  uint32_t rx_call_count_;                                  //!< DS_receive ЊД‚СЏo‚µ‰сђ”
+  uint32_t rx_count_;                                       //!< гЃЄгЃ«гЃ‹гЃ—г‚‰гЃ®гѓ‡гѓјг‚їгЃ®еЏ—дїЎе›ћж•°
+  uint32_t rx_call_count_;                                  //!< DS_receive е‘јгЃіе‡єгЃ—е›ћж•°
 
-  ObcTime  rx_time_;                                        //!< ‚И‚Й‚©‚µ‚з‚МѓfЃ[ѓ^‚МЋуђMЋћЌЏ
+  ObcTime  rx_time_;                                        //!< гЃЄгЃ«гЃ‹гЃ—г‚‰гЃ®гѓ‡гѓјг‚їгЃ®еЏ—дїЎж™‚е€»
 
-  uint8_t  should_monitor_for_rx_disruption_;               //!< ЋуђM“rђв”»’и‚р‚·‚й‚©ЃH
-  uint32_t time_threshold_for_rx_disruption_;               //!< ЋуђM“rђв”»’и‚Ми‡’l [ms]
+  uint8_t  should_monitor_for_rx_disruption_;               //!< еЏ—дїЎйЂ”зµ¶е€¤е®љг‚’гЃ™г‚‹гЃ‹пјџ
+  uint32_t time_threshold_for_rx_disruption_;               //!< еЏ—дїЎйЂ”зµ¶е€¤е®љгЃ®й–ѕеЂ¤ [ms]
 
-  // Ѓy“а•”Џ€—ќ‚Е—p‚ў‚й’lЃz
-  uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< ѓfЃ[ѓ^ЋуђMѓoѓbѓtѓ@
+  // гЂђе†…йѓЁе‡¦зђ†гЃ§з”ЁгЃ„г‚‹еЂ¤гЂ‘
+  uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< гѓ‡гѓјг‚їеЏ—дїЎгѓђгѓѓгѓ•г‚Ў
 
-  DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init ‚ЕѓЌЃ[ѓh‚·‚йЃCѓhѓ‰ѓCѓo‚МЏ‰ЉъђЭ’и‚МђЭ’иЉЦђ”
-                                                                 DS_reset_config ‚Е‚МђЭ’и‚рѓIЃ[ѓoЃ[ѓЌЃ[ѓh‚·‚й
-                                                                 •Ф‚и’l‚Н DS_ERR_CODE */
+  DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init гЃ§гѓ­гѓјгѓ‰гЃ™г‚‹пјЊгѓ‰гѓ©г‚¤гѓђгЃ®е€ќжњџиЁ­е®љгЃ®иЁ­е®љй–ўж•°
+                                                                 DS_reset_config гЃ§гЃ®иЁ­е®љг‚’г‚Єгѓјгѓђгѓјгѓ­гѓјгѓ‰гЃ™г‚‹
+                                                                 иї”г‚ЉеЂ¤гЃЇ DS_ERR_CODE */
 } DS_Config;
-
 
 /**
  * @struct DS_StreamConfig
- * @brief  DriverSuperStream‚МђЭ’и
+ * @brief  DriverSuperStreamгЃ®иЁ­е®љ
  */
 struct DS_StreamConfig
 {
-  // ЃyЊpЏіђж‚Ь‚ЕЊцЉJЃz
-  // Њ»Џу‚И‚µ
-  // setter/getter‚Е‘ЂЌм‚·‚й
+  // гЂђз¶™ж‰їе…€гЃѕгЃ§е…¬й–‹гЂ‘
+  // зЏѕзЉ¶гЃЄгЃ—
+  // setter/getterгЃ§ж“ЌдЅњгЃ™г‚‹
 
-  // Ѓyѓ†Ѓ[ѓUЃ[ђЭ’иЃ^Ћж“ѕ’lЃzЃiDS_StreamConfig‚М•Пђ”‚Н‚·‚Ч‚Д‚МDriver‚©‚з”сЊцЉJ‚Ж‚·‚йЃj
-  uint8_t  is_enabled_;                                     //!< —LЊш‚©ЃH
+  // гЂђгѓ¦гѓјг‚¶гѓјиЁ­е®љпјЏеЏ–еѕ—еЂ¤гЂ‘пј€DS_StreamConfigгЃ®е¤‰ж•°гЃЇгЃ™гЃ№гЃ¦гЃ®DriverгЃ‹г‚‰йќће…¬й–‹гЃЁгЃ™г‚‹пј‰
+  uint8_t  is_enabled_;                                     //!< жњ‰еЉ№гЃ‹пјџ
 
-  uint8_t  is_strict_frame_search_;                         /*!< ЊµЉi‚ИѓtѓЊЃ[ѓЂ’TЌх‚Є—LЊш‚©ЃH
-                                                                 ѓmѓCѓY”­ђ¶Ћћ‚в•Ўђ”streamЋg—pЋћ‚ЙѓtѓЊЃ[ѓЂЋуђMR‚к‚рЉ®‘S‚Й‚И‚­‚·ѓ‚Ѓ[ѓh
-                                                                 - OFF‚МЏкЌ‡Ѓi’КЏн‚Н‚±‚ї‚зЃj
-                                                                    ѓwѓbѓ_‚рЊ©‚В‚Ї‚ДЃCѓtѓЊЃ[ѓЂЊу•в‚рЊ©‚В‚Ї‚ЅЊгЃCЋџ‚МѓtѓЊЃ[ѓЂ‚НѓtѓЊЃ[ѓЂЊу•в‚©‚з’TЌх‚·‚й
-                                                                 - ON‚МЏкЌ‡
-                                                                    ѓwѓbѓ_‚рЊ©‚В‚Ї‚ДЃCѓtѓЊЃ[ѓЂЊу•в‚рЊ©‚В‚Ї‚ЅЊгЃCЋџ‚МѓtѓЊЃ[ѓЂ‚НЃCЊ©‚В‚Ї‚Ѕѓwѓbѓ_ђж“Є‚МЋџѓoѓCѓg‚©‚з’TЌх‚·‚й
-                                                                    ЋАЌsЋћЉФ‚Н’·‚­‚И‚й
-                                                                 •Ўђ”stream‚вѓmѓCѓY‚Є“ь‚Б‚Д‚µ‚Ь‚Б‚ЅЏкЌ‡‚И‚ЗЃC–{—€ѓwѓbѓ_‚Е‚И‚ў•”•Є‚рѓwѓbѓ_‚Ж‚µ‚Д”FЋЇ‚µ‚Д‚µ‚Ь‚¤ЏкЌ‡‚Й—LЊш‰»‚·‚й‚ЖЃC
-                                                                 _—ќ“I‚ИѓtѓЊЃ[ѓЂЋуђMR‚к‚МЉm—¦‚рЊА‚и‚И‚­‚O‚Й‹Я‚Г‚Ї‚й‚±‚Ж‚Є‚Е‚«‚йЃD
-                                                                 ѓwѓbѓ_‚Є‚ ‚йѓtѓЊЃ[ѓЂ‚МЏкЌ‡‚М‚ЭЃC—LЊш‚Й‚Е‚«‚й */
+  uint8_t  is_strict_frame_search_;                         /*!< еЋіж јгЃЄгѓ•гѓ¬гѓјгѓ жЋўзґўгЃЊжњ‰еЉ№гЃ‹пјџ
+                                                                 гѓЋг‚¤г‚єз™єз”џж™‚г‚„и¤‡ж•°streamдЅїз”Ёж™‚гЃ«гѓ•гѓ¬гѓјгѓ еЏ—дїЎжјЏг‚Њг‚’е®Ње…ЁгЃ«гЃЄгЃЏгЃ™гѓўгѓјгѓ‰
+                                                                 - OFFгЃ®е ґеђ€пј€йЂљеёёгЃЇгЃ“гЃЎг‚‰пј‰
+                                                                    гѓгѓѓгѓЂг‚’и¦‹гЃ¤гЃ‘гЃ¦пјЊгѓ•гѓ¬гѓјгѓ еЂ™иЈњг‚’и¦‹гЃ¤гЃ‘гЃџеѕЊпјЊж¬ЎгЃ®гѓ•гѓ¬гѓјгѓ гЃЇгѓ•гѓ¬гѓјгѓ еЂ™иЈњгЃ‹г‚‰жЋўзґўгЃ™г‚‹
+                                                                 - ONгЃ®е ґеђ€
+                                                                    гѓгѓѓгѓЂг‚’и¦‹гЃ¤гЃ‘гЃ¦пјЊгѓ•гѓ¬гѓјгѓ еЂ™иЈњг‚’и¦‹гЃ¤гЃ‘гЃџеѕЊпјЊж¬ЎгЃ®гѓ•гѓ¬гѓјгѓ гЃЇпјЊи¦‹гЃ¤гЃ‘гЃџгѓгѓѓгѓЂе…€й ­гЃ®ж¬Ўгѓђг‚¤гѓ€гЃ‹г‚‰жЋўзґўгЃ™г‚‹
+                                                                    е®џиЎЊж™‚й–“гЃЇй•·гЃЏгЃЄг‚‹
+                                                                 и¤‡ж•°streamг‚„гѓЋг‚¤г‚єгЃЊе…ҐгЃЈгЃ¦гЃ—гЃѕгЃЈгЃџе ґеђ€гЃЄгЃ©пјЊжњ¬жќҐгѓгѓѓгѓЂгЃ§гЃЄгЃ„йѓЁе€†г‚’гѓгѓѓгѓЂгЃЁгЃ—гЃ¦иЄЌи­гЃ—гЃ¦гЃ—гЃѕгЃ†е ґеђ€гЃ«жњ‰еЉ№еЊ–гЃ™г‚‹гЃЁпјЊ
+                                                                 и«–зђ†зљ„гЃЄгѓ•гѓ¬гѓјгѓ еЏ—дїЎжјЏг‚ЊгЃ®зўєзЋ‡г‚’й™ђг‚ЉгЃЄгЃЏ 0 гЃ«иї‘гЃҐгЃ‘г‚‹гЃ“гЃЁгЃЊгЃ§гЃЌг‚‹пјЋ
+                                                                 гѓгѓѓгѓЂгЃЊгЃ‚г‚‹гѓ•гѓ¬гѓјгѓ гЃ®е ґеђ€гЃ®гЃїпјЊжњ‰еЉ№гЃ«гЃ§гЃЌг‚‹ */
 
-  DS_StreamSendStatus send_status_;                         //!< ѓtѓЊЃ[ѓЂ‘—ђMЏу‹µ
-  DS_StreamRecStatus  rec_status_;                          //!< ѓtѓЊЃ[ѓЂЋуђMЏу‹µ
+  DS_StreamSendStatus send_status_;                         //!< гѓ•гѓ¬гѓјгѓ йЂЃдїЎзЉ¶жіЃ
+  DS_StreamRecStatus  rec_status_;                          //!< гѓ•гѓ¬гѓјгѓ еЏ—дїЎзЉ¶жіЃ
 
-  uint32_t general_cmd_tx_count_;                           //!< ’КЏнѓRѓ}ѓ“ѓh‘—ђM‰сђ”
-  uint32_t req_tlm_cmd_tx_count_;                           //!< ѓeѓЊѓЃ—v‹ЃѓRѓ}ѓ“ѓh‘—ђM‰сђ”
-  uint32_t req_tlm_cmd_tx_count_after_last_tx_;             /*!< ЌЕЊг‚ЙѓeѓЊѓЃ‚рЋуђM‚µ‚Д‚©‚з‚МѓeѓЊѓЃ—v‹ЃѓRѓ}ѓ“ѓh‘—ђM‰сђ”
-                                                                 ‚±‚к‚Є 0 ‚Е‚И‚ўЏкЌ‡ЃCѓeѓЊѓЃ‚ЄЌЕђV‚Е‚Н‚И‚ў‰В”\ђ«‚Є‚ ‚й */
-  uint32_t rx_frame_fix_count_;                             //!< ѓtѓЊЃ[ѓЂЋуђMЉm’и‰сђ”
+  uint32_t general_cmd_tx_count_;                           //!< йЂљеёёг‚ігѓћгѓігѓ‰йЂЃдїЎе›ћж•°
+  uint32_t req_tlm_cmd_tx_count_;                           //!< гѓ†гѓ¬гѓЎи¦Ѓж±‚г‚ігѓћгѓігѓ‰йЂЃдїЎе›ћж•°
+  uint32_t req_tlm_cmd_tx_count_after_last_tx_;             /*!< жњЂеѕЊгЃ«гѓ†гѓ¬гѓЎг‚’еЏ—дїЎгЃ—гЃ¦гЃ‹г‚‰гЃ®гѓ†гѓ¬гѓЎи¦Ѓж±‚г‚ігѓћгѓігѓ‰йЂЃдїЎе›ћж•°
+                                                                 гЃ“г‚ЊгЃЊ 0 гЃ§гЃЄгЃ„е ґеђ€пјЊгѓ†гѓ¬гѓЎгЃЊжњЂж–°гЃ§гЃЇгЃЄгЃ„еЏЇиѓЅжЂ§гЃЊгЃ‚г‚‹ */
+  uint32_t rx_frame_fix_count_;                             //!< гѓ•гѓ¬гѓјгѓ еЏ—дїЎзўєе®ље›ћж•°
 
-  ObcTime  general_cmd_tx_time_;                            //!< ’КЏнѓRѓ}ѓ“ѓhЌЕЏI‘—ђMЋћЌЏ
-  ObcTime  req_tlm_cmd_tx_time_;                            //!< ѓeѓЊѓЃ—v‹ЃѓRѓ}ѓ“ѓhЌЕЏI‘—ђMЋћЌЏ
-  ObcTime  rx_frame_fix_time_;                              //!< ѓtѓЊЃ[ѓЂЉm’иЋћЌЏ
+  ObcTime  general_cmd_tx_time_;                            //!< йЂљеёёг‚ігѓћгѓігѓ‰жњЂзµ‚йЂЃдїЎж™‚е€»
+  ObcTime  req_tlm_cmd_tx_time_;                            //!< гѓ†гѓ¬гѓЎи¦Ѓж±‚г‚ігѓћгѓігѓ‰жњЂзµ‚йЂЃдїЎж™‚е€»
+  ObcTime  rx_frame_fix_time_;                              //!< гѓ•гѓ¬гѓјгѓ зўєе®љж™‚е€»
 
-  uint8_t  *tx_frame_;                                      //!< ѓRѓ}ѓ“ѓhѓtѓЊЃ[ѓЂ
-  uint16_t tx_frame_size_;                                  /*!< ѓRѓ}ѓ“ѓhѓtѓЊЃ[ѓЂѓTѓCѓY
-                                                                 ‘—ђMѓfЃ[ѓ^‚Є‚И‚ўЏкЌ‡‚Н 0 */
+  uint8_t  *tx_frame_;                                      //!< г‚ігѓћгѓігѓ‰гѓ•гѓ¬гѓјгѓ 
+  uint16_t tx_frame_size_;                                  /*!< г‚ігѓћгѓігѓ‰гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚є
+                                                                 йЂЃдїЎгѓ‡гѓјг‚їгЃЊгЃЄгЃ„е ґеђ€гЃЇ 0 */
 
-  uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< ѓfЃ[ѓ^ЋуђMѓtѓЊЃ[ѓЂѓoѓbѓtѓ@
-                                                                 DS_RX_FRAME_SIZE_MAX ‚р’ґ‚¦‚й‚ж‚¤‚И‹ђ‘е‚ИѓtѓЊЃ[ѓЂЃiѓrѓbѓOѓfЃ[ѓ^Ѓj‚Й‚Н–ў‘О‰ћЃiЏ«—€ЋА‘•—\’иЃj
-                                                                 ‘О‰ћ‚і‚№‚йЏкЌ‡ЃC‚±‚М”z—с•Пђ”‚рЉO•”‚М‘е‚«‚И”z—с‚Мѓ|ѓCѓ“ѓ^‚ЙЏгЏ‘‚«‚·‚й•K—v‚Є‚ ‚йЃD */
+  uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< гѓ‡гѓјг‚їеЏ—дїЎгѓ•гѓ¬гѓјгѓ гѓђгѓѓгѓ•г‚Ў
+                                                                 DS_RX_FRAME_SIZE_MAX г‚’и¶…гЃ€г‚‹г‚€гЃ†гЃЄе·Ёе¤§гЃЄгѓ•гѓ¬гѓјгѓ пј€гѓ“гѓѓг‚°гѓ‡гѓјг‚їпј‰гЃ«гЃЇжњЄеЇѕеїњпј€е°†жќҐе®џиЈ…дє€е®љпј‰
+                                                                 еЇѕеїњгЃ•гЃ›г‚‹е ґеђ€пјЊгЃ“гЃ®й…Ќе€—е¤‰ж•°г‚’е¤–йѓЁгЃ®е¤§гЃЌгЃЄй…Ќе€—гЃ®гѓќг‚¤гѓіг‚їгЃ«дёЉж›ёгЃЌгЃ™г‚‹еї…и¦ЃгЃЊгЃ‚г‚‹пјЋ */
 
-  const uint8_t* rx_header_;                                //!< ЋуђMѓfЃ[ѓ^‚Мѓwѓbѓ_
-  uint16_t rx_header_size_;                                 /*!< ЋуђMѓfЃ[ѓ^‚Мѓwѓbѓ_ѓTѓCѓY
-                                                                 ѓwѓbѓ_‚Є‚И‚ўЏкЌ‡‚Н0‚ЙђЭ’и
-                                                                 ‚±‚МЏкЌ‡ЃCЉо–{“I‚Й‚НЊЕ’и’·Ѓi rx_frame_size ‚ЄђіЃj‚рЋg‚¤ЃD
-                                                                 ѓwѓbѓ_‚Є‚И‚­ЃC‰В•П’·‚МЏкЌ‡‚НЃCЋуђM‘OЃi—б‚¦‚О DS_send_req_tlm_cmd ЊД‚СЏo‚µ‘OЃj ‚Й
-                                                                 rx_frame_size_ ‚рђЭ’и‚·‚й‚±‚Ж‚ЕЊЕ’и’·‚М‚ж‚¤‚Й€µ‚¤‚±‚Ж‚Е‘О‰ћ‚·‚йЃD
-                                                                 ‚Ь‚ЅЃCЏ‰Љъ‰»Ћћ‚М Validation ‚р’К‚·‚Ѕ‚Я‚Й‚аЃCЏ‰Љъ’l‚Н“KђШ‚Иђіђ”‚Й‚µ‚Д‚Ё‚­‚±‚Ж */
-  const uint8_t  *rx_footer_;                               //!< ЋуђMѓfЃ[ѓ^‚Мѓtѓbѓ^
-  uint16_t rx_footer_size_;                                 /*!< ЋуђMѓfЃ[ѓ^‚Мѓtѓbѓ^ѓTѓCѓY
-                                                                 ѓwѓbѓ_‚Є‚И‚ўЏкЌ‡‚Н0‚ЙђЭ’и */
-  int16_t  rx_frame_size_;                                  /*!< ЋуђMѓfЃ[ѓ^ЃiѓeѓЊѓЃѓgѓЉЃjѓtѓЊЃ[ѓЂѓTѓCѓY
-                                                                 ЋуђMѓfЃ[ѓ^‚Є‚И‚ўЏкЌ‡‚Н0‚ЙђЭ’и
-                                                                 ЋуђMѓfЃ[ѓ^‚Є‰В•П‚МЏкЌ‡‚Н•‰ђ”‚ЙђЭ’и */
-  int16_t  rx_framelength_pos_;                             /*!< ЋуђMѓfЃ[ѓ^“а‚МѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚М‘¶ЌЭ‚·‚йЏкЏЉЃiђж“Є‚©‚зђ”‚¦‚Д‰Ѕ byte –Ъ‚Й€К’u‚·‚й‚©ЃD0 ‹NЋZЃj
-                                                                 ЋуђMѓfЃ[ѓ^‚Є‰В•П’·‚МЏкЌ‡‚М‚ЭЋg—p‚і‚к‚йЃD
-                                                                 ѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚Є‚И‚ўЏкЌ‡‚Й‚Н•‰‚ЙђЭ’и‚·‚йЃD
-                                                                 ‰В•П’·‚Е‚©‚ВѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚М‚И‚ўѓtѓЊЃ[ѓЂ‚НЃCѓtѓbѓ^‚ЄђЭ’и‚і‚к‚Д‚ў‚йЏкЌ‡‚Н—LЊш‚Е‚ ‚йЃD
-                                                                 ‚Ѕ‚ѕ‚µЃCѓtѓbѓ^‚М’TЌх‚Є•K—v‚И‚Ѕ‚ЯЃCЋАЌsЋћЉФ‚НЋбЉ±’x‚­‚И‚йЃD
-                                                                 ‚а‚ї‚л‚сЃCѓwѓbѓ_‚Є‚ ‚й‚±‚Ж‚рђ„Џ§‚·‚йЃDѓwѓbѓ_‚Є‚И‚ўЏкЌ‡‚НЃCЋуђM‚µ‚ЅѓfЃ[ѓ^‚М–`“Є‚©‚зѓtѓЊЃ[ѓЂ‚Ж‚Э‚И‚·ЃD
-                                                                 ЋуђM‚і‚к‚йѓtѓЊЃ[ѓЂ’·‚ЄЋуђM‘O‚Й”»–ѕ‚µ‚Д‚ў‚йЏкЌ‡‚НЃC
-                                                                 ѓwѓbѓ_‚Є‚И‚ўЏкЌ‡‚М‚Ж‚«‚Ж“Ї—l‚ЙЃCЋуђM‘OЃi—б‚¦‚О DS_send_req_tlm_cmd ЊД‚СЏo‚µ‘OЃj ‚Й
-                                                                 rx_frame_size_ ‚рђЭ’и‚·‚й‚±‚Ж‚ЕЃCЊЕ’и’·‚М‚ж‚¤‚Й€µ‚¤‚±‚Ж‚Е‘О‰ћ‚·‚й‚±‚Ж‚рђ„Џ§‚·‚йЃD */
-  uint16_t rx_framelength_type_size_;                       /*!< ѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚МЊ^ѓTѓCѓY [Byte]
-                                                                 ЋуђMѓfЃ[ѓ^‚Є‰В•П’·‚МЏкЌ‡‚М‚ЭЋg—p‚і‚к‚йЃD
-                                                                 —б‚¦‚О uint8 ‚И‚з 1ЃC uint32 ‚И‚з 4 */
-  uint16_t rx_framelength_offset_;                          /*!< ѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚МѓIѓtѓZѓbѓg’l
-                                                                 ЋуђMѓfЃ[ѓ^‚Є‰В•П’·‚МЏкЌ‡‚М‚ЭЋg—p‚і‚к‚й
-                                                                 ѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚Й‚ж‚й‰В•П’·ѓfЃ[ѓ^‚М‰рђН‚НЃuѓtѓЊЃ[ѓЂ‚М‘SѓTѓCѓYЃv‚Й‚ж‚иЌs‚н‚к‚й‚ЄЃC
-                                                                 ‹@Љн‚М’†‚Й‚Нѓwѓbѓ_‚Жѓtѓbѓ^‚М•Є‚НЏњ‚ў‚ЅѓfЃ[ѓ^ђ”‚Ж‚µ‚ДѓTѓCѓY‚Є•\Њ»‚і‚к‚йЏкЌ‡‚Є‚ ‚й
-                                                                 ‚»‚МЏкЌ‡‚МѓTѓCѓY’Іђ®‚М‚Ѕ‚Я‚ЙЋg‚¤
-                                                                 ѓtѓЊЃ[ѓЂѓTѓCѓYѓfЃ[ѓ^‚ЄЃuѓtѓЊЃ[ѓЂ‚М‘SѓTѓCѓYЃv‚рЋ¦‚µ‚Д‚ў‚йЏкЌ‡‚Й‚Н0‚ЙђЭ’и‚·‚й */
+  const uint8_t* rx_header_;                                //!< еЏ—дїЎгѓ‡гѓјг‚їгЃ®гѓгѓѓгѓЂ
+  uint16_t rx_header_size_;                                 /*!< еЏ—дїЎгѓ‡гѓјг‚їгЃ®гѓгѓѓгѓЂг‚µг‚¤г‚є
+                                                                 гѓгѓѓгѓЂгЃЊгЃЄгЃ„е ґеђ€гЃЇ0гЃ«иЁ­е®љ
+                                                                 гЃ“гЃ®е ґеђ€пјЊеџєжњ¬зљ„гЃ«гЃЇе›єе®љй•·пј€ rx_frame_size гЃЊж­Јпј‰г‚’дЅїгЃ†пјЋ
+                                                                 гѓгѓѓгѓЂгЃЊгЃЄгЃЏпјЊеЏЇе¤‰й•·гЃ®е ґеђ€гЃЇпјЊеЏ—дїЎе‰Ќпј€дѕ‹гЃ€гЃ° DS_send_req_tlm_cmd е‘јгЃіе‡єгЃ—е‰Ќпј‰ гЃ«
+                                                                 rx_frame_size_ г‚’иЁ­е®љгЃ™г‚‹гЃ“гЃЁгЃ§е›єе®љй•·гЃ®г‚€гЃ†гЃ«ж‰±гЃ†гЃ“гЃЁгЃ§еЇѕеїњгЃ™г‚‹пјЋ
+                                                                 гЃѕгЃџпјЊе€ќжњџеЊ–ж™‚гЃ® Validation г‚’йЂљгЃ™гЃџг‚ЃгЃ«г‚‚пјЊе€ќжњџеЂ¤гЃЇйЃ©е€‡гЃЄж­Јж•°гЃ«гЃ—гЃ¦гЃЉгЃЏгЃ“гЃЁ */
+  const uint8_t  *rx_footer_;                               //!< еЏ—дїЎгѓ‡гѓјг‚їгЃ®гѓ•гѓѓг‚ї
+  uint16_t rx_footer_size_;                                 /*!< еЏ—дїЎгѓ‡гѓјг‚їгЃ®гѓ•гѓѓг‚їг‚µг‚¤г‚є
+                                                                 гѓгѓѓгѓЂгЃЊгЃЄгЃ„е ґеђ€гЃЇ0гЃ«иЁ­е®љ */
+  int16_t  rx_frame_size_;                                  /*!< еЏ—дїЎгѓ‡гѓјг‚їпј€гѓ†гѓ¬гѓЎгѓ€гѓЄпј‰гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚є
+                                                                 еЏ—дїЎгѓ‡гѓјг‚їгЃЊгЃЄгЃ„е ґеђ€гЃЇ0гЃ«иЁ­е®љ
+                                                                 еЏ—дїЎгѓ‡гѓјг‚їгЃЊеЏЇе¤‰гЃ®е ґеђ€гЃЇиІ ж•°гЃ«иЁ­е®љ */
+  int16_t  rx_framelength_pos_;                             /*!< еЏ—дїЎгѓ‡гѓјг‚їе†…гЃ®гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃ®е­ењЁгЃ™г‚‹е ґж‰Ђпј€е…€й ­гЃ‹г‚‰ж•°гЃ€гЃ¦дЅ• byte з›®гЃ«дЅЌзЅ®гЃ™г‚‹гЃ‹пјЋ0 иµ·з®—пј‰
+                                                                 еЏ—дїЎгѓ‡гѓјг‚їгЃЊеЏЇе¤‰й•·гЃ®е ґеђ€гЃ®гЃїдЅїз”ЁгЃ•г‚Њг‚‹пјЋ
+                                                                 гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃЊгЃЄгЃ„е ґеђ€гЃ«гЃЇиІ гЃ«иЁ­е®љгЃ™г‚‹пјЋ
+                                                                 еЏЇе¤‰й•·гЃ§гЃ‹гЃ¤гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃ®гЃЄгЃ„гѓ•гѓ¬гѓјгѓ гЃЇпјЊгѓ•гѓѓг‚їгЃЊиЁ­е®љгЃ•г‚ЊгЃ¦гЃ„г‚‹е ґеђ€гЃЇжњ‰еЉ№гЃ§гЃ‚г‚‹пјЋ
+                                                                 гЃџгЃ гЃ—пјЊгѓ•гѓѓг‚їгЃ®жЋўзґўгЃЊеї…и¦ЃгЃЄгЃџг‚ЃпјЊе®џиЎЊж™‚й–“гЃЇи‹Ґе№ІйЃ…гЃЏгЃЄг‚‹пјЋ
+                                                                 г‚‚гЃЎг‚Ќг‚“пјЊгѓгѓѓгѓЂгЃЊгЃ‚г‚‹гЃ“гЃЁг‚’жЋЁеҐЁгЃ™г‚‹пјЋгѓгѓѓгѓЂгЃЊгЃЄгЃ„е ґеђ€гЃЇпјЊеЏ—дїЎгЃ—гЃџгѓ‡гѓјг‚їгЃ®е†’й ­гЃ‹г‚‰гѓ•гѓ¬гѓјгѓ гЃЁгЃїгЃЄгЃ™пјЋ
+                                                                 еЏ—дїЎгЃ•г‚Њг‚‹гѓ•гѓ¬гѓјгѓ й•·гЃЊеЏ—дїЎе‰ЌгЃ«е€¤жЋгЃ—гЃ¦гЃ„г‚‹е ґеђ€гЃЇпјЊ
+                                                                 гѓгѓѓгѓЂгЃЊгЃЄгЃ„е ґеђ€гЃ®гЃЁгЃЌгЃЁеђЊж§гЃ«пјЊеЏ—дїЎе‰Ќпј€дѕ‹гЃ€гЃ° DS_send_req_tlm_cmd е‘јгЃіе‡єгЃ—е‰Ќпј‰ гЃ«
+                                                                 rx_frame_size_ г‚’иЁ­е®љгЃ™г‚‹гЃ“гЃЁгЃ§пјЊе›єе®љй•·гЃ®г‚€гЃ†гЃ«ж‰±гЃ†гЃ“гЃЁгЃ§еЇѕеїњгЃ™г‚‹гЃ“гЃЁг‚’жЋЁеҐЁгЃ™г‚‹пјЋ */
+  uint16_t rx_framelength_type_size_;                       /*!< гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃ®ећ‹г‚µг‚¤г‚є [Byte]
+                                                                 еЏ—дїЎгѓ‡гѓјг‚їгЃЊеЏЇе¤‰й•·гЃ®е ґеђ€гЃ®гЃїдЅїз”ЁгЃ•г‚Њг‚‹пјЋ
+                                                                 дѕ‹гЃ€гЃ° uint8 гЃЄг‚‰ 1пјЊ uint32 гЃЄг‚‰ 4 */
+  uint16_t rx_framelength_offset_;                          /*!< гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃ®г‚Єгѓ•г‚»гѓѓгѓ€еЂ¤
+                                                                 еЏ—дїЎгѓ‡гѓјг‚їгЃЊеЏЇе¤‰й•·гЃ®е ґеђ€гЃ®гЃїдЅїз”ЁгЃ•г‚Њг‚‹
+                                                                 гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃ«г‚€г‚‹еЏЇе¤‰й•·гѓ‡гѓјг‚їгЃ®и§ЈжћђгЃЇгЂЊгѓ•гѓ¬гѓјгѓ гЃ®е…Ёг‚µг‚¤г‚єгЂЌгЃ«г‚€г‚ЉиЎЊг‚Џг‚Њг‚‹гЃЊпјЊ
+                                                                 ж©џе™ЁгЃ®дё­гЃ«гЃЇгѓгѓѓгѓЂгЃЁгѓ•гѓѓг‚їгЃ®е€†гЃЇй™¤гЃ„гЃџгѓ‡гѓјг‚їж•°гЃЁгЃ—гЃ¦г‚µг‚¤г‚єгЃЊиЎЁзЏѕгЃ•г‚Њг‚‹е ґеђ€гЃЊгЃ‚г‚‹
+                                                                 гЃќгЃ®е ґеђ€гЃ®г‚µг‚¤г‚єиЄїж•ґгЃ®гЃџг‚ЃгЃ«дЅїгЃ†
+                                                                 гѓ•гѓ¬гѓјгѓ г‚µг‚¤г‚єгѓ‡гѓјг‚їгЃЊгЂЊгѓ•гѓ¬гѓјгѓ гЃ®е…Ёг‚µг‚¤г‚єгЂЌг‚’з¤єгЃ—гЃ¦гЃ„г‚‹е ґеђ€гЃ«гЃЇ0гЃ«иЁ­е®љгЃ™г‚‹ */
 
-  uint8_t  should_monitor_for_tlm_disruption_;              //!< ѓeѓЊѓЃ“rђв”»’и‚р‚·‚й‚©ЃH
-  uint32_t time_threshold_for_tlm_disruption_;              //!< ѓeѓЊѓЃ“rђв”»’и‚Ми‡’l [ms]
+  uint8_t  should_monitor_for_tlm_disruption_;              //!< гѓ†гѓ¬гѓЎйЂ”зµ¶е€¤е®љг‚’гЃ™г‚‹гЃ‹пјџ
+  uint32_t time_threshold_for_tlm_disruption_;              //!< гѓ†гѓ¬гѓЎйЂ”зµ¶е€¤е®љгЃ®й–ѕеЂ¤ [ms]
 
   DS_ERR_CODE (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver);
-                                                            /*!< ЋуђMѓfЃ[ѓ^‚М‰рђНЉЦђ”
-                                                                 p_driver ‚НЊpЏіђж‹@Љн‚Мѓhѓ‰ѓCѓoЌ\‘ў‘М‚И‚З
-                                                                 •Ф‚и’l‚Н DS_ERR_CODE */
-  DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ ‚М•Ф‚и’l
+                                                            /*!< еЏ—дїЎгѓ‡гѓјг‚їгЃ®и§Јжћђй–ўж•°
+                                                                 p_driver гЃЇз¶™ж‰їе…€ж©џе™ЁгЃ®гѓ‰гѓ©г‚¤гѓђж§‹йЂ дЅ“гЃЄгЃ©
+                                                                 иї”г‚ЉеЂ¤гЃЇ DS_ERR_CODE */
+  DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ гЃ®иї”г‚ЉеЂ¤
 
-  // Ѓy“а•”Џ€—ќ‚Е—p‚ў‚й’lЃz
-  uint8_t  is_validation_needed_for_send_;                  //!< ‘—ђM‘O‚ЙђЭ’и’l‚М Validation ‚Є•K—v‚©ЃH
-  uint8_t  is_validation_needed_for_rec_;                   //!< ЋуђM‘O‚ЙђЭ’и’l‚М Validation ‚Є•K—v‚©ЃH
+  // гЂђе†…йѓЁе‡¦зђ†гЃ§з”ЁгЃ„г‚‹еЂ¤гЂ‘
+  uint8_t  is_validation_needed_for_send_;                  //!< йЂЃдїЎе‰ЌгЃ«иЁ­е®љеЂ¤гЃ® Validation гЃЊеї…и¦ЃгЃ‹пјџ
+  uint8_t  is_validation_needed_for_rec_;                   //!< еЏ—дїЎе‰ЌгЃ«иЁ­е®љеЂ¤гЃ® Validation гЃЊеї…и¦ЃгЃ‹пјџ
 
-  uint16_t rx_frame_rec_len_;                               //!< ЋуђMѓfЃ[ѓ^ѓtѓЊЃ[ѓЂ‚МЋуђMЌП‚ЭByteЃDrx_frame_ ‚Й‘О‚·‚й‘ЂЌмѓ|ѓCѓ“ѓ^‚Й‚И‚й
-  uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< ЋуђMѓoѓbѓtѓ@‰рђНЋћ‚ЙЃCѓtѓЊЃ[ѓЂЊу•в‚Ж‚µ‚ЅѓtѓЊЃ[ѓЂ‚Мђж“Є€К’uЃi0 ‹NЋZЃj
-                                                                 DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ ‚©‚зЊД‚О‚к‚йЉЦђ”‚ЕЃC
-                                                                 ѓtѓЊЃ[ѓЂЊу•в‚ЄѓЌѓWѓJѓ‹‚ИѓGѓ‰Ѓ[Ѓiѓtѓbѓ^‚М•s€к’v‚вѓtѓЊЃ[ѓЂ’·‚М•sђ®Ќ‡Ѓj“™‚Є‹N‚«‚ЅЋћ‚ЙЃC
-                                                                 ЌД“xѓtѓЊЃ[ѓЂ‚р’TЌх‚Е‚«‚й‚ж‚¤‚Й‚·‚й‚Ѕ‚Я‚ЙЋg‚¤ */
+  uint16_t rx_frame_rec_len_;                               //!< еЏ—дїЎгѓ‡гѓјг‚їгѓ•гѓ¬гѓјгѓ гЃ®еЏ—дїЎжё€гЃїByteпјЋrx_frame_ гЃ«еЇѕгЃ™г‚‹ж“ЌдЅњгѓќг‚¤гѓіг‚їгЃ«гЃЄг‚‹
+  uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< еЏ—дїЎгѓђгѓѓгѓ•г‚Ўи§Јжћђж™‚гЃ«пјЊгѓ•гѓ¬гѓјгѓ еЂ™иЈњгЃЁгЃ—гЃџгѓ•гѓ¬гѓјгѓ гЃ®е…€й ­дЅЌзЅ®пј€0 иµ·з®—пј‰
+                                                                 DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ гЃ‹г‚‰е‘јгЃ°г‚Њг‚‹й–ўж•°гЃ§пјЊ
+                                                                 гѓ•гѓ¬гѓјгѓ еЂ™иЈњгЃЊгѓ­г‚ёг‚«гѓ«гЃЄг‚Ёгѓ©гѓјпј€гѓ•гѓѓг‚їгЃ®дёЌдёЂи‡ґг‚„гѓ•гѓ¬гѓјгѓ й•·гЃ®дёЌж•ґеђ€пј‰з­‰гЃЊиµ·гЃЌгЃџж™‚гЃ«пјЊ
+                                                                 е†Ќеє¦гѓ•гѓ¬гѓјгѓ г‚’жЋўзґўгЃ§гЃЌг‚‹г‚€гЃ†гЃ«гЃ™г‚‹гЃџг‚ЃгЃ«дЅїгЃ† */
 
-  uint8_t  is_rx_buffer_carry_over_;                        //!< ЊJ‰z‚·‚йЋуђMѓfЃ[ѓ^‚Є‚ ‚й‚©ЃH
-  uint16_t carry_over_buffer_size_;                         //!< ЊJ‰z‚·‚йЋуђMѓfЃ[ѓ^‚МѓTѓCѓY
-  uint16_t carry_over_buffer_next_pos_;                     //!< Ћџ‰с’TЌх‚рЋn‚Я‚йѓoѓbѓtѓ@€К’uЃi0 ‹NЋZЃj
+  uint8_t  is_rx_buffer_carry_over_;                        //!< з№°и¶ЉгЃ™г‚‹еЏ—дїЎгѓ‡гѓјг‚їгЃЊгЃ‚г‚‹гЃ‹пјџ
+  uint16_t carry_over_buffer_size_;                         //!< з№°и¶ЉгЃ™г‚‹еЏ—дїЎгѓ‡гѓјг‚їгЃ®г‚µг‚¤г‚є
+  uint16_t carry_over_buffer_next_pos_;                     //!< ж¬Ўе›ћжЋўзґўг‚’е§‹г‚Ѓг‚‹гѓђгѓѓгѓ•г‚ЎдЅЌзЅ®пј€0 иµ·з®—пј‰
   uint8_t  rx_buffer_for_carry_over_[DS_RX_BUFFER_SIZE_MAX];
-                                                            /*!< ѓtѓЊЃ[ѓЂЉm’и‚µ‚Ѕ‚Ж‚«‚ЙЃC‚»‚МЊг‚Й‘±‚ў‚Д‚ў‚ЅЋуђMѓfЃ[ѓ^‚рЊJ‰z‚·‚Ѕ‚Я‚М•Ы‘¶—pѓoѓbѓtѓ@
-                                                                 Ћџ‚МЋуђMЋћ‚Й‚Ь‚Ж‚Я‚ДЏ€—ќ‚і‚№‚й */
+                                                            /*!< гѓ•гѓ¬гѓјгѓ зўєе®љгЃ—гЃџгЃЁгЃЌгЃ«пјЊгЃќгЃ®еѕЊгЃ«з¶љгЃ„гЃ¦гЃ„гЃџеЏ—дїЎгѓ‡гѓјг‚їг‚’з№°и¶ЉгЃ™гЃџг‚ЃгЃ®дїќе­з”Ёгѓђгѓѓгѓ•г‚Ў
+                                                                 ж¬ЎгЃ®еЏ—дїЎж™‚гЃ«гЃѕгЃЁг‚ЃгЃ¦е‡¦зђ†гЃ•гЃ›г‚‹ */
 };
-
 
 /**
  * @struct DriverSuper
- * @brief  DriverSuper‚МђЭ’и
- *         ЉeIF‚Н‚±‚к‚рЊpЏі‚µ‚Д‚В‚©‚¤ЃD
+ * @brief  DriverSuperгЃ®иЁ­е®љ
+ *         еђ„IFгЃЇгЃ“г‚Њг‚’з¶™ж‰їгЃ—гЃ¦гЃ¤гЃ‹гЃ†пјЋ
  */
 struct DriverSuper
 {
-  // ЃyЊpЏіђж‚Ь‚ЕЊцЉJЃz
-  IF_LIST_ENUM      interface;                              //!< ЊpЏіђж‚М‹@Љн‚МЋg—pIF
-  void              *if_config;                             //!< IFђЭ’и
+  // гЂђз¶™ж‰їе…€гЃѕгЃ§е…¬й–‹гЂ‘
+  IF_LIST_ENUM      interface;                              //!< з¶™ж‰їе…€гЃ®ж©џе™ЁгЃ®дЅїз”ЁIF
+  void              *if_config;                             //!< IFиЁ­е®љ
 
-  DS_Config         config;                                 //!< DriverSuper‚МђЭ’и
+  DS_Config         config;                                 //!< DriverSuperгЃ®иЁ­е®љ
 
   DS_StreamConfig   stream_config[DS_STREAM_MAX];           /*!< DriverSuperStream
-                                                                 index‚Є’б‚ў‚а‚М‚Щ‚З—DђжЃi‚ЙЌЎЊг‚·‚й‚©‚аЃDЋАЌs‘¬“xЋџ‘жЃjЃD
-                                                                 Ћg‚ў•ы—бЃF[0]‚М‚Э‚р‚В‚©‚Б‚ДЃCѓeѓЊѓЃ“а‚ЙЋdЌћ‚с‚ѕ TLM ID ‚И‚З‚Е data_analyzer_ “а‚ЕЏ€—ќ‚р•ЄЉт
-                                                                 Ћg‚ў•ы—бЃF[0]‚р’иЉъѓeѓЊѓЃ‚Ж€к”КѓRѓ}ѓ“ѓh‚ЕЋg‚ўЃC[1]€ИЌ~‚р”с’иЉъ‚в“БЋкѓRѓ}ѓ“ѓhЃEѓeѓЊѓЃѓgѓЉ‚ЕЋg‚¤
-                                                                 ‚ЄЃC‚Ь‚ Ћ©—R‚ЙЋg‚Б‚Д‚а‚з‚¦‚Ѕ‚з */
+                                                                 indexгЃЊдЅЋгЃ„г‚‚гЃ®гЃ»гЃ©е„Єе…€пј€гЃ«д»ЉеѕЊгЃ™г‚‹гЃ‹г‚‚пјЋе®џиЎЊйЂџеє¦ж¬Ўз¬¬пј‰пјЋ
+                                                                 дЅїгЃ„ж–№дѕ‹пјљ[0]гЃ®гЃїг‚’гЃ¤гЃ‹гЃЈгЃ¦пјЊгѓ†гѓ¬гѓЎе†…гЃ«д»•иѕјг‚“гЃ  TLM ID гЃЄгЃ©гЃ§ data_analyzer_ е†…гЃ§е‡¦зђ†г‚’е€†еІђ
+                                                                 дЅїгЃ„ж–№дѕ‹пјљ[0]г‚’е®љжњџгѓ†гѓ¬гѓЎгЃЁдёЂи€¬г‚ігѓћгѓігѓ‰гЃ§дЅїгЃ„пјЊ[1]д»Ґй™Ќг‚’йќће®љжњџг‚„з‰№ж®Љг‚ігѓћгѓігѓ‰гѓ»гѓ†гѓ¬гѓЎгѓ€гѓЄгЃ§дЅїгЃ†
+                                                                 гЃЊпјЊгЃѕгЃ‚и‡Єз”±гЃ«дЅїгЃЈгЃ¦г‚‚г‚‰гЃ€гЃџг‚‰ */
 };
 
-
-// ###### DriverSuperЉо–{ЉЦђ” ######
+// ###### DriverSuperеџєжњ¬й–ўж•° ######
 
 /**
- * @brief  ЊpЏіђж‚М‹@Љн‚ж‚иDriverSuper‚рЏ‰Љъ‰»‚·‚й
+ * @brief  з¶™ж‰їе…€гЃ®ж©џе™Ёг‚€г‚ЉDriverSuperг‚’е€ќжњџеЊ–гЃ™г‚‹
  *
- *         DriverSuperЌ\‘ў‘М‚рЊpЏіђжDriveЌ\‘ў‘М‚МѓЃѓ“ѓo‚Ж‚µ‚Д’и‹`ЃiЊpЏіЃj‚µЃCѓ|ѓCѓ“ѓ^‚р“n‚·‚±‚Ж‚Еѓ|Ѓ[ѓg‚рЏ‰Љъ‰»‚·‚йЃD
- *         ‚»‚µ‚ДЃCЌ\‘ў‘М“а‚МЏ‰Љъ‰»‚Є•K—v‚И•Пђ”‚рЏ‰Љъ‰»‚·‚йЃD
- *         ѓfѓtѓHѓ‹ѓg’l‚МЏгЏ‘‚«‚Н load_init_setting ‚ЕЌs‚¤
- * @note   DriverSuper‚рЋg—p‚·‚йЋћ‚Н‹N“®Ћћ‚Й•K‚ёЋАЋ{‚·‚й‚±‚Ж
- * @param  *p_super           Џ‰Љъ‰»‚·‚йDriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
- * @param  *if_config         Џ‰Љъ‰»‚·‚йDriver‚Е—p‚ў‚з‚к‚Д‚ў‚йIF‚МconfigЌ\‘ў‘М
- * @param  *load_init_setting DriverSuper‚МЏ‰ЉъђЭ’иѓЌЃ[ѓhЉЦђ”ѓ|ѓCѓ“ѓ^
+ *         DriverSuperж§‹йЂ дЅ“г‚’з¶™ж‰їе…€Driveж§‹йЂ дЅ“гЃ®гѓЎгѓігѓђгЃЁгЃ—гЃ¦е®љзѕ©пј€з¶™ж‰їпј‰гЃ—пјЊгѓќг‚¤гѓіг‚їг‚’жёЎгЃ™гЃ“гЃЁгЃ§гѓќгѓјгѓ€г‚’е€ќжњџеЊ–гЃ™г‚‹пјЋ
+ *         гЃќгЃ—гЃ¦пјЊж§‹йЂ дЅ“е†…гЃ®е€ќжњџеЊ–гЃЊеї…и¦ЃгЃЄе¤‰ж•°г‚’е€ќжњџеЊ–гЃ™г‚‹пјЋ
+ *         гѓ‡гѓ•г‚©гѓ«гѓ€еЂ¤гЃ®дёЉж›ёгЃЌгЃЇ load_init_setting гЃ§иЎЊгЃ†
+ * @note   DriverSuperг‚’дЅїз”ЁгЃ™г‚‹ж™‚гЃЇиµ·е‹•ж™‚гЃ«еї…гЃље®џж–ЅгЃ™г‚‹гЃ“гЃЁ
+ * @param  p_super:           е€ќжњџеЊ–гЃ™г‚‹DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
+ * @param  if_config:         е€ќжњџеЊ–гЃ™г‚‹DriverгЃ§з”ЁгЃ„г‚‰г‚ЊгЃ¦гЃ„г‚‹IFгЃ®configж§‹йЂ дЅ“
+ * @param  load_init_setting: DriverSuperгЃ®е€ќжњџиЁ­е®љгѓ­гѓјгѓ‰й–ўж•°гѓќг‚¤гѓіг‚ї
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_init(DriverSuper* p_super,
@@ -387,84 +368,84 @@ DS_ERR_CODE DS_init(DriverSuper* p_super,
                     DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super));
 
 /**
- * @brief  DriverSuper‚МѓЉѓZѓbѓg
- * @note   DS_init“а‚ЕЊД‚О‚к‚Д‚ў‚йЃD
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
+ * @brief  DriverSuperгЃ®гѓЄг‚»гѓѓгѓ€
+ * @note   DS_initе†…гЃ§е‘јгЃ°г‚ЊгЃ¦гЃ„г‚‹пјЋ
+ * @param  p_super: DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_reset(DriverSuper* p_super);
 
 /**
- * @brief  DriverSuper‚МђЭ’и‚Й•sђ®Ќ‡‚Єђ¶‚¶‚Д‚ў‚И‚ў‚©ѓ`ѓFѓbѓN‚·‚й
+ * @brief  DriverSuperгЃ®иЁ­е®љгЃ«дёЌж•ґеђ€гЃЊз”џгЃгЃ¦гЃ„гЃЄгЃ„гЃ‹гѓЃг‚§гѓѓг‚ЇгЃ™г‚‹
  *
- *         Driver‚МђЭ’и‚р•П‚¦‚ЅЏкЌ‡‚Н–€‰сЊД‚СЏo‚·‚±‚Ж‚рђ„Џ§‚·‚й
- * @note   DS_init“а‚ЕЊД‚О‚к‚Д‚ў‚йЃD
- * @note   “а•”‚МЉЗ—ќѓtѓ‰ѓO‚р•ПЌX‚µ‚Д‚ў‚й‚М‚ЕЃC p_super ‚ЙЊµ–§‚Иconstђ«‚Н‚И‚ў
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
+ *         DriverгЃ®иЁ­е®љг‚’е¤‰гЃ€гЃџе ґеђ€гЃЇжЇЋе›ће‘јгЃіе‡єгЃ™гЃ“гЃЁг‚’жЋЁеҐЁгЃ™г‚‹
+ * @note   DS_initе†…гЃ§е‘јгЃ°г‚ЊгЃ¦гЃ„г‚‹пјЋ
+ * @note   е†…йѓЁгЃ®з®Ўзђ†гѓ•гѓ©г‚°г‚’е¤‰ж›ґгЃ—гЃ¦гЃ„г‚‹гЃ®гЃ§пјЊ p_super гЃ«еЋіеЇ†гЃЄconstжЂ§гЃЇгЃЄгЃ„
+ * @param  p_super: DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_validate_config(DriverSuper* p_super);
 
 /**
- * @brief  ЋуђMѓoѓbѓtѓ@‚рѓNѓЉѓA‚·‚й
+ * @brief  еЏ—дїЎгѓђгѓѓгѓ•г‚Ўг‚’г‚ЇгѓЄг‚ўгЃ™г‚‹
  *
- *         —б‚¦‚ОЃCѓwѓbѓ_‚И‚µѓeѓЊѓЃ‚МЏкЌ‡ЃC“r’†‚ЕѓSѓ~ѓfЃ[ѓ^‚Є“ь‚й‚Ж€ИЊг‚·‚Ч‚Д‚МѓtѓЊЃ[ѓЂ‚Є‚ё‚к‚Д‚µ‚Ь‚¤ЃD
- *         ‚»‚М‚ж‚¤‚И‚Ж‚«ЃiCRCѓGѓ‰Ѓ[‚Є‚Е‚й‚Ж‚©ЃCЋуђMѓfЃ[ѓ^‚Є–ѕ‚з‚©‚Й‚Ё‚©‚µ‚ўЏкЌ‡Ѓj‚ЙЃCbuffer‚р€к“xѓNѓЉѓA‚µЃC
- *         Ћџ‚Й“Н‚­ѓfЃ[ѓ^‚©‚зѓtѓЊЃ[ѓЂ‰рђН‚рђж“Є‚©‚зЌs‚¤‚ж‚¤‚Й‚·‚й‚Ѕ‚Я‚Й—p‚ў‚йЃD
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
+ *         дѕ‹гЃ€гЃ°пјЊгѓгѓѓгѓЂгЃЄгЃ—гѓ†гѓ¬гѓЎгЃ®е ґеђ€пјЊйЂ”дё­гЃ§г‚ґгѓџгѓ‡гѓјг‚їгЃЊе…Ґг‚‹гЃЁд»ҐеѕЊгЃ™гЃ№гЃ¦гЃ®гѓ•гѓ¬гѓјгѓ гЃЊгЃљг‚ЊгЃ¦гЃ—гЃѕгЃ†пјЋ
+ *         гЃќгЃ®г‚€гЃ†гЃЄгЃЁгЃЌпј€CRCг‚Ёгѓ©гѓјгЃЊгЃ§г‚‹гЃЁгЃ‹пјЊеЏ—дїЎгѓ‡гѓјг‚їгЃЊжЋг‚‰гЃ‹гЃ«гЃЉгЃ‹гЃ—гЃ„е ґеђ€пј‰гЃ«пјЊbufferг‚’дёЂеє¦г‚ЇгѓЄг‚ўгЃ—пјЊ
+ *         ж¬ЎгЃ«е±ЉгЃЏгѓ‡гѓјг‚їгЃ‹г‚‰гѓ•гѓ¬гѓјгѓ и§Јжћђг‚’е…€й ­гЃ‹г‚‰иЎЊгЃ†г‚€гЃ†гЃ«гЃ™г‚‹гЃџг‚ЃгЃ«з”ЁгЃ„г‚‹пјЋ
+ * @param  p_super: DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super);
 
 /**
- * @brief  ЊpЏіђж‚М‹@Љн‚©‚зѓeѓЊѓЃѓgѓЉ‚рЋуђM‚·‚й
+ * @brief  з¶™ж‰їе…€гЃ®ж©џе™ЁгЃ‹г‚‰гѓ†гѓ¬гѓЎгѓ€гѓЄг‚’еЏ—дїЎгЃ™г‚‹
  *
- *         ѓtѓЊЃ[ѓЂ‚рЉm’и‚і‚№‚ДЃCrx_frame_‚Й‚ў‚к‚й‚Ь‚ЕЃD‰рђН (data_analyzer_) ‚Н‚µ‚И‚ў‚М‚Еѓhѓ‰ѓCѓo‚Е DS_analyze_rec_data ‚рЊД‚СЏo‚·‚±‚Ж
- *         ‚±‚к‚НЃC“Ї‚¶stream‚Е‚аѓeѓЊѓЃ“а•”‚МID‚И‚З‚Е‰рђН‚р•П‚¦‚Ѕ‚ў‚Ж‚«‚И‚З‚Є‘z’и‚і‚к‚й‚Ѕ‚Я
- * @note   ЊpЏіђж‚М‹@Љн‚МѓfЃ[ѓ^Џo—НЋьЉъ‚ж‚и‘Ѓ‚ўЋьЉъ‚Е’иЉъ“I‚ЙЋАЌs‚·‚й‚±‚Ж
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
- * @retval DS_ERR_CODE_OK  : IF_RX ‚Е‚МѓGѓ‰Ѓ[‚И‚µ
- * @retval DS_ERR_CODE_ERR : IF_RX ‚Е‚МѓGѓ‰Ѓ[‚ ‚и
- * @note   ЋуђMЏу‹µ‚вѓGѓ‰Ѓ[Џо•с‚Н rec_status_ ‚ЙЉi”[‚і‚к‚Д‚ў‚й
+ *         гѓ•гѓ¬гѓјгѓ г‚’зўєе®љгЃ•гЃ›гЃ¦пјЊrx_frame_гЃ«гЃ„г‚Њг‚‹гЃѕгЃ§пјЋи§Јжћђ (data_analyzer_) гЃЇгЃ—гЃЄгЃ„гЃ®гЃ§гѓ‰гѓ©г‚¤гѓђгЃ§ DS_analyze_rec_data г‚’е‘јгЃіе‡єгЃ™гЃ“гЃЁ
+ *         гЃ“г‚ЊгЃЇпјЊеђЊгЃstreamгЃ§г‚‚гѓ†гѓ¬гѓЎе†…йѓЁгЃ®IDгЃЄгЃ©гЃ§и§Јжћђг‚’е¤‰гЃ€гЃџгЃ„гЃЁгЃЌгЃЄгЃ©гЃЊжѓіе®љгЃ•г‚Њг‚‹гЃџг‚Ѓ
+ * @note   з¶™ж‰їе…€гЃ®ж©џе™ЁгЃ®гѓ‡гѓјг‚їе‡єеЉ›е‘Ёжњџг‚€г‚Љж—©гЃ„е‘ЁжњџгЃ§е®љжњџзљ„гЃ«е®џиЎЊгЃ™г‚‹гЃ“гЃЁ
+ * @param  p_super: DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
+ * @retval DS_ERR_CODE_OK:  IF_RX гЃ§гЃ®г‚Ёгѓ©гѓјгЃЄгЃ—
+ * @retval DS_ERR_CODE_ERR: IF_RX гЃ§гЃ®г‚Ёгѓ©гѓјгЃ‚г‚Љ
+ * @note   еЏ—дїЎзЉ¶жіЃг‚„г‚Ёгѓ©гѓјжѓ…е ±гЃЇ rec_status_ гЃ«ж јзґЌгЃ•г‚ЊгЃ¦гЃ„г‚‹
  */
 DS_ERR_CODE DS_receive(DriverSuper* p_super);
 
 /**
- * @brief  data_analyzer_ ‚рЊД‚СЏo‚µЃCЋуђMѓfЃ[ѓ^‚р‰рђН‚·‚йЃD
+ * @brief  data_analyzer_ г‚’е‘јгЃіе‡єгЃ—пјЊеЏ—дїЎгѓ‡гѓјг‚їг‚’и§ЈжћђгЃ™г‚‹пјЋ
  *
- *         DS_receive ‚Й‚ДѓfЃ[ѓ^‚рЋуђM‚µ‚ЅЊгЃC DSSC_get_rec_status(p_stream_config)->status_code ‚Є DS_STREAM_REC_STATUS_FIXED_FRAME ‚И‚з‚ОЊД‚СЏo‚·ЃD
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
- * @param  stream   ‚З‚Мstream_config‚рЋg—p‚·‚й‚©ЃDstream‚Н0-MAX‚И‚М‚ЕЃCЊpЏіђж‚ЕENUM‚И‚ЗђйЊѕ‚µ‚ДЋg‚ў‚в‚·‚­‚·‚к‚О‚ў‚ў‚ЖЋv‚¤ЃD
- * @param  p_driver ЊpЏіђж‹@Љн‚Мѓhѓ‰ѓCѓoЌ\‘ў‘М‚И‚ЗЃDdata_analyzer_ ‚М‘ж“с€шђ”ЃD
- * @return DS_ERR_CODE : data_analyzer_ ‚М•Ф‚и’l‚р‚»‚М‚Ь‚Ь•Ф‚·
- * @note   data_analyzer_ ‚М•Ф‚и’l‚НЃC ret_from_data_analyzer_ ‚Й‚а•Ы‘¶‚і‚к‚йЃD
+ *         DS_receive гЃ«гЃ¦гѓ‡гѓјг‚їг‚’еЏ—дїЎгЃ—гЃџеѕЊпјЊ DSSC_get_rec_status(p_stream_config)->status_code гЃЊ DS_STREAM_REC_STATUS_FIXED_FRAME гЃЄг‚‰гЃ°е‘јгЃіе‡єгЃ™пјЋ
+ * @param  p_super:  DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
+ * @param  stream:   гЃ©гЃ®stream_configг‚’дЅїз”ЁгЃ™г‚‹гЃ‹пјЋstreamгЃЇ0-MAXгЃЄгЃ®гЃ§пјЊз¶™ж‰їе…€гЃ§ENUMгЃЄгЃ©е®ЈиЁЂгЃ—гЃ¦дЅїгЃ„г‚„гЃ™гЃЏгЃ™г‚ЊгЃ°гЃ„гЃ„гЃЁжЂќгЃ†пјЋ
+ * @param  p_driver: з¶™ж‰їе…€ж©џе™ЁгЃ®гѓ‰гѓ©г‚¤гѓђж§‹йЂ дЅ“гЃЄгЃ©пјЋdata_analyzer_ гЃ®з¬¬дєЊеј•ж•°пјЋ
+ * @return DS_ERR_CODE: data_analyzer_ гЃ®иї”г‚ЉеЂ¤г‚’гЃќгЃ®гЃѕгЃѕиї”гЃ™
+ * @note   data_analyzer_ гЃ®иї”г‚ЉеЂ¤гЃЇпјЊ ret_from_data_analyzer_ гЃ«г‚‚дїќе­гЃ•г‚Њг‚‹пјЋ
  */
 DS_ERR_CODE DS_analyze_rec_data(DriverSuper* p_super, uint8_t stream, void* p_driver);
 
 /**
- * @brief  ЊpЏіђж‚М‹@Љн‚Й€к”КѓRѓ}ѓ“ѓh‚р”­Ќs‚·‚й
+ * @brief  з¶™ж‰їе…€гЃ®ж©џе™ЁгЃ«дёЂи€¬г‚ігѓћгѓігѓ‰г‚’з™єиЎЊгЃ™г‚‹
  *
- *         ‚±‚МѓRѓ}ѓ“ѓh‚р‘—‚Б‚Ѕ‚±‚Ж‚Й‚ж‚Б‚ДѓЊѓXѓ|ѓ“ѓX‚Є•Ф‚Б‚Д‚­‚й‚±‚Ж‚р‘z’и‚µ‚Д‚ў‚И‚ўЃi‚»‚МЏкЌ‡‚Н DS_send_req_tlm_cmd ‚рЋg‚¤Ѓj
- * @note   ‚±‚МЉЦђ”‚МЋАЌs‘O‚ЙЃCtx_frame, tx_frame_size‚МђЭ’и‚Є•K—v‚Е‚ ‚й
- * @note   ‚±‚к‚НЉо’кѓNѓ‰ѓX‚И‚Ѕ‚ЯЃCѓAѓmѓ}ѓЉ”­Ќs‚НЌs‚н‚И‚ўЃDЊpЏіђж‚Е•Ф‚и’l‚рЊ©‚Д“KђШ‚ЙѓAѓmѓ}ѓЉ”­Ќs‚·‚й‚±‚Ж
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
- * @param  stream   ‚З‚Мstream_config‚рЋg—p‚·‚й‚©ЃDstream‚Н0-MAX‚И‚М‚ЕЃCЊpЏіђж‚ЕENUM‚И‚ЗђйЊѕ‚µ‚ДЋg‚ў‚в‚·‚­‚·‚к‚О‚ў‚ў‚ЖЋv‚¤ЃD
- * @retval DS_ERR_CODE_OK  : ђіЏнЏI—№
- * @retval DS_ERR_CODE_ERR : IF_TX ‚Е‚МѓGѓ‰Ѓ[‚ ‚и
- * @note   ЋуђMЏу‹µ‚вѓGѓ‰Ѓ[Џо•с‚Н send_status_ ‚ЙЉi”[‚і‚к‚Д‚ў‚й
+ *         гЃ“гЃ®г‚ігѓћгѓігѓ‰г‚’йЂЃгЃЈгЃџгЃ“гЃЁгЃ«г‚€гЃЈгЃ¦гѓ¬г‚№гѓќгѓіг‚№гЃЊиї”гЃЈгЃ¦гЃЏг‚‹гЃ“гЃЁг‚’жѓіе®љгЃ—гЃ¦гЃ„гЃЄгЃ„пј€гЃќгЃ®е ґеђ€гЃЇ DS_send_req_tlm_cmd г‚’дЅїгЃ†пј‰
+ * @note   гЃ“гЃ®й–ўж•°гЃ®е®џиЎЊе‰ЌгЃ«пјЊtx_frame, tx_frame_sizeгЃ®иЁ­е®љгЃЊеї…и¦ЃгЃ§гЃ‚г‚‹
+ * @note   гЃ“г‚ЊгЃЇеџєеє•г‚Їгѓ©г‚№гЃЄгЃџг‚ЃпјЊг‚ўгѓЋгѓћгѓЄз™єиЎЊгЃЇиЎЊг‚ЏгЃЄгЃ„пјЋз¶™ж‰їе…€гЃ§иї”г‚ЉеЂ¤г‚’и¦‹гЃ¦йЃ©е€‡гЃ«г‚ўгѓЋгѓћгѓЄз™єиЎЊгЃ™г‚‹гЃ“гЃЁ
+ * @param  p_super: DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
+ * @param  stream:  гЃ©гЃ®stream_configг‚’дЅїз”ЁгЃ™г‚‹гЃ‹пјЋstreamгЃЇ0-MAXгЃЄгЃ®гЃ§пјЊз¶™ж‰їе…€гЃ§ENUMгЃЄгЃ©е®ЈиЁЂгЃ—гЃ¦дЅїгЃ„г‚„гЃ™гЃЏгЃ™г‚ЊгЃ°гЃ„гЃ„гЃЁжЂќгЃ†пјЋ
+ * @retval DS_ERR_CODE_OK:  ж­Јеёёзµ‚дє†
+ * @retval DS_ERR_CODE_ERR: IF_TX гЃ§гЃ®г‚Ёгѓ©гѓјгЃ‚г‚Љ
+ * @note   еЏ—дїЎзЉ¶жіЃг‚„г‚Ёгѓ©гѓјжѓ…е ±гЃЇ send_status_ гЃ«ж јзґЌгЃ•г‚ЊгЃ¦гЃ„г‚‹
  */
 DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
 
 /**
- * @brief  ЊpЏіђж‚М‹@Љн‚ЙѓeѓЊѓЃ—v‹ЃѓRѓ}ѓ“ѓh‚р”­Ќs‚·‚й
+ * @brief  з¶™ж‰їе…€гЃ®ж©џе™ЁгЃ«гѓ†гѓ¬гѓЎи¦Ѓж±‚г‚ігѓћгѓігѓ‰г‚’з™єиЎЊгЃ™г‚‹
  *
- *         ѓeѓЊѓЃ‚Й‚В‚ў‚Д‚Н DS_receive ‚ЕЋу‚ЇЋж‚йЃD
- * @note   ‚±‚МЉЦђ”‚МЋАЌs‘O‚ЙЃCtx_frame, tx_frame_size‚МђЭ’и‚Є•K—v‚Е‚ ‚й
- * @param  *p_super DriverSuperЌ\‘ў‘М‚Ц‚Мѓ|ѓCѓ“ѓ^
- * @param  stream   ‚З‚Мstream_config‚рЋg—p‚·‚й‚©ЃDstream‚Н0-MAX‚И‚М‚ЕЃCЊpЏіђж‚ЕENUM‚И‚ЗђйЊѕ‚µ‚ДЋg‚ў‚в‚·‚­‚·‚к‚О‚ў‚ў‚ЖЋv‚¤ЃD
- * @retval DS_ERR_CODE_OK  : ђіЏнЏI—№
- * @retval DS_ERR_CODE_ERR : IF_TX ‚Е‚МѓGѓ‰Ѓ[‚ ‚и
- * @note   ЋуђMЏу‹µ‚вѓGѓ‰Ѓ[Џо•с‚Н send_status_ ‚ЙЉi”[‚і‚к‚Д‚ў‚й
+ *         гѓ†гѓ¬гѓЎгЃ«гЃ¤гЃ„гЃ¦гЃЇ DS_receive гЃ§еЏ—гЃ‘еЏ–г‚‹пјЋ
+ * @note   гЃ“гЃ®й–ўж•°гЃ®е®џиЎЊе‰ЌгЃ«пјЊtx_frame, tx_frame_sizeгЃ®иЁ­е®љгЃЊеї…и¦ЃгЃ§гЃ‚г‚‹
+ * @param  p_super: DriverSuperж§‹йЂ дЅ“гЃёгЃ®гѓќг‚¤гѓіг‚ї
+ * @param  stream:  гЃ©гЃ®stream_configг‚’дЅїз”ЁгЃ™г‚‹гЃ‹пјЋstreamгЃЇ0-MAXгЃЄгЃ®гЃ§пјЊз¶™ж‰їе…€гЃ§ENUMгЃЄгЃ©е®ЈиЁЂгЃ—гЃ¦дЅїгЃ„г‚„гЃ™гЃЏгЃ™г‚ЊгЃ°гЃ„гЃ„гЃЁжЂќгЃ†пјЋ
+ * @retval DS_ERR_CODE_OK:  ж­Јеёёзµ‚дє†
+ * @retval DS_ERR_CODE_ERR: IF_TX гЃ§гЃ®г‚Ёгѓ©гѓјгЃ‚г‚Љ
+ * @note   еЏ—дїЎзЉ¶жіЃг‚„г‚Ёгѓ©гѓјжѓ…е ±гЃЇ send_status_ гЃ«ж јзґЌгЃ•г‚ЊгЃ¦гЃ„г‚‹
  */
 DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
 
@@ -541,23 +522,23 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config);
 
 
-// ###### Driver”Д—pUtilЉЦђ” ######
+// ###### Driverж±Ћз”ЁUtilй–ўж•° ######
 
 /**
- * @brief  DS_DRIVER_ERR_CODE ‚©‚з CCP_EXEC_STS ‚Ц‚М•ПЉ·ЉЦђ”
+ * @brief  DS_DRIVER_ERR_CODE гЃ‹г‚‰ CCP_EXEC_STS гЃёгЃ®е¤‰жЏ›й–ўж•°
  *
- *         DI ‚©‚з Driver ‚МЉЦђ”‚рЊД‚СЏo‚µ‚Ѕ‚Ж‚«‚МѓGѓ‰Ѓ[ѓRЃ[ѓh‚М•ПЉ·‚Й—p‚ў‚й
- * @note   ”Д—pUtilЉЦђ”
+ *         DI гЃ‹г‚‰ Driver гЃ®й–ўж•°г‚’е‘јгЃіе‡єгЃ—гЃџгЃЁгЃЌгЃ®г‚Ёгѓ©гѓјг‚ігѓјгѓ‰гЃ®е¤‰жЏ›гЃ«з”ЁгЃ„г‚‹
+ * @note   ж±Ћз”ЁUtilй–ўж•°
  * @param  DS_DRIVER_ERR_CODE
  * @return CCP_EXEC_STS
  */
 CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code);
 
 /**
- * @brief  DS_CMD_ERR_CODE ‚©‚з CCP_EXEC_STS ‚Ц‚М•ПЉ·ЉЦђ”
+ * @brief  DS_CMD_ERR_CODE гЃ‹г‚‰ CCP_EXEC_STS гЃёгЃ®е¤‰жЏ›й–ўж•°
  *
- *         DI ‚©‚з Driver ‚МЉЦђ”‚рЊД‚СЏo‚µ‚Ѕ‚Ж‚«‚МѓGѓ‰Ѓ[ѓRЃ[ѓh‚М•ПЉ·‚Й—p‚ў‚й
- * @note   ”Д—pUtilЉЦђ”
+ *         DI гЃ‹г‚‰ Driver гЃ®й–ўж•°г‚’е‘јгЃіе‡єгЃ—гЃџгЃЁгЃЌгЃ®г‚Ёгѓ©гѓјг‚ігѓјгѓ‰гЃ®е¤‰жЏ›гЃ«з”ЁгЃ„г‚‹
+ * @note   ж±Ћз”ЁUtilй–ўж•°
  * @param  DS_CMD_ERR_CODE
  * @return CCP_EXEC_STS
  */

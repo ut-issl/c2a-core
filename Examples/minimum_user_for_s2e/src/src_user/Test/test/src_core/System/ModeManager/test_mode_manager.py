@@ -3,9 +3,10 @@
 
 import os
 import sys
-import time
 
-import isslwings as wings
+# import time
+
+# import isslwings as wings
 import pytest
 
 ROOT_PATH = "../../../../"
@@ -15,6 +16,13 @@ import wings_utils
 
 c2a_enum = c2a_enum_utils.get_c2a_enum()
 ope = wings_utils.get_wings_operation()
+
+
+# 他をコメントアウトしてると， pytest がコケるので
+@pytest.mark.sils
+@pytest.mark.real
+def test_mm_nop():
+    pass
 
 
 # @pytest.mark.sils
@@ -28,7 +36,7 @@ ope = wings_utils.get_wings_operation()
 #     # ===== 存在しないモード =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -54,7 +62,7 @@ ope = wings_utils.get_wings_operation()
 #     # ===== 無効化されているブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_INACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_INACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -70,7 +78,7 @@ ope = wings_utils.get_wings_operation()
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -130,7 +138,7 @@ ope = wings_utils.get_wings_operation()
 #     # ===== 無効化されているブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_INACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_INACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )
@@ -146,7 +154,7 @@ ope = wings_utils.get_wings_operation()
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
 #         ope,
-#         c2a_enum.Cmd_CODE_BCT_ACTIVATE_BLOCK_BY_ID,
+#         c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK_BY_ID,
 #         (valid_bc,),
 #         c2a_enum.Tlm_CODE_HK,
 #     )

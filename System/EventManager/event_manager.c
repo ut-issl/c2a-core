@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
  * @file
- * @brief C2A‘S‘Ì‚ÌƒCƒxƒ“ƒg‚ðŠÇ—‚·‚é
- * @note  event_logger ‚Æ event_handler ‚ðŠÇ—‚·‚é
+ * @brief C2Aå…¨ä½“ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç®¡ç†ã™ã‚‹
+ * @note  event_logger ã¨ event_handler ã‚’ç®¡ç†ã™ã‚‹
  */
 #include "event_manager.h"
 #include "event_logger.h"

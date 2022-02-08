@@ -5,21 +5,12 @@ project(C2A_CORE)
 # user config
 option(USE_ALL_C2A_CORE_APPS    "use C2A-core all Applications" ON)
 option(USE_ALL_C2A_CORE_LIB     "use C2A-core all Library" ON)
+option(USE_32BIT_COMPILER       "use 32bit compiler" OFF)
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
   c2a_core_main.c
-  CmdTlm/block_command_loader.c
-  CmdTlm/block_command_table.c
-  CmdTlm/block_command_executor.c
-  CmdTlm/command_analyze.c
-  CmdTlm/command_dispatcher.c
-  CmdTlm/common_tlm_cmd_packet_util.c
-  CmdTlm/packet_handler.c
-  CmdTlm/packet_list.c
-  CmdTlm/telemetry_frame.c
-  CmdTlm/telemetry_generator.c
   Drivers/Super/driver_super.c
   Drivers/Super/driver_super_issl_format.c
   System/AnomalyLogger/anomaly_logger.c
@@ -33,6 +24,20 @@ set(C2A_SRCS
   System/TimeManager/obc_time.c
   System/TimeManager/time_manager.c
   System/WatchdogTimer/watchdog_timer.c
+  TlmCmd/block_command_loader.c
+  TlmCmd/block_command_table.c
+  TlmCmd/block_command_executor.c
+  TlmCmd/command_analyze.c
+  TlmCmd/command_dispatcher.c
+  TlmCmd/common_cmd_packet_util.c
+  TlmCmd/packet_handler.c
+  TlmCmd/packet_list_util.c
+  TlmCmd/packet_list.c
+  TlmCmd/telemetry_frame.c
+  TlmCmd/telemetry_generator.c
+  TlmCmd/Ccsds/cmd_space_packet.c
+  TlmCmd/Ccsds/space_packet.c
+  TlmCmd/Ccsds/tlm_space_packet.c
 )
 
 if(BUILD_C2A_AS_CXX)
@@ -41,14 +46,13 @@ endif()
 
 add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
 
-add_subdirectory(Applications)
-add_subdirectory(Library)
-
 if(USE_ALL_C2A_CORE_APPS)
+  add_subdirectory(Applications)
   target_link_libraries(${PROJECT_NAME} C2A_CORE_APPS)
 endif()
 
 if(USE_ALL_C2A_CORE_LIB)
+  add_subdirectory(Library)
   target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
 endif()
 

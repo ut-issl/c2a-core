@@ -13,14 +13,15 @@ sub GetSetting {
 	$SETTING{'FOOTER'} = '#pragma section';
 
 	$SETTING{'ROOT_PATH'} = '../../';
+	$SETTING{'FILE_ENCODING'} = 'utf8';
 	$SETTING{'LOG_FILE'}  = './log.log';
 	$SETTING{'SEARCH_PATH'} = [
 		'Applications',
-		'CmdTlm',
 		'Drivers',
 		'IfWrapper',
 		'Library',
-		'System'
+		'System',
+		'TlmCmd'
 	];
 
 	# スキップファイル

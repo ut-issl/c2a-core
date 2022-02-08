@@ -1,18 +1,18 @@
 #pragma section REPRO
 /**
  * @file
- * @brief óM‚µ‚½ TC Frame ‚ÌŒŸØ‚ğs‚¤
+ * @brief å—ä¿¡ã—ãŸ TC Frame ã®æ¤œè¨¼ã‚’è¡Œã†
  */
 
 #include "gs_validate.h"
 
-#define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: —vŒŸ“¢
+#define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: è¦æ¤œè¨
 
-// ˆÈ‰ºŒŸØŠÖ”. –¼‘O’Ê‚è
+// ä»¥ä¸‹æ¤œè¨¼é–¢æ•°. åå‰é€šã‚Š
 static GS_VALIDATE_ERR GS_check_tcf_header_(const TCF* tc_frame);
 static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame);
 static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment);
-static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet);
+static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp);
 static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len);
 
 static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame);
@@ -37,7 +37,7 @@ GS_VALIDATE_ERR GS_validate_tc_frame(const TCF* tc_frame)
 
   size_t frame_length = TCF_get_frame_len(tc_frame);
 
-  // TODO WINGS‘¤‚ª‚Ü‚¾‘Î‰‚µ‚Ä‚È‚¢‚Ì‚Åˆê’UƒRƒƒ“ƒgƒAƒEƒg
+  // TODO WINGSå´ãŒã¾ã å¯¾å¿œã—ã¦ãªã„ã®ã§ä¸€æ—¦ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
   GS_check_fecw_((const uint8_t*)tc_frame, frame_length);
 
   ret = GS_check_tcf_header_(tc_frame);
@@ -67,7 +67,7 @@ GS_VALIDATE_ERR GS_validate_tc_frame(const TCF* tc_frame)
 static GS_VALIDATE_ERR GS_check_tcf_header_(const TCF* tc_frame)
 {
   if (TCF_get_ver(tc_frame) != TCF_VER_1) return GS_VALIDATE_ERR_TCF_VER;
-  // if (TCF_get_scid(tc_frame) != TCF_SCID_SAMPLE_SATELLITE) return GS_VALIDATE_ERR_TCF_SCID;    // FIXME: ƒeƒXƒg—p‚Éˆê’UƒRƒƒ“ƒgƒAƒEƒg
+  // if (TCF_get_scid(tc_frame) != TCF_SCID_SAMPLE_SATELLITE) return GS_VALIDATE_ERR_TCF_SCID;    // FIXME: ãƒ†ã‚¹ãƒˆç”¨ã«ä¸€æ—¦ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
   if (TCF_get_vcid(tc_frame) != TCF_VCID_REALTIME) return GS_VALIDATE_ERR_TCF_VCID;
 
   return GS_VALIDATE_ERR_OK;
@@ -77,25 +77,13 @@ static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame)
 {
   GS_VALIDATE_ERR ack;
 
-  // TCSegment Header‚ÌŒÅ’è’l•”•ª‚ª‘Ã“–‚©Šm”F‚·‚é
+  // TCSegment Header ã®å›ºå®šå€¤éƒ¨åˆ†ãŒå¦¥å½“ã‹ç¢ºèªã™ã‚‹
   ack = GS_check_tcs_headers_(&tc_frame->tcs);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
-  // TCPacekt‚Ìƒwƒbƒ_‚Ì‚¤‚¿TLM/CMD‹¤’Ê•”•ª‚ª‘Ã“–‚©Šm”F‚·‚é
-  ack = GS_check_tcp_headers_(&tc_frame->tcs.tcp);
+  // CmdSpacePacket ã®ãƒ˜ãƒƒãƒ€ã®ã†ã¡å…±é€šéƒ¨åˆ†ãŒå¦¥å½“ã‹ç¢ºèªã™ã‚‹
+  ack = GS_check_cmd_space_packet_headers_(&tc_frame->tcs.tcp);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
-
-  // TCPacket‚ÌPackte Type‚ªCommand‚©‚Ç‚¤‚©Šm”F‚·‚é
-  if (TCP_get_type(&tc_frame->tcs.tcp) != TCP_TYPE_CMD)
-  {
-    return GS_VALIDATE_ERR_TCP_TYPE_IS_NOT_CMD;
-  }
-
-  // TCPacket‚ÌSequence Flag‚ª’PƒpƒPƒbƒg‚©Šm”F‚·‚é
-  if (TCP_get_seq_flag(&tc_frame->tcs.tcp) != TCP_SEQ_SINGLE)
-  {
-    return GS_VALIDATE_ERR_TCP_SEQ_IS_NOT_SINGLE;
-  }
 
   return GS_VALIDATE_ERR_OK;
 }
@@ -107,31 +95,43 @@ static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment)
     return GS_VALIDATE_ERR_TCS_SEQ_FLAG;
   }
 
-  // FIXME: ˆÈ‰º—vC³? (20210714)
-  // ‚±‚±‚Å‚ÍNORMALˆÈŠO‚ÌMAP_ID‚ğƒTƒ|[ƒg‚µ‚È‚¢ (000010b)
-  // GSTOS‘¤‚ª‘—M‚·‚éSegment‚ÌMAP_ID‚Í0x08‚Æ‚È‚Á‚Ä‚¢‚é
-  // —vC³:‘Îô‚ªŠ®—¹‚·‚é‚Ü‚Åb’è“I‚É”»’èˆ—‚ğ–³Œø‰»
+  // FIXME: ä»¥ä¸‹è¦ä¿®æ­£? (20210714)
+  // ã“ã“ã§ã¯NORMALä»¥å¤–ã®MAP_IDã‚’ã‚µãƒãƒ¼ãƒˆã—ãªã„ (000010b)
+  // GSTOSå´ãŒé€ä¿¡ã™ã‚‹Segmentã®MAP_IDã¯0x08ã¨ãªã£ã¦ã„ã‚‹
+  // è¦ä¿®æ­£:å¯¾ç­–ãŒå®Œäº†ã™ã‚‹ã¾ã§æš«å®šçš„ã«åˆ¤å®šå‡¦ç†ã‚’ç„¡åŠ¹åŒ–
 
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet)
+static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp)
 {
-  TCP_APID apid;
+  APID apid;
+  // FIXME: ä»–ã®éƒ¨åˆ†ã®ãƒã‚§ãƒƒã‚¯ã‚‚å…¥ã‚Œã‚‹
 
-  if (TCP_get_ver(tc_packet) != TCP_VER_1) return GS_VALIDATE_ERR_TCP_VER;
-  if (TCP_get_2nd_hdr_flag(tc_packet) != TCP_2ND_HDR_PRESENT)
+  if (CSP_get_ver(csp) != SP_VER_1) return GS_VALIDATE_ERR_TCP_VER;
+  if (CSP_get_2nd_hdr_flag(csp) != SP_2ND_HDR_FLAG_PRESENT)
   {
-    // ‚±‚±‚Å‚ÍSecondary Header‚ª•K{B
+    // ã“ã“ã§ã¯Secondary HeaderãŒå¿…é ˆã€‚
     return GS_VALIDATE_ERR_TCP_2ND_HDR_FLAG;
   }
 
-  apid = TCP_get_apid(tc_packet);
-  if ( !( apid == TCP_APID_MOBC_CMD
-       || apid == TCP_APID_AOBC_CMD
-       || apid == TCP_APID_TOBC_CMD ) )
+  if (CSP_get_type(csp) != SP_TYPE_CMD)
   {
-    return GS_VALIDATE_ERR_TCP_APID;
+    return GS_VALIDATE_ERR_TCP_TYPE_IS_NOT_CMD;
+  }
+
+  apid = CSP_get_apid(csp);
+  if ( !( apid == APID_MOBC_CMD
+       || apid == APID_AOBC_CMD
+       || apid == APID_TOBC_CMD ) )
+  {
+    return GS_VALIDATE_ERR_APID;
+  }
+
+  // Sequence Flag ãŒå˜ãƒ‘ã‚±ãƒƒãƒˆã‹ç¢ºèªã™ã‚‹
+  if (CSP_get_seq_flag(csp) != SP_SEQ_FLAG_SINGLE)
+  {
+    return GS_VALIDATE_ERR_TCP_SEQ_IS_NOT_SINGLE;
   }
 
   return GS_VALIDATE_ERR_OK;
@@ -140,37 +140,37 @@ static GS_VALIDATE_ERR GS_check_tcp_headers_(const TCP* tc_packet)
 static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len)
 {
   int i, j;
-  uint16_t shift_reg = 0xffff; // ‰Šú’l‚Í‘Sbit‚ª1
-  uint16_t xor_tap = 0x1021; // LSB‚Íí0‚ÆXOR‚ğ‚Æ‚Á‚Ä‚¢‚é‚Æl‚¦‚éB
+  uint16_t shift_reg = 0xffff; // åˆæœŸå€¤ã¯å…¨bitãŒ1
+  uint16_t xor_tap = 0x1021; // LSBã¯å¸¸æ™‚0ã¨XORã‚’ã¨ã£ã¦ã„ã‚‹ã¨è€ƒãˆã‚‹ã€‚
 
-  // ƒf[ƒ^’·‚¾‚¯ƒ‹[ƒv
+  // ãƒ‡ãƒ¼ã‚¿é•·ã ã‘ãƒ«ãƒ¼ãƒ—
   for (i = 0; i < len; ++i)
   {
-    // MSBˆÊ’u‚ğshift_reg‚Æ‘µ‚¦‚é‚½‚ß8bit¶ƒVƒtƒg
+    // MSBä½ç½®ã‚’shift_regã¨æƒãˆã‚‹ãŸã‚8bitå·¦ã‚·ãƒ•ãƒˆ
     uint16_t tmp = (uint16_t)(data[i] << 8);
 
-    // ƒrƒbƒg’·‚¾‚¯ƒ‹[ƒv
+    // ãƒ“ãƒƒãƒˆé•·ã ã‘ãƒ«ãƒ¼ãƒ—
     for (j = 0; j < 8; ++j)
     {
-      // MSB“¯m‚ÌXOR‚ğ”äŠr
+      // MSBåŒå£«ã®XORã‚’æ¯”è¼ƒ
       if ((shift_reg ^ tmp) & 0x8000)
       {
-        // Œ‹‰Ê‚ª1‚Ìê‡‚ÍƒVƒtƒg+XOR
+        // çµæœãŒ1ã®å ´åˆã¯ã‚·ãƒ•ãƒˆ+XOR
         shift_reg <<= 1;
         shift_reg ^= xor_tap;
       }
       else
       {
-        // Œ‹‰Ê‚ª0‚Ìê‡‚ÍƒVƒtƒg‚Ì‚İ
+        // çµæœãŒ0ã®å ´åˆã¯ã‚·ãƒ•ãƒˆã®ã¿
         shift_reg <<= 1;
       }
 
-      // Ÿƒrƒbƒg•]‰¿‚Ì‚½‚ßƒVƒtƒg
+      // æ¬¡ãƒ“ãƒƒãƒˆè©•ä¾¡ã®ãŸã‚ã‚·ãƒ•ãƒˆ
       tmp <<= 1;
     }
   }
 
-  // ƒf[ƒ^+FECW‚ª³í‚È‚çŒ‹‰Ê‚Í0‚Æ‚È‚é
+  // ãƒ‡ãƒ¼ã‚¿+FECWãŒæ­£å¸¸ãªã‚‰çµæœã¯0ã¨ãªã‚‹
   if (shift_reg != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   return GS_VALIDATE_ERR_OK;
@@ -190,15 +190,15 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame)
 
   if (seq_diff < 0)
   {
-    // Sequence Counter‚Ì’l‚Ímod-256‚È‚Ì‚Åseq_diff‚Ì’l‚ª•‰‚Ìê‡‚Í
-    // 256‚ğ‘«‚µ‚Ä’l‚Ì”ÍˆÍ‚ğ[1, 256]‚É•ÏŠ·
+    // Sequence Counterã®å€¤ã¯mod-256ãªã®ã§seq_diffã®å€¤ãŒè² ã®å ´åˆã¯
+    // 256ã‚’è¶³ã—ã¦å€¤ã®ç¯„å›²ã‚’[1, 256]ã«å¤‰æ›
     seq_diff += 256;
   }
 
   if (seq_diff == 0)
   {
-    // seq_diff‚ª0A‚·‚È‚í‚¿N(R) == V(R)‚È‚ç³íóM
-    // Ä‘——v‹ƒtƒ‰ƒO‚ÌƒNƒŠƒA‚ÆƒV[ƒPƒ“ƒX”‚ÌƒCƒ“ƒNƒŠƒƒ“ƒg
+    // seq_diffãŒ0ã€ã™ãªã‚ã¡N(R) == V(R)ãªã‚‰æ­£å¸¸å—ä¿¡
+    // å†é€è¦æ±‚ãƒ•ãƒ©ã‚°ã®ã‚¯ãƒªã‚¢ã¨ã‚·ãƒ¼ã‚±ãƒ³ã‚¹æ•°ã®ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
     gs_validate_info_.retransmit_flag = 0;
     ++gs_validate_info_.type_a_counter;
   }
@@ -226,37 +226,37 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame)
 
 static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCF* tc_frame)
 {
-  // BCƒRƒ}ƒ“ƒh‚Ìí•Ê‚ğ”»’è‚µAˆ—‚·‚éB
-  // TCF‚Ì\¬‚ªAD/BDƒRƒ}ƒ“ƒh‚É“Á‰»‚µ‚½Œ`‚Æ‚È‚Á‚Ä‚¢‚é‚½‚ßA
-  // TCS‚âTCP‚Ìƒf[ƒ^\‘¢‚ğ“Ç‚İ‘Ö‚¦‚Äˆ—‚ğs‚Á‚Ä‚¢‚éB
+  // BCã‚³ãƒãƒ³ãƒ‰ã®ç¨®åˆ¥ã‚’åˆ¤å®šã—ã€å‡¦ç†ã™ã‚‹ã€‚
+  // TCFã®æ§‹æˆãŒAD/BDã‚³ãƒãƒ³ãƒ‰ã«ç‰¹åŒ–ã—ãŸå½¢ã¨ãªã£ã¦ã„ã‚‹ãŸã‚ã€
+  // TCSã‚„TCPã®ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã‚’èª­ã¿æ›¿ãˆã¦å‡¦ç†ã‚’è¡Œã£ã¦ã„ã‚‹ã€‚
   if (tc_frame->tcs.header[0] == TCF_BC_CMD_CODE_UNLOCK)
   {
-    // UnlockƒRƒ}ƒ“ƒh‚Ìê‡‚ÍLockout‚ÆRetransmitƒtƒ‰ƒO‚ğƒNƒŠƒA
+    // Unlockã‚³ãƒãƒ³ãƒ‰ã®å ´åˆã¯Lockoutã¨Retransmitãƒ•ãƒ©ã‚°ã‚’ã‚¯ãƒªã‚¢
     gs_validate_info_.lockout_flag = 0;
     gs_validate_info_.retransmit_flag = 0;
 
-    // Type-B Coutner‚Ì’l‚ğXV‚µ‚Äˆ—I—¹
+    // Type-B Coutnerã®å€¤ã‚’æ›´æ–°ã—ã¦å‡¦ç†çµ‚äº†
     ++gs_validate_info_.type_b_counter;
   }
   else if ((tc_frame->tcs.header[0] == TCF_BC_CMD_CODE_SET_VR_0)
         && (tc_frame->tcs.tcp.packet[0] == TCF_BC_CMD_CODE_SET_VR_1))
   {
-    // SET V(R)ƒRƒ}ƒ“ƒh‚Ìê‡
+    // SET V(R)ã‚³ãƒãƒ³ãƒ‰ã®å ´åˆ
     if (gs_validate_info_.lockout_flag == 0)
     {
-      // Lockoutó‘Ô‚Å‚È‚¢ê‡‚ÍType-AƒJƒEƒ“ƒ^‚Ì’l‚ğw’è’l‚Éİ’è‚µ
-      // Retransmitƒtƒ‰ƒO‚ğƒNƒŠƒA
+      // LockoutçŠ¶æ…‹ã§ãªã„å ´åˆã¯Type-Aã‚«ã‚¦ãƒ³ã‚¿ã®å€¤ã‚’æŒ‡å®šå€¤ã«è¨­å®šã—
+      // Retransmitãƒ•ãƒ©ã‚°ã‚’ã‚¯ãƒªã‚¢
       gs_validate_info_.type_a_counter = tc_frame->tcs.tcp.packet[1];
       gs_validate_info_.retransmit_flag = 0;
     }
 
-    // Type-B Coutner‚Ì’l‚ğXV‚µ‚Äˆ—I—¹
-    // Lockoutó‘Ô‚Å‚àType-B Counter‚Ì’l‚ÍXV‚·‚é
+    // Type-B Coutnerã®å€¤ã‚’æ›´æ–°ã—ã¦å‡¦ç†çµ‚äº†
+    // LockoutçŠ¶æ…‹ã§ã‚‚Type-B Counterã®å€¤ã¯æ›´æ–°ã™ã‚‹
     ++gs_validate_info_.type_b_counter;
   }
   else
   {
-    // ã‹LˆÈŠO‚Ìê‡‚Í•s³‚Æ”»’f‚µˆÙíI—¹
+    // ä¸Šè¨˜ä»¥å¤–ã®å ´åˆã¯ä¸æ­£ã¨åˆ¤æ–­ã—ç•°å¸¸çµ‚äº†
     return GS_VALIDATE_ERR_INVALID_BC_CMD;
   }
 
@@ -276,16 +276,16 @@ static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCF* tc_frame)
 
 uint32_t GS_form_clcw(void)
 {
-  // ’l‚ª0ŒÅ’è‚Ì€–Ú‚Í•Ï”‚Ì‰Šú‰»‚Å‘ã‘Ö‚µ–¾¦“I‚É‚Íw’è‚µ‚È‚¢
+  // å€¤ãŒ0å›ºå®šã®é …ç›®ã¯å¤‰æ•°ã®åˆæœŸåŒ–ã§ä»£æ›¿ã—æ˜ç¤ºçš„ã«ã¯æŒ‡å®šã—ãªã„
   uint32_t clcw = 0;
   uint32_t val;
 
-  // [FIXME] TRP‚ª‚Å‚«‚½‚ç‚±‚±‚à’¼‚·Di2021/01/17j
+  // [FIXME] TRPãŒã§ããŸã‚‰ã“ã“ã‚‚ç›´ã™ï¼ï¼ˆ2021/01/17ï¼‰
   /*
   // XTRP-A Carrier Lock Status
   if (xtrp1->xtrp_rx_sts.act_monitor.bit.career_lock == 1)
   {
-    // Carrier Lock On‚Ìê‡‚Íƒtƒ‰ƒOİ’è
+    // Carrier Lock Onã®å ´åˆã¯ãƒ•ãƒ©ã‚°è¨­å®š
     clcw |= 0x08000000; // **** 1*** **** **** **** **** **** ****
   }
   */
@@ -293,12 +293,12 @@ uint32_t GS_form_clcw(void)
   // COP in Effect -> COP-1
   clcw |= 0x01000000; // **** **01 **** **** **** **** **** ****
 
-  // [FIXME] TRP‚ª‚Å‚«‚½‚ç‚±‚±‚à’¼‚·Di2021/01/17j
+  // [FIXME] TRPãŒã§ããŸã‚‰ã“ã“ã‚‚ç›´ã™ï¼ï¼ˆ2021/01/17ï¼‰
   /*
   // Sub-Carrier Lock + Rx Bit Rate
   if (xtrp1->xtrp_rx_sts.act_monitor.bit.sub_career_lock == 1)
   {
-    // Sub-carrier Lock On‚Ìê‡‚ÍƒrƒbƒgƒŒ[ƒg•Ê‚Ìƒtƒ‰ƒOİ’è
+    // Sub-carrier Lock Onã®å ´åˆã¯ãƒ“ãƒƒãƒˆãƒ¬ãƒ¼ãƒˆåˆ¥ã®ãƒ•ãƒ©ã‚°è¨­å®š
     if (xtrp1->xtrp_rx_sts.rx_bitrate == 0)
     {
       // Rx Bitrate 15.625bps (Low)

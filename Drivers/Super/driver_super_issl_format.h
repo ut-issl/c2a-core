@@ -1,93 +1,109 @@
 /**
  * @file
- * @brief  Driver‚Ì‚½‚ß‚ÌISSLƒtƒH[ƒ}ƒbƒg’ÊM‚Ì‚½‚ß‚ÌŒöŠJ’è‹`CŠÖ”‚È‚Ç
+ * @brief  Driver ã®ãŸã‚ã® ISSL ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆé€šä¿¡ã®ãŸã‚ã®å…¬é–‹å®šç¾©ï¼Œé–¢æ•°ãªã©
  */
 #ifndef DRIVER_SUPER_ISSL_FORMAT_H_
 #define DRIVER_SUPER_ISSL_FORMAT_H_
 
 #include "driver_super.h"
 #include <src_user/Library/stdint.h>
+#include "../../TlmCmd/common_tlm_cmd_packet.h"
 
-
-#define DS_ISSLFMT_STX_SIZE             (2)          //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌSTX‚ÌƒTƒCƒY
-#define DS_ISSLFMT_ETX_SIZE             (2)          //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌETX‚ÌƒTƒCƒY
-#define DS_ISSLFMT_LEN_SIZE             (2)          //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌLEN‚ÌƒTƒCƒY
-#define DS_ISSLFMT_CRC_SIZE             (2)          //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌCRC‚ÌƒTƒCƒY
-#define DS_ISSLFMT_COMMON_HEADER_SIZE   (DS_ISSLFMT_STX_SIZE + DS_ISSLFMT_LEN_SIZE)  //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌƒRƒ‚ƒ“ƒwƒbƒ_[‚ÌƒTƒCƒY
-#define DS_ISSLFMT_COMMON_FOOTER_SIZE   (DS_ISSLFMT_ETX_SIZE + DS_ISSLFMT_CRC_SIZE)  //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌƒRƒ‚ƒ“ƒtƒbƒ^[‚ÌƒTƒCƒY
-#define DS_ISSLFMT_CMD_HEADER_SIZE      (4)          //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌCMDƒwƒbƒ_[‚ÌƒTƒCƒY
-#define DS_ISSLFMT_TLM_HEADER_SIZE      (4)          //!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌTLMƒwƒbƒ_[‚ÌƒTƒCƒY
-#define DS_ISSLFMT_STX_1ST_BYTE         (0xEB)       /*!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌSTX 1st byte‚Ìæ“¾
-                                                          ‚±‚ê‚ÍC2AŒ`®/”ñC2AŒ`®‹¤’Ê‚ÌTLM HEADERd—l‚Å‚ ‚é  */
-#define DS_ISSLFMT_STX_2ND_BYTE         (0x90)       /*!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌSTX 2nd byte‚Ìæ“¾
-                                                          ‚±‚ê‚ÍC2AŒ`®/”ñC2AŒ`®‹¤’Ê‚ÌTLM HEADERd—l‚Å‚ ‚é  */
-#define DS_ISSLFMT_ETX_1ST_BYTE         (0xC5)       /*!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌETX 1st byte‚Ìæ“¾
-                                                          ‚±‚ê‚ÍC2AŒ`®/”ñC2AŒ`®‹¤’Ê‚ÌTLM HEADERd—l‚Å‚ ‚é  */
-#define DS_ISSLFMT_ETX_2ND_BYTE         (0x79)       /*!< ISSL•W€ƒtƒH[ƒ}ƒbƒg‚ÌETX 2nd byte‚Ìæ“¾
-                                                          ‚±‚ê‚ÍC2AŒ`®/”ñC2AŒ`®‹¤’Ê‚ÌTLM HEADERd—l‚Å‚ ‚é  */
-
-
-// [TODO] ˆÈ‰º‚Í–{“–‚ÍTCP‚Ì’è‹`‚©‚ç‚Á‚Ä‚«‚½‚¢DTCP‚Ì®—‚ªI‚í‚Á‚½‚ç‚»‚¤‚·‚é
-#define DS_C2AFMT_TCP_CMD_PRIMARY_HEADER_SIZE     (6)     //!< C2AŠÔ’ÊM‚ÌTCPCMD‚Ì‚ÌPrimary header size
-#define DS_C2AFMT_TCP_CMD_SECONDARY_HEADER_SIZE   (1)     //!< C2AŠÔ’ÊM‚ÌTCPCMD‚Ì‚ÌSecondary header size
-#define DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE     (6)     //!< C2AŠÔ’ÊM‚ÌTCP‚ÌTLM‚ÌPrimary header size
-#define DS_C2AFMT_TCP_TLM_SECONDARY_HEADER_SIZE   (7)     //!< C2AŠÔ’ÊM‚ÌTCP‚ÌTLM‚ÌSecondary header sizeDADU•ªŠ„–³‚µ
+#define DS_ISSLFMT_STX_SIZE             (2)          //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® STX ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_ETX_SIZE             (2)          //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® ETX ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_LEN_SIZE             (2)          //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® LEN ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_CRC_SIZE             (2)          //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® CRC ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_COMMON_HEADER_SIZE   (DS_ISSLFMT_STX_SIZE + DS_ISSLFMT_LEN_SIZE)  //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®ã‚³ãƒ¢ãƒ³ãƒ˜ãƒƒãƒ€ãƒ¼ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_COMMON_FOOTER_SIZE   (DS_ISSLFMT_ETX_SIZE + DS_ISSLFMT_CRC_SIZE)  //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®ã‚³ãƒ¢ãƒ³ãƒ•ãƒƒã‚¿ãƒ¼ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_CMD_HEADER_SIZE      (4)          //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® CMD ãƒ˜ãƒƒãƒ€ãƒ¼ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_TLM_HEADER_SIZE      (4)          //!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® TLM ãƒ˜ãƒƒãƒ€ãƒ¼ã®ã‚µã‚¤ã‚º
+#define DS_ISSLFMT_STX_1ST_BYTE         (0xEB)       /*!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® STX 1st byte ã®å–å¾—
+                                                          ã“ã‚Œã¯ C2A å½¢å¼/é C2A å½¢å¼å…±é€šã® TLM HEADER ä»•æ§˜ã§ã‚ã‚‹ */
+#define DS_ISSLFMT_STX_2ND_BYTE         (0x90)       /*!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® STX 2nd byte ã®å–å¾—
+                                                          ã“ã‚Œã¯ C2A å½¢å¼/é C2A å½¢å¼å…±é€šã® TLM HEADER ä»•æ§˜ã§ã‚ã‚‹ */
+#define DS_ISSLFMT_ETX_1ST_BYTE         (0xC5)       /*!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® ETX 1st byte ã®å–å¾—
+                                                          ã“ã‚Œã¯ C2A å½¢å¼/é C2A å½¢å¼å…±é€šã® TLM HEADER ä»•æ§˜ã§ã‚ã‚‹ */
+#define DS_ISSLFMT_ETX_2ND_BYTE         (0x79)       /*!< ISSL æ¨™æº–ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã® ETX 2nd byte ã®å–å¾—
+                                                          ã“ã‚Œã¯ C2A å½¢å¼/é C2A å½¢å¼å…±é€šã® TLM HEADER ä»•æ§˜ã§ã‚ã‚‹ */
 
 
 /**
- * @brief  TLM Version‚Ìæ“¾
- * @note   ƒtƒŒ[ƒ€‚ªŠm’è‚µ‚Ä‚¢‚é‚Æ‚«‚ÉŒÄ‚Ño‚·‚±‚Æ
- * @note   ‚±‚ê‚Í”ñC2AŒ`®‚Åg‚í‚ê‚éTLM HEADERd—l‚Å‚ ‚é
- * @param  p_stream_config DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @return ƒo[ƒWƒ‡ƒ“iƒo[ƒWƒ‡ƒ“ 0x01‚Å‚Íuint8_t‚¾‚ª«—ˆ«‚Ì‚½‚ß‚Éuint32_t‚Å•Ô‚·j
+ * @brief  TLM Version ã®å–å¾—
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯é C2A å½¢å¼ã§ä½¿ã‚ã‚Œã‚‹ TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @return ãƒãƒ¼ã‚¸ãƒ§ãƒ³ï¼ˆãƒãƒ¼ã‚¸ãƒ§ãƒ³ 0x01 ã§ã¯ uint8_t ã ãŒå°†æ¥æ€§ã®ãŸã‚ã« uint32_t ã§è¿”ã™ï¼‰
  */
 uint32_t DS_ISSLFMT_get_tlm_version(const DS_StreamConfig* p_stream_config);
 
 /**
- * @brief  TLM count‚Ìæ“¾
- * @note   ƒtƒŒ[ƒ€‚ªŠm’è‚µ‚Ä‚¢‚é‚Æ‚«‚ÉŒÄ‚Ño‚·‚±‚Æ
- * @note   ‚±‚ê‚Í”ñC2AŒ`®‚Åg‚í‚ê‚éTLM HEADERd—l‚Å‚ ‚é
- * @param  version         TLM Version
- * @param  p_stream_config DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @return TLM countiƒo[ƒWƒ‡ƒ“ 0x01‚Å‚Íuint8_t‚¾‚ª«—ˆ«‚Ì‚½‚ß‚Éuint32_t‚Å•Ô‚·j
+ * @brief  TLM count ã®å–å¾—
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯é C2A å½¢å¼ã§ä½¿ã‚ã‚Œã‚‹ TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param  version:         TLM Version
+ * @param  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @return TLM countï¼ˆãƒãƒ¼ã‚¸ãƒ§ãƒ³ 0x01 ã§ã¯ uint8_t ã ãŒå°†æ¥æ€§ã®ãŸã‚ã« uint32_t ã§è¿”ã™ï¼‰
  */
 uint32_t DS_ISSLFMT_get_tlm_count(const uint32_t version, const DS_StreamConfig* p_stream_config);
 
 /**
- * @brief  TLM id‚Ìæ“¾
- * @note   ƒtƒŒ[ƒ€‚ªŠm’è‚µ‚Ä‚¢‚é‚Æ‚«‚ÉŒÄ‚Ño‚·‚±‚Æ
- * @note   ‚±‚ê‚Í”ñC2AŒ`®‚Åg‚í‚ê‚éTLM HEADERd—l‚Å‚ ‚é
- * @param  version         TLM Version
- * @param  p_stream_config DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @return idiƒo[ƒWƒ‡ƒ“ 0x01‚Å‚Íuint16_t‚¾‚ª«—ˆ«‚Ì‚½‚ß‚Éuint32_t‚Å•Ô‚·j
+ * @brief  TLM id ã®å–å¾—
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯é C2A å½¢å¼ã§ä½¿ã‚ã‚Œã‚‹ TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param  version:         TLM Version
+ * @param  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @return idï¼ˆãƒãƒ¼ã‚¸ãƒ§ãƒ³ 0x01 ã§ã¯ uint16_t ã ãŒå°†æ¥æ€§ã®ãŸã‚ã« uint32_t ã§è¿”ã™ï¼‰
  */
 uint32_t DS_ISSLFMT_get_tlm_id(const uint32_t version, const DS_StreamConfig* p_stream_config);
 
 /**
- * @brief  TLM length‚Ìæ“¾
- * @note   ƒtƒŒ[ƒ€‚ªŠm’è‚µ‚Ä‚¢‚é‚Æ‚«‚ÉŒÄ‚Ño‚·‚±‚Æ
- * @note   ‚±‚ê‚ÍC2AŒ`®/”ñC2AŒ`®‹¤’Ê‚ÌTLM HEADERd—l‚Å‚ ‚é
- * @param  p_stream_config DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @return idiƒo[ƒWƒ‡ƒ“ 0x01‚Å‚Íuint16_t‚¾‚ª«—ˆ«‚Ì‚½‚ß‚Éuint32_t‚Å•Ô‚·j
+ * @brief  TLM length ã®å–å¾—
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯ C2A å½¢å¼/é C2A å½¢å¼å…±é€šã® TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @return idï¼ˆãƒãƒ¼ã‚¸ãƒ§ãƒ³ 0x01ã§ã¯uint16_tã ãŒå°†æ¥æ€§ã®ãŸã‚ã«uint32_tã§è¿”ã™ï¼‰
  */
 uint32_t DS_ISSLFMT_get_tlm_length(const DS_StreamConfig* p_stream_config);
 
 /**
- * @brief  CRC‚ÌŒvZ
- * @note   CRC-16-IBM‚ğg‚¤
- * @note   ‚±‚ê‚ÍC2AŒ`®/”ñC2AŒ`®‹¤’Ê‚ÌTLM HEADERd—l‚Å‚ ‚é
- * @param  c CRC‚ğŒvZ‚·‚éƒf[ƒ^‚Ìƒ|ƒCƒ“ƒ^
- * @return n ƒf[ƒ^’·
+ * @brief  CRCã®è¨ˆç®—
+ * @note   CRC-16-IBM ã‚’ä½¿ã†
+ * @note   ã“ã‚Œã¯ C2A å½¢å¼/é C2A å½¢å¼å…±é€šã® TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param  c: CRC ã‚’è¨ˆç®—ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã®ãƒã‚¤ãƒ³ã‚¿
+ * @param  n: ãƒ‡ãƒ¼ã‚¿é•·
+ * @return CRC
  */
 uint16_t DS_ISSLFMT_calc_crc(const unsigned char* c, size_t n);
 
 /**
- * @brief  TLM id‚Ìæ“¾
- * @note   ƒtƒŒ[ƒ€‚ªŠm’è‚µ‚Ä‚¢‚é‚Æ‚«‚ÉŒÄ‚Ño‚·‚±‚Æ
- * @note   ‚±‚ê‚ÍC2AŒ`®‚Åg‚í‚ê‚éTLM HEADERd—l‚Å‚ ‚é
- * @param  p_stream_config DriverSuper\‘¢‘Ì‚ÌDS_StreamConfig
- * @return id
+ * @brief  å—ä¿¡ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã®å…ˆé ­ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—ã™ã‚‹
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯ C2A å½¢å¼ã§ä½¿ã‚ã‚Œã‚‹ TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @return ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã®å…ˆé ­ãƒã‚¤ãƒ³ã‚¿
  */
-uint8_t DS_C2AFMT_get_tlm_id(const DS_StreamConfig* p_stream_config);
+const uint8_t* DS_C2AFMT_get_user_data_head(const DS_StreamConfig* p_stream_config);
+
+/**
+ * @brief  CommonTlmPacket ã‚’å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚³ãƒ”ãƒ¼ã—ã¦å–å¾—ã™ã‚‹
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯ C2A å½¢å¼ã§ä½¿ã‚ã‚Œã‚‹ TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param[in]  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @param[out] ctp: æŠ½å‡ºã—ãŸãƒ‘ã‚±ãƒƒãƒˆ
+ * @retval DS_ERR_CODE_OK:  æ­£å¸¸çµ‚äº†
+ * @retval DS_ERR_CODE_ERR: ãƒ‘ã‚±ãƒƒãƒˆé•·ãŒç•°å¸¸ãªã©ï¼Œã‚¨ãƒ©ãƒ¼ã§ã‚³ãƒ”ãƒ¼ã§ããªã„
+ */
+DS_ERR_CODE DS_C2AFMT_get_ctp(const DS_StreamConfig* p_stream_config, CommonTlmPacket* ctp);
+
+/**
+ * @brief  CommonCmdPacket ã‚’å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚³ãƒ”ãƒ¼ã—ã¦å–å¾—ã™ã‚‹
+ * @note   ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç¢ºå®šã—ã¦ã„ã‚‹ã¨ãã«å‘¼ã³å‡ºã™ã“ã¨
+ * @note   ã“ã‚Œã¯ C2A å½¢å¼ã§ä½¿ã‚ã‚Œã‚‹ TLM HEADER ä»•æ§˜ã§ã‚ã‚‹
+ * @param[in]  p_stream_config: DriverSuper æ§‹é€ ä½“ã® DS_StreamConfig
+ * @param[out] ccp: æŠ½å‡ºã—ãŸãƒ‘ã‚±ãƒƒãƒˆ
+ * @retval DS_ERR_CODE_OK:  æ­£å¸¸çµ‚äº†
+ * @retval DS_ERR_CODE_ERR: ãƒ‘ã‚±ãƒƒãƒˆé•·ãŒç•°å¸¸ãªã©ï¼Œã‚¨ãƒ©ãƒ¼ã§ã‚³ãƒ”ãƒ¼ã§ããªã„
+ */
+DS_ERR_CODE DS_C2AFMT_get_ccp(const DS_StreamConfig* p_stream_config, CommonCmdPacket* ccp);
 
 #endif

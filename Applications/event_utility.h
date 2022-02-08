@@ -1,29 +1,29 @@
 /**
  * @file
- * @brief ƒCƒxƒ“ƒgˆ—‚Ì’èŠúÀs‚Ì‚½‚ß‚ÌApp
- * @note  À¿“I‚É‚Í event_handler ‚ğ’èŠúÀs‚·‚é‚¾‚¯
+ * @brief ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†ã®å®šæœŸå®Ÿè¡Œã®ãŸã‚ã®App
+ * @note  å®Ÿè³ªçš„ã«ã¯ event_handler ã‚’å®šæœŸå®Ÿè¡Œã™ã‚‹ã ã‘
  */
 #ifndef EVENT_UTILITY_H_
 #define EVENT_UTILITY_H_
 
 #include "../System/ApplicationManager/app_info.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
+#include "../TlmCmd/common_cmd_packet.h"
 
 AppInfo EVENT_UTIL_create_app(void);
 
 /**
  * @struct EventUtility
- * @brief  EventUtility ‚Ì AppInfo \‘¢‘Ì
+ * @brief  EventUtility ã® AppInfo æ§‹é€ ä½“
  */
 typedef struct
 {
-  uint8_t is_enabled_eh_execution;    //!< EH ‚ÌÀs‚ª—LŒø‚©H
+  uint8_t is_enabled_eh_execution;    //!< EH ã®å®Ÿè¡ŒãŒæœ‰åŠ¹ã‹ï¼Ÿ
 } EventUtility;
 
 extern const EventUtility* const event_utility;
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CTCP* packet);
-CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CTCP* packet);
-CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CTCP* packet);
+CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CommonCmdPacket* packet);
 
 #endif

@@ -1,7 +1,7 @@
 /**
  * @file
- * @brief event_handler ‚ÌŠeíİ’è
- *        Šeƒpƒ‰ƒƒ^—Ş‚ÌÚ×‚Í event_handler.h ‚ğQÆ‚·‚é‚±‚Æ
+ * @brief event_handler ã®å„ç¨®è¨­å®š
+ *        å„ãƒ‘ãƒ©ãƒ¡ã‚¿é¡ã®è©³ç´°ã¯ event_handler.h ã‚’å‚ç…§ã™ã‚‹ã“ã¨
  */
 #ifndef EVENT_HANDLER_PARAMS_H_
 #define EVENT_HANDLER_PARAMS_H_
@@ -13,6 +13,7 @@
 #undef EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
 #undef EH_MAX_RESPONSE_NUM_DEFAULT
 #undef EH_MAX_CHECK_EVENT_NUM_DEFAULT
+#undef EH_MAX_MULTI_LEVEL_NUM_DEFAULT
 
 
 #define EH_RULE_TLM_PAGE_SIZE (20)
@@ -22,5 +23,6 @@
 #define EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES   (4)
 #define EH_MAX_RESPONSE_NUM_DEFAULT           (8)
 #define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)
+#define EH_MAX_MULTI_LEVEL_NUM_DEFAULT        (4)
 
 #endif

@@ -1,34 +1,34 @@
 /**
  * @file
- * @brief ƒAƒmƒ}ƒŠ‚âƒGƒ‰[‚È‚Ç‚ÌŠeíƒCƒxƒ“ƒg‚ğ‹L˜^‚·‚é
- * @note  ‚±‚ÌƒCƒxƒ“ƒg‚ğ‚à‚Æ‚É event_handler ‚ğ”­‰Î‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚é
- * @note  ƒƒO‚Í TLog (TimeSeriesLog) ‚Æ CLog (EL_CumulativeLog) ‚Ì“ñí—Ş‚ğ€”õ‚µC•K—v‚È‚à‚Ì‚Ì‚İ‚ğg‚¤
- * @note  ¡ŒãC NvLog (•sŠö”­Log) ‚ªÀ‘•—\’è
+ * @brief ã‚¢ãƒãƒãƒªã‚„ã‚¨ãƒ©ãƒ¼ãªã©ã®å„ç¨®ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¨˜éŒ²ã™ã‚‹
+ * @note  ã“ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’ã‚‚ã¨ã« event_handler ã‚’ç™ºç«ã•ã›ã‚‹ã“ã¨ãŒã§ãã‚‹
+ * @note  ãƒ­ã‚°ã¯ TLog (TimeSeriesLog) ã¨ CLog (EL_CumulativeLog) ã®äºŒç¨®é¡ã‚’æº–å‚™ã—ï¼Œå¿…è¦ãªã‚‚ã®ã®ã¿ã‚’ä½¿ã†
+ * @note  ä»Šå¾Œï¼Œ NvLog (ä¸æ®ç™ºLog) ãŒå®Ÿè£…äºˆå®š
  * @note  TLog (TimeSeriesLog)
- *        Œn—ñƒƒO
- *        ‚Ğ‚½‚·‚çCV‚µ‚¢ EL_Event ‚ğƒe[ƒuƒ‹‚É’Ç‹L‚µ‚Ä‚¢‚­D
- *        EL_get_the_nth_tlog_from_the_latest ‚ÅÅV‚©‚çn”Ô–Ú‚ªæ“¾‚Å‚«‚éD
- *        ‚±‚ê‚ğ—LŒø‰»‚µ‚È‚¢‚ÆC event_handler ‚Íg‚¦‚È‚¢D
- *        ƒe[ƒuƒ‹‚ª–”t‚É‚È‚Á‚½ê‡Cã‘‚«‚·‚é‚©‚µ‚È‚¢‚©‚Í is_enable_overwrite ‚É‚Ä‘I‘ğ‰Â”\D
+ *        æ™‚ç³»åˆ—ãƒ­ã‚°
+ *        ã²ãŸã™ã‚‰ï¼Œæ–°ã—ã„ EL_Event ã‚’ãƒ†ãƒ¼ãƒ–ãƒ«ã«è¿½è¨˜ã—ã¦ã„ãï¼
+ *        EL_get_the_nth_tlog_from_the_latest ã§æœ€æ–°ã‹ã‚‰nç•ªç›®ãŒå–å¾—ã§ãã‚‹ï¼
+ *        ã“ã‚Œã‚’æœ‰åŠ¹åŒ–ã—ãªã„ã¨ï¼Œ event_handler ã¯ä½¿ãˆãªã„ï¼
+ *        ãƒ†ãƒ¼ãƒ–ãƒ«ãŒæº€æ¯ã«ãªã£ãŸå ´åˆï¼Œä¸Šæ›¸ãã™ã‚‹ã‹ã—ãªã„ã‹ã¯ is_enable_overwrite ã«ã¦é¸æŠå¯èƒ½ï¼
  * @note  CLog (EL_CumulativeLog)
- *        —İÏƒƒO
- *        EL_Event (EL_Event.group, EL_Event.local ‚É‚Ä“Á’è) ‚²‚Æ‚Ì—İÏƒJƒEƒ“ƒ^‚ğ•Û‚µCŒn—ñƒ\[ƒg‚³‚ê‚éD
- *        ƒe[ƒuƒ‹‚ª–”t‚É‚È‚é‚ÆÅ‚àŒÃ‚¢‚à‚Ì‚ªÌ‚Ä‚ç‚ê‚éD
- *        ˆÈ‰º‚Ì‚æ‚¤‚È“®‚«‚ğ‚·‚é
- *          ƒtƒH[ƒ}ƒbƒg:
+ *        ç´¯ç©ãƒ­ã‚°
+ *        EL_Event (EL_Event.group, EL_Event.local ã«ã¦ç‰¹å®š) ã”ã¨ã®ç´¯ç©ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿æŒã—ï¼Œæ™‚ç³»åˆ—ã‚½ãƒ¼ãƒˆã•ã‚Œã‚‹ï¼
+ *        ãƒ†ãƒ¼ãƒ–ãƒ«ãŒæº€æ¯ã«ãªã‚‹ã¨æœ€ã‚‚å¤ã„ã‚‚ã®ãŒæ¨ã¦ã‚‰ã‚Œã‚‹ï¼
+ *        ä»¥ä¸‹ã®ã‚ˆã†ãªå‹•ãã‚’ã™ã‚‹
+ *          ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ:
  *            | log index | event | counter | time | dt |
- *          1.  t1: event1 ‚ª”­¶
+ *          1. æ™‚åˆ» t1: event1 ãŒç™ºç”Ÿ
  *             | 0 | event1 | 1 | t1 | 0 |
- *          2.  t2: event2 ‚ª”­¶
+ *          2. æ™‚åˆ» t2: event2 ãŒç™ºç”Ÿ
  *             | 0 | event2 | 1 | t2 | 0 |
  *             | 1 | event1 | 1 | t1 | 0 |
- *          3.  t3: event2 ‚ª”­¶
+ *          3. æ™‚åˆ» t3: event2 ãŒç™ºç”Ÿ
  *             | 0 | event2 | 2 | t3 | t3 - t2 |
  *             | 1 | event1 | 1 | t1 | 0       |
- *          4.  t4: event1 ‚ª”­¶
+ *          4. æ™‚åˆ» t4: event1 ãŒç™ºç”Ÿ
  *             | 0 | event1 | 2 | t4 | t4 - t1 |
  *             | 1 | event2 | 2 | t3 | t3 - t2 |
- *          5.  t5: event3 ‚ª”­¶
+ *          5. æ™‚åˆ» t5: event3 ãŒç™ºç”Ÿ
  *             | 0 | event3 | 1 | t5 | 0       |
  *             | 1 | event1 | 2 | t4 | t4 - t1 |
  *             | 2 | event2 | 2 | t3 | t3 - t2 |
@@ -36,58 +36,56 @@
 #ifndef EVENT_LOGGER_H_
 #define EVENT_LOGGER_H_
 
-// TODO: FALSHƒƒ‚ƒŠ“™‚Ì‘å—e—Ê•sŠö”­ƒ{ƒŠƒ…[ƒ€‚Ö‚Ì‘‚«‚İ
-// TODO: AL ‚â EL ‚»‚Ì‚à‚Ì‘S‘Ì‚ğƒrƒ‹ƒh‚·‚éC‚µ‚È‚¢‚ğ‚¦‚ç‚×‚é ifdef ‚ğ’Ç‰Áiƒƒ‚ƒŠ‚Ì‚½‚ßj
-// TODO: ObcTime ‚Ì‰Šú‰»‚ª OBCT_clear ‚Å‚Í‚È‚­ memset 0x00 ‚Å‚ ‚éiŒ»ó–â‘è‚È‚¢‚ªC¡Œã–â‘è‚É‚È‚é‚©‚àj
+// TODO: FALSHãƒ¡ãƒ¢ãƒªç­‰ã®å¤§å®¹é‡ä¸æ®ç™ºãƒœãƒªãƒ¥ãƒ¼ãƒ ã¸ã®æ›¸ãè¾¼ã¿
+// TODO: AL ã‚„ EL ãã®ã‚‚ã®å…¨ä½“ã‚’ãƒ“ãƒ«ãƒ‰ã™ã‚‹ï¼Œã—ãªã„ã‚’ãˆã‚‰ã¹ã‚‹ ifdef ã‚’è¿½åŠ ï¼ˆãƒ¡ãƒ¢ãƒªã®ãŸã‚ï¼‰
+// TODO: ObcTime ã®åˆæœŸåŒ–ãŒ OBCT_clear ã§ã¯ãªã memset 0x00 ã§ã‚ã‚‹ï¼ˆç¾çŠ¶å•é¡Œãªã„ãŒï¼Œä»Šå¾Œå•é¡Œã«ãªã‚‹ã‹ã‚‚ï¼‰
 
 #include <stddef.h>
 #include <src_user/Library/stdint.h>
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_cmd_packet.h"
 #include "../TimeManager/obc_time.h"
 
-// EL_GROUP (uint32_t ‚ğ‘z’è) ‚ğ‚±‚±‚Å’è‹`‚·‚é
+// EL_GROUP (uint32_t ã‚’æƒ³å®š) ã‚’ã“ã“ã§å®šç¾©ã™ã‚‹
 #include <src_user/Settings/System/event_logger_group.h>
 
-#define EL_TLOG_TLM_PAGE_SIZE         (32)    //!< TLog‚É‚ÄCƒeƒŒƒ‚Pƒy[ƒW‚É‚¨‚ë‚¹‚élog”
-#define EL_TLOG_TLM_PAGE_MAX_HIGH     (4)     //!< TLog‚Å•Û‘¶‚·‚éƒƒO‚Ìƒy[ƒW” (EL_ERROR_LEVEL_HIGH)
-#define EL_TLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< TLog‚Å•Û‘¶‚·‚éƒƒO‚Ìƒy[ƒW” (EL_ERROR_LEVEL_MIDDLE)
-#define EL_TLOG_TLM_PAGE_MAX_LOW      (4)     //!< TLog‚Å•Û‘¶‚·‚éƒƒO‚Ìƒy[ƒW” (EL_ERROR_LEVEL_LOW)
-#define EL_CLOG_TLM_PAGE_SIZE         (32)    //!< CLog‚É‚ÄCƒeƒŒƒ‚Pƒy[ƒW‚É‚¨‚ë‚¹‚élog”
-#define EL_CLOG_TLM_PAGE_MAX_HIGH     (4)     //!< CLog‚Å•Û‘¶‚·‚éƒƒO‚Ìƒy[ƒW” (EL_ERROR_LEVEL_HIGH)
-#define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< CLog‚Å•Û‘¶‚·‚éƒƒO‚Ìƒy[ƒW” (EL_ERROR_LEVEL_MIDDLE)
-#define EL_CLOG_TLM_PAGE_MAX_LOW      (4)     //!< CLog‚Å•Û‘¶‚·‚éƒƒO‚Ìƒy[ƒW” (EL_ERROR_LEVEL_LOW)
+#define EL_TLOG_TLM_PAGE_SIZE         (32)    //!< TLogã«ã¦ï¼Œãƒ†ãƒ¬ãƒ¡ï¼‘ãƒšãƒ¼ã‚¸ã«ãŠã‚ã›ã‚‹logæ•°
+#define EL_TLOG_TLM_PAGE_MAX_HIGH     (4)     //!< TLogã§ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®ãƒšãƒ¼ã‚¸æ•° (EL_ERROR_LEVEL_HIGH)
+#define EL_TLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< TLogã§ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®ãƒšãƒ¼ã‚¸æ•° (EL_ERROR_LEVEL_MIDDLE)
+#define EL_TLOG_TLM_PAGE_MAX_LOW      (4)     //!< TLogã§ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®ãƒšãƒ¼ã‚¸æ•° (EL_ERROR_LEVEL_LOW)
+#define EL_CLOG_TLM_PAGE_SIZE         (20)    //!< CLogã«ã¦ï¼Œãƒ†ãƒ¬ãƒ¡ï¼‘ãƒšãƒ¼ã‚¸ã«ãŠã‚ã›ã‚‹logæ•°
+#define EL_CLOG_TLM_PAGE_MAX_HIGH     (4)     //!< CLogã§ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®ãƒšãƒ¼ã‚¸æ•° (EL_ERROR_LEVEL_HIGH)
+#define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< CLogã§ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®ãƒšãƒ¼ã‚¸æ•° (EL_ERROR_LEVEL_MIDDLE)
+#define EL_CLOG_TLM_PAGE_MAX_LOW      (4)     //!< CLogã§ä¿å­˜ã™ã‚‹ãƒ­ã‚°ã®ãƒšãƒ¼ã‚¸æ•° (EL_ERROR_LEVEL_LOW)
 
-#define EL_TLOG_LOG_SIZE_MAX_EL       (16)    //!< TLog‚É‚Ä•Û‘¶‚·‚éƒƒO” (EL_ERROR_LEVEL_EL)
-#define EL_CLOG_LOG_SIZE_MAX_EL       (8)     //!< CLog‚É‚Ä•Û‘¶‚·‚éƒƒO” (EL_ERROR_LEVEL_EL)
-#define EL_TLOG_LOG_SIZE_MAX_EH       (16)    //!< TLog‚É‚Ä•Û‘¶‚·‚éƒƒO” (EL_ERROR_LEVEL_EH) ¬‚³‚ß‚ÅOKD EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES x ‘½’iEH‚ÌÅ‘å’i”‚®‚ç‚¢‚ ‚ê‚Î
-#define EL_CLOG_LOG_SIZE_MAX_EH       (8)     //!< CLog‚É‚Ä•Û‘¶‚·‚éƒƒO” (EL_ERROR_LEVEL_EH) ‚±‚ê‚Í EH ‚Å‚Íg‚í‚ê‚È‚¢‚Ì‚Å¬‚³‚­‚Ä—Ç‚¢
+#define EL_TLOG_LOG_SIZE_MAX_EL       (16)    //!< TLogã«ã¦ä¿å­˜ã™ã‚‹ãƒ­ã‚°æ•° (EL_ERROR_LEVEL_EL)
+#define EL_CLOG_LOG_SIZE_MAX_EL       (8)     //!< CLogã«ã¦ä¿å­˜ã™ã‚‹ãƒ­ã‚°æ•° (EL_ERROR_LEVEL_EL)
+#define EL_TLOG_LOG_SIZE_MAX_EH       (16)    //!< TLogã«ã¦ä¿å­˜ã™ã‚‹ãƒ­ã‚°æ•° (EL_ERROR_LEVEL_EH) å°ã•ã‚ã§OKï¼ EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES x å¤šæ®µEHã®æœ€å¤§æ®µæ•°ãã‚‰ã„ã‚ã‚Œã°
+#define EL_CLOG_LOG_SIZE_MAX_EH       (8)     //!< CLogã«ã¦ä¿å­˜ã™ã‚‹ãƒ­ã‚°æ•° (EL_ERROR_LEVEL_EH) ã“ã‚Œã¯ EH ã§ã¯ä½¿ã‚ã‚Œãªã„ã®ã§å°ã•ãã¦è‰¯ã„
 
-#define EL_IS_ENABLE_TLOG                     //!< TLog ‚ğ—LŒø‚É‚·‚é‚©H ¨ ‚±‚ê‚ª‚È‚¢‚Æ event_handler ‚Íg‚¦‚È‚¢
-#define EL_IS_ENABLE_CLOG                     //!< CLog ‚ğ—LŒø‚É‚·‚é‚©H
-// #define EL_IS_ENABLE_NVLOG                 //!< TODO: NvLog (•sŠö”­Log) ‚ğ—LŒø‚É‚·‚é‚©H
-#define EL_IS_ENABLE_EVENT_NOTE               //!< EL_Event.note ‚ğ—LŒø‚É‚·‚é‚©H event ‚Æ‚µ‚Ä‚Í (event_handler ‚È‚Ç‚Å) “¯‚¶‚¾‚ªC•â‘«î•ñ‚â‹æ•Ê—p‚Ì id ‚ğg‚¤‚©H
-#define EL_IS_ENABLE_MIDDLE_ERROR_LEVEL       //!< EL_ERROR_LEVEL_MIDDLE ‚ğ—LŒø‚É‚·‚é‚©H iC2A core‚Å‚Íg‚í‚È‚¢‚Ì‚ÅCŠî–{–³Œø‚ÅOKDg‚¢‚½‚¢‚È‚ç—LŒø‚Éj
-#define EL_IS_ENABLE_EL_ERROR_LEVEL           /*!< EL_ERROR_LEVEL_EL ‚ğ—LŒø‚É‚·‚é‚©H
-                                                   Ä‹AŒÄ‚Ño‚µ & –³ŒÀƒ‹[ƒv‚ğ–h‚®‚½‚ß‚ÉCEL“à•”‚ÌƒCƒxƒ“ƒg‚Í•Ê‚Ìê—p‚ÌƒGƒ‰[ƒŒƒxƒ‹‚Å‹L˜^‚³‚ê‚éD
-                                                   ‚±‚ê‚ğ—LŒø‰»‚·‚é‚ÆCEL“à•”‚ÌƒAƒmƒ}ƒŠ‚ğ‹L˜^‚Å‚«‚éD */
+#define EL_IS_ENABLE_TLOG                     //!< TLog ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ï¼Ÿ â†’ ã“ã‚ŒãŒãªã„ã¨ event_handler ã¯ä½¿ãˆãªã„
+#define EL_IS_ENABLE_CLOG                     //!< CLog ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ï¼Ÿ
+// #define EL_IS_ENABLE_NVLOG                 //!< TODO: NvLog (ä¸æ®ç™ºLog) ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ï¼Ÿ
+#define EL_IS_ENABLE_EVENT_NOTE               //!< EL_Event.note ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ï¼Ÿ event ã¨ã—ã¦ã¯ (event_handler ãªã©ã§) åŒã˜ã ãŒï¼Œè£œè¶³æƒ…å ±ã‚„åŒºåˆ¥ç”¨ã® id ã‚’ä½¿ã†ã‹ï¼Ÿ
+#define EL_IS_ENABLE_MIDDLE_ERROR_LEVEL       //!< EL_ERROR_LEVEL_MIDDLE ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ï¼Ÿ ï¼ˆC2A coreã§ã¯ä½¿ã‚ãªã„ã®ã§ï¼ŒåŸºæœ¬ç„¡åŠ¹ã§OKï¼ä½¿ã„ãŸã„ãªã‚‰æœ‰åŠ¹ã«ï¼‰
+#define EL_IS_ENABLE_EL_ERROR_LEVEL           /*!< EL_ERROR_LEVEL_EL ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ï¼Ÿ
+                                                   å†å¸°å‘¼ã³å‡ºã— & ç„¡é™ãƒ«ãƒ¼ãƒ—ã‚’é˜²ããŸã‚ã«ï¼ŒELå†…éƒ¨ã®ã‚¤ãƒ™ãƒ³ãƒˆã¯åˆ¥ã®å°‚ç”¨ã®ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«ã§è¨˜éŒ²ã•ã‚Œã‚‹ï¼
+                                                   ã“ã‚Œã‚’æœ‰åŠ¹åŒ–ã™ã‚‹ã¨ï¼ŒELå†…éƒ¨ã®ã‚¢ãƒãƒãƒªã‚’è¨˜éŒ²ã§ãã‚‹ï¼ */
 
-#define SIZE_OF_EL_CLOG_COUNTER_T      (2)    //!< el_clog_counter_t ‚ÌŒ^ƒTƒCƒYDƒƒ‚ƒŠƒCƒ“ƒpƒNƒg‚ª‚»‚ê‚È‚è‚É‚ ‚é‚Ì‚ÅC‰Â•Ï‚É
+#define SIZE_OF_EL_CLOG_COUNTER_T      (2)    //!< el_clog_counter_t ã®å‹ã‚µã‚¤ã‚ºï¼ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‘ã‚¯ãƒˆãŒãã‚Œãªã‚Šã«ã‚ã‚‹ã®ã§ï¼Œå¯å¤‰ã«
 
-// ˆÈ‰º event_logger_params.h ‚É‚ÄCˆÈ‰º‚Ì‚æ‚¤‚Èİ’è‚ğ’è‹`‚·‚éDå‚Éƒƒ‚ƒŠƒCƒ“ƒpƒNƒg‚Ì‚½‚ß‚É’²®‰Â”\‚É‚µ‚Ä‚¢‚éD
-// ‚È‚¨C‚«‚¿‚ñ‚Æ“®ìŠm”F‚³‚ê‚Ä‚¢‚é‚Ì‚ÍCEL_IS_ENABLE_MIDDLE_ERROR_LEVEL ‚Ì‚İ–³Œø‚Èƒ‚[ƒh‚Ì‚Æ‚«
-// #define EL_IS_ENABLE_TLOG: TLog ‚ğ—LŒø‚É‚·‚éH
-// #define EL_IS_ENABLE_CLOG: CLog ‚ğ—LŒø‚É‚·‚éH
-// #define EL_IS_ENABLE_EVENT_NOTE: EL_Event.note ‚ğ—LŒø‚É‚·‚éH
-// #define EL_IS_ENABLE_MIDDLE_ERROR_LEVEL: EL_ERROR_LEVEL_MIDDLE ‚ğg‚¦‚é‚æ‚¤‚É‚·‚é‚©H
-// #define EL_IS_ENABLE_EL_ERROR_LEVEL: EL_ERROR_LEVEL_EL ‚ğg‚¦‚é‚æ‚¤‚É‚·‚é‚©H
-// SIZE_OF_EL_CLOG_COUNTER_T: el_clog_counter_t ‚ÌŒ^ƒTƒCƒY
-// ã•”‚Å’è‹`‚³‚ê‚Ä‚¢‚éCŠeítableƒTƒCƒY
+// ä»¥ä¸‹ event_logger_params.h ã«ã¦ï¼Œä»¥ä¸‹ã®ã‚ˆã†ãªè¨­å®šã‚’å®šç¾©ã™ã‚‹ï¼ä¸»ã«ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‘ã‚¯ãƒˆã®ãŸã‚ã«èª¿æ•´å¯èƒ½ã«ã—ã¦ã„ã‚‹ï¼
+// ãªãŠï¼Œãã¡ã‚“ã¨å‹•ä½œç¢ºèªã•ã‚Œã¦ã„ã‚‹ã®ã¯ï¼ŒEL_IS_ENABLE_MIDDLE_ERROR_LEVEL ã®ã¿ç„¡åŠ¹ãªãƒ¢ãƒ¼ãƒ‰ã®ã¨ã
+// #define EL_IS_ENABLE_TLOG: TLog ã‚’æœ‰åŠ¹ã«ã™ã‚‹ï¼Ÿ
+// #define EL_IS_ENABLE_CLOG: CLog ã‚’æœ‰åŠ¹ã«ã™ã‚‹ï¼Ÿ
+// #define EL_IS_ENABLE_EVENT_NOTE: EL_Event.note ã‚’æœ‰åŠ¹ã«ã™ã‚‹ï¼Ÿ
+// #define EL_IS_ENABLE_MIDDLE_ERROR_LEVEL: EL_ERROR_LEVEL_MIDDLE ã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹ã‹ï¼Ÿ
+// #define EL_IS_ENABLE_EL_ERROR_LEVEL: EL_ERROR_LEVEL_EL ã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹ã‹ï¼Ÿ
+// SIZE_OF_EL_CLOG_COUNTER_T: el_clog_counter_t ã®å‹ã‚µã‚¤ã‚º
+// ä¸Šéƒ¨ã§å®šç¾©ã•ã‚Œã¦ã„ã‚‹ï¼Œå„ç¨®tableã‚µã‚¤ã‚º
 #include <src_user/Settings/System/event_logger_params.h>
 
-#include "event_logger.h"
-
-#define EL_LOG_MINIMUM_REQUIRED           (2)   //!< ƒƒO‚É‹‚ß‚ç‚ê‚éÅ¬—v‘f”
-#define EL_LOG_MINIMUM_REQUIRED_EL_LOG    (4)   //!< ELƒƒO‚É‹‚ß‚ç‚ê‚éÅ¬—v‘f”
+#define EL_LOG_MINIMUM_REQUIRED           (2)   //!< ãƒ­ã‚°ã«æ±‚ã‚ã‚‰ã‚Œã‚‹æœ€å°è¦ç´ æ•°
+#define EL_LOG_MINIMUM_REQUIRED_EL_LOG    (4)   //!< ELãƒ­ã‚°ã«æ±‚ã‚ã‚‰ã‚Œã‚‹æœ€å°è¦ç´ æ•°
 
 #ifdef EL_IS_ENABLE_TLOG
 
@@ -120,8 +118,13 @@
 #undef EL_TLOG_LOG_SIZE_MAX_EL
 #endif  // EL_IS_ENABLE_EL_ERROR_LEVEL
 
-#if EL_TLOG_LOG_SIZE_MAX_EH <= EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
-#error EL_TLOG_LOG_SIZE_MAX_EH is too small
+// FIXME: event_logger.h ã¨ event_handler.h ãŒç›¸äº’ include ã«ãªã£ã¦ã—ã¾ã„ãƒ“ãƒ«ãƒ‰ã§ããªã„ã®ã§ï¼Œä¸€æ™‚çš„ã«ã“ã®ã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã‚’ç„¡åŠ¹åŒ–
+// #include "event_handler.h"
+// #if EL_TLOG_LOG_SIZE_MAX_EH <= EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
+// #error EL_TLOG_LOG_SIZE_MAX_EH is too small
+// #endif
+#if EL_TLOG_LOG_SIZE_MAX_EH <= 0
+#error EL_TLOG_LOG_SIZE_MAX_EH must be a positive number
 #endif
 
 #else   // EL_IS_ENABLE_TLOG
@@ -195,12 +198,12 @@ typedef uint32_t el_clog_counter_t;
 
 /**
  * @enum  EL_CORE_GROUP
- * @brief event_logger ‚Ì Event Group ‚Ì C2A core g—p•ª
- * @note  uint32_t ‚ğ‘z’è
+ * @brief event_logger ã® Event Group ã® C2A core ä½¿ç”¨åˆ†
+ * @note  uint32_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  EL_CORE_GROUP_NULL = 0,             //!< ‰Šú’l or NULLD‚±‚ê‚Í 0 ‚Å‚ ‚é‚±‚Æ‚ğ—v‹ (clear ‚Å memset 0x00 ‚ğ‚·‚é‚È‚ç)
+  EL_CORE_GROUP_NULL = 0,             //!< åˆæœŸå€¤ or NULLï¼ã“ã‚Œã¯ 0 ã§ã‚ã‚‹ã“ã¨ã‚’è¦æ±‚ (clear ã§ memset 0x00 ã‚’ã™ã‚‹ãªã‚‰)
   EL_CORE_GROUP_EVENT_LOGGER,         //!< EL
   EL_CORE_GROUP_MODE_MANAGER,
   EL_CORE_GROUP_TASK_DISPATCHER,
@@ -208,14 +211,14 @@ typedef enum
   EL_CORE_GROUP_TLCD_PAST_TIME,
   EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
   EL_CORE_GROUP_DCU,
-  EL_CORE_GROUP_EVENT_HANDLER,        //!< EH iÚ×‚Í event_handler.h QÆj
-  EL_CORE_GROUP_EH_MATCH_RULE,        //!< EH_Rule ‚Åƒ}ƒbƒ`‚µ‚½iÚ×‚Í event_handler.h QÆj
-  EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,  //!< EH_Rule ‚Åƒ}ƒbƒ`‚µ‚½‚ªC‚»‚Ìƒ‹[ƒ‹‚Å‘Î‰‚¹‚¸‚ÉCãˆÊ‚Ìƒ‹[ƒ‹‚Å‘Î‰‚³‚¹‚½iÚ×‚Í event_handler.h QÆj
+  EL_CORE_GROUP_EVENT_HANDLER,        //!< EH ï¼ˆè©³ç´°ã¯ event_handler.h å‚ç…§ï¼‰
+  EL_CORE_GROUP_EH_MATCH_RULE,        //!< EH_Rule ã§ãƒãƒƒãƒã—ãŸï¼ˆè©³ç´°ã¯ event_handler.h å‚ç…§ï¼‰
+  EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,  //!< EH_Rule ã§ãƒãƒƒãƒã—ãŸãŒï¼Œãã®ãƒ«ãƒ¼ãƒ«ã§å¯¾å¿œã›ãšã«ï¼Œä¸Šä½ã®ãƒ«ãƒ¼ãƒ«ã§å¯¾å¿œã•ã›ãŸï¼ˆè©³ç´°ã¯ event_handler.h å‚ç…§ï¼‰
   EL_CORE_GROUP_COMMAND_ANALYZE,
   // TODO: Driver Super
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
-  EL_CORE_GROUP_EL_DROP_CLOG1,        //!< EL CLogs ‚ÅŒÃ‚¢ƒGƒ‰[‚ğã‘‚«‚·‚é‚Æ‚« (group, err_level ‚ğ•Û‘¶)
-  EL_CORE_GROUP_EL_DROP_CLOG2,        //!< EL CLogs ‚ÅŒÃ‚¢ƒGƒ‰[‚ğã‘‚«‚·‚é‚Æ‚« (local, count ‚ğ•Û‘¶)
+  EL_CORE_GROUP_EL_DROP_CLOG1,        //!< EL CLogs ã§å¤ã„ã‚¨ãƒ©ãƒ¼ã‚’ä¸Šæ›¸ãã™ã‚‹ã¨ã (group, err_level ã‚’ä¿å­˜)
+  EL_CORE_GROUP_EL_DROP_CLOG2,        //!< EL CLogs ã§å¤ã„ã‚¨ãƒ©ãƒ¼ã‚’ä¸Šæ›¸ãã™ã‚‹ã¨ã (local, count ã‚’ä¿å­˜)
 #endif
   EL_CORE_GROUP_MAX
 } EL_CORE_GROUP;
@@ -224,21 +227,21 @@ typedef enum
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
 /**
  * @enum  EL_EVENT_LOCAL
- * @brief EL_CORE_GROUP_EVENT_LOGGER ‚Ì local id
- * @note  uint32_t ‚ğ‘z’è
+ * @brief EL_CORE_GROUP_EVENT_LOGGER ã® local id
+ * @note  uint32_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  EL_EVENT_LOCAL_UNKNOWN_ERR,             //!< •s–¾‚ÌƒGƒ‰[
+  EL_EVENT_LOCAL_UNKNOWN_ERR,             //!< ä¸æ˜ã®ã‚¨ãƒ©ãƒ¼
 #ifdef EL_IS_ENABLE_TLOG
-  EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL,     //!< TLog ‚Ìƒe[ƒuƒ‹‚Ì”¼•ª‚ª–„‚Ü‚Á‚½ (HIGH)
-  EL_EVENT_LOCAL_TLOG_HIGH_FULL,          //!< TLog ‚Ìƒe[ƒuƒ‹‚ª–„‚Ü‚Á‚½Dwp‚ÍÅ‰‚É–ß‚èCŒÃ‚¢‚à‚Ì‚©‚çã‘‚«‚µ‚Ä‚¢‚­ (HIGH)
+  EL_EVENT_LOCAL_TLOG_HIGH_HALF_FULL,     //!< TLog ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã®åŠåˆ†ãŒåŸ‹ã¾ã£ãŸ (HIGH)
+  EL_EVENT_LOCAL_TLOG_HIGH_FULL,          //!< TLog ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãŒåŸ‹ã¾ã£ãŸï¼wpã¯æœ€åˆã«æˆ»ã‚Šï¼Œå¤ã„ã‚‚ã®ã‹ã‚‰ä¸Šæ›¸ãã—ã¦ã„ã (HIGH)
 #ifdef EL_IS_ENABLE_MIDDLE_ERROR_LEVEL
-  EL_EVENT_LOCAL_TLOG_MIDDLE_HALF_FULL,   //!< TLog ‚Ìƒe[ƒuƒ‹‚Ì”¼•ª‚ª–„‚Ü‚Á‚½ (MIDDLE)
-  EL_EVENT_LOCAL_TLOG_MIDDLE_FULL,        //!< TLog ‚Ìƒe[ƒuƒ‹‚ª–„‚Ü‚Á‚½Dwp‚ÍÅ‰‚É–ß‚èCŒÃ‚¢‚à‚Ì‚©‚çã‘‚«‚µ‚Ä‚¢‚­ (MIDDLE)
+  EL_EVENT_LOCAL_TLOG_MIDDLE_HALF_FULL,   //!< TLog ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã®åŠåˆ†ãŒåŸ‹ã¾ã£ãŸ (MIDDLE)
+  EL_EVENT_LOCAL_TLOG_MIDDLE_FULL,        //!< TLog ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãŒåŸ‹ã¾ã£ãŸï¼wpã¯æœ€åˆã«æˆ»ã‚Šï¼Œå¤ã„ã‚‚ã®ã‹ã‚‰ä¸Šæ›¸ãã—ã¦ã„ã (MIDDLE)
 #endif
-  EL_EVENT_LOCAL_TLOG_LOW_HALF_FULL,      //!< TLog ‚Ìƒe[ƒuƒ‹‚Ì”¼•ª‚ª–„‚Ü‚Á‚½ (LOW)
-  EL_EVENT_LOCAL_TLOG_LOW_FULL,           //!< TLog ‚Ìƒe[ƒuƒ‹‚ª–„‚Ü‚Á‚½Dwp‚ÍÅ‰‚É–ß‚èCŒÃ‚¢‚à‚Ì‚©‚çã‘‚«‚µ‚Ä‚¢‚­ (LOW)
+  EL_EVENT_LOCAL_TLOG_LOW_HALF_FULL,      //!< TLog ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã®åŠåˆ†ãŒåŸ‹ã¾ã£ãŸ (LOW)
+  EL_EVENT_LOCAL_TLOG_LOW_FULL,           //!< TLog ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãŒåŸ‹ã¾ã£ãŸï¼wpã¯æœ€åˆã«æˆ»ã‚Šï¼Œå¤ã„ã‚‚ã®ã‹ã‚‰ä¸Šæ›¸ãã—ã¦ã„ã (LOW)
 #endif
   EL_EVENT_LOCAL_MAX
 } EL_EVENT_LOCAL;
@@ -247,9 +250,9 @@ typedef enum
 
 /**
  * @enum  EL_ERROR_LEVEL
- * @brief event_logger ‚Ì ƒGƒ‰[ƒŒƒxƒ‹
- * @note  uint8_t ‚ğ‘z’è
- * @note  C2A Core ‚Å‚Í HIGH, LOW ‚µ‚©g‚í‚È‚¢‚½‚ßC MIDDLE ‚Íƒ†[ƒU[’è‹`‚Æ‚·‚é
+ * @brief event_logger ã® ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«
+ * @note  uint8_t ã‚’æƒ³å®š
+ * @note  C2A Core ã§ã¯ HIGH, LOW ã—ã‹ä½¿ã‚ãªã„ãŸã‚ï¼Œ MIDDLE ã¯ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©ã¨ã™ã‚‹
  */
 typedef enum
 {
@@ -261,71 +264,71 @@ typedef enum
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   EL_ERROR_LEVEL_EL,
 #endif
-  EL_ERROR_LEVEL_EH,    /*!< ‘½’i‚Ì EH ‘Î‰‚ğÀŒ»‚·‚é‚½‚ß‚ÌƒGƒ‰[ƒŒƒxƒ‹
-                             EL_CORE_GROUP_EH_MATCH_RULE, EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE ‚ª‹L˜^‚³‚ê‚é */
+  EL_ERROR_LEVEL_EH,    /*!< å¤šæ®µã® EH å¯¾å¿œã‚’å®Ÿç¾ã™ã‚‹ãŸã‚ã®ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«
+                             EL_CORE_GROUP_EH_MATCH_RULE, EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE ãŒè¨˜éŒ²ã•ã‚Œã‚‹ */
   EL_ERROR_LEVEL_MAX
 } EL_ERROR_LEVEL;
 
 
 /**
  * @enum  EL_ACK
- * @brief event_logger ‚Ì”Ä—p•Ô‚è’l
- * @note  uint8_t ‚ğ‘z’è
+ * @brief event_logger ã®æ±ç”¨è¿”ã‚Šå€¤
+ * @note  uint8_t ã‚’æƒ³å®š
  */
 typedef enum
 {
-  EL_ACK_OK,                    //!< ³íI—¹
-  EL_ACK_ILLEGAL_GROUP,         //!< •s³‚È EL_Event.group
-  EL_ACK_ILLEGAL_ERROR_LEVEL,   //!< •s³‚È EL_Event.err_level
-  EL_ACK_DISABLE_LOGGING,       //!< ƒƒMƒ“ƒO‚ª–³Œø‚É‚æ‚èCŠü‹p
-  EL_ACK_TLOG_FULL,             //!< TLog‚Ì’Ç‹L‚ª•s”\‚Ì‚½‚ßCTLog‹L˜^‚ª‚Å‚«‚¸
-  EL_ACK_OTHER_ERR              //!< ‚»‚Ì‘¼‚ÌƒGƒ‰[
+  EL_ACK_OK,                    //!< æ­£å¸¸çµ‚äº†
+  EL_ACK_ILLEGAL_GROUP,         //!< ä¸æ­£ãª EL_Event.group
+  EL_ACK_ILLEGAL_ERROR_LEVEL,   //!< ä¸æ­£ãª EL_Event.err_level
+  EL_ACK_DISABLE_LOGGING,       //!< ãƒ­ã‚®ãƒ³ã‚°ãŒç„¡åŠ¹ã«ã‚ˆã‚Šï¼Œæ£„å´
+  EL_ACK_TLOG_FULL,             //!< TLogã®è¿½è¨˜ãŒä¸èƒ½ã®ãŸã‚ï¼ŒTLogè¨˜éŒ²ãŒã§ããš
+  EL_ACK_OTHER_ERR              //!< ãã®ä»–ã®ã‚¨ãƒ©ãƒ¼
 } EL_ACK;
 
 
 /**
  * @struct EL_Event
- * @brief  ƒCƒxƒ“ƒg
+ * @brief  ã‚¤ãƒ™ãƒ³ãƒˆ
  */
 typedef struct
 {
-  EL_GROUP group;             //!< ƒCƒxƒ“ƒg‚ğ“Á’è‚·‚é group id
-  uint32_t local;             /*!< ‚»‚ê‚¼‚ê‚Ì group ‚²‚Æ‚ÉÚ×î•ñ‚ğ•t—^‚·‚é‚½‚ß‚Ì id
-                                   enum‚Å‚à‚æ‚¢‚µC‚È‚É‚©‚ÌƒGƒ‰[ƒR[ƒh‚Å‚à—Ç‚¢‚µC—á‚¦‚Î‘‚«‚İ‚ª¸”s‚µ‚½ƒƒ‚ƒŠƒAƒhƒŒƒXC‚È‚Ç‚Å‚à—Ç‚¢
-                                   group‚²‚Æ‚É’è‹`‚·‚é */
-  EL_ERROR_LEVEL err_level;   //!< ƒGƒ‰[ƒŒƒxƒ‹
-  ObcTime  time;              //!< ”­¶
+  EL_GROUP group;             //!< ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç‰¹å®šã™ã‚‹ group id
+  uint32_t local;             /*!< ãã‚Œãã‚Œã® group ã”ã¨ã«è©³ç´°æƒ…å ±ã‚’ä»˜ä¸ã™ã‚‹ãŸã‚ã® id
+                                   enumã§ã‚‚ã‚ˆã„ã—ï¼Œãªã«ã‹ã®ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã§ã‚‚è‰¯ã„ã—ï¼Œä¾‹ãˆã°æ›¸ãè¾¼ã¿ãŒå¤±æ•—ã—ãŸãƒ¡ãƒ¢ãƒªã‚¢ãƒ‰ãƒ¬ã‚¹ï¼Œãªã©ã§ã‚‚è‰¯ã„
+                                   groupã”ã¨ã«å®šç¾©ã™ã‚‹ */
+  EL_ERROR_LEVEL err_level;   //!< ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«
+  ObcTime  time;              //!< ç™ºç”Ÿæ™‚åˆ»
 #ifdef EL_IS_ENABLE_EVENT_NOTE
-  uint32_t note;              /*!< Event ‚Í group, local ‚Å“¯’è‚³‚ê‚é‚ªC‚³‚ç‚É•â‘«î•ñ‚ğ’Ç‰Á‚·‚éê‡‚Ég‚¤D
-                                   event_handler ‚È‚Ç‚Å‚Í–³‹‚³‚ê‚é
-                                   •â‘«î•ñ‚ğ’Ç‰Á‚·‚éê‡‚âC“¯‚¶ event ‚Å‚à”­¶êŠ“™‚Å‹æ•Ê‚µ‚½‚¢ê‡‚Ég‚¦‚éD */
+  uint32_t note;              /*!< Event ã¯ group, local ã§åŒå®šã•ã‚Œã‚‹ãŒï¼Œã•ã‚‰ã«è£œè¶³æƒ…å ±ã‚’è¿½åŠ ã™ã‚‹å ´åˆã«ä½¿ã†ï¼
+                                   event_handler ãªã©ã§ã¯ç„¡è¦–ã•ã‚Œã‚‹
+                                   è£œè¶³æƒ…å ±ã‚’è¿½åŠ ã™ã‚‹å ´åˆã‚„ï¼ŒåŒã˜ event ã§ã‚‚ç™ºç”Ÿå ´æ‰€ç­‰ã§åŒºåˆ¥ã—ãŸã„å ´åˆã«ä½¿ãˆã‚‹ï¼ */
 #endif
 } EL_Event;
 
 
 /**
  * @struct EL_EventStatistics
- * @brief  ƒCƒxƒ“ƒg“Œvî•ñ
+ * @brief  ã‚¤ãƒ™ãƒ³ãƒˆçµ±è¨ˆæƒ…å ±
  */
 typedef struct
 {
-  uint32_t record_counter_total;                //!< ƒCƒxƒ“ƒg‹L˜^”
-  uint32_t record_counters[EL_ERROR_LEVEL_MAX]; //!< ƒGƒ‰[ƒŒƒxƒ‹‚²‚Æ‚Ì‹L˜^”
+  uint32_t record_counter_total;                //!< ã‚¤ãƒ™ãƒ³ãƒˆè¨˜éŒ²æ•°
+  uint32_t record_counters[EL_ERROR_LEVEL_MAX]; //!< ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«ã”ã¨ã®è¨˜éŒ²æ•°
 } EL_EventStatistics;
 
 
 #ifdef EL_IS_ENABLE_TLOG
 /**
  * @struct EL_TimeSeriesLog
- * @brief  Œn—ñƒƒO (TLog) ‚ÌƒƒO\‘¢’è‹`
+ * @brief  æ™‚ç³»åˆ—ãƒ­ã‚° (TLog) ã®ãƒ­ã‚°æ§‹é€ å®šç¾©
  */
 typedef struct
 {
-  EL_Event* events;               //!< ‹L˜^‚·‚éƒCƒxƒ“ƒgƒe[ƒuƒ‹iƒTƒCƒY‰Â•Ï‚Ì‚½‚ßƒ|ƒCƒ“ƒ^j
-  uint16_t  log_capacity;         //!< ƒCƒxƒ“ƒgƒe[ƒuƒ‹‚ÌƒLƒƒƒpƒVƒeƒBiƒTƒCƒYj
-  uint16_t  log_wp;               //!< ƒCƒxƒ“ƒgƒe[ƒuƒ‹‚Ì write pointerDŸ‰ñ‘‚«‚İêŠ
-  uint8_t   is_enable_overwrite;  //!< TLog‚Ìã‘‚«‚ğ‹–‰Â‚·‚é‚©HiƒfƒtƒHƒ‹ƒg‚Å‚Í‹–‰Âj
-  uint8_t   is_table_overflow;    //!< ã‘‚«‚ª–³Œø‚Ìê‡Cˆì‚ê‚Ä’Ç‹L‚Å‚«‚È‚©‚Á‚½‚©H
+  EL_Event* events;               //!< è¨˜éŒ²ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ï¼ˆã‚µã‚¤ã‚ºå¯å¤‰ã®ãŸã‚ãƒã‚¤ãƒ³ã‚¿ï¼‰
+  uint16_t  log_capacity;         //!< ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚­ãƒ£ãƒ‘ã‚·ãƒ†ã‚£ï¼ˆã‚µã‚¤ã‚ºï¼‰
+  uint16_t  log_wp;               //!< ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã® write pointerï¼æ¬¡å›æ›¸ãè¾¼ã¿å ´æ‰€
+  uint8_t   is_enable_overwrite;  //!< TLogã®ä¸Šæ›¸ãã‚’è¨±å¯ã™ã‚‹ã‹ï¼Ÿï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯è¨±å¯ï¼‰
+  uint8_t   is_table_overflow;    //!< ä¸Šæ›¸ããŒç„¡åŠ¹ã®å ´åˆï¼Œæº¢ã‚Œã¦è¿½è¨˜ã§ããªã‹ã£ãŸã‹ï¼Ÿ
 } EL_TimeSeriesLog;
 #endif
 
@@ -333,26 +336,26 @@ typedef struct
 #ifdef EL_IS_ENABLE_CLOG
 /**
  * @struct EL_CLogElement
- * @brief  —İÏƒƒO (CLog) ‚Ì‚P—v‘f
- * note    group, local ‚ª“¯‚¶ƒCƒxƒ“ƒg‚ğ“¯ˆê‚Æ‚İ‚È‚·
+ * @brief  ç´¯ç©ãƒ­ã‚° (CLog) ã®ï¼‘è¦ç´ 
+ * note    group, local ãŒåŒã˜ã‚¤ãƒ™ãƒ³ãƒˆã‚’åŒä¸€ã¨ã¿ãªã™
  */
 typedef struct
 {
-  EL_Event          event;                  //!< ‹L˜^‚·‚éƒCƒxƒ“ƒg‚ÆCÅŒã‚É‹L˜^‚³‚ê‚½ƒCƒxƒ“ƒgî•ñ
-  el_clog_counter_t count;                  //!< —İÏƒJƒEƒ“ƒ^
-  ObcTime           delta_record_time;      //!< ’¼‹ß‚Q‚Â‚ÌƒCƒxƒ“ƒg”­¶‚Ì·
+  EL_Event          event;                  //!< è¨˜éŒ²ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã¨ï¼Œæœ€å¾Œã«è¨˜éŒ²ã•ã‚ŒãŸã‚¤ãƒ™ãƒ³ãƒˆæƒ…å ±
+  el_clog_counter_t count;                  //!< ç´¯ç©ã‚«ã‚¦ãƒ³ã‚¿
+  ObcTime           delta_record_time;      //!< ç›´è¿‘ï¼’ã¤ã®ã‚¤ãƒ™ãƒ³ãƒˆç™ºç”Ÿæ™‚åˆ»ã®å·®
 } EL_CLogElement;
 
 
 /**
  * @struct EL_CumulativeLog
- * @brief  —İÏƒƒO (CLog) ‚ÌƒƒO\‘¢’è‹`
+ * @brief  ç´¯ç©ãƒ­ã‚° (CLog) ã®ãƒ­ã‚°æ§‹é€ å®šç¾©
  */
 typedef struct
 {
-  EL_CLogElement* logs;         //!< —İÏƒJƒEƒ“ƒ^‚ğ•Û‚·‚éƒCƒxƒ“ƒgƒe[ƒuƒ‹D[log_order[0]] ‚ªÅVDiƒTƒCƒY‰Â•Ï‚Ì‚½‚ßƒ|ƒCƒ“ƒ^j
-  uint16_t*       log_orders;   //!< logs ‚ğŒn—ñ‡‚É•À‚Ñ‘Ö‚¦‚é sort_keyiƒTƒCƒY‰Â•Ï‚Ì‚½‚ßƒ|ƒCƒ“ƒ^j
-  uint16_t        log_capacity; //!< ƒCƒxƒ“ƒgƒe[ƒuƒ‹‚ÌƒLƒƒƒpƒVƒeƒBiƒTƒCƒYj
+  EL_CLogElement* logs;         //!< ç´¯ç©ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿æŒã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ï¼[log_order[0]] ãŒæœ€æ–°ï¼ï¼ˆã‚µã‚¤ã‚ºå¯å¤‰ã®ãŸã‚ãƒã‚¤ãƒ³ã‚¿ï¼‰
+  uint16_t*       log_orders;   //!< logs ã‚’æ™‚ç³»åˆ—é †ã«ä¸¦ã³æ›¿ãˆã‚‹ sort_keyï¼ˆã‚µã‚¤ã‚ºå¯å¤‰ã®ãŸã‚ãƒã‚¤ãƒ³ã‚¿ï¼‰
+  uint16_t        log_capacity; //!< ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚­ãƒ£ãƒ‘ã‚·ãƒ†ã‚£ï¼ˆã‚µã‚¤ã‚ºï¼‰
 } EL_CumulativeLog;
 #endif
 
@@ -362,15 +365,15 @@ typedef struct
 #ifdef EL_IS_ENABLE_TLOG
   struct
   {
-    uint8_t page_no;            //!< tlm ‚Å‰º‚ë‚·ƒƒOƒy[ƒW
-    EL_ERROR_LEVEL err_level;   //!< tlm ‚Å‰º‚ë‚·î•ñ‚ÌƒGƒ‰[ƒŒƒxƒ‹
+    uint8_t page_no;            //!< tlm ã§ä¸‹ã‚ã™ãƒ­ã‚°ãƒšãƒ¼ã‚¸
+    EL_ERROR_LEVEL err_level;   //!< tlm ã§ä¸‹ã‚ã™æƒ…å ±ã®ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«
   } tlog;
 #endif
 #ifdef EL_IS_ENABLE_CLOG
   struct
   {
-    uint8_t page_no;            //!< tlm ‚Å‰º‚ë‚·ƒƒOƒy[ƒW
-    EL_ERROR_LEVEL err_level;   //!< tlm ‚Å‰º‚ë‚·î•ñ‚ÌƒGƒ‰[ƒŒƒxƒ‹
+    uint8_t page_no;            //!< tlm ã§ä¸‹ã‚ã™ãƒ­ã‚°ãƒšãƒ¼ã‚¸
+    EL_ERROR_LEVEL err_level;   //!< tlm ã§ä¸‹ã‚ã™æƒ…å ±ã®ã‚¨ãƒ©ãƒ¼ãƒ¬ãƒ™ãƒ«
   } clog;
 #endif
 } EL_TlmInfo;
@@ -385,10 +388,10 @@ typedef struct
   EL_CumulativeLog clogs[EL_ERROR_LEVEL_MAX];
 #endif
 
-  EL_EventStatistics statistics;    //!< “Œvî•ñ
-  EL_TlmInfo tlm_info;              //!< tlm‚Ì‚½‚ß‚Ìî•ñ
+  EL_EventStatistics statistics;    //!< çµ±è¨ˆæƒ…å ±
+  EL_TlmInfo tlm_info;              //!< tlmã®ãŸã‚ã®æƒ…å ±
 
-  uint8_t is_logging_enable[EL_GROUP_MAX / 8 + 1];  //!< —LŒø‚©ƒtƒ‰ƒODƒƒ‚ƒŠíŒ¸‚Ì‚½‚ßC bit ’PˆÊ‚Å•Û‘¶
+  uint8_t is_logging_enable[EL_GROUP_MAX / 8 + 1];  //!< æœ‰åŠ¹ã‹ãƒ•ãƒ©ã‚°ï¼ãƒ¡ãƒ¢ãƒªå‰Šæ¸›ã®ãŸã‚ï¼Œ bit å˜ä½ã§ä¿å­˜
 
   EL_Event latest_event;
 } EventLogger;
@@ -398,56 +401,56 @@ extern const EventLogger* const event_logger;
 
 
 /**
- * @brief  event_logger ‚Ì‰Šú‰»
+ * @brief  event_logger ã®åˆæœŸåŒ–
  * @param  void
  * @return void
  */
 void EL_initialize(void);
 
 /**
- * @brief  ƒCƒxƒ“ƒg (EL_Event) ‚ğ‹L˜^
- * @note   C2A ã‚Ì”CˆÓ‚ÌêŠ‚©‚ç”­s‰Â”\
+ * @brief  ã‚¤ãƒ™ãƒ³ãƒˆ (EL_Event) ã‚’è¨˜éŒ²
+ * @note   C2A ä¸Šã®ä»»æ„ã®å ´æ‰€ã‹ã‚‰ç™ºè¡Œå¯èƒ½
  * @param  group: EL_Event.group
  * @param  local: EL_Event.local
- * @param  err_level: EL_Event.err_level EL_ERROR_LEVEL_EL ‚Í‹Ö~
+ * @param  err_level: EL_Event.err_level EL_ERROR_LEVEL_EL ã¯ç¦æ­¢
  * @param  note: EL_Event.note
  * @return EL_ACK
  */
 EL_ACK EL_record_event(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL err_level, uint32_t note);
 
 /**
- * @brief  event_logger ‚Ì EL_Event.group ‚Ì—LŒø‰»
- * @param  group: —LŒø‰»‚·‚é EL_Event.group
- * @retval EL_ACK_OK: ³íI—¹
- * @retval EL_ACK_ILLEGAL_GROUP: •s³‚È EL_Event.group
+ * @brief  event_logger ã® EL_Event.group ã®æœ‰åŠ¹åŒ–
+ * @param  group: æœ‰åŠ¹åŒ–ã™ã‚‹ EL_Event.group
+ * @retval EL_ACK_OK: æ­£å¸¸çµ‚äº†
+ * @retval EL_ACK_ILLEGAL_GROUP: ä¸æ­£ãª EL_Event.group
  */
 EL_ACK EL_enable_logging(EL_GROUP group);
 
 /**
- * @brief  event_logger ‚Ì EL_Event.group ‚Ì–³Œø‰»
- * @param  group: –³Œø‰»‚·‚é EL_Event.group
- * @retval EL_ACK_OK: ³íI—¹
- * @retval EL_ACK_ILLEGAL_GROUP: •s³‚È EL_Event.group
+ * @brief  event_logger ã® EL_Event.group ã®ç„¡åŠ¹åŒ–
+ * @param  group: ç„¡åŠ¹åŒ–ã™ã‚‹ EL_Event.group
+ * @retval EL_ACK_OK: æ­£å¸¸çµ‚äº†
+ * @retval EL_ACK_ILLEGAL_GROUP: ä¸æ­£ãª EL_Event.group
  */
 EL_ACK EL_disable_logging(EL_GROUP group);
 
 /**
- * @brief  event_logger ‚Ì EL_Event.group ‚ª—LŒø‚©H
- * @param  group: –³Œø‰»‚·‚é EL_Event.group
- * @retval 0: –³Œø or –³Œø‚Èˆø”
- * @retval 1: —LŒø
+ * @brief  event_logger ã® EL_Event.group ãŒæœ‰åŠ¹ã‹ï¼Ÿ
+ * @param  group: ç„¡åŠ¹åŒ–ã™ã‚‹ EL_Event.group
+ * @retval 0: ç„¡åŠ¹ or ç„¡åŠ¹ãªå¼•æ•°
+ * @retval 1: æœ‰åŠ¹
  */
 int EL_is_logging_enable(EL_GROUP group);
 
 /**
- * @brief  event_logger ‚Ì‘S EL_Event.group ‚Ì—LŒø‰»
+ * @brief  event_logger ã®å…¨ EL_Event.group ã®æœ‰åŠ¹åŒ–
  * @param  void
  * @return void
  */
 void EL_enable_all_logging(void);
 
 /**
- * @brief  event_logger ‚Ì‘S EL_Event.group ‚Ì–³Œø‰»
+ * @brief  event_logger ã®å…¨ EL_Event.group ã®ç„¡åŠ¹åŒ–
  * @param  void
  * @return void
  */
@@ -455,101 +458,101 @@ void EL_disable_all_logging(void);
 
 #ifdef EL_IS_ENABLE_TLOG
 /**
- * @brief  TLog ‚ÌƒCƒxƒ“ƒgƒe[ƒuƒ‹‚Ìã‘‚«‚ğ—LŒø‰»
- * @param  err_level: —LŒø‰»‚·‚é EL_Event.err_level
- * @retval EL_ACK_OK: ³íI—¹
- * @retval EL_ACK_ILLEGAL_ERROR_LEVEL: •s³‚È EL_Event.err_level
+ * @brief  TLog ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ä¸Šæ›¸ãã‚’æœ‰åŠ¹åŒ–
+ * @param  err_level: æœ‰åŠ¹åŒ–ã™ã‚‹ EL_Event.err_level
+ * @retval EL_ACK_OK: æ­£å¸¸çµ‚äº†
+ * @retval EL_ACK_ILLEGAL_ERROR_LEVEL: ä¸æ­£ãª EL_Event.err_level
  */
 EL_ACK EL_enable_tlog_overwrite(EL_ERROR_LEVEL err_level);
 
 /**
- * @brief  TLog ‚ÌƒCƒxƒ“ƒgƒe[ƒuƒ‹‚Ìã‘‚«‚ğ–³Œø‰»
- * @param  err_level: –³Œø‰»‚·‚é EL_Event.err_level
- * @retval EL_ACK_OK: ³íI—¹
- * @retval EL_ACK_ILLEGAL_ERROR_LEVEL: •s³‚È EL_Event.err_level
+ * @brief  TLog ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ä¸Šæ›¸ãã‚’ç„¡åŠ¹åŒ–
+ * @param  err_level: ç„¡åŠ¹åŒ–ã™ã‚‹ EL_Event.err_level
+ * @retval EL_ACK_OK: æ­£å¸¸çµ‚äº†
+ * @retval EL_ACK_ILLEGAL_ERROR_LEVEL: ä¸æ­£ãª EL_Event.err_level
  */
 EL_ACK EL_disable_tlog_overwrite(EL_ERROR_LEVEL err_level);
 
 /**
- * @brief  TLog ‚ÌƒCƒxƒ“ƒgƒe[ƒuƒ‹‚Ìã‘‚«‚ğ‚·‚×‚Ä—LŒø‰»
- * @note   EL_ERROR_LEVEL_EH ‚ÍŠî–{“I‚Éƒ†[ƒU[‚ª‘€ì‚·‚é‚à‚Ì‚Å‚Í‚È‚¢‚Ì‚ÅC‚±‚±‚Å‚Í—LŒø‰»‚³‚ê‚È‚¢
+ * @brief  TLog ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ä¸Šæ›¸ãã‚’ã™ã¹ã¦æœ‰åŠ¹åŒ–
+ * @note   EL_ERROR_LEVEL_EH ã¯åŸºæœ¬çš„ã«ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒæ“ä½œã™ã‚‹ã‚‚ã®ã§ã¯ãªã„ã®ã§ï¼Œã“ã“ã§ã¯æœ‰åŠ¹åŒ–ã•ã‚Œãªã„
  * @param  void
  * @return void
  */
 void EL_enable_tlog_overwrite_all(void);
 
 /**
- * @brief  TLog ‚ÌƒCƒxƒ“ƒgƒe[ƒuƒ‹‚Ìã‘‚«‚ğ‚·‚×‚Ä–³Œø‰»
- * @note   EL_ERROR_LEVEL_EH ‚ÍŠî–{“I‚Éƒ†[ƒU[‚ª‘€ì‚·‚é‚à‚Ì‚Å‚Í‚È‚¢‚Ì‚ÅC‚±‚±‚Å‚Í–³Œø‰»‚³‚ê‚È‚¢
+ * @brief  TLog ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ä¸Šæ›¸ãã‚’ã™ã¹ã¦ç„¡åŠ¹åŒ–
+ * @note   EL_ERROR_LEVEL_EH ã¯åŸºæœ¬çš„ã«ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒæ“ä½œã™ã‚‹ã‚‚ã®ã§ã¯ãªã„ã®ã§ï¼Œã“ã“ã§ã¯ç„¡åŠ¹åŒ–ã•ã‚Œãªã„
  * @param  void
  * @return void
  */
 void EL_disable_tlog_overwrite_all(void);
 
 /**
- * @brief  TLog ‚ÌƒCƒxƒ“ƒgƒe[ƒuƒ‹‚Ìã‘‚«‚ª—LŒø‚©H
- * @param  err_level: –³Œø‰»‚·‚é EL_Event.err_level
- * @retval 0: –³Œø or –³Œø‚Èˆø”
- * @retval 1: —LŒø
+ * @brief  TLog ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®ä¸Šæ›¸ããŒæœ‰åŠ¹ã‹ï¼Ÿ
+ * @param  err_level: ç„¡åŠ¹åŒ–ã™ã‚‹ EL_Event.err_level
+ * @retval 0: ç„¡åŠ¹ or ç„¡åŠ¹ãªå¼•æ•°
+ * @retval 1: æœ‰åŠ¹
  */
 int EL_is_tlog_overwrite_enable(EL_ERROR_LEVEL err_level);
 
 /**
- * @brief  TLog ‚ÌƒCƒxƒ“ƒgƒe[ƒuƒ‹‚ÌÅV‚©‚çn”Ô–Ú‚ÌƒCƒxƒ“ƒg‚ğæ“¾
- * @note   n ‚ª‘å‚«‚·‚¬‚éê‡‚ÍCÅV‚Ì‚à‚Ì‚ğ•Ô‚·
- * @note   err_level ‚ª•s³‚Èê‡‚ÍC EL_ERROR_LEVEL_HIGH ‚Ì‚à‚Ì‚ğ•Ô‚·
- * @note   ‚Â‚Ü‚èCƒAƒT[ƒVƒ‡ƒ“ƒGƒ‰[‚ğo‚³‚È‚¢
- * @param  err_level: æ“¾‚·‚é EL_Event.err_level
- * @param  n: n”Ô–Úi0‚Ì‚Æ‚«ÅVj
+ * @brief  TLog ã®ã‚¤ãƒ™ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã®æœ€æ–°ã‹ã‚‰nç•ªç›®ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’å–å¾—
+ * @note   n ãŒå¤§ãã™ãã‚‹å ´åˆã¯ï¼Œæœ€æ–°ã®ã‚‚ã®ã‚’è¿”ã™
+ * @note   err_level ãŒä¸æ­£ãªå ´åˆã¯ï¼Œ EL_ERROR_LEVEL_HIGH ã®ã‚‚ã®ã‚’è¿”ã™
+ * @note   ã¤ã¾ã‚Šï¼Œã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã‚¨ãƒ©ãƒ¼ã‚’å‡ºã•ãªã„
+ * @param  err_level: å–å¾—ã™ã‚‹ EL_Event.err_level
+ * @param  n: nç•ªç›®ï¼ˆ0ã®ã¨ãæœ€æ–°ï¼‰
  * @return EL_Event
  */
 const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, uint16_t n);
 #endif
 
-CCP_EXEC_STS Cmd_EL_INIT(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet);
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet);
 #endif
 
-CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 #endif
 
-CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
 #endif
 
 #endif

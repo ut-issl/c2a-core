@@ -14,7 +14,7 @@ static void UTIL_CMD_reset_(void);
 static void UTIL_CMD_add_(unsigned char add_size, const unsigned char* cmd);
 static int UTIL_CMD_send_(unsigned char ch);
 
-// ”Ä—pƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
+// æ±ç”¨ã‚³ãƒãƒ³ãƒ‰ã“ã“ã‹ã‚‰
 AppInfo UTIL_CMD_create_app(void)
 {
   return AI_create_app_info("util_cmd", UTIL_CMD_init_, NULL);
@@ -30,7 +30,7 @@ static void UTIL_CMD_init_(void)
   utility_command_.cmd_size = 0;
   utility_command_.pointer = 0;
 
-  // UART‘—M—p‚Ìƒ_ƒ~[\‘¢‘ÌDÀÛ‚Ég—p‚³‚ê‚é‚Ì‚Ích‚Ì‚İ
+  // UARTé€ä¿¡ç”¨ã®ãƒ€ãƒŸãƒ¼æ§‹é€ ä½“ï¼å®Ÿéš›ã«ä½¿ç”¨ã•ã‚Œã‚‹ã®ã¯chã®ã¿
   utility_command_.uart_config_dummy.ch = 0;
   utility_command_.uart_config_dummy.baudrate = 115200;
   utility_command_.uart_config_dummy.parity_settings = PARITY_SETTINGS_NONE;
@@ -51,7 +51,7 @@ static void UTIL_CMD_reset_(void)
 
 static void UTIL_CMD_add_(unsigned char add_size, const unsigned char* cmd)
 {
-  // ƒTƒCƒY‚ª“K‡‚µ‚Ä‚¢‚ê‚ÎCƒoƒbƒtƒ@‚ÌŒã’[‚É‰Á‚¦‚é
+  // ã‚µã‚¤ã‚ºãŒé©åˆã—ã¦ã„ã‚Œã°ï¼Œãƒãƒƒãƒ•ã‚¡ã®å¾Œç«¯ã«åŠ ãˆã‚‹
   if (utility_command_.pointer + add_size < UTIL_CMD_SIZE_MAX)
   {
     memcpy(&utility_command_.util_cmd_buffer[utility_command_.pointer], cmd, (size_t)add_size);
@@ -60,7 +60,7 @@ static void UTIL_CMD_add_(unsigned char add_size, const unsigned char* cmd)
   }
 }
 
-// ‚±‚±‚Ì‘Î‰ŠÖŒW‚ğ‚¤‚Ü‚­®—‚·‚é
+// ã“ã“ã®å¯¾å¿œé–¢ä¿‚ã‚’ã†ã¾ãæ•´ç†ã™ã‚‹
 static int UTIL_CMD_send_(unsigned char ch)
 {
   int ret = -100;
@@ -71,23 +71,23 @@ static int UTIL_CMD_send_(unsigned char ch)
   }
   if (ret != 0)
   {
-    // UART_ERR_CODE‚ğ•Û
+    // UART_ERR_CODEã‚’ä¿æŒ
     utility_command_.uart_err_code = ret;
   }
   return ret;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CTCP* packet)
+CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
 {
   unsigned char size = CCP_get_param_head(packet)[0];
   if (CCP_get_param_len(packet) != 21)
   {
-    // ƒpƒ‰ƒ[ƒ^’·Šm”F(21Bytes)
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é•·ç¢ºèª(21Bytes)
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
   if (size <= 20)
   {
-    // ”ÍˆÍ“à‚È‚çŠY“–‚Ì‚à‚Ì‚ğ’Ç‰Á
+    // ç¯„å›²å†…ãªã‚‰è©²å½“ã®ã‚‚ã®ã‚’è¿½åŠ 
     if (utility_command_.pointer + size < UTIL_CMD_SIZE_MAX)
     {
       UTIL_CMD_add_(size, &CCP_get_param_head(packet)[1]);
@@ -104,14 +104,14 @@ CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CTCP* packet)
+CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
 {
   unsigned char uart_ch = CCP_get_param_head(packet)[0];
   int ret;
 
   if (uart_ch < PORT_CH_MAX_UART_PORT)
   {
-    // ”ÍˆÍ“à‚È‚çŠY“–‚Ì‚à‚Ì‚ğ‘—M
+    // ç¯„å›²å†…ãªã‚‰è©²å½“ã®ã‚‚ã®ã‚’é€ä¿¡
     ret = UTIL_CMD_send_(uart_ch);
     if (ret != 0)
     {
@@ -125,7 +125,7 @@ CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_RESET(const CTCP* packet)
+CCP_EXEC_STS Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
   UTIL_CMD_reset_();

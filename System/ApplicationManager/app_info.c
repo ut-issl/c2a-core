@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief App î•ñ\‘¢‘Ì’è‹`‚Æ App ì¬
+ * @brief App æƒ…å ±æ§‹é€ ä½“å®šç¾©ã¨ App ä½œæˆ
  */
 #include "app_info.h"
 #include <stddef.h>

@@ -1,170 +1,303 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief OBCÊôÇÂàª„ÅÆ„Ç´„Ç¶„É≥„Éà„Ç¢„ÉÉ„Éó„Å®ÔºåÂêÑÁ®ÆË°õÊòüÊôÇÂàªÈñ¢ÈÄ£Âá¶ÁêÜ
+ */
 #include "time_manager.h"
 #include <string.h>
-#include <src_user/CmdTlm/Ccsds/TCPacket.h>
 #include "../TaskManager/task_dispatcher.h"
-#include "../../Library/endian_memcpy.h"
-
-static ObcTime master_clock_;
-
-static OBCT_UnixtimeInfo OBCT_unixtime_info_;
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 static TimeManager time_manager_;
 const TimeManager* const time_manager = &time_manager_;
 
-static void TMGR_set_master_total_cycle_(cycle_t total_cycle);
+/**
+ * @brief TI (master_clock_.total_cycle) „ÅÆ setter
+ * @param[in] total_cycle
+ * @return TMGR_ACK
+ */
+static TMGR_ACK TMGR_set_master_total_cycle_(cycle_t total_cycle);
+
+/**
+ * @brief time_manager_.unixtime_info_.utl_unixtime_epoch „ÅÆ setter
+ * @param[in] utl_unixtime_epoch
+ * @return TMGR_ACK
+ */
+static TMGR_ACK TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch);
+
+/**
+ * @brief time_manager_.unixtime_info_.cycle_correction „ÅÆ setter
+ * @param[in] cycle_correction
+ * @return TMGR_ACK
+ */
+static TMGR_ACK TMGR_set_cycle_correction_(double cycle_correction);
+
+/**
+ * @brief enum Â§âÊèõÁî®Èñ¢Êï∞
+ * @param[in] ack: TMGR_ACK
+ * @return CCP_EXEC_STS
+ */
+static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack);
 
 void TMGR_init(void)
 {
-  OBCT_clear(&time_manager_.initializing_time);
-  time_manager_.initializing_flag = 1;
+  OBCT_clear(&time_manager_.init_info_.initializing_time);
+  time_manager_.init_info_.initializing_flag = 1;
   TMGR_clear();
 }
 
 void TMGR_clear(void)
 {
-  OBCT_clear(&master_clock_);
-  OBCT_clear_unixtime_info(&OBCT_unixtime_info_);
+  OBCT_clear(&time_manager_.master_clock_);
+  TMGR_clear_unixtime_info();
 }
 
 void TMGR_clear_master_mode_cycle(void)
 {
-  master_clock_.mode_cycle = 0;
+  time_manager_.master_clock_.mode_cycle = 0;
 }
 
 #pragma section _FIX_TMGR
-// PÉZÉNÉVÉáÉìÇµÇ©äÑÇËìñÇƒÇƒÇ¢Ç»Ç¢ÇÃÇ≈ÅC
-// D, BÉZÉNÉVÉáÉìÇ…èÊÇÈÇÊÇ§Ç»ïœêîíËã`ÇÕã÷é~ÅIÅIÅI
+// P„Çª„ÇØ„Ç∑„Éß„É≥„Åó„ÅãÂâ≤„ÇäÂΩì„Å¶„Å¶„ÅÑ„Å™„ÅÑ„ÅÆ„ÅßÔºå
+// D, B„Çª„ÇØ„Ç∑„Éß„É≥„Å´‰πó„Çã„Çà„ÅÜ„Å™Â§âÊï∞ÂÆöÁæ©„ÅØÁ¶ÅÊ≠¢ÔºÅÔºÅÔºÅ
 void TMGR_count_up_master_clock(void)
 {
-  OBCT_count_up(&master_clock_);
+  OBCT_count_up(&time_manager_.master_clock_);
 }
 #pragma section
 #pragma section REPRO
 
 void TMGR_down_initializing_flag(void)
 {
-  memcpy(&time_manager_.initializing_time, &master_clock_, sizeof(ObcTime));
-  time_manager_.initializing_flag = 0;
+  memcpy(&time_manager_.init_info_.initializing_time, &time_manager_.master_clock_, sizeof(ObcTime));
+  time_manager_.init_info_.initializing_flag = 0;
 
   TMGR_clear();
 }
 
 ObcTime TMGR_get_master_clock(void)
 {
-  if (time_manager_.initializing_flag)
+  if (time_manager_.init_info_.initializing_flag)
   {
     return OBCT_create(0, 0, 0);
   }
   else
   {
-    return master_clock_;
+    return time_manager_.master_clock_;
   }
 }
 
 ObcTime TMGR_get_master_clock_from_boot(void)
 {
-  return OBCT_add(&time_manager_.initializing_time, &master_clock_);
+  return OBCT_add(&time_manager_.init_info_.initializing_time, &time_manager_.master_clock_);
 }
 
 cycle_t TMGR_get_master_total_cycle(void) {
-  return OBCT_get_total_cycle(&master_clock_);
+  return OBCT_get_total_cycle(&time_manager_.master_clock_);
 }
 
 cycle_t TMGR_get_master_mode_cycle(void) {
-  return OBCT_get_mode_cycle(&master_clock_);
+  return OBCT_get_mode_cycle(&time_manager_.master_clock_);
 }
 
 step_t  TMGR_get_master_step(void) {
-  return OBCT_get_step(&master_clock_);
+  return OBCT_get_step(&time_manager_.master_clock_);
 }
 
 uint32_t TMGR_get_master_total_cycle_in_msec(void)
 {
-  return OBCT_get_total_cycle_in_msec(&master_clock_);
+  return OBCT_get_total_cycle_in_msec(&time_manager_.master_clock_);
 }
 
 uint32_t TMGR_get_master_mode_cycle_in_msec(void)
 {
-  return OBCT_get_mode_cycle_in_msec(&master_clock_);
+  return OBCT_get_mode_cycle_in_msec(&time_manager_.master_clock_);
 }
 
-static void TMGR_set_master_total_cycle_(cycle_t total_cycle)
+static TMGR_ACK TMGR_set_master_total_cycle_(cycle_t total_cycle)
 {
-  master_clock_.total_cycle = total_cycle;
+  if (total_cycle >= OBCT_MAX_CYCLE) return TMGR_ACK_PARAM_ERR;
+
+  time_manager_.master_clock_.total_cycle = total_cycle;
+  TDSP_resync_internal_counter();
+  return TMGR_ACK_OK;
 }
 
-OBCT_UnixtimeInfo TMGR_get_obct_unixtime_info(void)
+void TMGR_clear_unixtime_info(void)
 {
-  return OBCT_unixtime_info_;
+  time_manager_.unixtime_info_.unixtime_at_ti0 = 0.0;
+  time_manager_.unixtime_info_.ti_at_last_update = 0;
+  TMGR_set_utl_unixtime_epoch_(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL);
+  TMGR_set_cycle_correction_(1.0);
+}
+
+TMGR_ACK TMGR_update_unixtime(const double unixtime, const ObcTime* time)
+{
+  double ti_sec = TMGR_get_precice_ti_in_sec(time);
+
+  // unixtime „Åå ti „Çà„ÇäÂ∞è„Åï„ÅÑ„Å®Âõ∞„Çã
+  if (unixtime < ti_sec) return TMGR_ACK_PARAM_ERR;
+
+  time_manager_.unixtime_info_.unixtime_at_ti0 = unixtime - ti_sec;
+  time_manager_.unixtime_info_.ti_at_last_update = OBCT_get_total_cycle(time);
+  return TMGR_ACK_OK;
+}
+
+double TMGR_get_unixtime_at_ti0(void)
+{
+  return time_manager_.unixtime_info_.unixtime_at_ti0;
+}
+
+double TMGR_get_utl_unixtime_epoch(void)
+{
+  return time_manager_.unixtime_info_.utl_unixtime_epoch;
+}
+
+double TMGR_get_precice_cycles_per_sec(void)
+{
+  return OBCT_CYCLES_PER_SEC * time_manager_.unixtime_info_.cycle_correction;
+}
+
+double TMGR_get_precice_ti_in_sec(const ObcTime* time)
+{
+  double cycle = time->total_cycle + (double)time->step / OBCT_STEPS_PER_CYCLE;
+  return cycle / TMGR_get_precice_cycles_per_sec();
+}
+
+double TMGR_get_current_unixtime(void)
+{
+  return TMGR_get_unixtime_at_ti0() + TMGR_get_precice_ti_in_sec(&time_manager_.master_clock_);
 }
 
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  ObcTime ti0 = OBCT_create(0, 0, 0);
-  return OBCT_unixtime_info_.unixtime_at_ti0 + OBCT_diff_in_sec(&ti0, time);
+  return TMGR_get_unixtime_at_ti0() + TMGR_get_precice_ti_in_sec(time);
 }
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 {
-  double diff_double = unixtime - OBCT_unixtime_info_.unixtime_at_ti0;
+  double diff_in_cycle = (unixtime - TMGR_get_unixtime_at_ti0()) * TMGR_get_precice_cycles_per_sec();
+  cycle_t cycle;
+  step_t step;
   ObcTime res;
-  uint32_t diff;
-  cycle_t cycle_diff;
-  step_t step_diff;
 
-  if (diff_double < 0)  // Ç†ÇËìæÇ»Ç¢, Ç®Ç©ÇµÇ¢
+  if (diff_in_cycle < 0)  // „ÅÇ„ÇäÂæó„Å™„ÅÑ, „Åä„Åã„Åó„ÅÑ
   {
-    return res = OBCT_create(0, 0, 0);
+    return OBCT_create(0, 0, 0);
   }
+  cycle = (cycle_t)diff_in_cycle; // cycleÊú™Ê∫Ä„ÅØÂàá„ÇäÊç®„Å¶
+  step = (step_t)((diff_in_cycle - cycle) * OBCT_STEPS_PER_CYCLE); // stepÊú™Ê∫Ä„ÅØÂàá„ÇäÊç®„Å¶
 
-  diff = (uint32_t)(diff_double * 1000.0 + 1e-4); // msÉIÅ[É_Å[ÇæÇ™ÇªÇÒÇ»Ç…ëÂÇ´Ç≠Ç»Ç¢Ç±Ç∆ÇëzíË, 1e-4ÇÕêîílåÎç∑ëŒçÙÅi.999Ç™jêÿÇËéÃÇƒÇÁÇÍÇÈÇÃÇñhÇÆÅj
-  cycle_diff = diff / (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE);
-  step_diff = (diff - cycle_diff * (OBCT_STEP_IN_MSEC * OBCT_STEPS_PER_CYCLE)) / OBCT_STEP_IN_MSEC;
-
-  res.total_cycle = cycle_diff;
-  res.mode_cycle = 0; // éÊìæèoóàÇ»Ç¢ÇÃÇ≈0Ç∆Ç∑ÇÈ
-  res.step = step_diff;
+  res.total_cycle = cycle;
+  res.mode_cycle = 0; // ÂèñÂæóÂá∫Êù•„Å™„ÅÑ„ÅÆ„Åß0„Å®„Åô„Çã
+  res.step = step;
 
   return res;
 }
 
-void TMGR_modify_unixtime_criteria(const double unixtime, const ObcTime time)
+double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime)
 {
-  OBCT_modify_unixtime_info(&OBCT_unixtime_info_, unixtime, time);
+  return TMGR_get_utl_unixtime_epoch() + (double)utl_unixtime / OBCT_CYCLES_PER_SEC;
 }
 
-
-CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CTCP* packet)
+cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
 {
-  cycle_t set_value = 0;
+  double unixtime = TMGR_get_unixtime_from_utl_unixtime(utl_unixtime);
+  double ti_in_sec = unixtime - TMGR_get_unixtime_at_ti0();
 
-  endian_memcpy(&set_value, CCP_get_param_head(packet), 4);
+  // unixtime_at_ti0 „Çà„ÇäÂ∞è„Åï„ÅÑÂÆüË°åÊôÇÂàª„ÅØÁÑ°Âäπ„Å™„ÅÆ„Åß„Çº„É≠„ÇíËøî„Åô
+  if (ti_in_sec < 0) return 0;
 
-  if (set_value < OBCT_MAX_CYCLE)
+  return (cycle_t)(ti_in_sec * TMGR_get_precice_cycles_per_sec() );
+}
+
+static TMGR_ACK TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch)
+{
+  if (utl_unixtime_epoch < 0) return TMGR_ACK_PARAM_ERR;
+
+  time_manager_.unixtime_info_.utl_unixtime_epoch = utl_unixtime_epoch;
+  return TMGR_ACK_OK;
+}
+
+static TMGR_ACK TMGR_set_cycle_correction_(double cycle_correction)
+{
+  // ÊØî„Å™„ÅÆ„Åß„ÄÅË≤†Êï∞„ÅØ„Åä„Åã„Åó„ÅÑ
+  if (cycle_correction <= 0) return TMGR_ACK_PARAM_ERR;
+
+  time_manager_.unixtime_info_.cycle_correction = cycle_correction;
+  return TMGR_ACK_OK;
+}
+
+static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
+{
+  switch (ack)
   {
-    TMGR_set_master_total_cycle_(set_value);
-    TDSP_resync_internal_counter();
+  case TMGR_ACK_OK:
     return CCP_EXEC_SUCCESS;
-  }
-  else
-  {
+  case TMGR_ACK_PARAM_ERR:
     return CCP_EXEC_ILLEGAL_PARAMETER;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_UNIXTIME(const CTCP* packet)
+CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
 {
-  const unsigned char* param = CCP_get_param_head(packet);
-  double unixtime;
+  cycle_t set_value = CCP_get_param_from_packet(packet, 0, cycle_t);
+  TMGR_ACK ack = TMGR_set_master_total_cycle_(set_value);
+
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+}
+
+CCP_EXEC_STS Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
+{
   ObcTime time;
+  double unixtime = CCP_get_param_from_packet(packet, 0, double);
+  cycle_t total_cycle = CCP_get_param_from_packet(packet, 1, cycle_t);
+  step_t step = CCP_get_param_from_packet(packet, 2, cycle_t);
+  TMGR_ACK ack;
 
-  endian_memcpy(&unixtime, param, 8);
-  endian_memcpy(&time.total_cycle, param + 8, 4);
-  endian_memcpy(&time.step, param + 12, 4);
-  time.mode_cycle = 0; // ïKóvÇ»Ç¢ÇÃÇ≈0Ç∆Ç∑ÇÈ
+  if (unixtime < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (total_cycle >= OBCT_MAX_CYCLE) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (step >= OBCT_STEPS_PER_CYCLE) return CCP_EXEC_ILLEGAL_PARAMETER;
 
-  TMGR_modify_unixtime_criteria(unixtime, time);
+  time.total_cycle = total_cycle;
+  time.step = step;
+  time.mode_cycle = 0; // ÂøÖË¶Å„Å™„ÅÑ„ÅÆ„Åß0„Å®„Åô„Çã
+
+  ack = TMGR_update_unixtime(unixtime, &time);
+
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+}
+
+CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
+{
+  double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
+  TMGR_ACK ack = TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);
+
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+}
+
+CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
+{
+  double cycle_correction = CCP_get_param_from_packet(packet, 0, double);
+  TMGR_ACK ack = TMGR_set_cycle_correction_(cycle_correction);
+
+  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+}
+
+CCP_EXEC_STS Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  TMGR_set_cycle_correction_(1.0);
+
+  return CCP_EXEC_SUCCESS;
+}
+
+CCP_EXEC_STS Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  TMGR_clear_unixtime_info();
 
   return CCP_EXEC_SUCCESS;
 }

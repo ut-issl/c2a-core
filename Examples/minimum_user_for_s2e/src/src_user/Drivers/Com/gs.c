@@ -1,22 +1,22 @@
 #pragma section REPRO
 /**
  * @file
- * @brief Ground station ‚Æ‚Ì’ÊM‚Ì Driver
+ * @brief Ground station ã¨ã®é€šä¿¡ã® Driver
  */
 
 #include "gs.h"
 
 #include <string.h>
 #include "../../IfWrapper/ccsds_user.h"
-#include "../../CmdTlm/Ccsds/TCFrame.h"
+#include "../../TlmCmd/Ccsds/TCFrame.h"
 #include <src_core/Drivers/Super/driver_super.h>
-#include <src_core/CmdTlm/packet_handler.h>
+#include <src_core/TlmCmd/packet_handler.h>
 #include "../../Library/stdint.h"
 
 #define GS_RX_HEADER_SIZE (2)
-#define GS_RX_FRAME_SIZE  (-1) // ‰Â•Ï’·
+#define GS_RX_FRAME_SIZE  (-1) // å¯å¤‰é•·
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
-#define GS_TX_stream (0) // ‚Ç‚ê‚Å‚à—Ç‚¢‚ª‚Æ‚è‚ ‚¦‚¸ 0 ‚Å
+#define GS_TX_stream (0) // ã©ã‚Œã§ã‚‚è‰¯ã„ãŒã¨ã‚Šã‚ãˆãš 0 ã§
 
 #define GS_RX_HEADER_NUM (3)
 
@@ -25,31 +25,31 @@
 #endif
 
 // header
-static const uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE] = {{0x03, 0x5C}, {0x23, 0x5C}, {0x33, 0x5C} }; // FIXME: ’¼‚·
+static const uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE] = {{0x03, 0x5C}, {0x23, 0x5C}, {0x33, 0x5C} }; // FIXME: ç›´ã™
 static uint8_t GS_tx_frame_[VCDU_LEN];
 
 /**
- * @brief CCSDS ‘¤ Driver ‚Ì DS ã‚Å‚Ì‰Šú‰»İ’è
+ * @brief CCSDS å´ Driver ã® DS ä¸Šã§ã®åˆæœŸåŒ–è¨­å®š
  * @param[in] p_super: DriverSuper
  * @return DS_ERR_CODE
  */
 static DS_ERR_CODE GS_load_ccsds_driver_super_init_settings_(DriverSuper* p_super);
 
 /**
- * @brief UART ‘¤ Driver ‚Ì DS ã‚Å‚Ì‰Šú‰»İ’è
+ * @brief UART å´ Driver ã® DS ä¸Šã§ã®åˆæœŸåŒ–è¨­å®š
  * @param[in] p_super: DriverSuper
  * @return DS_ERR_CODE
  */
 static DS_ERR_CODE GS_load_uart_driver_super_init_settings_(DriverSuper* p_super);
 
 /**
- * @brief ã‹L‰Šú‰»‚Ì‹¤’Ê•”•ª‚ğ‚Ü‚Æ‚ß‚½ŠÖ”
+ * @brief ä¸Šè¨˜åˆæœŸåŒ–ã®å…±é€šéƒ¨åˆ†ã‚’ã¾ã¨ã‚ãŸé–¢æ•°
  * @param[in] p_super: DriverSuper
  */
 static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super);
 
 /**
- * @brief ’nã‚©‚ç‚ÌóMƒf[ƒ^‰ğÍŠÖ”
+ * @brief åœ°ä¸Šã‹ã‚‰ã®å—ä¿¡ãƒ‡ãƒ¼ã‚¿è§£æé–¢æ•°
  * @param[in] p_stream_config: DS_StreamConfig
  * @param[in] p_driver: GS_Driver
  * @param[in]
@@ -65,6 +65,9 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
 
   GS_validate_init();
 
+  gs_driver->driver_ccsds.ccsds_config.bitrate = 115200;
+  gs_driver->driver_ccsds.ccsds_config.ch = 0;
+
   gs_driver->driver_uart.uart_config.ch = uart_ch;
   gs_driver->driver_uart.uart_config.baudrate = 115200;
   gs_driver->driver_uart.uart_config.parity_settings = PARITY_SETTINGS_NONE;
@@ -79,7 +82,7 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   gs_driver->is_ccsds_tx_valid = 0;
 
 #ifdef SILS_FW
-  gs_driver->is_ccsds_tx_valid = 1; // SILS ‚Å‚±‚ê‚ªÅ‰‚©‚ç ON ‚É‚È‚Á‚Ä‚È‚¢‚Æ‰½‚à~‚è‚Ä‚±‚È‚¢
+  gs_driver->is_ccsds_tx_valid = 1; // SILS ã§ã“ã‚ŒãŒæœ€åˆã‹ã‚‰ ON ã«ãªã£ã¦ãªã„ã¨ä½•ã‚‚é™ã‚Šã¦ã“ãªã„
 #endif
 
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
@@ -133,16 +136,16 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
   {
     p_stream_config = &(p_super->stream_config[stream]);
     DSSC_enable(p_stream_config);
-    DSSC_enable_strict_frame_search(p_stream_config);   // •¡”ƒXƒgƒŠ[ƒ€‚ª‚ ‚èC‚©‚Â˜_—“I‚ÈóM˜R‚ê‚ğ0‚É‚·‚é‚½‚ßD
+    DSSC_enable_strict_frame_search(p_stream_config);   // è¤‡æ•°ã‚¹ãƒˆãƒªãƒ¼ãƒ ãŒã‚ã‚Šï¼Œã‹ã¤è«–ç†çš„ãªå—ä¿¡æ¼ã‚Œã‚’0ã«ã™ã‚‹ãŸã‚ï¼
 
-    DSSC_set_tx_frame(p_stream_config, GS_tx_frame_); // ‘S stream, uart, ccsds ‚ÉŠÖ‚í‚ç‚¸‹¤’Ê
-    DSSC_set_tx_frame_size(p_stream_config, VCDU_LEN); // VCDU ‚ğ‘—M
+    DSSC_set_tx_frame(p_stream_config, GS_tx_frame_); // å…¨ stream, uart, ccsds ã«é–¢ã‚ã‚‰ãšå…±é€š
+    DSSC_set_tx_frame_size(p_stream_config, VCDU_LEN); // VCDU ã‚’é€ä¿¡
 
     DSSC_set_rx_header(p_stream_config, GS_rx_header_[stream], GS_RX_HEADER_SIZE);
-    DSSC_set_rx_frame_size(p_stream_config, GS_RX_FRAME_SIZE); // ‰Â•Ï’·
+    DSSC_set_rx_frame_size(p_stream_config, GS_RX_FRAME_SIZE); // å¯å¤‰é•·
     DSSC_set_rx_framelength_pos(p_stream_config, GS_RX_HEADER_SIZE);
     DSSC_set_rx_framelength_type_size(p_stream_config, GS_RX_FRAMELENGTH_TYPE_SIZE);
-    DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCF ‚Ì framelength ‚Í 0 ‹NZ
+    DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCF ã® framelength ã¯ 0 èµ·ç®—
     DSSC_set_data_analyzer(p_stream_config, GS_analyze_rec_data_);
   }
 }
@@ -164,7 +167,7 @@ int GS_rec_tcf(GS_Driver* gs_driver)
       ds = &gs_driver->driver_uart.super;
     }
 
-    // TODO: ‚±‚ê‚ÍƒGƒ‰[î•ñ‚ğ‚«‚¿‚ñ‚Æ”cˆ¬‚µ‚½‚¢‚Ì‚ÅCƒAƒmƒ}ƒŠ”­s‚ğ“ü‚ê‚é
+    // TODO: ã“ã‚Œã¯ã‚¨ãƒ©ãƒ¼æƒ…å ±ã‚’ãã¡ã‚“ã¨æŠŠæ¡ã—ãŸã„ã®ã§ï¼Œã‚¢ãƒãƒãƒªç™ºè¡Œã‚’å…¥ã‚Œã‚‹
     gs_driver->info[i].rec_status = DS_receive(ds);
     gs_driver->info[i].ret_from_if_rx = ds->config.rec_status_.ret_from_if_rx;
 
@@ -208,13 +211,19 @@ int GS_rec_tcf(GS_Driver* gs_driver)
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)
 {
   const uint8_t* gs_rx_data = DSSC_get_rx_frame(p_stream_config);
-  const TCF* tc_frame = (const TCF*)gs_rx_data; // ”ñ©–¾‚Ècast
+  const TCF* tc_frame = (const TCF*)gs_rx_data; // éè‡ªæ˜ãªcast
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
-  int driver_index;
+  GS_PORT_TYPE driver_index;
 
-  // ƒAƒhƒŒƒXŒvZ‚Å CCSDS ‚© UART ‚©”»•Ê
-  if ((uint32_t)p_stream_config < (uint32_t)&gs_driver->driver_uart) driver_index = GS_PORT_TYPE_CCSDS;
-  else                                           driver_index = GS_PORT_TYPE_UART;
+  // ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®—ã§ CCSDS ã‹ UART ã‹åˆ¤åˆ¥
+  if ((uint32_t)p_stream_config < (uint32_t)&gs_driver->driver_uart)
+  {
+    driver_index = GS_PORT_TYPE_CCSDS;
+  }
+  else
+  {
+    driver_index = GS_PORT_TYPE_UART;
+  }
 
   gs_driver->info[driver_index].tc_frame_validate_status = GS_validate_tc_frame(tc_frame);
   if (gs_driver->info[driver_index].tc_frame_validate_status != GS_VALIDATE_ERR_OK)
@@ -222,7 +231,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     return DS_ERR_CODE_ERR;
   }
 
-  gs_driver->info[driver_index].cmd_ack = PH_analyze_packet(&tc_frame->tcs.tcp); // óMƒRƒ}ƒ“ƒhƒpƒPƒbƒg‰ğÍ
+  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(&tc_frame->tcs.tcp);  // å—ä¿¡ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚±ãƒƒãƒˆè§£æ
 
   return DS_ERR_CODE_OK;
 }
@@ -234,7 +243,7 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   DS_ERR_CODE ret_uart  = DS_ERR_CODE_OK;
   size_t vcdu_size = sizeof(VCDU);
 
-  // ƒpƒfƒBƒ“ƒO‚ª–³‚¯‚ê‚ÎŒ³‚ğ GS_tx_frame_ ‚ÉƒRƒs[‚³‚¹‚é (444Byte) ‚ÌƒRƒs[‚ª–³‘Ê
+  // ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°ãŒç„¡ã‘ã‚Œã°å…ƒã‚’ GS_tx_frame_ ã«ã‚³ãƒ”ãƒ¼ã•ã›ã‚‹ (444Byte) ã®ã‚³ãƒ”ãƒ¼ãŒç„¡é§„
   if (vcdu_size == VCDU_LEN)
   {
     DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_stream], (uint8_t*)vcdu);
@@ -242,7 +251,7 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   }
   else
   {
-    VCDU_generate_byte_stream(vcdu, GS_tx_frame_); // ‘—MŒ³‚ÉƒZƒbƒg Á‚µ‚½‚¢‚È‚Ÿ...
+    VCDU_generate_byte_stream(vcdu, GS_tx_frame_); // é€ä¿¡å…ƒã«ã‚»ãƒƒãƒˆ æ¶ˆã—ãŸã„ãªã...
     DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_stream], GS_tx_frame_);
     DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_stream], GS_tx_frame_);
   }
@@ -251,8 +260,8 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   {
     if (i == GS_PORT_TYPE_CCSDS)
     {
-      // CCSDS –³Œø, –”‚Í ƒoƒbƒtƒ@[‹ó‚«‚ª–³‚¢‚Å‰º‚Ìˆ—‚Í’[Ü‚é
-      // FIXME: ˆê”t‚¾‚Á‚½‚Ìˆ—
+      // CCSDS ç„¡åŠ¹, åˆã¯ ãƒãƒƒãƒ•ã‚¡ãƒ¼ç©ºããŒç„¡ã„ã§ä¸‹ã®å‡¦ç†ã¯ç«¯æŠ˜ã‚‹
+      // FIXME: ä¸€æ¯ã ã£ãŸæ™‚ã®å‡¦ç†
       gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
       if (!gs_driver->is_ccsds_tx_valid || !gs_driver->ccsds_info.buffer_num) continue;
     }
@@ -261,7 +270,7 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
     gs_driver->info[i].vcid = VCDU_get_vcid(vcdu);
     gs_driver->info[i].vcdu_counter = VCDU_get_vcdu_counter(vcdu);
 
-    // DS ‘¤‚Ì–¼Ì‚ª cmd ‚È‚¾‚¯‚Å‘—M‚µ‚Ä‚¢‚é‚Ì‚Í TLM
+    // DS å´ã®åç§°ãŒ cmd ãªã ã‘ã§é€ä¿¡ã—ã¦ã„ã‚‹ã®ã¯ TLM
     if (i == GS_PORT_TYPE_CCSDS)
     {
       ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_stream);

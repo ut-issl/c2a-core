@@ -1,11 +1,11 @@
 /**
  * @file
- * @brief SPI�ʐM(Master��)�̃��b�p�[�N���X�ł��B
- * @note SPI�ʐM���b�p�[�́A
- *       SPI�̃C���^�[�t�F�[�X���������A
- *       SPI�|�[�g�̏������A�f�[�^���M�A�f�[�^��M���s���A
- *       SPI�ʐM���b�p�[�̃N���X�ł��B
- *       �X�̋@��̃C���^�[�t�F�[�X���W���[���Ɍp�������Ďg�p���܂��B
+ * @brief SPI通信(Master側)のラッパークラスです。
+ * @note SPI通信ラッパーは、
+ *       SPIのインターフェースを実現し、
+ *       SPIポートの初期化、データ送信、データ受信を行う、
+ *       SPI通信ラッパーのクラスです。
+ *       個々の機器のインターフェースモジュールに継承させて使用します。
  */
 #ifndef SPI_H_
 #define SPI_H_
@@ -14,8 +14,8 @@
 
  /**
   * @enum  SPI_MODE
-  * @brief SPI���샂�[�h�̐ݒ�
-  * @note  �^��uint8_t��z��
+  * @brief SPI動作モードの設定
+  * @note  型はuint8_tを想定
   */
 typedef enum
 {
@@ -27,101 +27,101 @@ typedef enum
 
 /**
  * @enum  SPI_MODE
- * @brief SPI���샂�[�h�̐ݒ�
- * @note  �^��uint8_t��z��
+ * @brief SPI動作モードの設定
+ * @note  型はuint8_tを想定
  */
 typedef enum
 {
-  SPI_TX_CS_STATE_LOW  = 0,   //!< ���M���CS��Low�̂܂܂ɂ��A���̂܂܎�M����Ȃǂ��s��
-  SPI_TX_CS_STATE_HIGH = 1,   //!< ���M���CS��High�ɂ���
+  SPI_TX_CS_STATE_LOW  = 0,   //!< 送信後にCSをLowのままにし、そのまま受信動作などを行う
+  SPI_TX_CS_STATE_HIGH = 1,   //!< 送信後にCSをHighにする
 } SPI_TX_CS_STATE;
 
 /**
  * @struct SPI_Config
- * @brief SPI�|�[�g�̏������A�f�[�^���M�E��M�̍ۂɕK�v�ƂȂ�ݒ�����i�[����\���̂ł��B
+ * @brief SPIポートの初期化、データ送信・受信の際に必要となる設定情報を格納する構造体です。
  */
 typedef struct
 {
-  uint8_t  comm_ch;            //!< �p����̋@�킪�Ȃ����Ă���ʐM�|�[�g�ԍ�
-  uint8_t  gpio_ch;            //!< �p����̋@�킪�Ȃ����Ă���Chip Select�pGPIO�|�[�g�ԍ�
-  uint32_t frequency_khz;      //!< SPI�N���b�N�̎��g�� �P��:kHz
-  SPI_MODE mode;               //!< SPI���샂�[�h
-  uint8_t  tx_data_for_rx;     //!< RX��������邽�߂ɒ���I�ɑ���TX�f�[�^
-  uint16_t rx_length;          //!< ��M����f�[�^���A��M����O�ɐݒ肷��
-  SPI_TX_CS_STATE tx_cs_state; //!< ���M������Chip Select��High�ɂ��邩�ǂ����̃t���O
+  uint8_t  comm_ch;            //!< 継承先の機器がつながっている通信ポート番号
+  uint8_t  gpio_ch;            //!< 継承先の機器がつながっているChip Select用GPIOポート番号
+  uint32_t frequency_khz;      //!< SPIクロックの周波数 単位:kHz
+  SPI_MODE mode;               //!< SPI動作モード
+  uint8_t  tx_data_for_rx;     //!< RX動作をするために定期的に送るTXデータ
+  uint16_t rx_length;          //!< 受信するデータ数、受信動作前に設定する
+  SPI_TX_CS_STATE tx_cs_state; //!< 送信動作後にChip SelectをHighにするかどうかのフラグ
 } SPI_Config;
 
 /**
  * @enum  SPI_ERR_CODE
- * @brief SPI�p�̔ėp�G���[�R�[�h
- * @note  �^��int8_t��z�肵�Ă��邪, if_list�Ń��b�v����Ă��邽��SPI�̌��J�֐��̕Ԃ�l��int�ƂȂ��Ă���
- *        ��{���Ȃ̂�RX�̕Ԃ�l�͐���������Byte��, �����G���[�R�[�h�ƂȂ��Ă��邽��
+ * @brief SPI用の汎用エラーコード
+ * @note  型はint8_tを想定しているが, if_listでラップされているためSPIの公開関数の返り値はintとなっている
+ *        基本負なのはRXの返り値は正が送ったByte数, 負がエラーコードとなっているため
  */
 typedef enum
 {
-  SPI_ERR_UNKNOWN = -20,          //!< �����s��
-  SPI_ERR_RX_BUFFER_SMALL = -14,  //!< ��M�o�b�t�@�T�C�Y����M�f�[�^����菬����
-  SPI_ERR_DATA_NEGA = -13,        //!< ����M�f�[�^�T�C�Y�����̃G���[
-  SPI_ERR_DATA_LARGE = -12,       //!< ����M�f�[�^�T�C�Y���傫������
-  SPI_ERR_GPIO = -5,              //!< GPIO�֘A�G���[
-  SPI_ERR_YET = -4,               //!< �`�����l�����I�[�v��
-  SPI_ERR_ALREADY = -3,           //!< �`�����l���I�[�v���ς�
-  SPI_ERR_FREQUENCY = -2,         //!< ���g���ُ�
-  SPI_ERR_CH = -1,                //!< �`�����l���ُ� (Port_config�ɖ���)
-  SPI_ERR_OK = 0,                 //!< OK��0�𓥏P
+  SPI_ERR_UNKNOWN = -20,          //!< 原因不明
+  SPI_ERR_RX_BUFFER_SMALL = -14,  //!< 受信バッファサイズが受信データ長より小さい
+  SPI_ERR_DATA_NEGA = -13,        //!< 送受信データサイズが負のエラー
+  SPI_ERR_DATA_LARGE = -12,       //!< 送受信データサイズが大きすぎる
+  SPI_ERR_GPIO = -5,              //!< GPIO関連エラー
+  SPI_ERR_YET = -4,               //!< チャンネル未オープン
+  SPI_ERR_ALREADY = -3,           //!< チャンネルオープン済み
+  SPI_ERR_FREQUENCY = -2,         //!< 周波数異常
+  SPI_ERR_CH = -1,                //!< チャンネル異常 (Port_configに無い)
+  SPI_ERR_OK = 0,                 //!< OKは0を踏襲
 } SPI_ERR_CODE;
 
 /**
- * @brief SPI_Config�\���̂��O���[�o���C���X�^���X�Ƃ��Ē�`���A�|�C���^��n�����ƂŃ|�[�g�����������܂��B
- * @param[in] my_spi_v ����������SPI_Config�\���̂ւ̃|�C���^
- * @return int SPI_ERR_CODE�Ƃ�������, if_list��int�Ɠ��ꂳ��Ă���B
- * @note SPI�ʐM���b�p�[�̃N���X���g�p���鎞�͋N�����ɕK�����{���Ă��������B
- *       ���̊֐������s����O��SPI_Config�\���̓��̐ݒ�l��ݒ肵�Ă����K�v������܂��B
+ * @brief SPI_Config構造体をグローバルインスタンスとして定義し、ポインタを渡すことでポートを初期化します。
+ * @param[in] my_spi_v 初期化するSPI_Config構造体へのポインタ
+ * @return int SPI_ERR_CODEとしたいが, if_listでintと統一されている。
+ * @note SPI通信ラッパーのクラスを使用する時は起動時に必ず実施してください。
+ *       この関数を実行する前にSPI_Config構造体内の設定値を設定しておく必要があります。
  */
 int SPI_init(void* my_spi_v);
 
 /**
- * @brief SPI_Config�\���̂ɂĎw�肳�ꂽch����f�[�^����M���܂�
- * @param[in] my_spi_v    : �ΏۂƂ���SPI_Config�\���̂ւ̃|�C���^
- * @param[in] data_v      : ��M�f�[�^�i�[��ւ̃|�C���^
- * @param[in] buffer_size : ��M�f�[�^�i�[��̃o�b�t�@�T�C�Y�ASPI�ʐM�ɂ���M�f�[�^�����������K�v������
- * @retval 0: ��M�f�[�^�Ȃ�
- * @retval ��: ��M�f�[�^�o�C�g��
- * @retval ��: �G���[. SPI_ERR_CODE �ɏ]��
- * @note ���̊֐�����SPI�ǂݏo���v���𑗐M���Ă��܂�
+ * @brief SPI_Config構造体にて指定されたchからデータを受信します
+ * @param[in] my_spi_v    : 対象とするSPI_Config構造体へのポインタ
+ * @param[in] data_v      : 受信データ格納先へのポインタ
+ * @param[in] buffer_size : 受信データ格納先のバッファサイズ、SPI通信による受信データ長よりも長い必要がある
+ * @retval 0: 受信データなし
+ * @retval 正: 受信データバイト数
+ * @retval 負: エラー. SPI_ERR_CODE に従う
+ * @note この関数内でSPI読み出し要求を送信しています
  */
 int SPI_rx(void* my_spi_v, void* data_v, int buffer_size);
 
 /**
- * @brief SPI_Config�\���̂ɂĎw�肳�ꂽch�փf�[�^�𑗐M���܂�
- * @param[in] my_spi_v : �ΏۂƂ���SPI_Config�\���̂ւ̃|�C���^
- * @param[in] data_v     : ���M�f�[�^�i�[��ւ̃|�C���^
- * @param[in] count      : ���M�f�[�^�T�C�Y
- * @return int:  SPI_ERR_CODE �ɏ]��
+ * @brief SPI_Config構造体にて指定されたchへデータを送信します
+ * @param[in] my_spi_v : 対象とするSPI_Config構造体へのポインタ
+ * @param[in] data_v     : 送信データ格納先へのポインタ
+ * @param[in] count      : 送信データサイズ
+ * @return int:  SPI_ERR_CODE に従う
  */
 int SPI_tx(void* my_spi_v, void* data_v, int data_size);
 
 /**
- * @brief �w�肳�ꂽch���J���Ȃ���
- * @param[in] my_spi_v �J���Ȃ����ۂ̃|�[�g�ݒ�
- * @param[in] reason   reopen���闝�R�D0�͐��푀������� TODO: reason��enum�����H
- * @return int:  SPI_ERR_CODE �ɏ]��
+ * @brief 指定されたchを開きなおす
+ * @param[in] my_spi_v 開きなおす際のポート設定
+ * @param[in] reason   reopenする理由．0は正常操作を示す TODO: reasonのenumを作る？
+ * @return int:  SPI_ERR_CODE に従う
  */
 int SPI_reopen(void* my_spi_v, int reason);
 
 /**
- * @brief rx_length��ݒ肷��
- * @param[in] my_spi_v  : �ΏۂƂ���SPI_Config�\���̂ւ̃|�C���^
- * @param[in] rx_length : �ݒ肷���M�f�[�^��
- * @return �Ȃ�
+ * @brief rx_lengthを設定する
+ * @param[in] my_spi_v  : 対象とするSPI_Config構造体へのポインタ
+ * @param[in] rx_length : 設定する受信データ長
+ * @return なし
  */
 void SPI_set_rx_length(void* my_spi_v, const uint16_t rx_length);
 
 /**
- * @brief cs_up_after_tx��ݒ肷��
- * @param[in] my_spi_v       : �ΏۂƂ���SPI_Config�\���̂ւ̃|�C���^
- * @param[in] tx_cs_state    : �ݒ肷��tx_cs_state
- * @return �Ȃ�
+ * @brief cs_up_after_txを設定する
+ * @param[in] my_spi_v       : 対象とするSPI_Config構造体へのポインタ
+ * @param[in] tx_cs_state    : 設定するtx_cs_state
+ * @return なし
  */
 void SPI_set_tx_cs_state(void* my_spi_v, const SPI_TX_CS_STATE tx_cs_state);
 

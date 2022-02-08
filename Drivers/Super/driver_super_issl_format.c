@@ -1,16 +1,17 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  Driver‚Ì‚½‚ß‚ÌISSLƒtƒH[ƒ}ƒbƒg’ÊM‚Ì‚½‚ß‚ÌŒöŠJ’è‹`CŠÖ”‚È‚Ç
+ * @brief  Driver ã®ãŸã‚ã® ISSL ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆé€šä¿¡ã®ãŸã‚ã®å…¬é–‹å®šç¾©ï¼Œé–¢æ•°ãªã©
  */
 
 #include "driver_super_issl_format.h"
 #include "../../Library/crc.h"
+#include <string.h>
 
 
 uint32_t DS_ISSLFMT_get_tlm_version(const DS_StreamConfig* p_stream_config)
 {
-  // [TODO] Œ»ó‚ÍVersion”Ô†‚ª8bit‚Ì‚à‚Ì‚Ì‚İ‚µ‚©‘Î‰‚µ‚Ä‚¢‚È‚¢
+  // [TODO] ç¾çŠ¶ã¯ Version ç•ªå·ãŒ 8bit ã®ã‚‚ã®ã®ã¿ã—ã‹å¯¾å¿œã—ã¦ã„ãªã„
   return (uint32_t)(DSSC_get_rx_frame(p_stream_config)[DS_ISSLFMT_COMMON_HEADER_SIZE]);
 }
 
@@ -43,7 +44,7 @@ uint32_t DS_ISSLFMT_get_tlm_id(const uint32_t version, const DS_StreamConfig* p_
 
 uint32_t DS_ISSLFMT_get_tlm_length(const DS_StreamConfig* p_stream_config)
 {
-  // [TODO] 2bit‚Ì‚à‚Ì‚Ì‚İ‚µ‚©‘Î‰‚µ‚Ä‚¢‚È‚¢
+  // TODO: 2bit ã®ã‚‚ã®ã®ã¿ã—ã‹å¯¾å¿œã—ã¦ã„ãªã„
   uint16_t length = DSSC_get_rx_frame(p_stream_config)[2];
   length <<= 8;
   length  |= DSSC_get_rx_frame(p_stream_config)[3];
@@ -55,14 +56,35 @@ uint16_t DS_ISSLFMT_calc_crc(const unsigned char* c, size_t n)
   return crc_16_ibm_right(0x0000, c, n, 0);
 }
 
-uint8_t DS_C2AFMT_get_tlm_id(const DS_StreamConfig* p_stream_config)
+const uint8_t* DS_C2AFMT_get_user_data_head(const DS_StreamConfig* p_stream_config)
 {
-  uint16_t offset = DS_ISSLFMT_COMMON_HEADER_SIZE + DS_C2AFMT_TCP_TLM_PRIMARY_HEADER_SIZE + 5;
-  uint8_t  tlm_id = DSSC_get_rx_frame(p_stream_config)[offset];
-  return tlm_id;
+  return &(DSSC_get_rx_frame(p_stream_config)[DS_ISSLFMT_COMMON_HEADER_SIZE]);
+}
 
-  // [TODO] –{“–‚ÍˆÈ‰º‚ÌŠÖ”‚ğg‚¢‚½‚¢‚ªCTPCŒ^‚Émemcpy‚µ‚È‚¢‚Æ‚±‚ÌŠÖ”‚ªg‚¦‚È‚¢DDD
-  // return TCP_TLM_get_packet_id();
+DS_ERR_CODE DS_C2AFMT_get_ctp(const DS_StreamConfig* p_stream_config, CommonTlmPacket* ctp)
+{
+  uint32_t issl_fmt_user_data_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
+  if (issl_fmt_user_data_len > CTP_MAX_LEN) return DS_ERR_CODE_ERR;
+
+  // ã¾ãšï¼Œ å—ä¿¡ãƒ‡ãƒ¼ã‚¿é•·ã ã‘ã‚³ãƒ”ãƒ¼ã—ã¦ã—ã¾ã£ã¦ã‹ã‚‰ï¼Œã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ï¼ˆåŠ¹ç‡ã®ãŸã‚ï¼‰
+  memcpy(&ctp->packet, DS_C2AFMT_get_user_data_head(p_stream_config), (size_t)issl_fmt_user_data_len);
+
+  if (CTP_get_packet_len(ctp) != issl_fmt_user_data_len) return DS_ERR_CODE_ERR;
+  if (!CTP_is_valid_packet(ctp)) return DS_ERR_CODE_ERR;
+  return DS_ERR_CODE_OK;
+}
+
+DS_ERR_CODE DS_C2AFMT_get_ccp(const DS_StreamConfig* p_stream_config, CommonCmdPacket* ccp)
+{
+  uint32_t issl_fmt_user_data_len = DS_ISSLFMT_get_tlm_length(p_stream_config);
+  if (issl_fmt_user_data_len > CCP_MAX_LEN) return DS_ERR_CODE_ERR;
+
+  // ã¾ãšï¼Œ å—ä¿¡ãƒ‡ãƒ¼ã‚¿é•·ã ã‘ã‚³ãƒ”ãƒ¼ã—ã¦ã—ã¾ã£ã¦ã‹ã‚‰ï¼Œã‚¢ã‚µãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ï¼ˆåŠ¹ç‡ã®ãŸã‚ï¼‰
+  memcpy(&ccp->packet, DS_C2AFMT_get_user_data_head(p_stream_config), (size_t)issl_fmt_user_data_len);
+
+  if (CCP_get_packet_len(ccp) != issl_fmt_user_data_len) return DS_ERR_CODE_ERR;
+  if (!CCP_is_valid_packet(ccp)) return DS_ERR_CODE_ERR;
+  return DS_ERR_CODE_OK;
 }
 
 #pragma section

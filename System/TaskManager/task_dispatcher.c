@@ -4,40 +4,41 @@
 #include <stdlib.h>
 #include <string.h> // for memcpy
 
-#include "../../CmdTlm/packet_list.h"
-#include "../../CmdTlm/block_command_executor.h"
+#include "../../TlmCmd/packet_list_util.h"
+#include "../../TlmCmd/block_command_executor.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
 #include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
-#include <src_user/CmdTlm/block_command_definitions.h>
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/block_command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"
 #include <src_user/Library/VT100.h>
 
 static TDSP_Info TDSP_info_;
 const TDSP_Info* const TDSP_info = &TDSP_info_;
 
-// Œ»İ‚ÌƒTƒCƒNƒ‹‚ÅÀs‚·‚×‚«ƒ^ƒXƒNˆê——‚ğ•Û‘¶‚µ‚½‚à‚Ì
+// ç¾åœ¨ã®ã‚µã‚¤ã‚¯ãƒ«ã§å®Ÿè¡Œã™ã¹ãã‚¿ã‚¹ã‚¯ä¸€è¦§ã‚’ä¿å­˜ã—ãŸã‚‚ã®
 static PacketList task_list_;
 
 /**
- * @brief `TDSP_info_.task_list_id` ‚É“o˜^‚³‚ê‚½ BC ‚ğ TaskList‚É“WŠJ.
- * @note  ÀÛ‚É BC ‚Ì“à—e‚ğ“Ç‚İ‚İA“WŠJ‚µ‚Ä‚¢‚é‚Ì‚Í `PL_ACK PL_deploy_block_cmd(args)`
+ * @brief `TDSP_info_.task_list_id` ã«ç™»éŒ²ã•ã‚ŒãŸ BC ã‚’ TaskListã«å±•é–‹.
+ * @note  å®Ÿéš›ã« BC ã®å†…å®¹ã‚’èª­ã¿è¾¼ã¿ã€å±•é–‹ã—ã¦ã„ã‚‹ã®ã¯ `PL_ACK PL_deploy_block_cmd(args)`
  */
 static void TDSP_deploy_block_as_task_list_(void);
 
 /**
- * @brief ƒfƒoƒbƒOî•ñ•\¦
+ * @brief ãƒ‡ãƒãƒƒã‚°æƒ…å ±è¡¨ç¤º
  */
 static void print_tdsp_status_(void);
 
 void TDSP_initialize(void)
 {
   static PL_Node task_stock_[TDSP_TASK_MAX];
-  PL_initialize(task_stock_, TDSP_TASK_MAX, &task_list_);
+  static CommonCmdPacket packet_stock_[TDSP_TASK_MAX];
+  PL_initialize_with_ccp(task_stock_, packet_stock_, TDSP_TASK_MAX, &task_list_);
 
-  // ƒ^ƒXƒNƒŠƒXƒg‚ğ‰Šú‰»‚µAINITIALƒ‚[ƒh‚ÌƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ğ“WŠJ‚·‚é
+  // ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã‚’åˆæœŸåŒ–ã—ã€INITIALãƒ¢ãƒ¼ãƒ‰ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ã‚’å±•é–‹ã™ã‚‹
   TDSP_info_.tskd = CDIS_init(&task_list_);
   TDSP_info_.task_list_id = MM_get_tasklist_id_of_mode(MD_MODEID_START_UP);
   TDSP_deploy_block_as_task_list_();
@@ -58,8 +59,8 @@ static void TDSP_deploy_block_as_task_list_(void)
 {
   PL_ACK ack;
 
-  // –{ŠÖ”“à‚Ìˆ—’†‚ÉMaster Cycle‚ª•Ï‰»‚µ‚½ê‡‚ğŒŸo‚Å‚«‚é‚æ‚¤A
-  // ‚Ü‚¸ŸMaster Cycle‚Ìî•ñ‚ğXV‚·‚éB
+  // æœ¬é–¢æ•°å†…ã®å‡¦ç†ä¸­ã«Master CycleãŒå¤‰åŒ–ã—ãŸå ´åˆã‚’æ¤œå‡ºã§ãã‚‹ã‚ˆã†ã€
+  // ã¾ãšæ¬¡Master Cycleã®æƒ…å ±ã‚’æ›´æ–°ã™ã‚‹ã€‚
   TDSP_info_.activated_at = TMGR_get_master_total_cycle() + 1;
 
   ack = PL_deploy_block_cmd(&task_list_, TDSP_info_.task_list_id, 0);
@@ -78,65 +79,65 @@ static void TDSP_deploy_block_as_task_list_(void)
 
 void TDSP_execute_pl_as_task_list(void)
 {
-  // ‚Ü‚¸‚Í (1)ƒuƒƒbƒNƒRƒ}ƒ“ƒh‚ªƒ^ƒXƒNƒŠƒXƒg‚É“WŠJ‚³‚ê‚½‚ÌƒTƒCƒNƒ‹” ‚Æ (2)Œ»İ‚ÌƒTƒCƒNƒ‹” ‚ğ”äŠr
-  // (1) = (2) ‚Ì‚Í“WŠJ‚©‚ç 1ƒTƒCƒNƒ‹ (100ms) ˆÈ“à‚È‚Ì‚Åƒ^ƒXƒNƒŠƒXƒg‚É“o˜^‚³‚ê‚½ƒRƒ}ƒ“ƒh‚ğˆê‚ÂÀs‚·‚é
-  // (1) > (2) ‚Ì‚Í¡‰ñ‚ÌƒTƒCƒNƒ‹‚ÅÀs‚·‚×‚«ƒRƒ}ƒ“ƒh‚ª‚·‚×‚ÄÀsÏ‚İ‚Å‚ ‚é
-  // (1) < (2) ‚Ì‚Í“WŠJ‚©‚ç 1ƒTƒCƒNƒ‹ (100ms) ˆÈãŒo‰ß‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é‚Ì‚Å‹­§I—¹‚·‚é
+  // ã¾ãšã¯ (1)ãƒ–ãƒ­ãƒƒã‚¯ã‚³ãƒãƒ³ãƒ‰ãŒã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã«å±•é–‹ã•ã‚ŒãŸæ™‚ã®ã‚µã‚¤ã‚¯ãƒ«æ•° ã¨ (2)ç¾åœ¨ã®ã‚µã‚¤ã‚¯ãƒ«æ•° ã‚’æ¯”è¼ƒ
+  // (1) = (2) ã®æ™‚ã¯å±•é–‹ã‹ã‚‰ 1ã‚µã‚¤ã‚¯ãƒ« (100ms) ä»¥å†…ãªã®ã§ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã«ç™»éŒ²ã•ã‚ŒãŸã‚³ãƒãƒ³ãƒ‰ã‚’ä¸€ã¤å®Ÿè¡Œã™ã‚‹
+  // (1) > (2) ã®æ™‚ã¯ä»Šå›ã®ã‚µã‚¤ã‚¯ãƒ«ã§å®Ÿè¡Œã™ã¹ãã‚³ãƒãƒ³ãƒ‰ãŒã™ã¹ã¦å®Ÿè¡Œæ¸ˆã¿ã§ã‚ã‚‹
+  // (1) < (2) ã®æ™‚ã¯å±•é–‹ã‹ã‚‰ 1ã‚µã‚¤ã‚¯ãƒ« (100ms) ä»¥ä¸ŠçµŒéã—ã¦ã—ã¾ã£ã¦ã„ã‚‹ã®ã§å¼·åˆ¶çµ‚äº†ã™ã‚‹
 
   if (TDSP_info_.activated_at == TMGR_get_master_total_cycle())
   {
-    // ƒ^ƒXƒNƒŠƒXƒg‚Ìæ“ªƒRƒ}ƒ“ƒhÀs—\’è‚ÆŒ»İ‚ğ”äŠr
+    // ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã®å…ˆé ­ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œäºˆå®šæ™‚åˆ»ã¨ç¾åœ¨æ™‚åˆ»ã‚’æ¯”è¼ƒ
     PL_ACK ack = PL_check_tl_cmd(&task_list_,
                                  (size_t)(TMGR_get_master_step()));
 
     switch (ack)
     {
     case PL_TLC_PAST_TIME:
-      // Às‚ª‰ß‚¬‚Ä‚¢‚½ê‡‚ÍÀs‘O‚ÉƒAƒmƒ}ƒŠ‚ğ“o˜^B
+      // å®Ÿè¡Œæ™‚åˆ»ãŒéãã¦ã„ãŸå ´åˆã¯å®Ÿè¡Œå‰ã«ã‚¢ãƒãƒãƒªã‚’ç™»éŒ²ã€‚
 #ifndef AL_DISALBE_AT_C2A_CORE
       AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_STEP_OVERRUN);
 #endif
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_STEP_OVERRUN,
                       EL_ERROR_LEVEL_LOW,
-                      (uint32_t)CCP_get_ti(&PL_get_head(&task_list_)->packet));
+                      (uint32_t)CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(&task_list_)->packet) ));
 
       // FALL THROUGH
 
     case PL_TLC_ON_TIME:
-      // Às‚ª‰ß‚¬‚Ä‚¢‚éA‚à‚µ‚­‚ÍÀsƒsƒbƒ^ƒŠ‚Ìê‡‚ÍƒRƒ}ƒ“ƒh‚ğÀs
+      // å®Ÿè¡Œæ™‚åˆ»ãŒéãã¦ã„ã‚‹ã€ã‚‚ã—ãã¯å®Ÿè¡Œæ™‚åˆ»ãƒ”ãƒƒã‚¿ãƒªã®å ´åˆã¯ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œ
       CDIS_dispatch_command(&(TDSP_info_.tskd));
 
       if (TDSP_info_.tskd.prev.sts != CCP_EXEC_SUCCESS)
       {
-        // ƒRƒ}ƒ“ƒhÀs‚ÉˆÙí‚ª”­¶‚µ‚½ê‡‚ÍƒAƒmƒ}ƒŠ‚ğ“o˜^B
+        // ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œæ™‚ã«ç•°å¸¸ãŒç™ºç”Ÿã—ãŸå ´åˆã¯ã‚¢ãƒãƒãƒªã‚’ç™»éŒ²ã€‚
 #ifndef AL_DISALBE_AT_C2A_CORE
         AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_TASK_EXEC_FAILED);
 #endif
         EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_TASK_EXEC_FAILED,
                       EL_ERROR_LEVEL_HIGH,
-                      (uint32_t)(TDSP_info_.tskd.prev.sts + 100));   // FIXME: CCP_EXEC_STS ‚ª•‰”‚àŠÜ‚Ş‚Ì‚ÅDDD‚È‚ñ‚Æ‚©‚µ‚½‚¢
+                      TDSP_info_.tskd.prev.sts);
       }
 
       break;
 
     case PL_TLC_NOT_YET:
-      // case–¼‚ª•s“KØ‚¾‚ªA‚±‚±‚É—ˆ‚é‚Ì‚ÍˆÈ‰º‚Ì“ñ‚Â‚Ìê‡
-      // Eƒ^ƒXƒNƒŠƒXƒg‚ª‹ó
-      // EŸ‚ÌƒRƒ}ƒ“ƒh‚ÌÀs‚ª‚Ü‚¾
+      // caseåãŒä¸é©åˆ‡ã ãŒã€ã“ã“ã«æ¥ã‚‹ã®ã¯ä»¥ä¸‹ã®äºŒã¤ã®å ´åˆ
+      // ãƒ»ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆãŒç©º
+      // ãƒ»æ¬¡ã®ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œæ™‚åˆ»ãŒã¾ã 
 
       if (PL_count_active_nodes(&task_list_) == 0)
       {
-        // task_list‚ª‹ó‚È‚çÄ“xƒ^ƒXƒNƒŠƒXƒg‚ğ“WŠJ
-        // ‚±‚ê‚ğs‚¤‚ÆTDSP_info_.activated_at‚ªƒCƒ“ƒNƒŠƒƒ“ƒg‚³‚ê‚é‚Ì‚ÅA"Ÿ‚ÌƒTƒCƒNƒ‹Às‘Ò‚¿ó‘Ô"‚É‚È‚é
+        // task_listãŒç©ºãªã‚‰å†åº¦ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆã‚’å±•é–‹
+        // ã“ã‚Œã‚’è¡Œã†ã¨TDSP_info_.activated_atãŒã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã•ã‚Œã‚‹ã®ã§ã€"æ¬¡ã®ã‚µã‚¤ã‚¯ãƒ«å®Ÿè¡Œå¾…ã¡çŠ¶æ…‹"ã«ãªã‚‹
         TDSP_deploy_block_as_task_list_();
       }
 
       break;
 
     default:
-      // Šî–{‚±‚±‚É‚Í—ˆ‚È‚¢
+      // åŸºæœ¬ã“ã“ã«ã¯æ¥ãªã„
 #ifndef AL_DISALBE_AT_C2A_CORE
       AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_UNKNOWN);
 #endif
@@ -148,21 +149,21 @@ void TDSP_execute_pl_as_task_list(void)
   }
   else if (TDSP_info_.activated_at > TMGR_get_master_total_cycle())
   {
-    // Ÿ‚ÌƒTƒCƒNƒ‹‚ÌÀs‘Ò‚¿ó‘Ô
+    // æ¬¡ã®ã‚µã‚¤ã‚¯ãƒ«ã®å®Ÿè¡Œå¾…ã¡çŠ¶æ…‹
     return;
   }
   else if (TDSP_info_.activated_at < TMGR_get_master_total_cycle())
   {
     if ((TDSP_info_.activated_at == 0) && (TMGR_get_master_total_cycle() == OBCT_MAX_CYCLE - 1))
     {
-      // ŸƒTƒCƒNƒ‹‚ÌÀs‘Ò‚¿ó‘Ô(ƒTƒCƒNƒ‹ƒI[ƒo[ƒtƒ[’¼‘O)
-      // –{—ˆ‚Í TDSP_info_.activated_at > TMGR_get_master_total_cycle() ‚Æ‚È‚é‚Í‚¸‚ªA
-      // TDSP_info_.activated_at‚ª‚ ‚Ó‚ê‚Ä0‚É–ß‚Á‚Ä‚¢‚éê‡‚±‚±‚É—ˆ‚é
+      // æ¬¡ã‚µã‚¤ã‚¯ãƒ«ã®å®Ÿè¡Œå¾…ã¡çŠ¶æ…‹(ã‚µã‚¤ã‚¯ãƒ«ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ç›´å‰)
+      // æœ¬æ¥ã¯ TDSP_info_.activated_at > TMGR_get_master_total_cycle() ã¨ãªã‚‹ã¯ãšãŒã€
+      // TDSP_info_.activated_atãŒã‚ãµã‚Œã¦0ã«æˆ»ã£ã¦ã„ã‚‹å ´åˆã“ã“ã«æ¥ã‚‹
       return;
     }
     else
     {
-      // 1ƒTƒCƒNƒ‹ˆÈ“à‚É‘S‚Ä‚ÌƒRƒ}ƒ“ƒh‚ğÀs‚µI‚¦‚È‚©‚Á‚½ê‡‚±‚±‚É—ˆ‚é
+      // 1ã‚µã‚¤ã‚¯ãƒ«ä»¥å†…ã«å…¨ã¦ã®ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã—çµ‚ãˆãªã‹ã£ãŸå ´åˆã“ã“ã«æ¥ã‚‹
 #ifndef AL_DISALBE_AT_C2A_CORE
       AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_CYCLE_OVERRUN);
 #endif
@@ -171,7 +172,7 @@ void TDSP_execute_pl_as_task_list(void)
                       EL_ERROR_LEVEL_HIGH,
                       0);
 
-      // ƒŠƒXƒg‚ğƒNƒŠƒA->Ä“WŠJ‚µŸƒTƒCƒNƒ‹‚©‚çÄÀs
+      // ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢->å†å±•é–‹ã—æ¬¡ã‚µã‚¤ã‚¯ãƒ«ã‹ã‚‰å†å®Ÿè¡Œ
       PL_clear_list(&task_list_);
       TDSP_deploy_block_as_task_list_();
     }
@@ -183,9 +184,9 @@ void TDSP_resync_internal_counter(void)
   TDSP_info_.activated_at = TMGR_get_master_total_cycle();
 }
 
-CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CTCP* packet)
+CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
 {
-  // FIXME: u8 ‚Å‚¢‚¢‚Ì‚©H ‚Ü‚ C‚¢‚¢‹C‚à‚·‚éD
+  // FIXME: u8 ã§ã„ã„ã®ã‹ï¼Ÿ ã¾ã‚ï¼Œã„ã„æ°—ã‚‚ã™ã‚‹ï¼
   TDSP_ACK ack = TDSP_set_task_list_id((bct_id_t)(CCP_get_param_head(packet)[0]));
 
   switch (ack)

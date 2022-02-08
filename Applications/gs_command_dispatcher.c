@@ -1,27 +1,27 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ’nã‹Ç‚©‚ç”­s‚³‚ê‚½ RTC (Real Time Cmd) ‚ğÀs‚·‚é
+ * @brief åœ°ä¸Šå±€ã‹ã‚‰ç™ºè¡Œã•ã‚ŒãŸ RTC (Real Time Cmd) ã‚’å®Ÿè¡Œã™ã‚‹
  */
 
 #include "gs_command_dispatcher.h"
-#include "../CmdTlm/packet_handler.h"
+#include "../TlmCmd/packet_handler.h"
 
 static CommandDispatcher gs_command_dispatcher_;
 const CommandDispatcher* const gs_command_dispatcher = &gs_command_dispatcher_;
 
 /**
- * @brief  GSCD App ‰Šú‰»ŠÖ”
+ * @brief  GSCD App åˆæœŸåŒ–é–¢æ•°
  * @param  void
  * @return void
  */
 static void GSCD_init_(void);
 
 /**
- * @brief  GSCD App ÀsŠÖ”
+ * @brief  GSCD App å®Ÿè¡Œé–¢æ•°
  *
- *         PH_add_gs_cmd_ ‚É‚ÄC GS ‚©‚ç‚Ì RTC ‚ª gs_command_dispatcher ‚É•R•t‚¯‚ç‚ê‚½ƒRƒ}ƒ“ƒhƒLƒ…[ PH_gs_cmd_list ‚É push back ‚³‚ê‚éD
- *         ‚»‚ÌƒLƒ…[‚©‚ç‚P‚ÂƒRƒ}ƒ“ƒh‚ğæ‚èo‚µÀs‚·‚é
+ *         PH_add_gs_cmd_ ã«ã¦ï¼Œ GS ã‹ã‚‰ã® RTC ãŒ gs_command_dispatcher ã«ç´ä»˜ã‘ã‚‰ã‚ŒãŸã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ãƒ¼ PH_gs_cmd_list ã« push back ã•ã‚Œã‚‹ï¼
+ *         ãã®ã‚­ãƒ¥ãƒ¼ã‹ã‚‰ï¼‘ã¤ã‚³ãƒãƒ³ãƒ‰ã‚’å–ã‚Šå‡ºã—å®Ÿè¡Œã™ã‚‹
  * @param  void
  * @return void
  */
@@ -43,11 +43,11 @@ static void GSCD_dispatch_(void)
   CDIS_dispatch_command(&gs_command_dispatcher_);
 }
 
-CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 
-  // ‹L˜^‚³‚ê‚½ƒGƒ‰[î•ñ‚ğƒNƒŠƒA
+  // è¨˜éŒ²ã•ã‚ŒãŸã‚¨ãƒ©ãƒ¼æƒ…å ±ã‚’ã‚¯ãƒªã‚¢
   CDIS_clear_error_status(&gs_command_dispatcher_);
   return CCP_EXEC_SUCCESS;
 }

@@ -1,21 +1,21 @@
-#ifndef SEQUENCE_ITEMS_H_
-#define SEQUENCE_ITEMS_H_
+#ifndef SEQUENCEITEMS_H_
+#define SEQUENCEITEMS_H_
 
-#include <src_core/CmdTlm/common_tlm_cmd_packet.h>
-#include "../../../CmdTlm/command_definitions.h"
-#include <src_core/CmdTlm/block_command_table.h>
+#include <src_core/TlmCmd/common_cmd_packet.h>
+#include "../../../TlmCmd/command_definitions.h"
+#include <src_core/TlmCmd/block_command_table.h>
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// SI‚ğg‚¤‚±‚Æ‚Í‚à‚¤”ñ„§III
-// •’Ê‚ÌBC‚ğg‚¤‚±‚ÆIIII
+// SIã‚’ä½¿ã†ã“ã¨ã¯ã‚‚ã†éæ¨å¥¨ï¼ï¼ï¼
+// æ™®é€šã®BCã‚’ä½¿ã†ã“ã¨ï¼ï¼ï¼ï¼
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-void SI_finish_transition(CTCP* packet);
+void SI_finish_transition(CommonCmdPacket* packet);
 
-void SI_start_hk_tlm(CTCP* packet);
+void SI_start_hk_tlm(CommonCmdPacket* packet);
 
-// BC“WŠJ
-void SI_deploy_block(CTCP* packet, int line_no, bct_id_t block_no);
+// BCå±•é–‹
+void SI_deploy_block(CommonCmdPacket* packet, int line_no, bct_id_t block_no);
 
 
-#endif // SEQUENCE_ITEMS_H_
+#endif

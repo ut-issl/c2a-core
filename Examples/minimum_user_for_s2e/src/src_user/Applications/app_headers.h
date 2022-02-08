@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief App‚Ìƒwƒbƒ_‚ğ‚Ü‚Æ‚ß‚½ƒwƒbƒ_
+ * @brief Appã®ãƒ˜ãƒƒãƒ€ã‚’ã¾ã¨ã‚ãŸãƒ˜ãƒƒãƒ€
  */
 #ifndef APP_HEADERS_H_
 #define APP_HEADERS_H_
@@ -19,6 +19,7 @@
 #include <src_core/Applications/divided_cmd_utility.h>
 
 // DI
+#include "DriverInstances/di_aobc.h"
 #include "DriverInstances/di_uart_test.h"
 #include "DriverInstances/di_gs.h"
 

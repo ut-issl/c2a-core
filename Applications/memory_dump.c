@@ -4,18 +4,25 @@
 #include <string.h> // for memcpy
 
 #include "../System/TimeManager/time_manager.h"
-#include "../CmdTlm/packet_handler.h"
+#include "../TlmCmd/packet_handler.h"
 #include "../Library/endian_memcpy.h"
 
 static MemoryDump memory_dump_;
 const MemoryDump* const memory_dump = &memory_dump_;
 
-static CTCP MEM_ctcp_; // ƒf[ƒ^ƒTƒCƒY‚ª‘å‚«‚¢‚Ì‚ÅstaticŠm•Û
+// FIXME: CTCP å¤§æ”¹ä¿®ãŒçµ‚ã‚ã£ãŸã‚‰ç›´ã™
+// https://github.com/ut-issl/c2a-core/pull/217
+#if 0
+static CommonTlmPacket MEM_ctp_; // ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºãŒå¤§ãã„ã®ã§staticç¢ºä¿
+#endif
 
 static void MEM_init_(void);
 
 static uint8_t MEM_get_next_adu_counter_(void);
 
+// FIXME: CTCP å¤§æ”¹ä¿®ãŒçµ‚ã‚ã£ãŸã‚‰ç›´ã™
+// https://github.com/ut-issl/c2a-core/pull/217
+#if 0
 static CCP_EXEC_STS MEM_dump_region_(uint8_t category,
                                      uint8_t num_dumps);
 
@@ -33,8 +40,9 @@ static void MEM_setup_header_(TCP* packet,
                               uint16_t adu_seq_cnt,
                               uint32_t adu_len);
 
-static void MEM_send_packet_(const CTCP* packet,
+static void MEM_send_packet_(const CommonTlmPacket* packet,
                              uint8_t num_dumps);
+#endif
 
 AppInfo MEM_create_app(void)
 {
@@ -50,18 +58,18 @@ static void MEM_init_(void)
   memory_dump_.adu_counter = 0;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t begin, end, span;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µ
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—
   endian_memcpy(&begin, param, 4);
   endian_memcpy(&end,   param + 4, 4);
 
   if (begin > end)
   {
-    // —Ìˆæ‚ÌŠJn‚ÆI—¹‚Ì‘å¬ŠÖŒW‚ª‹t‚Ìê‡‚ÍˆÙíI—¹
+    // é ˜åŸŸã®é–‹å§‹ã¨çµ‚äº†ã®å¤§å°é–¢ä¿‚ãŒé€†ã®å ´åˆã¯ç•°å¸¸çµ‚äº†
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
@@ -69,7 +77,7 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
 
   if (span > MEM_MAX_SPAN)
   {
-    // w’èƒ_ƒ“ƒv•‚ªÅ‘å—Ê‚ğ’´‚¦‚Ä‚¢‚éê‡‚ÍˆÙíI—¹B
+    // æŒ‡å®šãƒ€ãƒ³ãƒ—å¹…ãŒæœ€å¤§é‡ã‚’è¶…ãˆã¦ã„ã‚‹å ´åˆã¯ç•°å¸¸çµ‚äº†ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -78,48 +86,51 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CTCP* packet)
   memory_dump_.adu_size = span;
   memory_dump_.adu_seq = 0;
 
-  // —Ìˆæİ’è1‰ñ–ˆ‚É“Æ—§‚µ‚½ADUƒJƒEƒ“ƒg’l‚ğŠ„‚è“–‚Ä‚éB
+  // é ˜åŸŸè¨­å®š1å›æ¯ã«ç‹¬ç«‹ã—ãŸADUã‚«ã‚¦ãƒ³ãƒˆå€¤ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã€‚
   memory_dump_.adu_counter = MEM_get_next_adu_counter_();
 
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CTCP* packet)
+// FIXME: CTCP å¤§æ”¹ä¿®ãŒçµ‚ã‚ã£ãŸã‚‰ç›´ã™
+// https://github.com/ut-issl/c2a-core/pull/217
+#if 0
+CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µ
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—
   category = param[0];
   num_dumps = param[1];
 
   if (num_dumps >= 8)
   {
-    // ƒpƒPƒbƒg¶¬‰ñ”‚ÌãŒÀ‚Í8‰ñ‚Æ‚·‚éB
-    // 32kbps‚Å‚ÌDL‚É8VCDU/sec‚Å1•b•ª‚Ì’ÊM—ÊB
-    // ‚±‚ê‚ğ’´‚¦‚éê‡‚Í•¡”‰ñƒRƒ}ƒ“ƒh‚ğ‘—M‚µ‚Ä‘Î‰‚·‚éB
+    // ãƒ‘ã‚±ãƒƒãƒˆç”Ÿæˆå›æ•°ã®ä¸Šé™ã¯8å›ã¨ã™ã‚‹ã€‚
+    // 32kbpsã§ã®DLæ™‚ã«8VCDU/secã§1ç§’åˆ†ã®é€šä¿¡é‡ã€‚
+    // ã“ã‚Œã‚’è¶…ãˆã‚‹å ´åˆã¯è¤‡æ•°å›ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡ã—ã¦å¯¾å¿œã™ã‚‹ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
   return MEM_dump_region_(category, num_dumps);
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
   uint16_t adu_seq;
   uint32_t rp;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µ
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—
   category = param[0];
   num_dumps = param[1];
 
   if (num_dumps >= 8)
   {
-    // ƒpƒPƒbƒg¶¬‰ñ”‚ÌãŒÀ‚Í8‰ñ‚Æ‚·‚éB
-    // 32kbps‚Å‚ÌDL‚É8VCDU/sec‚Å1•b•ª‚Ì’ÊM—ÊB
-    // ‚±‚ê‚ğ’´‚¦‚éê‡‚Í•¡”‰ñƒRƒ}ƒ“ƒh‚ğ‘—M‚µ‚Ä‘Î‰‚·‚éB
+    // ãƒ‘ã‚±ãƒƒãƒˆç”Ÿæˆå›æ•°ã®ä¸Šé™ã¯8å›ã¨ã™ã‚‹ã€‚
+    // 32kbpsã§ã®DLæ™‚ã«8VCDU/secã§1ç§’åˆ†ã®é€šä¿¡é‡ã€‚
+    // ã“ã‚Œã‚’è¶…ãˆã‚‹å ´åˆã¯è¤‡æ•°å›ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡ã—ã¦å¯¾å¿œã™ã‚‹ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -129,85 +140,87 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CTCP* packet)
 
   if (rp < memory_dump_.end)
   {
-    // w’è‚³‚ê‚½ADU Sequence Counter‚ª—Ìˆæ“à‚È‚ç’l‚ğæ‚è‚İA
-    // w’è‚³‚ê‚½ˆÊ’u‚Ì“à—e‚ğƒ_ƒ“ƒvB
-    // uw’è‚·‚é = ƒ_ƒ“ƒv‚µ‚½‚¢v‚Æ”»’f‚µ‚Ä‚¢‚é
+    // æŒ‡å®šã•ã‚ŒãŸADU Sequence CounterãŒé ˜åŸŸå†…ãªã‚‰å€¤ã‚’å–ã‚Šè¾¼ã¿ã€
+    // æŒ‡å®šã•ã‚ŒãŸä½ç½®ã®å†…å®¹ã‚’ãƒ€ãƒ³ãƒ—ã€‚
+    // ã€ŒæŒ‡å®šã™ã‚‹ = ãƒ€ãƒ³ãƒ—ã—ãŸã„ã€ã¨åˆ¤æ–­ã—ã¦ã„ã‚‹
     memory_dump_.adu_seq = adu_seq;
     return MEM_dump_region_(category, num_dumps);
   }
   else
   {
-    // w’è‚³‚ê‚½ADU Sequence Counter‚ª—ÌˆæŠO‚Å‚ ‚ê‚ÎˆÙíI—¹
+    // æŒ‡å®šã•ã‚ŒãŸADU Sequence CounterãŒé ˜åŸŸå¤–ã§ã‚ã‚Œã°ç•°å¸¸çµ‚äº†
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
   uint32_t start_addr;
   uint8_t* data;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µ
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—
   category = param[0];
   num_dumps = param[1];
 
   if (num_dumps >= 8)
   {
-    // ƒpƒPƒbƒg¶¬‰ñ”‚ÌãŒÀ‚Í8‰ñ‚Æ‚·‚éB
-    // 32kbps‚Å‚ÌDL‚É8VCDU/sec‚Å1•b•ª‚Ì’ÊM—ÊB
-    // ‚±‚ê‚ğ’´‚¦‚éê‡‚Í•¡”‰ñƒRƒ}ƒ“ƒh‚ğ‘—M‚µ‚Ä‘Î‰‚·‚éB
+    // ãƒ‘ã‚±ãƒƒãƒˆç”Ÿæˆå›æ•°ã®ä¸Šé™ã¯8å›ã¨ã™ã‚‹ã€‚
+    // 32kbpsã§ã®DLæ™‚ã«8VCDU/secã§1ç§’åˆ†ã®é€šä¿¡é‡ã€‚
+    // ã“ã‚Œã‚’è¶…ãˆã‚‹å ´åˆã¯è¤‡æ•°å›ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡ã—ã¦å¯¾å¿œã™ã‚‹ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
   endian_memcpy(&start_addr, param + 2, 4);
 
-  // —vŒŸ“¢: w’èƒAƒhƒŒƒX’l‚ªˆÙí‚Èê‡‚Ìˆ—‚ğ‚·‚×‚«‚©H
-  // Segmentation Fault‚Æ‚©‹N‚±‚éH
+  // è¦æ¤œè¨: æŒ‡å®šã‚¢ãƒ‰ãƒ¬ã‚¹å€¤ãŒç•°å¸¸ãªå ´åˆã®å‡¦ç†ã‚’ã™ã¹ãã‹ï¼Ÿ
+  // Segmentation Faultã¨ã‹èµ·ã“ã‚‹ï¼Ÿ
 
-  // ƒƒ‚ƒŠƒ_ƒ“ƒvƒpƒPƒbƒg‚Ìƒwƒbƒ_‚ğİ’è
-  // Packet Sequence Counter for each ADU‚Í’PƒpƒPƒbƒg‚È‚Ì‚Å0ŒÅ’èB
-  // ADU•ªŠ„Œ`®‚É‚µ‚È‚¯‚ê‚Î5Bytes•ªƒ_ƒ“ƒv—Ìˆæ‚ğ‘‚â‚¹‚é‚ªA
-  // Packet ID‚à•Ê‚É‚·‚é•K—v‚ª¶‚¶‚é‚Ì‚Å‚Ğ‚Æ‚Ü‚¸Œ`®‚ğ‡‚í‚¹‚ÄÀ‘•‚·‚éB
-  MEM_setup_header_(&MEM_ctcp_,
-                    MEM_DUMP_WIDTH,              // 1ƒpƒPƒbƒg‚ÌÅ‘å’·‚ğƒ_ƒ“ƒv‚·‚é
-                    category,                    // ‘—oƒJƒeƒSƒŠ‚Íƒpƒ‰ƒ[ƒ^‚Åw’è
-                    MEM_get_next_adu_counter_(), // ’PADU‚È‚Ì‚ÅADUƒJƒEƒ“ƒg’l‚ğ’¼ÚŠ„‚è“–‚Ä
-                    TCP_SEQ_SINGLE,              // ƒAƒhƒŒƒXw’è‚Ìê‡‚Í’PADU‚Æ‚µ‚Äˆ—
-                    0x0000,                      // ’PADU‚È‚Ì‚Å0x0000‚ÉŒÅ’è
-                    MEM_DUMP_WIDTH);             // ADU’·‚ÍDUMP’·‚Æ“¯ˆê
+  // ãƒ¡ãƒ¢ãƒªãƒ€ãƒ³ãƒ—ãƒ‘ã‚±ãƒƒãƒˆã®ãƒ˜ãƒƒãƒ€ã‚’è¨­å®š
+  // Packet Sequence Counter for each ADUã¯å˜ãƒ‘ã‚±ãƒƒãƒˆãªã®ã§0å›ºå®šã€‚
+  // ADUåˆ†å‰²å½¢å¼ã«ã—ãªã‘ã‚Œã°5Bytesåˆ†ãƒ€ãƒ³ãƒ—é ˜åŸŸã‚’å¢—ã‚„ã›ã‚‹ãŒã€
+  // Packet IDã‚‚åˆ¥ã«ã™ã‚‹å¿…è¦ãŒç”Ÿã˜ã‚‹ã®ã§ã²ã¨ã¾ãšå½¢å¼ã‚’åˆã‚ã›ã¦å®Ÿè£…ã™ã‚‹ã€‚
+  MEM_setup_header_(&MEM_ctp_,
+                    MEM_DUMP_WIDTH,              // 1ãƒ‘ã‚±ãƒƒãƒˆã®æœ€å¤§é•·ã‚’ãƒ€ãƒ³ãƒ—ã™ã‚‹
+                    category,                    // é€å‡ºã‚«ãƒ†ã‚´ãƒªã¯ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã§æŒ‡å®š
+                    MEM_get_next_adu_counter_(), // å˜ADUãªã®ã§ADUã‚«ã‚¦ãƒ³ãƒˆå€¤ã‚’ç›´æ¥å‰²ã‚Šå½“ã¦
+                    TCP_SEQ_SINGLE,              // ã‚¢ãƒ‰ãƒ¬ã‚¹æŒ‡å®šã®å ´åˆã¯å˜ADUã¨ã—ã¦å‡¦ç†
+                    0x0000,                      // å˜ADUãªã®ã§0x0000ã«å›ºå®š
+                    MEM_DUMP_WIDTH);             // ADUé•·ã¯DUMPé•·ã¨åŒä¸€
 
-  // ƒ_ƒ“ƒvƒf[ƒ^‚ğİ’è
-  data = TCP_TLM_get_user_data_head(&MEM_ctcp_) + 5; // ADU•ªŠ„‚É‚æ‚èƒwƒbƒ_’·‚ª5Bytes‘‚¦‚é
+  // ãƒ€ãƒ³ãƒ—ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š
+    // FIXME: CTCP, SpacePacket æ•´ç†ã§ç›´ã™ï¼ TCPä¾å­˜æ€§ã‚‚ã‚„ã‚ã‚‹
+  data = TCP_TLM_get_user_data_head(&MEM_ctp_) + 5; // ADUåˆ†å‰²ã«ã‚ˆã‚Šãƒ˜ãƒƒãƒ€é•·ãŒ5Byteså¢—ãˆã‚‹
   memcpy(data, (const void*)start_addr, MEM_DUMP_WIDTH);
 
-  // ¶¬‚µ‚½ƒpƒPƒbƒg‚ğ‘—o
-  MEM_send_packet_(&MEM_ctcp_, num_dumps);
+  // ç”Ÿæˆã—ãŸãƒ‘ã‚±ãƒƒãƒˆã‚’é€å‡º
+  MEM_send_packet_(&MEM_ctp_, num_dumps);
 
   return CCP_EXEC_SUCCESS;
 }
+#endif
 
-CCP_EXEC_STS Cmd_MEM_LOAD(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t param_len = CCP_get_param_len(packet);
   size_t data_len;
   uint32_t start_addr;
 
-  // ƒf[ƒ^’·“Ç‚İo‚µ
-  // ƒf[ƒ^’· -> ƒpƒ‰ƒ[ƒ^‘S’·-ŠJnƒAƒhƒŒƒXƒpƒ‰ƒ[ƒ^’·
+  // ãƒ‡ãƒ¼ã‚¿é•·èª­ã¿å‡ºã—
+  // ãƒ‡ãƒ¼ã‚¿é•· -> ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿å…¨é•·-é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿é•·
   data_len = param_len - 4;
 
-  // ‘‚«‚İƒAƒhƒŒƒX“Ç‚İo‚µ
+  // æ›¸ãè¾¼ã¿ã‚¢ãƒ‰ãƒ¬ã‚¹èª­ã¿å‡ºã—
   endian_memcpy(&start_addr, param, 4);
 
-  // w’è‚µ‚½ŠJnƒAƒhƒŒƒX‚©‚çn‚Ü‚é—Ìˆæ‚Éƒf[ƒ^‚ğ‘‚«‚İ
+  // æŒ‡å®šã—ãŸé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰å§‹ã¾ã‚‹é ˜åŸŸã«ãƒ‡ãƒ¼ã‚¿ã‚’æ›¸ãè¾¼ã¿
   memcpy((void*)start_addr, &(param[4]), data_len);
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t dest;
@@ -216,43 +229,43 @@ CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CTCP* packet)
 
   if ((dest >= memory_dump_.begin) && (dest < memory_dump_.end))
   {
-    // ˆ¶æƒAƒhƒŒƒX‚ª—Ìˆæ“à•”‚ÉŠÜ‚Ü‚ê‚éê‡B
-    // ‚±‚ê‚ğ”F‚ß‚é‚Æˆ—‚ª•¡G‚É‚È‚é‚Ì‚Å‹Ö~‚·‚éB
+    // å®›å…ˆã‚¢ãƒ‰ãƒ¬ã‚¹ãŒé ˜åŸŸå†…éƒ¨ã«å«ã¾ã‚Œã‚‹å ´åˆã€‚
+    // ã“ã‚Œã‚’èªã‚ã‚‹ã¨å‡¦ç†ãŒè¤‡é›‘ã«ãªã‚‹ã®ã§ç¦æ­¢ã™ã‚‹ã€‚
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  // ˆ¶æƒAƒhƒŒƒX‚ğİ’è‚µARP‚ğ—Ìˆææ“ª‚É‡‚í‚¹‚éB
+  // å®›å…ˆã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¨­å®šã—ã€RPã‚’é ˜åŸŸå…ˆé ­ã«åˆã‚ã›ã‚‹ã€‚
   memory_dump_.dest = dest;
   memory_dump_.rp = memory_dump_.begin;
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CTCP* packet)
+CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t copy_width, wp;
 
   if (memory_dump_.rp == memory_dump_.end)
   {
-    // Šù‚É—Ìˆæ‘S‘Ì‚Ì“Ç‚İo‚µ‚ªŠ®—¹‚µ‚Ä‚¢‚éê‡B
-    // ˆ—‚Ís‚í‚¸³íI—¹‚·‚éB
+    // æ—¢ã«é ˜åŸŸå…¨ä½“ã®èª­ã¿å‡ºã—ãŒå®Œäº†ã—ã¦ã„ã‚‹å ´åˆã€‚
+    // å‡¦ç†ã¯è¡Œã‚ãšæ­£å¸¸çµ‚äº†ã™ã‚‹ã€‚
     return CCP_EXEC_SUCCESS;
   }
 
-  // ƒpƒ‰ƒ[ƒ^“Ç‚İo‚µB
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿å‡ºã—ã€‚
   endian_memcpy(&copy_width, param, 4);
 
   if ((memory_dump_.rp + copy_width) > memory_dump_.end)
   {
-    // w’èƒRƒs[•‚ÅƒRƒs[‚·‚é‚Æ—ÌˆæŠO‚Éo‚Ä‚µ‚Ü‚¤ê‡B
-    // ƒRƒs[Œ‹‰Ê‚ª—ÌˆæI’[‚Éˆê’v‚·‚é‚æ‚¤ƒRƒs[•‚ğƒNƒŠƒbƒvB
+    // æŒ‡å®šã‚³ãƒ”ãƒ¼å¹…ã§ã‚³ãƒ”ãƒ¼ã™ã‚‹ã¨é ˜åŸŸå¤–ã«å‡ºã¦ã—ã¾ã†å ´åˆã€‚
+    // ã‚³ãƒ”ãƒ¼çµæœãŒé ˜åŸŸçµ‚ç«¯ã«ä¸€è‡´ã™ã‚‹ã‚ˆã†ã‚³ãƒ”ãƒ¼å¹…ã‚’ã‚¯ãƒªãƒƒãƒ—ã€‚
     copy_width = memory_dump_.end - memory_dump_.rp;
   }
 
-  // WPŒvZBWP = ˆ¶ææ“ª+“Ç‚İo‚µÏ‚İƒf[ƒ^—ÊB
+  // WPè¨ˆç®—ã€‚WP = å®›å…ˆå…ˆé ­+èª­ã¿å‡ºã—æ¸ˆã¿ãƒ‡ãƒ¼ã‚¿é‡ã€‚
   wp = memory_dump_.dest + (memory_dump_.rp - memory_dump_.begin);
 
-  // w’è‚³‚ê‚½ƒRƒs[•‚¾‚¯—Ìˆæ‚ğƒRƒs[‚µARP‚ğXVB
+  // æŒ‡å®šã•ã‚ŒãŸã‚³ãƒ”ãƒ¼å¹…ã ã‘é ˜åŸŸã‚’ã‚³ãƒ”ãƒ¼ã—ã€RPã‚’æ›´æ–°ã€‚
   memcpy((uint8_t*)wp, (const uint8_t*)memory_dump_.rp, copy_width);
   memory_dump_.rp += copy_width;
   return CCP_EXEC_SUCCESS;
@@ -260,33 +273,36 @@ CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CTCP* packet)
 
 static uint8_t MEM_get_next_adu_counter_(void)
 {
-  // ƒCƒ“ƒNƒŠƒƒ“ƒgŒã‚Ì’l‚ğ•Ô‚·‚Ì‚Å‰Šú’l‚Í0xff‚Æ‚·‚éB
+  // ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆå¾Œã®å€¤ã‚’è¿”ã™ã®ã§åˆæœŸå€¤ã¯0xffã¨ã™ã‚‹ã€‚
   static uint8_t adu_counter_ = 0xff;
   return ++adu_counter_;
 }
 
+// FIXME: CTCP å¤§æ”¹ä¿®ãŒçµ‚ã‚ã£ãŸã‚‰ç›´ã™
+// https://github.com/ut-issl/c2a-core/pull/217
+#if 0
 static CCP_EXEC_STS MEM_dump_region_(uint8_t category,
                                      uint8_t num_dumps)
 {
   MEM_ACK ack;
 
-  // İ’è’l‚É‚à‚Æ‚Ã‚«‘—o‚·‚×‚«ƒpƒPƒbƒg‚ğ\’z
-  ack = MEM_form_packet_(&MEM_ctcp_, category);
+  // è¨­å®šå€¤ã«ã‚‚ã¨ã¥ãé€å‡ºã™ã¹ããƒ‘ã‚±ãƒƒãƒˆã‚’æ§‹ç¯‰
+  ack = MEM_form_packet_(&MEM_ctp_, category);
 
   switch (ack)
   {
   case MEM_SUCCESS:
-    // ¶¬‚µ‚½ƒpƒPƒbƒg‚ğ‘—o‚µAADU Sequence Counter‚Ì’l‚ğXV
-    MEM_send_packet_(&MEM_ctcp_, num_dumps);
+    // ç”Ÿæˆã—ãŸãƒ‘ã‚±ãƒƒãƒˆã‚’é€å‡ºã—ã€ADU Sequence Counterã®å€¤ã‚’æ›´æ–°
+    MEM_send_packet_(&MEM_ctp_, num_dumps);
     ++memory_dump_.adu_seq;
     return CCP_EXEC_SUCCESS;
 
   case MEM_NO_DATA:
-    // ‚·‚Å‚É‘S—Ìˆæƒ_ƒ“ƒvÏ‚İ‚È‚ç‰½‚à‚¹‚¸I—¹
+    // ã™ã§ã«å…¨é ˜åŸŸãƒ€ãƒ³ãƒ—æ¸ˆã¿ãªã‚‰ä½•ã‚‚ã›ãšçµ‚äº†
     return CCP_EXEC_SUCCESS;
 
   default:
-    // ‚»‚êˆÈŠO‚ÌƒGƒ‰[‚Í‚È‚¢‚Í‚¸
+    // ãã‚Œä»¥å¤–ã®ã‚¨ãƒ©ãƒ¼ã¯ãªã„ã¯ãš
     return CCP_EXEC_UNKNOWN;
   }
 }
@@ -303,24 +319,24 @@ static MEM_ACK MEM_form_packet_(TCP* packet,
 
   if (rp >= memory_dump_.end)
   {
-    // Read Pointer‚ªI’[‚É’B‚µ‚Ä‚¢‚ê‚Î‰½‚à‚¹‚¸I—¹
+    // Read PointerãŒçµ‚ç«¯ã«é”ã—ã¦ã„ã‚Œã°ä½•ã‚‚ã›ãšçµ‚äº†
     return MEM_NO_DATA;
   }
 
-  // c‚èƒ_ƒ“ƒv’·‚ğŒvZ
+  // æ®‹ã‚Šãƒ€ãƒ³ãƒ—é•·ã‚’è¨ˆç®—
   len = memory_dump_.end - rp;
 
   if (len > MEM_DUMP_WIDTH)
   {
-    // 1ƒpƒPƒbƒg‚Ìƒ_ƒ“ƒv•‚ğ’´‚¦‚éê‡‚Íƒ_ƒ“ƒv•‚É‰Ÿ‚³‚¦‚éB
+    // 1ãƒ‘ã‚±ãƒƒãƒˆã®ãƒ€ãƒ³ãƒ—å¹…ã‚’è¶…ãˆã‚‹å ´åˆã¯ãƒ€ãƒ³ãƒ—å¹…ã«æŠ¼ã•ãˆã‚‹ã€‚
     len = MEM_DUMP_WIDTH;
   }
 
-  // Packet Sequence Flag‚Ìí•Ê”»’è
+  // Packet Sequence Flagã®ç¨®åˆ¥åˆ¤å®š
   seq_flag = MEM_judge_seq_flag_(rp, len);
 
-  // ƒƒ‚ƒŠƒ_ƒ“ƒvƒpƒPƒbƒg‚Ìƒwƒbƒ_‚ğİ’è
-  MEM_setup_header_(&MEM_ctcp_,
+  // ãƒ¡ãƒ¢ãƒªãƒ€ãƒ³ãƒ—ãƒ‘ã‚±ãƒƒãƒˆã®ãƒ˜ãƒƒãƒ€ã‚’è¨­å®š
+  MEM_setup_header_(&MEM_ctp_,
                     len,
                     category,
                     memory_dump_.adu_counter,
@@ -328,8 +344,8 @@ static MEM_ACK MEM_form_packet_(TCP* packet,
                     memory_dump_.adu_seq,
                     memory_dump_.adu_size);
 
-  // ƒ_ƒ“ƒvƒf[ƒ^‚ğİ’è
-  data = TCP_TLM_get_user_data_head(packet) + 5; // ADU•ªŠ„‚É‚æ‚èƒwƒbƒ_’·‚ª5Bytes‘‚¦‚é
+  // ãƒ€ãƒ³ãƒ—ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š
+  data = TCP_TLM_get_user_data_head(packet) + 5; // ADUåˆ†å‰²ã«ã‚ˆã‚Šãƒ˜ãƒƒãƒ€é•·ãŒ5Byteså¢—ãˆã‚‹
   memcpy(data, (const void*)rp, len);
 
   return MEM_SUCCESS;
@@ -340,25 +356,25 @@ static TCP_SEQ_FLAG MEM_judge_seq_flag_(uint32_t rp,
 {
   if (memory_dump_.adu_size < MEM_DUMP_WIDTH)
   {
-    // ADU‚ª’PƒpƒPƒbƒg‚Éû‚Ü‚éê‡
+    // ADUãŒå˜ãƒ‘ã‚±ãƒƒãƒˆã«åã¾ã‚‹å ´åˆ
     return TCP_SEQ_SINGLE;
   }
   else
   {
-    // ADU‚ª•¡”ƒpƒPƒbƒg‚É‚Ü‚½‚ª‚éê‡
+    // ADUãŒè¤‡æ•°ãƒ‘ã‚±ãƒƒãƒˆã«ã¾ãŸãŒã‚‹å ´åˆ
     if (rp == memory_dump_.begin)
     {
-      // Read Pointer‚ª“Ç‚İo‚µ—Ìˆææ“ª‚Éˆê’v‚·‚é‚È‚çŠJnƒpƒPƒbƒg
+      // Read PointerãŒèª­ã¿å‡ºã—é ˜åŸŸå…ˆé ­ã«ä¸€è‡´ã™ã‚‹ãªã‚‰é–‹å§‹ãƒ‘ã‚±ãƒƒãƒˆ
       return TCP_SEQ_FIRST;
     }
     else if (len < MEM_DUMP_WIDTH)
     {
-      // ƒ_ƒ“ƒvc—Ê‚ª1ƒpƒPƒbƒgˆÈ“à‚Éû‚Ü‚é‚È‚çI—¹ƒpƒPƒbƒg
+      // ãƒ€ãƒ³ãƒ—æ®‹é‡ãŒ1ãƒ‘ã‚±ãƒƒãƒˆä»¥å†…ã«åã¾ã‚‹ãªã‚‰çµ‚äº†ãƒ‘ã‚±ãƒƒãƒˆ
       return TCP_SEQ_LAST;
     }
     else
     {
-      // ‚»‚êˆÈŠO‚Ìê‡‚Í’†ŠÔƒpƒPƒbƒg
+      // ãã‚Œä»¥å¤–ã®å ´åˆã¯ä¸­é–“ãƒ‘ã‚±ãƒƒãƒˆ
       return TCP_SEQ_CONT;
     }
   }
@@ -374,36 +390,37 @@ static void MEM_setup_header_(TCP* packet,
 {
   uint8_t* data;
 
-  // TCPacketƒwƒbƒ_‚ğİ’è
-  TCP_TLM_setup_primary_hdr(packet, TCP_APID_DUMP_TLM, (uint16_t)(data_len + 12));
+  // TCPacketãƒ˜ãƒƒãƒ€ã‚’è¨­å®š
+  TCP_TLM_setup_primary_hdr(packet, APID_DUMP_TLM, (uint16_t)(data_len + 12));
   TCP_TLM_set_ti(packet, (uint32_t)( TMGR_get_master_total_cycle() ));
-  TCP_TLM_set_category(packet, category); // ƒpƒ‰ƒ[ƒ^‚É‚æ‚éw’è
+  TCP_TLM_set_category(packet, category); // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã«ã‚ˆã‚‹æŒ‡å®š
   TCP_TLM_set_packet_id(packet, (uint8_t)MEM_TLM_ID);
   TCP_TLM_set_adu_cnt(packet, adu_cnt);
   TCP_TLM_set_adu_seq_flag(packet, adu_seq_flag);
 
-  // ADU•ªŠ„‚ÌSecondary Header’Ç‰Á•ª‚ğİ’è
+  // ADUåˆ†å‰²æ™‚ã®Secondary Headerè¿½åŠ åˆ†ã‚’è¨­å®š
   data = TCP_TLM_get_user_data_head(packet);
   data[0] = (uint8_t)(adu_seq_cnt >> 8);
   data[1] = (uint8_t)(adu_seq_cnt);
   data += 2;
-  // ADU Length‚ğİ’è 3Bytes’·‚È‚Ì‚Å’ˆÓ
+  // ADU Lengthã‚’è¨­å®š 3Bytesé•·ãªã®ã§æ³¨æ„
   data[0] = (uint8_t)(adu_len >> 16);
   data[1] = (uint8_t)(adu_len >> 8);
   data[2] = (uint8_t)(adu_len);
 }
 
-static void MEM_send_packet_(const CTCP* packet,
+static void MEM_send_packet_(const CommonTlmPacket* packet,
                              uint8_t num_dumps)
 {
   int i;
 
-  // TLM‘—oˆ—
+  // TLMé€å‡ºå‡¦ç†
   for (i = 0; i < num_dumps; ++i)
   {
-    // num_dumps‚Ì‰ñ”‚¾‚¯¶¬‚µ‚½ƒpƒPƒbƒg‚ğ”z‘—ˆ—‚Ö“n‚·
-    PH_analyze_packet(packet);
+    // num_dumpsã®å›æ•°ã ã‘ç”Ÿæˆã—ãŸãƒ‘ã‚±ãƒƒãƒˆã‚’é…é€å‡¦ç†ã¸æ¸¡ã™
+    PH_analyze_packet(packet);      // FIXME: CTCP, SpacePacket æ•´ç†ã§ç›´ã™
   }
 }
+#endif
 
 #pragma section

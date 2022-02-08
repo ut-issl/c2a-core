@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief watchdog timer ‚Ì IF wapper
+ * @brief watchdog timer ã® IF wapper
  */
 #ifndef WDT_H_
 #define WDT_H_
@@ -15,42 +15,42 @@ typedef struct
 } WDT_Config;
 
 /**
- * @brief  WDT‚Ì‰Šú‰»
- * @param  *wdt_config: WDT_Config \‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @retval 0:     ³íI—¹
- * @retval 0ˆÈŠO: ˆÙíI—¹
+ * @brief  WDTã®åˆæœŸåŒ–
+ * @param  *wdt_config: WDT_Config æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @retval 0:     æ­£å¸¸çµ‚äº†
+ * @retval 0ä»¥å¤–: ç•°å¸¸çµ‚äº†
  */
 int WDT_initialize(void* wdt_config);
 
 /**
- * @brief  WDT‚ÌƒJƒEƒ“ƒ^ƒNƒŠƒA
- * @param  *wdt_config: WDT_Config \‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @retval 0:     ³íI—¹
- * @retval 0ˆÈŠO: ˆÙíI—¹iƒpƒ‰ƒƒ^ƒGƒ‰[‚âWDT–³Œø’†‚È‚Çj
+ * @brief  WDTã®ã‚«ã‚¦ãƒ³ã‚¿ã‚¯ãƒªã‚¢
+ * @param  *wdt_config: WDT_Config æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @retval 0:     æ­£å¸¸çµ‚äº†
+ * @retval 0ä»¥å¤–: ç•°å¸¸çµ‚äº†ï¼ˆãƒ‘ãƒ©ãƒ¡ã‚¿ã‚¨ãƒ©ãƒ¼ã‚„WDTç„¡åŠ¹ä¸­ãªã©ï¼‰
  */
 int WDT_clear(void* wdt_config);
 
 /**
- * @brief  WDT‚Ì—LŒø‰»
- * @param  *wdt_config: WDT_Config \‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @retval 0:     ³íI—¹
- * @retval 0ˆÈŠO: ˆÙíI—¹iƒpƒ‰ƒƒ^ƒGƒ‰[‚â‚·‚Å‚ÉWDT‚ª—LŒø‚Èê‡‚È‚Çj
+ * @brief  WDTã®æœ‰åŠ¹åŒ–
+ * @param  *wdt_config: WDT_Config æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @retval 0:     æ­£å¸¸çµ‚äº†
+ * @retval 0ä»¥å¤–: ç•°å¸¸çµ‚äº†ï¼ˆãƒ‘ãƒ©ãƒ¡ã‚¿ã‚¨ãƒ©ãƒ¼ã‚„ã™ã§ã«WDTãŒæœ‰åŠ¹ãªå ´åˆãªã©ï¼‰
  */
 int WDT_enable(void* wdt_config);
 
 /**
- * @brief  WDT‚Ì—LŒø‰»
- * @param  *wdt_config: WDT_Config \‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @retval 0:     ³íI—¹
- * @retval 0ˆÈŠO: ˆÙíI—¹iƒpƒ‰ƒƒ^ƒGƒ‰[‚â‚·‚Å‚ÉWDT‚ª–³Œø‚Èê‡‚È‚Çj
+ * @brief  WDTã®æœ‰åŠ¹åŒ–
+ * @param  *wdt_config: WDT_Config æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @retval 0:     æ­£å¸¸çµ‚äº†
+ * @retval 0ä»¥å¤–: ç•°å¸¸çµ‚äº†ï¼ˆãƒ‘ãƒ©ãƒ¡ã‚¿ã‚¨ãƒ©ãƒ¼ã‚„ã™ã§ã«WDTãŒç„¡åŠ¹ãªå ´åˆãªã©ï¼‰
  */
 int WDT_disable(void* wdt_config);
 
 /**
- * @brief  WDT‚ÌŠÔİ’è
- * @param  *wdt_config: WDT_Config \‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
- * @retval 0:     ³íI—¹
- * @retval 0ˆÈŠO: ˆÙíI—¹iƒpƒ‰ƒƒ^ƒGƒ‰[‚â‚·‚Å‚ÉWDT“®ì’†‚È‚Çj
+ * @brief  WDTã®æ™‚é–“è¨­å®š
+ * @param  *wdt_config: WDT_Config æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+ * @retval 0:     æ­£å¸¸çµ‚äº†
+ * @retval 0ä»¥å¤–: ç•°å¸¸çµ‚äº†ï¼ˆãƒ‘ãƒ©ãƒ¡ã‚¿ã‚¨ãƒ©ãƒ¼ã‚„ã™ã§ã«WDTå‹•ä½œä¸­ãªã©ï¼‰
  */
 int WDT_set_timer(void* wdt_config, int time);
 

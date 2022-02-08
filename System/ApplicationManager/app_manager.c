@@ -9,7 +9,7 @@
 #include "../EventManager/event_logger.h"
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
-#include <src_user/CmdTlm/command_definitions.h>
+#include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"   // for Printf
 #include "../../Library/endian_memcpy.h"
 
@@ -28,7 +28,7 @@ void AM_initialize(void)
     app_manager_.ais[i] = NOP_create_app();
   }
 
-  // ƒeƒŒƒƒgƒŠƒy[ƒW”Ô†‚ğ0‚É‰Šú‰»B
+  // ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒšãƒ¼ã‚¸ç•ªå·ã‚’0ã«åˆæœŸåŒ–ã€‚
   app_manager_.page_no = 0;
 }
 
@@ -58,13 +58,13 @@ void AM_initialize_all_apps(void)
   }
 }
 
-CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
   AppInfo ai;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İo‚µB
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã—ã€‚
   endian_memcpy(&id, param, 4);
   endian_memcpy(&ai.initializer, param + 4, 4);
   endian_memcpy(&ai.entry_point, param + 8, 4);
@@ -85,11 +85,11 @@ CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
 {
   size_t id = AM_MAX_APPS;
 
-  // ƒpƒ‰ƒ[ƒ^“Ç‚İo‚µB
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿å‡ºã—ã€‚
   endian_memcpy(&id, CCP_get_param_head(packet), 4);
 
   switch (AM_initialize_app_(id))
@@ -130,7 +130,7 @@ static AM_ACK AM_initialize_app_(size_t id)
   app_manager_.ais[id].initializer();
   finish = TMGR_get_master_clock_from_boot();
 
-  // ˆ—ŠÔî•ñƒAƒbƒvƒf[ƒg
+  // å‡¦ç†æ™‚é–“æƒ…å ±ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
   app_manager_.ais[id].init_duration = OBCT_diff_in_step(&start, &finish);
 #endif
 
@@ -139,11 +139,11 @@ static AM_ACK AM_initialize_app_(size_t id)
   return AM_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
 {
   size_t id = AM_MAX_APPS;
 
-  // ƒpƒ‰ƒ[ƒ^“Ç‚İo‚µB
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿èª­ã¿å‡ºã—ã€‚
   endian_memcpy(&id, CCP_get_param_head(packet), 4);
 
   switch (AM_execute_app_(id))
@@ -188,7 +188,7 @@ static AM_ACK AM_execute_app_(size_t id)
   app_manager_.ais[id].entry_point();
   finish = TMGR_get_master_clock();
 
-  // ˆ—ŠÔî•ñƒAƒbƒvƒf[ƒg
+  // å‡¦ç†æ™‚é–“æƒ…å ±ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
   app_manager_.ais[id].prev = OBCT_diff_in_step(&start, &finish);
 
   if (app_manager_.ais[id].max < app_manager_.ais[id].prev)
@@ -206,7 +206,7 @@ static AM_ACK AM_execute_app_(size_t id)
   return AM_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -214,7 +214,7 @@ CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet)
 
   if (page >= AM_TLM_PAGE_MAX)
   {
-    // ƒy[ƒW”Ô†‚ªƒRƒ}ƒ“ƒhƒe[ƒuƒ‹”ÍˆÍŠO
+    // ãƒšãƒ¼ã‚¸ç•ªå·ãŒã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -222,7 +222,7 @@ CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CTCP* packet)
+CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
 {
   int i;
   (void)packet;

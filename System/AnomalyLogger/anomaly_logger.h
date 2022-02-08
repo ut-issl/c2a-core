@@ -4,27 +4,27 @@
 #include <stddef.h> // for size_t
 
 #include "../TimeManager/obc_time.h"
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_cmd_packet.h"
 #include <src_user/Settings/AnomalyLogger/anomaly_group.h>
 
-#define AL_TLM_PAGE_SIZE (32)                                 //!< ƒAƒmƒ}ƒŠƒƒK[‚ÌƒƒOƒe[ƒuƒ‹‚Ì1ƒeƒŒƒƒgƒŠƒpƒPƒbƒg(=1ƒy[ƒW)‚ÉŠi”[‚³‚ê‚éƒƒO”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define AL_TLM_PAGE_MAX  (4)                                  //!< ƒAƒmƒ}ƒŠƒƒK[‚ÌƒƒOƒe[ƒuƒ‹‚Ìƒy[ƒW”iƒy[ƒWƒl[ƒVƒ‡ƒ“—pj
-#define AL_RECORD_MAX (AL_TLM_PAGE_SIZE * AL_TLM_PAGE_MAX)    //!< Å‘å‰½ŒÂ‚ÌƒAƒmƒ}ƒŠ‚ğ‹L˜^‚Å‚«‚é‚©
+#define AL_TLM_PAGE_SIZE (32)                                 //!< ã‚¢ãƒãƒãƒªãƒ­ã‚¬ãƒ¼ã®ãƒ­ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«ã®1ãƒ†ãƒ¬ãƒ¡ãƒˆãƒªãƒ‘ã‚±ãƒƒãƒˆ(=1ãƒšãƒ¼ã‚¸)ã«æ ¼ç´ã•ã‚Œã‚‹ãƒ­ã‚°æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define AL_TLM_PAGE_MAX  (4)                                  //!< ã‚¢ãƒãƒãƒªãƒ­ã‚¬ãƒ¼ã®ãƒ­ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒšãƒ¼ã‚¸æ•°ï¼ˆãƒšãƒ¼ã‚¸ãƒãƒ¼ã‚·ãƒ§ãƒ³ç”¨ï¼‰
+#define AL_RECORD_MAX (AL_TLM_PAGE_SIZE * AL_TLM_PAGE_MAX)    //!< æœ€å¤§ä½•å€‹ã®ã‚¢ãƒãƒãƒªã‚’è¨˜éŒ²ã§ãã‚‹ã‹
 // [TODO] 2018/12/10
-// AL_FULL ‚Ì‚Ü‚Ü‚Å‚¢‚¢‚Ì‚©H
-// FLASH‚É‘‚¢‚Ä‚¢‚Á‚ÄCÁ‚µ‚Ä‚­H
-// ’èŠú“I‚É‘S•”‚¨‚ë‚µ‚ÄCclear‚·‚é‚Ì‚à‚ ‚è‚©‚à‚µ‚ê‚È‚¢
-// ƒAƒmƒ}ƒŠƒŒƒR[ƒ_[‚Ì•û‚ÍCrunlength‚Åˆ³k‚¹‚¸‚ÉCti‚Æ‚Æ‚à‚É•Û‘¶‚µ‚½‚¢
+// AL_FULL ã®ã¾ã¾ã§ã„ã„ã®ã‹ï¼Ÿ
+// FLASHã«æ›¸ã„ã¦ã„ã£ã¦ï¼Œæ¶ˆã—ã¦ãï¼Ÿ
+// å®šæœŸçš„ã«å…¨éƒ¨ãŠã‚ã—ã¦ï¼Œclearã™ã‚‹ã®ã‚‚ã‚ã‚Šã‹ã‚‚ã—ã‚Œãªã„
+// ã‚¢ãƒãƒãƒªãƒ¬ã‚³ãƒ¼ãƒ€ãƒ¼ã®æ–¹ã¯ï¼Œrunlengthã§åœ§ç¸®ã›ãšã«ï¼Œtiã¨ã¨ã‚‚ã«ä¿å­˜ã—ãŸã„
 
-// anomaly_logger_params.h ‚É‚ÄCˆÈ‰º‚Ì’è”‚ÌÄ’è‹`‚ğ‚·‚é
+// anomaly_logger_params.h ã«ã¦ï¼Œä»¥ä¸‹ã®å®šæ•°ã®å†å®šç¾©ã‚’ã™ã‚‹
 //   - AL_TLM_PAGE_SIZE
 //   - AL_TLM_PAGE_MAX
 //   - AL_RECORD_MAX
-// ‚Ü‚½
+// ã¾ãŸ
 //   AL_DISALBE_AT_C2A_CORE
-// ‚ğ’è‹`‚·‚é‚±‚Æ‚ÅC C2A CORE ‚Å‚Ì AL_add_anomaly ‚ğ—}§‚Å‚«‚éD
-// AL ‚©‚ç Event Logger ‚Ö‚ÌˆÚs‚ªÏ‚ñ‚Å‚¢‚é‚à‚Ì‚É‘Î‚µ‚Ä‚ÍC’è‹`‚ğ„§‚·‚éD
-// ‚È‚¨C‚±‚ê‚ğ’è‹`‚µ‚Ä‚àC AL, AH ©‘Ì‚Ì‹@”\‚Íˆø‚«‘±‚«—˜—p‰Â”\‚Å‚ ‚éD
+// ã‚’å®šç¾©ã™ã‚‹ã“ã¨ã§ï¼Œ C2A CORE ã§ã® AL_add_anomaly ã‚’æŠ‘åˆ¶ã§ãã‚‹ï¼
+// AL ã‹ã‚‰ Event Logger ã¸ã®ç§»è¡ŒãŒæ¸ˆã‚“ã§ã„ã‚‹ã‚‚ã®ã«å¯¾ã—ã¦ã¯ï¼Œå®šç¾©ã‚’æ¨å¥¨ã™ã‚‹ï¼
+// ãªãŠï¼Œã“ã‚Œã‚’å®šç¾©ã—ã¦ã‚‚ï¼Œ AL, AH è‡ªä½“ã®æ©Ÿèƒ½ã¯å¼•ãç¶šãåˆ©ç”¨å¯èƒ½ã§ã‚ã‚‹ï¼
 #include <src_user/Settings/System/anomaly_logger_params.h>
 
 typedef enum
@@ -45,12 +45,12 @@ typedef enum
   AL_FULL
 } AL_ACK;
 
-// AL_add_anomaly‚Ì•Ô‚è’l
+// AL_add_anomalyã®è¿”ã‚Šå€¤
 enum
 {
-  AL_ADD_SUCCESS,         // ³íI—¹
-  AL_ADD_ERR_INVALID,     // ƒGƒ‰[
-  AL_ADD_DISABLE_LOGGING  // ƒƒMƒ“ƒO–³Œø‰»iŠü‹pj
+  AL_ADD_SUCCESS,         // æ­£å¸¸çµ‚äº†
+  AL_ADD_ERR_INVALID,     // ã‚¨ãƒ©ãƒ¼
+  AL_ADD_DISABLE_LOGGING  // ãƒ­ã‚®ãƒ³ã‚°ç„¡åŠ¹åŒ–ï¼ˆæ£„å´ï¼‰
 };
 
 typedef struct
@@ -68,11 +68,11 @@ typedef struct
 
 typedef struct
 {
-  size_t counter;           // AL_add_anomaly ‚³‚ê‚½‰ñ”
-  size_t header;            // Ÿ‚Éadd‚³‚ê‚é‚Æ‘‚«‚Ü‚ê‚éˆÊ’uDAR‚ÍƒŠƒ“ƒOƒoƒbƒtƒ@‚Å‚Í‚È‚­CFull‚Å‚Æ‚Ü‚éD
+  size_t counter;           // AL_add_anomaly ã•ã‚ŒãŸå›æ•°
+  size_t header;            // æ¬¡ã«addã•ã‚Œã‚‹ã¨æ›¸ãè¾¼ã¾ã‚Œã‚‹ä½ç½®ï¼ARã¯ãƒªãƒ³ã‚°ãƒãƒƒãƒ•ã‚¡ã§ã¯ãªãï¼ŒFullã§ã¨ã¾ã‚‹ï¼
   AL_AnomalyRecord records[AL_RECORD_MAX];
   uint8_t page_no;
-  uint8_t is_logging_enable[AL_GROUP_MAX / 8];    // bit’PˆÊ‚Åî•ñ‚ğ•Û‚·‚é
+  uint8_t is_logging_enable[AL_GROUP_MAX / 8];    // bitå˜ä½ã§æƒ…å ±ã‚’ä¿æŒã™ã‚‹
   uint16_t threshold_of_nearly_full;
 } AnomalyLogger;
 
@@ -94,18 +94,18 @@ int  AL_is_logging_enable(uint32_t group);
 
 void AL_clear(void);
 
-CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CTCP* packet);
+CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet);
 
 #endif

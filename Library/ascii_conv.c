@@ -8,34 +8,34 @@ unsigned char ascii2hex(unsigned short ascii)
 
   if ((ascii_p[0] >= '0') && (ascii_p[0] <= '9'))
   {
-    hex |= (unsigned char)(((ascii_p[0] - '0') & 0x0F) << 4); // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // hex |= (unsigned char)(((ascii_p[0] - '0') & 0x0F) << 0); // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    hex |= (unsigned char)(((ascii_p[0] - '0') & 0x0F) << 4); // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // hex |= (unsigned char)(((ascii_p[0] - '0') & 0x0F) << 0); // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
   else if ((ascii_p[0] >= 'A') && (ascii_p[0] <= 'F'))
   {
-    hex |= (unsigned char)(((ascii_p[0] - 'A' + 10) & 0x0F) << 4);  // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // hex |= (unsigned char)(((ascii_p[0] - 'A' + 10) & 0x0F) << 0);  // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    hex |= (unsigned char)(((ascii_p[0] - 'A' + 10) & 0x0F) << 4);  // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // hex |= (unsigned char)(((ascii_p[0] - 'A' + 10) & 0x0F) << 0);  // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
   else if ((ascii_p[0] >= 'a') && (ascii_p[0] <= 'f'))
   {
-    hex |= (unsigned char)(((ascii_p[0] - 'a' + 10) & 0x0F) << 4);  // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // hex |= (unsigned char)(((ascii_p[0] - 'a' + 10) & 0x0F) << 0);  // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    hex |= (unsigned char)(((ascii_p[0] - 'a' + 10) & 0x0F) << 4);  // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // hex |= (unsigned char)(((ascii_p[0] - 'a' + 10) & 0x0F) << 0);  // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
 
   if ((ascii_p[1] >= '0') && (ascii_p[1] <= '9'))
   {
-    hex |= (unsigned char)(((ascii_p[1] - '0') & 0x0F) << 0); // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // hex |= (unsigned char)(((ascii_p[1] - '0') & 0x0F) << 4); // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    hex |= (unsigned char)(((ascii_p[1] - '0') & 0x0F) << 0); // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // hex |= (unsigned char)(((ascii_p[1] - '0') & 0x0F) << 4); // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
   else if ((ascii_p[1] >= 'A') && (ascii_p[1] <= 'F'))
   {
-    hex |= (unsigned char)(((ascii_p[1] - 'A' + 10) & 0x0F) << 0);  // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // hex |= (unsigned char)(((ascii_p[1] - 'A' + 10) & 0x0F) << 4);  // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    hex |= (unsigned char)(((ascii_p[1] - 'A' + 10) & 0x0F) << 0);  // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // hex |= (unsigned char)(((ascii_p[1] - 'A' + 10) & 0x0F) << 4);  // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
   else if ((ascii_p[1] >= 'a') && (ascii_p[1] <= 'f'))
   {
-    hex |= (unsigned char)(((ascii_p[1] - 'a' + 10) & 0x0F) << 0);  // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // hex |= (unsigned char)(((ascii_p[1] - 'a' + 10) & 0x0F) << 4);  // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    hex |= (unsigned char)(((ascii_p[1] - 'a' + 10) & 0x0F) << 0);  // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // hex |= (unsigned char)(((ascii_p[1] - 'a' + 10) & 0x0F) << 4);  // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
 
   return (hex);
@@ -49,24 +49,24 @@ unsigned short  hex2ascii(unsigned char hex)
 
   if (((hex >> 4) & 0x0F) <= 0x09)
   {
-    ascii_p[0] = (unsigned char)(((hex >> 4) & 0x0F) + '0');  // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // ascii_p[1] = (unsigned char)(((hex >> 4) & 0x0F) + '0');  // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    ascii_p[0] = (unsigned char)(((hex >> 4) & 0x0F) + '0');  // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // ascii_p[1] = (unsigned char)(((hex >> 4) & 0x0F) + '0');  // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
   else if (((hex >> 4) & 0x0F) >= 0x0A)
   {
-    ascii_p[0] = (unsigned char)((((hex >> 4) & 0x0F) + 'A') - 10); // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // ascii_p[1] = (unsigned char)((((hex >> 4) & 0x0F) + 'A') - 10); // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    ascii_p[0] = (unsigned char)((((hex >> 4) & 0x0F) + 'A') - 10); // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // ascii_p[1] = (unsigned char)((((hex >> 4) & 0x0F) + 'A') - 10); // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
 
   if (((hex >> 0) & 0x0F) <= 0x09)
   {
-    ascii_p[1] = (unsigned char)(((hex >> 0) & 0x0F) + '0');  // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // ascii_p[0] = (unsigned char)(((hex >> 0) & 0x0F) + '0');  // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    ascii_p[1] = (unsigned char)(((hex >> 0) & 0x0F) + '0');  // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // ascii_p[0] = (unsigned char)(((hex >> 0) & 0x0F) + '0');  // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
   else if (((hex >> 0) & 0x0F) >= 0x0A)
   {
-    ascii_p[1] = (unsigned char)((((hex >> 0) & 0x0F) + 'A') - 10); // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“—p
-    // ascii_p[0] = (unsigned char)((((hex >> 0) & 0x0F) + 'A') - 10); // ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“—p
+    ascii_p[1] = (unsigned char)((((hex >> 0) & 0x0F) + 'A') - 10); // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
+    // ascii_p[0] = (unsigned char)((((hex >> 0) & 0x0F) + 'A') - 10); // ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ç”¨
   }
 
   return (ascii);

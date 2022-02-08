@@ -1,52 +1,95 @@
 /**
  * @file
- * @brief �C�x���g���Ό^�������s��
- * @note  event_logger �̏������� BC ��W�J���� ( Event ���΂ɉ����đΉ����s�� )
- * @note  ���i�� EH �Ή��̑g�ݕ�
- *        ���i�� EH ��g�ޏꍇ�C EH_RuleSettings.event.group �� EL_CORE_GROUP_EH_MATCH_RULE ���w�肷��D
- *        ��������ƁC��ʂ̃��[�����}�b�`�����ꍇ�C�Y�����郋�[���Ή��͎��s����Ȃ��Ȃ�
- *        �Ⴆ�΁C UART �s�ʂ��l����
- *        �ݒ�Ƃ���
- *          - UART�s�ʂ����������� EL_UART �𔭍s����
- *          - EL_UART �� 5 �񔭐������� UART �h���C�o���Z�b�g���s�� EH_Rule1 ��ݒ肷��
- *          - EH_Rule1 �̑Ή� BC �� EH_Rule1 ���ēx�L��������悤�ɂ���
- *          - EH_Rule1 �̃}�b�` (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 �� EH_RULE_ID) �� 3 �񔭐������� UART ��H���Z�b�g���s�� EH_Rule2 ��ݒ肷��
- *        �Ƃ����ꍇ�C
- *          1. EL_UART �� 5 �񔭐�������C EH_Rule1 ������
- *          2. EL_UART �� 10 �񔭐�������C EH_Rule1 ������
- *          3. EL_UART �� 15 �񔭐�������C EH_Rule1 �͔��΂����ɁC EH_Rule2 ������
- *          4. EL_UART �� 20 �񔭐�������C EH_Rule1 ������
+ * @brief イベント発火型処理を行う
+ * @note  event_logger の情報を元に指定した BC (対応 BC) を展開する (Event 発火に応じて対応を行う)
+ * @note  EH のベストプラクティス
+ *          - いろんな箇所で FDIR を組むと，何が発動しているかわかりにくかったり，ログが散逸するので，
+ *            できる限りすべての対応を EH で行うと良い
+ *            - EH で対応を行う，ということは，以下のログが必ず取れている，ということになる
+ *              - EH 対応をトリガするための Event 発行ログ
+ *              - EH にマッチしたという Event ログ
+ *              - EH 対応したという EH 対応ログと対応結果
+ *            - ただし， EH 対応を行うためには， Block Cmd を消費するため，メモリ制約の厳しい OBC の場合は，難しい可能性もある
+ *              - その場合は， EH_RESPONSE_CONDITION_SINGLE のもの（つまり，ステートレスな対応）を優先して， App 内部でハードコードすることを推奨する
+ *              - EH_RESPONSE_CONDITION_SINGLE でないものは，カウンタを実装しなくてはいけないため， EH で処理するほうが望ましい
+ *          - activate と inactivate
+ *            - その EH Rule を 使う前に， activate することをおすすめする
+ *            - activate 時に，内部のカウンタ (EH_Rule.counter) がリセットされるため， EH_RESPONSE_CONDITION_CONTINUOUS, EH_RESPONSE_CONDITION_CUMULATIVE において適切な状態からスタートできる
+ *            - モード線維持の SL や，コンポーネントを ON する BC などで activate cmd を仕込ませておくと良い
+ *          - 対応 BC 展開後の activate について
+ *            - EH Rule がマッチし，対応 BC が展開された時，その EH_RULE_ID は自動的に inactivate される
+ *            - そのため，常に対応し続けたいような Rule については，その対応 BC のどこか（基本的には不感時間などを考慮して末尾など）で activate する cmd を仕込ませておくと良い
+ * @note  多段の EH 対応の組み方
+ *        多段の EH を組む場合，
+ *          EH_RuleSettings.event.group: EL_CORE_GROUP_EH_MATCH_RULE
+ *          EH_RuleSettings.event.local: 下位の EH_RULE_ID
+ *          EH_RuleSettings.event.err_level: EL_ERROR_LEVEL_EH
+ *        を指定する．
+ *        そうすると，上位のルールがマッチした場合，該当するルール対応は実行されなくなる
+ *        例えば， UART 不通を考える
+ *        設定として
+ *          - UART 不通が発生したら EL_UART Event を発行する (Event Logger)
+ *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 3 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *        とした場合，
+ *          1. EL_UART が 5 回発生したら， EH_Rule1 が発火
+ *          2. EL_UART が 10 回発生したら， EH_Rule1 が発火
+ *          3. EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *          4. EL_UART が 20 回発生したら， EH_Rule1 が発火
  *          5. ...
- *        �Ƃ����悤�ɂȂ�
- *        ���̂悤�ɁC EL_CORE_GROUP_EH_MATCH_RULE �Ŕ��΂��� EH_Rule �͏�ʃ��[���Ƃ��ĉ��߁C���s����C
- *        ��ʃ��[�������s�����Ƃ��́C���ʃ��[���͎��s����Ȃ��Ȃ�D
- *        �܂��C����� 2 �i�݂̂Ȃ炸�C 3 �i�ȏ���\�ł���D
- *        ���̎�@�����p����ƁC���[���̃I�[�o�[���C�h�ł���D
- *        �Ⴆ�΁C�ݒ�Ƃ���
- *          - UART�s�ʂ����������� EL_UART �𔭍s����
- *          - EL_UART �� 5 �񔭐������� UART �h���C�o���Z�b�g���s�� EH_Rule1 ��ݒ肷��
- *          - EH_Rule1 �̑Ή� BC �� EH_Rule1 ���ēx�L��������悤�ɂ���
- *          - EH_Rule1 �̃}�b�` (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 �� EH_RULE_ID) �� 1 �񔭐������� UART ��H���Z�b�g���s�� EH_Rule2 ��ݒ肷��
- *        �Ƃ���ƁC
- *          - EL_UART �� 5 �񔭐�������C EH_Rule1 �͔��΂����ɁC EH_Rule2 ������
- *        �ƂȂ�̂ŁC�����I�ɁC EH_Rule2 �� EH_Rule1 ���I�[�o�[���C�h���邱�Ƃ��ł���D
- *        ���̂悤�ɁC���ʂ̃��[�����C��ʂ̔��Ώ�����ς��邱�ƂŁC�_��ɃI�[�o�[���C�h�ł���D
- * @note  EH �ł� Event ���s�͈ȉ�
+ *        というようになる
+ *        このように， EL_CORE_GROUP_EH_MATCH_RULE で発火する EH_Rule は上位ルールとして解釈，実行され，
+ *        上位ルールが実行されるときは，下位ルールは実行されなくなる．
+ *        また，これは 2 段のみならず， 3 段以上も可能である．
+ *        この手法を応用すると，ルールのオーバーライドできる．
+ *        例えば，設定として
+ *          - UART不通が発生したら EL_UART を発行する
+ *          - EL_UART が 5 回発生したら UART ドライバリセットを行う EH_Rule1 を設定する
+ *          - EH_Rule1 の対応 BC で EH_Rule1 を再度有効化するようにする
+ *          - EH_Rule1 のマッチ (group: EL_CORE_GROUP_EH_MATCH_RULE, local: EH_Rule1 の EH_RULE_ID) が 1 回発生したら UART 回路リセットを行う EH_Rule2 を設定する
+ *        とすると，
+ *          - EL_UART が 5 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *        となるので，実質的に， EH_Rule2 で EH_Rule1 をオーバーライドすることができる．
+ *        このように，下位のルールを，上位の発火条件を変えることで，柔軟にオーバーライドできる．
+ * @note  上記の多段の EH 対応の場合に発行される EH Event は，次のようになる．
+ *        group / local / err_level / note の順に記す．また，時系列降順でしるす（上が新しい）
+ *          1. EL_UART が 5 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          2. EL_UART が 10 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          3. EL_UART が 15 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 が発火
+ *                EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE / EH_Rule1 / EH / 1
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule2 / EH / err_level
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          4. EL_UART が 20 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          5. EL_UART が 25 回発生したら， EH_Rule1 が発火
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ *          6. EL_UART が 30 回発生したら， EH_Rule1 は発火せずに， EH_Rule2 も発火せずに， EH_Rule3 が発火
+ *                EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE / EH_Rule1 / EH / 1
+ *                EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE / EH_Rule2 / EH / 1
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule3 / EH / err_level
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule2 / EH / err_level
+ *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
+ * @note  多段の EH 対応のため， EL_ERROR_LEVEL_EH の Event をルールに設定することは，
+ *        多段対応時 (つまり group == EL_CORE_GROUP_EH_MATCH_RULE) を除いてできない
+ * @note  EH での Event 発行は以下
  *          - EL_CORE_GROUP_EVENT_HANDLER
- *            - EH �Ɋւ���l�X�ȃG���[
- *            - local id �� EH_EL_LOCAL_ID
+ *            - EH に関する様々なエラー
+ *            - local id は EH_EL_LOCAL_ID
  *          - EL_CORE_GROUP_EH_MATCH_RULE
- *            - EH_Rule �Ƀ}�b�`
- *            - local id �� EH_RULE_ID
+ *            - EH_Rule にマッチ
+ *            - local id は EH_RULE_ID
  *          - EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE
- *            - EH_Rule �Ƀ}�b�`�������C����ɏ�ʂ� EH_Rule �̃}�b�`�����𖞂��������߁C���΂̓L�����Z�����ꂽ�i��ʂŔ��΂����j
- *            - local id �� EH_RULE_ID
+ *            - EH_Rule にマッチしたが，さらに上位の EH_Rule のマッチ条件を満たしたため，発火はキャンセルされた（上位で発火される）
+ *            - local id は EH_RULE_ID
  */
 #ifndef EVENT_HANDLER_H_
 #define EVENT_HANDLER_H_
 
-// TODO: �ݐϔ���couter�̃��Z�b�g
-// TODO: �ݐϔ���couter��activate����0�N���A����
+// TODO: 累積発火couterのリセット
+// TODO: 累積発火couterをactivate時に0クリアする
 
 #include "event_logger.h"
 
@@ -54,29 +97,30 @@
 
 #include <stddef.h>
 #include "../TimeManager/obc_time.h"
-#include "../../CmdTlm/block_command_table.h"
+#include "../../TlmCmd/block_command_table.h"
 #include <src_user/Settings/System/EventHandlerRules/event_handler_rules.h>
 
 
-#define EH_RULE_TLM_PAGE_SIZE (20)            //!< event_handler �̃��[���e�[�u����1�e�����g���p�P�b�g(=1�y�[�W)�Ɋi�[����郋�[�����i�y�[�W�l�[�V�����p�j
-#define EH_RULE_TLM_PAGE_MAX  (8)             //!< event_handler �̃��[���e�[�u���̃y�[�W���i�y�[�W�l�[�V�����p�j
+#define EH_RULE_TLM_PAGE_SIZE (20)            //!< event_handler のルールテーブルの1テレメトリパケット(=1ページ)に格納されるルール数（ページネーション用）
+#define EH_RULE_TLM_PAGE_MAX  (8)             //!< event_handler のルールテーブルのページ数（ページネーション用）
 #define EH_RULE_MAX           (EH_RULE_ID)(EH_RULE_TLM_PAGE_SIZE * EH_RULE_TLM_PAGE_MAX)
-                                              /*!< �ő剽�̃��[�� ( EL_Event - EH_Rule �Ή�) ��ێ��ł��邩
-                                                   ��{�I�ɁC EH_RULE_ID �Ƃ��Ďg���̂ŁC�L���X�g����
-                                                   enum��Œ�`���Ȃ��̂́C EH_Rule �̍ő�l���C�����ɒ�`���鐔������������������
-                                                   �܂��C���̒l�́C Rule ����`�l�i�Ȃ����͏����l�j�Ƃ��Ă��g�� */
+                                              /*!< 最大何個のルール ( EL_Event - EH_Rule 対応) を保持できるか
+                                                   基本的に， EH_RULE_ID として使うので，キャストする
+                                                   enum上で定義しないのは， EH_Rule の最大値を，初期に定義する数よりも多くしたいため
+                                                   また，この値は， Rule 未定義値（ないしは初期値）としても使う */
 
-#define EH_LOG_TLM_PAGE_SIZE (64)                                          //!< EH�Ή��̃��O�e�[�u����1�e�����g���p�P�b�g(=1�y�[�W)�Ɋi�[����郍�O���i�y�[�W�l�[�V�����p�j
-#define EH_LOG_TLM_PAGE_MAX  (2)                                           //!< EH�Ή��̃��O�e�[�u���̃y�[�W���i�y�[�W�l�[�V�����p�j
-#define EH_LOG_MAX           (EH_LOG_TLM_PAGE_SIZE * EH_LOG_TLM_PAGE_MAX)  //!< �ő剽�� EH �Ή����O��ێ��ł��邩
+#define EH_LOG_TLM_PAGE_SIZE (64)                                          //!< EH対応のログテーブルの1テレメトリパケット(=1ページ)に格納されるログ数（ページネーション用）
+#define EH_LOG_TLM_PAGE_MAX  (2)                                           //!< EH対応のログテーブルのページ数（ページネーション用）
+#define EH_LOG_MAX           (EH_LOG_TLM_PAGE_SIZE * EH_LOG_TLM_PAGE_MAX)  //!< 最大何個の EH 対応ログを保持できるか
 
 
-#define EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES   (4)     //!< EL_Event �� ID ���d������ EH_Rule ���ő剽�܂ŏd�������Ă悢��
-#define EH_MAX_RESPONSE_NUM_DEFAULT           (8)     //!< ��x�̎��s�őΉ�����ő吔�i�����l�j
-#define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< ��x�̎��s�Ń`�F�b�N���� event_logger �� event log �̍ő�l�i�����l�j
-                                                           TL���ł̎��s���Ԃ𒲐����邽�߂ɐݒ肷��D */
+#define EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES   (4)     //!< EL_Event の ID が重複した EH_Rule を最大何個まで重複させてよいか
+#define EH_MAX_RESPONSE_NUM_DEFAULT           (8)     //!< 一度の実行で対応する最大数（初期値）
+#define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< 一度の実行でチェックする event_logger の event log の最大値（初期値）
+                                                           TL内での実行時間を調整するために設定する． */
+#define EH_MAX_MULTI_LEVEL_NUM_DEFAULT        (4)     //!< 多段の EH 対応の設定可能な最大段数（初期値）
 
-// �ȉ��̃t�@�C���ɂāC���̃p�����^���㏑���ݒ�ł���
+// 以下のファイルにて，次のパラメタを上書き設定できる
 // EH_RULE_TLM_PAGE_SIZE
 // EH_RULE_TLM_PAGE_MAX
 // EH_LOG_TLM_PAGE_SIZE
@@ -84,132 +128,134 @@
 // EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES
 // EH_MAX_RESPONSE_NUM_DEFAULT
 // EH_MAX_CHECK_EVENT_NUM_DEFAULT
+// EH_MAX_MULTI_LEVEL_NUM_DEFAULT
 #include <src_user/Settings/System/event_handler_params.h>
 
 
 /**
  * @enum   EH_REGISTER_ACK
- * @brief  EH_register_rule �̕Ԃ�l
- * @note   uint8_t ��z��
+ * @brief  EH_register_rule の返り値
+ * @note   uint8_t を想定
  */
 typedef enum
 {
-  EH_REGISTER_ACK_OK = 0,                   //!< ����ɓo�^����
-  EH_REGISTER_ACK_ERR_FULL,                 //!< ����ȏ�o�^�ł��Ȃ�
-  EH_REGISTER_ACK_ERR_RULE_OVERWRITE,       //!< ���łɓ��� ID �Ƀ��[�����o�^����Ă��邽�ߊ��p
-  EH_REGISTER_ACK_ERR_DUPLICATE_FULL,       //!< ����ȏ�C EL_Event �̏d������ EH_Rule ��o�^�ł��Ȃ�
-  EH_REGISTER_ACK_ILLEGAL_RULE_ID,          //!< �s���� EH_RULE_ID
-  EH_REGISTER_ACK_ILLEGAL_GROUP,            //!< �s���� EL_Event.group
-  EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL,      //!< �s���� EL_Event.err_level
-  EH_REGISTER_ACK_ILLEGAL_MATCH_FLAG,       //!< �s���� should_match_err_level
-  EH_REGISTER_ACK_ILLEGAL_CONDITION_TYPE,   //!< �s���� EH_RESPONSE_CONDITION_TYPE
-  EH_REGISTER_ACK_ILLEGAL_COUNT_THRESHOLD,  //!< �s���� condition.count_threshold
-  EH_REGISTER_ACK_ILLEGAL_BCT_ID,           //!< �s���� deploy_bct_id
-  EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG,      //!< �s���� is_active
-  EH_REGISTER_ACK_UNKNOWN_ERR               //!< �s���ȃG���[
+  EH_REGISTER_ACK_OK = 0,                   //!< 正常に登録完了
+  EH_REGISTER_ACK_ERR_FULL,                 //!< これ以上登録できない
+  EH_REGISTER_ACK_ERR_RULE_OVERWRITE,       //!< すでに同じ ID にルールが登録されているため棄却
+  EH_REGISTER_ACK_ERR_DUPLICATE_FULL,       //!< これ以上， EL_Event の重複した EH_Rule を登録できない
+  EH_REGISTER_ACK_ILLEGAL_RULE_ID,          //!< 不正な EH_RULE_ID
+  EH_REGISTER_ACK_ILLEGAL_GROUP,            //!< 不正な EL_Event.group
+  EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL,      //!< 不正な EL_Event.err_level
+  EH_REGISTER_ACK_ILLEGAL_MATCH_FLAG,       //!< 不正な should_match_err_level
+  EH_REGISTER_ACK_ILLEGAL_CONDITION_TYPE,   //!< 不正な EH_RESPONSE_CONDITION_TYPE
+  EH_REGISTER_ACK_ILLEGAL_COUNT_THRESHOLD,  //!< 不正な condition.count_threshold
+  EH_REGISTER_ACK_ILLEGAL_BCT_ID,           //!< 不正な deploy_bct_id
+  EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG,      //!< 不正な is_active
+  EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL,      //!< 多段 EH 対応での不正な設定
+  EH_REGISTER_ACK_UNKNOWN_ERR               //!< 不明なエラー
 } EH_REGISTER_ACK;
 
 /**
  * @enum   EH_CHECK_RULE_ACK
- * @brief  EH_Rule �o�^�󋵊m�F�p
- * @note   EH_{in}activate_rule �̕Ԃ�l�Ȃǂɂ��p����
- * @note   uint8_t ��z��
+ * @brief  EH_Rule 登録状況確認用
+ * @note   EH_{in}activate_rule の返り値などにも用いる
+ * @note   uint8_t を想定
  */
 typedef enum
 {
-  EH_CHECK_RULE_ACK_OK = 0,           //!< ���� or ���[���o�^�ς�
-  EH_CHECK_RULE_ACK_INVALID_RULE_ID,  //!< EH_RULE_ID ���s��
-  EH_CHECK_RULE_ACK_UNREGISTERED      //!< ���[�������o�^
+  EH_CHECK_RULE_ACK_OK = 0,           //!< 正常 or ルール登録済み
+  EH_CHECK_RULE_ACK_INVALID_RULE_ID,  //!< EH_RULE_ID が不正
+  EH_CHECK_RULE_ACK_UNREGISTERED      //!< ルールが未登録
 } EH_CHECK_RULE_ACK;
 
 /**
  * @enum   EH_RESPONSE_CONDITION_TYPE
- * @brief  EL_Event �o�^�ɑ΂��āC�ǂ̂悤�� EH �Ή������邩�̎��
- * @note   uint8_t ��z��
+ * @brief  EL_Event 登録に対して，どのように EH 対応させるかの種類
+ * @note   uint8_t を想定
  */
 typedef enum
 {
-  EH_RESPONSE_CONDITION_SINGLE,       //!< Event �o�^�ɑ΂��đ����� EH �Ή�
-  EH_RESPONSE_CONDITION_CONTINUOUS,   //!< Event �o�^�� N �b�ȓ��ɍĂѓ��� Event �o�^���������邱�Ƃ� M ��A���Ŕ��������ꍇ�� EH �Ή�
-  EH_RESPONSE_CONDITION_CUMULATIVE,   //!< Event �� M ��o�^�����ꍇ�� EH �Ή�
+  EH_RESPONSE_CONDITION_SINGLE,       //!< Event 登録に対して即座に EH 対応
+  EH_RESPONSE_CONDITION_CONTINUOUS,   //!< Event 登録後 N 秒以内に再び同じ Event 登録が発生することが M 回連続で発生した場合に EH 対応
+  EH_RESPONSE_CONDITION_CUMULATIVE,   //!< Event が M 回登録した場合に EH 対応
   EH_RESPONSE_CONDITION_TYPE_MAX
 } EH_RESPONSE_CONDITION_TYPE;
 
 /**
  * @struct EH_RuleSettings
- * @brief  EH_register_rule �̈����DRule�o�^�ɕK�v�ȏ��
+ * @brief  EH_register_rule の引数．Rule登録に必要な情報
  */
 typedef struct
 {
   struct
   {
-    EL_GROUP group;                           //!< �����|���� EL_Event.group
-    uint32_t local;                           //!< �����|���� EL_Event.local
-    EL_ERROR_LEVEL err_level;                 /*!< �����|���� EL_Event.err_level
-                                                   should_match_err_level == 0 �̂Ƃ��͂Ȃ�ł��悢 */
-  } event;                                    //!< EH �ɑΉ����� EL_Event
-  uint8_t should_match_err_level;             //!< EL_Event �̈�v�ɁC�G���[���x����v���܂߂邩�H
+    EL_GROUP group;                           //!< 引っ掛ける EL_Event.group
+    uint32_t local;                           //!< 引っ掛ける EL_Event.local
+    EL_ERROR_LEVEL err_level;                 /*!< 引っ掛ける EL_Event.err_level
+                                                   should_match_err_level == 0 のときはなんでもよい */
+  } event;                                    //!< EH に対応する EL_Event
+  uint8_t should_match_err_level;             //!< EL_Event の一致に，エラーレベル一致を含めるか？
   struct
   {
-    EH_RESPONSE_CONDITION_TYPE type;          //!< EH �Ή��̏������
-    uint16_t count_threshold;                 /*!< �����ɉ񐔂�����ꍇ�Ɏg���C�Ή��܂ł� Event ��臒l
-                                                   type == EH_RESPONSE_CONDITION_SINGLE �̂Ƃ��͂Ȃ�ł��悢 */
-    uint32_t time_threshold_ms;               /*!< �A�������Ƃ݂Ȃ����� [ms]
-                                                   type == EH_RESPONSE_CONDITION_CONTINUOUS �̂Ƃ��̂ݗL�� */
-  } condition;                                //!< EH �Ή�����
-  bct_id_t deploy_bct_id;                     //!< EH �Ή��ɓW�J���� BCT id
-  uint8_t  is_active;                         //!< �Ή����L�����H �Ή���C�����I�ɖ����ɂȂ�
+    EH_RESPONSE_CONDITION_TYPE type;          //!< EH 対応の条件種類
+    uint16_t count_threshold;                 /*!< 条件に回数がある場合に使う，対応までの Event 回数閾値
+                                                   type == EH_RESPONSE_CONDITION_SINGLE のときはなんでもよい */
+    uint32_t time_threshold_ms;               /*!< 連続発生とみなす時間 [ms]
+                                                   type == EH_RESPONSE_CONDITION_CONTINUOUS のときのみ有効 */
+  } condition;                                //!< EH 対応条件
+  bct_id_t deploy_bct_id;                     //!< EH 対応に展開する BCT id
+  uint8_t  is_active;                         //!< 対応が有効か？ 対応後，自動的に無効になる
 } EH_RuleSettings;
 
 /**
  * @struct EH_Rule
- * @brief  EL_Event �ɑ΂��đΉ����� EH_Rule
+ * @brief  EL_Event に対して対応する EH_Rule
  */
 typedef struct
 {
-  EH_RuleSettings settings;                   //!< �ݒ�l
-  uint16_t counter;                           //!< EH �Ή��܂ł̃J�E���^
-  ObcTime  last_event_time;                   //!< �Ō�ɔ������� EL_Event �̎���
+  EH_RuleSettings settings;                   //!< 設定値
+  uint16_t counter;                           //!< EH 対応までのカウンタ
+  ObcTime  last_event_time;                   //!< 最後に発生した EL_Event の時刻
 } EH_Rule;
 
 /**
  * @struct EH_RuleTable
- * @brief  EH_Rule �̃e�[�u��
+ * @brief  EH_Rule のテーブル
  */
 typedef struct
 {
-  EH_Rule  rules[EH_RULE_MAX];      //!< idx �� EH_RULE_ID
-  uint16_t registered_rule_num;     //!< �o�^�ς� rule ��
+  EH_Rule  rules[EH_RULE_MAX];      //!< idx は EH_RULE_ID
+  uint16_t registered_rule_num;     //!< 登録済み rule 数
 } EH_RuleTable;
 
 /**
  * @struct EH_RuleSortIndex
- * @brief  EH_RuleTable ���� EH_Rule ��񕪒T�����Č����ł���悤�ɂ��邽�߂̃\�[�g�ς�index
- * @note   {group, local, duplicate_id} ���� rule_id ���������߂ɂ���
- * @note   sorted_idxes[registered_rule_num] �ȍ~�̖��o�^�́C group == EL_CORE_GROUP_NULL, rule_id == EH_RULE_MAX �Ə�����
+ * @brief  EH_RuleTable から EH_Rule を二分探索して検索できるようにするためのソート済みindex
+ * @note   {group, local, duplicate_id} から rule_id を引くためにつかう
+ * @note   sorted_idxes[registered_rule_num] 以降の未登録は， group == EL_CORE_GROUP_NULL, rule_id == EH_RULE_MAX と初期化
  */
 typedef struct
 {
   EL_GROUP group;           //!< EH_Rule.event.group
   uint32_t local;           //!< EH_Rule.event.local
-  uint8_t  duplicate_id;    //!< ���� {group. local} �� rule ������ꍇ�́C�d��ID
-  EH_RULE_ID rule_id;       //!< EventHandler.rules �� idx
+  uint8_t  duplicate_id;    //!< 同じ {group. local} の rule がある場合の，重複ID
+  EH_RULE_ID rule_id;       //!< EventHandler.rules の idx
 } EH_RuleSortedIndex;
 
 /**
  * @struct EH_Log
- * @brief  EH �Ή��̃��O
+ * @brief  EH 対応のログ
  */
 typedef struct
 {
   EH_RULE_ID   rule_id;
   cycle_t      respond_time_in_master_cycle;
-  CCP_EXEC_STS deploy_cmd_ack;        // FIXME: �����I�ɁC�Ō�� BC �W�J�����Ƃ��̃G���[��񂪎擾�ł���悤�ɂȂ�����C����ɂ���
+  CCP_EXEC_STS deploy_cmd_ack;        // FIXME: 将来的に，最後に BC 展開したときのエラー情報が取得できるようになったら，それにする
 } EH_Log;
 
 /**
  * @struct EH_LogTable
- * @brief  EH �Ή��̃��O�e�[�u��
+ * @brief  EH 対応のログテーブル
  */
 typedef struct
 {
@@ -220,29 +266,53 @@ typedef struct
 
 /**
  * @struct EH_ElEventCounter
- * @brief  EL �C�x���g�J�E���^�D EL �̃C�x���g�L�^���ƏƂ炵���킹�āC�Ή����ׂ��C�x���g��T�����邽�߂Ɏg��
- * @note   EL_EventStatistics �ɑΉ�����
+ * @brief  EL イベントカウンタ． EL のイベント記録情報と照らし合わせて，対応すべきイベントを探索するために使う
+ * @note   EL_EventStatistics に対応する
  */
 typedef struct
 {
-  uint32_t counter_total;                  //!< �O�� EH_execute ���s���� EL �ł̃C�x���g�L�^��
-  uint32_t counters[EL_ERROR_LEVEL_MAX];   //!< �G���[���x�����Ƃ̋L�^��
+  uint32_t counter_total;                  //!< 前回 EH_execute 実行時の EL でのイベント記録数
+  uint32_t counters[EL_ERROR_LEVEL_MAX];   //!< エラーレベルごとの記録数
 } EH_ElEventCounter;
 
 /**
- * @struct EH_RegisterFromCmd
- * @brief  �R�}���h�o�R�� EH_Rule ��o�^����Ƃ��Ɏg��������ԕϐ�
+ * @struct EH_ExecSettings
+ * @brief  EH 実行時設定
  */
 typedef struct
 {
-  EH_RULE_ID      rule_id;      //!< �o�^�� EH_RULE_ID
-  EH_RuleSettings settings;     //!< �o�^���� EH_RuleSettings
-  EH_REGISTER_ACK register_ack; //!< EH_register_rule �̕Ԃ�l
+  uint8_t  max_response_num;      /*!< 一度の EH_execute の実行で対応する最大数
+                                       初期値は EH_MAX_RESPONSE_NUM_DEFAULT
+                                       EL_Event のIDが重複した EH_Rule もあるので，実際の対応数はこれを上回る可能性がある */
+  uint16_t max_check_event_num;   /*!< 一度の実行でチェックする event_logger の event log の最大値
+                                       初期値は EH_MAX_CHECK_EVENT_NUM_DEFAULT */
+  uint8_t  max_multi_level_num;   /*!< 多段の EH 対応の設定可能な最大段数
+                                       初期値は EH_MAX_MULTI_LEVEL_NUM_DEFAULT */
+} EH_ExecSettings;
+
+/**
+ * @struct EH_ExecInfo
+ * @brief  EH 実行時情報
+ */
+typedef struct
+{
+  uint8_t current_multi_level;   //!< 現在処理してる多段 EH 対応レベル
+} EH_ExecInfo;
+
+/**
+ * @struct EH_RegisterFromCmd
+ * @brief  コマンド経由で EH_Rule を登録するときに使う内部状態変数
+ */
+typedef struct
+{
+  EH_RULE_ID      rule_id;      //!< 登録先 EH_RULE_ID
+  EH_RuleSettings settings;     //!< 登録する EH_RuleSettings
+  EH_REGISTER_ACK register_ack; //!< EH_register_rule の返り値
 } EH_RegisterFromCmd;
 
 /**
  * @struct EH_TlmInfo
- * @brief  tlm�̃y�[�W�l�[�V�����̏��ێ�
+ * @brief  tlmのページネーションの情報保持
  */
 typedef struct
 {
@@ -263,46 +333,43 @@ typedef struct
 
 /**
  * @struct EventHandler
- * @brief  EventHandler ��Info�\����
+ * @brief  EventHandler のInfo構造体
  */
 typedef struct
 {
-  EH_RuleTable       rule_table;                //!< EH_Rule �̃e�[�u��
-  EH_RuleSortedIndex sorted_idxes[EH_RULE_MAX]; //!< rules �̓񕪒T���p idx
-  EH_LogTable        log_table;                 //!< EH �Ή����O�e�[�u��
+  EH_RuleTable       rule_table;                //!< EH_Rule のテーブル
+  EH_RuleSortedIndex sorted_idxes[EH_RULE_MAX]; //!< rules の二分探索用 idx
+  EH_LogTable        log_table;                 //!< EH 対応ログテーブル
   EH_ElEventCounter  el_event_counter;          //!< EH_ElEventCounter
-  uint8_t            max_response_num;          /*!< ��x�� EH_execute �̎��s�őΉ�����ő吔
-                                                     �����l�� EH_MAX_RESPONSE_NUM_DEFAULT
-                                                     EL_Event ��ID���d������ EH_Rule ������̂ŁC���ۂ̑Ή����͂��������\�������� */
-  uint16_t           max_check_event_num;       /*!< ��x�̎��s�Ń`�F�b�N���� event_logger �� event log �̍ő�l
-                                                     �����l�� EH_MAX_CHECK_EVENT_NUM_DEFAULT */
-  EH_RegisterFromCmd reg_from_cmd;              //!< �R�}���h�o�R�� EH_Rule ��o�^����Ƃ��Ɏg��������ԕϐ�
-  EH_TlmInfo         tlm_info;                  //!< tlm�̂��߂̏��
+  EH_ExecSettings    exec_settings;             //!< 実行時設定
+  EH_ExecInfo        exec_info;                 //!< 実行時情報
+  EH_RegisterFromCmd reg_from_cmd;              //!< コマンド経由で EH_Rule を登録するときに使う内部状態変数
+  EH_TlmInfo         tlm_info;                  //!< tlmのための情報
 } EventHandler;
 
 extern const EventHandler* const event_handler;
 
 
 /**
- * @brief  event_handler �̏�����
+ * @brief  event_handler の初期化
  * @param  void
  * @return void
  */
 void EH_initialize(void);
 
 /**
- * @brief  event_handler �̎��s
+ * @brief  event_handler の実行
  *
- *         EL �ɂēo�^���ꂽ�C�x���g�𑖍����C�Ή�����BC��W�J����
- * @note   event_utility app �Ȃǂ��������s����邱�Ƃ�z��
+ *         EL にて登録されたイベントを走査し，対応するBCを展開する
+ * @note   event_utility app などから定期実行されることを想定
  * @param  void
  * @return void
  */
 void EH_execute(void);
 
 /**
- * @brief  ���[���̓o�^
- * @note   ��{�I�ɂ́C EH_load_default_rules �����ł̂ݎg���邱�Ƃ�z��
+ * @brief  ルールの登録
+ * @note   基本的には， EH_load_default_rules 内部でのみ使われることを想定
  * @param  settings: EH_RuleSettings
  * @param  id: EH_RULE_ID
  * @return EH_REGISTER_ACK
@@ -310,61 +377,61 @@ void EH_execute(void);
 EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings);
 
 /**
- * @brief  ���[���̗L����
- * @note   ��{�I�ɂ̓R�}���h�ő��삷��̂ŁC���ڎg�����Ƃ͂��܂�z�肵�Ă��Ȃ�
- * @note   ������ EH_clear_rule_counter ���Ă΂��
+ * @brief  ルールの有効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   内部で EH_clear_rule_counter も呼ばれる
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id);
 
 /**
- * @brief  ���[���̖�����
- * @note   ��{�I�ɂ̓R�}���h�ő��삷��̂ŁC���ڎg�����Ƃ͂��܂�z�肵�Ă��Ȃ�
+ * @brief  ルールの無効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_inactivate_rule(EH_RULE_ID id);
 
 /**
- * @brief  ���[���̗L���� (multi-level)
- * @note   ���i�̏ꍇ�C�w�肵�� EH_RULE_ID ��艺�ʂ̂��ׂẴ��[����L����
- * @note   ��{�I�ɂ̓R�}���h�ő��삷��̂ŁC���ڎg�����Ƃ͂��܂�z�肵�Ă��Ȃ�
+ * @brief  ルールの有効化 (multi-level)
+ * @note   多段の場合，指定した EH_RULE_ID より下位のすべてのルールを有効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id);
 
 /**
- * @brief  ���[���̖����� (multi-level)
- * @note   ���i�̏ꍇ�C�w�肵�� EH_RULE_ID ��艺�ʂ̂��ׂẴ��[���𖳌���
- * @note   ��{�I�ɂ̓R�}���h�ő��삷��̂ŁC���ڎg�����Ƃ͂��܂�z�肵�Ă��Ȃ�
+ * @brief  ルールの無効化 (multi-level)
+ * @note   多段の場合，指定した EH_RULE_ID より下位のすべてのルールを無効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id);
 
 /**
- * @brief  EH_Rule �� counter ���Z�b�g
- * @note   ��{�I�ɂ̓R�}���h�ő��삷��̂ŁC���ڎg�����Ƃ͂��܂�z�肵�Ă��Ȃ�
+ * @brief  EH_Rule の counter をセット
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @param  id: EH_RULE_ID
- * @param  counter: �Z�b�g���� counter
+ * @param  counter: セットする counter
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_set_rule_counter(EH_RULE_ID id, uint16_t counter);
 
 /**
- * @brief  EH_Rule �� counter �� 0 �N���A
- * @note   ��{�I�ɂ̓R�}���h�ő��삷��̂ŁC���ڎg�����Ƃ͂��܂�z�肵�Ă��Ȃ�
+ * @brief  EH_Rule の counter を 0 クリア
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_clear_rule_counter(EH_RULE_ID id);
 
 /**
- * @brief  EH_Rule �� counter �� EL_Event �w��� 0 �N���A
- * @note   �����A�m�}��������������C EL_record_event, ����Ȃ� EH_clear_rule_counter_by_event �Ƃ����g������z�肵�Ă���
- * @note   ���̂��߁CEL_record_event �ƃC���^�[�t�F�[�X�����킹�Ă���
+ * @brief  EH_Rule の counter を EL_Event 指定で 0 クリア
+ * @note   もしアノマリが発生したら， EL_record_event, 正常なら EH_clear_rule_counter_by_event という使い方を想定している
+ * @note   そのため，EL_record_event とインターフェースをあわせている
  * @param  group: EL_Event.group
  * @param  local: EL_Event.local
  * @param  err_level: EL_Event.err_level
@@ -373,68 +440,70 @@ EH_CHECK_RULE_ACK EH_clear_rule_counter(EH_RULE_ID id);
 void EH_clear_rule_counter_by_event(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL err_level);
 
 /**
- * @brief  �C�x���g�J�E���^�� EL �̂���ɍ��킹��
- * @note   EL �������Z�b�g�����ۂɌĂяo���Ȃ��ƁC�s��������������i�܂��C����ɉ�������邯�ǁj
+ * @brief  イベントカウンタを EL のそれに合わせる
+ * @note   EL 側をリセットした際に呼び出さないと，不整合が発生する（まあ，勝手に解消されるけど）
  * @param  void
  * @return void
  */
 void EH_match_event_counter_to_el(void);
 
 /**
- * @brief  EH_LogTable �̍ŐV����n�Ԗڂ̑Ή����O���擾
- * @note   n ���傫������ꍇ�́C�ŐV�̂��̂�Ԃ�
- * @param  n: n�Ԗځi0�̂Ƃ��ŐV�j
+ * @brief  EH_LogTable の最新からn番目の対応ログを取得
+ * @note   n が大きすぎる場合は，最新のものを返す
+ * @param  n: n番目（0のとき最新）
  * @return EH_Log
  */
 const EH_Log* EH_get_the_nth_log_from_the_latest(uint16_t n);
 
 
-CCP_EXEC_STS Cmd_EH_INIT(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
 /**
- * @brief �V���� EL_Event ���������o���邽�߂̃J�E���^�������I�� EL �̃J�E���^�ɍ��킹��
+ * @brief 新しい EL_Event 発生を検出するためのカウンタを強制的に EL のカウンタに合わせる
  */
-CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CTCP* packet);
+CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet);
 
 #endif  // EL_IS_ENABLE_TLOG
 

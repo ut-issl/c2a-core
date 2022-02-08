@@ -1,9 +1,9 @@
 /**
  * @file
- * @brief  3�d�璷�p�ėp�������֐�
+ * @brief  3重冗長用汎用多数決関数
  */
-#ifndef MAJORITY_VOTE_FOR3_
-#define MAJORITY_VOTE_FOR3_
+#ifndef MAJORITY_VOTE_FOR3_H_
+#define MAJORITY_VOTE_FOR3_H_
 
 #include <stdio.h>
 #include <src_user/Library/stdint.h>
@@ -16,17 +16,17 @@ typedef enum
 } MAJORITY_VOTE_FOR3_STATUS;
 
 /**
- * @brief 3�d�璷�p�ėp�������֐� (�R�s�[)
+ * @brief 3重冗長用汎用多数決関数 (コピー)
  *
- *        3�d�璷�p�z����󂯎���đ��������s�������ʂ�res�ɓ���, �璷�̏�Ԃ�Ԃ�
- * @param[in] array1_arg ~ array3_arg ���肵����3�d�璷
- * @param[in] type_len sizeof(�^)������
- * @param[in] length �z��̒���, �������ł����̂�1�����Ȃ̂őS��������, �P�̂̏ꍇ��1��
- * @param[out] res_arg �Ԃ�l�̃|�C���^, ���炩���ߊm�ۂ��Ă����悤��
- * @retval MAJORITY_VOTE_ERROR:    �S�s��v�����Ȃ��Ƃ�1����, �ُ�
- * @retval MAJORITY_VOTE_MAJORITY: 2:1�����Ȃ��Ƃ�1����,     ����
- * @retval MAJORITY_VOTE_MATCH:    �S�Ăɂ��đS��v,         ����
- * @note �z��ɑ΂��čs����̂�, ������index�ő��������s���Ă��Ă�MAJORITY_VOTE_MAJORITY���Ԃ�܂�.
+ *        3重冗長用配列を受け取って多数決を行った結果をresに入れ, 冗長の状態を返す
+ * @param[in] array1_arg ~ array3_arg 判定したい3重冗長
+ * @param[in] type_len sizeof(型)を入れる
+ * @param[in] length 配列の長さ, 多次元でも実体は1次元なので全長を入れる, 単体の場合は1を
+ * @param[out] res_arg 返り値のポインタ, あらかじめ確保しておくように
+ * @retval MAJORITY_VOTE_ERROR:    全不一致が少なくとも1つ存在, 異常
+ * @retval MAJORITY_VOTE_MAJORITY: 2:1が少なくとも1つ存在,     正常
+ * @retval MAJORITY_VOTE_MATCH:    全てについて全一致,         正常
+ * @note 配列に対して行われるので, 複数のindexで多数決が行われていてもMAJORITY_VOTE_MAJORITYが返ります.
  */
 MAJORITY_VOTE_FOR3_STATUS majority_vote_for3_copy(void* res_arg,
                                                   void* array1_arg,
@@ -36,17 +36,17 @@ MAJORITY_VOTE_FOR3_STATUS majority_vote_for3_copy(void* res_arg,
                                                   uint32_t length);
 
 /**
- * @brief 3�d�璷�p�ėp�������֐� (����)
+ * @brief 3重冗長用汎用多数決関数 (同期)
  *
- *        3�d�璷�p�z����󂯎���đ��������s���A�S�Ă���v��������Ԃɂ���
- * @param[in] array1_arg ~ array3_arg ���肵����3�d�璷
- * @param[in] type_len sizeof(�^)������
- * @param[in] length �z��̒���, �������ł����̂�1�����Ȃ̂őS��������, �P�̂̏ꍇ��1��
- * @retval MAJORITY_VOTE_ERROR:    �S�s��v�����Ȃ��Ƃ�1����, �ُ�
- * @retval MAJORITY_VOTE_MAJORITY: 2:1�����Ȃ��Ƃ�1����,      ����
- * @retval MAJORITY_VOTE_MATCH:    �S�Ăɂ��đS��v,          ����
- * @note �z��ɑ΂��čs����̂�, ������index�ő��������s���Ă��Ă�MAJORITY_VOTE_MAJORITY���Ԃ�܂�.
- *       �܂�, ������g���Γ��������̂ŎO�d�璷���ꂽ���̂� [0] �̃|�C���^������đ���ł��܂�.
+ *        3重冗長用配列を受け取って多数決を行い、全てを一致させた状態にする
+ * @param[in] array1_arg ~ array3_arg 判定したい3重冗長
+ * @param[in] type_len sizeof(型)を入れる
+ * @param[in] length 配列の長さ, 多次元でも実体は1次元なので全長を入れる, 単体の場合は1を
+ * @retval MAJORITY_VOTE_ERROR:    全不一致が少なくとも1つ存在, 異常
+ * @retval MAJORITY_VOTE_MAJORITY: 2:1が少なくとも1つ存在,      正常
+ * @retval MAJORITY_VOTE_MATCH:    全てについて全一致,          正常
+ * @note 配列に対して行われるので, 複数のindexで多数決が行われていてもMAJORITY_VOTE_MAJORITYが返ります.
+ *       また, これを使えば同期されるので三重冗長されたものの [0] のポインタを取って操作できます.
  */
 MAJORITY_VOTE_FOR3_STATUS majority_vote_for3_sync(void* array1_arg,
                                                   void* array2_arg,

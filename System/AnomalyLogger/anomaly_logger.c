@@ -20,7 +20,7 @@ const AnomalyLogger* const anomaly_logger = &anomaly_logger_;
 
 const AL_AnomalyRecord* AL_get_record(size_t pos)
 {
-  // w’è”ÍˆÍƒGƒ‰[‚Ìê‡‚ÍNULL‚ğ•Ô‚·
+  // æŒ‡å®šç¯„å›²ã‚¨ãƒ©ãƒ¼ã®å ´åˆã¯NULLã‚’è¿”ã™
   if (pos >= anomaly_logger_.header) return NULL;
 
   return &(anomaly_logger_.records[pos]);
@@ -28,8 +28,8 @@ const AL_AnomalyRecord* AL_get_record(size_t pos)
 
 const AL_AnomalyRecord* AL_get_latest_record(void)
 {
-  // “o˜^ƒAƒmƒ}ƒŠ[‚ª‚È‚¢ê‡‚Íæ“ª—v‘f‚ğ•Ô‚·B
-  // ‚±‚Ìê‡‚Ìæ“ª—v‘f‚ÍAL_initialize()‚É‚æ‚Á‚Äƒ[ƒƒNƒŠƒAÏ‚İB
+  // ç™»éŒ²ã‚¢ãƒãƒãƒªãƒ¼ãŒãªã„å ´åˆã¯å…ˆé ­è¦ç´ ã‚’è¿”ã™ã€‚
+  // ã“ã®å ´åˆã®å…ˆé ­è¦ç´ ã¯AL_initialize()ã«ã‚ˆã£ã¦ã‚¼ãƒ­ã‚¯ãƒªã‚¢æ¸ˆã¿ã€‚
   if (anomaly_logger_.header == 0) return &(anomaly_logger_.records[0]);
 
   return &(anomaly_logger_.records[anomaly_logger_.header - 1]);
@@ -39,22 +39,22 @@ void AL_initialize(void)
 {
   AL_clear();
   AL_init_logging_ena_flag_();
-  anomaly_logger_.threshold_of_nearly_full = AL_RECORD_MAX - 10;      // ‰¼‚Ì’l 2019/02/06
+  anomaly_logger_.threshold_of_nearly_full = AL_RECORD_MAX - 10;      // ä»®ã®å€¤ 2019/02/06
 
   AL_load_default_settings();
 }
 
-CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group, local;
   int ret;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ’Šo
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æŠ½å‡º
   endian_memcpy(&group, param, 4);
   endian_memcpy(&local, param + 4, 4);
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ“o˜^
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ç™»éŒ²
   ret = AL_add_anomaly(group, local);
 
   if (ret == AL_ADD_SUCCESS)
@@ -82,26 +82,26 @@ int AL_add_anomaly(uint32_t group, uint32_t local)
   new_anomaly_record.code.local = local;
   new_anomaly_record.run_length = 1;
 
-  // “o˜^”ãŒÀ‚Ìê‡‚Í‚»‚Ì–À‚ğ‹L˜^‚·‚é
+  // ç™»éŒ²æ•°ä¸Šé™ã®å ´åˆã¯ãã®äº‹å®Ÿã‚’è¨˜éŒ²ã™ã‚‹
   if (anomaly_logger_.header == AL_RECORD_MAX - 1)
   {
     new_anomaly_record.code.group = AL_CORE_GROUP_ANOMALY_LOGGER;
     new_anomaly_record.code.local = AL_FULL;
   }
 
-  // “¯‚¶AL_AnomalyCode‚Ì“o˜^‚Íˆ³k‚·‚é
+  // åŒã˜AL_AnomalyCodeã®ç™»éŒ²ã¯åœ§ç¸®ã™ã‚‹
   if (AC_is_equal_(&(new_anomaly_record.code), &(prev_anomaly_record->code)))
   {
-    // ‚Æ˜A’·‚ğXV‚µÄ“o˜^
+    // æ™‚åˆ»ã¨é€£é•·ã‚’æ›´æ–°ã—å†ç™»éŒ²
     new_anomaly_record.run_length += prev_anomaly_record->run_length;
     anomaly_logger_.records[anomaly_logger_.header - 1] = new_anomaly_record;
   }
   else
   {
-    // V‹K“o˜^
+    // æ–°è¦ç™»éŒ²
     anomaly_logger_.records[anomaly_logger_.header] = new_anomaly_record;
 
-    // “o˜^”‚ªãŒÀ‚Å‚È‚¢‚È‚çæ“ªˆÊ’u‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
+    // ç™»éŒ²æ•°ãŒä¸Šé™ã§ãªã„ãªã‚‰å…ˆé ­ä½ç½®ã‚’ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
     if (anomaly_logger_.header != AL_RECORD_MAX - 1)
     {
       ++anomaly_logger_.header;
@@ -118,14 +118,14 @@ int AL_add_anomaly(uint32_t group, uint32_t local)
   return AL_ADD_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_clear();
   return CCP_EXEC_SUCCESS;
 }
 
-// ‚±‚¢‚Â‚ÍCAH‚©‚ç‚àŒÄ‚Î‚ê‚é‚Ì‚Å’ˆÓI
+// ã“ã„ã¤ã¯ï¼ŒAHã‹ã‚‰ã‚‚å‘¼ã°ã‚Œã‚‹ã®ã§æ³¨æ„ï¼
 void AL_clear(void)
 {
   anomaly_logger_.counter = 0;
@@ -151,7 +151,7 @@ static int AC_is_equal_(const AL_AnomalyCode* lhs,
   return ((lhs->group == rhs->group) && (lhs->local == rhs->local));
 }
 
-CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -159,7 +159,7 @@ CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
 
   if (page >= AL_TLM_PAGE_MAX)
   {
-    // ƒy[ƒW”Ô†‚ªƒRƒ}ƒ“ƒhƒe[ƒuƒ‹”ÍˆÍŠO
+    // ãƒšãƒ¼ã‚¸ç•ªå·ãŒã‚³ãƒãƒ³ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ç¯„å›²å¤–
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -169,9 +169,9 @@ CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CTCP* packet)
 
 
 // 2019-01-18
-// ’Ç‰Á
+// è¿½åŠ 
 
-CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_init_logging_ena_flag_();
@@ -181,20 +181,20 @@ CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CTCP* packet)
 static void AL_init_logging_ena_flag_(void)
 {
   int i;
-  // ƒfƒtƒHƒ‹ƒg‚Å‚Í‘SGROUP ID‚ÅƒƒMƒ“ƒO‚ª—LŒø
+  // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯å…¨GROUP IDã§ãƒ­ã‚®ãƒ³ã‚°ãŒæœ‰åŠ¹
   for (i = 0; i < (AL_GROUP_MAX / 8); ++i)
   {
     anomaly_logger_.is_logging_enable[i] = 0xff;
   }
 }
 
-CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group;
   int ret;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ’Šo
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æŠ½å‡º
   endian_memcpy(&group, param, 4);
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
@@ -214,13 +214,13 @@ CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CTCP* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group;
   int ret;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ’Šo
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æŠ½å‡º
   endian_memcpy(&group, param, 4);
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
@@ -240,13 +240,13 @@ CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CTCP* packet)
   }
 }
 
-// —LŒø‚È‚ç1
-// –³Œø‚È‚ç0
-// ƒGƒ‰[‚Í-1
+// æœ‰åŠ¹ãªã‚‰1
+// ç„¡åŠ¹ãªã‚‰0
+// ã‚¨ãƒ©ãƒ¼ã¯-1
 static int  AL_is_logging_enable_(uint32_t group)
 {
   uint32_t group_idx      = group / 8;
-  uint32_t group_subidx   = 7 - group % 8;    // ”½“]
+  uint32_t group_subidx   = 7 - group % 8;    // åè»¢
   uint8_t  info;
   uint8_t  mask;
   uint8_t  ret;
@@ -268,7 +268,7 @@ static int  AL_is_logging_enable_(uint32_t group)
 static int  AL_enable_logging_(uint32_t group)
 {
   uint32_t group_idx      = group / 8;
-  uint32_t group_subidx   = 7 - group % 8;    // ”½“]
+  uint32_t group_subidx   = 7 - group % 8;    // åè»¢
   uint8_t  info;
   uint8_t  mask;
 
@@ -289,7 +289,7 @@ static int  AL_enable_logging_(uint32_t group)
 static int  AL_disable_logging_(uint32_t group)
 {
   uint32_t group_idx      = group / 8;
-  uint32_t group_subidx   = 7 - group % 8;    // ”½“]
+  uint32_t group_subidx   = 7 - group % 8;    // åè»¢
   uint8_t  info;
   uint8_t  mask;
 
@@ -300,7 +300,7 @@ static int  AL_disable_logging_(uint32_t group)
 
   info = anomaly_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
-  mask = (uint8_t)(~mask);                     // ƒrƒbƒg”½“]
+  mask = (uint8_t)(~mask);                     // ãƒ“ãƒƒãƒˆåè»¢
   info = (uint8_t)(info & mask);
 
   anomaly_logger_.is_logging_enable[group_idx] = info;
@@ -309,12 +309,12 @@ static int  AL_disable_logging_(uint32_t group)
 }
 
 
-CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CTCP* packet)
+CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint16_t thres;
 
-  // ƒpƒ‰ƒ[ƒ^‚ğ’Šo
+  // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æŠ½å‡º
   endian_memcpy(&thres, param, 2);
 
   anomaly_logger_.threshold_of_nearly_full = thres;
@@ -323,7 +323,7 @@ CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CTCP* packet)
 
 
 
-// 2019/04/26 ŒöŠJ‚µ‚½
+// 2019/04/26 å…¬é–‹ã—ãŸ
 int AL_enable_logging(uint32_t group)
 {
   return AL_enable_logging_(group);

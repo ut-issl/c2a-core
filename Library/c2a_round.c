@@ -2,7 +2,7 @@
 
 /**
  * @file
- * @brief lÌŒÜ“üDC89‚Éround‚Í‚È‚¢‚Ì‚Å
+ * @brief å››æ¨äº”å…¥ï¼C89ã«roundã¯ãªã„ã®ã§
  */
 #include "c2a_round.h"
 

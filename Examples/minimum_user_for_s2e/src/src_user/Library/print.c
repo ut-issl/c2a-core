@@ -1,12 +1,12 @@
 /**
  * @file
- * @brief  HWˆË‘¶Print
+ * @brief  HWä¾å­˜Print
  */
 
-// ‚±‚¢‚Â‚àBootLoader‚É”z’u‚·‚é‚Ì‚ÅCƒŠƒvƒ‰Â”\—Ìˆæ‚Ì‚à‚Ì‚ğinclude‚µ‚È‚¢‚±‚ÆII
+// ã“ã„ã¤ã‚‚BootLoaderã«é…ç½®ã™ã‚‹ã®ã§ï¼Œãƒªãƒ—ãƒ­å¯èƒ½é ˜åŸŸã®ã‚‚ã®ã‚’includeã—ãªã„ã“ã¨ï¼ï¼
 
-// print‚ÍHWˆË‘¶«‚ª‹­‚¢‚½‚ßCƒwƒbƒ_[‚Ícore‚É‚¨‚«CƒI[ƒo[ƒ‰ƒCƒh‚·‚é
-// ƒrƒ‹ƒh‘ÎÛ‚É‚Ä‘I‘ğ‚·‚é
+// printã¯HWä¾å­˜æ€§ãŒå¼·ã„ãŸã‚ï¼Œãƒ˜ãƒƒãƒ€ãƒ¼ã¯coreã«ãŠãï¼Œã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹
+// ãƒ“ãƒ«ãƒ‰å¯¾è±¡ã«ã¦é¸æŠã™ã‚‹
 #include <src_core/Library/print.h>
 
 #include <stdio.h>
@@ -19,7 +19,7 @@
 
 
 /*
- *  ƒƒOî•ñ‚ÌƒtƒH[ƒ}ƒbƒgo—ÍiƒfƒoƒbƒOo—Íj
+ *  ãƒ­ã‚°æƒ…å ±ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå‡ºåŠ›ï¼ˆãƒ‡ãƒãƒƒã‚°å‡ºåŠ›ï¼‰
  */
 char printf_buffer[512];
 
@@ -27,16 +27,16 @@ void Printf(char* format, ...)
 {
   va_list argptr;
 
-  WDT_clear_wdt();         // 2019/03/10 ’Ç‰Á
+  WDT_clear_wdt();         // 2019/03/10 è¿½åŠ 
 
   va_start(argptr, format);
   vsprintf(printf_buffer, format, argptr);
 
   tt_printf("%s", printf_buffer);
-  // Printf_org("%s", printf_buffer);  // LVTTL UART ch1‚Å‚Ìo—ÍD×–‚‚È‚Ì‚Å‰Šú‰»‚Æ‚Æ‚à‚É–³Œø‰» (2019-04-09)
+  // Printf_org("%s", printf_buffer);  // LVTTL UART ch1ã§ã®å‡ºåŠ›ï¼é‚ªé­”ãªã®ã§åˆæœŸåŒ–ã¨ã¨ã‚‚ã«ç„¡åŠ¹åŒ– (2019-04-09)
   va_end(argptr);
 
-  WDT_clear_wdt();         // 2019/03/10 ’Ç‰Á
+  WDT_clear_wdt();         // 2019/03/10 è¿½åŠ 
 }
 
 #else
@@ -44,7 +44,7 @@ void Printf(char* format, ...)
 void Printf(char* format, ...)
 {
 #ifdef SHOW_DEBUG_PRINT_ON_SILS
-  char printf_buffer[512];   // ƒoƒbƒtƒ@ƒTƒCƒY‚æ‚è‚Å‚©‚¢•¶š—ñ‚ª—ˆ‚é‚Æ€‚Êi‚ªC‚±‚ê‚ÍÀ‹@ŠÂ‹«‚Å‚à“¯‚¶‚©j
+  char printf_buffer[512];   // ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºã‚ˆã‚Šã§ã‹ã„æ–‡å­—åˆ—ãŒæ¥ã‚‹ã¨æ­»ã¬ï¼ˆãŒï¼Œã“ã‚Œã¯å®Ÿæ©Ÿç’°å¢ƒã§ã‚‚åŒã˜ã‹ï¼‰
   va_list args;
   va_start(args, format);
   vsprintf(printf_buffer, format, args);
@@ -54,7 +54,7 @@ void Printf(char* format, ...)
 
   va_end(args);
 #else
-  // ‚È‚É‚à•\¦‚µ‚È‚¢
+  // ãªã«ã‚‚è¡¨ç¤ºã—ãªã„
 #endif
 }
 

@@ -1,12 +1,42 @@
 {
   "root_dir" : "../../",
+  "text_file_config" : {
+    "input_encoding": "utf-8",
+    "extensions": [
+      "txt",
+      "md",
+      "json",
+      "cmake"
+    ]
+  },
+  "code_file_config" : {
+    "input_encoding" : "utf-8",
+    "extensions" : [
+      "c",
+      "h"
+    ]
+  },
+  "script_file_config" : {
+    "input_encoding" : "utf-8",
+    "extensions" : [
+      "sh",
+      "pl",
+      "py"
+    ]
+  },
+  "exceptional_file_config" : {
+    "input_encoding" : "shift_jis",
+    "extensions" : [
+      "bat"
+    ]
+  },
   "target_dirs" : [
     "Applications/",
-    "CmdTlm/",
     "Drivers/",
     "IfWrapper/",
     "Library/",
     "System/",
+    "TlmCmd/",
     "Examples/minimum_user_for_s2e/src/src_user/"
   ]
 }

@@ -9,16 +9,16 @@
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/AnomalyLogger/anomaly_logger.h>
 // #include "../../ReProgramming/ReProg.h"
-#include <src_core/CmdTlm/packet_handler.h>
-#include "../../CmdTlm/telemetry_definitions.h"
-#include <src_core/CmdTlm/block_command_table.h>
+#include <src_core/TlmCmd/packet_handler.h>
+#include "../../TlmCmd/telemetry_definitions.h"
+#include <src_core/TlmCmd/block_command_table.h>
 // #include "stt_sel_detector.h"
 #include <src_core/Applications/memory_dump.h>
 #include <src_core/Applications/gs_command_dispatcher.h>
 #include <src_core/Applications/realtime_command_dispatcher.h>
 #include <src_core/Applications/timeline_command_dispatcher.h>
 #include "../../Applications/DriverInstances/di_gs.h"
-// #include <src_core/CmdTlm/telemetry_generator.h>
+// #include <src_core/TlmCmd/telemetry_generator.h>
 #include "../../Library/git_revision.h"
 #include "../../Library/VT100.h"
 #include "../../Library/stdint.h"

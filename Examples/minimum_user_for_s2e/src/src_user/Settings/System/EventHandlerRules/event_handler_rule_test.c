@@ -1,11 +1,11 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  EH ‚Ì ƒeƒXƒg—p Rule
+ * @brief  EH ã® ãƒ†ã‚¹ãƒˆç”¨ Rule
  */
 #include "event_handler_rules.h"
 #include <src_core/System/EventManager/event_handler.h>
-#include "../../../CmdTlm/block_command_definitions.h"
+#include "../../../TlmCmd/block_command_definitions.h"
 
 void EH_load_rule_test(void)
 {
@@ -23,7 +23,7 @@ void EH_load_rule_test(void)
   settings.is_active = 1;
   EH_register_rule(EH_RULE_TEST0, &settings);
 
-  // single, err_level ƒ}ƒbƒ`‚È‚µ
+  // single, err_level ãƒãƒƒãƒãªã—
   settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 1;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
@@ -59,7 +59,7 @@ void EH_load_rule_test(void)
   settings.is_active = 1;
   EH_register_rule(EH_RULE_TEST3, &settings);
 
-  // single, EH_RULE_TEST0 ‚Æ “¯ (ƒfƒtƒHƒ‹ƒg inactive)
+  // single, EH_RULE_TEST0 ã¨ åŒæ™‚ (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ inactive)
   settings.event.group = EL_GROUP_TEST_EH;
   settings.event.local = 0;
   settings.event.err_level = EL_ERROR_LEVEL_LOW;
@@ -71,7 +71,7 @@ void EH_load_rule_test(void)
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TEST4, &settings);
 
-  // ‘½’i Lv.2, Lv.1 ‚Í EH_RULE_TEST0 (ƒfƒtƒHƒ‹ƒg inactive)
+  // å¤šæ®µ Lv.2, Lv.1 ã¯ EH_RULE_TEST0 (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ inactive)
   settings.event.group = (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE;
   settings.event.local = EH_RULE_TEST0;
   settings.event.err_level = EL_ERROR_LEVEL_EH;
@@ -83,7 +83,7 @@ void EH_load_rule_test(void)
   settings.is_active = 0;
   EH_register_rule(EH_RULE_TEST5, &settings);
 
-  // ‘½’i Lv.3 (ƒfƒtƒHƒ‹ƒg inactive)
+  // å¤šæ®µ Lv.3 (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ inactive)
   settings.event.group = (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE;
   settings.event.local = EH_RULE_TEST5;
   settings.event.err_level = EL_ERROR_LEVEL_EH;

@@ -4,11 +4,11 @@
 #include <stddef.h> // for size_t
 
 #include "app_info.h"
-#include "../../CmdTlm/common_tlm_cmd_packet.h"
+#include "../../TlmCmd/common_cmd_packet.h"
 
-#define AM_TLM_PAGE_SIZE (32)                               //!< AMÇÃAppInfoÉeÅ[ÉuÉãÇÃ1ÉeÉåÉÅÉgÉäÉpÉPÉbÉg(=1ÉyÅ[ÉW)Ç…äiî[Ç≥ÇÍÇÈAppInfoêîÅiÉyÅ[ÉWÉlÅ[ÉVÉáÉìópÅj
-#define AM_TLM_PAGE_MAX (4)                                 //!< AMÇÃAppInfoÉeÅ[ÉuÉãÇÃÉyÅ[ÉWêîÅiÉyÅ[ÉWÉlÅ[ÉVÉáÉìópÅj
-#define AM_MAX_APPS (AM_TLM_PAGE_SIZE * AM_TLM_PAGE_MAX)    //!< ìoò^Ç≈Ç´ÇÈç≈ëÂAppInfoêîÅCÇ±ÇÍÇÕìoò^Ç≈Ç´ÇÈç≈ëÂÉAÉvÉäêîÇ∆ìôÇµÇ¢
+#define AM_TLM_PAGE_SIZE (32)                               //!< AM„ÅÆAppInfo„ÉÜ„Éº„Éñ„É´„ÅÆ1„ÉÜ„É¨„É°„Éà„É™„Éë„Ç±„ÉÉ„Éà(=1„Éö„Éº„Ç∏)„Å´Ê†ºÁ¥ç„Åï„Çå„ÇãAppInfoÊï∞Ôºà„Éö„Éº„Ç∏„Éç„Éº„Ç∑„Éß„É≥Áî®Ôºâ
+#define AM_TLM_PAGE_MAX (4)                                 //!< AM„ÅÆAppInfo„ÉÜ„Éº„Éñ„É´„ÅÆ„Éö„Éº„Ç∏Êï∞Ôºà„Éö„Éº„Ç∏„Éç„Éº„Ç∑„Éß„É≥Áî®Ôºâ
+#define AM_MAX_APPS (AM_TLM_PAGE_SIZE * AM_TLM_PAGE_MAX)    //!< ÁôªÈå≤„Åß„Åç„ÇãÊúÄÂ§ßAppInfoÊï∞Ôºå„Åì„Çå„ÅØÁôªÈå≤„Åß„Åç„ÇãÊúÄÂ§ß„Ç¢„Éó„É™Êï∞„Å®Á≠â„Åó„ÅÑ
 
 #include <src_user/Settings/System/AppManagerParams.h>
 
@@ -34,16 +34,16 @@ AM_ACK AM_register_ai(size_t id,
 
 void AM_initialize_all_apps(void);
 
-CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CTCP* packet);
+CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
-// 2019-07-18 í«â¡
-// min, max, prevÇÃÇ›è¡Ç∑ÅDinitÇÕÇªÇÃÇ‹Ç‹
-CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CTCP* packet);
+// 2019-07-18 ËøΩÂä†
+// min, max, prev„ÅÆ„ÅøÊ∂à„ÅôÔºéinit„ÅØ„Åù„ÅÆ„Åæ„Åæ
+CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet);
 
 #endif

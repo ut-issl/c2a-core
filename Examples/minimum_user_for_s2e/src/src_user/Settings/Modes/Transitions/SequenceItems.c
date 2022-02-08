@@ -1,37 +1,37 @@
 #pragma section REPRO
 #include "SequenceItems.h"
-#include "../../../CmdTlm/block_command_definitions.h"
+#include "../../../TlmCmd/block_command_definitions.h"
 #include <src_core/Applications/timeline_command_dispatcher.h>
 #include <src_core/Library/endian_memcpy.h>
-#include <src_core/CmdTlm/common_tlm_cmd_packet_util.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../../Settings/AnomalyLogger/anomaly_group.h"
 #include "../mode_definitions.h"
 
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// SI‚ğg‚¤‚±‚Æ‚Í‚à‚¤”ñ„§III
-// •’Ê‚ÌBC‚ğg‚¤‚±‚ÆIIII
+// SIã‚’ä½¿ã†ã“ã¨ã¯ã‚‚ã†éæ¨å¥¨ï¼ï¼ï¼
+// æ™®é€šã®BCã‚’ä½¿ã†ã“ã¨ï¼ï¼ï¼ï¼
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-void SI_finish_transition(CTCP* packet)
+void SI_finish_transition(CommonCmdPacket* packet)
 {
   CCP_form_rtc(packet, Cmd_CODE_MM_FINISH_TRANSITION, NULL, 0);
 }
 
-void SI_start_hk_tlm(CTCP* packet)
+void SI_start_hk_tlm(CommonCmdPacket* packet)
 {
   unsigned char param[1 + SIZE_OF_BCT_ID_T];
   bct_id_t bc_id;
 
-  param[0] = TL_ID_DEPLOY_TLM; // TL2‚É“WŠJ
+  param[0] = TL_ID_DEPLOY_TLM; // TL2ã«å±•é–‹
   bc_id = BC_HK_CYCLIC_TLM;
   endian_memcpy(&param[1], &bc_id, SIZE_OF_BCT_ID_T);
   CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, &param[0], 1 + SIZE_OF_BCT_ID_T);
 }
 
 
-// BC“WŠJ
-void SI_deploy_block(CTCP* packet, int line_no, bct_id_t block_no)
+// BCå±•é–‹
+void SI_deploy_block(CommonCmdPacket* packet, int line_no, bct_id_t block_no)
 {
   unsigned char param[1 + SIZE_OF_BCT_ID_T];
 

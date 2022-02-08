@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  3重冗長用汎用多数決関数
+ * @brief  3驥榊�鈴聞逕ｨ豎守畑螟壽焚豎ｺ髢｢謨ｰ
  */
 #include "majority_vote_for3.h"
 #include <string.h>               // for memcpy;
@@ -52,7 +52,7 @@ MAJORITY_VOTE_FOR3_STATUS majority_vote_for3_copy(void* res_arg,
       }
       else
       {
-        return MAJORITY_VOTE_ERROR; // 全不一致は即return
+        return MAJORITY_VOTE_ERROR; // 蜈ｨ荳堺ｸ閾ｴ縺ｯ蜊ｳreturn
       }
     }
 
@@ -106,7 +106,7 @@ MAJORITY_VOTE_FOR3_STATUS majority_vote_for3_sync(void* array1_arg,
       }
       else
       {
-        return MAJORITY_VOTE_ERROR; // 全不一致は即return
+        return MAJORITY_VOTE_ERROR; // 蜈ｨ荳堺ｸ閾ｴ縺ｯ蜊ｳreturn
       }
     }
   }

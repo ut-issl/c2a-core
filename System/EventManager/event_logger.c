@@ -1,11 +1,11 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ÉAÉmÉ}ÉäÇ‚ÉGÉâÅ[Ç»Ç«ÇÃäeéÌÉCÉxÉìÉgÇãLò^Ç∑ÇÈ
- * @note  Ç±ÇÃÉCÉxÉìÉgÇÇ‡Ç∆Ç… event_handler Çî≠âŒÇ≥ÇπÇÈÇ±Ç∆Ç™Ç≈Ç´ÇÈ
- * @note  ÉçÉOÇÕ TLog (TimeSeriesLog) Ç∆ CLog (EL_CumulativeLog) ÇÃìÒéÌóﬁÇèÄîıÇµÅCïKóvÇ»Ç‡ÇÃÇÃÇ›ÇégÇ§
- * @note  ç°å„ÅC NvLog (ïsäˆî≠Log) Ç™é¿ëïó\íË
- * @note  è⁄ç◊ÇÕ event_logger.h ÇéQè∆
+ * @brief „Ç¢„Éé„Éû„É™„ÇÑ„Ç®„É©„Éº„Å™„Å©„ÅÆÂêÑÁ®Æ„Ç§„Éô„É≥„Éà„ÇíË®òÈå≤„Åô„Çã
+ * @note  „Åì„ÅÆ„Ç§„Éô„É≥„Éà„Çí„ÇÇ„Å®„Å´ event_handler „ÇíÁô∫ÁÅ´„Åï„Åõ„Çã„Åì„Å®„Åå„Åß„Åç„Çã
+ * @note  „É≠„Ç∞„ÅØ TLog (TimeSeriesLog) „Å® CLog (EL_CumulativeLog) „ÅÆ‰∫åÁ®ÆÈ°û„ÇíÊ∫ñÂÇô„ÅóÔºåÂøÖË¶Å„Å™„ÇÇ„ÅÆ„ÅÆ„Åø„Çí‰Ωø„ÅÜ
+ * @note  ‰ªäÂæåÔºå NvLog (‰∏çÊèÆÁô∫Log) „ÅåÂÆüË£Ö‰∫àÂÆö
+ * @note  Ë©≥Á¥∞„ÅØ event_logger.h „ÇíÂèÇÁÖß
  */
 #include "event_logger.h"
 #include "event_handler.h"
@@ -13,25 +13,25 @@
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
 #include <src_user/Settings/System/event_logger_settings.h>
-#include "../../CmdTlm/common_tlm_cmd_packet_util.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 
 #ifdef EL_IS_ENABLE_CLOG
 /**
  * @enum   EL_CLOG_LOG_ACK
- * @brief  ÉçÉOëÄçÏÇÃï‘ÇËíl
- * @note   uint8_t ÇëzíË
+ * @brief  „É≠„Ç∞Êìç‰Ωú„ÅÆËøî„ÇäÂÄ§
+ * @note   uint8_t „ÇíÊÉ≥ÂÆö
  */
 typedef enum
 {
-  EL_CLOG_LOG_ACK_OK = 0,           //!< ê≥èÌèIóπ
-  EL_CLOG_LOG_ACK_NOT_FOUND         //!< éwíËÉçÉOÇ™å©Ç¬Ç©ÇÁÇ∏
+  EL_CLOG_LOG_ACK_OK = 0,           //!< Ê≠£Â∏∏ÁµÇ‰∫Ü
+  EL_CLOG_LOG_ACK_NOT_FOUND         //!< ÊåáÂÆö„É≠„Ç∞„ÅåË¶ã„Å§„Åã„Çâ„Åö
 } EL_CLOG_LOG_ACK;
 #endif
 
 
 /**
- * @brief  ÉCÉxÉìÉg (EL_Event) Çèâä˙âª
+ * @brief  „Ç§„Éô„É≥„Éà (EL_Event) „ÇíÂàùÊúüÂåñ
  * @param  group: EL_Event.group
  * @param  local: EL_Event.local
  * @param  err_level: EL_Event.err_level
@@ -41,8 +41,8 @@ typedef enum
 static EL_Event EL_init_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL err_level, uint32_t note);
 
 /**
- * @brief  ÉCÉxÉìÉg (EL_Event) ÇãLò^
- * @note   ELì‡ïîÇ≈ÇÕ EL_ERROR_LEVEL_EL ÇÃÉCÉxÉìÉgÇ™î≠çsÇ≈Ç´ÇÈÇΩÇﬂÅCåˆäJä÷êîÇ∆ï™ÇØÇƒÇ¢ÇÈ
+ * @brief  „Ç§„Éô„É≥„Éà (EL_Event) „ÇíË®òÈå≤
+ * @note   ELÂÜÖÈÉ®„Åß„ÅØ EL_ERROR_LEVEL_EL „ÅÆ„Ç§„Éô„É≥„Éà„ÅåÁô∫Ë°å„Åß„Åç„Çã„Åü„ÇÅÔºåÂÖ¨ÈñãÈñ¢Êï∞„Å®ÂàÜ„Åë„Å¶„ÅÑ„Çã
  * @param  group: EL_Event.group
  * @param  local: EL_Event.local
  * @param  err_level: EL_Event.err_level
@@ -53,35 +53,35 @@ static EL_ACK EL_record_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL er
 
 #ifdef EL_IS_ENABLE_TLOG
 /**
- * @brief  ÉCÉxÉìÉg (EL_Event) Ç TLog Ç…ãLò^
- * @note   ÉAÉTÅ[ÉVÉáÉìÇÃÇ»Ç¢ÅCì‡ïîópä÷êî
- * @param  event: ãLò^Ç∑ÇÈÉCÉxÉìÉg
- * @retval EL_ACK_OK        : ê≥èÌèIóπ
- * @retval EL_ACK_TLOG_FULL : TLogÇÃí«ãLÇ™ïsî\ÇÃÇΩÇﬂÅCTLogãLò^Ç™Ç≈Ç´Ç∏
+ * @brief  „Ç§„Éô„É≥„Éà (EL_Event) „Çí TLog „Å´Ë®òÈå≤
+ * @note   „Ç¢„Çµ„Éº„Ç∑„Éß„É≥„ÅÆ„Å™„ÅÑÔºåÂÜÖÈÉ®Áî®Èñ¢Êï∞
+ * @param  event: Ë®òÈå≤„Åô„Çã„Ç§„Éô„É≥„Éà
+ * @retval EL_ACK_OK        : Ê≠£Â∏∏ÁµÇ‰∫Ü
+ * @retval EL_ACK_TLOG_FULL : TLog„ÅÆËøΩË®ò„Åå‰∏çËÉΩ„ÅÆ„Åü„ÇÅÔºåTLogË®òÈå≤„Åå„Åß„Åç„Åö
  */
 static EL_ACK EL_record_event_to_tlog_(const EL_Event* event);
 
 /**
- * @brief  TLog ÇÃ wp ÇÉ`ÉFÉbÉNÇµÅC event Çê∂ê¨Ç∑ÇÈ
+ * @brief  TLog „ÅÆ wp „Çí„ÉÅ„Çß„ÉÉ„ÇØ„ÅóÔºå event „ÇíÁîüÊàê„Åô„Çã
  *
- *         wp Ç™ îºï™ÅCèIí[ÇÃÇ∆Ç´Ç… event Çê∂ê¨Ç∑ÇÈ
- *         Ç±ÇÍÇ…ÇÊÇËÅCÇ±Ç±Ç≈ê∂Ç∂ÇΩ event Ç≈ TLog ÉeÅ[ÉuÉãÇÃÉfÅ[É^ÇÃëﬁîÇ»ÇçsÇ§Ç∆ÇÊÇ¢ÅD
- * @note   err_level ÇÃÉAÉTÅ[ÉVÉáÉìÇÕÇµÇ»Ç¢Åiì‡ïîä÷êîÅj
- * @param  err_level: É`ÉFÉbÉNÇ∑ÇÈÉeÅ[ÉuÉãÇÃÉGÉâÅ[ÉåÉxÉã
+ *         wp „Åå ÂçäÂàÜÔºåÁµÇÁ´Ø„ÅÆ„Å®„Åç„Å´ event „ÇíÁîüÊàê„Åô„Çã
+ *         „Åì„Çå„Å´„Çà„ÇäÔºå„Åì„Åì„ÅßÁîü„Åò„Åü event „Åß TLog „ÉÜ„Éº„Éñ„É´„ÅÆ„Éá„Éº„Çø„ÅÆÈÄÄÈÅø„Å™„ÇíË°å„ÅÜ„Å®„Çà„ÅÑÔºé
+ * @note   err_level „ÅÆ„Ç¢„Çµ„Éº„Ç∑„Éß„É≥„ÅØ„Åó„Å™„ÅÑÔºàÂÜÖÈÉ®Èñ¢Êï∞Ôºâ
+ * @param  err_level: „ÉÅ„Çß„ÉÉ„ÇØ„Åô„Çã„ÉÜ„Éº„Éñ„É´„ÅÆ„Ç®„É©„Éº„É¨„Éô„É´
  * @return void
  */
 static void EL_check_tlog_wp_(EL_ERROR_LEVEL err_level);
 
 /**
- * @brief  TLogÉeÅ[ÉuÉãÇÇ∑Ç◊ÇƒÉNÉäÉA
+ * @brief  TLog„ÉÜ„Éº„Éñ„É´„Çí„Åô„Åπ„Å¶„ÇØ„É™„Ç¢
  * @return void
  */
 static void EL_clear_all_tlog_(void);
 
 /**
- * @brief  TLogÉeÅ[ÉuÉãÇÉNÉäÉA
- * @note   err_level ÇÃÉAÉTÅ[ÉVÉáÉìÇÕÇµÇ»Ç¢Åiì‡ïîä÷êîÅj
- * @param  err_level: ÉNÉäÉAÇ∑ÇÈÉeÅ[ÉuÉãÇÃÉGÉâÅ[ÉåÉxÉã
+ * @brief  TLog„ÉÜ„Éº„Éñ„É´„Çí„ÇØ„É™„Ç¢
+ * @note   err_level „ÅÆ„Ç¢„Çµ„Éº„Ç∑„Éß„É≥„ÅØ„Åó„Å™„ÅÑÔºàÂÜÖÈÉ®Èñ¢Êï∞Ôºâ
+ * @param  err_level: „ÇØ„É™„Ç¢„Åô„Çã„ÉÜ„Éº„Éñ„É´„ÅÆ„Ç®„É©„Éº„É¨„Éô„É´
  * @return void
  */
 static void EL_clear_tlog_(EL_ERROR_LEVEL err_level);
@@ -89,63 +89,63 @@ static void EL_clear_tlog_(EL_ERROR_LEVEL err_level);
 
 #ifdef EL_IS_ENABLE_CLOG
 /**
- * @brief  ÉCÉxÉìÉg (EL_Event) Ç CLog Ç…ãLò^
- * @note   ÉAÉTÅ[ÉVÉáÉìÇÃÇ»Ç¢ÅCì‡ïîópä÷êî
- * @param  event: ãLò^Ç∑ÇÈÉCÉxÉìÉg
+ * @brief  „Ç§„Éô„É≥„Éà (EL_Event) „Çí CLog „Å´Ë®òÈå≤
+ * @note   „Ç¢„Çµ„Éº„Ç∑„Éß„É≥„ÅÆ„Å™„ÅÑÔºåÂÜÖÈÉ®Áî®Èñ¢Êï∞
+ * @param  event: Ë®òÈå≤„Åô„Çã„Ç§„Éô„É≥„Éà
  * @return void
  */
 static void EL_record_event_to_clog_(const EL_Event* event);
 
 /**
- * @brief  CLogÉeÅ[ÉuÉãÇÇ∑Ç◊ÇƒÉNÉäÉA
+ * @brief  CLog„ÉÜ„Éº„Éñ„É´„Çí„Åô„Åπ„Å¶„ÇØ„É™„Ç¢
  * @return void
  */
 static void EL_clear_all_clog_(void);
 
 /**
- * @brief  CLogÉeÅ[ÉuÉãÇÉNÉäÉA
- * @note   err_level ÇÃÉAÉTÅ[ÉVÉáÉìÇÕÇµÇ»Ç¢Åiì‡ïîä÷êîÅj
- * @param  err_level: ÉNÉäÉAÇ∑ÇÈÉeÅ[ÉuÉãÇÃÉGÉâÅ[ÉåÉxÉã
+ * @brief  CLog„ÉÜ„Éº„Éñ„É´„Çí„ÇØ„É™„Ç¢
+ * @note   err_level „ÅÆ„Ç¢„Çµ„Éº„Ç∑„Éß„É≥„ÅØ„Åó„Å™„ÅÑÔºàÂÜÖÈÉ®Èñ¢Êï∞Ôºâ
+ * @param  err_level: „ÇØ„É™„Ç¢„Åô„Çã„ÉÜ„Éº„Éñ„É´„ÅÆ„Ç®„É©„Éº„É¨„Éô„É´
  * @return void
  */
 static void EL_clear_clog_(EL_ERROR_LEVEL err_level);
 
 /**
- * @brief  äYìñÉCÉxÉìÉgÇÃ CLog ÇåüçıÇµéÊìæÇ∑ÇÈ
- * @param[in]  event:     íTçıÇ∑ÇÈ EL_Event
- * @param[out] log_idx:   EL_CumulativeLog.logs Ç…Ç®ÇØÇÈ Clog ÇÃèÍèä
- * @param[out] order_idx: EL_CumulativeLog.log_orders Ç…Ç®ÇØÇÈ Clog ÇÃèÍèä
- * @retval EL_CLOG_LOG_ACK_OK:        å©Ç¬Ç©Ç¡ÇΩ
- * @retval EL_CLOG_LOG_ACK_NOT_FOUND: å©Ç¬Ç©ÇÁÇ∏
+ * @brief  Ë©≤ÂΩì„Ç§„Éô„É≥„Éà„ÅÆ CLog „ÇíÊ§úÁ¥¢„ÅóÂèñÂæó„Åô„Çã
+ * @param[in]  event:     Êé¢Á¥¢„Åô„Çã EL_Event
+ * @param[out] log_idx:   EL_CumulativeLog.logs „Å´„Åä„Åë„Çã Clog „ÅÆÂ†¥ÊâÄ
+ * @param[out] order_idx: EL_CumulativeLog.log_orders „Å´„Åä„Åë„Çã Clog „ÅÆÂ†¥ÊâÄ
+ * @retval EL_CLOG_LOG_ACK_OK:        Ë¶ã„Å§„Åã„Å£„Åü
+ * @retval EL_CLOG_LOG_ACK_NOT_FOUND: Ë¶ã„Å§„Åã„Çâ„Åö
  */
 static EL_CLOG_LOG_ACK EL_search_clog_(const EL_Event* event, uint16_t* log_idx, uint16_t* order_idx);
 
 /**
- * @brief  äYìñÉCÉxÉìÉgÇÃ CLog ÇÅCÉCÉxÉìÉgÉeÅ[ÉuÉãÇÃêÊì™Ç…èoÇ∑
- * @note   CLog Ç™Ç»ÇØÇÍÇŒ insert Ç∑ÇÈ
- * @param[in]  event: êÊì™Ç…èoÇ∑ EL_Event
+ * @brief  Ë©≤ÂΩì„Ç§„Éô„É≥„Éà„ÅÆ CLog „ÇíÔºå„Ç§„Éô„É≥„Éà„ÉÜ„Éº„Éñ„É´„ÅÆÂÖàÈ†≠„Å´Âá∫„Åô
+ * @note   CLog „Åå„Å™„Åë„Çå„Å∞ insert „Åô„Çã
+ * @param[in]  event: ÂÖàÈ†≠„Å´Âá∫„Åô EL_Event
  * @return void
  */
 static void EL_move_to_front_in_clog_(const EL_Event* event);
 
 /**
- * @brief  ÉCÉxÉìÉgÉeÅ[ÉuÉãêÊì™Ç…äYìñÉCÉxÉìÉgÇÃ CLog ÇÇ¬Ç≠ÇÈ
- * @note   ç≈Ç‡å√Ç¢ CLog Ç™îjä¸Ç≥ÇÍÇÈÇ±Ç∆Ç…íçà”
- * @note   Ç∑Ç≈Ç… CLog Ç™ãLò^Ç≥Ç¶ÇƒÇ¢ÇÈèÍçáÇ‡É`ÉFÉbÉNÇπÇ∏Ç… insert Ç∑ÇÈÅDÇ∑Ç≈Ç…É`ÉFÉbÉN (EL_search_clog_) Ç≥ÇÍÇƒÇ¢ÇÈÇ±Ç∆ÇëOíÒÇ∆Ç∑ÇÈÅIÅIÅI
- * @param[in]  event: êÊì™Ç…çÏÇÈ EL_Event
+ * @brief  „Ç§„Éô„É≥„Éà„ÉÜ„Éº„Éñ„É´ÂÖàÈ†≠„Å´Ë©≤ÂΩì„Ç§„Éô„É≥„Éà„ÅÆ CLog „Çí„Å§„Åè„Çã
+ * @note   ÊúÄ„ÇÇÂè§„ÅÑ CLog „ÅåÁ†¥Ê£Ñ„Åï„Çå„Çã„Åì„Å®„Å´Ê≥®ÊÑè
+ * @note   „Åô„Åß„Å´ CLog „ÅåË®òÈå≤„Åï„Åà„Å¶„ÅÑ„ÇãÂ†¥Âêà„ÇÇ„ÉÅ„Çß„ÉÉ„ÇØ„Åõ„Åö„Å´ insert „Åô„ÇãÔºé„Åô„Åß„Å´„ÉÅ„Çß„ÉÉ„ÇØ (EL_search_clog_) „Åï„Çå„Å¶„ÅÑ„Çã„Åì„Å®„ÇíÂâçÊèê„Å®„Åô„ÇãÔºÅÔºÅÔºÅ
+ * @param[in]  event: ÂÖàÈ†≠„Å´‰Ωú„Çã EL_Event
  * @return void
  */
 static void EL_create_clog_on_front_(const EL_Event* event);
 #endif
 
 /**
- * @brief  ç≈êVÉçÉOÇÉNÉäÉA
+ * @brief  ÊúÄÊñ∞„É≠„Ç∞„Çí„ÇØ„É™„Ç¢
  * @return void
  */
 static void EL_clear_latest_event_(void);
 
 /**
- * @brief  ìùåvèÓïÒÇÉNÉäÉA
+ * @brief  Áµ±Ë®àÊÉÖÂ†±„Çí„ÇØ„É™„Ç¢
  * @return void
  */
 static void EL_clear_statistics_(void);
@@ -188,7 +188,7 @@ void EL_initialize(void)
 {
   memset(&event_logger_, 0x00, sizeof(EventLogger));
 
-  // ç≈èâÇÕÇ∑Ç◊ÇƒÇÃÉçÉMÉìÉOÇ™óLå¯
+  // ÊúÄÂàù„ÅØ„Åô„Åπ„Å¶„ÅÆ„É≠„ÇÆ„É≥„Ç∞„ÅåÊúâÂäπ
   EL_enable_all_logging();
 
 #ifdef EL_IS_ENABLE_TLOG
@@ -209,7 +209,7 @@ void EL_initialize(void)
 
   EL_clear_all_tlog_();
 
-  // ÉfÉtÉHÉãÉgÇ≈ÇÕ TLog ÇÃè„èëÇ´ÇÕóLå¯
+  // „Éá„Éï„Ç©„É´„Éà„Åß„ÅØ TLog „ÅÆ‰∏äÊõ∏„Åç„ÅØÊúâÂäπ
   EL_enable_tlog_overwrite_all();
   EL_enable_tlog_overwrite(EL_ERROR_LEVEL_EH);
 #endif  // EL_IS_ENABLE_TLOG
@@ -238,10 +238,10 @@ void EL_initialize(void)
   EL_clear_all_clog_();
 #endif  // EL_IS_ENABLE_CLOG
 
-  // EL_clear_statistics_();    // ñ`ì™ÇÃ memset Ç™Ç†ÇÈÇÃÇ≈ïsóv
-  // EL_clear_latest_event_();    // ñ`ì™ÇÃ memset Ç™Ç†ÇÈÇÃÇ≈ïsóv
+  // EL_clear_statistics_();    // ÂÜíÈ†≠„ÅÆ memset „Åå„ÅÇ„Çã„ÅÆ„Åß‰∏çË¶Å
+  // EL_clear_latest_event_();    // ÂÜíÈ†≠„ÅÆ memset „Åå„ÅÇ„Çã„ÅÆ„Åß‰∏çË¶Å
 
-  // ÉÜÅ[ÉUÅ[ÉfÉtÉHÉãÉgê›íË
+  // „É¶„Éº„Ç∂„Éº„Éá„Éï„Ç©„É´„ÉàË®≠ÂÆö
   EL_load_default_settings();
 
   EH_match_event_counter_to_el();
@@ -268,7 +268,7 @@ static EL_Event EL_init_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL er
 
 EL_ACK EL_record_event(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL err_level, uint32_t note)
 {
-  // ÉÜÅ[ÉUÅ[Ç©ÇÁÇÃÉCÉxÉìÉgãLò^Ç≈ EL_IS_ENABLE_EL_ERROR_LEVEL ÇÕã÷é~
+  // „É¶„Éº„Ç∂„Éº„Åã„Çâ„ÅÆ„Ç§„Éô„É≥„ÉàË®òÈå≤„Åß EL_IS_ENABLE_EL_ERROR_LEVEL „ÅØÁ¶ÅÊ≠¢
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   if (err_level == EL_ERROR_LEVEL_EL) return EL_ACK_ILLEGAL_ERROR_LEVEL;
 #endif
@@ -283,12 +283,12 @@ static EL_ACK EL_record_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL er
   EL_ACK ack = EL_ACK_OK;
 
   if (event.group >= EL_GROUP_MAX)                 return EL_ACK_ILLEGAL_GROUP;
-  if (event.group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // Ç±ÇÍÇÕñ{ìñÇ…ì¸ÇÍÇƒÇÊÇ¢Ç©óvãcò_
+  if (event.group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // „Åì„Çå„ÅØÊú¨ÂΩì„Å´ÂÖ•„Çå„Å¶„Çà„ÅÑ„ÅãË¶ÅË≠∞Ë´ñ
   if (event.err_level < 0)                         return EL_ACK_ILLEGAL_ERROR_LEVEL;
   if (event.err_level >= EL_ERROR_LEVEL_MAX)       return EL_ACK_ILLEGAL_ERROR_LEVEL;
   if (!EL_is_logging_enable(event.group))          return EL_ACK_DISABLE_LOGGING;
 
-  event_logger_.latest_event = event;   // çƒãAåƒÇ—èoÇµÇÃâ¬î\ê´Ç™Ç†ÇÈÇÃÇ≈ÅCï ìrÉRÉsÅ[ÇµÇƒéùÇ¬
+  event_logger_.latest_event = event;   // ÂÜçÂ∏∞Âëº„Å≥Âá∫„Åó„ÅÆÂèØËÉΩÊÄß„Åå„ÅÇ„Çã„ÅÆ„ÅßÔºåÂà•ÈÄî„Ç≥„Éî„Éº„Åó„Å¶ÊåÅ„Å§
   event_logger_.statistics.record_counter_total++;
   event_logger_.statistics.record_counters[event.err_level]++;
 
@@ -300,10 +300,10 @@ static EL_ACK EL_record_event_(EL_GROUP group, uint32_t local, EL_ERROR_LEVEL er
   EL_record_event_to_clog_(&event);
 #endif
 
-  // EL_record_event ÇÃçƒãAåƒÇ—èoÇµÇ…Ç»ÇÈÇÃÇ≈ç≈å„Ç…åƒÇ—èoÇµÅDíçà”ÅIÅI
+  // EL_record_event „ÅÆÂÜçÂ∏∞Âëº„Å≥Âá∫„Åó„Å´„Å™„Çã„ÅÆ„ÅßÊúÄÂæå„Å´Âëº„Å≥Âá∫„ÅóÔºéÊ≥®ÊÑèÔºÅÔºÅ
 #ifdef EL_IS_ENABLE_TLOG
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
-  // í«ãLÇ≈Ç´Ç»Ç¢èÍçáÇÕÉXÉLÉbÉv
+  // ËøΩË®ò„Åß„Åç„Å™„ÅÑÂ†¥Âêà„ÅØ„Çπ„Ç≠„ÉÉ„Éó
   if (ack != EL_ACK_TLOG_FULL)
   {
     EL_check_tlog_wp_(event.err_level);
@@ -324,7 +324,7 @@ static EL_ACK EL_record_event_to_tlog_(const EL_Event* event)
 
   if ( EL_is_tlog_overwrite_enable(err_level) == 0 && p_tlog->is_table_overflow == 1 )
   {
-    // í«ãLÇ≈Ç´Ç»Ç¢
+    // ËøΩË®ò„Åß„Åç„Å™„ÅÑ
     return EL_ACK_TLOG_FULL;
   }
 
@@ -334,7 +334,7 @@ static EL_ACK EL_record_event_to_tlog_(const EL_Event* event)
 
   if ( EL_is_tlog_overwrite_enable(err_level) == 0 && p_tlog->log_wp == 0 )
   {
-    // éüâÒÇ©ÇÁí«ãLÇ≈Ç´Ç»Ç≠Ç»ÇÈ
+    // Ê¨°Âõû„Åã„ÇâËøΩË®ò„Åß„Åç„Å™„Åè„Å™„Çã
     p_tlog->is_table_overflow = 1;
   }
   else
@@ -350,7 +350,7 @@ static void EL_check_tlog_wp_(EL_ERROR_LEVEL err_level)
 {
   const uint16_t wp = event_logger_.tlogs[err_level].log_wp;
   const uint16_t capacity = event_logger_.tlogs[err_level].log_capacity;
-  if (wp == 0)    // capacity Çí¥Ç¶ÅCàÍé¸ÇµÇΩÇ∆Ç´
+  if (wp == 0)    // capacity „ÇíË∂Ö„ÅàÔºå‰∏ÄÂë®„Åó„Åü„Å®„Åç
   {
     switch (err_level)
     {
@@ -378,12 +378,12 @@ static void EL_check_tlog_wp_(EL_ERROR_LEVEL err_level)
       break;
 
     default:
-      // EL_ERROR_LEVEL_EL ÇÃÇ‡ÇÃÇÕÅCñ≥å¿ÉãÅ[ÉvÇÃâ¬î\ê´Ç™Ç†ÇÈÇÃÇ≈ÅCÉCÉxÉìÉgî≠çsÇµÇ»Ç¢
+      // EL_ERROR_LEVEL_EL „ÅÆ„ÇÇ„ÅÆ„ÅØÔºåÁÑ°Èôê„É´„Éº„Éó„ÅÆÂèØËÉΩÊÄß„Åå„ÅÇ„Çã„ÅÆ„ÅßÔºå„Ç§„Éô„É≥„ÉàÁô∫Ë°å„Åó„Å™„ÅÑ
       break;
     }
   }
 
-  if (wp == (capacity / 2) && (capacity % 2 ) == 0)   // ñÒîºï™Ç…íBÇµÇΩÇ∆Ç´
+  if (wp == (capacity / 2) && (capacity % 2 ) == 0)   // Á¥ÑÂçäÂàÜ„Å´ÈÅî„Åó„Åü„Å®„Åç
   {
     switch (err_level)
     {
@@ -411,7 +411,7 @@ static void EL_check_tlog_wp_(EL_ERROR_LEVEL err_level)
       break;
 
     default:
-      // EL_ERROR_LEVEL_EL ÇÃÇ‡ÇÃÇÕÅCñ≥å¿ÉãÅ[ÉvÇÃâ¬î\ê´Ç™Ç†ÇÈÇÃÇ≈ÅCÉCÉxÉìÉgî≠çsÇµÇ»Ç¢
+      // EL_ERROR_LEVEL_EL „ÅÆ„ÇÇ„ÅÆ„ÅØÔºåÁÑ°Èôê„É´„Éº„Éó„ÅÆÂèØËÉΩÊÄß„Åå„ÅÇ„Çã„ÅÆ„ÅßÔºå„Ç§„Éô„É≥„ÉàÁô∫Ë°å„Åó„Å™„ÅÑ
       break;
     }
   }
@@ -450,7 +450,7 @@ static void EL_record_event_to_clog_(const EL_Event* event)
 
   EL_move_to_front_in_clog_(event);
 
-  // é©êgÇÃÉçÉOidxÅCÇ¬Ç‹ÇËç≈Ç‡êVÇµÇ¢ÉçÉOidxÇèEÇ§
+  // Ëá™Ë∫´„ÅÆ„É≠„Ç∞idxÔºå„Å§„Åæ„ÇäÊúÄ„ÇÇÊñ∞„Åó„ÅÑ„É≠„Ç∞idx„ÇíÊãæ„ÅÜ
   log_idx = event_logger_.clogs[err_level].log_orders[0];
   p_newest_clog_log = &event_logger_.clogs[err_level].logs[log_idx];
 
@@ -523,7 +523,7 @@ static void EL_move_to_front_in_clog_(const EL_Event* event)
 
   if (log_ret == EL_CLOG_LOG_ACK_NOT_FOUND)
   {
-    // ÉçÉOÇ™Ç»Ç¢ÇÃÇ≈çÏÇÈ
+    // „É≠„Ç∞„Åå„Å™„ÅÑ„ÅÆ„Åß‰Ωú„Çã
     EL_create_clog_on_front_(event);
     return;
   }
@@ -540,7 +540,7 @@ static void EL_create_clog_on_front_(const EL_Event* event)
   EL_CumulativeLog* p_clog = &event_logger_.clogs[err_level];
   const uint16_t capacity = p_clog->log_capacity;
 
-  // ç≈Ç‡å√Ç¢ÉçÉOÇéÊìæ
+  // ÊúÄ„ÇÇÂè§„ÅÑ„É≠„Ç∞„ÇíÂèñÂæó
   log_idx = p_clog->log_orders[capacity - 1];
 
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
@@ -548,8 +548,8 @@ static void EL_create_clog_on_front_(const EL_Event* event)
     const EL_CLogElement* drop_clog_log = &p_clog->logs[log_idx];
     if (drop_clog_log->event.group != (EL_GROUP)EL_CORE_GROUP_NULL)
     {
-      // àÍâûãLò^ÇÃÇΩÇﬂÇ…ÉCÉxÉìÉgÇî≠çsÇ∑ÇÈ
-      // Ç±Ç±Ç≈ÅC EL Ç‡èoÇµÇƒÇµÇ‹Ç§Ç∆çƒãA & ç≈à´ñ≥å¿ÉãÅ[ÉvÇ…Ç»ÇÈ
+      // ‰∏ÄÂøúË®òÈå≤„ÅÆ„Åü„ÇÅ„Å´„Ç§„Éô„É≥„Éà„ÇíÁô∫Ë°å„Åô„Çã
+      // „Åì„Åì„ÅßÔºå EL „ÇÇÂá∫„Åó„Å¶„Åó„Åæ„ÅÜ„Å®ÂÜçÂ∏∞ & ÊúÄÊÇ™ÁÑ°Èôê„É´„Éº„Éó„Å´„Å™„Çã
       if (err_level != EL_ERROR_LEVEL_EL)
       {
         EL_record_event_((EL_GROUP)EL_CORE_GROUP_EL_DROP_CLOG1,
@@ -568,12 +568,12 @@ static void EL_create_clog_on_front_(const EL_Event* event)
   memmove(&p_clog->log_orders[1], &p_clog->log_orders[0], sizeof(uint16_t) * (capacity - 1));
   p_clog->log_orders[0] = log_idx;
 
-  // Ç±Ç±Ç≈ event ÇÇ¢ÇÍÇƒÇµÇ‹Ç§
-  // ÇªÇ§Ç∑ÇÈÇ±Ç∆Ç≈ÅCèââÒÇÃ delta_record_time Ç™ 0 Ç…Ç»ÇÈ
+  // „Åì„Åì„Åß event „Çí„ÅÑ„Çå„Å¶„Åó„Åæ„ÅÜ
+  // „Åù„ÅÜ„Åô„Çã„Åì„Å®„ÅßÔºåÂàùÂõû„ÅÆ delta_record_time „Åå 0 „Å´„Å™„Çã
   p_clog->logs[log_idx].event = *event;
   p_clog->logs[log_idx].count = 0;
 
-  // delta_record_time ÇÕÇ∆ÇËÇ†Ç¶Ç∏ÇÕè¡ÇµÇƒÇ»Ç¢Ç™ÅCíºå„Ç…è„èëÇ´Ç≥ÇÍÇÈÇÕÇ∏
+  // delta_record_time „ÅØ„Å®„Çä„ÅÇ„Åà„Åö„ÅØÊ∂à„Åó„Å¶„Å™„ÅÑ„ÅåÔºåÁõ¥Âæå„Å´‰∏äÊõ∏„Åç„Åï„Çå„Çã„ÅØ„Åö
 }
 #endif
 
@@ -594,12 +594,12 @@ static void EL_clear_statistics_(void)
 EL_ACK EL_enable_logging(EL_GROUP group)
 {
   uint32_t group_idx    = (uint32_t)group / 8;
-  uint32_t group_subidx = 7 - (uint32_t)group % 8;    // îΩì]
+  uint32_t group_subidx = 7 - (uint32_t)group % 8;    // ÂèçËª¢
   uint8_t  info;
   uint8_t  mask;
 
   if (group >= EL_GROUP_MAX) return EL_ACK_ILLEGAL_GROUP;
-  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // Ç±ÇÍÇÕñ{ìñÇ…ì¸ÇÍÇƒÇÊÇ¢Ç©óvãcò_
+  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // „Åì„Çå„ÅØÊú¨ÂΩì„Å´ÂÖ•„Çå„Å¶„Çà„ÅÑ„ÅãË¶ÅË≠∞Ë´ñ
 
   info = event_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
@@ -614,16 +614,16 @@ EL_ACK EL_enable_logging(EL_GROUP group)
 EL_ACK EL_disable_logging(EL_GROUP group)
 {
   uint32_t group_idx    = (uint32_t)group / 8;
-  uint32_t group_subidx = 7 - (uint32_t)group % 8;    // îΩì]
+  uint32_t group_subidx = 7 - (uint32_t)group % 8;    // ÂèçËª¢
   uint8_t  info;
   uint8_t  mask;
 
   if (group >= EL_GROUP_MAX) return EL_ACK_ILLEGAL_GROUP;
-  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // Ç±ÇÍÇÕñ{ìñÇ…ì¸ÇÍÇƒÇÊÇ¢Ç©óvãcò_
+  if (group <= (EL_GROUP)EL_CORE_GROUP_NULL) return EL_ACK_ILLEGAL_GROUP;     // „Åì„Çå„ÅØÊú¨ÂΩì„Å´ÂÖ•„Çå„Å¶„Çà„ÅÑ„ÅãË¶ÅË≠∞Ë´ñ
 
   info = event_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
-  mask = (uint8_t)(~mask);                     // ÉrÉbÉgîΩì]
+  mask = (uint8_t)(~mask);                     // „Éì„ÉÉ„ÉàÂèçËª¢
   info = (uint8_t)(info & mask);
 
   event_logger_.is_logging_enable[group_idx] = info;
@@ -635,12 +635,12 @@ EL_ACK EL_disable_logging(EL_GROUP group)
 int EL_is_logging_enable(EL_GROUP group)
 {
   uint32_t group_idx    = (uint32_t)group / 8;
-  uint32_t group_subidx = 7 - (uint32_t)group % 8;    // îΩì]
+  uint32_t group_subidx = 7 - (uint32_t)group % 8;    // ÂèçËª¢
   uint8_t  info;
   uint8_t  mask;
   uint8_t  ret;
 
-  // ïsê≥Ç» group ÇÕñ≥å¯îªíË
+  // ‰∏çÊ≠£„Å™ group „ÅØÁÑ°ÂäπÂà§ÂÆö
   if (group >= EL_GROUP_MAX) return 0;
 
   info = event_logger_.is_logging_enable[group_idx];
@@ -726,7 +726,7 @@ const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, ui
 
   if (err_level < 0 || err_level >= EL_ERROR_LEVEL_MAX)
   {
-    // édï˚Ç™Ç»Ç¢ÇÃÇ≈ HIGHÇ
+    // ‰ªïÊñπ„Åå„Å™„ÅÑ„ÅÆ„Åß HIGH„Çí
     err_level = EL_ERROR_LEVEL_HIGH;
   }
 
@@ -735,7 +735,7 @@ const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, ui
 
   if (n >= capacity)
   {
-    // édï˚Ç™Ç»Ç¢ÇÃÇ≈ÅCç≈êVÇÃÇ‡ÇÃÇ
+    // ‰ªïÊñπ„Åå„Å™„ÅÑ„ÅÆ„ÅßÔºåÊúÄÊñ∞„ÅÆ„ÇÇ„ÅÆ„Çí
     idx = 0;
   }
   else
@@ -748,7 +748,7 @@ const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, ui
 #endif
 
 
-CCP_EXEC_STS Cmd_EL_INIT(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_initialize();
@@ -756,7 +756,7 @@ CCP_EXEC_STS Cmd_EL_INIT(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -775,7 +775,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -794,7 +794,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_clear_statistics_();
@@ -803,7 +803,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -818,7 +818,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -832,7 +832,7 @@ CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CTCP* packet)
 #endif
 
 
-CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   uint32_t local = CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -846,7 +846,7 @@ CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
   case EL_ACK_OK:
     return CCP_EXEC_SUCCESS;
   case EL_ACK_TLOG_FULL:
-    // óvåüì¢ÇæÇ™ÅCÇ±ÇÍÇÕê≥èÌÇ≈ÇÕÇ†ÇÈÇÃÇ≈Ç±ÇÍÇ≈ÇÊÇµ
+    // Ë¶ÅÊ§úË®é„Å†„ÅåÔºå„Åì„Çå„ÅØÊ≠£Â∏∏„Åß„ÅØ„ÅÇ„Çã„ÅÆ„Åß„Åì„Çå„Åß„Çà„Åó
     return CCP_EXEC_SUCCESS;
   case EL_ACK_ILLEGAL_GROUP:
     return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -861,7 +861,7 @@ CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -900,7 +900,7 @@ CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page_no = CCP_get_param_from_packet(packet, 0, uint8_t);
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -938,7 +938,7 @@ CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CTCP* packet)
 #endif
 
 
-CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_all_logging();
@@ -947,7 +947,7 @@ CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
@@ -965,7 +965,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
 
@@ -983,7 +983,7 @@ CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_all_logging();
@@ -991,7 +991,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_disable_all_logging();
@@ -1000,7 +1000,7 @@ CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CTCP* packet)
 
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -1018,7 +1018,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
 {
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -1036,7 +1036,7 @@ CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_tlog_overwrite_all();
@@ -1044,7 +1044,7 @@ CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CTCP* packet)
 }
 
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CTCP* packet)
+CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_disable_tlog_overwrite_all();

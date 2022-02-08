@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
  * @file
- * @brief ƒCƒxƒ“ƒgˆ—‚Ì’èŠúÀs‚Ì‚½‚ß‚ÌApp
- * @note  À¿“I‚É‚Í event_handler ‚ğ’èŠúÀs‚·‚é‚¾‚¯
+ * @brief ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†ã®å®šæœŸå®Ÿè¡Œã®ãŸã‚ã®App
+ * @note  å®Ÿè³ªçš„ã«ã¯ event_handler ã‚’å®šæœŸå®Ÿè¡Œã™ã‚‹ã ã‘
  */
 #include "event_utility.h"
 #include "../System/EventManager/event_handler.h"
@@ -33,21 +33,21 @@ static void EVENT_UTIL_update_()
   }
 }
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CTCP* packet)
+CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CommonCmdPacket* packet)
 {
   (void)packet;
   event_utility_.is_enabled_eh_execution = 1;
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CTCP* packet)
+CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CommonCmdPacket* packet)
 {
   (void)packet;
   event_utility_.is_enabled_eh_execution = 0;
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CTCP* packet)
+CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_execute();

@@ -1,8 +1,8 @@
 /**
  * @file
  * @brief watchdog timer
- * @note  ‚±‚¢‚Â‚àBootLoader‚É”z’u‚·‚é‚Ì‚ÅCƒŠƒvƒ‰Â”\—Ìˆæ‚Ì‚à‚Ì‚ğinclude‚µ‚È‚¢‚±‚ÆII
- *        ‚È‚¨CCMD‚ÍƒŠƒvƒ‘ÎÛ“àII
+ * @note  ã“ã„ã¤ã‚‚BootLoaderã«é…ç½®ã™ã‚‹ã®ã§ï¼Œãƒªãƒ—ãƒ­å¯èƒ½é ˜åŸŸã®ã‚‚ã®ã‚’includeã—ãªã„ã“ã¨ï¼ï¼
+ *        ãªãŠï¼ŒCMDã¯ãƒªãƒ—ãƒ­å¯¾è±¡å†…ï¼ï¼
  */
 #include "watchdog_timer.h"
 #include "../../Library/print.h"
@@ -12,8 +12,8 @@ const WDT_Config* const wdt_config = &wdt_config_;
 
 static void wdt_init_(void);
 
-// WDT‰Šú‰»‚ÌŒöŠJŠÖ”
-// BootLoader‚©‚ç‚Í‚±‚ê‚ªŒÄ‚Î‚ê‚é
+// WDTåˆæœŸåŒ–ã®å…¬é–‹é–¢æ•°
+// BootLoaderã‹ã‚‰ã¯ã“ã‚ŒãŒå‘¼ã°ã‚Œã‚‹
 void WDT_init(void)
 {
   wdt_init_();
@@ -31,7 +31,7 @@ static void wdt_init_(void)
 
 void WDT_clear_wdt(void)
 {
-  // IF wrapper ‚Ì‚à‚Ì‚ğ‚æ‚Ô
+  // IF wrapper ã®ã‚‚ã®ã‚’ã‚ˆã¶
   WDT_clear((void*)&wdt_config_);
 }
 
@@ -40,10 +40,10 @@ void WDT_clear_wdt(void)
 // ###########################################################
 // ###########################################################
 #pragma section REPRO
-// ‚±‚±‚©‚çƒŠƒvƒ‘ÎÛ“àII
+// ã“ã“ã‹ã‚‰ãƒªãƒ—ãƒ­å¯¾è±¡å†…ï¼ï¼
 
 
-CCP_EXEC_STS Cmd_WDT_INIT(const CTCP* packet)
+CCP_EXEC_STS Cmd_WDT_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -51,7 +51,7 @@ CCP_EXEC_STS Cmd_WDT_INIT(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_ENABLE(const CTCP* packet)
+CCP_EXEC_STS Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
 {
   int ret;
   (void)packet;
@@ -67,7 +67,7 @@ CCP_EXEC_STS Cmd_WDT_ENABLE(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_DISABLE(const CTCP* packet)
+CCP_EXEC_STS Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
 {
   int ret;
   (void)packet;
@@ -83,7 +83,7 @@ CCP_EXEC_STS Cmd_WDT_DISABLE(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CTCP* packet)
+CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -92,7 +92,7 @@ CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CTCP* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_START_CLEAR(const CTCP* packet)
+CCP_EXEC_STS Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
 

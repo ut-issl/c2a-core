@@ -6,21 +6,6 @@ on:
       - main
       - develop
   pull_request:
-    paths:
-      - '.github/workflows/build_as_c89.yml'
-      - 'c2a_core_main.c'
-      - 'c2a_core_main.h'
-      - 'common.cmake'
-      - 'Applications/**'
-      - 'CmdTlm/**'
-      - 'Drivers/**'
-      - 'IfWrapper/**'
-      - 'Library/**'
-      - 'System/**'
-      - 'Examples/minimum_user_for_s2e/CMakeLists.txt'
-      - 'Examples/minimum_user_for_s2e/src/**'
-      - 'setup.bat'
-      - 'setup.sh'
 
 jobs:
   gen_build_matrix:
@@ -70,9 +55,9 @@ jobs:
         run: |
           sudo apt-get install -y libc6-dev-i386 nkf
 
-      - name: convert Shift-JIS to UTF-8
-        if: matrix.compiler == 'clang'
-        run: find -- . -type f \( -name '*.h' -or -name '*.c' \) -exec nkf --overwrite -S -w80 "{}" \;
+      # - name: convert Shift-JIS to UTF-8
+      #   if: matrix.compiler == 'clang'
+      #   run: find -- . -type f \( -name '*.h' -or -name '*.c' \) -exec nkf --overwrite -S -w80 "{}" \;
 
       - name: setup
         shell: bash
@@ -137,12 +122,16 @@ jobs:
         working-directory: ./Examples/minimum_user_for_s2e/build
         run: cat clang_tidy.log
 
+      - name: remove duplicate error
+        if: matrix.compiler == 'clang'
+        run: |
+          python Script/CI/remove_duplicate_error.py ./Examples/minimum_user_for_s2e/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
+
       - name: reviewdog clang-tidy (github-pr-review)
         if: matrix.compiler == 'clang' && matrix.warning == 'Werror'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
           reviewdog \
             -name 'clang-tidy(Werror)' \
             -level warning \
@@ -157,22 +146,26 @@ jobs:
             -efm="%C%m" \
             < clang_tidy.log
 
-      # - name: reviewdog clang-tidy (github-check)
-      #   if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
-      #   env:
-      #     REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     cp ./Examples/minimum_user_for_s2e/build/clang_tidy.log .
-      #     reviewdog \
-      #       -name 'clang-tidy(Wextra)' \
-      #       -level warning \
-      #       -fail-on-error=true \
-      #       -filter-mode=nofilter \
-      #       -diff="git diff FETCH_HEAD" \
-      #       -reporter=github-check \
-      #       -efm="%-Gclang-tidy%s" \
-      #       -efm="%-GError while processing%s" \
-      #       -efm="%W%f:%l:%c: warning: %m" \
-      #       -efm="%E%f:%l:%c: error: %m" \
-      #       -efm="%C%m" \
-      #       < clang_tidy.log
+      - name: reviewdog clang-tidy (github-check)
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog \
+            -name 'clang-tidy(Wextra)' \
+            -level warning \
+            -fail-on-error=true \
+            -filter-mode=nofilter \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-check \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
+
+      - name: build failed
+        if: steps.build.outcome == 'failure'
+        shell: bash
+        run: exit 1

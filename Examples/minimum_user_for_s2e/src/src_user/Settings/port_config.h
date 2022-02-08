@@ -2,10 +2,10 @@
 #define PORT_CONFIG_H_
 
 // ============================================== //
-// =            UARTä÷òAÇÃÉ|Å[Égê›íË             = //
+// =            UARTÈñ¢ÈÄ£„ÅÆ„Éù„Éº„ÉàË®≠ÂÆö             = //
 // ============================================== //
-#define  PORT_CH_RS422_MOBC_EXT            (0)  //!< RS-422 UART ch2
-#define  PORT_CH_RS422_SAMPLE1             (1)  //!< RS-422 UART ch2
+#define  PORT_CH_RS422_MOBC_EXT            (0)  //!< RS-422 UART ch1
+#define  PORT_CH_RS422_AOBC                (1)  //!< RS-422 UART ch2
 #define  PORT_CH_RS422_SAMPLE2             (2)  //!< RS-422 UART ch3
 #define  PORT_CH_RS422_SAMPLE3             (3)  //!< RS-422 UART ch4
 #define  PORT_CH_RS422_SAMPLE4             (4)  //!< RS-422 UART ch5
@@ -15,10 +15,10 @@
 
 #define  PORT_CH_UART_TEST                 (1)  //!< RS-422 UART ch1
 
-#define  PORT_CH_MAX_UART_PORT             (8)  //!< UARTÉ|Å[Égè„å¿
+#define  PORT_CH_MAX_UART_PORT             (8)  //!< UART„Éù„Éº„Éà‰∏äÈôê
 
 // ============================================== //
-// =            GPIOä÷òAÇÃÉ|Å[Égê›íË             = //
+// =            GPIOÈñ¢ÈÄ£„ÅÆ„Éù„Éº„ÉàË®≠ÂÆö             = //
 // ============================================== //
 #define   PORT_CH_GPIO_OUT_SAMPLE0         (0x0001)  //!< LVTTL OUT ch1
 #define   PORT_CH_GPIO_OUT_SAMPLE1         (0x0002)  //!< LVTTL OUT ch2
@@ -27,7 +27,7 @@
 #define   PORT_CH_GPIO_IN_SAMPLE1          (0x0002)  //!< LVTTL IN ch2
 
 // ============================================== //
-// =            ADCä÷òAÇÃÉ|Å[Égê›íË              = //
+// =            ADCÈñ¢ÈÄ£„ÅÆ„Éù„Éº„ÉàË®≠ÂÆö              = //
 // ============================================== //
 #define   PORT_CH_ADC_SAMPLE0              (0x00)  //!< ADC ch1
 #define   PORT_CH_ADC_SAMPLE1              (0x01)  //!< ADC ch2

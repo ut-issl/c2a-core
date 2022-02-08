@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  DriverSuperパラメタのオーバーライド用ヘッダー
+ * @brief  DriverSuper繝代Λ繝｡繧ｿ縺ｮ繧ｪ繝ｼ繝舌�ｼ繝ｩ繧､繝臥畑繝倥ャ繝繝ｼ
  */
 #ifndef DRIVER_SUPER_PARAMS_H_
 #define DRIVER_SUPER_PARAMS_H_

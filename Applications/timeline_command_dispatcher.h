@@ -3,8 +3,8 @@
 
 /**
  * @enum   TL_ID
- * @brief  TimeLine‚ğ‘I‚Ô‚Æ‚«‚É“ˆê“I‚Ég‚¤ƒR[ƒh
- * @note   uint8_t‚ğ‘z’è
+ * @brief  TimeLineã‚’é¸ã¶ã¨ãã«çµ±ä¸€çš„ã«ä½¿ã†ã‚³ãƒ¼ãƒ‰
+ * @note   uint8_tã‚’æƒ³å®š
  */
 typedef enum
 {
@@ -13,20 +13,20 @@ typedef enum
   TL_ID_DEPLOY_TLM     = 2,
   TL_ID_MAX
 } TL_ID;
-// FIXME: ‘S‘Ì“I‚ÉC line_no ‚ª int ‚È‚Ì‚ÅC enum ‚É‚·‚é
-// FIXME: TL‚ğ3–{ˆÈã‚É‚Å‚«‚é‚æ‚¤‚É‚·‚é
+// FIXME: å…¨ä½“çš„ã«ï¼Œ line_no ãŒ int ãªã®ã§ï¼Œ enum ã«ã™ã‚‹
+// FIXME: TLã‚’3æœ¬ä»¥ä¸Šã«ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
 
-// zŠÂQÆ‚ğ–h‚®‚½‚ß‚É‚±‚±‚Åinclude
-#include "../CmdTlm/command_dispatcher.h"
-#include "../CmdTlm/common_tlm_cmd_packet.h"
-#include "../CmdTlm/packet_handler.h"
+// å¾ªç’°å‚ç…§ã‚’é˜²ããŸã‚ã«ã“ã“ã§include
+#include "../TlmCmd/command_dispatcher.h"
+#include "../TlmCmd/common_cmd_packet.h"
+#include "../TlmCmd/packet_handler.h"
 #include "../System/ApplicationManager/app_info.h"
 
-// FIXME: \‘¢‘Ì‚É‚·‚é
+// FIXME: æ§‹é€ ä½“ã«ã™ã‚‹
 extern const CommandDispatcher* const timeline_command_dispatcher;
 extern const int* TLCD_line_no_for_tlm;
 extern const cycle_t* TLCD_tl_tlm_updated_at;
-extern const CTCP* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
+extern const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
 extern const int* TLCD_page_no;
 
 AppInfo TLCD0_create_app(void);
@@ -34,20 +34,20 @@ AppInfo TLCD1_create_app(void);
 AppInfo TLCD2_create_app(void);
 
 /**
- * @brief TLM ‚Ì“à—e‚ğ©“®XV‚·‚é.
- * @param[in] line_no TLCD_line_no_for_tlm ‚ª“ü‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚é
- * @return uint8_t ˆø”‚Ì line_no ‚ğ•Ô‚µ, TL TLM ‚É‚à”½‰f‚³‚ê‚é.
- * @note ‚±‚ê‚ª TLM ‚Ì–`“ª‚ÅŒÄ‚Î‚ê‚é‚±‚Æ‚Å TLM ‚Ì“à—e‚ªŸè‚ÉXV‚³‚ê‚é.
+ * @brief TLM ã®å†…å®¹ã‚’è‡ªå‹•æ›´æ–°ã™ã‚‹.
+ * @param[in] line_no TLCD_line_no_for_tlm ãŒå…¥ã‚‹ã“ã¨ã‚’æƒ³å®šã—ã¦ã„ã‚‹
+ * @return uint8_t å¼•æ•°ã® line_no ã‚’è¿”ã—, TL TLM ã«ã‚‚åæ˜ ã•ã‚Œã‚‹.
+ * @note ã“ã‚ŒãŒ TLM ã®å†’é ­ã§å‘¼ã°ã‚Œã‚‹ã“ã¨ã§ TLM ã®å†…å®¹ãŒå‹æ‰‹ã«æ›´æ–°ã•ã‚Œã‚‹.
  */
 uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no);
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CTCP* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CTCP* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

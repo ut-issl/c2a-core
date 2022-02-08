@@ -1,13 +1,13 @@
 #pragma section REPRO
 #include "InitialSL.h"
 
-#include "../../../CmdTlm/block_command_definitions.h"
-#include "../../../CmdTlm/command_definitions.h"
+#include "../../../TlmCmd/block_command_definitions.h"
+#include "../../../TlmCmd/command_definitions.h"
 
 #include "../../../Drivers/Com/gs.h"
 
 #include <src_core/Applications/timeline_command_dispatcher.h>
-#include <src_core/CmdTlm/block_command_loader.h>
+#include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
 
 void BCL_load_start_up_to_initial(void)
