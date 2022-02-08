@@ -4,8 +4,8 @@
 
 ## 環境
 - python3 系列と以下のライブラリ
-  - [python-wings-interface](https://github.com/ut-issl/python-wings-interface)
-  - [c2a-enum-loader](https://github.com/ut-issl/c2a-enum-loader)
+    - [python-wings-interface](https://github.com/ut-issl/python-wings-interface)
+    - [c2a-enum-loader](https://github.com/ut-issl/c2a-enum-loader)
 - C2A実行環境（特定のボードでもSILSでも可）
 - WINGS
 
@@ -13,8 +13,8 @@
 ### フォルダ構成
 - C2Aと揃える．
 - ファイル名は， `test_${c2a_src_filename}.py`．例えば次のようなもの．
-  - './test/src_core/Applications/test_nop.py'
-  - './test/src_user/Applications/UserDefined/test_tlm_mem_dump.py'
+    - './test/src_core/Applications/test_nop.py'
+    - './test/src_user/Applications/UserDefined/test_tlm_mem_dump.py'
 
 ### 関数名
 `test_hoge` という関数を定義すれば，それが実行される．
