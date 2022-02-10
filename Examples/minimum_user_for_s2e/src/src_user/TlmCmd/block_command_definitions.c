@@ -8,10 +8,10 @@
 #include "../Settings/Modes/Transitions/sl_initial.h"
 #include "../Settings/Modes/Transitions/sl_nop.h"
 #include "../Settings/Modes/TaskLists/tl_initial.h"
-#include "../Settings/Modes/TaskLists/Elements/tlm_cmd_hirate.h"
-#include "../Settings/Modes/TaskLists/Elements/debug_display.h"
-#include "../Settings/Modes/TaskLists/Elements/drivers_update.h"
-#include "../Settings/Modes/TaskLists/Elements/gs_related_process.h"
+#include "../Settings/Modes/TaskLists/Elements/tl_elem_tlm_cmd_hirate.h"
+#include "../Settings/Modes/TaskLists/Elements/tl_elem_debug_display.h"
+#include "../Settings/Modes/TaskLists/Elements/tl_elem_drivers_update.h"
+#include "../Settings/Modes/TaskLists/Elements/tl_elem_gs_related_process.h"
 #include "./NormalBlockCommandDefinition/nbc_header.h"
 
 /**
@@ -30,10 +30,10 @@ void BC_load_defaults(void)
   BCL_load_bc(BC_TL_INITIAL,                BCL_load_tl_initial);
 
   // Block Cmds for Application Rotation / Combination
-  BCL_load_bc(BC_AR_DRIVERS_UPDATE_INI,     BCL_load_drivers_update_initial);
-  BCL_load_bc(BC_AR_DEBUG_DISPLAY_INI,      BCL_load_debug_display_initial);
-  BCL_load_bc(BC_AR_GS_RELATED_PROCESS,     BCL_load_gs_related_process);
-  BCL_load_bc(BC_AC_TLM_CMD_HIRATE,         BCL_load_tlm_cmd_hirate);
+  BCL_load_bc(BC_AR_DRIVERS_UPDATE_INI,     BCL_load_tl_elem_drivers_update_initial);
+  BCL_load_bc(BC_AR_DEBUG_DISPLAY_INI,      BCL_load_tl_elem_debug_display_initial);
+  BCL_load_bc(BC_AR_GS_RELATED_PROCESS,     BCL_load_tl_elem_gs_related_process);
+  BCL_load_bc(BC_AC_TLM_CMD_HIRATE,         BCL_load_tl_elem_tlm_cmd_hirate);
 
   // Normal Block Cmds
 
