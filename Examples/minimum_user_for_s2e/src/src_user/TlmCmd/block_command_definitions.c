@@ -21,8 +21,8 @@
 void BC_load_defaults(void)
 {
   // Block Cmds for Mode Transition
-  BCL_load_bc(BC_SL_START_UP_TO_INITIAL,    BCL_load_start_up_to_initial);
-  BCL_load_bc(BC_SL_NOP,                    BCL_load_nop_sl);
+  BCL_load_bc(BC_SL_START_UP_TO_INITIAL,    BCL_load_sl_start_up_to_initial);
+  BCL_load_bc(BC_SL_NOP,                    BCL_load_sl_nop);
 
   // Block Cmds for TaskList
   // こいつは TDSP_initialize() で展開される

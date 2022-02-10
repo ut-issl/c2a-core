@@ -10,7 +10,7 @@
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
 
-void BCL_load_start_up_to_initial(void)
+void BCL_load_sl_start_up_to_initial(void)
 {
   BCL_tool_register_deploy(OBCT_sec2cycle(1), BC_HK_CYCLIC_TLM, TL_ID_DEPLOY_TLM);
 
