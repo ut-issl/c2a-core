@@ -5,8 +5,8 @@
 #include <string.h> // for memcpy
 #include "command_definitions.h"
 
-#include "../Settings/Modes/Transitions/InitialSL.h"
-#include "../Settings/Modes/Transitions/NopSL.h"
+#include "../Settings/Modes/Transitions/sl_initial.h"
+#include "../Settings/Modes/Transitions/sl_nop.h"
 #include "../Settings/Modes/TaskLists/tl_initial.h"
 #include "../Settings/Modes/TaskLists/Elements/tlm_cmd_hirate.h"
 #include "../Settings/Modes/TaskLists/Elements/debug_display.h"

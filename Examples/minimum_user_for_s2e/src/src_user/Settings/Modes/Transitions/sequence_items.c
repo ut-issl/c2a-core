@@ -1,5 +1,5 @@
 #pragma section REPRO
-#include "SequenceItems.h"
+#include "sequence_items.h"
 #include "../../../TlmCmd/block_command_definitions.h"
 #include <src_core/Applications/timeline_command_dispatcher.h>
 #include <src_core/Library/endian_memcpy.h>

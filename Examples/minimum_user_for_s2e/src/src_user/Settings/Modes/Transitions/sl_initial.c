@@ -1,5 +1,5 @@
 #pragma section REPRO
-#include "InitialSL.h"
+#include "sl_initial.h"
 
 #include "../../../TlmCmd/block_command_definitions.h"
 #include "../../../TlmCmd/command_definitions.h"

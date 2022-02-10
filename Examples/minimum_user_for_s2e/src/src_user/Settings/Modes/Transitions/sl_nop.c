@@ -1,5 +1,5 @@
 #pragma section REPRO
-#include "NopSL.h"
+#include "sl_nop.h"
 
 #include "../../../TlmCmd/command_definitions.h"
 

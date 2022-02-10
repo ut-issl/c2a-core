@@ -11,9 +11,9 @@ set(C2A_SRCS
   Modes/TaskLists/Elements/drivers_update.c
   Modes/TaskLists/Elements/gs_related_process.c
   Modes/TaskLists/Elements/tlm_cmd_hirate.c
-  Modes/Transitions/InitialSL.c
-  Modes/Transitions/NopSL.c
-  Modes/Transitions/SequenceItems.c
+  Modes/Transitions/sl_initial.c
+  Modes/Transitions/sl_nop.c
+  Modes/Transitions/sequence_items.c
   System/event_logger_settings.c
   System/EventHandlerRules/event_handler_rules.c
   System/EventHandlerRules/event_handler_rule_test.c
