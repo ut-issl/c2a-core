@@ -52,6 +52,7 @@ typedef struct
   GS_VALIDATE_ERR tc_frame_validate_status; //!< TC Frame の検証結果
   int ret_from_if_rx;                       //!< UART or CCSDS からの返り値
   cycle_t last_rec_time;                    //!< 最後に受信した時刻
+  CCP_DEST_TYPE last_dest_type;             //!< 最後に受信したパケットの dest type
   PH_ACK cmd_ack;                           //!< 受信した CMD の実行結果
 
   cycle_t send_cycle;                       //!< 最後に送信したときの時刻

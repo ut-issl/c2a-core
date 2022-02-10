@@ -28,31 +28,16 @@
 // FIXME: 整理したい
 typedef enum
 {
-  PH_SUCCESS,
-  PH_REGISTERED,
-  PH_FORWARDED,
-  PH_INVALID_LENGTH,
-  PH_INVALID_CRC,
-  PH_INVALID_TO_ID,
-  PH_INVALID_DISCRIMINATOR,
-  PH_INVALID_CMD_TYPE,
-  PH_PL_LIST_FULL,
-  PH_TLC_REGISTERD,
-  PH_TLC_PAST_TIME,
-  PH_TLC_ALREADY_EXISTS,
-  PH_TLC_NOT_EXECUTED,
-  PH_TLC_NOT_FOUND,
-  PH_BC_REGISTERED,
-  PH_BC_INVALID_BLOCK_NO,
-  PH_BC_INVALID_CMD_NO,
-  PH_BC_ISORATED_CMD,
-  PH_BC_CMD_TOO_LONG,
-  PH_BC_INACTIVE_BLOCK,
-  PH_BC_COMBINE_FAILED,
-  PH_BC_ROTATE_FAILED,
-  PH_BC_ZERO_PERIOD,         // BCT_rotate_block_cmd_で使う(本来このenumに乗せるべきかは要検討)
-  PH_TLM_INVALID_DIST_FLAG,
-  PH_UNKNOWN
+  PH_ACK_SUCCESS,             //!< OK
+  PH_ACK_PL_LIST_FULL,        //!< PL が一杯だった
+  PH_ACK_PACKET_NOT_FOUND,    //!< パケットが無い
+  PH_ACK_INVALID_PACKET,      //!< 無効な Packet
+  PH_ACK_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
+  PH_ACK_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
+  PH_ACK_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
+  PH_ACK_BC_ISORATED_CMD,     //!< 飛ばして BC 登録しようとした
+  PH_ACK_BC_CMD_TOO_LONG,     //!< CMD が BC には長すぎる
+  PH_ACK_UNKNOWN
 } PH_ACK;
 
 extern PacketList PH_gs_cmd_list;

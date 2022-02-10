@@ -95,7 +95,7 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
     gs_driver->info[i].tc_frame_validate_status = GS_VALIDATE_ERR_OK;
     gs_driver->info[i].ret_from_if_rx = 0;
     gs_driver->info[i].last_rec_time = 0;
-    gs_driver->info[i].cmd_ack = PH_SUCCESS;
+    gs_driver->info[i].cmd_ack = PH_ACK_SUCCESS;
 
     gs_driver->info[i].send_cycle = 0;
     gs_driver->info[i].vcid = VCDU_VCID_UNKNOWN;
@@ -231,6 +231,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     return DS_ERR_CODE_ERR;
   }
 
+  gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(&tc_frame->tcs.tcp);
   gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(&tc_frame->tcs.tcp);  // 受信コマンドパケット解析
 
   return DS_ERR_CODE_OK;

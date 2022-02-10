@@ -39,8 +39,7 @@ static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
 static CommonTlmPacket PH_st_tlm_ctp_stock_[PH_ST_TLM_LIST_MAX];
 static CommonTlmPacket PH_rp_tlm_ctp_stock_[PH_RP_TLM_LIST_MAX];
 
-static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet);
-
+static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_tl_cmd_(int line_no,
@@ -77,7 +76,7 @@ void PH_init(void)
 
 PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
 {
-  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CTCP_is_valid_packet(packet)) return PH_ACK_INVALID_PACKET;
 
   switch (CTCP_get_packet_type(packet))
   {
@@ -90,23 +89,23 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
     return PH_analyze_cmd_packet(CTCP_convert_to_ccp(packet));
 
   default:
-    return PH_INVALID_DISCRIMINATOR;    // FIXME: 返り値変えたい
+    return PH_ACK_INVALID_PACKET;
   }
 
-  return PH_UNKNOWN;
+  return PH_ACK_UNKNOWN;
 }
 
 
 PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
 {
   PH_ACK ack;
-  if (!CCP_is_valid_packet(packet)) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CCP_is_valid_packet(packet)) return PH_ACK_INVALID_PACKET;
 
   // ユーザー定義部
   // 基本的には，接続されているC2Aを搭載したボードに
   // この段階（キューイングされ，時刻調整され， PH_user_cmd_router で実行されるのではなく，この段階）で転送したいときに使う
   ack = PH_user_analyze_cmd(packet);
-  if (ack != PH_UNKNOWN)
+  if (ack != PH_ACK_UNKNOWN)
   {
     return ack;
   }
@@ -120,7 +119,7 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return PH_add_tl_cmd_(0, packet, TMGR_get_master_total_cycle());
 
   case CCP_EXEC_TYPE_BC:
-    return PH_analyze_block_cmd_(packet);
+    return PH_add_block_cmd_(packet);
 
   case CCP_EXEC_TYPE_RT:
     return PH_add_rt_cmd_(packet);
@@ -135,32 +134,32 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return PH_add_tl_cmd_(2, packet, TMGR_get_master_total_cycle());
 
   default:
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
 
-static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
+static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet)
 {
   switch (BCT_register_cmd(packet))
   {
   case BCT_SUCCESS:
-    return PH_BC_REGISTERED;
+    return PH_ACK_SUCCESS;
 
   case BCT_INVALID_BLOCK_NO:
-    return PH_BC_INVALID_BLOCK_NO;
+    return PH_ACK_BC_INVALID_BLOCK_NO;
 
   case BCT_INVALID_CMD_NO:
-    return PH_BC_INVALID_CMD_NO;
+    return PH_ACK_INVALID_PACKET;
 
   case BCT_ISORATED_CMD:
-    return PH_BC_ISORATED_CMD;
+    return PH_ACK_BC_ISORATED_CMD;
 
   case BCT_CMD_TOO_LONG:
-    return PH_BC_CMD_TOO_LONG;
+    return PH_ACK_BC_CMD_TOO_LONG;
 
   default:
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
@@ -168,7 +167,7 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
 PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 {
   ctp_dest_flags_t flags;
-  if (!CTP_is_valid_packet(packet)) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CTP_is_valid_packet(packet)) return PH_ACK_UNKNOWN;    // FIXME: 返り値変えたい
 
   flags = CTP_get_dest_flags(packet);
 
@@ -187,7 +186,7 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
   if (flags & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
 
   // [TODO] 要検討:各Queue毎の登録エラー判定は未実装
-  return PH_SUCCESS;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -213,9 +212,9 @@ static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_gs_cmd_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_SUCCESS;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -223,9 +222,9 @@ static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rt_cmd_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -238,19 +237,19 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
   switch (ack)
   {
   case PL_SUCCESS:
-    return PH_TLC_REGISTERD;
+    return PH_ACK_SUCCESS;
 
   case PL_LIST_FULL:
-    return PH_PL_LIST_FULL;
+    return PH_ACK_PL_LIST_FULL;
 
   case PL_TLC_PAST_TIME:
-    return PH_TLC_PAST_TIME;
+    return PH_ACK_TLC_PAST_TIME;
 
   case PL_TLC_ALREADY_EXISTS:
-    return PH_TLC_ALREADY_EXISTS;
+    return PH_ACK_TLC_ALREADY_EXISTS;
 
   default:
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
@@ -277,9 +276,9 @@ static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -287,9 +286,9 @@ static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -297,9 +296,9 @@ static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
 
 #pragma section

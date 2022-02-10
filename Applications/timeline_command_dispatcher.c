@@ -28,6 +28,7 @@ static void TLCD1_dispatch_(void);
 static void TLCD2_init_(void);
 static void TLCD2_dispatch_(void);
 static void tlc_dispatcher_(int line_no);
+// FIXME: 返り値が PH_ACK なのはおかしい
 static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time);
 
 AppInfo TLCD0_create_app(void)
@@ -198,7 +199,7 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
   // 指定TIを読み込み
   endian_memcpy(&time, packet + 1, sizeof(time));
 
-  if (drop_tl_cmd_at_(line_no, time) == PH_SUCCESS)
+  if (drop_tl_cmd_at_(line_no, time) == PH_ACK_SUCCESS)
   {
     return CCP_EXEC_SUCCESS;
   }
@@ -216,7 +217,7 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
   PL_Node* current = (PL_Node*)PL_get_head(&(PH_tl_cmd_list[line_no])); // const_cast
   int active_nodes_num = PL_count_active_nodes(&PH_tl_cmd_list[line_no]);
 
-  if (current == NULL) return PH_TLC_NOT_FOUND;
+  if (current == NULL) return PH_ACK_PACKET_NOT_FOUND;
 
   for (i = 0; i < active_nodes_num; ++i)
   {
@@ -225,13 +226,13 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
       PL_drop_node(&(PH_tl_cmd_list[line_no]), prev, current);
       break;
     }
-    if (PL_get_next(current) == NULL) return PH_TLC_NOT_FOUND;
+    if (PL_get_next(current) == NULL) return PH_ACK_PACKET_NOT_FOUND;
 
     prev = current;
     current = current->next;
   }
 
-  return PH_SUCCESS;
+  return PH_ACK_SUCCESS;
 }
 
 

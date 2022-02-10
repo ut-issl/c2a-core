@@ -35,15 +35,15 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
   switch (CCP_get_dest_type(packet))
   {
   case CCP_DEST_TYPE_TO_AOBC:
-    return (PH_add_aobc_cmd_(packet) == PH_SUCCESS) ? PH_FORWARDED : PH_PL_LIST_FULL;
+    return (PH_add_aobc_cmd_(packet) == PH_ACK_SUCCESS) ? PH_ACK_SUCCESS : PH_ACK_PL_LIST_FULL;
   case CCP_DEST_TYPE_TO_TOBC:
-    return (PH_add_tobc_cmd_(packet) == PH_SUCCESS) ? PH_FORWARDED : PH_PL_LIST_FULL;
+    return (PH_add_tobc_cmd_(packet) == PH_ACK_SUCCESS) ? PH_ACK_SUCCESS : PH_ACK_PL_LIST_FULL;
   default:
     // CCP_DEST_TYPE_TO_ME
     // CCP_DEST_TYPE_TO_MOBC （自分）
     // 宛先不明
     // はここに
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
@@ -69,8 +69,8 @@ static PH_ACK PH_add_aobc_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_aobc_cmd_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
-  return PH_SUCCESS;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -80,9 +80,9 @@ static PH_ACK PH_add_tobc_cmd_(const CommonCmdPacket* packet)
 #if 0
   PL_ACK ack = PL_push_back(&PH_tobc_cmd_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 #endif
-  return PH_SUCCESS;
+  return PH_ACK_SUCCESS;
 }
 
 #pragma section
