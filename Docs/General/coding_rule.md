@@ -381,7 +381,6 @@ HWを示すファイル名は，再利用性を意識し，決定する．
 例えば，Arduino互換マイコンを使っているのであれば `Arduino` でよく，ペリフェラルなどが特殊な一品物などを使っている場合は，`Issl6uMobc` のように，衛星名＋ボード名でよい．
 
 
-
 ### その他の場所のファイル名
 C言語におけるファイル名のユニーク性を担保するために，以下のファイル名prefixをつける．
 名前空間を切るために用いる接頭辞（変数名・関数名につけるもの）とは異なることに注意すること．
@@ -407,6 +406,25 @@ TlmCmd/NormalBlockCommandDefinition
 -> nbc_
 ```
 
+
+### Block Command のロード関数の命名
+基本的には， [Block Command Loade](https://github.com/ut-issl/c2a-core/blob/develop/TlmCmd/block_command_loader.h) を使って定義する．  
+そして，関数名は `BCL_load_hoge(void)' を基本とする．
+
+Block Command は各所で定義されるため， TL, SL に関しては以下のようにする．
+
+```
+Settings/Modes/TaskLists
+-> void BCL_load_tl_hoge(void);
+
+Settings/Modes/TaskLists/Elements
+-> void BCL_load_tl_elem_hoge(void);
+
+Settings/Modes/Transitions
+-> void BCL_load_sl_hoge(void);
+```
+
+例として [Block Command Definitions](https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user_for_s2e/src/src_user/TlmCmd/block_command_definitions.c) を参考にすること．
 
 
 ## 細かな記法 [M]
