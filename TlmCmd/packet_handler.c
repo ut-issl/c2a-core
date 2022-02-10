@@ -89,7 +89,7 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
     return PH_analyze_cmd_packet(CTCP_convert_to_ccp(packet));
 
   default:
-    return PH_ACK_INVALID_TYPE;
+    return PH_ACK_INVALID_PACKET;
   }
 
   return PH_ACK_UNKNOWN;

@@ -13,37 +13,37 @@ extern PacketList PH_aobc_cmd_list;
 extern PacketList PH_tobc_cmd_list;
 
 /**
- * @brief  PHのユーザー固有部初期化処理
+ * @brief  PH のユーザー固有部初期化処理
  *
- *         PacketListの初期化を行う
+ *         PacketList の初期化を行う
  * @param  void
  * @return void
  */
 void PH_user_init(void);
 
 /**
- * @brief  PHのanalyze_cmd_のユーザー処理関数
+ * @brief  PH の analyze_cmd_ のユーザー処理関数
  *
- *         Coreの処理より優先される
- *         C2Aを搭載したコンポのキュー（GSC，RTC，TLC，BC）に即座に直接追加される．
- *         正確には，add_rt_cmd_の送信先版を作り，そこにキューイングされ，DI (dispatcher) によって回収される．
- *         つまり，本OBCにとってはRTCだが，転送対象OBCにとっては各種Cmd扱いなCmdを転送する処理
+ *         Core の処理より優先される
+ *         C2A を搭載したコンポのキュー（GSC，RTC，TLC，BC）に即座に直接追加される．
+ *         正確には， add_rt_cmd_ の送信先版を作り，そこにキューイングされ，DI (dispatcher) によって回収される．
+ *         つまり，本 OBC にとっては RTC だが，転送対象 OBC にとっては各種 Cmd 扱いな Cmd を転送する処理
  * @param  packet: CCP
  * @retval PH_FORWARDED: 無事に転送するキューに追加された
  * @retval PH_ACK_PL_LIST_FULL: PL LIST FULL
- * @retval PH_FORWARDED以外（PH_ACK_UNKNOWNを想定）: ユーザー処理に引っかからなかった場合．Core側の処理に回される
+ * @retval PH_ACK_SUCCESS 以外（PH_ACK_UNKNOWN を想定）: ユーザー処理に引っかからなかった場合．Core 側の処理に回される
  */
 PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet);
 
 /**
- * @brief  PHのcmd_router_のユーザー処理関数
+ * @brief  PH の cmd_router_ のユーザー処理関数
  *
- *         C2Aを搭載したコンポにCmdが転送される．
- *         つまり，転送対象OBCにとってはRTC扱いになる
- *         ここからDriverを叩いて送信まで行うことになる（実行時間はcmdExecと同じだけ許容されているのでOK）
+ *         C2A を搭載したコンポに Cmd が転送される．
+ *         つまり，転送対象 OBC にとっては RTC 扱いになる
+ *         ここから Driver を叩いて送信まで行うことになる（実行時間は cmdExec と同じだけ許容されているので OK）
  * @param  packet: CCP
  * @retval CCP_EXEC_SUCCESS など:   無事に転送された．転送先の結果を返す
- * @retval CCP_EXEC_ROUTING_FAILED: 転送失敗（詳細エラーはDriverSuperを参照）
+ * @retval CCP_EXEC_ROUTING_FAILED: 転送失敗（詳細エラーは DriverSuper を参照）
  */
 CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet);
 

@@ -32,7 +32,6 @@ typedef enum
   PH_ACK_PL_LIST_FULL,        //!< PL が一杯だった
   PH_ACK_PACKET_NOT_FOUND,    //!< パケットが無い
   PH_ACK_INVALID_PACKET,      //!< 無効な Packet
-  PH_ACK_INVALID_TYPE,        //!< 無効な Type
   PH_ACK_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
   PH_ACK_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
   PH_ACK_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
