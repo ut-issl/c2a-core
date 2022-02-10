@@ -20,7 +20,7 @@
 #include "../../Applications/DriverInstances/di_gs.h"
 // #include <src_core/TlmCmd/telemetry_generator.h>
 #include "../../Library/git_revision.h"
-#include "../../Library/VT100.h"
+#include "../../Library/vt100.h"
 #include "../../Library/stdint.h"
 
 void APP_DBG_flush_screen_(void);

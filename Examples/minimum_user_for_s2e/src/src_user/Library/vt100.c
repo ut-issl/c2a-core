@@ -1,5 +1,5 @@
 #pragma section REPRO
-#include "VT100.h"
+#include "vt100.h"
 
 #include <src_core/Library/print.h>
 
@@ -94,6 +94,5 @@ void VT100_reset_cursor(void)
 {
   Printf("\x1B[0;0H");
 }
-
 
 #pragma section

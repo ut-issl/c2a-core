@@ -2,7 +2,7 @@
 #include "anomaly_handler.h"
 
 #include "../Library/print.h"
-#include <src_user/Library/VT100.h>
+#include <src_user/Library/vt100.h>
 #include "../System/TimeManager/time_manager.h"
 #include "../Library/endian_memcpy.h"
 #include "../TlmCmd/common_cmd_packet_util.h"

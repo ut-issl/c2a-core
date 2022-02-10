@@ -6,14 +6,14 @@ set(C2A_SRCS
   Applications/AnomalyHandlerRules/ahr_default_load.c
   AnomalyLogger/al_default_settings.c
   Modes/mode_definitions.c
-  Modes/TaskLists/InitialTL.c
-  Modes/TaskLists/Composition/debug_display.c
-  Modes/TaskLists/Composition/drivers_update.c
-  Modes/TaskLists/Composition/gs_related_process.c
-  Modes/TaskLists/Composition/tlm_cmd_hirate.c
-  Modes/Transitions/InitialSL.c
-  Modes/Transitions/NopSL.c
-  Modes/Transitions/SequenceItems.c
+  Modes/TaskLists/tl_initial.c
+  Modes/TaskLists/Elements/tl_elem_debug_display.c
+  Modes/TaskLists/Elements/tl_elem_drivers_update.c
+  Modes/TaskLists/Elements/tl_elem_gs_related_process.c
+  Modes/TaskLists/Elements/tl_elem_tlm_cmd_hirate.c
+  Modes/Transitions/sl_initial.c
+  Modes/Transitions/sl_nop.c
+  Modes/Transitions/sequence_items.c
   System/event_logger_settings.c
   System/EventHandlerRules/event_handler_rules.c
   System/EventHandlerRules/event_handler_rule_test.c
