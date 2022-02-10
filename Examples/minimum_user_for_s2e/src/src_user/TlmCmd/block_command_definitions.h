@@ -20,8 +20,8 @@ typedef enum
   BC_TL_START_UP = 20,
   BC_TL_INITIAL = 21,
 
-  // Block Cmds for Composition (App Rotator, Combinar)
-  // ./src_user/Settings/Modes/TaskLists/Composition/ で定義
+  // Block Cmds for Elements (App Rotator, Combinar)
+  // ./src_user/Settings/Modes/TaskLists/Elements/ で定義
   BC_AR_DEBUG_DISPLAY_INI = 40,
   BC_AR_DRIVERS_UPDATE_INI = 42,
   BC_AR_GS_RELATED_PROCESS = 44,

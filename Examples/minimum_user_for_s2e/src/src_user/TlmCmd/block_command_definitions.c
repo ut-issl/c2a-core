@@ -8,10 +8,10 @@
 #include "../Settings/Modes/Transitions/InitialSL.h"
 #include "../Settings/Modes/Transitions/NopSL.h"
 #include "../Settings/Modes/TaskLists/tl_initial.h"
-#include "../Settings/Modes/TaskLists/Composition/tlm_cmd_hirate.h"
-#include "../Settings/Modes/TaskLists/Composition/debug_display.h"
-#include "../Settings/Modes/TaskLists/Composition/drivers_update.h"
-#include "../Settings/Modes/TaskLists/Composition/gs_related_process.h"
+#include "../Settings/Modes/TaskLists/Elements/tlm_cmd_hirate.h"
+#include "../Settings/Modes/TaskLists/Elements/debug_display.h"
+#include "../Settings/Modes/TaskLists/Elements/drivers_update.h"
+#include "../Settings/Modes/TaskLists/Elements/gs_related_process.h"
 #include "./NormalBlockCommandDefinition/nbc_header.h"
 
 /**

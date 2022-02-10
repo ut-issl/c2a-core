@@ -7,10 +7,10 @@ set(C2A_SRCS
   AnomalyLogger/al_default_settings.c
   Modes/mode_definitions.c
   Modes/TaskLists/tl_initial.c
-  Modes/TaskLists/Composition/debug_display.c
-  Modes/TaskLists/Composition/drivers_update.c
-  Modes/TaskLists/Composition/gs_related_process.c
-  Modes/TaskLists/Composition/tlm_cmd_hirate.c
+  Modes/TaskLists/Elements/debug_display.c
+  Modes/TaskLists/Elements/drivers_update.c
+  Modes/TaskLists/Elements/gs_related_process.c
+  Modes/TaskLists/Elements/tlm_cmd_hirate.c
   Modes/Transitions/InitialSL.c
   Modes/Transitions/NopSL.c
   Modes/Transitions/SequenceItems.c
