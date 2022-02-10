@@ -26,8 +26,8 @@ void BC_load_defaults(void)
 
   // Block Cmds for TaskList
   // こいつは TDSP_initialize() で展開される
-  BCL_load_bc(BC_TL_START_UP,               BCL_load_initial_mode);
-  BCL_load_bc(BC_TL_INITIAL,                BCL_load_initial_mode);
+  BCL_load_bc(BC_TL_START_UP,               BCL_load_tl_initial);
+  BCL_load_bc(BC_TL_INITIAL,                BCL_load_tl_initial);
 
   // Block Cmds for Application Rotation / Combination
   BCL_load_bc(BC_AR_DRIVERS_UPDATE_INI,     BCL_load_drivers_update_initial);

@@ -6,7 +6,7 @@
 
 #include <src_core/TlmCmd/block_command_loader.h>
 
-void BCL_load_initial_mode(void)
+void BCL_load_tl_initial(void)
 {
   BCL_tool_register_rotate ( 0, BC_AR_GS_RELATED_PROCESS);
   BCL_tool_register_app    ( 4, AR_TLC0_DISPATCHER);
