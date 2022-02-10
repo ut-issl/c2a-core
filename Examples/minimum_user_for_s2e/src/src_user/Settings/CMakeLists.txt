@@ -6,7 +6,7 @@ set(C2A_SRCS
   Applications/AnomalyHandlerRules/ahr_default_load.c
   AnomalyLogger/al_default_settings.c
   Modes/mode_definitions.c
-  Modes/TaskLists/InitialTL.c
+  Modes/TaskLists/tl_initial.c
   Modes/TaskLists/Composition/debug_display.c
   Modes/TaskLists/Composition/drivers_update.c
   Modes/TaskLists/Composition/gs_related_process.c

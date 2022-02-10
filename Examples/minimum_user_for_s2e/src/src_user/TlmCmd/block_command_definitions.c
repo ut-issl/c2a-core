@@ -7,7 +7,7 @@
 
 #include "../Settings/Modes/Transitions/InitialSL.h"
 #include "../Settings/Modes/Transitions/NopSL.h"
-#include "../Settings/Modes/TaskLists/InitialTL.h"
+#include "../Settings/Modes/TaskLists/tl_initial.h"
 #include "../Settings/Modes/TaskLists/Composition/tlm_cmd_hirate.h"
 #include "../Settings/Modes/TaskLists/Composition/debug_display.h"
 #include "../Settings/Modes/TaskLists/Composition/drivers_update.h"
