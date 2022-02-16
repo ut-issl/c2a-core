@@ -12,6 +12,9 @@
 ### 開発のためのセットアップ
 1. clone 後， setup.bat or setup.sh を実行
 
+### Kanban (開発マイルストーンなど)
+- https://github.com/orgs/ut-issl/projects/1
+
 ### テスト
 - 特定のuserを仮定しないと，各種パラメタが確定しないため， `Examples/minimum_user_for_s2e` でテストする．
 - https://github.com/ut-issl/c2a-core/tree/develop/Examples/minimum_user_for_s2e/src/src_user/Test 参照．
