@@ -5,7 +5,7 @@
 #include "../System/TimeManager/time_manager.h"
 #include "packet_handler.h"
 
-static CDIS_EXEC_INFO CEI_init_(void);
+static CDIS_ExecInfo CEI_init_(void);
 
 CommandDispatcher CDIS_init(PacketList* pli)
 {
@@ -31,9 +31,9 @@ CommandDispatcher CDIS_init(PacketList* pli)
   return cdis;
 }
 
-static CDIS_EXEC_INFO CEI_init_(void)
+static CDIS_ExecInfo CEI_init_(void)
 {
-  CDIS_EXEC_INFO cei;
+  CDIS_ExecInfo cei;
 
   OBCT_clear(&cei.time);
   cei.time.step = 0;            // ここで重複してClearしている理由はなんだ．．．

@@ -11,12 +11,12 @@ typedef struct
   ObcTime time;
   CMD_CODE code;
   CCP_EXEC_STS sts;
-} CDIS_EXEC_INFO;
+} CDIS_ExecInfo;
 
 typedef struct
 {
-  CDIS_EXEC_INFO prev;
-  CDIS_EXEC_INFO prev_err;
+  CDIS_ExecInfo prev;
+  CDIS_ExecInfo prev_err;
   unsigned int error_counter;
   int lockout;
   int stop_on_error;
