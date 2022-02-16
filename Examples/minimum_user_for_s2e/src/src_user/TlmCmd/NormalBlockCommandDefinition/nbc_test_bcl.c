@@ -18,12 +18,12 @@ void BCL_load_test_bcl(void)
   BCL_tool_prepare_param_uint32(0);
   BCL_tool_register_cmd(1, Cmd_CODE_TMGR_UPDATE_UNIXTIME);
 
-  BCL_tool_prepare_param_double(unixtime+2000000);
+  BCL_tool_prepare_param_double(unixtime + 2000000);
   BCL_tool_prepare_param_uint32(0);
   BCL_tool_prepare_param_uint32(0);
   BCL_tool_register_cmd(2, Cmd_CODE_TMGR_UPDATE_UNIXTIME);
 
-  BCL_tool_prepare_param_double(unixtime+3000000);
+  BCL_tool_prepare_param_double(unixtime + 3000000);
   BCL_tool_prepare_param_uint32(0);
   BCL_tool_prepare_param_uint32(0);
   BCL_tool_register_cmd(3, Cmd_CODE_TMGR_UPDATE_UNIXTIME);
