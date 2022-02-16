@@ -13,6 +13,7 @@
 #include "block_command_executor.h"
 #include <src_user/TlmCmd/command_definitions.h> // for rotate/combine block
 #include "common_cmd_packet_util.h"
+#include "../Library/endian_memcpy.h"
 
 #define BCL_PARAM_MAX_LENGTH BCT_CMD_MAX_LENGTH
 
@@ -193,20 +194,26 @@ void BCL_tool_prepare_param_float(float val)
   block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((tmp      ) & 0xff);
 }
 
-// 実装時点ではuint64_tを使えなかったかつ使う人も少ないのでいったん無効化
-#if 0
+void BCL_tool_prepare_param_uint64(uint64_t val)
+{
+  uint64_t tmp = val;
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &tmp, sizeof(tmp));
+  block_command_loader_.param_idx += 8;
+}
+
+void BCL_tool_prepare_param_int64(int64_t val)
+{
+  int64_t tmp = val;
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &tmp, sizeof(tmp));
+  block_command_loader_.param_idx += 8;
+}
+
 void BCL_tool_prepare_param_double(double val)
 {
-  int i;
-
-  // TODO: idx超過のassertionを入れる
-  for (i = 0; i < sizeof(val); i++)
-  {
-    block_command_loader_.param_buffer[block_command_loader_.command_idx][block_command_loader_.param_idx++]
-        = (unsigned char)((val >> (sizeof(val) - i) * 8) & 0xff);
-  }
+  double tmp = val;
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &tmp, sizeof(tmp));
+  block_command_loader_.param_idx += 8;
 }
-#endif
 
 
 void BCL_register_cmd_(cycle_t ti, CMD_CODE cmd_id)

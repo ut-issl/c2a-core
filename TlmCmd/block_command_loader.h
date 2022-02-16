@@ -134,9 +134,25 @@ void BCL_tool_prepare_param_int32(int32_t val);
  */
 void BCL_tool_prepare_param_float(float val);
 
-// 実装時点ではuint64_tを使えなかった，かつ使う人も少ないのでいったん無効化
-#if 0
+/**
+ * @brief  コマンド登録前にコマンドの引数としてuint64のパラメータを追加する
+ * @note   BCL_tool_register_cmd前でのみ使用することを想定している
+ * @param  val        追加するパラメータ
+ */
+void BCL_tool_prepare_param_uint64(uint32_t val);
+
+/**
+ * @brief  コマンド登録前にコマンドの引数としてint64のパラメータを追加する
+ * @note   BCL_tool_register_cmd前でのみ使用することを想定している
+ * @param  val        追加するパラメータ
+ */
+void BCL_tool_prepare_param_int64(int32_t val);
+
+/**
+ * @brief  コマンド登録前にコマンドの引数としてdoubleのパラメータを追加する
+ * @note   BCL_tool_register_cmd前でのみ使用することを想定している
+ * @param  val        追加するパラメータ
+ */
 void BCL_tool_prepare_param_double(double val);
-#endif
 
 #endif

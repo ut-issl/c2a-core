@@ -56,6 +56,7 @@ typedef enum
 
   // Test
   BC_TEST_EH_RESPOND = 360,
+  BC_TEST_BCL = 361,
 
   // BCT MAX : 382
 

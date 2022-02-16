@@ -13,6 +13,7 @@ set(C2A_SRCS
   user_packet_handler.c
   NormalBlockCommandDefinition/nbc_start_hk_tlm.c
   NormalBlockCommandDefinition/nbc_respond_eh_for_test.c
+  NormalBlockCommandDefinition/nbc_test_bcl.c
   Ccsds/m_pdu.c
   Ccsds/TCFrame.c
   Ccsds/tcp_to_m_pdu.c
