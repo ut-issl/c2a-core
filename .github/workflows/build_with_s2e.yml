@@ -1,4 +1,4 @@
-name: Build
+name: build with S2E
 
 on:
   push:
