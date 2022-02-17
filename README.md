@@ -46,4 +46,4 @@
 
 
 ## 質問，問い合わせ，その他なんでも
-お気軽に [Discussions](. に投稿してください．
+お気軽に [Discussions](https://github.com/ut-issl/c2a-core/discussions) に投稿してください．
