@@ -48,7 +48,7 @@ def test_bcl_prepare_param():
     # j: そのコマンドの引数の何byte目か
     for i, params in enumerate(PARAMS_LIST):
         hex_str = params_to_hex(params)
-        param_len = min(len(hex_str) // 2, 6) # BLテレメでは最大 6byte までしか引数が見えないので
+        param_len = min(len(hex_str) // 2, 6)  # BLテレメでは最大 6byte までしか引数が見えないので
         for j in range(param_len):
             tlm_name = "BL.CMD" + str(i) + "_PARAM" + str(j)
             assert tlm_BL[tlm_name] == "0x" + hex_str[j * 2 : j * 2 + 2]
@@ -74,11 +74,13 @@ def params_to_hex(params):
             raise ValueError("未実装の引数タイプです")
     return hex_str
 
+
 def format_hex_str(hex_str, size):
-    hex_str = hex_str[2:] #'0x'を除去
+    hex_str = hex_str[2:]  # '0x'を除去
     while len(hex_str) < size:
-        hex_str = "0" + hex_str # size分のbyte数になるまで0で埋める
+        hex_str = "0" + hex_str  # size分のbyte数になるまで0で埋める
     return hex_str
+
 
 def double_to_hex(param):
     return hex(struct.unpack('>Q', struct.pack('>d', param))[0])
