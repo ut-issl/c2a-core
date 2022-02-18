@@ -7,13 +7,10 @@ on:
       - develop
   pull_request:
 
+env:
+  S2E_CORE_VERSION: bef17af9b13dbb9095183ba7de7af9d02d8cfe07
+
 jobs:
-  set_global_constants:
-    runs-on: ubuntu-latest
-    outputs:
-      S2E_CORE_VERSION: bef17af9b13dbb9095183ba7de7af9d02d8cfe07
-    steps:
-      - run: echo 'Setting constans.'
 
   build_s2e_win:
     name: Build on Windows
@@ -28,7 +25,7 @@ jobs:
         with:
           path: s2e-core
           repository: ut-issl/s2e-core
-          ref: '${{ needs.set_global_constants.outputs.S2E_CORE_VERSION }}'
+          ref: '${{ env.S2E_CORE_VERSION }}'
           fetch-depth: 1
 
       - name: checkout S2E user
