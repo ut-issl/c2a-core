@@ -83,7 +83,7 @@ def format_hex_str(hex_str, size):
 
 
 def double_to_hex(param):
-    return hex(struct.unpack('>Q', struct.pack('>d', param))[0])
+    return hex(struct.unpack(">Q", struct.pack(">d", param))[0])
 
 
 if __name__ == "__main__":
