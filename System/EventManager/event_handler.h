@@ -412,6 +412,14 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id);
 EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id);
 
 /**
+ * @brief ルールが有効かどうか取得する
+ * @param[in]  id: EH_RULE_ID
+ * @param[out] is_active: 
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_get_rule_is_active(EH_RULE_ID id, uint8_t* is_active);
+
+/**
  * @brief  EH_Rule の counter をセット
  * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @param  id: EH_RULE_ID
