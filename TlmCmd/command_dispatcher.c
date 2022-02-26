@@ -51,7 +51,8 @@ CommandDispatcher CDIS_init(PacketList* pl)
   cdis.stop_on_error = 0;
 
   // 処理対象とするPacketListをクリアして登録
-  if (pl == NULL) {
+  if (pl == NULL)
+  {
     // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
     EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
                     CIDS_EL_LOCAL_ID_NULL_PARAM,
