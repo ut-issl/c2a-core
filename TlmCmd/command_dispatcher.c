@@ -1,19 +1,23 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief 各種コマンドの実行管理
+ */
 #include "command_dispatcher.h"
 
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
 #include "packet_handler.h"
 
-static CDIS_ExecInfo CEI_init_(void);
+static CDIS_ExecInfo CDIS_init_exec_info_(void);
 
 CommandDispatcher CDIS_init(PacketList* pli)
 {
   CommandDispatcher cdis;
 
   // コマンド実行情報を初期化。
-  cdis.prev = CEI_init_();
-  cdis.prev_err = CEI_init_();
+  cdis.prev = CDIS_init_exec_info_();
+  cdis.prev_err = CDIS_init_exec_info_();
 
   // 実行エラーカウンタを0に初期化。
   cdis.error_counter = 0;
@@ -31,7 +35,7 @@ CommandDispatcher CDIS_init(PacketList* pli)
   return cdis;
 }
 
-static CDIS_ExecInfo CEI_init_(void)
+static CDIS_ExecInfo CDIS_init_exec_info_(void)
 {
   CDIS_ExecInfo cei;
 
@@ -115,7 +119,7 @@ void CDIS_clear_command_list(CommandDispatcher* cdis)
 void CDIS_clear_error_status(CommandDispatcher* cdis)
 {
   // 実行エラー状態を初期状態に復元
-  cdis->prev_err = CEI_init_();
+  cdis->prev_err = CDIS_init_exec_info_();
 
   // 積算エラー回数を0クリア
   cdis->error_counter = 0;
