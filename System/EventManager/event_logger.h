@@ -215,6 +215,7 @@ typedef enum
   EL_CORE_GROUP_EH_MATCH_RULE,        //!< EH_Rule でマッチした（詳細は event_handler.h 参照）
   EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,  //!< EH_Rule でマッチしたが，そのルールで対応せずに，上位のルールで対応させた（詳細は event_handler.h 参照）
   EL_CORE_GROUP_COMMAND_ANALYZE,
+  EL_CORE_GROUP_COMMAND_DISPATCHER,
   // TODO: Driver Super
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   EL_CORE_GROUP_EL_DROP_CLOG1,        //!< EL CLogs で古いエラーを上書きするとき (group, err_level を保存)

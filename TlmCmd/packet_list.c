@@ -128,6 +128,13 @@ uint16_t PL_get_packet_size(const PacketList* pl)
 }
 
 
+PL_PACKET_TYPE PL_get_packet_type(const PacketList* pl)
+{
+  // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている
+  return (PL_PACKET_TYPE)pl->packet_type_;
+}
+
+
 int PL_is_empty(const PacketList* pl)
 {
   return (pl->active_list_head_ == NULL);

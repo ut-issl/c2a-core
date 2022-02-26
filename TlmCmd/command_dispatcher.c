@@ -7,8 +7,23 @@
 
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
+#include "../System/EventManager/event_logger.h"
 #include "packet_handler.h"
 
+// TODO: 本当は，不正な CDISは pl == NULL などにしておくのが良さそうだが，
+//       現状 PL が NULL チェックをしてないので，できない
+
+/**
+ * @enum  CIDS_EL_LOCAL_ID
+ * @brief CDIS 内部の event の local ID
+ * @note  uint8_t
+ */
+typedef enum
+{
+  CIDS_EL_LOCAL_ID_NULL_PARAM,    //!< NULL 引数
+  CIDS_EL_LOCAL_ID__INVALID_PL,   //!< 不正な PL
+  CIDS_EL_LOCAL_ID_UNKNOWN
+} CIDS_EL_LOCAL_ID;
 
 /**
  * @brief  CDIS_ExecInfo の初期化
@@ -18,7 +33,7 @@
 static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info);
 
 
-CommandDispatcher CDIS_init(PacketList* pli)
+CommandDispatcher CDIS_init(PacketList* pl)
 {
   CommandDispatcher cdis;
 
@@ -36,8 +51,25 @@ CommandDispatcher CDIS_init(PacketList* pli)
   cdis.stop_on_error = 0;
 
   // 処理対象とするPacketListをクリアして登録
-  PL_clear_list(pli);
-  cdis.pli = pli;
+  if (pl == NULL) {
+    // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
+                    CIDS_EL_LOCAL_ID_NULL_PARAM,
+                    EL_ERROR_LEVEL_HIGH,
+                    0);
+    return cdis;
+  }
+  if (PL_get_packet_type(pl) != PL_PACKET_TYPE_CCP)
+  {
+    // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
+                    CIDS_EL_LOCAL_ID__INVALID_PL,
+                    EL_ERROR_LEVEL_HIGH,
+                    (uint32_t)pl);
+    return cdis;
+  }
+  PL_clear_list(pl);
+  cdis.pl = pl;
 
   return cdis;
 }
@@ -62,7 +94,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
     return;
   }
 
-  if (PL_is_empty(cdis->pli))
+  if (PL_is_empty(cdis->pl))
   {
     // 実行すべきコマンドが無い場合は処理終了。
     return;
@@ -77,7 +109,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   }
 
   // 実行すべきコマンドパケットを取得。
-  packet_ = *(const CommonCmdPacket*)(PL_get_head(cdis->pli)->packet);
+  packet_ = *(const CommonCmdPacket*)(PL_get_head(cdis->pl)->packet);
 
   // ここで実行種別を変更するのをやめた．
   // - MOBCから配送される第二OBCにも，GS cmdやTL cmdを送信したいため
@@ -97,7 +129,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   cdis->prev.sts  = PH_dispatch_command(&packet_);
 
   // 実行したコマンドをリストから破棄
-  PL_drop_executed(cdis->pli);
+  PL_drop_executed(cdis->pl);
 
   if (cdis->prev.sts != CCP_EXEC_SUCCESS)
   {
@@ -118,7 +150,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
 void CDIS_clear_command_list(CommandDispatcher* cdis)
 {
   // 保持しているリストの内容をクリア
-  PL_clear_list(cdis->pli);
+  PL_clear_list(cdis->pl);
 }
 
 
