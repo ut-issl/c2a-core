@@ -44,10 +44,25 @@ typedef struct
  */
 CommandDispatcher CDIS_init(PacketList* pl);
 
+/**
+ * @brief  CDIS に登録されているコマンドキューからコマンドを実行
+ * @param[in,out] cdis: 参照する CDIS
+ * @return void
+ */
 void CDIS_dispatch_command(CommandDispatcher* cdis);
 
+/**
+ * @brief  CDIS に登録されているコマンドキューからコマンドを削除
+ * @param[in,out] cdis: 参照する CDIS
+ * @return void
+ */
 void CDIS_clear_command_list(CommandDispatcher* cdis);
 
+/**
+ * @brief  CDIS に登録されているコマンドキューのコマンド実行エラー情報を削除
+ * @param[in,out] cdis: 参照する CDIS
+ * @return void
+ */
 void CDIS_clear_error_status(CommandDispatcher* cdis);
 
 #endif

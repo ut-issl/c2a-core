@@ -85,30 +85,25 @@ static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info)
 
 void CDIS_dispatch_command(CommandDispatcher* cdis)
 {
-  // パケットコピー用。サイズが大きいため静的変数として宣言。
+  // パケットコピー用．サイズが大きいため静的変数として宣言
   static CommonCmdPacket packet_;
 
-  if (cdis->lockout)
-  {
-    // 実行有効フラグが無効化されている場合は処理打ち切り。
-    return;
-  }
+  // 実行有効フラグが無効化されている場合は処理打ち切り
+  if (cdis->lockout) return;
 
-  if (PL_is_empty(cdis->pl))
-  {
-    // 実行すべきコマンドが無い場合は処理終了。
-    return;
-  }
+  // 実行すべきコマンドが無い場合は処理終了
+  if (cdis->pl == NULL) return;       // TODO: PL 側で NULL チェックに対応したら消す
+  if (PL_is_empty(cdis->pl)) return;
 
   if (cdis->prev.sts != CCP_EXEC_SUCCESS)
   {
-    // 直前コマンドが異常終了した場合は実行前に情報を保存。
+    // 直前コマンドが異常終了した場合は実行前に情報を保存
     // 実行前にコピーすることで次コマンドが異常終了した場合は
-    // prevとprev_errで2コマンド分の異常情報を保持できる。
+    // prev と prev_err で2コマンド分の異常情報を保持できる
     cdis->prev_err = cdis->prev;
   }
 
-  // 実行すべきコマンドパケットを取得。
+  // 実行すべきコマンドパケットを取得
   packet_ = *(const CommonCmdPacket*)(PL_get_head(cdis->pl)->packet);
 
   // ここで実行種別を変更するのをやめた．
@@ -123,7 +118,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   CCP_set_exec_type(&packet_, CCP_EXEC_TYPE_RT);
   */
 
-  // 実行時情報を記録しつつコマンドを実行。
+  // 実行時情報を記録しつつコマンドを実行
   cdis->prev.time = TMGR_get_master_clock();
   cdis->prev.code = CCP_get_id(&packet_);
   cdis->prev.sts  = PH_dispatch_command(&packet_);
@@ -133,14 +128,14 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
 
   if (cdis->prev.sts != CCP_EXEC_SUCCESS)
   {
-    // 実行したコマンドが実行異常ステータスを返した場合。
-    // エラー発生カウンタをカウントアップ。
+    // 実行したコマンドが実行異常ステータスを返した場合
+    // エラー発生カウンタをカウントアップ
     ++(cdis->error_counter);
 
     if (cdis->stop_on_error == 1)
     {
-      // 異常時実行中断フラグが有効な場合。
-      // 実行許可フラグを無効化し以降の実行を中断。
+      // 異常時実行中断フラグが有効な場合
+      // 実行許可フラグを無効化し以降の実行を中断
       cdis->lockout = 1;
     }
   }
@@ -150,6 +145,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
 void CDIS_clear_command_list(CommandDispatcher* cdis)
 {
   // 保持しているリストの内容をクリア
+  if (cdis->pl == NULL) return;       // TODO: PL 側で NULL チェックに対応したら消す
   PL_clear_list(cdis->pl);
 }
 
@@ -157,7 +153,7 @@ void CDIS_clear_command_list(CommandDispatcher* cdis)
 void CDIS_clear_error_status(CommandDispatcher* cdis)
 {
   // 実行エラー状態を初期状態に復元
-  cdis->prev_err = CDIS_init_exec_info_();
+  CDIS_clear_exec_info_(&cdis->prev_err);
 
   // 積算エラー回数を0クリア
   cdis->error_counter = 0;
