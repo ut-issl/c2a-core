@@ -9,43 +9,47 @@
 #include "../System/TimeManager/time_manager.h"
 #include "packet_handler.h"
 
-static CDIS_ExecInfo CDIS_init_exec_info_(void);
+
+/**
+ * @brief  CDIS_ExecInfo の初期化
+ * @param[in,out] exec_info: 初期化する exec_info
+ * @return void
+ */
+static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info);
+
 
 CommandDispatcher CDIS_init(PacketList* pli)
 {
   CommandDispatcher cdis;
 
-  // コマンド実行情報を初期化。
-  cdis.prev = CDIS_init_exec_info_();
-  cdis.prev_err = CDIS_init_exec_info_();
+  // コマンド実行情報を初期化
+  CDIS_clear_exec_info_(&cdis.prev);
+  CDIS_clear_exec_info_(&cdis.prev_err);
 
-  // 実行エラーカウンタを0に初期化。
+  // 実行エラーカウンタを0に初期化
   cdis.error_counter = 0;
 
   // 実行中断フラグを無効に設定
   cdis.lockout = 0;
 
-  // 異常時実行中断フラグを無効に設定。
+  // 異常時実行中断フラグを無効に設定
   cdis.stop_on_error = 0;
 
-  // 処理対象とするPacketListをクリアして登録。
+  // 処理対象とするPacketListをクリアして登録
   PL_clear_list(pli);
   cdis.pli = pli;
 
   return cdis;
 }
 
-static CDIS_ExecInfo CDIS_init_exec_info_(void)
+
+static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info)
 {
-  CDIS_ExecInfo cei;
-
-  OBCT_clear(&cei.time);
-  cei.time.step = 0;            // ここで重複してClearしている理由はなんだ．．．
-  cei.code = (CMD_CODE)0;
-  cei.sts = CCP_EXEC_SUCCESS;
-
-  return cei;
+  OBCT_clear(&(exec_info->time));
+  exec_info->code = (CMD_CODE)0;
+  exec_info->sts = CCP_EXEC_SUCCESS;
 }
+
 
 void CDIS_dispatch_command(CommandDispatcher* cdis)
 {
@@ -110,11 +114,13 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   }
 }
 
+
 void CDIS_clear_command_list(CommandDispatcher* cdis)
 {
   // 保持しているリストの内容をクリア
   PL_clear_list(cdis->pli);
 }
+
 
 void CDIS_clear_error_status(CommandDispatcher* cdis)
 {
@@ -124,4 +130,5 @@ void CDIS_clear_error_status(CommandDispatcher* cdis)
   // 積算エラー回数を0クリア
   cdis->error_counter = 0;
 }
+
 #pragma section
