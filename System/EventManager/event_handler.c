@@ -1150,6 +1150,13 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   return EH_CHECK_RULE_ACK_OK;
 }
 
+uint8_t EH_get_rule_is_active(EH_RULE_ID id)
+{
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return 0;
+
+  return event_handler_.rule_table.rules[id].settings.is_active;
+}
 
 EH_CHECK_RULE_ACK EH_set_rule_counter(EH_RULE_ID id, uint16_t counter)
 {
