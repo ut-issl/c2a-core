@@ -21,7 +21,7 @@
 typedef enum
 {
   CIDS_EL_LOCAL_ID_NULL_PARAM,    //!< NULL 引数
-  CIDS_EL_LOCAL_ID__INVALID_PL,   //!< 不正な PL
+  CIDS_EL_LOCAL_ID_INVALID_PL,    //!< 不正な PL
   CIDS_EL_LOCAL_ID_UNKNOWN
 } CIDS_EL_LOCAL_ID;
 
@@ -64,7 +64,7 @@ CommandDispatcher CDIS_init(PacketList* pl)
   {
     // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
     EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
-                    CIDS_EL_LOCAL_ID__INVALID_PL,
+                    CIDS_EL_LOCAL_ID_INVALID_PL,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)pl);
     return cdis;
