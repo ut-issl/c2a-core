@@ -147,6 +147,13 @@ uint16_t PL_get_total_node_num(const PacketList* pl);
 uint16_t PL_get_packet_size(const PacketList* pl);
 
 /**
+ * @brief PacketList で使用される packet の型情報 PL_PACKET_TYPE を返す
+ * @param[in] pl: PacketList
+ * @return packet の型情報
+ */
+PL_PACKET_TYPE PL_get_packet_type(const PacketList* pl);
+
+/**
  * @brief PacketList が空かどうか
  * @param[in] pl: PacketList
  * @retval 1: True
