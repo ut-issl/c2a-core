@@ -23,6 +23,9 @@ void BCL_load_test_bcl(void)
 
   BCL_tool_prepare_param_double(12345.6789);
   BCL_tool_register_cmd(3, Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH);
+
+  BCL_tool_prepare_param_double(-12345.6789);
+  BCL_tool_register_cmd(3, Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH);
 }
 
 #pragma section
