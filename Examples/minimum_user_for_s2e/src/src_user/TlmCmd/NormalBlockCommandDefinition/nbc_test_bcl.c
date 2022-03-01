@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief BCLの prepare param が上手くいくかどうか確認. あとで消す
+ * @brief BCLの prepare param が上手くいくかどうか確認. テスト用なので実機環境ではビルド対象に含めなくても良い
  */
 #include "nbc_header.h"
 
