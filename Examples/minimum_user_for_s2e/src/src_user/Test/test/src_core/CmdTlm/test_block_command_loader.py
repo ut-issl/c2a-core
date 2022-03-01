@@ -25,7 +25,7 @@ PARAMS_LIST = [
     [("uint8", 44), ("uint32", 555555)],
     # Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH
     [("double", 12345.6789)],
-    [("double", -12345.6789)]
+    [("double", -12345.6789)],
 ]
 
 
@@ -35,7 +35,10 @@ def test_bcl_prepare_param():
 
     # BC_TEST_BCL を BLテレメに降ろしてくる
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_BCT_SET_BLOCK_POSITION, (c2a_enum.BC_TEST_BCL, 0), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_BCT_SET_BLOCK_POSITION,
+        (c2a_enum.BC_TEST_BCL, 0),
+        c2a_enum.Tlm_CODE_HK,
     )
     tlm_BL = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_BL
@@ -58,19 +61,19 @@ def params2hex(params):
     hex_str = ""
     for type, num in params:
         if type == "uint8" or type == "int8":
-            temp = hex(num & 0xff)
+            temp = hex(num & 0xFF)
             hex_str += format_hex_str(temp, 2)
         elif type == "uint16" or type == "int16":
-            temp = hex(num & 0xffff)
+            temp = hex(num & 0xFFFF)
             hex_str += format_hex_str(temp, 4)
         elif type == "uint32" or type == "int32":
-            temp = hex(num & 0xffffffff)
+            temp = hex(num & 0xFFFFFFFF)
             hex_str += format_hex_str(temp, 8)
         elif type == "float":
             temp = float_to_hex(num)
             hex_str += format_hex_str(temp, 8)
         elif type == "uint64" or type == "int64":
-            temp = hex(num & 0xffffffffffffffff)
+            temp = hex(num & 0xFFFFFFFFFFFFFFFF)
             hex_str += format_hex_str(temp, 16)
         elif type == "double":
             temp = double_to_hex(num)
@@ -89,7 +92,7 @@ def format_hex_str(hex_str, size):
 
 def float_to_hex(param):
     # ビッグエンディアンの場合は引数を ">f" とする
-    return hex(struct.unpack('>I', struct.pack('>f', param))[0])
+    return hex(struct.unpack(">I", struct.pack(">f", param))[0])
 
 
 def double_to_hex(param):
