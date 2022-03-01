@@ -8,11 +8,10 @@
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/AnomalyLogger/anomaly_logger.h>
-// #include "../../ReProgramming/ReProg.h"
+#include <src_core/System/EventManager/event_logger.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include "../../TlmCmd/telemetry_definitions.h"
 #include <src_core/TlmCmd/block_command_table.h>
-// #include "stt_sel_detector.h"
 #include <src_core/Applications/memory_dump.h>
 #include <src_core/Applications/gs_command_dispatcher.h>
 #include <src_core/Applications/realtime_command_dispatcher.h>
@@ -26,26 +25,38 @@
 void APP_DBG_flush_screen_(void);
 void APP_DBG_print_time_stamp_(void);
 void APP_DBG_print_cmd_status_(void);
+void APP_DBG_print_event_logger0_(void);
+void APP_DBG_print_event_logger1_(void);
 void APP_DBG_print_git_rev_(void);
 
 AppInfo APP_DBG_flush_screen(void)
 {
-  return AI_create_app_info("fscr", NULL, APP_DBG_flush_screen_);
+  return AI_create_app_info("debug_fscr", NULL, APP_DBG_flush_screen_);
 }
 
 AppInfo APP_DBG_print_time_stamp(void)
 {
-  return AI_create_app_info("tstm", NULL, APP_DBG_print_time_stamp_);
+  return AI_create_app_info("debug_tstm", NULL, APP_DBG_print_time_stamp_);
 }
 
 AppInfo APP_DBG_print_cmd_status(void)
 {
-  return AI_create_app_info("cmds", NULL, APP_DBG_print_cmd_status_);
+  return AI_create_app_info("debug_cmds", NULL, APP_DBG_print_cmd_status_);
+}
+
+AppInfo APP_DBG_print_event_logger0(void)
+{
+  return AI_create_app_info("debug_el0", NULL, APP_DBG_print_event_logger0_);
+}
+
+AppInfo APP_DBG_print_event_logger1(void)
+{
+  return AI_create_app_info("debug_el1", NULL, APP_DBG_print_event_logger1_);
 }
 
 AppInfo APP_DBG_print_git_rev(void)
 {
-  return AI_create_app_info("git_rev", NULL, APP_DBG_print_git_rev_);
+  return AI_create_app_info("debug_git_rev", NULL, APP_DBG_print_git_rev_);
 }
 
 void APP_DBG_flush_screen_(void)
@@ -61,7 +72,7 @@ void APP_DBG_flush_screen_(void)
 void APP_DBG_print_time_stamp_(void)
 {
   VT100_erase_line();
-  Printf("CYCLE: TOTAL %04d, MODE %04d\n",
+  Printf("CYCLE: TOTAL %08d, MODE %08d\n",
          TMGR_get_master_total_cycle(), TMGR_get_master_mode_cycle());
   VT100_erase_line();
   Printf("MODE: STAT %d, PREV %d, CURR %d\n",
@@ -75,6 +86,57 @@ void APP_DBG_print_cmd_status_(void)
          (PL_count_executed_nodes(&PH_gs_cmd_list) & 0xff),
          (PL_count_executed_nodes(&PH_rt_cmd_list) & 0xff),
          gs_driver->info[gs_driver->tlm_tx_port_type].cmd_ack, gs_command_dispatcher->prev.code, gs_command_dispatcher->prev.sts);
+}
+
+void APP_DBG_print_event_logger0_(void)
+{
+// 一旦めんどくさいので，以下の時のみ対応で書く
+#ifdef EL_IS_ENABLE_TLOG
+#ifdef EL_IS_ENABLE_MIDDLE_ERROR_LEVEL
+#ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
+#ifdef EL_IS_ENABLE_EVENT_NOTE
+  const EL_Event* latest_high = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0);
+
+  VT100_erase_line();
+  Printf("EL Cnt: %5d, High %3d, Mid %3d, Low %3d, EL %3d, EH %3d\n",
+         event_logger->statistics.record_counter_total & 0xffff,
+         event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH] & 0xff,
+         event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE] & 0xff,
+         event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW] & 0xff,
+         event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL] & 0xff,
+         event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH] & 0xff);
+  VT100_erase_line();
+  Printf("EL Log H: %3d, %10d, %10d, %08d, %02d\n",
+         latest_high->group, latest_high->local, latest_high->note,
+         latest_high->time.total_cycle, latest_high->time.step);
+#endif
+#endif
+#endif
+#endif
+}
+
+void APP_DBG_print_event_logger1_(void)
+{
+// 一旦めんどくさいので，以下の時のみ対応で書く
+#ifdef EL_IS_ENABLE_TLOG
+#ifdef EL_IS_ENABLE_MIDDLE_ERROR_LEVEL
+#ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
+#ifdef EL_IS_ENABLE_EVENT_NOTE
+  const EL_Event* latest_mid = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 0);
+  const EL_Event* latest_low = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0);
+
+  VT100_erase_line();
+  Printf("EL Log M: %3d, %10d, %10d, %08d, %02d\n",
+         latest_mid->group, latest_mid->local, latest_mid->note,
+         latest_mid->time.total_cycle, latest_mid->time.step);
+  VT100_erase_line();
+  Printf("EL Log L: %3d, %10d, %10d, %08d, %02d\n",
+         latest_low->group, latest_low->local, latest_low->note,
+         latest_low->time.total_cycle, latest_low->time.step);
+#endif
+#endif
+#endif
+#endif
 }
 
 void APP_DBG_print_git_rev_(void)

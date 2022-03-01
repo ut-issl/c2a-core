@@ -30,6 +30,8 @@ void AR_load_initial_settings(void)
   add_application_(AR_APP_DBG_FLUSH_SCREEN, APP_DBG_flush_screen);
   add_application_(AR_APP_DBG_PRINT_TIMESTAMP, APP_DBG_print_time_stamp);
   add_application_(AR_APP_DBG_PRINT_CMD_STATUS, APP_DBG_print_cmd_status);
+  add_application_(AR_APP_DBG_PRINT_EVENT_LOGGER0, APP_DBG_print_event_logger0);
+  add_application_(AR_APP_DBG_PRINT_EVENT_LOGGER1, APP_DBG_print_event_logger1);
   add_application_(AR_APP_DBG_PRINT_GIT_REV, APP_DBG_print_git_rev);
 }
 
