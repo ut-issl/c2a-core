@@ -146,6 +146,7 @@ void BCL_tool_register_app(cycle_t ti, AR_APP_ID app_id)
   BCL_clear_info_();
 }
 
+// TODO: prepare_param系の関数にidx超過のassertionを入れる
 void BCL_tool_prepare_param_uint8(uint8_t val)
 {
   endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
