@@ -18,8 +18,10 @@ PacketList PH_gs_cmd_list;
 PacketList PH_rt_cmd_list;
 PacketList PH_tl_cmd_list[TL_ID_MAX];
 PacketList PH_ms_tlm_list;
+#ifndef PH_DISABLE_DATA_RECORDER
 PacketList PH_st_tlm_list;
 PacketList PH_rp_tlm_list;
+#endif
 
 static PL_Node PH_gs_cmd_stock_[PH_GS_CMD_LIST_MAX];
 static PL_Node PH_rt_cmd_stock_[PH_RT_CMD_LIST_MAX];
@@ -27,8 +29,10 @@ static PL_Node PH_tl0_cmd_stock_[PH_TL0_CMD_LIST_MAX];
 static PL_Node PH_tl1_cmd_stock_[PH_TL1_CMD_LIST_MAX];
 static PL_Node PH_tl2_cmd_stock_[PH_TL2_CMD_LIST_MAX];
 static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
+#ifndef PH_DISABLE_DATA_RECORDER
 static PL_Node PH_st_tlm_stock_[PH_ST_TLM_LIST_MAX];
 static PL_Node PH_rp_tlm_stock_[PH_RP_TLM_LIST_MAX];
+#endif
 
 static CommonCmdPacket PH_gs_cmd_ccp_stock_[PH_GS_CMD_LIST_MAX];
 static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RT_CMD_LIST_MAX];
@@ -36,8 +40,10 @@ static CommonCmdPacket PH_tl0_cmd_ccp_stock_[PH_TL0_CMD_LIST_MAX];
 static CommonCmdPacket PH_tl1_cmd_ccp_stock_[PH_TL1_CMD_LIST_MAX];
 static CommonCmdPacket PH_tl2_cmd_ccp_stock_[PH_TL2_CMD_LIST_MAX];
 static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
+#ifndef PH_DISABLE_DATA_RECORDER
 static CommonTlmPacket PH_st_tlm_ctp_stock_[PH_ST_TLM_LIST_MAX];
 static CommonTlmPacket PH_rp_tlm_ctp_stock_[PH_RP_TLM_LIST_MAX];
+#endif
 
 static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet);
@@ -67,8 +73,10 @@ void PH_init(void)
   PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[2]);
 
   PL_initialize_with_ctp(PH_ms_tlm_stock_, PH_ms_tlm_ctp_stock_, PH_MS_TLM_LIST_MAX, &PH_ms_tlm_list);
+#ifndef PH_DISABLE_DATA_RECORDER
   PL_initialize_with_ctp(PH_st_tlm_stock_, PH_st_tlm_ctp_stock_, PH_ST_TLM_LIST_MAX, &PH_st_tlm_list);
   PL_initialize_with_ctp(PH_rp_tlm_stock_, PH_rp_tlm_ctp_stock_, PH_RP_TLM_LIST_MAX, &PH_rp_tlm_list);
+#endif
 
   PH_user_init();
 }
@@ -284,21 +292,31 @@ static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
+#ifndef PH_DISABLE_DATA_RECORDER
   PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
 
   if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
   return PH_ACK_SUCCESS;
+#else
+  (void)packet;
+  return PH_ACK_SUCCESS;
+#endif
 }
 
 
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
+#ifndef PH_DISABLE_DATA_RECORDER
   PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
 
   if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
   return PH_ACK_SUCCESS;
+#else
+  (void)packet;
+  return PH_ACK_SUCCESS;
+#endif
 }
 
 #pragma section

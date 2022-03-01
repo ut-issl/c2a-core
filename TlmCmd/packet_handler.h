@@ -18,7 +18,20 @@
 #define PH_ST_TLM_LIST_MAX  (16)
 #define PH_RP_TLM_LIST_MAX  (16)
 
+// 以下で，上記の PL のキューサイズを再定義する
+// また， 以下で #define PH_DISABLE_DATA_RECORDER をすると，
+// DR 関連 PL がすべて無効となり，メモリが節約できる
+// #define PH_DISABLE_DATA_RECORDER
 #include <src_user/Settings/TlmCmd/packet_handler_params.h>
+
+#ifdef PH_DISABLE_DATA_RECORDER
+#ifdef PH_ST_TLM_LIST_MAX
+#undef PH_ST_TLM_LIST_MAX
+#endif
+#ifdef PH_RP_TLM_LIST_MAX
+#undef PH_RP_TLM_LIST_MAX
+#endif
+#endif
 
 // 循環参照を防ぐためにここでinclude
 #include "common_tlm_cmd_packet.h"

@@ -31,4 +31,7 @@
 #define PH_ST_TLM_LIST_MAX       (16)
 #define PH_RP_TLM_LIST_MAX       (16)
 
+// DR は使用するので， define しない
+// #define PH_DISABLE_DATA_RECORDER
+
 #endif
