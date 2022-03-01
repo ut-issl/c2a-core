@@ -58,8 +58,10 @@ extern PacketList PH_rt_cmd_list;
 extern PacketList PH_tl_cmd_list[TL_ID_MAX];
 // extern PacketList PH_hk_tlm_list;    // 現在は MS TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
 extern PacketList PH_ms_tlm_list;
+#ifndef PH_DISABLE_DATA_RECORDER
 extern PacketList PH_st_tlm_list;
 extern PacketList PH_rp_tlm_list;
+#endif
 
 /**
  * @brief Packet Handler を初期化
