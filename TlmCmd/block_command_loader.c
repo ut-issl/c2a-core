@@ -13,6 +13,7 @@
 #include "block_command_executor.h"
 #include <src_user/TlmCmd/command_definitions.h> // for rotate/combine block
 #include "common_cmd_packet_util.h"
+#include "../Library/endian_memcpy.h"
 
 #define BCL_PARAM_MAX_LENGTH BCT_CMD_MAX_LENGTH
 
@@ -145,68 +146,66 @@ void BCL_tool_register_app(cycle_t ti, AR_APP_ID app_id)
   BCL_clear_info_();
 }
 
+// TODO: prepare_param系の関数にidx超過のassertionを入れる
 void BCL_tool_prepare_param_uint8(uint8_t val)
 {
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int8(int8_t val)
 {
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_uint16(uint16_t val)
 {
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >>  8) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int16(int16_t val)
 {
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >>  8) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_uint32(uint32_t val)
 {
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >> 24) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >> 16) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >>  8) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int32(int32_t val)
 {
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >> 24) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >> 16) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val >>  8) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((val      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_float(float val)
 {
-  uint32_t tmp = *((uint32_t*)&val);
-
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((tmp >> 24) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((tmp >> 16) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((tmp >>  8) & 0xff);
-  block_command_loader_.params[block_command_loader_.param_idx++] = (uint8_t)((tmp      ) & 0xff);
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
 
-// 実装時点ではuint64_tを使えなかったかつ使う人も少ないのでいったん無効化
-#if 0
+void BCL_tool_prepare_param_uint64(uint64_t val)
+{
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
+}
+
+void BCL_tool_prepare_param_int64(int64_t val)
+{
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
+}
+
 void BCL_tool_prepare_param_double(double val)
 {
-  int i;
-
-  // TODO: idx超過のassertionを入れる
-  for (i = 0; i < sizeof(val); i++)
-  {
-    block_command_loader_.param_buffer[block_command_loader_.command_idx][block_command_loader_.param_idx++]
-        = (unsigned char)((val >> (sizeof(val) - i) * 8) & 0xff);
-  }
+  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  block_command_loader_.param_idx += sizeof(val);
 }
-#endif
 
 
 void BCL_register_cmd_(cycle_t ti, CMD_CODE cmd_id)

@@ -42,6 +42,7 @@ void BC_load_defaults(void)
 
   // === TEST ===
   BCL_load_bc(BC_TEST_EH_RESPOND,           BCL_load_respond_eh_for_test);
+  BCL_load_bc(BC_TEST_BCL,                  BCL_load_test_bcl);
 }
 
 #pragma section
