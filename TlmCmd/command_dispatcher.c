@@ -133,6 +133,12 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
     // エラー発生カウンタをカウントアップ
     ++(cdis->error_counter);
 
+    // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_STS,
+                    cdis->prev.sts,
+                    EL_ERROR_LEVEL_HIGH,
+                    (uint32_t)cdis);
+
     if (cdis->stop_on_error == 1)
     {
       // 異常時実行中断フラグが有効な場合
