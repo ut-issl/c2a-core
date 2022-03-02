@@ -1,5 +1,8 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "labels": ["priority::medium", "tools"],
+  "additionalReviewers": ["meltingrabbit", "sksat"],
+  "assignees": ["meltingrabbit", "sksat"]
 }
