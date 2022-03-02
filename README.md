@@ -41,7 +41,7 @@
 ## 採用実績・動作実績
 C2A Core の採用実績のある衛星 OBC や動作実績のあるボードの情報をまとめる．
 
-| Name | Satellite | Lead Institution | Launch | CPU | Clock | ROM | RAM | NVRAM | Storage | Interface | Reference |
+| Name | Satellite | &nbsp;&nbsp;&nbsp;Lead&nbsp;Institution&nbsp;&nbsp;&nbsp; | Launch | CPU | &nbsp;&nbsp;&nbsp;Clock&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ROM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NVRAM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Storage&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interface&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Reference |
 | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
 | MOBC | ONGLAISAT | ISSL at the University of Tokyo | - | Renesas Electronics SH-2A | 200 MHz | 2.5 MiB internal ROM | 128 KiB internal RAM, 8 MiB external SRAM | 2 MiB MRAM | 2 GiB NAND flash memory | UART (RS422, LVTTL), CCSDS (LVTTL), GPIO (LVTTL), ADC | [^1] |
 | AOBC | ONGLAISAT | ISSL at the University of Tokyo | - | Microchip Technology PIC32MX7 | 80 MHz | 512 KiB internal ROM | 128 KiB internal RAM | 512 KiB FRAM | None | UART (RS422, RS485, LVTTL), SPI, I2C, GPIO (LVTTL), ADC | [^1] |
