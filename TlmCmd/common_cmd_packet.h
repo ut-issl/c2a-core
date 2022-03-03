@@ -5,6 +5,7 @@
  */
 #ifndef COMMON_CMD_PACKET_H_
 #define COMMON_CMD_PACKET_H_
+#define TL_IS_ENABLE_MISSION_TL
 
 #include "../System/TimeManager/obc_time.h"
 #include <src_user/TlmCmd/command_definitions.h>
@@ -62,6 +63,9 @@ typedef enum
   CCP_EXEC_TYPE_UTL,    //!< UTL: Unixtime Timeline Command
   CCP_EXEC_TYPE_TL1,
   CCP_EXEC_TYPE_TL2,
+  #ifdef TL_IS_ENABLE_MISSION_TL
+  CCP_EXEC_TYPE_TL_MIS,
+  #endif
   CCP_EXEC_TYPE_UNKNOWN
 } CCP_EXEC_TYPE;
 

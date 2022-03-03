@@ -27,6 +27,10 @@ static void TLCD1_init_(void);
 static void TLCD1_dispatch_(void);
 static void TLCD2_init_(void);
 static void TLCD2_dispatch_(void);
+#ifdef TL_IS_ENABLE_MISSION_TL
+static void TLCD_mis_init_(void);
+static void TLCD_mis_dispatch_(void);
+#endif
 static void tlc_dispatcher_(int line_no);
 // FIXME: 返り値が PH_ACK なのはおかしい
 static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time);
@@ -88,6 +92,23 @@ static void TLCD2_dispatch_(void)
 {
   tlc_dispatcher_(2);
 }
+
+#ifdef TL_IS_ENABLE_MISSION_TL
+AppInfo TLCD_mis_create_app(void)
+{
+  return AI_create_app_info("tlcd_mis", TLCD_mis_init_, TLCD_mis_dispatch_);
+}
+
+static void TLCD_mis_init_(void)
+{
+  timeline_command_dispatcher_[TL_ID_FROM_GS_FOR_MISSION] = CDIS_init(&(PH_tl_cmd_list[TL_ID_FROM_GS_FOR_MISSION]));
+}
+
+static void TLCD_mis_dispatch_(void)
+{
+  tlc_dispatcher_(TL_ID_FROM_GS_FOR_MISSION);
+}
+#endif
 
 static void tlc_dispatcher_(int line_no)
 {

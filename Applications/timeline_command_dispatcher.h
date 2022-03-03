@@ -1,6 +1,8 @@
 #ifndef TIMELINE_COMMAND_DISPATCHER_H_
 #define TIMELINE_COMMAND_DISPATCHER_H_
 
+#include "../TlmCmd/common_cmd_packet.h"
+
 /**
  * @enum   TL_ID
  * @brief  TimeLineを選ぶときに統一的に使うコード
@@ -11,6 +13,9 @@ typedef enum
   TL_ID_DEPLOY_FROM_GS = 0,
   TL_ID_DEPLOY_BC      = 1,
   TL_ID_DEPLOY_TLM     = 2,
+#ifdef TL_IS_ENABLE_MISSION_TL
+  TL_ID_FROM_GS_FOR_MISSION,
+#endif
   TL_ID_MAX
 } TL_ID;
 // FIXME: 全体的に， line_no が int なので， enum にする
@@ -18,7 +23,6 @@ typedef enum
 
 // 循環参照を防ぐためにここでinclude
 #include "../TlmCmd/command_dispatcher.h"
-#include "../TlmCmd/common_cmd_packet.h"
 #include "../TlmCmd/packet_handler.h"
 #include "../System/ApplicationManager/app_info.h"
 
@@ -32,6 +36,9 @@ extern const int* TLCD_page_no;
 AppInfo TLCD0_create_app(void);
 AppInfo TLCD1_create_app(void);
 AppInfo TLCD2_create_app(void);
+#ifdef TL_IS_ENABLE_MISSION_TL
+AppInfo TLCD_mis_create_app(void);
+#endif
 
 /**
  * @brief TLM の内容を自動更新する.

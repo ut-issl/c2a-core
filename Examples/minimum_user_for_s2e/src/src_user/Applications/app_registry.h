@@ -1,5 +1,7 @@
 #ifndef APP_REGISTRY_H_
 #define APP_REGISTRY_H_
+#include <src_core/TlmCmd/common_cmd_packet.h>
+
 // こいつの自動生成がほしい．．．
 typedef enum
 {
@@ -13,6 +15,9 @@ typedef enum
   AR_TLC0_DISPATCHER,
   AR_TLC1_DISPATCHER,
   AR_TLC2_DISPATCHER,
+  #ifdef TL_IS_ENABLE_MISSION_TL
+  AR_TLC_MIS_DISPATCHER,
+  #endif
   AR_EVENT_UTILITY,
   AR_ANOMALY_HANDLER,
   AR_MEM_DUMP,
