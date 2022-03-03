@@ -54,7 +54,7 @@ CommandDispatcher CDIS_init(PacketList* pl)
   if (pl == NULL)
   {
     // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_INTERNAL_ERR,
                     CDIS_EL_LOCAL_ID_NULL_PARAM,
                     EL_ERROR_LEVEL_HIGH,
                     0);
@@ -63,7 +63,7 @@ CommandDispatcher CDIS_init(PacketList* pl)
   if (PL_get_packet_type(pl) != PL_PACKET_TYPE_CCP)
   {
     // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_INTERNAL_ERR,
                     CDIS_EL_LOCAL_ID_INVALID_PL,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)pl);
@@ -134,9 +134,9 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
     ++(cdis->error_counter);
 
     // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_STS,
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR,
                     cdis->prev.sts,
-                    EL_ERROR_LEVEL_HIGH,
+                    EL_ERROR_LEVEL_LOW,
                     (uint32_t)cdis);
 
     if (cdis->stop_on_error == 1)
