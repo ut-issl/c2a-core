@@ -10,7 +10,10 @@ void BCL_load_tl_initial(void)
 {
   BCL_tool_register_rotate ( 0, BC_AR_GS_RELATED_PROCESS);
   BCL_tool_register_app    ( 4, AR_TLC0_DISPATCHER);
-  BCL_tool_register_combine( 6, BC_AC_TLM_CMD_HIRATE);
+  #ifdef TL_IS_ENABLE_MISSION_TL
+  BCL_tool_register_app    ( 6, AR_TLC_MIS_DISPATCHER);
+  #endif
+  BCL_tool_register_combine( 8, BC_AC_TLM_CMD_HIRATE);
   BCL_tool_register_rotate (30, BC_AR_DRIVERS_UPDATE_INI);
   BCL_tool_register_app    (40, AR_EVENT_UTILITY);
   BCL_tool_register_app    (50, AR_ANOMALY_HANDLER);

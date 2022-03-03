@@ -20,6 +20,9 @@ void AR_load_initial_settings(void)
   add_application_(AR_TLC0_DISPATCHER, TLCD0_create_app);
   add_application_(AR_TLC1_DISPATCHER, TLCD1_create_app);
   add_application_(AR_TLC2_DISPATCHER, TLCD2_create_app);
+  #ifdef TL_IS_ENABLE_MISSION_TL
+  add_application_(AR_TLC_MIS_DISPATCHER, TLCD_mis_create_app);
+  #endif
   add_application_(AR_EVENT_UTILITY, EVENT_UTIL_create_app);
   add_application_(AR_ANOMALY_HANDLER, AH_create_app);
   add_application_(AR_MEM_DUMP, MEM_create_app);
