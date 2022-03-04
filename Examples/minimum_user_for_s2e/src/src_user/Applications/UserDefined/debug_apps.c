@@ -98,7 +98,7 @@ void APP_DBG_print_event_logger0_(void)
   const EL_Event* latest_high = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0);
 
   VT100_erase_line();
-  Printf("EL Cnt: %5d, High %3d, Mid %3d, Low %3d, EL %3d, EH %3d\n",
+  Printf("EL Cnt: %5d, H %3d, M %3d, L %3d, EL %3d, EH %3d\n",
          event_logger->statistics.record_counter_total & 0xffff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE] & 0xff,
