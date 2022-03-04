@@ -19,12 +19,11 @@
 #define PH_RP_TLM_LIST_MAX  (16)
 
 // 以下で，上記の PL のキューサイズを再定義する
-// また， 以下で #define PH_DISABLE_DATA_RECORDER をすると，
+// また， data_recorder_define.h の #define DR_ENABLE をコメントアウトすると，
 // DR 関連 PL がすべて無効となり，メモリが節約できる
-// #define PH_DISABLE_DATA_RECORDER
 #include <src_user/Settings/TlmCmd/packet_handler_params.h>
 
-#ifdef PH_DISABLE_DATA_RECORDER
+#ifndef DR_ENABLE
 #ifdef PH_ST_TLM_LIST_MAX
 #undef PH_ST_TLM_LIST_MAX
 #endif
@@ -58,7 +57,7 @@ extern PacketList PH_rt_cmd_list;
 extern PacketList PH_tl_cmd_list[TL_ID_MAX];
 // extern PacketList PH_hk_tlm_list;    // 現在は MS TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
 extern PacketList PH_ms_tlm_list;
-#ifndef PH_DISABLE_DATA_RECORDER
+#ifdef DR_ENABLE
 extern PacketList PH_st_tlm_list;
 extern PacketList PH_rp_tlm_list;
 #endif
