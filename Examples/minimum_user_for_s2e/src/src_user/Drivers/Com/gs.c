@@ -173,8 +173,6 @@ int GS_rec_tcf(GS_Driver* gs_driver)
 
     if (gs_driver->info[i].rec_status != DS_ERR_CODE_OK) continue;
 
-    gs_driver->info[i].last_rec_time = TMGR_get_master_total_cycle();
-
     for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
     {
       DS_StreamConfig* p_stream_config;
@@ -233,6 +231,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
 
   gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(&tc_frame->tcs.tcp);
   gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(&tc_frame->tcs.tcp);  // 受信コマンドパケット解析
+  gs_driver->info[driver_index].last_rec_time = TMGR_get_master_total_cycle();
 
   return DS_ERR_CODE_OK;
 }
