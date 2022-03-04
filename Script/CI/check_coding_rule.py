@@ -166,20 +166,18 @@ def check_file_(path: str, settings: dict) -> bool:
     with open(path, encoding=settings["input_file_encoding"]) as f:
         code_lines = f.read().split("\n")
 
-    if not check_comment_(path, code_lines):
-        flag = False
-    if not check_newline_(path, code_lines):
-        flag = False
-    if not check_eof_(path, code_lines):
-        flag = False
-    if not check_space_(path, code_lines):
-        flag = False
-    if not check_operator_space_(path, code_lines):
-        flag = False
-    if not check_preprocessor_(path, code_lines):
-        flag = False
-    if not check_include_guard_(path, code_lines):
-        flag = False
+    check_funcs = [
+        check_comment_,
+        check_newline_,
+        check_eof_,
+        check_space_,
+        check_operator_space_,
+        check_preprocessor_,
+        check_include_guard_,
+    ]
+    for check_func in check_funcs:
+        if not check_func(path, code_lines):
+            flag = False
 
     return flag
 
