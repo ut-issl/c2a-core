@@ -274,23 +274,6 @@ def check_newline_(path: str, code_lines: list) -> bool:
             else:
                 print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
                 flag = False
-        # 旧版
-        # # if not (line.find("[") != -1 and line.find("};") != -1):
-        #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
-        # # if line.find("};") == -1:
-        #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
-        # if line.find("[") == -1 and line.find("};") == -1:
-        #           ↑ # TODO: uint8_t command_id[3] = {0x76, 0x61, 0x73}; などを含めないため．今後治す
-        #     if not has_line_ended_with_target_(line, "{"):
-        #         print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
-        #         flag = False
-
-        # # targets = ["class", "enum", "struct", "else"]
-        # targets = [" class ", " enum ", " struct "]
-        # for target in targets:
-        #     if not has_line_ended_with_target_(line, target):
-        #         print_err_(path, idx + 1, "ALLMAN STYLE IS REQUIRED", line)
-        #         flag = False
 
         # TODO: だいぶ雑
         non_comment_line1 = line.split("//", 1)[0]
@@ -487,43 +470,10 @@ def check_operator_space_(path: str, code_lines: list) -> bool:
 
     # これは endif で ifとかがヒットするのでNG
     # # targets = [
-    # #     "for",
-    # #     "if",
-    # #     "while",
-    # #     "return",
-    # #     "switch",
-    # #     "case",
-    # #     "break",
-    # #     "else",
-    # #     "goto",
-    # #     "auto",
-    # #     "continue",
-    # #     "extern",
-    # #     "enum",
-    # #     "union",
-    # #     "register",
-    # #     "static",
-    # #     "struct",
-    # #     "typedef",
-    # #     "volatile",
+    # #     "for", "if", "while", "return", "switch", "case", "break", "else", "goto", "auto", "continue", "extern", "enum", "union", "register", "static", "struct", "typedef", "volatile",
     # # ]
     # targets = [
-    #     "for",
-    #     "if",
-    #     "while",
-    #     "switch",
-    #     "case",
-    #     "else",
-    #     "goto",
-    #     "auto",
-    #     "extern",
-    #     "enum",
-    #     "union",
-    #     "register",
-    #     "static",
-    #     "struct",
-    #     "typedef",
-    #     "volatile",
+    #     "for", "if", "while", "switch", "case", "else", "goto", "auto", "extern", "enum", "union", "register", "static", "struct", "typedef", "volatile",
     # ]
     # for idx, line in enumerate(code_lines):
     #     if is_in_comment_context_in_multiline_(path, code_lines, idx):
