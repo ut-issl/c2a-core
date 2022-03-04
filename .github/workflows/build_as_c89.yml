@@ -53,6 +53,7 @@ jobs:
 
       - name: install deps
         run: |
+          sudo apt-get update
           sudo apt-get install -y libc6-dev-i386 nkf
 
       # - name: convert Shift-JIS to UTF-8
