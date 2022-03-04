@@ -53,7 +53,8 @@ jobs:
 
       - name: install deps
         run: |
-          sudo apt-get install -y libc6-dev-i386 nkf
+          sudo apt update
+          sudo apt install -y libc6-dev-i386 nkf
 
       # - name: convert Shift-JIS to UTF-8
       #   if: matrix.compiler == 'clang'
@@ -106,7 +107,7 @@ jobs:
 
       - name: install clang-tidy
         if: matrix.compiler == 'clang'
-        run: sudo apt-get install -y clang-tidy-11
+        run: sudo apt install -y clang-tidy-11
 
       - name: clang-tidy
         if: matrix.compiler == 'clang'
