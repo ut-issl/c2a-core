@@ -59,8 +59,10 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
  */
 static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
+#ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
+#endif
 
 
 void PH_init(void)
@@ -187,11 +189,13 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
   // Mission Telemetry
   if (flags & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
 
+#ifdef DR_ENABLE
   // Stored Telemetry
   if (flags & CTP_DEST_FLAG_ST) PH_add_st_tlm_(packet);
 
   // Replay Telemetry
   if (flags & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
+#endif
 
   // [TODO] 要検討:各Queue毎の登録エラー判定は未実装
   return PH_ACK_SUCCESS;
@@ -290,33 +294,27 @@ static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 }
 
 
+#ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
-#ifdef DR_ENABLE
   PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
 
   if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
   return PH_ACK_SUCCESS;
-#else
-  (void)packet;
-  return PH_ACK_SUCCESS;
-#endif
 }
+#endif
 
 
+#ifdef DR_ENABLE
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
-#ifdef DR_ENABLE
   PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
 
   if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
   return PH_ACK_SUCCESS;
-#else
-  (void)packet;
-  return PH_ACK_SUCCESS;
-#endif
 }
+#endif
 
 #pragma section
