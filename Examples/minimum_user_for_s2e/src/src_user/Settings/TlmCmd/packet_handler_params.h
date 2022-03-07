@@ -5,6 +5,10 @@
 #ifndef PACKET_HANDLER_PARAMS_H_
 #define PACKET_HANDLER_PARAMS_H_
 
+// DR の利用の有無で必要な PL が変わるので， include する
+#include "../Applications/data_recorder_define.h"
+
+
 #undef TL_TLM_PAGE_SIZE
 #undef TL_TLM_PAGE_MAX
 
@@ -28,7 +32,9 @@
 #define PH_TL1_CMD_LIST_MAX      (TL_TLM_PAGE_SIZE * 4)
 #define PH_TL2_CMD_LIST_MAX      (TL_TLM_PAGE_SIZE * 4)
 #define PH_MS_TLM_LIST_MAX       (16)
+#ifdef DR_ENABLE
 #define PH_ST_TLM_LIST_MAX       (16)
 #define PH_RP_TLM_LIST_MAX       (16)
+#endif
 
 #endif
