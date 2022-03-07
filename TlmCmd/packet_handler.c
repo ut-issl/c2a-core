@@ -154,7 +154,7 @@ static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet)
   switch (BCT_register_cmd(packet))
   {
   case BCT_SUCCESS:
-    return PH_ACK_SUCCESS;
+    return PH_ACK_BC_SUCCESS;
 
   case BCT_INVALID_BLOCK_NO:
     return PH_ACK_BC_INVALID_BLOCK_NO;
@@ -249,7 +249,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
   switch (ack)
   {
   case PL_SUCCESS:
-    return PH_ACK_SUCCESS;
+    return PH_ACK_TLC_SUCCESS;
 
   case PL_LIST_FULL:
     return PH_ACK_PL_LIST_FULL;
