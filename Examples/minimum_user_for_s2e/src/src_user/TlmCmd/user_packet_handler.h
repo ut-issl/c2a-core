@@ -29,9 +29,9 @@ void PH_user_init(void);
  *         正確には， add_rt_cmd_ の送信先版を作り，そこにキューイングされ，DI (dispatcher) によって回収される．
  *         つまり，本 OBC にとっては RTC だが，転送対象 OBC にとっては各種 Cmd 扱いな Cmd を転送する処理
  * @param  packet: CCP
- * @retval PH_FORWARDED: 無事に転送するキューに追加された
+ * @retval PH_ACK_FORWARDED: 無事に転送するキューに追加された
  * @retval PH_ACK_PL_LIST_FULL: PL LIST FULL
- * @retval PH_ACK_SUCCESS 以外（PH_ACK_UNKNOWN を想定）: ユーザー処理に引っかからなかった場合．Core 側の処理に回される
+ * @retval PH_ACK_UNKNOWN: ユーザー処理に引っかからなかった場合．Core 側の処理に回される
  */
 PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet);
 
