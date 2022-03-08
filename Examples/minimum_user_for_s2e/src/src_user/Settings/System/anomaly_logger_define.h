@@ -6,6 +6,7 @@
 #ifndef ANOMALY_DEFINE_H_
 #define ANOMALY_DEFINE_H_
 
+// ここでは Core 開発のため有効化している
 #define AL_ENABLE
 
 #endif

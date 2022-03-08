@@ -15,6 +15,7 @@
 #include "./TlmCmd/telemetry_frame.h"
 
 #include <src_user/Applications/app_registry.h>
+#include <src_user/Settings/System/anomaly_logger_define.h>
 
 void C2A_core_init(void)
 {
@@ -26,8 +27,10 @@ void C2A_core_init(void)
   Printf("C2A_init: PH_init done.\n");
   EM_initialize();            // Event Manager．App Managerより先に初期化するべき
   Printf("C2A_init: EM_initialize done.\n");
+#ifdef AL_ENABLE
   AL_initialize();            // Anomaly Logger．App Managerより先に初期化するべき
   Printf("C2A_init: AL_initialize done.\n");
+#endif
   AM_initialize();            // App Manager
   Printf("C2A_init: AM_initialize done.\n");
   AR_load_initial_settings(); // App Registry
