@@ -138,6 +138,13 @@ void TF_copy_double(uint8_t* ptr,
   }
 }
 
+CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  TF_initialize();
+  return CCP_EXEC_SUCCESS;
+}
+
 CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
