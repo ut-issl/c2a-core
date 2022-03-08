@@ -3,12 +3,12 @@
 
 #include <string.h> // for memcpy
 
-TCF_VER TCF_get_ver(const TCF* tcf)
+TCF_VER TCF_get_ver(const TCFrame* tcf)
 {
-  unsigned int pos = 0;
+  uint32_t pos = 0;
   uint8_t mask = 0xc0; // 1100 0000b
 
-  TCF_VER ver = (TCF_VER)((tcf->header[pos] & mask) >> 6);
+  TCF_VER ver = (TCF_VER)((tcf->packet[pos] & mask) >> 6);
 
   switch (ver)
   {
@@ -20,12 +20,12 @@ TCF_VER TCF_get_ver(const TCF* tcf)
   }
 }
 
-TCF_TYPE TCF_get_type(const TCF* tcf)
+TCF_TYPE TCF_get_type(const TCFrame* tcf)
 {
-  unsigned int pos = 0;
+  uint32_t pos = 0;
   uint8_t mask = 0x30; // 0011 0000b
 
-  TCF_TYPE type = (TCF_TYPE)((tcf->header[pos] & mask) >> 4);
+  TCF_TYPE type = (TCF_TYPE)((tcf->packet[pos] & mask) >> 4);
 
   switch (type)
   {
@@ -39,15 +39,15 @@ TCF_TYPE TCF_get_type(const TCF* tcf)
   }
 }
 
-TCF_SCID TCF_get_scid(const TCF* tcf)
+TCF_SCID TCF_get_scid(const TCFrame* tcf)
 {
-  unsigned int pos = 0;
+  uint32_t pos = 0;
   uint8_t mask = 0x03; // 0000 0011b
 
   // pos = 0の下位2bitsとpos = 1の8bitsを合わせた10bits
-  TCF_SCID scid = (TCF_SCID)(tcf->header[pos] & mask);
+  TCF_SCID scid = (TCF_SCID)(tcf->packet[pos] & mask);
   scid = (TCF_SCID)(scid << 8);
-  scid = (TCF_SCID)(scid + tcf->header[pos + 1]);
+  scid = (TCF_SCID)(scid + tcf->packet[pos + 1]);
 
   switch (scid)
   {
@@ -59,12 +59,12 @@ TCF_SCID TCF_get_scid(const TCF* tcf)
   }
 }
 
-TCF_VCID TCF_get_vcid(const TCF* tcf)
+TCF_VCID TCF_get_vcid(const TCFrame* tcf)
 {
-  unsigned int pos = 2;
+  uint32_t pos = 2;
   uint8_t mask = 0xfc; // 1111 1100b
 
-  TCF_VCID vcid = (TCF_VCID)((tcf->header[pos] & mask) >> 2);
+  TCF_VCID vcid = (TCF_VCID)((tcf->packet[pos] & mask) >> 2);
 
   switch (vcid)
   {
@@ -76,33 +76,39 @@ TCF_VCID TCF_get_vcid(const TCF* tcf)
   }
 }
 
-size_t TCF_get_frame_len(const TCF* tcf)
+size_t TCF_get_frame_len(const TCFrame* tcf)
 {
-  unsigned int pos = 2;
+  uint32_t pos = 2;
   uint8_t mask = 0x03; // 0000 0011b
 
   // pos = 0の下位2bitsとpos = 1の8bitsを合わせた10bits
-  size_t len = (tcf->header[pos] & mask);
+  size_t len = (tcf->packet[pos] & mask);
   len <<= 8;
-  len += tcf->header[pos + 1];
+  len += tcf->packet[pos + 1];
 
   // TC Frameの長さ表記は0起算なので1起算に変換した値を返す
   return len + 1;
 }
 
-uint8_t TCF_get_frame_seq_num(const TCF* tcf)
+uint8_t TCF_get_frame_seq_num(const TCFrame* tcf)
 {
   size_t pos = 4;
-  return (uint8_t)(tcf->header[pos]);
+  return tcf->packet[pos];
 }
 
-uint16_t TCF_get_fecw(const TCF* tcf)
+const TCSegment* TCF_get_tc_segment(const TCFrame* tcf)
 {
-  unsigned int pos = 0;
+  size_t pos = TCF_HEADER_SIZE;
+  return (const TCSegment*)&tcf->packet[pos];
+}
 
-  uint16_t fecw = tcf->fecf[pos];
+uint16_t TCF_get_fecw(const TCFrame* tcf)
+{
+  size_t length = TCF_get_frame_len(tcf);
+
+  uint16_t fecw = tcf->packet[length - 2];
   fecw <<= 8;
-  fecw += tcf->fecf[pos + 1];
+  fecw += tcf->packet[length - 1];
 
   return fecw;
 }

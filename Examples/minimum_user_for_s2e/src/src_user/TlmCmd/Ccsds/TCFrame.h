@@ -1,7 +1,34 @@
+/**
+ * @file
+ * @brief CCSDS で規定される TC Frame の実装
+ * @note  packet 構造
+ *        |---------+-------+-------+-----------------------|
+ *        | Pos     | Pos   | size  | name                  |
+ *        | [octet] | [bit] | [bit] |                       |
+ *        |---------+-------+-------+-----------------------|
+ *        | === Primary Header =============================|
+ *        |---------+-------+-------+-----------------------|
+ *        |       0 |     0 |     2 | Version               |
+ *        |       0 |     2 |     2 | Type                  |
+ *        |       0 |     4 |     2 | N/A                   |
+ *        |       0 |     6 |    10 | Spacecraft ID         |
+ *        |       2 |     0 |     6 | Virtual Channel ID    |
+ *        |       2 |     6 |    10 | Frame Length          |
+ *        |       4 |     0 |     8 | Frame Sequence Number |
+ *        |---------+-------+-------+-----------------------|
+ *        | === User Data Field ============================|
+ *        |---------+-------+-------+-----------------------|
+ *        |       5 |     0 |     * | Command Space Packet  |
+ *        |---------+-------+-------+-----------------------|
+ *        | === Frame Error Control Field ==================|
+ *        |---------+-------+-------+-----------------------|
+ *        |       * |     0 |    16 |                       |
+ *        |---------+-------+-------+-----------------------|
+ */
 #ifndef TCFRAME_H_
 #define TCFRAME_H_
 
-#include <stddef.h> // for size_t
+#include <stddef.h>
 
 #include "../../Library/stdint.h"
 #include "TCSegment.h"
@@ -14,12 +41,12 @@
 #define TCF_BC_CMD_CODE_SET_VR_0 (0x82)
 #define TCF_BC_CMD_CODE_SET_VR_1 (0x00)
 
+#define TCF_PACKET_MAX_LENGTH (TCF_HEADER_SIZE + TCS_PACKET_MAX_LENGTH + TCF_FECF_SIZE)
+
 typedef struct
 {
-  uint8_t header[TCF_HEADER_SIZE];
-  TCS tcs;
-  uint8_t fecf[TCF_FECF_SIZE];
-} TCF;
+  uint8_t packet[TCF_PACKET_MAX_LENGTH];
+} TCFrame;
 
 typedef enum
 {
@@ -47,20 +74,22 @@ typedef enum
   TCF_VCID_UNKNOWN
 } TCF_VCID;
 
-TCF_VER TCF_get_ver(const TCF* tcf);
+TCF_VER TCF_get_ver(const TCFrame* tcf);
 
-TCF_TYPE TCF_get_type(const TCF* tcf);
+TCF_TYPE TCF_get_type(const TCFrame* tcf);
 
-TCF_SCID TCF_get_scid(const TCF* tcf);
+TCF_SCID TCF_get_scid(const TCFrame* tcf);
 
-TCF_VCID TCF_get_vcid(const TCF* tcf);
+TCF_VCID TCF_get_vcid(const TCFrame* tcf);
 
-size_t TCF_get_frame_len(const TCF* tcf);
+size_t TCF_get_frame_len(const TCFrame* tcf);
 
-uint8_t TCF_get_frame_seq_num(const TCF* tcf);
+uint8_t TCF_get_frame_seq_num(const TCFrame* tcf);
 
-uint16_t TCF_get_fecw(const TCF* tcf);
+uint16_t TCF_get_fecw(const TCFrame* tcf);
 
-uint16_t TCF_calc_fecw(const TCF* tcf);
+const TCSegment* TCF_get_tc_segment(const TCFrame* tcf);
+
+uint16_t TCF_calc_fecw(const TCFrame* tcf);
 
 #endif

@@ -23,10 +23,11 @@
 #include <src_core/TlmCmd/Ccsds/cmd_space_packet.h>
 
 #define TCS_HEADER_SIZE (1u)
+#define TCS_PACKET_MAX_LENGTH (TCS_HEADER_SIZE + CSP_MAX_LEN)
 
 typedef struct
 {
-  uint8_t packet[TCS_HEADER_SIZE + CSP_MAX_LEN];
+  uint8_t packet[TCS_PACKET_MAX_LENGTH];
 } TCSegment;
 
 typedef enum

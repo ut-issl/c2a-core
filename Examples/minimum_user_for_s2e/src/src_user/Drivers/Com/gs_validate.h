@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief 受信した TC Frame の検証を行う
+ * @brief 受信した TC Frame, TC  Segment の検証を行う
  */
 #ifndef GS_VALIDATE_H_
 #define GS_VALIDATE_H_
@@ -60,10 +60,18 @@ void GS_validate_init(void);
 
 /**
  * @brief tc_frame の検証
- * @param[in] tc_frame: 検証する tc frame
+ * @param[in] tc_frame: 検証する TC frame
  * @return GS_VALIDATE_ERR
  */
-GS_VALIDATE_ERR GS_validate_tc_frame(const TCF* tc_frame);
+GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame);
+
+/**
+ * @brief tc_segment の検証
+ * @param[in] tc_segment: 検証する TC segment
+ * @param[in] tc_frame_type
+ * @return GS_VALIDATE_ERR
+ */
+GS_VALIDATE_ERR GS_validate_tc_segment(const TCSegment* tc_segment, TCF_TYPE tc_frame_type);
 
 /**
  * @brief テレメ用の clcw の作成

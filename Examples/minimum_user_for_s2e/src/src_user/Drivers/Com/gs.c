@@ -11,6 +11,7 @@
 #include "../../TlmCmd/Ccsds/TCFrame.h"
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/TlmCmd/packet_handler.h>
+#include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
 #include "../../Library/stdint.h"
 
 #define GS_RX_HEADER_SIZE (2)
@@ -209,9 +210,11 @@ int GS_rec_tcf(GS_Driver* gs_driver)
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)
 {
   const uint8_t* gs_rx_data = DSSC_get_rx_frame(p_stream_config);
-  const TCF* tc_frame = (const TCF*)gs_rx_data; // 非自明なcast
+  const TCFrame* tc_frame = (const TCFrame*)gs_rx_data; // 非自明なcast
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
   GS_PORT_TYPE driver_index;
+  const TCSegment* tc_segment;
+  const CmdSpacePacket* cmd_space_packet;
 
   // アドレス計算で CCSDS か UART か判別
   if ((uint32_t)p_stream_config < (uint32_t)&gs_driver->driver_uart)
@@ -229,8 +232,10 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     return DS_ERR_CODE_ERR;
   }
 
-  gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(&tc_frame->tcs.tcp);
-  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(&tc_frame->tcs.tcp);  // 受信コマンドパケット解析
+  tc_segment = TCF_get_tc_segment(tc_frame);
+  cmd_space_packet = TCS_get_command_space_packet(tc_segment);
+  gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(cmd_space_packet);
+  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(cmd_space_packet);  // 受信コマンドパケット解析
   gs_driver->info[driver_index].last_rec_time = TMGR_get_master_total_cycle();
 
   return DS_ERR_CODE_OK;

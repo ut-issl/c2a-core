@@ -9,15 +9,16 @@
 #define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: 要検討
 
 // 以下検証関数. 名前通り
-static GS_VALIDATE_ERR GS_check_tcf_header_(const TCF* tc_frame);
-static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame);
-static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment);
-static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp);
+static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame);
 static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len);
 
-static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame);
-static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCF* tc_frame);
-static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCF* tc_frame);
+static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp);
+
+static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCSegment* tc_segment);
 
 static GS_ValiateInfo gs_validate_info_;
 const GS_ValiateInfo* const gs_validate_info = &gs_validate_info_;
@@ -31,30 +32,34 @@ void GS_validate_init(void)
   gs_validate_info_.positive_window_width = GS_POSITIVE_WINDOW_WIDTH_DEFAULT;
 }
 
-GS_VALIDATE_ERR GS_validate_tc_frame(const TCF* tc_frame)
+GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame)
 {
   GS_VALIDATE_ERR ret;
 
   size_t frame_length = TCF_get_frame_len(tc_frame);
 
-  // TODO WINGS側がまだ対応してないので一旦コメントアウト
+  // FIXME: return check
   GS_check_fecw_((const uint8_t*)tc_frame, frame_length);
 
-  ret = GS_check_tcf_header_(tc_frame);
-  if (ret != GS_VALIDATE_ERR_OK) return ret;
+  return GS_check_tcf_header_(tc_frame);
+}
 
-  switch (TCF_get_type(tc_frame))
+GS_VALIDATE_ERR GS_validate_tc_segment(const TCSegment* tc_segment, TCF_TYPE tc_frame_type)
+{
+  GS_VALIDATE_ERR ret;
+
+  switch (tc_frame_type)
   {
   case TCF_TYPE_AD:
-    ret = GS_check_ad_cmd_(tc_frame);
+    ret = GS_check_ad_cmd_(tc_segment);
     break;
 
   case TCF_TYPE_BC:
-    ret = GS_check_bc_cmd_(tc_frame);
+    ret = GS_check_bc_cmd_(tc_segment);
     break;
 
   case TCF_TYPE_BD:
-    ret = GS_check_bd_cmd_(tc_frame);
+    ret = GS_check_bd_cmd_(tc_segment);
     break;
 
   default:
@@ -64,7 +69,7 @@ GS_VALIDATE_ERR GS_validate_tc_frame(const TCF* tc_frame)
   return ret;
 }
 
-static GS_VALIDATE_ERR GS_check_tcf_header_(const TCF* tc_frame)
+static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame)
 {
   if (TCF_get_ver(tc_frame) != TCF_VER_1) return GS_VALIDATE_ERR_TCF_VER;
   // if (TCF_get_scid(tc_frame) != TCF_SCID_SAMPLE_SATELLITE) return GS_VALIDATE_ERR_TCF_SCID;    // FIXME: テスト用に一旦コメントアウト
@@ -73,7 +78,7 @@ static GS_VALIDATE_ERR GS_check_tcf_header_(const TCF* tc_frame)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame)
+static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCSegment* tc_segment)
 {
   GS_VALIDATE_ERR ack;
 
@@ -88,7 +93,7 @@ static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCF* tc_frame)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCS* tc_segment)
+static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment)
 {
   if (TCS_get_seq_flag(tc_segment) != TCS_SEQ_SINGLE)
   {
@@ -176,14 +181,14 @@ static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame)
+static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCSegment* tc_segment)
 {
   GS_VALIDATE_ERR ack;
   int seq_diff;
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 
-  ack = GS_check_tcf_contents_(tc_frame);
+  ack = GS_check_tcf_contents_(tc_segment);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
   seq_diff = TCF_get_frame_seq_num(tc_frame) - gs_validate_info_.type_a_counter;
@@ -224,7 +229,7 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCF* tc_frame)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCF* tc_frame)
+static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCSegment* tc_segment)
 {
   // BCコマンドの種別を判定し、処理する。
   // TCFの構成がAD/BDコマンドに特化した形となっているため、
@@ -263,7 +268,7 @@ static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCF* tc_frame)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCF* tc_frame)
+static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCSegment* tc_segment)
 {
   GS_VALIDATE_ERR ack;
   ack = GS_check_tcf_contents_(tc_frame);
