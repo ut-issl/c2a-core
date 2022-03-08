@@ -1,5 +1,6 @@
 #pragma section REPRO
 #include "anomaly_handler.h"
+#ifdef AL_ENABLE
 
 #include "../Library/print.h"
 #include <src_user/Library/vt100.h>
@@ -428,5 +429,7 @@ void AH_add_rule(size_t id, const AH_Rule* ahr, uint8_t is_active)
   AH_add_rule_(id, ahr);
   anomaly_handler_.elements[id].is_active = is_active;
 }
+
+#endif
 
 #pragma section

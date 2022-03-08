@@ -1,6 +1,9 @@
 #ifndef ANOMALY_LOGGER_H_
 #define ANOMALY_LOGGER_H_
 
+#include <src_user/Settings/System/anomaly_logger_define.h>
+#ifdef AL_ENABLE
+
 #include <stddef.h> // for size_t
 
 #include "../TimeManager/obc_time.h"
@@ -108,4 +111,5 @@ CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet);
 
+#endif
 #endif

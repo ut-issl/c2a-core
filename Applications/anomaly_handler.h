@@ -1,6 +1,9 @@
 #ifndef ANOMALY_HANDLER_H_
 #define ANOMALY_HANDLER_H_
 
+#include <src_user/Settings/System/anomaly_logger_define.h>
+#ifdef AL_ENABLE
+
 #include <stddef.h> // for size_t
 
 #include "../System/AnomalyLogger/anomaly_logger.h"
@@ -106,4 +109,5 @@ CCP_EXEC_STS Cmd_AHRES_LOG_CLEAR(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
+#endif
 #endif
