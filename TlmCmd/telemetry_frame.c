@@ -58,50 +58,42 @@ static void initialize_tlm_table_(void)
   telemetry_frame_.tlm_page_no = 0;
 }
 
-void TF_copy_u8(uint8_t* ptr,
-                uint8_t data)
+void TF_copy_u8(uint8_t* ptr, uint8_t data)
 {
   ptr[0] = data;
 }
 
-void TF_copy_u16(uint8_t* ptr,
-                 uint16_t data)
+void TF_copy_u16(uint8_t* ptr, uint16_t data)
 {
   endian_memcpy(ptr, &data, 2);
 }
 
-void TF_copy_u32(uint8_t* ptr,
-                 uint32_t data)
+void TF_copy_u32(uint8_t* ptr, uint32_t data)
 {
   endian_memcpy(ptr, &data, 4);
 }
 
-void TF_copy_i8(uint8_t* ptr,
-                int8_t data)
+void TF_copy_i8(uint8_t* ptr, int8_t data)
 {
   ptr[0] = (uint8_t)data;
 }
 
-void TF_copy_i16(uint8_t* ptr,
-                 int16_t data)
+void TF_copy_i16(uint8_t* ptr, int16_t data)
 {
   endian_memcpy(ptr, &data, 2);
 }
 
-void TF_copy_i32(uint8_t* ptr,
-                 int32_t data)
+void TF_copy_i32(uint8_t* ptr, int32_t data)
 {
   endian_memcpy(ptr, &data, 4);
 }
 
-void TF_copy_float(uint8_t* ptr,
-                   float data)
+void TF_copy_float(uint8_t* ptr, float data)
 {
   endian_memcpy(ptr, &data, sizeof(float));
 }
 
-void TF_copy_double(uint8_t* ptr,
-                    double data)
+void TF_copy_double(uint8_t* ptr, double data)
 {
   endian_memcpy(ptr, &data, sizeof(double));
 }
