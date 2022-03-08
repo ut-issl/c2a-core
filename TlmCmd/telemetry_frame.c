@@ -8,6 +8,7 @@
 #include <src_user/Library/stdint.h>
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
+#include "./common_cmd_packet_util.h"
 
 static void initialize_tlm_table_(void);
 
@@ -107,12 +108,8 @@ CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t index;
-  uint32_t tlm_func;
-
-  endian_memcpy(&index, param, 1);
-  endian_memcpy(&tlm_func, param + 1, 4);
+  uint8_t index = CCP_get_param_from_packet(packet, 0, uint8_t);
+  uint32_t tlm_func = CCP_get_param_from_packet(packet, 1, uint32_t);
 
   if ((int)index >= TF_MAX_TLMS)
   {
@@ -121,15 +118,13 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
   }
 
   telemetry_frame_.tlm_table[index].tlm_func = (TF_TLM_FUNC_ACK (*)(uint8_t*, uint16_t*, uint16_t))tlm_func;
-
   return CCP_EXEC_SUCCESS;
 }
 
 CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
-  uint8_t page;
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  page = CCP_get_param_head(packet)[0];
   if (page >= TF_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
