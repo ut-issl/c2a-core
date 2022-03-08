@@ -7,6 +7,7 @@
 #include "gs_validate.h"
 #include "../../TlmCmd/Ccsds/TCSegment.h"
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
+#include <src_core/Library/crc.h>
 
 #define GS_RECEIVE_WINDOW (256)
 #define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: 要検討
@@ -16,7 +17,7 @@
 
 // 以下検証関数. 名前通り
 static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame);
-static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len);
+static GS_VALIDATE_ERR GS_check_fecw_(const TCFrame* tc_frame);
 
 static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment);
 static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment);
@@ -54,17 +55,12 @@ GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame)
   GS_VALIDATE_ERR ret;
   TCF_TYPE tc_frame_type;
 
-  size_t frame_length = TCF_get_frame_len(tc_frame);
-
-  // FIXME: return check
-  GS_check_fecw_((const uint8_t*)tc_frame, frame_length);
-
+  ret = GS_check_fecw_(tc_frame);
+  if (ret != GS_VALIDATE_ERR_OK) return ret;
   ret = GS_check_tcf_header_(tc_frame);
-
   if (ret != GS_VALIDATE_ERR_OK) return ret;
 
   tc_frame_type = TCF_get_type(tc_frame);
-
   switch (tc_frame_type)
   {
   case TCF_TYPE_AD:
@@ -160,41 +156,10 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len)
+static GS_VALIDATE_ERR GS_check_fecw_(const TCFrame* tc_frame)
 {
-  int i, j;
-  uint16_t shift_reg = 0xffff; // 初期値は全bitが1
-  uint16_t xor_tap = 0x1021; // LSBは常時0とXORをとっていると考える。
-
-  // データ長だけループ
-  for (i = 0; i < len; ++i)
-  {
-    // MSB位置をshift_regと揃えるため8bit左シフト
-    uint16_t tmp = (uint16_t)(data[i] << 8);
-
-    // ビット長だけループ
-    for (j = 0; j < 8; ++j)
-    {
-      // MSB同士のXORを比較
-      if ((shift_reg ^ tmp) & 0x8000)
-      {
-        // 結果が1の場合はシフト+XOR
-        shift_reg <<= 1;
-        shift_reg ^= xor_tap;
-      }
-      else
-      {
-        // 結果が0の場合はシフトのみ
-        shift_reg <<= 1;
-      }
-
-      // 次ビット評価のためシフト
-      tmp <<= 1;
-    }
-  }
-
-  // データ+FECWが正常なら結果は0となる
-  if (shift_reg != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
+  size_t len = TCF_get_frame_len(tc_frame);
+  if (crc_16_ccitt_left(0xffff, (const unsigned char*)tc_frame, len, 0) != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   return GS_VALIDATE_ERR_OK;
 }
