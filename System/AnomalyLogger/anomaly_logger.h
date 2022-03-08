@@ -111,5 +111,8 @@ CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet);
 
+#else
+#define AL_DISALBE_AT_C2A_CORE
 #endif
+
 #endif
