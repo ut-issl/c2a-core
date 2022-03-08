@@ -1,22 +1,20 @@
 #pragma section REPRO
 #include "TCSegment.h"
 
-#include <string.h> // for memcpy
-
-TCS_SEQ_FLAG TCS_get_seq_flag(const TCS* tcs)
+TCS_SEQ_FLAG TCS_get_seq_flag(const TCSegment* tcs)
 {
   unsigned int pos = 0;
   uint8_t mask = 0xc0; // 1100 0000b
 
-  return (TCS_SEQ_FLAG)((tcs->header[pos] & mask) >> 6);
+  return (TCS_SEQ_FLAG)((tcs->packet[pos] & mask) >> 6);
 }
 
-TCS_MAP_ID TCS_get_map_id(const TCS* tcs)
+TCS_MAP_ID TCS_get_map_id(const TCSegment* tcs)
 {
   unsigned int pos = 0;
-  uint8_t mask = 0x3f;
+  uint8_t mask = 0x3f; // 0011 1111b
 
-  TCS_MAP_ID map_id = (TCS_MAP_ID)(tcs->header[pos] & mask);
+  TCS_MAP_ID map_id = (TCS_MAP_ID)(tcs->packet[pos] & mask);
 
   switch (map_id)
   {
@@ -29,4 +27,5 @@ TCS_MAP_ID TCS_get_map_id(const TCS* tcs)
     return TCS_MAP_ID_UNKNOWN;
   }
 }
+
 #pragma section

@@ -1,20 +1,33 @@
+/**
+ * @file
+ * @brief CCSDS で規定される TC Segment の実装
+ * @note  packet 構造
+ *        |---------+-------+-------+-----------------------------|
+ *        | Pos     | Pos   | size  | name                        |
+ *        | [octet] | [bit] | [bit] |                             |
+ *        |---------+-------+-------+-----------------------------|
+ *        | === Primary Header ===================================|
+ *        |---------+-------+-------+-----------------------------|
+ *        |       0 |     0 |     2 | Sequential Flag             |
+ *        |       0 |     2 |     6 | Multiplexer Access Point ID |
+ *        |---------+-------+-------+-----------------------------|
+ *        | === User Data Field ==================================|
+ *        |---------+-------+-------+-----------------------------|
+ *        |       1 |     0 |     * | Command Space Packet        |
+ *        |---------+-------+-------+-----------------------------|
+ */
 #ifndef TCSEGMENT_H_
 #define TCSEGMENT_H_
 
-#include <stddef.h> // for size_t
-
 #include "../../Library/stdint.h"
 #include <src_core/TlmCmd/Ccsds/cmd_space_packet.h>
-
-// FIXME: TCP から CmdSpacePacket にしたことによる整理をする！！！
 
 #define TCS_HEADER_SIZE (1u)
 
 typedef struct
 {
-  uint8_t header[TCS_HEADER_SIZE];
-  CmdSpacePacket tcp;      // FIXME: TCP から CSP に諸々直す！
-} TCS;
+  uint8_t packet[TCS_HEADER_SIZE + CSP_MAX_LEN];
+} TCSegment;
 
 typedef enum
 {
@@ -32,8 +45,10 @@ typedef enum
   TCS_MAP_ID_UNKNOWN
 } TCS_MAP_ID;
 
-TCS_SEQ_FLAG TCS_get_seq_flag(const TCS* tcs);
+TCS_SEQ_FLAG TCS_get_seq_flag(const TCSegment* tcs);
 
-TCS_MAP_ID TCS_get_map_id(const TCS* tcs);
+TCS_MAP_ID TCS_get_map_id(const TCSegment* tcs);
+
+const CmdSpacePacket* TCS_get_command_space_packet(const TCSegment* tcs);
 
 #endif
