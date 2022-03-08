@@ -4,7 +4,7 @@
 #include <src_core/Applications/timeline_command_dispatcher.h>
 #include <src_core/Library/endian_memcpy.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../../Settings/AnomalyLogger/anomaly_group.h"
+#include "../../../Settings/AnomalyLogger/anomaly_logger_group.h"
 #include "../mode_definitions.h"
 
 

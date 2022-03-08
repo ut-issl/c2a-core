@@ -5,7 +5,7 @@
 
 #include "../TimeManager/obc_time.h"
 #include "../../TlmCmd/common_cmd_packet.h"
-#include <src_user/Settings/AnomalyLogger/anomaly_group.h>
+#include <src_user/Settings/AnomalyLogger/anomaly_logger_group.h>
 
 #define AL_TLM_PAGE_SIZE (32)                                 //!< アノマリロガーのログテーブルの1テレメトリパケット(=1ページ)に格納されるログ数（ページネーション用）
 #define AL_TLM_PAGE_MAX  (4)                                  //!< アノマリロガーのログテーブルのページ数（ページネーション用）
