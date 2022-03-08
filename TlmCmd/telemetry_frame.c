@@ -8,7 +8,6 @@
 #include <src_user/Library/stdint.h>
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
-#include <src_user/Settings/build_settings.h>
 
 static void initialize_tlm_table_(void);
 
@@ -68,17 +67,13 @@ void TF_copy_u8(uint8_t* ptr,
 void TF_copy_u16(uint8_t* ptr,
                  uint16_t data)
 {
-  ptr[0] = (uint8_t)((data >>  8) & 0xff);
-  ptr[1] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 2);
 }
 
 void TF_copy_u32(uint8_t* ptr,
                  uint32_t data)
 {
-  ptr[0] = (uint8_t)((data >> 24) & 0xff);
-  ptr[1] = (uint8_t)((data >> 16) & 0xff);
-  ptr[2] = (uint8_t)((data >>  8) & 0xff);
-  ptr[3] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 4);
 }
 
 void TF_copy_i8(uint8_t* ptr,
@@ -90,53 +85,25 @@ void TF_copy_i8(uint8_t* ptr,
 void TF_copy_i16(uint8_t* ptr,
                  int16_t data)
 {
-  ptr[0] = (uint8_t)((data >>  8) & 0xff);
-  ptr[1] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 2);
 }
 
 void TF_copy_i32(uint8_t* ptr,
                  int32_t data)
 {
-  ptr[0] = (uint8_t)((data >> 24) & 0xff);
-  ptr[1] = (uint8_t)((data >> 16) & 0xff);
-  ptr[2] = (uint8_t)((data >>  8) & 0xff);
-  ptr[3] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 4);
 }
 
 void TF_copy_float(uint8_t* ptr,
                    float data)
 {
-  uint8_t* temp = (uint8_t*)&data;
-  size_t i;
-
-  for (i = 0; i < sizeof(float); ++i)
-  {
-#ifdef IS_LITTLE_ENDIAN
-    // Little Endianを想定したコード。
-    ptr[i] = temp[sizeof(float) - i - 1];
-#else
-    // Big Endianを想定したコード。
-    ptr[i] = temp[i];
-#endif
-  }
+  endian_memcpy(ptr, &data, sizeof(float));
 }
 
 void TF_copy_double(uint8_t* ptr,
                     double data)
 {
-  uint8_t* temp = (uint8_t*)&data;
-  size_t i;
-
-  for (i = 0; i < sizeof(double); ++i)
-  {
-#ifdef IS_LITTLE_ENDIAN
-    // Little Endianを想定したコード。
-    ptr[i] = temp[sizeof(double) - i - 1];
-#else
-    // Big Endianを想定したコード。
-    ptr[i] = temp[i];
-#endif
-  }
+  endian_memcpy(ptr, &data, sizeof(double));
 }
 
 CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
