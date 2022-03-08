@@ -1,6 +1,6 @@
 #pragma section REPRO
 #include "anomaly_logger.h"
-#include <src_user/Settings/AnomalyLogger/anomaly_logger_settings.h>
+#include <src_user/Settings/System/anomaly_logger_settings.h>
 
 #include <string.h> // memset
 

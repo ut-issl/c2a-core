@@ -1,5 +1,5 @@
-#ifndef AL_DEFAULT_SETTINGS_H_
-#define AL_DEFAULT_SETTINGS_H_
+#ifndef ANOMALY_LOGGER_SETTINGS_H_
+#define ANOMALY_LOGGER_SETTINGS_H_
 
 void AL_load_default_settings(void);
 

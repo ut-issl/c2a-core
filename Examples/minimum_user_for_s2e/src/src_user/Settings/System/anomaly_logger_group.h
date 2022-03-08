@@ -1,5 +1,5 @@
-#ifndef ANOMALY_GROUP_H_
-#define ANOMALY_GROUP_H_
+#ifndef ANOMALY_LOGGER_GROUP_H_
+#define ANOMALY_LOGGER_GROUP_H_
 
 // #include <src_core/System/AnomalyLogger/anomaly_logger.h>
 // ↑anomaly_logger.hからincludeされるべきであって，こっちからはincludeしない
