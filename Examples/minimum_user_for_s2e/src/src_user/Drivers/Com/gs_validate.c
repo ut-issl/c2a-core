@@ -202,8 +202,8 @@ static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len)
 static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCFrame* tc_frame)
 {
   GS_VALIDATE_ERR ack;
-  const TCSegment* tc_segment;
-  int seq_diff = (GS_RECEIVE_WINDOW + (int)TCF_get_frame_seq_num(tc_frame) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW; 
+  const TCSegment* tc_segment = TCF_get_tc_segment(tc_frame);
+  int seq_diff = (GS_RECEIVE_WINDOW + (int)TCF_get_frame_seq_num(tc_frame) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW;
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 

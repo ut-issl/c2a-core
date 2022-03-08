@@ -6,7 +6,7 @@
  *        https://sma.jaxa.jp/TechDoc/Docs/JAXA-JERG-2-401.pdf
  *        実装に関しては
  *        Blue Books: Recommended Standards: TC Space Data Link Protocol
- *        https://public.ccsds.org/Pubs/232x0b4.pdf 
+ *        https://public.ccsds.org/Pubs/232x0b4.pdf
  *        をそれぞれ参照した
  */
 #ifndef GS_VALIDATE_H_
