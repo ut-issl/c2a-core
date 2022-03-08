@@ -113,4 +113,9 @@ uint16_t TCF_get_fecw(const TCFrame* tcf)
   return fecw;
 }
 
+const TCFrame* TCF_convert_raw_byte(const uint8_t* byte)
+{
+  return (const TCFrame*)byte;
+}
+
 #pragma section

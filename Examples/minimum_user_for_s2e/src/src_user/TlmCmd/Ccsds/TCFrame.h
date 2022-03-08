@@ -92,4 +92,6 @@ const TCSegment* TCF_get_tc_segment(const TCFrame* tcf);
 
 uint16_t TCF_calc_fecw(const TCFrame* tcf);
 
+const TCFrame* TCF_convert_raw_byte(const uint8_t* byte);
+
 #endif

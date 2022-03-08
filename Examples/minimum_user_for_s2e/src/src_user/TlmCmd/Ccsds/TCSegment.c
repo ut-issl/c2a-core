@@ -1,4 +1,9 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief CCSDS で規定される TC Segment の実装
+ */
+
 #include "TCSegment.h"
 
 TCS_SEQ_FLAG TCS_get_seq_flag(const TCSegment* tcs)
@@ -26,6 +31,11 @@ TCS_MAP_ID TCS_get_map_id(const TCSegment* tcs)
   default:
     return TCS_MAP_ID_UNKNOWN;
   }
+}
+
+const CmdSpacePacket* TCS_get_command_space_packet(const TCSegment* tcs)
+{
+  return (const CmdSpacePacket*)&tcs->packet[TCS_HEADER_SIZE];
 }
 
 #pragma section

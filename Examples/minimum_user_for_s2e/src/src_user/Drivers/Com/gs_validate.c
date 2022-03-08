@@ -5,20 +5,37 @@
  */
 
 #include "gs_validate.h"
+#include "../../TlmCmd/Ccsds/TCSegment.h"
+#include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
 
+#define GS_RECEIVE_WINDOW (256)
 #define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: 要検討
+#if 2 * GS_POSITIVE_WINDOW_WIDTH_DEFAULT >= GS_RECEIVE_WINDOW
+#error POSITIVE_WINDOW_SETTINGS_IS_WRONG
+#endif
 
 // 以下検証関数. 名前通り
 static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame);
 static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len);
 
-static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment);
 static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment);
 static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp);
 
-static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCSegment* tc_segment);
-static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCSegment* tc_segment);
-static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCSegment* tc_segment);
+/**
+ * @note AD コマンド: COP-1 制御を使用し伝送順番のチェックを行う
+ */
+static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCFrame* tc_frame);
+
+/**
+ * @note BD コマンド: COP-1 制御を使用しないため伝送順番のチェックは行わない
+ */
+static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCFrame* tc_frame);
+
+/**
+ * @note BC コマンド: COP-1 制御の制御コマンド, AD, BD と性質が異なる
+ */
+static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCFrame* tc_frame);
 
 static GS_ValiateInfo gs_validate_info_;
 const GS_ValiateInfo* const gs_validate_info = &gs_validate_info_;
@@ -35,31 +52,31 @@ void GS_validate_init(void)
 GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame)
 {
   GS_VALIDATE_ERR ret;
+  TCF_TYPE tc_frame_type;
 
   size_t frame_length = TCF_get_frame_len(tc_frame);
 
   // FIXME: return check
   GS_check_fecw_((const uint8_t*)tc_frame, frame_length);
 
-  return GS_check_tcf_header_(tc_frame);
-}
+  ret = GS_check_tcf_header_(tc_frame);
 
-GS_VALIDATE_ERR GS_validate_tc_segment(const TCSegment* tc_segment, TCF_TYPE tc_frame_type)
-{
-  GS_VALIDATE_ERR ret;
+  if (ret != GS_VALIDATE_ERR_OK) return ret;
+
+  tc_frame_type = TCF_get_type(tc_frame);
 
   switch (tc_frame_type)
   {
   case TCF_TYPE_AD:
-    ret = GS_check_ad_cmd_(tc_segment);
-    break;
-
-  case TCF_TYPE_BC:
-    ret = GS_check_bc_cmd_(tc_segment);
+    ret = GS_check_ad_cmd_(tc_frame);
     break;
 
   case TCF_TYPE_BD:
-    ret = GS_check_bd_cmd_(tc_segment);
+    ret = GS_check_bd_cmd_(tc_frame);
+    break;
+
+  case TCF_TYPE_BC:
+    ret = GS_check_bc_cmd_(tc_frame);
     break;
 
   default:
@@ -78,16 +95,17 @@ static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tcf_contents_(const TCSegment* tc_segment)
+static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment)
 {
   GS_VALIDATE_ERR ack;
+  const CmdSpacePacket* csp = TCS_get_command_space_packet(tc_segment);
 
   // TCSegment Header の固定値部分が妥当か確認する
-  ack = GS_check_tcs_headers_(&tc_frame->tcs);
+  ack = GS_check_tcs_headers_(tc_segment);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
   // CmdSpacePacket のヘッダのうち共通部分が妥当か確認する
-  ack = GS_check_cmd_space_packet_headers_(&tc_frame->tcs.tcp);
+  ack = GS_check_cmd_space_packet_headers_(csp);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
   return GS_VALIDATE_ERR_OK;
@@ -181,100 +199,93 @@ static GS_VALIDATE_ERR GS_check_fecw_(const uint8_t* data, size_t len)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCSegment* tc_segment)
+static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCFrame* tc_frame)
 {
   GS_VALIDATE_ERR ack;
-  int seq_diff;
+  const TCSegment* tc_segment;
+  int seq_diff = (GS_RECEIVE_WINDOW + (int)TCF_get_frame_seq_num(tc_frame) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW; 
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 
-  ack = GS_check_tcf_contents_(tc_segment);
+  ack = GS_check_tc_segment_(tc_segment);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
-  seq_diff = TCF_get_frame_seq_num(tc_frame) - gs_validate_info_.type_a_counter;
-
-  if (seq_diff < 0)
-  {
-    // Sequence Counterの値はmod-256なのでseq_diffの値が負の場合は
-    // 256を足して値の範囲を[1, 256]に変換
-    seq_diff += 256;
-  }
-
+  // N(R) == V(R)なら正常受信
   if (seq_diff == 0)
   {
-    // seq_diffが0、すなわちN(R) == V(R)なら正常受信
     // 再送要求フラグのクリアとシーケンス数のインクリメント
     gs_validate_info_.retransmit_flag = 0;
     ++gs_validate_info_.type_a_counter;
   }
+  // 送信側が行き過ぎているのでパケット破棄して再送要求
+  else if (seq_diff <= gs_validate_info_.positive_window_width)
+  {
+    gs_validate_info_.retransmit_flag = 1;
+    return GS_VALIDATE_ERR_FARM1_POSITIVE_WINDOW_AREA;
+  }
+  // もう既に送られているので破棄
+  else if ((256 - gs_validate_info_.positive_window_width) <= seq_diff)
+  {
+    return GS_VALIDATE_ERR_FARM1_NEGATIVE_WINDOW_AREA;
+  }
+  // 許容 window から外れているので破棄してロックアウト, BC コマンドでロックアウト解除要求を行う
+  // ロックアウトするので一切のコマンドを受け付けない
   else
   {
-    if (seq_diff < gs_validate_info_.positive_window_width)
-    {
-      gs_validate_info_.retransmit_flag = 1;
-      return GS_VALIDATE_ERR_FARM1_POSITIVE_WINDOW_AREA;
-    }
-    else if (seq_diff < (256 - gs_validate_info_.positive_window_width))
-    {
-      gs_validate_info_.retransmit_flag = 1;
-      return GS_VALIDATE_ERR_FARM1_LOCKOUT_AREA;
-    }
-    else
-    {
-      if (seq_diff == 255) return GS_VALIDATE_ERR_FARM1_SAME_NUMBER;
-      else return GS_VALIDATE_ERR_FARM1_NEGATIVE_WINDOW_AREA;
-    }
+    gs_validate_info_.lockout_flag = 1;
+    return GS_VALIDATE_ERR_FARM1_LOCKOUT_AREA;
   }
 
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCSegment* tc_segment)
+static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCFrame* tc_frame)
 {
-  // BCコマンドの種別を判定し、処理する。
-  // TCFの構成がAD/BDコマンドに特化した形となっているため、
-  // TCSやTCPのデータ構造を読み替えて処理を行っている。
-  if (tc_frame->tcs.header[0] == TCF_BC_CMD_CODE_UNLOCK)
+  GS_VALIDATE_ERR ack;
+  const TCSegment* tc_segment = TCF_get_tc_segment(tc_frame);
+
+  ack = GS_check_tc_segment_(tc_segment);
+  if (ack != GS_VALIDATE_ERR_OK) return ack;
+
+  ++gs_validate_info_.type_b_counter;
+
+  return GS_VALIDATE_ERR_OK;
+}
+
+// BCコマンドの種別を判定し、処理する
+static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCFrame* tc_frame)
+{
+  size_t length = TCF_get_frame_len(tc_frame);
+  size_t offset = TCF_HEADER_SIZE + TCF_FECF_SIZE;
+  const TCSegment* tc_segment = TCF_get_tc_segment(tc_frame);
+
+  // BC コマンドは COP-1 制御の制御用コマンドで特殊なため少し構造が異なる
+  // Unlock
+  if (tc_segment->packet[0] == TCF_BC_CMD_CODE_UNLOCK && length == offset + 1)
   {
-    // Unlockコマンドの場合はLockoutとRetransmitフラグをクリア
     gs_validate_info_.lockout_flag = 0;
     gs_validate_info_.retransmit_flag = 0;
 
-    // Type-B Coutnerの値を更新して処理終了
     ++gs_validate_info_.type_b_counter;
   }
-  else if ((tc_frame->tcs.header[0] == TCF_BC_CMD_CODE_SET_VR_0)
-        && (tc_frame->tcs.tcp.packet[0] == TCF_BC_CMD_CODE_SET_VR_1))
+  // SET V(R)
+  else if (tc_segment->packet[0] == TCF_BC_CMD_CODE_SET_VR_0
+        && tc_segment->packet[1] == TCF_BC_CMD_CODE_SET_VR_1
+        && length == offset + 3)
   {
-    // SET V(R)コマンドの場合
     if (gs_validate_info_.lockout_flag == 0)
     {
-      // Lockout状態でない場合はType-Aカウンタの値を指定値に設定し
-      // Retransmitフラグをクリア
-      gs_validate_info_.type_a_counter = tc_frame->tcs.tcp.packet[1];
+      gs_validate_info_.type_a_counter = tc_segment->packet[2];
       gs_validate_info_.retransmit_flag = 0;
     }
 
-    // Type-B Coutnerの値を更新して処理終了
     // Lockout状態でもType-B Counterの値は更新する
     ++gs_validate_info_.type_b_counter;
   }
   else
   {
-    // 上記以外の場合は不正と判断し異常終了
     return GS_VALIDATE_ERR_INVALID_BC_CMD;
   }
-
-  return GS_VALIDATE_ERR_OK;
-}
-
-static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCSegment* tc_segment)
-{
-  GS_VALIDATE_ERR ack;
-  ack = GS_check_tcf_contents_(tc_frame);
-  if (ack != GS_VALIDATE_ERR_OK) return ack;
-
-  ++gs_validate_info_.type_b_counter;
 
   return GS_VALIDATE_ERR_OK;
 }
@@ -285,49 +296,22 @@ uint32_t GS_form_clcw(void)
   uint32_t clcw = 0;
   uint32_t val;
 
-  // [FIXME] TRPができたらここも直す．（2021/01/17）
-  /*
-  // XTRP-A Carrier Lock Status
-  if (xtrp1->xtrp_rx_sts.act_monitor.bit.career_lock == 1)
-  {
-    // Carrier Lock Onの場合はフラグ設定
-    clcw |= 0x08000000; // **** 1*** **** **** **** **** **** ****
-  }
-  */
+  // FIXME: Status Field
+  // ***x xx** **** **** **** **** **** ****
 
   // COP in Effect -> COP-1
   clcw |= 0x01000000; // **** **01 **** **** **** **** **** ****
 
-  // [FIXME] TRPができたらここも直す．（2021/01/17）
-  /*
-  // Sub-Carrier Lock + Rx Bit Rate
-  if (xtrp1->xtrp_rx_sts.act_monitor.bit.sub_career_lock == 1)
-  {
-    // Sub-carrier Lock Onの場合はビットレート別のフラグ設定
-    if (xtrp1->xtrp_rx_sts.rx_bitrate == 0)
-    {
-      // Rx Bitrate 15.625bps (Low)
-      clcw |= 0x00004000; // **** **** **** **** 01** **** **** ****
-    }
-    else if (xtrp1->xtrp_rx_sts.rx_bitrate <= 3)
-    {
-      // Rx Bitrate 125bps, 62.5bps, 31.25bps (Mid)
-      clcw |= 0x00008000; // **** **** **** **** 10** **** **** ****
-    }
-    else
-    {
-      // Rx Bitrate 2kbps, 1kbps, 500bps, 250bps (High)
-      clcw |= 0x0000c000; // **** **** **** **** 11** **** **** ****
-    }
-  }
-  */
+  // FIXME: No RF Available Flag
+  // **** **** **** **** x*** **** **** ****
+  // FIXME: NO Bit Lock Flag
+  // **** **** **** **** *x** **** **** ****
 
-  // Lockout
+  // Lockout flag
   if (gs_validate_info_.lockout_flag)
   {
     clcw |= 0x00002000; // **** **** **** **** **1* **** **** ****
   }
-
   // Retransmit
   if (gs_validate_info_.retransmit_flag)
   {
@@ -338,7 +322,7 @@ uint32_t GS_form_clcw(void)
   val = (gs_validate_info_.type_b_counter & 0x03) << 9;
   clcw |= val; // **** **** **** **** **** *xx* **** ****
 
-  // Report Value
+  // Type A Counter as Report Value
   clcw |= gs_validate_info_.type_a_counter; // **** **** **** **** **** **** xxxx xxxx
 
   return clcw;

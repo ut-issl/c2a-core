@@ -1,6 +1,13 @@
 /**
  * @file
  * @brief 受信した TC Frame, TC  Segment の検証を行う
+ * @note  AD, BC, BD コマンドの仕様に関しては
+ *        JAXA 設計標準 テレコマンドデータリンクプロトコル設計標準
+ *        https://sma.jaxa.jp/TechDoc/Docs/JAXA-JERG-2-401.pdf
+ *        実装に関しては
+ *        Blue Books: Recommended Standards: TC Space Data Link Protocol
+ *        https://public.ccsds.org/Pubs/232x0b4.pdf 
+ *        をそれぞれ参照した
  */
 #ifndef GS_VALIDATE_H_
 #define GS_VALIDATE_H_
@@ -66,16 +73,10 @@ void GS_validate_init(void);
 GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame);
 
 /**
- * @brief tc_segment の検証
- * @param[in] tc_segment: 検証する TC segment
- * @param[in] tc_frame_type
- * @return GS_VALIDATE_ERR
- */
-GS_VALIDATE_ERR GS_validate_tc_segment(const TCSegment* tc_segment, TCF_TYPE tc_frame_type);
-
-/**
  * @brief テレメ用の clcw の作成
  * @return clcw
+ * @note この CLCW は endian を考慮していないためこれが little endian 環境で動く場合 CCSDS (big endian) に
+ *       適用する際に Byte 順を逆転させる必要がある
  */
 uint32_t GS_form_clcw(void);
 
