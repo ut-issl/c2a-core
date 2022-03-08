@@ -16,19 +16,20 @@ static TelemetryFrame telemetry_frame_;
 const TelemetryFrame* const telemetry_frame = &telemetry_frame_;
 
 
-int TF_generate_contents(TLM_CODE packet_id,
-                         uint8_t* packet,
-                         int max_len)
+TF_TLM_FUNC_ACK TF_generate_contents(TLM_CODE tlm_id,
+                                     uint8_t* packet,
+                                     uint16_t* len,
+                                     uint16_t max_len)
 {
-  int (*tlm_func)(uint8_t*, int) = telemetry_frame->tlm_table[packet_id].tlm_func;
+  TF_TLM_FUNC_ACK (*tlm_func)(uint8_t*, uint16_t*, uint16_t) = telemetry_frame->tlm_table[tlm_id].tlm_func;
 
   if (tlm_func != NULL)
   {
-    return tlm_func(packet, max_len);
+    return tlm_func(packet, len, max_len);
   }
   else
   {
-    return TF_NOT_DEFINED;
+    return TF_TLM_FUNC_ACK_NOT_DEFINED;
   }
 }
 
@@ -160,7 +161,7 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  telemetry_frame_.tlm_table[index].tlm_func = (int (*)(unsigned char*, int))tlm_func;
+  telemetry_frame_.tlm_table[index].tlm_func = (TF_TLM_FUNC_ACK (*)(uint8_t*, uint16_t*, uint16_t))tlm_func;
 
   return CCP_EXEC_SUCCESS;
 }
