@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief 受信した TC Frame, TC  Segment の検証を行う
+ * @brief 受信した TC Transfer Frame, TC  Segment の検証を行う
  * @note  AD, BC, BD コマンドの仕様に関しては
  *        JAXA 設計標準 テレコマンドデータリンクプロトコル設計標準
  *        https://sma.jaxa.jp/TechDoc/Docs/JAXA-JERG-2-401.pdf
@@ -49,10 +49,10 @@ typedef enum
  */
 typedef struct
 {
-  // FARM-A,B用のカウンタ値
+  // FARM-A, B 用のカウンタ値
   uint8_t type_a_counter;
   uint8_t type_b_counter;
-  // FARM-1用の情報
+  // FARM-1 用の情報
   uint8_t lockout_flag;
   uint8_t retransmit_flag;
   uint8_t positive_window_width;
@@ -67,7 +67,7 @@ void GS_validate_init(void);
 
 /**
  * @brief tctf の検証
- * @param[in] tctf: 検証する TC frame
+ * @param[in] tctf: 検証する TC Transfer Frame
  * @return GS_VALIDATE_ERR
  */
 GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf);
@@ -81,8 +81,8 @@ GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf);
 uint32_t GS_form_clcw(void);
 
 /**
- * @brief positive_window_width の設定
- * @param[in] positive_window_width
+ * @brief Positive Window Width の設定
+ * @param[in] positive_window_width: Positive Window Width
  * @return GS_VALIDATE_ERR
  */
 GS_VALIDATE_ERR GS_set_farm_pw(uint8_t positive_window_width);
