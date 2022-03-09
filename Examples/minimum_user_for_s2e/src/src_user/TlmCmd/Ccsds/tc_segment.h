@@ -16,8 +16,8 @@
  *        |       1 |     0 |     * | Command Space Packet        |
  *        |---------+-------+-------+-----------------------------|
  */
-#ifndef TCSEGMENT_H_
-#define TCSEGMENT_H_
+#ifndef TC_SEGMENT_H_
+#define TC_SEGMENT_H_
 
 #include "../../Library/stdint.h"
 #include <src_core/TlmCmd/Ccsds/cmd_space_packet.h>

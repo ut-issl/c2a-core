@@ -233,6 +233,8 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   case TCTF_TYPE_BD:
     gs_driver->info[driver_index].bd_rec_status = DS_ERR_CODE_OK;
     break;
+  default:
+    break;
   }
 
   return DS_ERR_CODE_OK;
