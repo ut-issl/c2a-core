@@ -59,7 +59,7 @@ def test_telemetry_frame_tlm_fucn():
     tlm_TF = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
     )
-    assert int(tlm_TF["TF.TLM0"], base=16) != 0     # tlm id = 0 は MOBC tlm が普通はある
+    assert int(tlm_TF["TF.TLM0"], base=16) != 0  # tlm id = 0 は MOBC tlm が普通はある
 
     # 登録されていない tlm func の確認
     page = NO_USED_TLM_ID // TF_TLM_PAGE_SIZE
@@ -77,7 +77,10 @@ def test_telemetry_frame_tlm_fucn():
     # tlm func の登録
     func_adr = "0x12345678"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_TF_REGISTER_TLM, (NO_USED_TLM_ID, int(func_adr, base=16)), c2a_enum.Tlm_CODE_HK
+        ope,
+        c2a_enum.Cmd_CODE_TF_REGISTER_TLM,
+        (NO_USED_TLM_ID, int(func_adr, base=16)),
+        c2a_enum.Tlm_CODE_HK,
     )
     tlm_TF = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
