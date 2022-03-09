@@ -108,16 +108,16 @@ CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
 {
-  uint8_t index = CCP_get_param_from_packet(packet, 0, uint8_t);
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint32_t tlm_func = CCP_get_param_from_packet(packet, 1, uint32_t);
 
-  if ((int)index >= TF_MAX_TLMS)
+  if (tlm_id >= TF_MAX_TLMS)
   {
     // 登録指定位置がテレメトリ数上限を超えている場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  telemetry_frame_.tlm_table[index].tlm_func = (TF_TLM_FUNC_ACK (*)(uint8_t*, uint16_t*, uint16_t))tlm_func;
+  telemetry_frame_.tlm_table[tlm_id].tlm_func = (TF_TLM_FUNC_ACK (*)(uint8_t*, uint16_t*, uint16_t))tlm_func;
   return CCP_EXEC_SUCCESS;
 }
 
