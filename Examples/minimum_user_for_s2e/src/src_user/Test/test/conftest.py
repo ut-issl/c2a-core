@@ -24,6 +24,12 @@ def increase_hk_frequency():
 def _increase_hk_frequency():
 
     ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
+        (2,),
+    )
+    time.sleep(0.1)
+
+    ope.send_rt_cmd(
         c2a_enum.Cmd_CODE_BCT_CLEAR_BLOCK,
         (c2a_enum.BC_HK_CYCLIC_TLM,),
     )
