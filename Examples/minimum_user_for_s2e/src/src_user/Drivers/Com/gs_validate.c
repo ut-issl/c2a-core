@@ -5,7 +5,7 @@
  */
 
 #include "gs_validate.h"
-#include "../../TlmCmd/Ccsds/TCSegment.h"
+#include "../../TlmCmd/Ccsds/tc_segment.h"
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
 #include <src_core/Library/crc.h>
 
@@ -19,8 +19,8 @@
 static GS_VALIDATE_ERR GS_check_tctf_header_(const TcTransferFrame* tctf);
 static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf);
 
-static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment);
-static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_tc_segment_(const TcSegment* tc_segment);
+static GS_VALIDATE_ERR GS_check_tcs_headers_(const TcSegment* tc_segment);
 static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* csp);
 
 /**
@@ -91,12 +91,12 @@ static GS_VALIDATE_ERR GS_check_tctf_header_(const TcTransferFrame* tctf)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment)
+static GS_VALIDATE_ERR GS_check_tc_segment_(const TcSegment* tc_segment)
 {
   GS_VALIDATE_ERR ack;
   const CmdSpacePacket* csp = TCS_get_command_space_packet(tc_segment);
 
-  // TCSegment Header の固定値部分が妥当か確認する
+  // TcSegment Header の固定値部分が妥当か確認する
   ack = GS_check_tcs_headers_(tc_segment);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
 
@@ -107,7 +107,7 @@ static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment)
+static GS_VALIDATE_ERR GS_check_tcs_headers_(const TcSegment* tc_segment)
 {
   if (TCS_get_seq_flag(tc_segment) != TCS_SEQ_SINGLE)
   {
@@ -167,7 +167,7 @@ static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf)
 static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
-  const TCSegment* tc_segment = TCTF_get_tc_segment(tctf);
+  const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
   int seq_diff = (GS_RECEIVE_WINDOW + (int)TCTF_get_frame_seq_num(tctf) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW;
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
@@ -207,7 +207,7 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
 static GS_VALIDATE_ERR GS_check_bd_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
-  const TCSegment* tc_segment = TCTF_get_tc_segment(tctf);
+  const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
 
   ack = GS_check_tc_segment_(tc_segment);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
@@ -222,7 +222,7 @@ static GS_VALIDATE_ERR GS_check_bc_cmd_(const TcTransferFrame* tctf)
 {
   size_t length = TCTF_get_frame_len(tctf);
   size_t offset = TCTF_HEADER_SIZE + TCTF_FECF_SIZE;
-  const TCSegment* tc_segment = TCTF_get_tc_segment(tctf);
+  const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
 
   // BC コマンドは COP-1 制御の制御用コマンドで特殊なため少し構造が異なる
   // Unlock

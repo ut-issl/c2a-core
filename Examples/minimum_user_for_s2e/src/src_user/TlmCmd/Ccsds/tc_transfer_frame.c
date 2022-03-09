@@ -101,10 +101,10 @@ uint8_t TCTF_get_frame_seq_num(const TcTransferFrame* tctf)
   return tctf->packet[pos];
 }
 
-const TCSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf)
+const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf)
 {
   size_t pos = TCTF_HEADER_SIZE;
-  return (const TCSegment*)&tctf->packet[pos];
+  return (const TcSegment*)&tctf->packet[pos];
 }
 
 uint16_t TCTF_get_fecw(const TcTransferFrame* tctf)

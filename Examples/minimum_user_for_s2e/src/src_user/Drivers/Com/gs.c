@@ -195,7 +195,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   const TcTransferFrame* tctf = TCTF_convert_from_bytes_to_tctf(gs_rx_data);
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
   GS_PORT_TYPE driver_index;
-  const TCSegment* tc_segment;
+  const TcSegment* tc_segment;
   const CmdSpacePacket* cmd_space_packet;
 
   // アドレス計算で CCSDS か UART か判別

@@ -31,7 +31,7 @@
 #include <stddef.h>
 
 #include "../../Library/stdint.h"
-#include "TCSegment.h"
+#include "tc_segment.h"
 
 #define TCTF_MAX_LEN (1024u)
 #define TCTF_HEADER_SIZE (5u)
@@ -88,7 +88,7 @@ uint8_t TCTF_get_frame_seq_num(const TcTransferFrame* tctf);
 
 uint16_t TCTF_get_fecw(const TcTransferFrame* tctf);
 
-const TCSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
+const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
 
 uint16_t TCTF_calc_fecw(const TcTransferFrame* tctf);
 

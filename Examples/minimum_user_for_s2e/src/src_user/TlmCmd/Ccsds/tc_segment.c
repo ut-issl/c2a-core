@@ -4,9 +4,9 @@
  * @brief CCSDS で規定される TC Segment の実装
  */
 
-#include "TCSegment.h"
+#include "tc_segment.h"
 
-TCS_SEQ_FLAG TCS_get_seq_flag(const TCSegment* tcs)
+TCS_SEQ_FLAG TCS_get_seq_flag(const TcSegment* tcs)
 {
   unsigned int pos = 0;
   uint8_t mask = 0xc0; // 1100 0000b
@@ -14,7 +14,7 @@ TCS_SEQ_FLAG TCS_get_seq_flag(const TCSegment* tcs)
   return (TCS_SEQ_FLAG)((tcs->packet[pos] & mask) >> 6);
 }
 
-TCS_MAP_ID TCS_get_map_id(const TCSegment* tcs)
+TCS_MAP_ID TCS_get_map_id(const TcSegment* tcs)
 {
   unsigned int pos = 0;
   uint8_t mask = 0x3f; // 0011 1111b
@@ -33,7 +33,7 @@ TCS_MAP_ID TCS_get_map_id(const TCSegment* tcs)
   }
 }
 
-const CmdSpacePacket* TCS_get_command_space_packet(const TCSegment* tcs)
+const CmdSpacePacket* TCS_get_command_space_packet(const TcSegment* tcs)
 {
   return (const CmdSpacePacket*)&tcs->packet[TCS_HEADER_SIZE];
 }

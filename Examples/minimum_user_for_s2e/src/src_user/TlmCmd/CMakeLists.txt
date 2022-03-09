@@ -17,7 +17,7 @@ set(C2A_SRCS
   Ccsds/m_pdu.c
   Ccsds/tc_transfer_frame.c
   Ccsds/tcp_to_m_pdu.c
-  Ccsds/TCSegment.c
+  Ccsds/tc_segment.c
   Ccsds/vcdu.c
 )
 

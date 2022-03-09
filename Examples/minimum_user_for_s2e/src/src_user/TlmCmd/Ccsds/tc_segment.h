@@ -28,7 +28,7 @@
 typedef struct
 {
   uint8_t packet[TCS_PACKET_MAX_LENGTH];
-} TCSegment;
+} TcSegment;
 
 typedef enum
 {
@@ -46,10 +46,10 @@ typedef enum
   TCS_MAP_ID_UNKNOWN
 } TCS_MAP_ID;
 
-TCS_SEQ_FLAG TCS_get_seq_flag(const TCSegment* tcs);
+TCS_SEQ_FLAG TCS_get_seq_flag(const TcSegment* tcs);
 
-TCS_MAP_ID TCS_get_map_id(const TCSegment* tcs);
+TCS_MAP_ID TCS_get_map_id(const TcSegment* tcs);
 
-const CmdSpacePacket* TCS_get_command_space_packet(const TCSegment* tcs);
+const CmdSpacePacket* TCS_get_command_space_packet(const TcSegment* tcs);
 
 #endif
