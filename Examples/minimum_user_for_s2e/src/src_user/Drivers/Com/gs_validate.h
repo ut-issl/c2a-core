@@ -23,10 +23,10 @@ typedef enum
 {
   GS_VALIDATE_ERR_OK = 0,
 
-  GS_VALIDATE_ERR_TCF_VER,
-  GS_VALIDATE_ERR_TCF_SCID,
-  GS_VALIDATE_ERR_TCF_VCID,
-  GS_VALIDATE_ERR_TCF_TYPE,
+  GS_VALIDATE_ERR_TCTF_VER,
+  GS_VALIDATE_ERR_TCTF_SCID,
+  GS_VALIDATE_ERR_TCTF_VCID,
+  GS_VALIDATE_ERR_TCTF_TYPE,
   GS_VALIDATE_ERR_IN_LOCKOUT,
   GS_VALIDATE_ERR_TCS_SEQ_FLAG,
   GS_VALIDATE_ERR_TCP_VER,
@@ -66,11 +66,11 @@ extern const GS_ValiateInfo* const gs_validate_info;
 void GS_validate_init(void);
 
 /**
- * @brief tc_frame の検証
- * @param[in] tc_frame: 検証する TC frame
+ * @brief tctf の検証
+ * @param[in] tctf: 検証する TC frame
  * @return GS_VALIDATE_ERR
  */
-GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame);
+GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf);
 
 /**
  * @brief テレメ用の clcw の作成

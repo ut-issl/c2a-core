@@ -108,10 +108,10 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(const CommonTlmPacket* packet, AO
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tdsp_cmd_last_err_id), &(f[55]), 2);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tdsp_cmd_last_err_sts), &(f[57]), 4);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.gs_ret_from_if_rx), &(f[61]), 4);
-  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tcf_last_recv_ack), &(f[65]), 1);
-  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tcf_validate_status), &(f[66]), 1);
-  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tcf_last_recv_time), &(f[67]), 4);
-  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tcf_farm_pw), &(f[71]), 1);
+  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tctf_last_recv_ack), &(f[65]), 1);
+  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tctf_validate_status), &(f[66]), 1);
+  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tctf_last_recv_time), &(f[67]), 4);
+  endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tctf_farm_pw), &(f[71]), 1);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tcp_last_recv_ack), &(f[72]), 1);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tlm_tx_port_type), &(f[73]), 1);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_aobc.gs_cmd_counter), &(f[74]), 4);
@@ -263,8 +263,8 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(const CommonTlmPacket* packet, AOBC
   temp_u8 &= 0x7f;
   aobc_driver->tlm_data.aobc_hk.obc_mm_opsmode_prev = temp_u8;
   endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tdsp_current_id), &(f[40]), 2);
-  endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tcf_last_recv_ack), &(f[42]), 1);
-  endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tcf_last_recv_time), &(f[43]), 4);
+  endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tctf_last_recv_ack), &(f[42]), 1);
+  endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tctf_last_recv_time), &(f[43]), 4);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_tcp_last_recv_ack), &(f[47]), 1);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_gs_cmd_counter), &(f[48]), 4);
   endian_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc_gs_cmd_last_exec_time), &(f[52]), 4);

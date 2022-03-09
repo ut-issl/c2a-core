@@ -1,121 +1,126 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief CCSDS で規定される TC Transfer Frame の実装
+ */
+
 #include "tc_transfer_frame.h"
 
 #include <string.h> // for memcpy
 
-TCF_VER TCF_get_ver(const TCFrame* tcf)
+TCTF_VER TCTF_get_ver(const TcTransferFrame* tctf)
 {
   uint32_t pos = 0;
   uint8_t mask = 0xc0; // 1100 0000b
 
-  TCF_VER ver = (TCF_VER)((tcf->packet[pos] & mask) >> 6);
+  TCTF_VER ver = (TCTF_VER)((tctf->packet[pos] & mask) >> 6);
 
   switch (ver)
   {
-  case TCF_VER_1:
+  case TCTF_VER_1:
     return ver;
 
   default:
-    return TCF_VER_UNKNOWN;
+    return TCTF_VER_UNKNOWN;
   }
 }
 
-TCF_TYPE TCF_get_type(const TCFrame* tcf)
+TCTF_TYPE TCTF_get_type(const TcTransferFrame* tctf)
 {
   uint32_t pos = 0;
   uint8_t mask = 0x30; // 0011 0000b
 
-  TCF_TYPE type = (TCF_TYPE)((tcf->packet[pos] & mask) >> 4);
+  TCTF_TYPE type = (TCTF_TYPE)((tctf->packet[pos] & mask) >> 4);
 
   switch (type)
   {
-  case TCF_TYPE_AD: // FALL THROUGH
-  case TCF_TYPE_BD: // FALL THROUGH
-  case TCF_TYPE_BC:
+  case TCTF_TYPE_AD: // FALL THROUGH
+  case TCTF_TYPE_BD: // FALL THROUGH
+  case TCTF_TYPE_BC:
     return type;
 
   default:
-    return TCF_TYPE_UNKNOWN;
+    return TCTF_TYPE_UNKNOWN;
   }
 }
 
-TCF_SCID TCF_get_scid(const TCFrame* tcf)
+TCTF_SCID TCTF_get_scid(const TcTransferFrame* tctf)
 {
   uint32_t pos = 0;
   uint8_t mask = 0x03; // 0000 0011b
 
   // pos = 0の下位2bitsとpos = 1の8bitsを合わせた10bits
-  TCF_SCID scid = (TCF_SCID)(tcf->packet[pos] & mask);
-  scid = (TCF_SCID)(scid << 8);
-  scid = (TCF_SCID)(scid + tcf->packet[pos + 1]);
+  TCTF_SCID scid = (TCTF_SCID)(tctf->packet[pos] & mask);
+  scid = (TCTF_SCID)(scid << 8);
+  scid = (TCTF_SCID)(scid + tctf->packet[pos + 1]);
 
   switch (scid)
   {
-  case TCF_SCID_SAMPLE_SATELLITE:
+  case TCTF_SCID_SAMPLE_SATELLITE:
     return scid;
 
   default:
-    return TCF_SCID_UNKNOWN;
+    return TCTF_SCID_UNKNOWN;
   }
 }
 
-TCF_VCID TCF_get_vcid(const TCFrame* tcf)
+TCTF_VCID TCTF_get_vcid(const TcTransferFrame* tctf)
 {
   uint32_t pos = 2;
   uint8_t mask = 0xfc; // 1111 1100b
 
-  TCF_VCID vcid = (TCF_VCID)((tcf->packet[pos] & mask) >> 2);
+  TCTF_VCID vcid = (TCTF_VCID)((tctf->packet[pos] & mask) >> 2);
 
   switch (vcid)
   {
-  case TCF_VCID_REALTIME:
+  case TCTF_VCID_REALTIME:
     return vcid;
 
   default:
-    return TCF_VCID_UNKNOWN;
+    return TCTF_VCID_UNKNOWN;
   }
 }
 
-size_t TCF_get_frame_len(const TCFrame* tcf)
+size_t TCTF_get_frame_len(const TcTransferFrame* tctf)
 {
   uint32_t pos = 2;
   uint8_t mask = 0x03; // 0000 0011b
 
   // pos = 0の下位2bitsとpos = 1の8bitsを合わせた10bits
-  size_t len = (tcf->packet[pos] & mask);
+  size_t len = (tctf->packet[pos] & mask);
   len <<= 8;
-  len += tcf->packet[pos + 1];
+  len += tctf->packet[pos + 1];
 
   // TC Frameの長さ表記は0起算なので1起算に変換した値を返す
   return len + 1;
 }
 
-uint8_t TCF_get_frame_seq_num(const TCFrame* tcf)
+uint8_t TCTF_get_frame_seq_num(const TcTransferFrame* tctf)
 {
   size_t pos = 4;
-  return tcf->packet[pos];
+  return tctf->packet[pos];
 }
 
-const TCSegment* TCF_get_tc_segment(const TCFrame* tcf)
+const TCSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf)
 {
-  size_t pos = TCF_HEADER_SIZE;
-  return (const TCSegment*)&tcf->packet[pos];
+  size_t pos = TCTF_HEADER_SIZE;
+  return (const TCSegment*)&tctf->packet[pos];
 }
 
-uint16_t TCF_get_fecw(const TCFrame* tcf)
+uint16_t TCTF_get_fecw(const TcTransferFrame* tctf)
 {
-  size_t length = TCF_get_frame_len(tcf);
+  size_t length = TCTF_get_frame_len(tctf);
 
-  uint16_t fecw = tcf->packet[length - 2];
+  uint16_t fecw = tctf->packet[length - 2];
   fecw <<= 8;
-  fecw += tcf->packet[length - 1];
+  fecw += tctf->packet[length - 1];
 
   return fecw;
 }
 
-const TCFrame* TCF_convert_from_bytes_to_tc_frame(const uint8_t* byte)
+const TcTransferFrame* TCTF_convert_from_bytes_to_tctf(const uint8_t* byte)
 {
-  return (const TCFrame*)byte;
+  return (const TcTransferFrame*)byte;
 }
 
 #pragma section

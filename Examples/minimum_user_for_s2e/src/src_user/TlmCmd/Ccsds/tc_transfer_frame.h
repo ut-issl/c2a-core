@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief CCSDS で規定される TC Frame の実装
+ * @brief CCSDS で規定される TC Transfer Frame の実装
  * @note  packet 構造
  *        |---------+-------+-------+-----------------------|
  *        | Pos     | Pos   | size  | name                  |
@@ -25,73 +25,73 @@
  *        |       * |     0 |    16 |                       |
  *        |---------+-------+-------+-----------------------|
  */
-#ifndef TCFRAME_H_
-#define TCFRAME_H_
+#ifndef TC_TRANSFER_FRAME_H_
+#define TC_TRANSFER_FRAME_H_
 
 #include <stddef.h>
 
 #include "../../Library/stdint.h"
 #include "TCSegment.h"
 
-#define TCF_MAX_LEN (1024u)
-#define TCF_HEADER_SIZE (5u)
-#define TCF_FECF_SIZE (2u)
+#define TCTF_MAX_LEN (1024u)
+#define TCTF_HEADER_SIZE (5u)
+#define TCTF_FECF_SIZE (2u)
 
-#define TCF_BC_CMD_CODE_UNLOCK (0x00)
-#define TCF_BC_CMD_CODE_SET_VR_0 (0x82)
-#define TCF_BC_CMD_CODE_SET_VR_1 (0x00)
+#define TCTF_BC_CMD_CODE_UNLOCK (0x00)
+#define TCTF_BC_CMD_CODE_SET_VR_0 (0x82)
+#define TCTF_BC_CMD_CODE_SET_VR_1 (0x00)
 
-#define TCF_PACKET_MAX_LENGTH (TCF_HEADER_SIZE + TCS_PACKET_MAX_LENGTH + TCF_FECF_SIZE)
+#define TCTF_PACKET_MAX_LENGTH (TCTF_HEADER_SIZE + TCS_PACKET_MAX_LENGTH + TCTF_FECF_SIZE)
 
 typedef struct
 {
-  uint8_t packet[TCF_PACKET_MAX_LENGTH];
-} TCFrame;
+  uint8_t packet[TCTF_PACKET_MAX_LENGTH];
+} TcTransferFrame;
 
 typedef enum
 {
-  TCF_VER_1 = 0, // 00b: Version 1
-  TCF_VER_UNKNOWN
-} TCF_VER;
+  TCTF_VER_1 = 0, // 00b: Version 1
+  TCTF_VER_UNKNOWN
+} TCTF_VER;
 
 typedef enum
 {
-  TCF_TYPE_AD = 0, // 00b: TC data with FARM
-  TCF_TYPE_BD = 2, // 10b: TC data without FARM
-  TCF_TYPE_BC = 3, // 11b: FARM Control Command
-  TCF_TYPE_UNKNOWN
-} TCF_TYPE;
+  TCTF_TYPE_AD = 0, // 00b: TC data with FARM
+  TCTF_TYPE_BD = 2, // 10b: TC data without FARM
+  TCTF_TYPE_BC = 3, // 11b: FARM Control Command
+  TCTF_TYPE_UNKNOWN
+} TCTF_TYPE;
 
 typedef enum
 {
-  TCF_SCID_SAMPLE_SATELLITE = 0x00, // SCID for command of sample satellite
-  TCF_SCID_UNKNOWN
-} TCF_SCID;
+  TCTF_SCID_SAMPLE_SATELLITE = 0x00, // SCID for command of sample satellite
+  TCTF_SCID_UNKNOWN
+} TCTF_SCID;
 
 typedef enum
 {
-  TCF_VCID_REALTIME = 0,
-  TCF_VCID_UNKNOWN
-} TCF_VCID;
+  TCTF_VCID_REALTIME = 0,
+  TCTF_VCID_UNKNOWN
+} TCTF_VCID;
 
-TCF_VER TCF_get_ver(const TCFrame* tcf);
+TCTF_VER TCTF_get_ver(const TcTransferFrame* tctf);
 
-TCF_TYPE TCF_get_type(const TCFrame* tcf);
+TCTF_TYPE TCTF_get_type(const TcTransferFrame* tctf);
 
-TCF_SCID TCF_get_scid(const TCFrame* tcf);
+TCTF_SCID TCTF_get_scid(const TcTransferFrame* tctf);
 
-TCF_VCID TCF_get_vcid(const TCFrame* tcf);
+TCTF_VCID TCTF_get_vcid(const TcTransferFrame* tctf);
 
-size_t TCF_get_frame_len(const TCFrame* tcf);
+size_t TCTF_get_frame_len(const TcTransferFrame* tctf);
 
-uint8_t TCF_get_frame_seq_num(const TCFrame* tcf);
+uint8_t TCTF_get_frame_seq_num(const TcTransferFrame* tctf);
 
-uint16_t TCF_get_fecw(const TCFrame* tcf);
+uint16_t TCTF_get_fecw(const TcTransferFrame* tctf);
 
-const TCSegment* TCF_get_tc_segment(const TCFrame* tcf);
+const TCSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
 
-uint16_t TCF_calc_fecw(const TCFrame* tcf);
+uint16_t TCTF_calc_fecw(const TcTransferFrame* tctf);
 
-const TCFrame* TCF_convert_from_bytes_to_tc_frame(const uint8_t* byte);
+const TcTransferFrame* TCTF_convert_from_bytes_to_tctf(const uint8_t* byte);
 
 #endif

@@ -42,10 +42,10 @@ typedef struct
     uint16_t tdsp_cmd_last_err_id;
     int32_t tdsp_cmd_last_err_sts;
     int32_t gs_ret_from_if_rx;
-    uint8_t tcf_last_recv_ack;
-    uint8_t tcf_validate_status;
-    uint32_t tcf_last_recv_time;
-    uint8_t tcf_farm_pw;
+    uint8_t tctf_last_recv_ack;
+    uint8_t tctf_validate_status;
+    uint32_t tctf_last_recv_time;
+    uint8_t tctf_farm_pw;
     uint8_t tcp_last_recv_ack;
     uint8_t tlm_tx_port_type;
     uint32_t gs_cmd_counter;
@@ -149,8 +149,8 @@ typedef struct
     uint8_t obc_mm_sts;
     uint8_t obc_mm_opsmode_prev;
     uint16_t obc_tdsp_current_id;
-    uint8_t obc_tcf_last_recv_ack;
-    uint32_t obc_tcf_last_recv_time;
+    uint8_t obc_tctf_last_recv_ack;
+    uint32_t obc_tctf_last_recv_time;
     uint8_t obc_tcp_last_recv_ack;
     uint32_t obc_gs_cmd_counter;
     uint32_t obc_gs_cmd_last_exec_time;

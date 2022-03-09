@@ -59,7 +59,7 @@ static void DI_GS_cmd_packet_handler_(void)
 {
   uint8_t select;
 
-  GS_rec_tcf(&gs_driver_);
+  GS_rec_tctf(&gs_driver_);
 
   // Tlm更新
   for (select = 0; select < CCSDS_SELECT_NUM; ++select)

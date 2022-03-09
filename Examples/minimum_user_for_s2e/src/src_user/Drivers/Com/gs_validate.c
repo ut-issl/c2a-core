@@ -16,8 +16,8 @@
 #endif
 
 // 以下検証関数. 名前通り
-static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame);
-static GS_VALIDATE_ERR GS_check_fecw_(const TCFrame* tc_frame);
+static GS_VALIDATE_ERR GS_check_tctf_header_(const TcTransferFrame* tctf);
+static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf);
 
 static GS_VALIDATE_ERR GS_check_tc_segment_(const TCSegment* tc_segment);
 static GS_VALIDATE_ERR GS_check_tcs_headers_(const TCSegment* tc_segment);
@@ -26,17 +26,17 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
 /**
  * @note AD コマンド: COP-1 制御を使用し伝送順番のチェックを行う
  */
-static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCFrame* tc_frame);
+static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf);
 
 /**
  * @note BD コマンド: COP-1 制御を使用しないため伝送順番のチェックは行わない
  */
-static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCFrame* tc_frame);
+static GS_VALIDATE_ERR GS_check_bd_cmd_(const TcTransferFrame* tctf);
 
 /**
  * @note BC コマンド: COP-1 制御の制御コマンド, AD, BD と性質が異なる
  */
-static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCFrame* tc_frame);
+static GS_VALIDATE_ERR GS_check_bc_cmd_(const TcTransferFrame* tctf);
 
 static GS_ValiateInfo gs_validate_info_;
 const GS_ValiateInfo* const gs_validate_info = &gs_validate_info_;
@@ -50,43 +50,43 @@ void GS_validate_init(void)
   gs_validate_info_.positive_window_width = GS_POSITIVE_WINDOW_WIDTH_DEFAULT;
 }
 
-GS_VALIDATE_ERR GS_validate_tc_frame(const TCFrame* tc_frame)
+GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ret;
-  TCF_TYPE tc_frame_type;
+  TCTF_TYPE tctf_type;
 
-  ret = GS_check_fecw_(tc_frame);
+  ret = GS_check_fecw_(tctf);
   if (ret != GS_VALIDATE_ERR_OK) return ret;
-  ret = GS_check_tcf_header_(tc_frame);
+  ret = GS_check_tctf_header_(tctf);
   if (ret != GS_VALIDATE_ERR_OK) return ret;
 
-  tc_frame_type = TCF_get_type(tc_frame);
-  switch (tc_frame_type)
+  tctf_type = TCTF_get_type(tctf);
+  switch (tctf_type)
   {
-  case TCF_TYPE_AD:
-    ret = GS_check_ad_cmd_(tc_frame);
+  case TCTF_TYPE_AD:
+    ret = GS_check_ad_cmd_(tctf);
     break;
 
-  case TCF_TYPE_BD:
-    ret = GS_check_bd_cmd_(tc_frame);
+  case TCTF_TYPE_BD:
+    ret = GS_check_bd_cmd_(tctf);
     break;
 
-  case TCF_TYPE_BC:
-    ret = GS_check_bc_cmd_(tc_frame);
+  case TCTF_TYPE_BC:
+    ret = GS_check_bc_cmd_(tctf);
     break;
 
   default:
-    return GS_VALIDATE_ERR_TCF_TYPE;
+    return GS_VALIDATE_ERR_TCTF_TYPE;
   }
 
   return ret;
 }
 
-static GS_VALIDATE_ERR GS_check_tcf_header_(const TCFrame* tc_frame)
+static GS_VALIDATE_ERR GS_check_tctf_header_(const TcTransferFrame* tctf)
 {
-  if (TCF_get_ver(tc_frame) != TCF_VER_1) return GS_VALIDATE_ERR_TCF_VER;
-  // if (TCF_get_scid(tc_frame) != TCF_SCID_SAMPLE_SATELLITE) return GS_VALIDATE_ERR_TCF_SCID;    // FIXME: テスト用に一旦コメントアウト
-  if (TCF_get_vcid(tc_frame) != TCF_VCID_REALTIME) return GS_VALIDATE_ERR_TCF_VCID;
+  if (TCTF_get_ver(tctf) != TCTF_VER_1) return GS_VALIDATE_ERR_TCTF_VER;
+  // if (TCTF_get_scid(tctf) != TCTF_SCID_SAMPLE_SATELLITE) return GS_VALIDATE_ERR_TCTF_SCID;    // FIXME: テスト用に一旦コメントアウト
+  if (TCTF_get_vcid(tctf) != TCTF_VCID_REALTIME) return GS_VALIDATE_ERR_TCTF_VCID;
 
   return GS_VALIDATE_ERR_OK;
 }
@@ -156,19 +156,19 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_fecw_(const TCFrame* tc_frame)
+static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf)
 {
-  size_t len = TCF_get_frame_len(tc_frame);
-  if (crc_16_ccitt_left(0xffff, (const unsigned char*)tc_frame, len, 0) != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
+  size_t len = TCTF_get_frame_len(tctf);
+  if (crc_16_ccitt_left(0xffff, (const unsigned char*)tctf, len, 0) != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCFrame* tc_frame)
+static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
-  const TCSegment* tc_segment = TCF_get_tc_segment(tc_frame);
-  int seq_diff = (GS_RECEIVE_WINDOW + (int)TCF_get_frame_seq_num(tc_frame) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW;
+  const TCSegment* tc_segment = TCTF_get_tc_segment(tctf);
+  int seq_diff = (GS_RECEIVE_WINDOW + (int)TCTF_get_frame_seq_num(tctf) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW;
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 
@@ -204,10 +204,10 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TCFrame* tc_frame)
   return GS_VALIDATE_ERR_OK;
 }
 
-static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCFrame* tc_frame)
+static GS_VALIDATE_ERR GS_check_bd_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
-  const TCSegment* tc_segment = TCF_get_tc_segment(tc_frame);
+  const TCSegment* tc_segment = TCTF_get_tc_segment(tctf);
 
   ack = GS_check_tc_segment_(tc_segment);
   if (ack != GS_VALIDATE_ERR_OK) return ack;
@@ -218,15 +218,15 @@ static GS_VALIDATE_ERR GS_check_bd_cmd_(const TCFrame* tc_frame)
 }
 
 // BCコマンドの種別を判定し、処理する
-static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCFrame* tc_frame)
+static GS_VALIDATE_ERR GS_check_bc_cmd_(const TcTransferFrame* tctf)
 {
-  size_t length = TCF_get_frame_len(tc_frame);
-  size_t offset = TCF_HEADER_SIZE + TCF_FECF_SIZE;
-  const TCSegment* tc_segment = TCF_get_tc_segment(tc_frame);
+  size_t length = TCTF_get_frame_len(tctf);
+  size_t offset = TCTF_HEADER_SIZE + TCTF_FECF_SIZE;
+  const TCSegment* tc_segment = TCTF_get_tc_segment(tctf);
 
   // BC コマンドは COP-1 制御の制御用コマンドで特殊なため少し構造が異なる
   // Unlock
-  if (tc_segment->packet[0] == TCF_BC_CMD_CODE_UNLOCK && length == offset + 1)
+  if (tc_segment->packet[0] == TCTF_BC_CMD_CODE_UNLOCK && length == offset + 1)
   {
     gs_validate_info_.lockout_flag = 0;
     gs_validate_info_.retransmit_flag = 0;
@@ -234,8 +234,8 @@ static GS_VALIDATE_ERR GS_check_bc_cmd_(const TCFrame* tc_frame)
     ++gs_validate_info_.type_b_counter;
   }
   // SET V(R)
-  else if (tc_segment->packet[0] == TCF_BC_CMD_CODE_SET_VR_0
-        && tc_segment->packet[1] == TCF_BC_CMD_CODE_SET_VR_1
+  else if (tc_segment->packet[0] == TCTF_BC_CMD_CODE_SET_VR_0
+        && tc_segment->packet[1] == TCTF_BC_CMD_CODE_SET_VR_1
         && length == offset + 3)
   {
     if (gs_validate_info_.lockout_flag == 0)

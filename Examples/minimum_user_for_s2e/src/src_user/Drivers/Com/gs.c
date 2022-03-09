@@ -89,11 +89,11 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
   {
     gs_driver->info[i].rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].last_rec_tcf_type = GS_TCF_TYPE_ENUM_UNKNOWN;
+    gs_driver->info[i].last_rec_tctf_type = GS_TCTF_TYPE_ENUM_UNKNOWN;
     gs_driver->info[i].ad_rec_status = DS_ERR_CODE_OK;
     gs_driver->info[i].bd_rec_status = DS_ERR_CODE_OK;
     gs_driver->info[i].bd_rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].tc_frame_validate_status = GS_VALIDATE_ERR_OK;
+    gs_driver->info[i].tctf_validate_status = GS_VALIDATE_ERR_OK;
     gs_driver->info[i].ret_from_if_rx = 0;
     gs_driver->info[i].last_rec_time = 0;
     gs_driver->info[i].cmd_ack = PH_ACK_SUCCESS;
@@ -146,12 +146,12 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
     DSSC_set_rx_frame_size(p_stream_config, GS_RX_FRAME_SIZE); // 可変長
     DSSC_set_rx_framelength_pos(p_stream_config, GS_RX_HEADER_SIZE);
     DSSC_set_rx_framelength_type_size(p_stream_config, GS_RX_FRAMELENGTH_TYPE_SIZE);
-    DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCF の framelength は 0 起算
+    DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCTF の framelength は 0 起算
     DSSC_set_data_analyzer(p_stream_config, GS_analyze_rec_data_);
   }
 }
 
-int GS_rec_tcf(GS_Driver* gs_driver)
+int GS_rec_tctf(GS_Driver* gs_driver)
 {
   int i, stream;
 
@@ -183,18 +183,18 @@ int GS_rec_tcf(GS_Driver* gs_driver)
 
       gs_driver->info[i].rec_status = DS_analyze_rec_data(ds, (uint8_t)stream, gs_driver);
 
-      gs_driver->info[i].last_rec_tcf_type = (GS_TCF_TYPE_ENUM)stream;
-      switch (gs_driver->info[i].last_rec_tcf_type)
+      gs_driver->info[i].last_rec_tctf_type = (GS_TCTF_TYPE_ENUM)stream;
+      switch (gs_driver->info[i].last_rec_tctf_type)
       {
-      case GS_TCF_TYPE_ENUM_AD_CMD:
+      case GS_TCTF_TYPE_ENUM_AD_CMD:
         gs_driver->info[i].ad_rec_status = gs_driver->info[i].rec_status;
         break;
 
-      case GS_TCF_TYPE_ENUM_BC_CMD:
+      case GS_TCTF_TYPE_ENUM_BC_CMD:
         gs_driver->info[i].bc_rec_status = gs_driver->info[i].rec_status;
         break;
 
-      case GS_TCF_TYPE_ENUM_BD_CMD:
+      case GS_TCTF_TYPE_ENUM_BD_CMD:
         gs_driver->info[i].bd_rec_status = gs_driver->info[i].rec_status;
         break;
 
@@ -210,7 +210,7 @@ int GS_rec_tcf(GS_Driver* gs_driver)
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)
 {
   const uint8_t* gs_rx_data = DSSC_get_rx_frame(p_stream_config);
-  const TCFrame* tc_frame = TCF_convert_from_bytes_to_tc_frame(gs_rx_data);
+  const TcTransferFrame* tctf = TCTF_convert_from_bytes_to_tctf(gs_rx_data);
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
   GS_PORT_TYPE driver_index;
   const TCSegment* tc_segment;
@@ -226,13 +226,13 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     driver_index = GS_PORT_TYPE_UART;
   }
 
-  gs_driver->info[driver_index].tc_frame_validate_status = GS_validate_tc_frame(tc_frame);
-  if (gs_driver->info[driver_index].tc_frame_validate_status != GS_VALIDATE_ERR_OK)
+  gs_driver->info[driver_index].tctf_validate_status = GS_validate_tctf(tctf);
+  if (gs_driver->info[driver_index].tctf_validate_status != GS_VALIDATE_ERR_OK)
   {
     return DS_ERR_CODE_ERR;
   }
 
-  tc_segment = TCF_get_tc_segment(tc_frame);
+  tc_segment = TCTF_get_tc_segment(tctf);
   cmd_space_packet = TCS_get_command_space_packet(tc_segment);
   gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(cmd_space_packet);
   gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(cmd_space_packet);  // 受信コマンドパケット解析

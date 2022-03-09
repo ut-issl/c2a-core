@@ -14,17 +14,17 @@
 #include "gs_validate.h"
 
 /**
- * @enum GS_TCF_TYPE_ENUM
+ * @enum GS_TCTF_TYPE_ENUM
  * @note rx_header_ <-> stream で 各 CMD との対応の振り分けを行っている. その Index と対応させるため.
  * @note uint8_t を想定
  */
 typedef enum
 {
-  GS_TCF_TYPE_ENUM_AD_CMD,
-  GS_TCF_TYPE_ENUM_BD_CMD,
-  GS_TCF_TYPE_ENUM_BC_CMD,
-  GS_TCF_TYPE_ENUM_UNKNOWN
-} GS_TCF_TYPE_ENUM;
+  GS_TCTF_TYPE_ENUM_AD_CMD,
+  GS_TCTF_TYPE_ENUM_BD_CMD,
+  GS_TCTF_TYPE_ENUM_BC_CMD,
+  GS_TCTF_TYPE_ENUM_UNKNOWN
+} GS_TCTF_TYPE_ENUM;
 
 /**
  * @enum  GS_PORT_TYPE
@@ -45,11 +45,11 @@ typedef enum
 typedef struct
 {
   DS_ERR_CODE rec_status;                   //!< DriverSuper からの受信結果
-  GS_TCF_TYPE_ENUM last_rec_tcf_type;       //!< 最後に受信した tcf のタイプ
+  GS_TCTF_TYPE_ENUM last_rec_tctf_type;       //!< 最後に受信した tctf のタイプ
   DS_ERR_CODE ad_rec_status;                //!< AD CMD を受信したときの analyze 結果
   DS_ERR_CODE bc_rec_status;                //!< BC CMD を受信したときの analyze 結果
   DS_ERR_CODE bd_rec_status;                //!< BD CMD を受信したときの analyze 結果
-  GS_VALIDATE_ERR tc_frame_validate_status; //!< TC Frame の検証結果
+  GS_VALIDATE_ERR tctf_validate_status; //!< TC Frame の検証結果
   int ret_from_if_rx;                       //!< UART or CCSDS からの返り値
   cycle_t last_rec_time;                    //!< 最後に受信した時刻
   CCP_DEST_TYPE last_dest_type;             //!< 最後に受信したパケットの dest type
@@ -95,11 +95,11 @@ typedef struct
 int GS_init(GS_Driver* gs_driver, uint8_t uart_ch);
 
 /**
- * @brief 地上から CMD を受信する. 形式は TCFrame
+ * @brief 地上から CMD を受信する. 形式は TC Transer Frame
  * @param[in] gs_driver: ドライバー
  * @return int: 0
  */
-int GS_rec_tcf(GS_Driver* gs_driver);
+int GS_rec_tctf(GS_Driver* gs_driver);
 
 /**
  * @brief 地上に向けて TLM を送信. 形式は VCDU
