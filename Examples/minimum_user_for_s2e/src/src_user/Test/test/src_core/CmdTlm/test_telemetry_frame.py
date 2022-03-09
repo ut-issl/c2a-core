@@ -52,7 +52,7 @@ def test_telemetry_frame_set_page():
 
 @pytest.mark.real
 @pytest.mark.sils
-def test_telemetry_frame_tlm_fucn():
+def test_telemetry_frame_tlm_func():
     init_tf()
 
     # 登録されている tlm func の確認
