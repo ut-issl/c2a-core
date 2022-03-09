@@ -1,5 +1,5 @@
 #pragma section REPRO
-#include "TCFrame.h"
+#include "tc_transfer_frame.h"
 
 #include <string.h> // for memcpy
 
@@ -113,7 +113,7 @@ uint16_t TCF_get_fecw(const TCFrame* tcf)
   return fecw;
 }
 
-const TCFrame* TCF_convert_raw_byte(const uint8_t* byte)
+const TCFrame* TCF_convert_from_bytes_to_tc_frame(const uint8_t* byte)
 {
   return (const TCFrame*)byte;
 }

@@ -12,7 +12,7 @@
 #ifndef GS_VALIDATE_H_
 #define GS_VALIDATE_H_
 
-#include "../../TlmCmd/Ccsds/TCFrame.h"
+#include "../../TlmCmd/Ccsds/tc_transfer_frame.h"
 #include "../../Library/stdint.h"
 
 /**

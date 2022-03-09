@@ -8,7 +8,7 @@
 
 #include <string.h>
 #include "../../IfWrapper/ccsds_user.h"
-#include "../../TlmCmd/Ccsds/TCFrame.h"
+#include "../../TlmCmd/Ccsds/tc_transfer_frame.h"
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
@@ -210,7 +210,7 @@ int GS_rec_tcf(GS_Driver* gs_driver)
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)
 {
   const uint8_t* gs_rx_data = DSSC_get_rx_frame(p_stream_config);
-  const TCFrame* tc_frame = TCF_convert_raw_byte(gs_rx_data);
+  const TCFrame* tc_frame = TCF_convert_from_bytes_to_tc_frame(gs_rx_data);
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
   GS_PORT_TYPE driver_index;
   const TCSegment* tc_segment;
