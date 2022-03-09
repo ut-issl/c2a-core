@@ -26,6 +26,7 @@
 #endif
 
 // header
+// それぞれ AD, BD, BC
 static const uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE] = {{0x03, 0x5C}, {0x23, 0x5C}, {0x33, 0x5C} }; // FIXME: 直す
 static uint8_t GS_tx_frame_[VCDU_LEN];
 
@@ -89,7 +90,7 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
   {
     gs_driver->info[i].rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].last_rec_tctf_type = GS_TCTF_TYPE_ENUM_UNKNOWN;
+    gs_driver->info[i].last_rec_tctf_type = TCTF_TYPE_UNKNOWN;
     gs_driver->info[i].ad_rec_status = DS_ERR_CODE_OK;
     gs_driver->info[i].bd_rec_status = DS_ERR_CODE_OK;
     gs_driver->info[i].bd_rec_status = DS_ERR_CODE_OK;
@@ -182,25 +183,6 @@ int GS_rec_tctf(GS_Driver* gs_driver)
       if (DSSC_get_rec_status(p_stream_config)->status_code != DS_STREAM_REC_STATUS_FIXED_FRAME) continue;
 
       gs_driver->info[i].rec_status = DS_analyze_rec_data(ds, (uint8_t)stream, gs_driver);
-
-      gs_driver->info[i].last_rec_tctf_type = (GS_TCTF_TYPE_ENUM)stream;
-      switch (gs_driver->info[i].last_rec_tctf_type)
-      {
-      case GS_TCTF_TYPE_ENUM_AD_CMD:
-        gs_driver->info[i].ad_rec_status = gs_driver->info[i].rec_status;
-        break;
-
-      case GS_TCTF_TYPE_ENUM_BC_CMD:
-        gs_driver->info[i].bc_rec_status = gs_driver->info[i].rec_status;
-        break;
-
-      case GS_TCTF_TYPE_ENUM_BD_CMD:
-        gs_driver->info[i].bd_rec_status = gs_driver->info[i].rec_status;
-        break;
-
-      default:
-        break;
-      }
     }
   }
 
@@ -237,6 +219,21 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(cmd_space_packet);
   gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(cmd_space_packet);  // 受信コマンドパケット解析
   gs_driver->info[driver_index].last_rec_time = TMGR_get_master_total_cycle();
+  gs_driver->info[driver_index].last_rec_tctf_type = TCTF_get_type(tctf);
+  switch (gs_driver->info[driver_index].last_rec_tctf_type)
+  {
+  case TCTF_TYPE_AD:
+    gs_driver->info[driver_index].ad_rec_status = DS_ERR_CODE_OK;
+    break;
+
+  case TCTF_TYPE_BC:
+    gs_driver->info[driver_index].bc_rec_status = DS_ERR_CODE_OK;
+    break;
+
+  case TCTF_TYPE_BD:
+    gs_driver->info[driver_index].bd_rec_status = DS_ERR_CODE_OK;
+    break;
+  }
 
   return DS_ERR_CODE_OK;
 }

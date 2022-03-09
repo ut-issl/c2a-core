@@ -14,19 +14,6 @@
 #include "gs_validate.h"
 
 /**
- * @enum GS_TCTF_TYPE_ENUM
- * @note rx_header_ <-> stream で 各 CMD との対応の振り分けを行っている. その Index と対応させるため.
- * @note uint8_t を想定
- */
-typedef enum
-{
-  GS_TCTF_TYPE_ENUM_AD_CMD,
-  GS_TCTF_TYPE_ENUM_BD_CMD,
-  GS_TCTF_TYPE_ENUM_BC_CMD,
-  GS_TCTF_TYPE_ENUM_UNKNOWN
-} GS_TCTF_TYPE_ENUM;
-
-/**
  * @enum  GS_PORT_TYPE
  * @brief GS の通信ポートは CCSDS と UART の 2 つある
  * @note  uint8_t を想定
@@ -45,7 +32,7 @@ typedef enum
 typedef struct
 {
   DS_ERR_CODE rec_status;                   //!< DriverSuper からの受信結果
-  GS_TCTF_TYPE_ENUM last_rec_tctf_type;       //!< 最後に受信した tctf のタイプ
+  TCTF_TYPE last_rec_tctf_type;       //!< 最後に受信した tctf のタイプ
   DS_ERR_CODE ad_rec_status;                //!< AD CMD を受信したときの analyze 結果
   DS_ERR_CODE bc_rec_status;                //!< BC CMD を受信したときの analyze 結果
   DS_ERR_CODE bd_rec_status;                //!< BD CMD を受信したときの analyze 結果
