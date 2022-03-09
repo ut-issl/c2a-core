@@ -180,6 +180,13 @@ static CA_PARAM_SIZE_TYPE CA_get_param_size_type_(CMD_CODE cmd_code, uint8_t n)
   }
 }
 
+CCP_EXEC_STS Cmd_CA_INIT(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  CA_initialize();
+  return CCP_EXEC_SUCCESS;
+}
+
 CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
 {
   uint8_t param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];
