@@ -1,5 +1,7 @@
 #pragma section REPRO
 #include "utility_counter.h"
+#ifdef AL_ENABLE
+
 #include "../TlmCmd/packet_handler.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include <string.h>   // for memcpy
@@ -127,5 +129,7 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
   }
   return CCP_EXEC_SUCCESS;
 }
+
+#endif
 
 #pragma section

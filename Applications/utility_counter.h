@@ -3,6 +3,10 @@
 // FIXME: このAppは現在管理されていない！
 //        使用する前に確認すること
 
+// FIXME: 現在 AL に依存してしまっている
+#include <src_user/Settings/System/anomaly_logger_define.h>
+#ifdef AL_ENABLE
+
 #include "../System/ApplicationManager/app_info.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../TlmCmd/common_cmd_packet.h"
@@ -66,4 +70,5 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet);
 
+#endif
 #endif

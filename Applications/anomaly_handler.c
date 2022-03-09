@@ -1,5 +1,6 @@
 #pragma section REPRO
 #include "anomaly_handler.h"
+#ifdef AL_ENABLE
 
 #include "../Library/print.h"
 #include <src_user/Library/vt100.h>
@@ -7,7 +8,7 @@
 #include "../Library/endian_memcpy.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
 #include "timeline_command_dispatcher.h"
-// #include "../anomaly_group.h"
+// #include "../anomaly_logger_group.h"
 // #include "../../TlmCmd/block_command_definitions.h"
 
 static void   AH_init_(void);
@@ -428,5 +429,7 @@ void AH_add_rule(size_t id, const AH_Rule* ahr, uint8_t is_active)
   AH_add_rule_(id, ahr);
   anomaly_handler_.elements[id].is_active = is_active;
 }
+
+#endif
 
 #pragma section
