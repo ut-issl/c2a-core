@@ -13,7 +13,7 @@ set(C2A_SRCS
   c2a_core_main.c
   Drivers/Super/driver_super.c
   Drivers/Super/driver_super_issl_format.c
-  System/AnomalyLogger/anomaly_logger.c
+  # System/AnomalyLogger/anomaly_logger.c    # deprecated. 使いたい場合は， user 側でビルドターゲットに入れる．
   System/ApplicationManager/app_info.c
   System/ApplicationManager/app_manager.c
   System/EventManager/event_manager.c
