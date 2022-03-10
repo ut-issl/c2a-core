@@ -20,14 +20,14 @@
 #define GS_TX_stream (0) // どれでも良いがとりあえず 0 で
 
 #define GS_RX_HEADER_NUM (3)
+#define GS_RX_HEADER_SAMPLE_SCID (0x35C)
 
 #if GS_RX_HEADER_NUM > DS_STREAM_MAX
   #error GS RX HEADER NUM TOO MANY
 #endif
 
-// header
 // それぞれ AD, BD, BC
-static const uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE] = {{0x03, 0x5C}, {0x23, 0x5C}, {0x33, 0x5C} }; // FIXME: 直す
+static uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE];
 static uint8_t GS_tx_frame_[VCDU_LEN];
 
 /**
@@ -75,6 +75,15 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   gs_driver->driver_uart.uart_config.parity_settings = PARITY_SETTINGS_NONE;
   gs_driver->driver_uart.uart_config.data_length = UART_DATA_LENGTH_8BIT;
   gs_driver->driver_uart.uart_config.stop_bit = UART_STOP_BIT_1BIT;
+
+  GS_rx_header_[0][0] |= ((uint16_t)TCTF_TYPE_AD << 4);
+  GS_rx_header_[1][0] |= ((uint16_t)TCTF_TYPE_BD << 4);
+  GS_rx_header_[2][0] |= ((uint16_t)TCTF_TYPE_BC << 4);
+  for (i = 0; i < GS_RX_HEADER_NUM; ++i)
+  {
+    GS_rx_header_[i][0] |= (uint8_t)(GS_RX_HEADER_SAMPLE_SCID >> 8);
+    GS_rx_header_[i][1] |= (uint8_t)(GS_RX_HEADER_SAMPLE_SCID & 0xff);
+  }
 
   ret_ccsds = DS_init(&gs_driver->driver_ccsds.super, &gs_driver->driver_ccsds.ccsds_config, GS_load_ccsds_driver_super_init_settings_);
   ret_uart  = DS_init(&gs_driver->driver_uart.super, &gs_driver->driver_uart.uart_config, GS_load_uart_driver_super_init_settings_);
