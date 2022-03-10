@@ -56,6 +56,7 @@ add_subdirectory(${C2A_USER_DIR}/TlmCmd)
 
 set(C2A_SRCS
   ${C2A_USER_DIR}/c2a_main.c
+  ${C2A_CORE_DIR}/System/AnomalyLogger/anomaly_logger.c   # ここでは保守のため， deprecated だがビルドする
 )
 
 if(BUILD_C2A_AS_CXX)
