@@ -12,7 +12,7 @@
 #define GS_RECEIVE_WINDOW (256)
 #define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: 要検討
 #if 2 * GS_POSITIVE_WINDOW_WIDTH_DEFAULT >= GS_RECEIVE_WINDOW
-#error POSITIVE_WINDOW_SETTINGS_IS_WRONG
+#error POSITIVE WINDOW SETTINGS IS WRONG
 #endif
 
 // 以下検証関数. 名前通り
@@ -55,9 +55,9 @@ GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf)
   GS_VALIDATE_ERR ret;
   TCTF_TYPE tctf_type;
 
-  ret = GS_check_fecw_(tctf);
-  if (ret != GS_VALIDATE_ERR_OK) return ret;
   ret = GS_check_tctf_header_(tctf);
+  if (ret != GS_VALIDATE_ERR_OK) return ret;
+  ret = GS_check_fecw_(tctf);
   if (ret != GS_VALIDATE_ERR_OK) return ret;
 
   tctf_type = TCTF_get_type(tctf);
@@ -127,22 +127,22 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
   APID apid;
   // FIXME: 他の部分のチェックも入れる
 
-  if (CSP_get_ver(csp) != SP_VER_1) return GS_VALIDATE_ERR_TCP_VER;
+  if (CSP_get_ver(csp) != SP_VER_1) return GS_VALIDATE_ERR_CSP_VER;
   if (CSP_get_2nd_hdr_flag(csp) != SP_2ND_HDR_FLAG_PRESENT)
   {
     // ここではSecondary Headerが必須。
-    return GS_VALIDATE_ERR_TCP_2ND_HDR_FLAG;
+    return GS_VALIDATE_ERR_CSP_2ND_HDR_FLAG;
   }
 
   if (CSP_get_type(csp) != SP_TYPE_CMD)
   {
-    return GS_VALIDATE_ERR_TCP_TYPE_IS_NOT_CMD;
+    return GS_VALIDATE_ERR_CSP_TYPE_IS_NOT_CMD;
   }
 
   apid = CSP_get_apid(csp);
-  if ( !( apid == APID_MOBC_CMD
-       || apid == APID_AOBC_CMD
-       || apid == APID_TOBC_CMD ) )
+  if ( !( apid == APID_MOBC_CMD ||
+          apid == APID_AOBC_CMD ||
+          apid == APID_TOBC_CMD ) )
   {
     return GS_VALIDATE_ERR_APID;
   }
@@ -150,7 +150,7 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
   // Sequence Flag が単パケットか確認する
   if (CSP_get_seq_flag(csp) != SP_SEQ_FLAG_SINGLE)
   {
-    return GS_VALIDATE_ERR_TCP_SEQ_IS_NOT_SINGLE;
+    return GS_VALIDATE_ERR_CSP_SEQ_IS_NOT_SINGLE;
   }
 
   return GS_VALIDATE_ERR_OK;

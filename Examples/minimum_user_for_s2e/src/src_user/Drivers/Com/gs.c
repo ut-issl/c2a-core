@@ -163,7 +163,7 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
 
 int GS_rec_tctf(GS_Driver* gs_driver)
 {
-  int i, stream;
+  uint8_t i, stream;
 
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
   {
@@ -191,7 +191,7 @@ int GS_rec_tctf(GS_Driver* gs_driver)
       p_stream_config = &ds->stream_config[stream];
       if (DSSC_get_rec_status(p_stream_config)->status_code != DS_STREAM_REC_STATUS_FIXED_FRAME) continue;
 
-      gs_driver->info[i].rec_status = DS_analyze_rec_data(ds, (uint8_t)stream, gs_driver);
+      gs_driver->info[i].rec_status = DS_analyze_rec_data(ds, stream, gs_driver);
     }
   }
 
@@ -204,8 +204,9 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   const TcTransferFrame* tctf = TCTF_convert_from_bytes_to_tctf(gs_rx_data);
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
   GS_PORT_TYPE driver_index;
-  const TcSegment* tc_segment;
-  const CmdSpacePacket* cmd_space_packet;
+  const TcSegment* tcs;
+  const CmdSpacePacket* csp;
+  DS_ERR_CODE rec;
 
   // アドレス計算で CCSDS か UART か判別
   if ((uint32_t)p_stream_config < (uint32_t)&gs_driver->driver_uart)
@@ -218,33 +219,42 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   }
 
   gs_driver->info[driver_index].tctf_validate_status = GS_validate_tctf(tctf);
-  if (gs_driver->info[driver_index].tctf_validate_status != GS_VALIDATE_ERR_OK)
+  if (gs_driver->info[driver_index].tctf_validate_status == GS_VALIDATE_ERR_OK)
   {
-    return DS_ERR_CODE_ERR;
+    rec = DS_ERR_CODE_OK;
+  }
+  else
+  {
+    rec = DS_ERR_CODE_ERR;
   }
 
-  tc_segment = TCTF_get_tc_segment(tctf);
-  cmd_space_packet = TCS_get_command_space_packet(tc_segment);
-  gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(cmd_space_packet);
-  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(cmd_space_packet);  // 受信コマンドパケット解析
-  gs_driver->info[driver_index].last_rec_time = TMGR_get_master_total_cycle();
   gs_driver->info[driver_index].last_rec_tctf_type = TCTF_get_type(tctf);
   switch (gs_driver->info[driver_index].last_rec_tctf_type)
   {
   case TCTF_TYPE_AD:
-    gs_driver->info[driver_index].ad_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[driver_index].ad_rec_status = rec;
     break;
 
   case TCTF_TYPE_BC:
-    gs_driver->info[driver_index].bc_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[driver_index].bc_rec_status = rec;
     break;
 
   case TCTF_TYPE_BD:
-    gs_driver->info[driver_index].bd_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[driver_index].bd_rec_status = rec;
     break;
+
   default:
+    // not reached
     break;
   }
+
+  if (rec == DS_ERR_CODE_ERR) return rec;
+
+  tcs = TCTF_get_tc_segment(tctf);
+  csp = TCS_get_command_space_packet(tcs);
+  gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(csp);
+  gs_driver->info[driver_index].last_rec_time = TMGR_get_master_total_cycle();
+  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(csp);  // 受信コマンドパケット解析
 
   return DS_ERR_CODE_OK;
 }
