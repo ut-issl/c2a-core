@@ -33,11 +33,11 @@
 #include "../../Library/stdint.h"
 #include "tc_segment.h"
 
-#define TCTF_MAX_LEN (1024)
+#define TCTF_MAX_LEN     (1024)
 #define TCTF_HEADER_SIZE (5)
-#define TCTF_FECF_SIZE (2)
+#define TCTF_FECF_SIZE   (2)
 
-#define TCTF_BC_CMD_CODE_UNLOCK (0x00)
+#define TCTF_BC_CMD_CODE_UNLOCK   (0x00)
 #define TCTF_BC_CMD_CODE_SET_VR_0 (0x82)
 #define TCTF_BC_CMD_CODE_SET_VR_1 (0x00)
 
