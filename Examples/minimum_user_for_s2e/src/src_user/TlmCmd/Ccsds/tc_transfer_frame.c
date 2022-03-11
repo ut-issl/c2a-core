@@ -3,14 +3,13 @@
  * @file
  * @brief CCSDS で規定される TC Transfer Frame の実装
  */
-
 #include "tc_transfer_frame.h"
 
 #include <string.h> // for memcpy
 
 TCTF_VER TCTF_get_ver(const TcTransferFrame* tctf)
 {
-  uint32_t pos = 0;
+  uint8_t pos = 0;
   uint8_t mask = 0xc0; // 1100 0000b
 
   TCTF_VER ver = (TCTF_VER)((tctf->packet[pos] & mask) >> 6);
@@ -27,7 +26,7 @@ TCTF_VER TCTF_get_ver(const TcTransferFrame* tctf)
 
 TCTF_TYPE TCTF_get_type(const TcTransferFrame* tctf)
 {
-  uint32_t pos = 0;
+  uint8_t pos = 0;
   uint8_t mask = 0x30; // 0011 0000b
 
   TCTF_TYPE type = (TCTF_TYPE)((tctf->packet[pos] & mask) >> 4);
@@ -46,7 +45,7 @@ TCTF_TYPE TCTF_get_type(const TcTransferFrame* tctf)
 
 TCTF_SCID TCTF_get_scid(const TcTransferFrame* tctf)
 {
-  uint32_t pos = 0;
+  uint8_t pos = 0;
   uint8_t mask = 0x03; // 0000 0011b
 
   // pos = 0の下位2bitsとpos = 1の8bitsを合わせた10bits
@@ -66,7 +65,7 @@ TCTF_SCID TCTF_get_scid(const TcTransferFrame* tctf)
 
 TCTF_VCID TCTF_get_vcid(const TcTransferFrame* tctf)
 {
-  uint32_t pos = 2;
+  uint8_t pos = 2;
   uint8_t mask = 0xfc; // 1111 1100b
 
   TCTF_VCID vcid = (TCTF_VCID)((tctf->packet[pos] & mask) >> 2);
@@ -81,13 +80,13 @@ TCTF_VCID TCTF_get_vcid(const TcTransferFrame* tctf)
   }
 }
 
-size_t TCTF_get_frame_len(const TcTransferFrame* tctf)
+uint16_t TCTF_get_frame_len(const TcTransferFrame* tctf)
 {
-  uint32_t pos = 2;
+  uint8_t pos = 2;
   uint8_t mask = 0x03; // 0000 0011b
 
   // pos = 0の下位2bitsとpos = 1の8bitsを合わせた10bits
-  size_t len = (tctf->packet[pos] & mask);
+  uint16_t len = (tctf->packet[pos] & mask);
   len <<= 8;
   len += tctf->packet[pos + 1];
 
@@ -97,19 +96,17 @@ size_t TCTF_get_frame_len(const TcTransferFrame* tctf)
 
 uint8_t TCTF_get_frame_seq_num(const TcTransferFrame* tctf)
 {
-  size_t pos = 4;
-  return tctf->packet[pos];
+  return tctf->packet[4];
 }
 
 const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf)
 {
-  size_t pos = TCTF_HEADER_SIZE;
-  return (const TcSegment*)&tctf->packet[pos];
+  return (const TcSegment*)&tctf->packet[TCTF_HEADER_SIZE];
 }
 
 uint16_t TCTF_get_fecw(const TcTransferFrame* tctf)
 {
-  size_t length = TCTF_get_frame_len(tctf);
+  uint16_t length = TCTF_get_frame_len(tctf);
 
   uint16_t fecw = tctf->packet[length - 2];
   fecw <<= 8;

@@ -21,15 +21,24 @@
 
 #include "../../Library/stdint.h"
 #include <src_core/TlmCmd/Ccsds/cmd_space_packet.h>
+#include <src_user/Settings/TlmCmd/Ccsds/space_packet_typedef_params.h>
 
-#define TCS_HEADER_SIZE (1u)
+#define TCS_HEADER_SIZE (1)
 #define TCS_PACKET_MAX_LENGTH (TCS_HEADER_SIZE + CSP_MAX_LEN)
 
+/**
+ * @struct TcSegment
+ * @brief  TC Segment のパケット構造体
+ */
 typedef struct
 {
   uint8_t packet[TCS_PACKET_MAX_LENGTH];
 } TcSegment;
 
+/**
+ * @brief TCS_SEQ_FLAG
+ * @note  uint8_t
+ */
 typedef enum
 {
   TCS_SEQ_FIRST  = 1, // 01b: First Segment
@@ -38,6 +47,10 @@ typedef enum
   TCS_SEQ_SINGLE = 3  // 11b: No Segmentation
 } TCS_SEQ_FLAG;
 
+/**
+ * @brief TCS_MAP_ID
+ * @note  uint8_t
+ */
 typedef enum
 {
   TCS_MAP_ID_DHU_HDC = 1, // 000001b: DHU Hard Decode Command Packet
@@ -46,10 +59,25 @@ typedef enum
   TCS_MAP_ID_UNKNOWN
 } TCS_MAP_ID;
 
+/**
+ * @brief sequence flag を取得
+ * @param[in]: TcSegment
+ * @return TCS_SEQ_FLAG
+ */
 TCS_SEQ_FLAG TCS_get_seq_flag(const TcSegment* tcs);
 
+/**
+ * @brief MAP ID を取得
+ * @param[in]: TcSegment
+ * @return TCS_MAP_ID
+ */
 TCS_MAP_ID TCS_get_map_id(const TcSegment* tcs);
 
+/**
+ * @brief Command space packet 開始ポインタを取得
+ * @param[in]: TcSegment
+ * @return CmdSpacePacket
+ */
 const CmdSpacePacket* TCS_get_command_space_packet(const TcSegment* tcs);
 
 #endif

@@ -3,7 +3,6 @@
  * @file
  * @brief CCSDS で規定される TC Segment の実装
  */
-
 #include "tc_segment.h"
 
 TCS_SEQ_FLAG TCS_get_seq_flag(const TcSegment* tcs)
@@ -35,7 +34,7 @@ TCS_MAP_ID TCS_get_map_id(const TcSegment* tcs)
 
 const CmdSpacePacket* TCS_get_command_space_packet(const TcSegment* tcs)
 {
-  return (const CmdSpacePacket*)&tcs->packet[TCS_HEADER_SIZE];
+  return (const CmdSpacePacket*)(&tcs->packet[TCS_HEADER_SIZE]);
 }
 
 #pragma section

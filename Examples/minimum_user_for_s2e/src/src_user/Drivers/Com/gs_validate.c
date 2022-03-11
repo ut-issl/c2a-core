@@ -158,7 +158,7 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
 
 static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf)
 {
-  size_t len = TCTF_get_frame_len(tctf);
+  uint16_t len = TCTF_get_frame_len(tctf);
   if (crc_16_ccitt_left(0xffff, (const unsigned char*)tctf, len, 0) != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   return GS_VALIDATE_ERR_OK;
@@ -168,7 +168,7 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
   const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
-  int seq_diff = (GS_RECEIVE_WINDOW + (int)TCTF_get_frame_seq_num(tctf) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW;
+  int16_t seq_diff = (int16_t)((GS_RECEIVE_WINDOW + (int)TCTF_get_frame_seq_num(tctf) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW);
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 
@@ -178,9 +178,9 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
   // N(R) == V(R)なら正常受信
   if (seq_diff == 0)
   {
-    // 再送要求フラグのクリアとシーケンス数のインクリメント
     gs_validate_info_.retransmit_flag = 0;
     ++gs_validate_info_.type_a_counter;
+    return GS_VALIDATE_ERR_OK;
   }
   // 送信側が行き過ぎているのでパケット破棄して再送要求
   else if (seq_diff <= gs_validate_info_.positive_window_width)
@@ -201,7 +201,8 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
     return GS_VALIDATE_ERR_FARM1_LOCKOUT_AREA;
   }
 
-  return GS_VALIDATE_ERR_OK;
+  // not reaced
+  return GS_VALIDATE_ERR_UNKNOWN;
 }
 
 static GS_VALIDATE_ERR GS_check_bd_cmd_(const TcTransferFrame* tctf)
@@ -234,9 +235,9 @@ static GS_VALIDATE_ERR GS_check_bc_cmd_(const TcTransferFrame* tctf)
     ++gs_validate_info_.type_b_counter;
   }
   // SET V(R)
-  else if (tc_segment->packet[0] == TCTF_BC_CMD_CODE_SET_VR_0
-        && tc_segment->packet[1] == TCTF_BC_CMD_CODE_SET_VR_1
-        && length == offset + 3)
+  else if (tc_segment->packet[0] == TCTF_BC_CMD_CODE_SET_VR_0 &&
+           tc_segment->packet[1] == TCTF_BC_CMD_CODE_SET_VR_1 &&
+           length == offset + 3)
   {
     if (gs_validate_info_.lockout_flag == 0)
     {
