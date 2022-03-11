@@ -98,19 +98,21 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
 
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
   {
-    gs_driver->info[i].rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].last_rec_tctf_type = TCTF_TYPE_UNKNOWN;
-    gs_driver->info[i].ad_rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].bd_rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].bd_rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].tctf_validate_status = GS_VALIDATE_ERR_OK;
-    gs_driver->info[i].ret_from_if_rx = 0;
-    gs_driver->info[i].last_rec_time = 0;
-    gs_driver->info[i].cmd_ack = PH_ACK_SUCCESS;
+    gs_driver->info[i].rx.rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[i].rx.ret_from_if_rx = 0;
+    gs_driver->info[i].rx.last_dest_type = CCP_DEST_TYPE_TO_UNKOWN;
+    gs_driver->info[i].rx.last_rec_time = 0;
+    gs_driver->info[i].rx.cmd_ack = PH_ACK_SUCCESS;
 
-    gs_driver->info[i].send_cycle = 0;
-    gs_driver->info[i].vcid = VCDU_VCID_UNKNOWN;
-    gs_driver->info[i].vcdu_counter = 0;
+    gs_driver->info[i].tctf.last_rec_tctf_type = TCTF_TYPE_UNKNOWN;
+    gs_driver->info[i].tctf.tctf_validate_status = GS_VALIDATE_ERR_OK;
+    gs_driver->info[i].tctf.ad_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[i].tctf.bd_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[i].tctf.bd_rec_status = DS_ERR_CODE_OK;
+
+    gs_driver->info[i].tx.send_cycle = 0;
+    gs_driver->info[i].tx.vcid = VCDU_VCID_UNKNOWN;
+    gs_driver->info[i].tx.vcdu_counter = 0;
   }
 
   for (i = 0; i < CCSDS_SELECT_NUM; ++i)
@@ -179,10 +181,10 @@ int GS_rec_tctf(GS_Driver* gs_driver)
     }
 
     // TODO: これはエラー情報をきちんと把握したいので，アノマリ発行を入れる
-    gs_driver->info[i].rec_status = DS_receive(ds);
-    gs_driver->info[i].ret_from_if_rx = ds->config.rec_status_.ret_from_if_rx;
+    gs_driver->info[i].rx.rec_status = DS_receive(ds);
+    gs_driver->info[i].rx.ret_from_if_rx = ds->config.rec_status_.ret_from_if_rx;
 
-    if (gs_driver->info[i].rec_status != DS_ERR_CODE_OK) continue;
+    if (gs_driver->info[i].rx.rec_status != DS_ERR_CODE_OK) continue;
 
     for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
     {
@@ -191,7 +193,7 @@ int GS_rec_tctf(GS_Driver* gs_driver)
       p_stream_config = &ds->stream_config[stream];
       if (DSSC_get_rec_status(p_stream_config)->status_code != DS_STREAM_REC_STATUS_FIXED_FRAME) continue;
 
-      gs_driver->info[i].rec_status = DS_analyze_rec_data(ds, stream, gs_driver);
+      gs_driver->info[i].rx.rec_status = DS_analyze_rec_data(ds, stream, gs_driver);
     }
   }
 
@@ -218,8 +220,8 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     driver_index = GS_PORT_TYPE_UART;
   }
 
-  gs_driver->info[driver_index].tctf_validate_status = GS_validate_tctf(tctf);
-  if (gs_driver->info[driver_index].tctf_validate_status == GS_VALIDATE_ERR_OK)
+  gs_driver->info[driver_index].tctf.tctf_validate_status = GS_validate_tctf(tctf);
+  if (gs_driver->info[driver_index].tctf.tctf_validate_status == GS_VALIDATE_ERR_OK)
   {
     rec = DS_ERR_CODE_OK;
   }
@@ -228,19 +230,19 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     rec = DS_ERR_CODE_ERR;
   }
 
-  gs_driver->info[driver_index].last_rec_tctf_type = TCTF_get_type(tctf);
-  switch (gs_driver->info[driver_index].last_rec_tctf_type)
+  gs_driver->info[driver_index].tctf.last_rec_tctf_type = TCTF_get_type(tctf);
+  switch (gs_driver->info[driver_index].tctf.last_rec_tctf_type)
   {
   case TCTF_TYPE_AD:
-    gs_driver->info[driver_index].ad_rec_status = rec;
+    gs_driver->info[driver_index].tctf.ad_rec_status = rec;
     break;
 
   case TCTF_TYPE_BC:
-    gs_driver->info[driver_index].bc_rec_status = rec;
+    gs_driver->info[driver_index].tctf.bc_rec_status = rec;
     break;
 
   case TCTF_TYPE_BD:
-    gs_driver->info[driver_index].bd_rec_status = rec;
+    gs_driver->info[driver_index].tctf.bd_rec_status = rec;
     break;
 
   default:
@@ -252,9 +254,9 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
 
   tcs = TCTF_get_tc_segment(tctf);
   csp = TCS_get_command_space_packet(tcs);
-  gs_driver->info[driver_index].last_dest_type = CSP_get_dest_type(csp);
-  gs_driver->info[driver_index].last_rec_time = TMGR_get_master_total_cycle();
-  gs_driver->info[driver_index].cmd_ack = PH_analyze_cmd_packet(csp);  // 受信コマンドパケット解析
+  gs_driver->info[driver_index].rx.last_dest_type = CSP_get_dest_type(csp);
+  gs_driver->info[driver_index].rx.last_rec_time = TMGR_get_master_total_cycle();
+  gs_driver->info[driver_index].rx.cmd_ack = PH_analyze_cmd_packet(csp);  // 受信コマンドパケット解析
 
   return DS_ERR_CODE_OK;
 }
@@ -289,9 +291,9 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
       if (!gs_driver->is_ccsds_tx_valid || !gs_driver->ccsds_info.buffer_num) continue;
     }
 
-    gs_driver->info[i].send_cycle = TMGR_get_master_total_cycle();
-    gs_driver->info[i].vcid = VCDU_get_vcid(vcdu);
-    gs_driver->info[i].vcdu_counter = VCDU_get_vcdu_counter(vcdu);
+    gs_driver->info[i].tx.send_cycle = TMGR_get_master_total_cycle();
+    gs_driver->info[i].tx.vcid = VCDU_get_vcid(vcdu);
+    gs_driver->info[i].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
 
     // DS 側の名称が cmd なだけで送信しているのは TLM
     if (i == GS_PORT_TYPE_CCSDS)

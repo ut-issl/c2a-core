@@ -31,20 +31,30 @@ typedef enum
  */
 typedef struct
 {
-  DS_ERR_CODE rec_status;                   //!< DriverSuper からの受信結果
-  TCTF_TYPE last_rec_tctf_type;       //!< 最後に受信した tctf のタイプ
-  DS_ERR_CODE ad_rec_status;                //!< AD CMD を受信したときの analyze 結果
-  DS_ERR_CODE bc_rec_status;                //!< BC CMD を受信したときの analyze 結果
-  DS_ERR_CODE bd_rec_status;                //!< BD CMD を受信したときの analyze 結果
-  GS_VALIDATE_ERR tctf_validate_status; //!< TC Frame の検証結果
-  int ret_from_if_rx;                       //!< UART or CCSDS からの返り値
-  cycle_t last_rec_time;                    //!< 最後に受信した時刻
-  CCP_DEST_TYPE last_dest_type;             //!< 最後に受信したパケットの dest type
-  PH_ACK cmd_ack;                           //!< 受信した CMD の実行結果
+  struct
+  {
+    DS_ERR_CODE rec_status;                   //!< DriverSuper からの受信結果
+    int ret_from_if_rx;                       //!< UART or CCSDS からの返り値
+    CCP_DEST_TYPE last_dest_type;             //!< 最後に受信したパケットの dest type
+    cycle_t last_rec_time;                    //!< 最後に受信した時刻
+    PH_ACK cmd_ack;                           //!< 受信した CMD の実行結果
+  } rx;
 
-  cycle_t send_cycle;                       //!< 最後に送信したときの時刻
-  VCDU_VCID vcid;                           //!< 送信した TLM のタイプ
-  uint32_t vcdu_counter;                    //!< VCDU counter
+  struct
+  {
+    TCTF_TYPE last_rec_tctf_type;             //!< 最後に受信した tctf のタイプ
+    GS_VALIDATE_ERR tctf_validate_status;     //!< TC Frame の検証結果
+    DS_ERR_CODE ad_rec_status;                //!< AD CMD を受信したときの analyze 結果
+    DS_ERR_CODE bc_rec_status;                //!< BC CMD を受信したときの analyze 結果
+    DS_ERR_CODE bd_rec_status;                //!< BD CMD を受信したときの analyze 結果
+  } tctf;
+
+  struct
+  {
+    cycle_t send_cycle;                       //!< 最後に送信したときの時刻
+    VCDU_VCID vcid;                           //!< 送信した TLM のタイプ
+    uint32_t vcdu_counter;                    //!< VCDU counter
+  } tx;
 } GS_Info;
 
 /**
