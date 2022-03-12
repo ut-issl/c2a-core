@@ -38,16 +38,16 @@ typedef struct
     CCP_DEST_TYPE last_dest_type;             //!< 最後に受信したパケットの dest type
     cycle_t last_rec_time;                    //!< 最後に受信した時刻
     PH_ACK cmd_ack;                           //!< 受信した CMD の実行結果
-  } rx;
 
-  struct
-  {
-    TCTF_TYPE last_rec_tctf_type;             //!< 最後に受信した tctf のタイプ
-    GS_VALIDATE_ERR tctf_validate_status;     //!< TC Frame の検証結果
-    DS_ERR_CODE ad_rec_status;                //!< AD CMD を受信したときの analyze 結果
-    DS_ERR_CODE bc_rec_status;                //!< BC CMD を受信したときの analyze 結果
-    DS_ERR_CODE bd_rec_status;                //!< BD CMD を受信したときの analyze 結果
-  } tctf;
+    struct
+    {
+      TCTF_TYPE last_rec_tctf_type;             //!< 最後に受信した TC Transfer Frame のタイプ
+      GS_VALIDATE_ERR tctf_validate_status;     //!< TC Transfer Frame の検証結果
+      DS_ERR_CODE ad_rec_status;                //!< AD CMD を受信したときの analyze 結果
+      DS_ERR_CODE bc_rec_status;                //!< BC CMD を受信したときの analyze 結果
+      DS_ERR_CODE bd_rec_status;                //!< BD CMD を受信したときの analyze 結果
+    } tctf;
+  } rx;
 
   struct
   {

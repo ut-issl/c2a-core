@@ -36,8 +36,9 @@ typedef struct
 } TcSegment;
 
 /**
- * @brief TCS_SEQ_FLAG
- * @note  uint8_t
+ * @enum  TCS_SEQ_FLAG
+ * @brief Sequential Flag
+ * @note  2 bit
  */
 typedef enum
 {
@@ -48,8 +49,9 @@ typedef enum
 } TCS_SEQ_FLAG;
 
 /**
- * @brief TCS_MAP_ID
- * @note  uint8_t
+ * @enum  TCS_MAP_ID
+ * @brief Multiplexer Access Point ID
+ * @note  6 bit
  */
 typedef enum
 {

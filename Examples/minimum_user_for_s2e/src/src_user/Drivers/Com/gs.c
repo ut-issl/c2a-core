@@ -15,7 +15,6 @@
 #include "../../Library/stdint.h"
 
 #define GS_RX_HEADER_SIZE (2)
-#define GS_RX_FRAME_SIZE  (-1) // 可変長
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
 #define GS_TX_stream (0) // どれでも良いがとりあえず 0 で
 
@@ -23,7 +22,7 @@
 #define GS_RX_HEADER_SAMPLE_SCID (0x35C)
 
 #if GS_RX_HEADER_NUM > DS_STREAM_MAX
-  #error GS RX HEADER NUM TOO MANY
+#error GS RX HEADER NUM TOO MANY
 #endif
 
 // それぞれ AD, BD, BC
@@ -76,12 +75,13 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   gs_driver->driver_uart.uart_config.data_length = UART_DATA_LENGTH_8BIT;
   gs_driver->driver_uart.uart_config.stop_bit = UART_STOP_BIT_1BIT;
 
-  GS_rx_header_[0][0] |= ((uint16_t)TCTF_TYPE_AD << 4);
-  GS_rx_header_[1][0] |= ((uint16_t)TCTF_TYPE_BD << 4);
-  GS_rx_header_[2][0] |= ((uint16_t)TCTF_TYPE_BC << 4);
+  memset(GS_rx_header_, 0x00, sizeof(GS_rx_header_));
+  GS_rx_header_[0][0] |= (uint8_t)((TCTF_TYPE_AD & 0x0f) << 4);
+  GS_rx_header_[1][0] |= (uint8_t)((TCTF_TYPE_BD & 0x0f) << 4);
+  GS_rx_header_[2][0] |= (uint8_t)((TCTF_TYPE_BC & 0x0f) << 4);
   for (i = 0; i < GS_RX_HEADER_NUM; ++i)
   {
-    GS_rx_header_[i][0] |= (uint8_t)(GS_RX_HEADER_SAMPLE_SCID >> 8);
+    GS_rx_header_[i][0] |= (uint8_t)((GS_RX_HEADER_SAMPLE_SCID & 0xffff) >> 8);
     GS_rx_header_[i][1] |= (uint8_t)(GS_RX_HEADER_SAMPLE_SCID & 0xff);
   }
 
@@ -104,11 +104,11 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
     gs_driver->info[i].rx.last_rec_time = 0;
     gs_driver->info[i].rx.cmd_ack = PH_ACK_SUCCESS;
 
-    gs_driver->info[i].tctf.last_rec_tctf_type = TCTF_TYPE_UNKNOWN;
-    gs_driver->info[i].tctf.tctf_validate_status = GS_VALIDATE_ERR_OK;
-    gs_driver->info[i].tctf.ad_rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].tctf.bd_rec_status = DS_ERR_CODE_OK;
-    gs_driver->info[i].tctf.bd_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[i].rx.tctf.last_rec_tctf_type = TCTF_TYPE_UNKNOWN;
+    gs_driver->info[i].rx.tctf.tctf_validate_status = GS_VALIDATE_ERR_OK;
+    gs_driver->info[i].rx.tctf.ad_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[i].rx.tctf.bd_rec_status = DS_ERR_CODE_OK;
+    gs_driver->info[i].rx.tctf.bd_rec_status = DS_ERR_CODE_OK;
 
     gs_driver->info[i].tx.send_cycle = 0;
     gs_driver->info[i].tx.vcid = VCDU_VCID_UNKNOWN;
@@ -155,7 +155,7 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
     DSSC_set_tx_frame_size(p_stream_config, VCDU_LEN); // VCDU を送信
 
     DSSC_set_rx_header(p_stream_config, GS_rx_header_[stream], GS_RX_HEADER_SIZE);
-    DSSC_set_rx_frame_size(p_stream_config, GS_RX_FRAME_SIZE); // 可変長
+    DSSC_set_rx_frame_size(p_stream_config, -1); // 可変長
     DSSC_set_rx_framelength_pos(p_stream_config, GS_RX_HEADER_SIZE);
     DSSC_set_rx_framelength_type_size(p_stream_config, GS_RX_FRAMELENGTH_TYPE_SIZE);
     DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCTF の framelength は 0 起算
@@ -220,8 +220,8 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     driver_index = GS_PORT_TYPE_UART;
   }
 
-  gs_driver->info[driver_index].tctf.tctf_validate_status = GS_validate_tctf(tctf);
-  if (gs_driver->info[driver_index].tctf.tctf_validate_status == GS_VALIDATE_ERR_OK)
+  gs_driver->info[driver_index].rx.tctf.tctf_validate_status = GS_validate_tctf(tctf);
+  if (gs_driver->info[driver_index].rx.tctf.tctf_validate_status == GS_VALIDATE_ERR_OK)
   {
     rec = DS_ERR_CODE_OK;
   }
@@ -230,19 +230,19 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     rec = DS_ERR_CODE_ERR;
   }
 
-  gs_driver->info[driver_index].tctf.last_rec_tctf_type = TCTF_get_type(tctf);
-  switch (gs_driver->info[driver_index].tctf.last_rec_tctf_type)
+  gs_driver->info[driver_index].rx.tctf.last_rec_tctf_type = TCTF_get_type(tctf);
+  switch (gs_driver->info[driver_index].rx.tctf.last_rec_tctf_type)
   {
   case TCTF_TYPE_AD:
-    gs_driver->info[driver_index].tctf.ad_rec_status = rec;
+    gs_driver->info[driver_index].rx.tctf.ad_rec_status = rec;
     break;
 
   case TCTF_TYPE_BC:
-    gs_driver->info[driver_index].tctf.bc_rec_status = rec;
+    gs_driver->info[driver_index].rx.tctf.bc_rec_status = rec;
     break;
 
   case TCTF_TYPE_BD:
-    gs_driver->info[driver_index].tctf.bd_rec_status = rec;
+    gs_driver->info[driver_index].rx.tctf.bd_rec_status = rec;
     break;
 
   default:
@@ -250,7 +250,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     break;
   }
 
-  if (rec == DS_ERR_CODE_ERR) return rec;
+  if (rec != DS_ERR_CODE_OK) return rec;
 
   tcs = TCTF_get_tc_segment(tctf);
   csp = TCS_get_command_space_packet(tcs);

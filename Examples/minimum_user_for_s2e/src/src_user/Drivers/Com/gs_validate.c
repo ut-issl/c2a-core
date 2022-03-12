@@ -168,7 +168,7 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
   const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
-  int16_t seq_diff = (int16_t)((GS_RECEIVE_WINDOW + (int)TCTF_get_frame_seq_num(tctf) - (int)gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW);
+  int16_t seq_diff = (int16_t)((GS_RECEIVE_WINDOW + TCTF_get_frame_seq_num(tctf) - gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW);
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 
@@ -221,8 +221,8 @@ static GS_VALIDATE_ERR GS_check_bd_cmd_(const TcTransferFrame* tctf)
 // BCコマンドの種別を判定し、処理する
 static GS_VALIDATE_ERR GS_check_bc_cmd_(const TcTransferFrame* tctf)
 {
-  size_t length = TCTF_get_frame_len(tctf);
-  size_t offset = TCTF_HEADER_SIZE + TCTF_FECF_SIZE;
+  uint16_t length = TCTF_get_frame_len(tctf);
+  uint8_t offset = TCTF_HEADER_SIZE + TCTF_FECF_SIZE;
   const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
 
   // BC コマンドは COP-1 制御の制御用コマンドで特殊なため少し構造が異なる
@@ -235,8 +235,8 @@ static GS_VALIDATE_ERR GS_check_bc_cmd_(const TcTransferFrame* tctf)
     ++gs_validate_info_.type_b_counter;
   }
   // SET V(R)
-  else if (tc_segment->packet[0] == TCTF_BC_CMD_CODE_SET_VR_0 &&
-           tc_segment->packet[1] == TCTF_BC_CMD_CODE_SET_VR_1 &&
+  else if (tc_segment->packet[0] == TCTF_BC_CMD_CODE_SET_VR_1ST_BYTE &&
+           tc_segment->packet[1] == TCTF_BC_CMD_CODE_SET_VR_2ND_BYTE &&
            length == offset + 3)
   {
     if (gs_validate_info_.lockout_flag == 0)

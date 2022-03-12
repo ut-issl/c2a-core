@@ -38,8 +38,12 @@
 #define TCTF_FECF_SIZE   (2)
 
 #define TCTF_BC_CMD_CODE_UNLOCK   (0x00)
-#define TCTF_BC_CMD_CODE_SET_VR_0 (0x82)
-#define TCTF_BC_CMD_CODE_SET_VR_1 (0x00)
+#define TCTF_BC_CMD_CODE_SET_VR_1ST_BYTE (0x82)
+#define TCTF_BC_CMD_CODE_SET_VR_2ND_BYTE (0x00)
+
+#if TCTF_HEADER_SIZE + TCS_PACKET_MAX_LENGTH + TCTF_FECF_SIZE > TCTF_MAX_LEN
+#error TCTCF LEN IS LONGER THAN TCTF MAX LEN
+#endif
 
 /**
  * @struct TcTransferFrame
@@ -51,8 +55,9 @@ typedef struct
 } TcTransferFrame;
 
 /**
- * @enum TCTF_VER
- * @note 8 bit
+ * @enum  TCTF_VER
+ * @brief Version
+ * @note  2 bit
  */
 typedef enum
 {
@@ -61,8 +66,9 @@ typedef enum
 } TCTF_VER;
 
 /**
- * @enum TCTF_TYPE_UNKNOWN
- * @note 8 bit
+ * @enum  TCTF_TYPE
+ * @brief Type
+ * @note  2 bit
  */
 typedef enum
 {
@@ -73,8 +79,9 @@ typedef enum
 } TCTF_TYPE;
 
 /**
- * @enum TCTF_SCID
- * @note 16 bit
+ * @enum  TCTF_SCID
+ * @brief Spacecraft ID
+ * @note  10 bit
  */
 typedef enum
 {
@@ -83,8 +90,9 @@ typedef enum
 } TCTF_SCID;
 
 /**
- * @enum TCTF_VCID
- * @note 8 bit
+ * @enum  TCTF_VCID
+ * @brief Virtual Channel ID
+ * @note  6 bit
  */
 typedef enum
 {
