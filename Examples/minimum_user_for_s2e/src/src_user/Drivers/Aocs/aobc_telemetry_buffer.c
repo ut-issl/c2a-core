@@ -379,21 +379,20 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(const CommonTlmPacket* packet, AOBC
   return DS_ERR_CODE_OK;
 }
 
-int AOBC_pick_up_tlm_buffer(const AOBC_Driver* aobc_driver, AOBC_TLM_CODE tlm_id, uint8_t* packet, int max_len)
+TF_TLM_FUNC_ACK AOBC_pick_up_tlm_buffer(const AOBC_Driver* aobc_driver, AOBC_TLM_CODE tlm_id, uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   const CommonTlmPacket* buffered_packet;
-  uint16_t packet_len;
 
-  if (tlm_id >= AOBC_MAX_TLM_NUM) return TF_NOT_DEFINED;
-  if (aobc_driver->tlm_buffer.tlm[tlm_id].is_null_packet) return TF_NULL_PACKET;
+  if (tlm_id >= AOBC_MAX_TLM_NUM) return TF_TLM_FUNC_ACK_NOT_DEFINED;
+  if (aobc_driver->tlm_buffer.tlm[tlm_id].is_null_packet) return TF_TLM_FUNC_ACK_NULL_PACKET;
 
   buffered_packet = &(aobc_driver->tlm_buffer.tlm[tlm_id].packet);
-  packet_len = CTP_get_packet_len(buffered_packet);
+  *len = CTP_get_packet_len(buffered_packet);
 
-  if (packet_len > max_len) return TF_TOO_SHORT_LEN;
+  if (*len > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
-  memcpy(packet, &buffered_packet->packet, (size_t)packet_len);
-  return packet_len;
+  memcpy(packet, &buffered_packet->packet, (size_t)(*len));
+  return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 #pragma section

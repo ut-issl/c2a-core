@@ -15,28 +15,27 @@
 #include <src_user/Settings/TlmCmd/telemetry_frame_params.h>
 
 /**
- * @struct TF_TlmInfo
- * @brief  tlm の情報
- * @note   tlm_func は，成功時はテレメ長，失敗時は TF_ACK を返す
- */
-typedef struct
-{
-  int (*tlm_func)(uint8_t*, int);
-} TF_TlmInfo;
-
-/**
- * @enum   TF_ACK
- * @brief  tlm_func などの返り値につかう
- * @note   int8_t を想定（整数はテレメ長で使うので，負数）
+ * @enum   TF_TLM_FUNC_ACK
+ * @brief  tlm_func の返り値につかう
+ * @note   uint8_t を想定
  */
 typedef enum
 {
-  TF_SUCCESS = 0,
-  TF_TOO_SHORT_LEN = -1,
-  TF_NOT_DEFINED = -2,
-  TF_NULL_PACKET = -3,
-  TF_UNKNOWN = -3
-} TF_ACK;
+  TF_TLM_FUNC_ACK_SUCCESS,        //!< 成功
+  TF_TLM_FUNC_ACK_TOO_SHORT_LEN,  //!< CommonTlmPacket が，生成されるテレメに比べて小さすぎる（定義されたテレメが大きすぎる）
+  TF_TLM_FUNC_ACK_NOT_DEFINED,    //!< 定義されてないテレメ
+  TF_TLM_FUNC_ACK_NULL_PACKET,    //!< 2nd OBC などのテレメを生成する時，まだ１つもそのテレメパケットを 2nd OBC から受信していない
+  TF_TLM_FUNC_ACK_UNKNOWN_ERR     //!< その他のエラー
+} TF_TLM_FUNC_ACK;
+
+/**
+ * @struct TF_TlmInfo
+ * @brief  tlm の情報
+ */
+typedef struct
+{
+  TF_TLM_FUNC_ACK (*tlm_func)(uint8_t*, uint16_t*, uint16_t);   //!< tlm packet の中身を生成する関数
+} TF_TlmInfo;
 
 /**
  * @struct TelemetryFrame
@@ -59,15 +58,17 @@ extern const TelemetryFrame* const telemetry_frame;
 void TF_initialize(void);
 
 /**
- * @brief  テレメを実際に生成する関数
- * @param  packet_id: Tlm ID
- * @param  packet:    テレメを作る uint8_t にシリアライズされた packet へのポインタ
- * @param  max_len:   テレメの body として使える最大長
- * @return 成功時はテレメ長，失敗時は TF_ACK
+ * @brief テレメを実際に生成する関数
+ * @param[in]  tlm_id:  Tlm ID
+ * @param[out] packet:  テレメを作る uint8_t にシリアライズされた packet へのポインタ
+ * @param[out] len:     生成したテレメのパケット長
+ * @param[in]  max_len: 許容できる最大テレメパケット長
+ * @return TF_TLM_FUNC_ACK
  */
-int TF_generate_contents(TLM_CODE packet_id,
-                         uint8_t* packet,
-                         int max_len);
+TF_TLM_FUNC_ACK TF_generate_contents(TLM_CODE tlm_id,
+                                     uint8_t* packet,
+                                     uint16_t* len,
+                                     uint16_t max_len);
 
 /**
  * @brief  Tlm Tableのロード
@@ -83,28 +84,20 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
-void TF_copy_u8(uint8_t* ptr,
-                uint8_t data);
+void TF_copy_u8(uint8_t* ptr, uint8_t data);
 
-void TF_copy_u16(uint8_t* ptr,
-                 uint16_t data);
+void TF_copy_u16(uint8_t* ptr, uint16_t data);
 
-void TF_copy_u32(uint8_t* ptr,
-                 uint32_t data);
+void TF_copy_u32(uint8_t* ptr, uint32_t data);
 
-void TF_copy_i8(uint8_t* ptr,
-                int8_t data);
+void TF_copy_i8(uint8_t* ptr, int8_t data);
 
-void TF_copy_i16(uint8_t* ptr,
-                 int16_t data);
+void TF_copy_i16(uint8_t* ptr, int16_t data);
 
-void TF_copy_i32(uint8_t* ptr,
-                 int32_t data);
+void TF_copy_i32(uint8_t* ptr, int32_t data);
 
-void TF_copy_float(uint8_t* ptr,
-                   float data);
+void TF_copy_float(uint8_t* ptr, float data);
 
-void TF_copy_double(uint8_t* ptr,
-                    double data);
+void TF_copy_double(uint8_t* ptr, double data);
 
 #endif

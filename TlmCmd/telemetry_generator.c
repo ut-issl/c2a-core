@@ -18,7 +18,8 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   uint8_t category = CCP_get_param_from_packet(packet, 0, uint8_t);
   TLM_CODE id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
   uint8_t num_dumps = CCP_get_param_from_packet(packet, 2, uint8_t);
-  int len;
+  uint16_t len;
+  TF_TLM_FUNC_ACK ack;
   uint8_t dr_partition_mask = 0x1f; // 00011111b        // FIXME: 一時的な対応
   uint8_t dest_flags_mask = 0xe0; // 11100000b        // FIXME: 一時的な対応
   uint8_t dr_partition;
@@ -35,17 +36,18 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   // ADU生成
   // ADU分割が発生しない場合に限定したコードになっている。
   // TLM定義シート上で定義するADUはADU長をADU分割が発生しない長さに制限する。
-  len = TF_generate_contents(id,
+  ack = TF_generate_contents(id,
                              ctp_.packet,
+                             &len,
                              TSP_MAX_LEN);
 
   // 範囲外のTLM IDを除外
-  if (len == TF_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (len < 0) return CCP_EXEC_ILLEGAL_CONTEXT;     // TODO: lenがマイナスの値たちをどうするか？
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
 
   // TCPacketヘッダ設定
   // FIXME: Space Packet 依存を直す
-  TSP_setup_primary_hdr(&ctp_, APID_MIS_TLM, (uint16_t)len);
+  TSP_setup_primary_hdr(&ctp_, APID_MIS_TLM, len);
   TSP_set_board_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
   // FIXME: 他の時刻も入れる
   TSP_set_global_time(&ctp_, 0.0);

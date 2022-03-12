@@ -8,7 +8,7 @@
 #include <src_user/Library/stdint.h>
 #include "../Library/print.h"
 #include "../Library/endian_memcpy.h"
-#include <src_user/Settings/build_settings.h>
+#include "./common_cmd_packet_util.h"
 
 static void initialize_tlm_table_(void);
 
@@ -16,19 +16,20 @@ static TelemetryFrame telemetry_frame_;
 const TelemetryFrame* const telemetry_frame = &telemetry_frame_;
 
 
-int TF_generate_contents(TLM_CODE packet_id,
-                         uint8_t* packet,
-                         int max_len)
+TF_TLM_FUNC_ACK TF_generate_contents(TLM_CODE tlm_id,
+                                     uint8_t* packet,
+                                     uint16_t* len,
+                                     uint16_t max_len)
 {
-  int (*tlm_func)(uint8_t*, int) = telemetry_frame->tlm_table[packet_id].tlm_func;
+  TF_TLM_FUNC_ACK (*tlm_func)(uint8_t*, uint16_t*, uint16_t) = telemetry_frame->tlm_table[tlm_id].tlm_func;
 
   if (tlm_func != NULL)
   {
-    return tlm_func(packet, max_len);
+    return tlm_func(packet, len, max_len);
   }
   else
   {
-    return TF_NOT_DEFINED;
+    return TF_TLM_FUNC_ACK_NOT_DEFINED;
   }
 }
 
@@ -58,84 +59,44 @@ static void initialize_tlm_table_(void)
   telemetry_frame_.tlm_page_no = 0;
 }
 
-void TF_copy_u8(uint8_t* ptr,
-                uint8_t data)
+void TF_copy_u8(uint8_t* ptr, uint8_t data)
 {
   ptr[0] = data;
 }
 
-void TF_copy_u16(uint8_t* ptr,
-                 uint16_t data)
+void TF_copy_u16(uint8_t* ptr, uint16_t data)
 {
-  ptr[0] = (uint8_t)((data >>  8) & 0xff);
-  ptr[1] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 2);
 }
 
-void TF_copy_u32(uint8_t* ptr,
-                 uint32_t data)
+void TF_copy_u32(uint8_t* ptr, uint32_t data)
 {
-  ptr[0] = (uint8_t)((data >> 24) & 0xff);
-  ptr[1] = (uint8_t)((data >> 16) & 0xff);
-  ptr[2] = (uint8_t)((data >>  8) & 0xff);
-  ptr[3] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 4);
 }
 
-void TF_copy_i8(uint8_t* ptr,
-                int8_t data)
+void TF_copy_i8(uint8_t* ptr, int8_t data)
 {
   ptr[0] = (uint8_t)data;
 }
 
-void TF_copy_i16(uint8_t* ptr,
-                 int16_t data)
+void TF_copy_i16(uint8_t* ptr, int16_t data)
 {
-  ptr[0] = (uint8_t)((data >>  8) & 0xff);
-  ptr[1] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 2);
 }
 
-void TF_copy_i32(uint8_t* ptr,
-                 int32_t data)
+void TF_copy_i32(uint8_t* ptr, int32_t data)
 {
-  ptr[0] = (uint8_t)((data >> 24) & 0xff);
-  ptr[1] = (uint8_t)((data >> 16) & 0xff);
-  ptr[2] = (uint8_t)((data >>  8) & 0xff);
-  ptr[3] = (uint8_t)(        data & 0xff);
+  endian_memcpy(ptr, &data, 4);
 }
 
-void TF_copy_float(uint8_t* ptr,
-                   float data)
+void TF_copy_float(uint8_t* ptr, float data)
 {
-  uint8_t* temp = (uint8_t*)&data;
-  size_t i;
-
-  for (i = 0; i < sizeof(float); ++i)
-  {
-#ifdef IS_LITTLE_ENDIAN
-    // Little Endianを想定したコード。
-    ptr[i] = temp[sizeof(float) - i - 1];
-#else
-    // Big Endianを想定したコード。
-    ptr[i] = temp[i];
-#endif
-  }
+  endian_memcpy(ptr, &data, sizeof(float));
 }
 
-void TF_copy_double(uint8_t* ptr,
-                    double data)
+void TF_copy_double(uint8_t* ptr, double data)
 {
-  uint8_t* temp = (uint8_t*)&data;
-  size_t i;
-
-  for (i = 0; i < sizeof(double); ++i)
-  {
-#ifdef IS_LITTLE_ENDIAN
-    // Little Endianを想定したコード。
-    ptr[i] = temp[sizeof(double) - i - 1];
-#else
-    // Big Endianを想定したコード。
-    ptr[i] = temp[i];
-#endif
-  }
+  endian_memcpy(ptr, &data, sizeof(double));
 }
 
 CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
@@ -147,29 +108,23 @@ CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
 {
-  const uint8_t* param = CCP_get_param_head(packet);
-  uint8_t index;
-  uint32_t tlm_func;
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
+  uint32_t tlm_func = CCP_get_param_from_packet(packet, 1, uint32_t);
 
-  endian_memcpy(&index, param, 1);
-  endian_memcpy(&tlm_func, param + 1, 4);
-
-  if ((int)index >= TF_MAX_TLMS)
+  if (tlm_id >= TF_MAX_TLMS)
   {
     // 登録指定位置がテレメトリ数上限を超えている場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
-  telemetry_frame_.tlm_table[index].tlm_func = (int (*)(unsigned char*, int))tlm_func;
-
+  telemetry_frame_.tlm_table[tlm_id].tlm_func = (TF_TLM_FUNC_ACK (*)(uint8_t*, uint16_t*, uint16_t))tlm_func;
   return CCP_EXEC_SUCCESS;
 }
 
 CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
-  uint8_t page;
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  page = CCP_get_param_head(packet)[0];
   if (page >= TF_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
