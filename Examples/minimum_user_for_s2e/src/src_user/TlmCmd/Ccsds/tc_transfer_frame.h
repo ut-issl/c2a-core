@@ -158,6 +158,13 @@ uint16_t TCTF_get_fecw(const TcTransferFrame* tctf);
 const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
 
 /**
+ * @brief TCTF fecw のチェック
+ * @param[in] tctf: TcTransferFrame
+ * @return uint8_t: 計算結果
+ */
+uint8_t TCTF_check_fecw(const TcTransferFrame* tctf);
+
+/**
  * @brief 受信 byte 列を TcTransferFrame* に変換
  * @param[in] byte: 受信 byte 列
  * @return TcTransferFrame*

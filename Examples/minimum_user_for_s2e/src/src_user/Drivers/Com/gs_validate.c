@@ -7,7 +7,6 @@
 #include "gs_validate.h"
 #include "../../TlmCmd/Ccsds/tc_segment.h"
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
-#include <src_core/Library/crc.h>
 
 #define GS_RECEIVE_WINDOW (256)
 #define GS_POSITIVE_WINDOW_WIDTH_DEFAULT (64) // FIXME: 要検討
@@ -17,7 +16,6 @@
 
 // 以下検証関数. 名前通り
 static GS_VALIDATE_ERR GS_check_tctf_header_(const TcTransferFrame* tctf);
-static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf);
 
 static GS_VALIDATE_ERR GS_check_tc_segment_(const TcSegment* tc_segment);
 static GS_VALIDATE_ERR GS_check_tcs_headers_(const TcSegment* tc_segment);
@@ -53,12 +51,13 @@ void GS_validate_init(void)
 GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ret;
+  uint8_t crc_ret;
   TCTF_TYPE tctf_type;
 
   ret = GS_check_tctf_header_(tctf);
   if (ret != GS_VALIDATE_ERR_OK) return ret;
-  ret = GS_check_fecw_(tctf);
-  if (ret != GS_VALIDATE_ERR_OK) return ret;
+  crc_ret = TCTF_check_fecw(tctf);
+  if (crc_ret != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   tctf_type = TCTF_get_type(tctf);
   switch (tctf_type)
@@ -152,14 +151,6 @@ static GS_VALIDATE_ERR GS_check_cmd_space_packet_headers_(const CmdSpacePacket* 
   {
     return GS_VALIDATE_ERR_CSP_SEQ_IS_NOT_SINGLE;
   }
-
-  return GS_VALIDATE_ERR_OK;
-}
-
-static GS_VALIDATE_ERR GS_check_fecw_(const TcTransferFrame* tctf)
-{
-  uint16_t len = TCTF_get_frame_len(tctf);
-  if (crc_16_ccitt_left(0xffff, (const unsigned char*)tctf, len, 0) != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   return GS_VALIDATE_ERR_OK;
 }

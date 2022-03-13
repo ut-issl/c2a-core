@@ -81,7 +81,7 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   GS_rx_header_[2][0] |= (uint8_t)((TCTF_TYPE_BC & 0x0f) << 4);
   for (i = 0; i < GS_RX_HEADER_NUM; ++i)
   {
-    GS_rx_header_[i][0] |= (uint8_t)((GS_RX_HEADER_SAMPLE_SCID & 0xffff) >> 8);
+    GS_rx_header_[i][0] |= (uint8_t)((GS_RX_HEADER_SAMPLE_SCID & 0x3ff) >> 8);
     GS_rx_header_[i][1] |= (uint8_t)(GS_RX_HEADER_SAMPLE_SCID & 0xff);
   }
 
