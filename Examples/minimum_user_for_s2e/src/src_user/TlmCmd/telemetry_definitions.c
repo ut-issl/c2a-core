@@ -3104,7 +3104,7 @@ static TF_TLM_FUNC_ACK Tlm_EH_INDEX_(uint8_t* packet, uint16_t* len, uint16_t ma
 
 static TF_TLM_FUNC_ACK Tlm_GS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (139 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (115 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], (uint8_t)gs_driver->info[0].rx.rec_status);
@@ -3151,15 +3151,9 @@ static TF_TLM_FUNC_ACK Tlm_GS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u32(&packet[103], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
   TF_copy_u32(&packet[107], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
   TF_copy_u32(&packet[111], (uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter);
-  TF_copy_u32(&packet[115], gs_driver->ccsds_info.uip_stat[0]);
-  TF_copy_u32(&packet[119], gs_driver->ccsds_info.uip_stat[1]);
-  TF_copy_u32(&packet[123], gs_driver->ccsds_info.uip_stat[2]);
-  TF_copy_u32(&packet[127], gs_driver->ccsds_info.uip_stat[3]);
-  TF_copy_u32(&packet[131], gs_driver->ccsds_info.uip_stat[4]);
-  TF_copy_u32(&packet[135], gs_driver->ccsds_info.uip_stat[5]);
 #endif
 
-  *len = 139;
+  *len = 115;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 

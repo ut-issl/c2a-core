@@ -115,10 +115,6 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
     gs_driver->info[i].tx.vcdu_counter = 0;
   }
 
-  for (i = 0; i < CCSDS_SELECT_NUM; ++i)
-  {
-    gs_driver->ccsds_info.uip_stat[i] = 0;
-  }
   gs_driver->ccsds_info.buffer_num = 8;
 
   return 0;
