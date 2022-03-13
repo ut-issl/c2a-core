@@ -18,6 +18,7 @@
 /**
  * @enum GS_VALIDATE_ERR
  * @brief gs_validate 関数の返り値
+ * @note  uint8_t を想定
  */
 typedef enum
 {
