@@ -144,7 +144,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_GS_SET_RP_FLUSH_INTERVAL].cmd_func = Cmd_DI_GS_SET_RP_FLUSH_INTERVAL;
   cmd_table[Cmd_CODE_DI_GS_SET_FARM_PW].cmd_func = Cmd_DI_GS_SET_FARM_PW;
   cmd_table[Cmd_CODE_DI_GS_SET_INFO].cmd_func = Cmd_DI_GS_SET_INFO;
-  cmd_table[Cmd_CODE_DI_GS_CCSDS_READ_SEQUENCE].cmd_func = Cmd_DI_GS_CCSDS_READ_SEQUENCE;
   cmd_table[Cmd_CODE_DI_GS_CCSDS_GET_BUFFER].cmd_func = Cmd_DI_GS_CCSDS_GET_BUFFER;
   cmd_table[Cmd_CODE_DI_GS_CCSDS_SET_RATE].cmd_func = Cmd_DI_GS_CCSDS_SET_RATE;
   cmd_table[Cmd_CODE_WDT_INIT].cmd_func = Cmd_WDT_INIT;

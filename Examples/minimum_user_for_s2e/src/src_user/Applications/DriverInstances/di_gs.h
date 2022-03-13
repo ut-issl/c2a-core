@@ -40,7 +40,6 @@ CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet);
 
