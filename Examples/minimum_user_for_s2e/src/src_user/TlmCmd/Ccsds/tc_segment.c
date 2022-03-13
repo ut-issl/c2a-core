@@ -7,7 +7,7 @@
 
 TCS_SEQ_FLAG TCS_get_seq_flag(const TcSegment* tcs)
 {
-  unsigned int pos = 0;
+  uint8_t pos = 0;
   uint8_t mask = 0xc0; // 1100 0000b
 
   return (TCS_SEQ_FLAG)((tcs->packet[pos] & mask) >> 6);
@@ -15,7 +15,7 @@ TCS_SEQ_FLAG TCS_get_seq_flag(const TcSegment* tcs)
 
 TCS_MAP_ID TCS_get_map_id(const TcSegment* tcs)
 {
-  unsigned int pos = 0;
+  uint8_t pos = 0;
   uint8_t mask = 0x3f; // 0011 1111b
 
   TCS_MAP_ID map_id = (TCS_MAP_ID)(tcs->packet[pos] & mask);
