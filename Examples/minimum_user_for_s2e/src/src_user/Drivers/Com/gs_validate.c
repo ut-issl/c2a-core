@@ -51,13 +51,13 @@ void GS_validate_init(void)
 GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ret;
-  uint8_t crc_ret;
+  uint8_t is_frame_error;
   TCTF_TYPE tctf_type;
 
   ret = GS_check_tctf_header_(tctf);
   if (ret != GS_VALIDATE_ERR_OK) return ret;
-  crc_ret = TCTF_check_fecw(tctf);
-  if (crc_ret != 0) return GS_VALIDATE_ERR_FECW_MISSMATCH;
+  is_frame_error = TCTF_check_fecw(tctf);
+  if (is_frame_error) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   tctf_type = TCTF_get_type(tctf);
   switch (tctf_type)
@@ -159,7 +159,7 @@ static GS_VALIDATE_ERR GS_check_ad_cmd_(const TcTransferFrame* tctf)
 {
   GS_VALIDATE_ERR ack;
   const TcSegment* tc_segment = TCTF_get_tc_segment(tctf);
-  int16_t seq_diff = (int16_t)((GS_RECEIVE_WINDOW + TCTF_get_frame_seq_num(tctf) - gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW);
+  uint8_t seq_diff = (GS_RECEIVE_WINDOW + TCTF_get_frame_seq_num(tctf) - gs_validate_info_.type_a_counter) % GS_RECEIVE_WINDOW;
 
   if (gs_validate_info_.lockout_flag) return GS_VALIDATE_ERR_IN_LOCKOUT;
 

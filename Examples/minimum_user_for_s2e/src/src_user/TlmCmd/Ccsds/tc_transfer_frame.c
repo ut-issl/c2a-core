@@ -119,7 +119,10 @@ uint16_t TCTF_get_fecw(const TcTransferFrame* tctf)
 uint8_t TCTF_check_fecw(const TcTransferFrame* tctf)
 {
   uint16_t len = TCTF_get_frame_len(tctf);
-  return crc_16_ccitt_left(0xffff, (const unsigned char*)tctf, len, 0);
+  uint16_t result = crc_16_ccitt_left(0xffff, (const unsigned char*)tctf, len, 0);
+  if (result) return 1;
+
+  return 0;
 }
 
 const TcTransferFrame* TCTF_convert_from_bytes_to_tctf(const uint8_t* byte)

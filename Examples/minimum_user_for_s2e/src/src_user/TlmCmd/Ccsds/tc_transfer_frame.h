@@ -85,7 +85,7 @@ typedef enum
  */
 typedef enum
 {
-  TCTF_SCID_SAMPLE_SATELLITE = 0x00, // SCID for command of sample satellite
+  TCTF_SCID_SAMPLE_SATELLITE = 0x35C, // SCID for command of sample satellite
   TCTF_SCID_UNKNOWN
 } TCTF_SCID;
 
@@ -160,7 +160,8 @@ const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
 /**
  * @brief TCTF fecw のチェック
  * @param[in] tctf: TcTransferFrame
- * @return uint8_t: 計算結果
+ * @return bool: 0: ok, 1: error
+ * @note ここでは標準として CRC-16-CCITT を採用している
  */
 uint8_t TCTF_check_fecw(const TcTransferFrame* tctf);
 
