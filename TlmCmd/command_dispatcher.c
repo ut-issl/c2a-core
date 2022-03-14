@@ -86,8 +86,8 @@ static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info)
 
 void CDIS_dispatch_command(CommandDispatcher* cdis)
 {
-  // パケットコピー用．サイズが大きいため静的変数として宣言
-  static CommonCmdPacket packet_;
+  static CommonCmdPacket packet_; // パケットコピー用．サイズが大きいため静的変数として宣言
+  uint32_t note; // 実行時エラー情報のEL登録で用いる
 
   // 実行有効フラグが無効化されている場合は処理打ち切り
   if (cdis->lockout) return;
@@ -134,10 +134,11 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
     ++(cdis->error_counter);
 
     // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
+    note = (cdis->prev.code << 16) | cdis->prev.sts;
     EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR,
-                    cdis->prev.sts,
+                    (uint32_t)cdis,
                     EL_ERROR_LEVEL_LOW,
-                    (uint32_t)cdis);
+                    note);
 
     if (cdis->stop_on_error == 1)
     {
