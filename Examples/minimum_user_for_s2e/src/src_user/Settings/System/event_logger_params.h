@@ -29,11 +29,11 @@
 #undef SIZE_OF_EL_CLOG_COUNTER_T
 
 
-#define EL_TLOG_TLM_PAGE_SIZE         (32)
+#define EL_TLOG_TLM_PAGE_SIZE         (28)
 #define EL_TLOG_TLM_PAGE_MAX_HIGH     (4)
 #define EL_TLOG_TLM_PAGE_MAX_MIDDLE   (4)
 #define EL_TLOG_TLM_PAGE_MAX_LOW      (4)
-#define EL_CLOG_TLM_PAGE_SIZE         (20)
+#define EL_CLOG_TLM_PAGE_SIZE         (18)
 #define EL_CLOG_TLM_PAGE_MAX_HIGH     (4)
 #define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)
 #define EL_CLOG_TLM_PAGE_MAX_LOW      (4)

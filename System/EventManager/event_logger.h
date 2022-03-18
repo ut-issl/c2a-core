@@ -48,11 +48,11 @@
 // EL_GROUP (uint32_t を想定) をここで定義する
 #include <src_user/Settings/System/event_logger_group.h>
 
-#define EL_TLOG_TLM_PAGE_SIZE         (32)    //!< TLogにて，テレメ１ページにおろせるlog数
+#define EL_TLOG_TLM_PAGE_SIZE         (28)    //!< TLogにて，テレメ１ページにおろせるlog数
 #define EL_TLOG_TLM_PAGE_MAX_HIGH     (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_HIGH)
 #define EL_TLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_MIDDLE)
 #define EL_TLOG_TLM_PAGE_MAX_LOW      (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_LOW)
-#define EL_CLOG_TLM_PAGE_SIZE         (20)    //!< CLogにて，テレメ１ページにおろせるlog数
+#define EL_CLOG_TLM_PAGE_SIZE         (18)    //!< CLogにて，テレメ１ページにおろせるlog数
 #define EL_CLOG_TLM_PAGE_MAX_HIGH     (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_HIGH)
 #define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_MIDDLE)
 #define EL_CLOG_TLM_PAGE_MAX_LOW      (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_LOW)
