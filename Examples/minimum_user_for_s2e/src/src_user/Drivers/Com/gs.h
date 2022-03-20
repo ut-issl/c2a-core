@@ -42,7 +42,6 @@ typedef struct
     struct
     {
       TCTF_TYPE last_rec_tctf_type;             //!< 最後に受信した TC Transfer Frame のタイプ
-      GS_VALIDATE_ERR tctf_validate_status;     //!< TC Transfer Frame の検証結果
       GS_VALIDATE_ERR ad_rec_status;            //!< AD CMD を受信したときの analyze 結果
       GS_VALIDATE_ERR bc_rec_status;            //!< BC CMD を受信したときの analyze 結果
       GS_VALIDATE_ERR bd_rec_status;            //!< BD CMD を受信したときの analyze 結果

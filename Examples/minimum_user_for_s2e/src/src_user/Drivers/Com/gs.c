@@ -104,7 +104,6 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
     gs_driver->info[i].rx.cmd_ack = PH_ACK_SUCCESS;
 
     gs_driver->info[i].rx.tctf.last_rec_tctf_type = TCTF_TYPE_UNKNOWN;
-    gs_driver->info[i].rx.tctf.tctf_validate_status = GS_VALIDATE_ERR_OK;
     gs_driver->info[i].rx.tctf.ad_rec_status = GS_VALIDATE_ERR_OK;
     gs_driver->info[i].rx.tctf.bd_rec_status = GS_VALIDATE_ERR_OK;
     gs_driver->info[i].rx.tctf.bd_rec_status = GS_VALIDATE_ERR_OK;
@@ -201,6 +200,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
   const TcTransferFrame* tctf = TCTF_convert_from_bytes_to_tctf(gs_rx_data);
   GS_Driver* gs_driver = (GS_Driver*)p_driver;
   GS_PORT_TYPE driver_index;
+  GS_VALIDATE_ERR tctf_validate_status;
   const TcSegment* tcs;
   const CmdSpacePacket* csp;
 
@@ -214,21 +214,21 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     driver_index = GS_PORT_TYPE_UART;
   }
 
-  gs_driver->info[driver_index].rx.tctf.tctf_validate_status = GS_validate_tctf(tctf);
+  tctf_validate_status = GS_validate_tctf(tctf);
 
   gs_driver->info[driver_index].rx.tctf.last_rec_tctf_type = TCTF_get_type(tctf);
   switch (gs_driver->info[driver_index].rx.tctf.last_rec_tctf_type)
   {
   case TCTF_TYPE_AD:
-    gs_driver->info[driver_index].rx.tctf.ad_rec_status = gs_driver->info[driver_index].rx.tctf.tctf_validate_status;
+    gs_driver->info[driver_index].rx.tctf.ad_rec_status = tctf_validate_status;
     break;
 
   case TCTF_TYPE_BC:
-    gs_driver->info[driver_index].rx.tctf.bc_rec_status = gs_driver->info[driver_index].rx.tctf.tctf_validate_status;
+    gs_driver->info[driver_index].rx.tctf.bc_rec_status = tctf_validate_status;
     break;
 
   case TCTF_TYPE_BD:
-    gs_driver->info[driver_index].rx.tctf.bd_rec_status = gs_driver->info[driver_index].rx.tctf.tctf_validate_status;
+    gs_driver->info[driver_index].rx.tctf.bd_rec_status = tctf_validate_status;
     break;
 
   default:
@@ -236,7 +236,7 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
     break;
   }
 
-  if (gs_driver->info[driver_index].rx.tctf.tctf_validate_status != GS_VALIDATE_ERR_OK) return DS_ERR_CODE_ERR;
+  if (tctf_validate_status != GS_VALIDATE_ERR_OK) return DS_ERR_CODE_ERR;
 
   tcs = TCTF_get_tc_segment(tctf);
   csp = TCS_get_command_space_packet(tcs);

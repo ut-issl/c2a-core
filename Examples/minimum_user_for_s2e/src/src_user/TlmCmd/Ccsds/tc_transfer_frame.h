@@ -160,7 +160,7 @@ const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
 /**
  * @brief TCTF fecw のチェック
  * @param[in] tctf: TcTransferFrame
- * @return bool: 0: ok, 1: error
+ * @return bool: 1: ok, 0: error
  * @note ここでは標準として CRC-16-CCITT を採用している
  */
 uint8_t TCTF_check_fecw(const TcTransferFrame* tctf);

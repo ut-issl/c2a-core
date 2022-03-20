@@ -73,9 +73,7 @@ GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf);
 
 /**
  * @brief テレメ用の clcw の作成
- * @return clcw
- * @note この CLCW は endian を考慮していないためこれが little endian 環境で動く場合 CCSDS (big endian) に
- *       適用する際に Byte 順を逆転させる必要がある
+ * @return uit32_t: clcw
  */
 uint32_t GS_form_clcw(void);
 
