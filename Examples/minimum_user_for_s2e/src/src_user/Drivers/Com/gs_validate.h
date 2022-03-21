@@ -61,6 +61,7 @@ extern const GS_ValiateInfo* const gs_validate_info;
 
 /**
  * @brief GS_ValiateInfo の初期化
+ * @return void
  */
 void GS_validate_init(void);
 
@@ -72,8 +73,8 @@ void GS_validate_init(void);
 GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf);
 
 /**
- * @brief テレメ用の clcw の作成
- * @return uit32_t: clcw
+ * @brief テレメ用の CLCW の作成
+ * @return CLCW
  */
 uint32_t GS_form_clcw(void);
 

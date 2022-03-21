@@ -2,28 +2,28 @@
  * @file
  * @brief CCSDS で規定される TC Transfer Frame の実装
  * @note  packet 構造
- *        |---------+-------+-------+-----------------------|
- *        | Pos     | Pos   | size  | name                  |
- *        | [octet] | [bit] | [bit] |                       |
- *        |---------+-------+-------+-----------------------|
- *        | === Primary Header =============================|
- *        |---------+-------+-------+-----------------------|
- *        |       0 |     0 |     2 | Version               |
- *        |       0 |     2 |     2 | Type                  |
- *        |       0 |     4 |     2 | N/A                   |
- *        |       0 |     6 |    10 | Spacecraft ID         |
- *        |       2 |     0 |     6 | Virtual Channel ID    |
- *        |       2 |     6 |    10 | Frame Length          |
- *        |       4 |     0 |     8 | Frame Sequence Number |
- *        |---------+-------+-------+-----------------------|
- *        | === User Data Field ============================|
- *        |---------+-------+-------+-----------------------|
- *        |       5 |     0 |     * | TC Segment            |
- *        |---------+-------+-------+-----------------------|
- *        | === Frame Error Control Field ==================|
- *        |---------+-------+-------+-----------------------|
- *        |       * |     0 |    16 |                       |
- *        |---------+-------+-------+-----------------------|
+ *        |---------+-------+-------+--------------------------|
+ *        | Pos     | Pos   | Size  | Name                     |
+ *        | [octet] | [bit] | [bit] |                          |
+ *        |---------+-------+-------+--------------------------|
+ *        | === Primary Header ================================|
+ *        |---------+-------+-------+--------------------------|
+ *        |       0 |     0 |     2 | Version                  |
+ *        |       0 |     2 |     2 | Type                     |
+ *        |       0 |     4 |     2 | N/A                      |
+ *        |       0 |     6 |    10 | Spacecraft ID            |
+ *        |       2 |     0 |     6 | Virtual Channel ID       |
+ *        |       2 |     6 |    10 | Frame Length             |
+ *        |       4 |     0 |     8 | Frame Sequence Number    |
+ *        |---------+-------+-------+--------------------------|
+ *        | === User Data Field ===============================|
+ *        |---------+-------+-------+--------------------------|
+ *        |       5 |     0 |     * | TC Segment               |
+ *        |---------+-------+-------+--------------------------|
+ *        | === Frame Error Control Field =====================|
+ *        |---------+-------+-------+--------------------------|
+ *        |       * |     0 |    16 | Frame Error Control Word |
+ *        |---------+-------+-------+--------------------------|
  */
 #ifndef TC_TRANSFER_FRAME_H_
 #define TC_TRANSFER_FRAME_H_
@@ -129,36 +129,36 @@ TCTF_SCID TCTF_get_scid(const TcTransferFrame* tctf);
 TCTF_VCID TCTF_get_vcid(const TcTransferFrame* tctf);
 
 /**
- * @brief length を取得
+ * @brief Frame Length を取得
  * @param[in] tctf: TcTransferFrame
- * @return uint16_t
+ * @return Frame Length
  */
 uint16_t TCTF_get_frame_len(const TcTransferFrame* tctf);
 
 /**
- * @brief length を取得
+ * @brief  Frame Sequence Number を取得
  * @param[in] tctf: TcTransferFrame
- * @return uint8_t
+ * @return  Frame Sequence Number
  */
 uint8_t TCTF_get_frame_seq_num(const TcTransferFrame* tctf);
 
 /**
- * @brief fecw を取得
+ * @brief FECW を取得
  * @param[in] tctf: TcTransferFrame
- * @return uin16_t
+ * @return FECW
  * @note エンディアンは既に考慮されている (ccsds は big endian)
  */
 uint16_t TCTF_get_fecw(const TcTransferFrame* tctf);
 
 /**
- * @brief TcSegment を取得
+ * @brief TC Segment を取得
  * @param[in] tctf: TcTransferFrame
- * @return TcSegment*
+ * @return TC Segment
  */
 const TcSegment* TCTF_get_tc_segment(const TcTransferFrame* tctf);
 
 /**
- * @brief TCTF fecw のチェック
+ * @brief TCTF FECW のチェック
  * @param[in] tctf: TcTransferFrame
  * @return bool: 1: ok, 0: error
  * @note ここでは標準として CRC-16-CCITT を採用している
