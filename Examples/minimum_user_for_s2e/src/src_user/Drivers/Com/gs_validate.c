@@ -57,7 +57,7 @@ GS_VALIDATE_ERR GS_validate_tctf(const TcTransferFrame* tctf)
   ret = GS_check_tctf_header_(tctf);
   if (ret != GS_VALIDATE_ERR_OK) return ret;
   is_frame_error = TCTF_check_fecw(tctf);
-  if (is_frame_error) return GS_VALIDATE_ERR_FECW_MISSMATCH;
+  if (!is_frame_error) return GS_VALIDATE_ERR_FECW_MISSMATCH;
 
   tctf_type = TCTF_get_type(tctf);
   switch (tctf_type)
