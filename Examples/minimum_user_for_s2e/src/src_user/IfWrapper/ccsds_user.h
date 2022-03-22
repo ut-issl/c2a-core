@@ -9,7 +9,6 @@
 #include "../Library/stdint.h"
 
 #define CCSDS_FIFO_SIZE (8) // 現在使っている CCSDS API の設計上決まっている
-#define CCSDS_SELECT_NUM (6)
 
 /**
  * @enum  CCSDS_ERR_CODE
