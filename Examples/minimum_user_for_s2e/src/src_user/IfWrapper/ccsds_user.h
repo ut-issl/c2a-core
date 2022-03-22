@@ -9,7 +9,6 @@
 #include "../Library/stdint.h"
 
 #define CCSDS_FIFO_SIZE (8) // 現在使っている CCSDS API の設計上決まっている
-#define CCSDS_SELECT_NUM (6)
 
 /**
  * @enum  CCSDS_ERR_CODE
@@ -32,17 +31,8 @@ typedef enum
  */
 typedef struct
 {
-  uint32_t uip_stat[CCSDS_SELECT_NUM]; //!< FPGA が保持する CCSDS sequence counter
   uint8_t buffer_num;                  //!< 送信バッファの残り数. 最大 CCSDS_FIFO_SIZE
 } CCSDS_Info;
-
-/**
- * @brief FPGA が保持する CCSDS sequence counter を読む API を呼び出す
- * @param[in] select レジスタ読み出しを選択
- * @param[out] uip_stat: 状態
- * @return CCSDS_ERR_CODE
- */
-CCSDS_ERR_CODE CCSDS_read_sequence(uint32_t select, uint32_t* uip_stat);
 
 /**
  * @brief CCSDS TX の残り buffer をカウントするAPI を呼びだす

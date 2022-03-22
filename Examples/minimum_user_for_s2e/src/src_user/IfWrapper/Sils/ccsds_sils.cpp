@@ -65,14 +65,6 @@ int CCSDS_reopen(void* my_ccsds_v, int reason)
   return 0;
 }
 
-CCSDS_ERR_CODE CCSDS_read_sequence(uint32_t select, uint32_t* uip_stat)
-{
-  (void)select;
-  (void)uip_stat;
-
-  return CCSDS_ERR_OK;
-}
-
 uint8_t CCSDS_get_buffer_num(void)
 {
   return 8;

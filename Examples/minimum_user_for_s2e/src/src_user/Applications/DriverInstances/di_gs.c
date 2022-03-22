@@ -57,15 +57,7 @@ static void DI_GS_cmd_packet_handler_init_(void)
 
 static void DI_GS_cmd_packet_handler_(void)
 {
-  uint8_t select;
-
-  GS_rec_tcf(&gs_driver_);
-
-  // Tlm更新
-  for (select = 0; select < CCSDS_SELECT_NUM; ++select)
-  {
-    CCSDS_read_sequence((uint32_t)select, &gs_driver_.ccsds_info.uip_stat[select]);
-  }
+  GS_rec_tctf(&gs_driver_);
   // TODO: エラー処理
 }
 
@@ -197,18 +189,6 @@ CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
   if (which >= GS_PORT_TYPE_NUM) return CCP_EXEC_ILLEGAL_PARAMETER;
   gs_driver_.latest_info = &gs_driver_.info[(GS_PORT_TYPE)which];
   gs_driver_.tlm_tx_port_type = (GS_PORT_TYPE)which;
-
-  return CCP_EXEC_SUCCESS;
-}
-
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_READ_SEQUENCE(const CommonCmdPacket* packet)
-{
-  uint32_t select;
-  (void)packet;
-  for (select = 0; select < CCSDS_SELECT_NUM; ++select)
-  {
-    CCSDS_read_sequence(select, &gs_driver_.ccsds_info.uip_stat[select]);
-  }
 
   return CCP_EXEC_SUCCESS;
 }

@@ -15,9 +15,9 @@ set(C2A_SRCS
   NormalBlockCommandDefinition/nbc_respond_eh_for_test.c
   NormalBlockCommandDefinition/nbc_test_bcl.c
   Ccsds/m_pdu.c
-  Ccsds/TCFrame.c
+  Ccsds/tc_transfer_frame.c
   Ccsds/tcp_to_m_pdu.c
-  Ccsds/TCSegment.c
+  Ccsds/tc_segment.c
   Ccsds/vcdu.c
 )
 
