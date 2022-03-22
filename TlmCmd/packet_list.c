@@ -11,6 +11,7 @@
 #include "block_command_table.h"
 #include <src_user/Library/stdint.h>
 #include <string.h>
+#include "../Applications/timeline_command_dispatcher.h"
 
 
 /**
@@ -375,7 +376,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
     for (j = 0; j <= pl->active_nodes_; ++j)
     {
       // コマンドをTLCに登録を試みる
-      ack = PL_insert_tl_cmd(pl, &temp_, start_at);
+      ack = TLCD_insert_tl_cmd_strictly(pl, &temp_, start_at);
       if (ack != PL_TLC_ALREADY_EXISTS) break;    // PL_SUCCESS なはず． TODO: 一応 event 発行しておく？
 
       // 同一時刻で既に登録されていた場合は時刻をずらして再登録

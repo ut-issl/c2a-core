@@ -243,21 +243,6 @@ PL_ACK PL_drop_node(PacketList* pl, PL_Node* prev, PL_Node* current);
 // 以下，特定の packet を想定した PacketList の関数
 
 /**
- * @brief CCP が時系列に並ぶように CCP を挿入する
- * @note TimeLine だけでなく TaskList もこれを使い，その場合， now は step_t になることに注意
- * @param[in,out] pl: CCP を挿入する PacketList
- * @param[in] packet: 挿入する CCP
- * @param[in] now: 基準時刻 (TimeLine なら現在時刻， TaskList なら現在 step)
- * @retval PL_SUCCESS: 成功
- * @retval PL_LIST_FULL: PacketList が満杯
- * @retval PL_TLC_PAST_TIME: 実行時間がすでに過ぎている
- * @retval PL_TLC_ALREADY_EXISTS: 指定した実行時間にはすでにコマンドが登録されている
- * @retval PL_NO_SUCH_NODE: 何かがおかしい
- * @retval PL_PACKET_TYPE_ERR: 指定した PacketList の packet が CCP ではない
- */
-PL_ACK PL_insert_tl_cmd(PacketList* pl, const CommonCmdPacket* packet, cycle_t now);
-
-/**
  * @brief PacketList 上に BC を展開する
  * @note TimeLine だけでなく TaskList もこれを使い，その場合， start_at は step_t になることに注意
  * @param[in,out] pl: BC を展開する PacketList

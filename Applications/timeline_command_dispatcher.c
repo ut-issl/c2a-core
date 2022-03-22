@@ -138,6 +138,110 @@ static void tlc_dispatcher_(int line_no)
   }
 }
 
+PL_ACK TLCD_insert_tl_cmd_strictly(PacketList* pl, const CommonCmdPacket* packet, cycle_t now)
+{
+  cycle_t head, tail;
+  cycle_t planed = CCP_get_ti(packet);
+
+  if (PL_get_packet_type(pl)) return PL_PACKET_TYPE_ERR;
+  if (now > planed) return PL_TLC_PAST_TIME;
+  if (PL_is_full(pl)) return PL_LIST_FULL;
+
+  if (PL_is_empty(pl)) return PL_push_back(pl, packet);
+
+  head = CCP_get_ti((const CommonCmdPacket*)(PL_get_head(pl)->packet));
+  tail = CCP_get_ti((const CommonCmdPacket*)(PL_get_tail(pl)->packet));
+
+  if (tail < planed)
+  {
+    return PL_push_back(pl, packet);
+  }
+  else if (head > planed)
+  {
+    return PL_push_front(pl, packet);
+  }
+  else if (head == planed || tail == planed) // 時刻指定が等しい
+  {
+    return PL_TLC_ALREADY_EXISTS;
+  }
+  else
+  {
+    uint16_t i;
+    PL_Node* previous = (PL_Node*)PL_get_head(pl)->next;
+    PL_Node* current = previous->next; // const_cast
+
+    for (i = 0; i < pl->active_nodes_; ++i)
+    {
+      cycle_t current_ti = CCP_get_ti((const CommonCmdPacket*)(current->packet));
+      if (planed > current_ti)
+      {
+        previous = current;
+        current = previous->next;
+      }
+      else if (current_ti > planed)
+      {
+        PL_insert_after(pl, previous, packet);
+        return PL_SUCCESS;
+      }
+      else
+      {
+        return PL_TLC_ALREADY_EXISTS;
+      }
+    }
+  }
+
+  // NOT REACED
+  return PL_NO_SUCH_NODE;
+}
+
+PL_ACK TLCD_insert_tl_cmd_asap(PacketList* pl, const CommonCmdPacket* packet, cycle_t now)
+{
+  cycle_t head, tail;
+  cycle_t planed = CCP_get_ti(packet);
+
+  if (PL_get_packet_type(pl)) return PL_PACKET_TYPE_ERR;
+  if (now > planed) return PL_TLC_PAST_TIME;
+  if (PL_is_full(pl)) return PL_LIST_FULL;
+
+  if (PL_is_empty(pl)) return PL_push_back(pl, packet);
+
+  head = CCP_get_ti((const CommonCmdPacket*)(PL_get_head(pl)->packet));
+  tail = CCP_get_ti((const CommonCmdPacket*)(PL_get_tail(pl)->packet));
+
+  if (tail < planed)
+  {
+    return PL_push_back(pl, packet);
+  }
+  else if (head > planed)
+  {
+    return PL_push_front(pl, packet);
+  }
+  else
+  {
+    uint16_t i;
+    PL_Node* previous = (PL_Node*)PL_get_head(pl)->next;
+    PL_Node* current = previous->next; // const_cast
+
+    for (i = 0; i < pl->active_nodes_; ++i)
+    {
+      cycle_t current_ti = CCP_get_ti((const CommonCmdPacket*)(current->packet));
+      if (planed > current_ti)
+      {
+        previous = current;
+        current = previous->next;
+      }
+      else if (current_ti > planed)
+      {
+        PL_insert_after(pl, previous, packet);
+        return PL_SUCCESS;
+      }
+    }
+  }
+
+  // NOT REACED
+  return PL_NO_SUCH_NODE;
+}
+
 uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
 {
   PL_Node* pos;

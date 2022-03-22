@@ -244,7 +244,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
                             const CommonCmdPacket* packet,
                             cycle_t now)
 {
-  PL_ACK ack = PL_insert_tl_cmd(&(PH_tl_cmd_list[line_no]), packet, now);
+  PL_ACK ack = TLCD_insert_tl_cmd_strictly(&(PH_tl_cmd_list[line_no]), packet, now);
 
   switch (ack)
   {
