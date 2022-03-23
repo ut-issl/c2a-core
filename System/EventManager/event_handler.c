@@ -1085,14 +1085,45 @@ static EH_CHECK_RULE_ACK EH_check_rule_id_(EH_RULE_ID id)
 }
 
 
+EH_CHECK_RULE_ACK EH_init_rule(EH_RULE_ID id)
+{
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  EH_clear_rule_counter(id);
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
+EH_CHECK_RULE_ACK EH_init_rule_for_multi_level(EH_RULE_ID id)
+{
+  int i;
+  EH_RULE_ID next_rule_id = id;
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  // 無限ループ回避のため for で
+  for (i = 0; i < EH_RULE_MAX; ++i)
+  {
+    if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
+    EH_clear_rule_counter(next_rule_id);
+    if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+    {
+      break;
+    }
+    next_rule_id = (EH_RULE_ID)event_handler_.rule_table.rules[next_rule_id].settings.event.local;
+  }
+
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
 EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id)
 {
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   event_handler_.rule_table.rules[id].settings.is_active = 1;
-  // 急に発火しても困るので
-  EH_clear_rule_counter(id);
   return EH_CHECK_RULE_ACK_OK;
 }
 
@@ -1341,6 +1372,44 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
   case EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   case EH_RULE_SORTED_INDEX_ACK_NOT_FOUND:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_init_rule(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_init_rule_for_multi_level(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
     return CCP_EXEC_ILLEGAL_CONTEXT;
