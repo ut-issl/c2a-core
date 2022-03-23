@@ -790,6 +790,22 @@ def test_event_handler_check_counter():
     tlm_EH = download_eh_tlm()
     assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
 
+    # activate / init でのカウンタチェック
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_SET_RULE_COUNTER, (EH_RULE_TEST0, 10), c2a_enum.Tlm_CODE_HK
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 10
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EH_INIT_RULE, (EH_RULE_TEST0,), c2a_enum.Tlm_CODE_HK
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+
 
 @pytest.mark.real
 @pytest.mark.sils
@@ -849,6 +865,8 @@ def test_event_handler_clear_counter_by_event():
 
     tlm_EH = download_eh_tlm()
     assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+
+    disable_eh_exec()
 
 
 @pytest.mark.real
@@ -1079,6 +1097,7 @@ def test_event_handler_respond_cumulative():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_handler_activate_and_inactivate_rule_for_multi_level():
+    # カウンタのチェックは test_event_handler_respond_multi_level でやっている
     print("")
     print("test_event_handler_activate_and_inactivate_rule_for_multi_level")
 
@@ -1498,6 +1517,120 @@ def test_event_handler_respond_multi_level():
             "is_active": "INACTIVE",
         },
     )
+
+    # カウンタのチェック
+    enable_eh_exec()
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL,
+        (EH_RULE_TEST6,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    for i in range(3):
+        assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+            ope,
+            c2a_enum.Cmd_CODE_EL_RECORD_EVENT,
+            (EL_GROUP_TEST_EH, 0, EL_ERROR_LEVEL_LOW, 0),
+            c2a_enum.Tlm_CODE_HK,
+        )
+        assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+            ope,
+            c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL,
+            (EH_RULE_TEST6,),
+            c2a_enum.Tlm_CODE_HK,
+        )
+    # これで，カウンタが以下の通りになるはず
+    # Lv.1: 0, Lv.2: 1, Lv.3: 1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST0,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST5,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST6,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 1
+
+    # activate でカウンタが変わらないことをチェック
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL,
+        (EH_RULE_TEST6,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST0,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST5,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 1
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST6,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 1
+
+    # init でカウンタがリセットされていることをチェック
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_INIT_RULE_FOR_MULTI_LEVEL,
+        (EH_RULE_TEST6,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST0,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST5,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST6,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+
+    disable_eh_exec()
 
 
 @pytest.mark.real

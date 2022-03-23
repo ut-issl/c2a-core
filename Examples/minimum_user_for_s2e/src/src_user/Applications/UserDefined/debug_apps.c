@@ -98,15 +98,15 @@ void APP_DBG_print_event_logger0_(void)
   const EL_Event* latest_high = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0);
 
   VT100_erase_line();
-  Printf("EL Cnt: %5d, H %3d, M %3d, L %3d, EL %3d, EH %3d\n",
-         event_logger->statistics.record_counter_total & 0xffff,
+  Printf("EL Cnt: %4d, H %3d, M %3d, L %3d, EL %3d, EH %3d\n",
+         event_logger->statistics.record_counter_total & 0xfff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH] & 0xff);
   VT100_erase_line();
-  Printf("EL Log H: %3d, %10d, %10d, %08d, %02d\n",
+  Printf("EL H: %3d, %10d, %10d, %08d, %02d\n",
          latest_high->group, latest_high->local, latest_high->note,
          latest_high->time.total_cycle, latest_high->time.step);
 #endif
@@ -126,11 +126,11 @@ void APP_DBG_print_event_logger1_(void)
   const EL_Event* latest_low = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0);
 
   VT100_erase_line();
-  Printf("EL Log M: %3d, %10d, %10d, %08d, %02d\n",
+  Printf("EL M: %3d, %10d, %10d, %08d, %02d\n",
          latest_mid->group, latest_mid->local, latest_mid->note,
          latest_mid->time.total_cycle, latest_mid->time.step);
   VT100_erase_line();
-  Printf("EL Log L: %3d, %10d, %10d, %08d, %02d\n",
+  Printf("EL L: %3d, %10d, %10d, %08d, %02d\n",
          latest_low->group, latest_low->local, latest_low->note,
          latest_low->time.total_cycle, latest_low->time.step);
 #endif
