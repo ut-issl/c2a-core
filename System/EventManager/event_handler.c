@@ -277,14 +277,14 @@ static void EH_clear_rules_(void)
   int i;
   memset(&event_handler_.rule_table, 0x00, sizeof(EH_RuleTable));
   // 現時点で EL_CORE_GROUP_NULL == 0 であるため，以下は不要．
-  // for (i = 0; i < EH_RULE_MAX; ++i)
+  // for (i = 0; i < (int)EH_RULE_MAX; ++i)
   // {
   //   event_handler_.rule_table.rules[i].settings.event.group = (EL_GROUP)EL_CORE_GROUP_NULL;
   // }
 
   // EH_RuleSortedIndex もクリア
   memset(event_handler_.sorted_idxes, 0x00, sizeof(EH_RuleSortedIndex) * EH_RULE_MAX);
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     // 現時点で EL_CORE_GROUP_NULL == 0 であるため，以下は不要．
     // event_handler_.sorted_idxes[i].group = (EL_GROUP)EL_CORE_GROUP_NULL;
@@ -335,7 +335,7 @@ static EH_ACK EH_check_el_event_counter_(void)
   int32_t delta_counter = event_logger->statistics.record_counter_total - event_handler_.el_event_counter.counter_total;
   int32_t delta_counters[EL_ERROR_LEVEL_MAX];
   uint8_t err_level;
-  uint32_t subtotal = 0;
+  int32_t subtotal = 0;
 
   // カウンタ不整合を調べる．
   // エラー等は定期的にリセットされているはずなので，オーバーフローは考慮していない
@@ -369,7 +369,7 @@ static EH_ACK EH_check_el_event_counter_(void)
     subtotal += delta_counters[err_level];
   }
 
-  if (delta_counter != subtotal)
+  if (delta_counter != (int32_t)subtotal)
   {
     // 不整合
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
@@ -1103,7 +1103,7 @@ EH_CHECK_RULE_ACK EH_init_rule_for_multi_level(EH_RULE_ID id)
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   // 無限ループ回避のため for で
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
     EH_clear_rule_counter(next_rule_id);
@@ -1146,7 +1146,7 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id)
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   // 無限ループ回避のため for で
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
     if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
@@ -1168,7 +1168,7 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   // 無限ループ回避のため for で
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_inactivate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
     if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
