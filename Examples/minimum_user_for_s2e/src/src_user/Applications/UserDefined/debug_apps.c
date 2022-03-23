@@ -9,6 +9,7 @@
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/AnomalyLogger/anomaly_logger.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/System/EventManager/event_handler.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include "../../TlmCmd/telemetry_definitions.h"
 #include <src_core/TlmCmd/block_command_table.h>
@@ -27,6 +28,7 @@ void APP_DBG_print_time_stamp_(void);
 void APP_DBG_print_cmd_status_(void);
 void APP_DBG_print_event_logger0_(void);
 void APP_DBG_print_event_logger1_(void);
+void APP_DBG_print_event_handler_(void);
 void APP_DBG_print_git_rev_(void);
 
 AppInfo APP_DBG_flush_screen(void)
@@ -52,6 +54,11 @@ AppInfo APP_DBG_print_event_logger0(void)
 AppInfo APP_DBG_print_event_logger1(void)
 {
   return AI_create_app_info("debug_el1", NULL, APP_DBG_print_event_logger1_);
+}
+
+AppInfo APP_DBG_print_event_handler(void)
+{
+  return AI_create_app_info("debug_eh", NULL, APP_DBG_print_event_handler_);
 }
 
 AppInfo APP_DBG_print_git_rev(void)
@@ -137,6 +144,19 @@ void APP_DBG_print_event_logger1_(void)
 #endif
 #endif
 #endif
+}
+
+void APP_DBG_print_event_handler_(void)
+{
+  const EH_Log* latest = EH_get_the_nth_log_from_the_latest(0);
+  const EH_Log* second = EH_get_the_nth_log_from_the_latest(1);
+  VT100_erase_line();
+  Printf("EH: Cnt %3d, 1st %3d, %08d, 2nd %3d, %08d\n",
+         event_handler->log_table.respond_counter,
+         latest->rule_id,
+         latest->respond_time_in_master_cycle,
+         second->rule_id,
+         second->respond_time_in_master_cycle);
 }
 
 void APP_DBG_print_git_rev_(void)
