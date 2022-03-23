@@ -152,7 +152,7 @@ void APP_DBG_print_event_handler_(void)
   const EH_Log* second = EH_get_the_nth_log_from_the_latest(1);
   VT100_erase_line();
   Printf("EH: Cnt %3d, 1st %3d, %08d, 2nd %3d, %08d\n",
-         event_handler->log_table.respond_counter,
+         event_handler->log_table.respond_counter & 0xff,
          latest->rule_id,
          latest->respond_time_in_master_cycle,
          second->rule_id,
