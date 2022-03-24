@@ -6,19 +6,21 @@
  *          - いろんな箇所で FDIR を組むと，何が発動しているかわかりにくかったり，ログが散逸するので，
  *            できる限りすべての対応を EH で行うと良い
  *            - EH で対応を行う，ということは，以下のログが必ず取れている，ということになる
- *              - EH 対応をトリガするための Event 発行ログ
- *              - EH にマッチしたという Event ログ
+ *              - EH 対応をトリガするための Event 発行ログ (Event)
+ *              - EH にマッチしたという Event ログ (Event)
  *              - EH 対応したという EH 対応ログと対応結果
  *            - ただし， EH 対応を行うためには， Block Cmd を消費するため，メモリ制約の厳しい OBC の場合は，難しい可能性もある
  *              - その場合は， EH_RESPONSE_CONDITION_SINGLE のもの（つまり，ステートレスな対応）を優先して， App 内部でハードコードすることを推奨する
  *              - EH_RESPONSE_CONDITION_SINGLE でないものは，カウンタを実装しなくてはいけないため， EH で処理するほうが望ましい
- *          - activate と inactivate
- *            - その EH Rule を 使う前に， activate することをおすすめする
- *            - activate 時に，内部のカウンタ (EH_Rule.counter) がリセットされるため， EH_RESPONSE_CONDITION_CONTINUOUS, EH_RESPONSE_CONDITION_CUMULATIVE において適切な状態からスタートできる
- *            - モード線維持の SL や，コンポーネントを ON する BC などで activate cmd を仕込ませておくと良い
+ *          - init, activate と inactivate
+ *            - その EH Rule を 使う前に， init or activate することをおすすめする
+ *            - init 時に，内部のカウンタ (EH_Rule.counter) がリセットされるため， EH_RESPONSE_CONDITION_CONTINUOUS, EH_RESPONSE_CONDITION_CUMULATIVE において適切な状態からスタートできる
+ *            - モード線維持の SL や，コンポーネントを ON する BC などで init cmd を仕込ませておくと良い
+ *            - 一方で，内部処理でカウンタをリセットせずに再度 EH Rule を有効化したい場合は， activate を用いる
+ *              - 多段 EH 対応時に， Lv.1 で使う対応 BC を Lv.2 でも呼び出したりする場合に，カウンタをリセットしたくないことがある
  *          - 対応 BC 展開後の activate について
  *            - EH Rule がマッチし，対応 BC が展開された時，その EH_RULE_ID は自動的に inactivate される
- *            - そのため，常に対応し続けたいような Rule については，その対応 BC のどこか（基本的には不感時間などを考慮して末尾など）で activate する cmd を仕込ませておくと良い
+ *            - そのため，常に対応し続けたいような Rule については，その対応 BC のどこか（基本的には不感時間などを考慮して末尾など）で activate (or init) する cmd を仕込ませておくと良い
  * @note  多段の EH 対応の組み方
  *        多段の EH を組む場合，
  *          EH_RuleSettings.event.group: EL_CORE_GROUP_EH_MATCH_RULE
@@ -87,9 +89,6 @@
  */
 #ifndef EVENT_HANDLER_H_
 #define EVENT_HANDLER_H_
-
-// TODO: 累積発火couterのリセット
-// TODO: 累積発火couterをactivate時に0クリアする
 
 #include "event_logger.h"
 
@@ -375,9 +374,29 @@ void EH_execute(void);
 EH_REGISTER_ACK EH_register_rule(EH_RULE_ID id, const EH_RuleSettings* settings);
 
 /**
+ * @brief  ルールの初期化
+ *
+ *         EH_activate_rule した後， EH_clear_rule_counter が実行される
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_init_rule(EH_RULE_ID id);
+
+/**
+ * @brief  ルールの初期化 (multi-level)
+ *
+ *         EH_activate_rule した後， EH_clear_rule_counter が実行される
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @param  id: EH_RULE_ID
+ * @return EH_CHECK_RULE_ACK
+ */
+EH_CHECK_RULE_ACK EH_init_rule_for_multi_level(EH_RULE_ID id);
+
+/**
  * @brief  ルールの有効化
  * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
- * @note   内部で EH_clear_rule_counter も呼ばれる
+ * @note   rule_counter はクリアされない
  * @param  id: EH_RULE_ID
  * @return EH_CHECK_RULE_ACK
  */
@@ -475,6 +494,10 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* pac
 CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet);
 

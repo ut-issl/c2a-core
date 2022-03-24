@@ -9,6 +9,7 @@
 #include <src_core/System/TaskManager/task_dispatcher.h>
 #include <src_core/System/AnomalyLogger/anomaly_logger.h>
 #include <src_core/System/EventManager/event_logger.h>
+#include <src_core/System/EventManager/event_handler.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include "../../TlmCmd/telemetry_definitions.h"
 #include <src_core/TlmCmd/block_command_table.h>
@@ -27,6 +28,7 @@ void APP_DBG_print_time_stamp_(void);
 void APP_DBG_print_cmd_status_(void);
 void APP_DBG_print_event_logger0_(void);
 void APP_DBG_print_event_logger1_(void);
+void APP_DBG_print_event_handler_(void);
 void APP_DBG_print_git_rev_(void);
 
 AppInfo APP_DBG_flush_screen(void)
@@ -52,6 +54,11 @@ AppInfo APP_DBG_print_event_logger0(void)
 AppInfo APP_DBG_print_event_logger1(void)
 {
   return AI_create_app_info("debug_el1", NULL, APP_DBG_print_event_logger1_);
+}
+
+AppInfo APP_DBG_print_event_handler(void)
+{
+  return AI_create_app_info("debug_eh", NULL, APP_DBG_print_event_handler_);
 }
 
 AppInfo APP_DBG_print_git_rev(void)
@@ -98,15 +105,15 @@ void APP_DBG_print_event_logger0_(void)
   const EL_Event* latest_high = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0);
 
   VT100_erase_line();
-  Printf("EL Cnt: %5d, H %3d, M %3d, L %3d, EL %3d, EH %3d\n",
-         event_logger->statistics.record_counter_total & 0xffff,
+  Printf("EL Cnt: %3d, H %3d, M %3d, L %3d, EL %3d, EH %3d\n",
+         event_logger->statistics.record_counter_total & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL] & 0xff,
          event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH] & 0xff);
   VT100_erase_line();
-  Printf("EL Log H: %3d, %10d, %10d, %08d, %02d\n",
+  Printf("EL H: %3d, %10d, %10d, %08d, %02d\n",
          latest_high->group, latest_high->local, latest_high->note,
          latest_high->time.total_cycle, latest_high->time.step);
 #endif
@@ -126,17 +133,30 @@ void APP_DBG_print_event_logger1_(void)
   const EL_Event* latest_low = EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0);
 
   VT100_erase_line();
-  Printf("EL Log M: %3d, %10d, %10d, %08d, %02d\n",
+  Printf("EL M: %3d, %10d, %10d, %08d, %02d\n",
          latest_mid->group, latest_mid->local, latest_mid->note,
          latest_mid->time.total_cycle, latest_mid->time.step);
   VT100_erase_line();
-  Printf("EL Log L: %3d, %10d, %10d, %08d, %02d\n",
+  Printf("EL L: %3d, %10d, %10d, %08d, %02d\n",
          latest_low->group, latest_low->local, latest_low->note,
          latest_low->time.total_cycle, latest_low->time.step);
 #endif
 #endif
 #endif
 #endif
+}
+
+void APP_DBG_print_event_handler_(void)
+{
+  const EH_Log* latest = EH_get_the_nth_log_from_the_latest(0);
+  const EH_Log* second = EH_get_the_nth_log_from_the_latest(1);
+  VT100_erase_line();
+  Printf("EH: Cnt %3d, 1st %3d, %08d, 2nd %3d, %08d\n",
+         event_handler->log_table.respond_counter & 0xff,
+         latest->rule_id,
+         latest->respond_time_in_master_cycle,
+         second->rule_id,
+         second->respond_time_in_master_cycle);
 }
 
 void APP_DBG_print_git_rev_(void)

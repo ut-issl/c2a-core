@@ -97,6 +97,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EH_SET_REGISTER_RULE_CONDITION_PARAM].cmd_func = Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM;
   cmd_table[Cmd_CODE_EH_REGISTER_RULE].cmd_func = Cmd_EH_REGISTER_RULE;
   cmd_table[Cmd_CODE_EH_DELETE_RULE].cmd_func = Cmd_EH_DELETE_RULE;
+  cmd_table[Cmd_CODE_EH_INIT_RULE].cmd_func = Cmd_EH_INIT_RULE;
+  cmd_table[Cmd_CODE_EH_INIT_RULE_FOR_MULTI_LEVEL].cmd_func = Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL;
   cmd_table[Cmd_CODE_EH_ACTIVATE_RULE].cmd_func = Cmd_EH_ACTIVATE_RULE;
   cmd_table[Cmd_CODE_EH_INACTIVATE_RULE].cmd_func = Cmd_EH_INACTIVATE_RULE;
   cmd_table[Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL].cmd_func = Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL;
@@ -262,6 +264,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EH_SET_REGISTER_RULE_CONDITION_PARAM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_EH_SET_REGISTER_RULE_CONDITION_PARAM].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EH_DELETE_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_EH_INIT_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_EH_INIT_RULE_FOR_MULTI_LEVEL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_EH_ACTIVATE_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_EH_INACTIVATE_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
