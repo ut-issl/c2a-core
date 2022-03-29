@@ -128,16 +128,16 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
 
   if (cdis->prev.sts != CCP_EXEC_SUCCESS)
   {
-    // 実行したコマンドが実行異常ステータスを返した場合
-    // エラー発生カウンタをカウントアップ
-    ++(cdis->error_counter);
-
     // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
     uint32_t note = ((0x0000ffff & cdis->prev.code) << 16) | (0x0000ffff & cdis->prev.sts);
     EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR,
                     (uint32_t)cdis,
                     EL_ERROR_LEVEL_LOW,
                     note);
+
+    // 実行したコマンドが実行異常ステータスを返した場合
+    // エラー発生カウンタをカウントアップ
+    ++(cdis->error_counter);
 
     if (cdis->stop_on_error == 1)
     {
