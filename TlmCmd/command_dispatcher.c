@@ -14,16 +14,16 @@
 //       現状 PL が NULL チェックをしてないので，できない
 
 /**
- * @enum  CIDS_EL_LOCAL_ID
+ * @enum  CDIS_EL_LOCAL_ID
  * @brief CDIS 内部の event の local ID
  * @note  uint8_t
  */
 typedef enum
 {
-  CIDS_EL_LOCAL_ID_NULL_PARAM,    //!< NULL 引数
-  CIDS_EL_LOCAL_ID_INVALID_PL,    //!< 不正な PL
-  CIDS_EL_LOCAL_ID_UNKNOWN
-} CIDS_EL_LOCAL_ID;
+  CDIS_EL_LOCAL_ID_NULL_PARAM,    //!< NULL 引数
+  CDIS_EL_LOCAL_ID_INVALID_PL,    //!< 不正な PL
+  CDIS_EL_LOCAL_ID_UNKNOWN
+} CDIS_EL_LOCAL_ID;
 
 /**
  * @brief  CDIS_ExecInfo の初期化
@@ -54,8 +54,8 @@ CommandDispatcher CDIS_init(PacketList* pl)
   if (pl == NULL)
   {
     // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
-                    CIDS_EL_LOCAL_ID_NULL_PARAM,
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_INTERNAL_ERR,
+                    CDIS_EL_LOCAL_ID_NULL_PARAM,
                     EL_ERROR_LEVEL_HIGH,
                     0);
     return cdis;
@@ -63,8 +63,8 @@ CommandDispatcher CDIS_init(PacketList* pl)
   if (PL_get_packet_type(pl) != PL_PACKET_TYPE_CCP)
   {
     // 初期化時エラーは試験時に確認され，打ち上げ後はありえないので，イベント発行のみしかしない
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_COMMAND_DISPATCHER,
-                    CIDS_EL_LOCAL_ID_INVALID_PL,
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_INTERNAL_ERR,
+                    CDIS_EL_LOCAL_ID_INVALID_PL,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)pl);
     return cdis;
@@ -86,8 +86,7 @@ static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info)
 
 void CDIS_dispatch_command(CommandDispatcher* cdis)
 {
-  // パケットコピー用．サイズが大きいため静的変数として宣言
-  static CommonCmdPacket packet_;
+  static CommonCmdPacket packet_; // パケットコピー用．サイズが大きいため静的変数として宣言
 
   // 実行有効フラグが無効化されている場合は処理打ち切り
   if (cdis->lockout) return;
@@ -129,6 +128,13 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
 
   if (cdis->prev.sts != CCP_EXEC_SUCCESS)
   {
+    // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
+    uint32_t note = ((0x0000ffff & cdis->prev.code) << 16) | (0x0000ffff & cdis->prev.sts);
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR,
+                    (uint32_t)cdis,
+                    EL_ERROR_LEVEL_LOW,
+                    note);
+
     // 実行したコマンドが実行異常ステータスを返した場合
     // エラー発生カウンタをカウントアップ
     ++(cdis->error_counter);

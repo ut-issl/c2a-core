@@ -96,13 +96,7 @@ g_clog_capacity_pre = g_clog_capacity
 @pytest.mark.sils
 def test_event_logger_init_check():
     update_all_tlm()
-
-    # ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
-    assert ret == "SUC"
-
+    initialize_el()
     update_all_tlm()
     assert g_count_total == 0
     for err_level in range(EL_ERROR_LEVEL_MAX):
@@ -147,11 +141,7 @@ def test_event_logger_set_params():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_record_event():
-    # ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
-
+    initialize_el()
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     change_clog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
     update_all_tlm()
@@ -276,10 +266,7 @@ def test_event_logger_record_event():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_clear_log():
-    # ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
+    initialize_el()
 
     local0 = 1
     local1 = 5
@@ -405,10 +392,7 @@ def test_event_logger_clear_log():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_tlog_overflow():
-    # ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
+    initialize_el()
 
     # ### 設定コマンドのアサーション確認
     change_tlog_tlm_page(0, EL_ERROR_LEVEL_HIGH)
@@ -630,9 +614,7 @@ def test_event_logger_tlog_overflow():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_clog_overflow():
-    # ### 初期化
-    wings.util.send_rt_cmd_and_confirm(ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK)
-
+    initialize_el()
     update_el_tlm()
     update_el_clog_tlm()
 
@@ -686,10 +668,7 @@ def test_event_logger_clog_overflow():
 @pytest.mark.real
 @pytest.mark.sils
 def test_event_logger_logging_setting():
-    # ### 初期化
-    ret = wings.util.send_rt_cmd_and_confirm(
-        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
-    )
+    initialize_el()
 
     # ### 切り替え
     ret = wings.util.send_rt_cmd_and_confirm(
@@ -767,6 +746,22 @@ def test_event_logger_final_check():
     # ### 初期化
     ret = wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
+    )
+    assert ret == "SUC"
+
+
+def initialize_el():
+    # ### 初期化
+    ret = wings.util.send_rt_cmd_and_confirm(
+        ope, c2a_enum.Cmd_CODE_EL_INIT, (), c2a_enum.Tlm_CODE_HK
+    )
+    assert ret == "SUC"
+    # ### 不正引数のチェックをするtestでEL登録されないように無効化
+    ret = wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EL_DISABLE_LOGGING,
+        (c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR,),
+        c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"
 
