@@ -53,7 +53,7 @@ def main():
     # ignore rules のチェック
     for func in check_funcs_all:
         rule_name = func.__name__[6:-1]
-        if not rule_name in settings["ignore_rules"]:
+        if rule_name not in settings["ignore_rules"]:
             check_funcs.append(func)
         else:
             print("WARNING: " + rule_name + " rule is ignored!!")
