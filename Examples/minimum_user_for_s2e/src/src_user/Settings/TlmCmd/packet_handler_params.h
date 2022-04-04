@@ -31,6 +31,7 @@
                                                                         // TLCD_tl_list_for_tlmの長さがこれなので！！
 #define PH_TL1_CMD_LIST_MAX      (TL_TLM_PAGE_SIZE * 4)
 #define PH_TL2_CMD_LIST_MAX      (TL_TLM_PAGE_SIZE * 4)
+#define PH_TL_MIS_CMD_LIST_MAX   (TL_TLM_PAGE_SIZE * 4)   // とりあえず TL1,2 と同じ長さにした
 #define PH_MS_TLM_LIST_MAX       (16)
 #ifdef DR_ENABLE
 #define PH_ST_TLM_LIST_MAX       (16)

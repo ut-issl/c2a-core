@@ -1,7 +1,7 @@
 #ifndef TIMELINE_COMMAND_DISPATCHER_H_
 #define TIMELINE_COMMAND_DISPATCHER_H_
 
-#include "../TlmCmd/common_cmd_packet.h"
+#include <src_user/Settings/Applications/timeline_command_dispatcher_define.h>
 
 /**
  * @enum   TL_ID
@@ -23,6 +23,7 @@ typedef enum
 
 // 循環参照を防ぐためにここでinclude
 #include "../TlmCmd/command_dispatcher.h"
+#include "../TlmCmd/common_cmd_packet.h"
 #include "../TlmCmd/packet_handler.h"
 #include "../System/ApplicationManager/app_info.h"
 
@@ -33,6 +34,7 @@ extern const cycle_t* TLCD_tl_tlm_updated_at;
 extern const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
 extern const int* TLCD_page_no;
 
+// TODO: TL0,1,2を TL_BUS, TL_BC, TL_TLM のように名前変更する
 AppInfo TLCD0_create_app(void);
 AppInfo TLCD1_create_app(void);
 AppInfo TLCD2_create_app(void);
