@@ -51,7 +51,7 @@ def test_cdis_exec_err():
     wings.util.send_tl_cmd(
         ope, ti_now + 55, c2a_enum.Cmd_CODE_AM_SET_PAGE_FOR_TLM, (AM_TLM_PAGE_MAX + 100,)
     )
-    time.sleep(2)
+    time.sleep(5)
 
     # === ELのチェック
     tlm_EL = wings.util.generate_and_receive_tlm(
