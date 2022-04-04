@@ -216,6 +216,7 @@ CCP_EXEC_TYPE CSP_get_exec_type(const CmdSpacePacket* csp)
   case CCP_EXEC_TYPE_TL2:
   #ifdef TL_IS_ENABLE_MISSION_TL
   case CCP_EXEC_TYPE_TL_MIS:
+  case CCP_EXEC_TYPE_UTL_MIS:
   #endif
     return exec_type;
   default:

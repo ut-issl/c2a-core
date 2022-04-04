@@ -63,7 +63,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
  * @param[in] packet
  * @return PH_ACK
  */
-static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet);
+static PH_ACK PH_add_utl_cmd_(int line_no, const CommonCmdPacket* packet);
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
@@ -144,7 +144,7 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return PH_add_rt_cmd_(packet);
 
   case CCP_EXEC_TYPE_UTL:
-    return PH_add_utl_cmd_(packet);
+    return PH_add_utl_cmd_(0, packet);
 
   case CCP_EXEC_TYPE_TL1:
     return PH_add_tl_cmd_(1, packet, TMGR_get_master_total_cycle());
@@ -155,6 +155,9 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   #ifdef TL_IS_ENABLE_MISSION_TL
   case CCP_EXEC_TYPE_TL_MIS:
     return PH_add_tl_cmd_(3, packet, TMGR_get_master_total_cycle());
+
+  case CCP_EXEC_TYPE_UTL_MIS:
+    return PH_add_utl_cmd_(3, packet);
   #endif
 
   default:
@@ -280,7 +283,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
 }
 
 
-static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
+static PH_ACK PH_add_utl_cmd_(int line_no, const CommonCmdPacket* packet)
 {
   static CommonCmdPacket temp_; // サイズが大きいため静的領域に確保
 
@@ -294,7 +297,7 @@ static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
   CCP_set_ti(&temp_, ti);
   CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0
 
-  return PH_add_tl_cmd_(0, &temp_, TMGR_get_master_total_cycle());
+  return PH_add_tl_cmd_(line_no, &temp_, TMGR_get_master_total_cycle());
 }
 
 
