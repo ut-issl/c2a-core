@@ -255,13 +255,15 @@ def check_newline_(path: str, code_lines: list) -> bool:
 
         if line.find("for") == -1:  # TODO: for があると文途中に ; があるので．今後治す
             if not has_line_ended_with_target_(line, ";"):
-                print_err_(
-                    path,
-                    idx + 1,
-                    "THE END OF A STATEMENT SHOULD BE A COMMENT OR A LINE BREAK",
-                    line,
-                )
-                flag = False
+                # ";" の含まれるプリプロセッサディレクティブで改行 "\" すると引っかかってしまうので，除く
+                if not has_line_ended_with_target_(line, " \\"):
+                    print_err_(
+                        path,
+                        idx + 1,
+                        "THE END OF A STATEMENT SHOULD BE A COMMENT OR A LINE BREAK",
+                        line,
+                    )
+                    flag = False
 
         if not has_line_ended_with_target_(line, "{"):
             non_comment_line = remove_comment_and_strip_(line)
