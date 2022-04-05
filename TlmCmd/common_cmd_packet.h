@@ -65,8 +65,8 @@ typedef enum
   CCP_EXEC_TYPE_TL1,
   CCP_EXEC_TYPE_TL2,    // TODO: TL0,1,2を TL_BUS, TL_BC, TL_TLM のように名前変更する
 #ifdef TLCD_ENABLE_MISSION_TL
-  CCP_EXEC_TYPE_TL_MIS,
-  CCP_EXEC_TYPE_UTL_MIS,
+  CCP_EXEC_TYPE_TL_MIS,  //!< TL_MIS  : Timeline Command for Mission
+  CCP_EXEC_TYPE_UTL_MIS, //!< UTL_MIS : Unixtime Timeline Command for Mission
 #endif
   CCP_EXEC_TYPE_UNKNOWN
 } CCP_EXEC_TYPE;
