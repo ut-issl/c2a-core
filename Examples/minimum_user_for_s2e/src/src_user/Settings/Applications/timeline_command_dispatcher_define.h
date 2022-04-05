@@ -6,6 +6,6 @@
 #define TIMELINE_COMMAND_DISPATCHER_DEFINE_H_
 
 // TL_MIS (ミッション用の timeline) を使うかどうか
-#define TL_IS_ENABLE_MISSION_TL
+#define TLCD_ENABLE_MISSION_TL
 
 #endif

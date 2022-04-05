@@ -14,7 +14,7 @@ void BCL_load_tl_elem_tlm_cmd_hirate(void)
   BCL_tool_register_app    (2, AR_TLC2_DISPATCHER);
   BCL_tool_register_app    (3, AR_DI_GS_MST_PH);
   BCL_tool_register_app    (4, AR_DI_GS_RPT_PH);
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
   BCL_tool_register_app    (5, AR_TLC_MIS_DISPATCHER);
 #endif
 }

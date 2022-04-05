@@ -13,7 +13,7 @@ typedef enum
   TL_ID_DEPLOY_FROM_GS = 0,
   TL_ID_DEPLOY_BC      = 1,
   TL_ID_DEPLOY_TLM     = 2,
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
   TL_ID_FROM_GS_FOR_MISSION,
 #endif
   TL_ID_MAX
@@ -38,7 +38,7 @@ extern const int* TLCD_page_no;
 AppInfo TLCD0_create_app(void);
 AppInfo TLCD1_create_app(void);
 AppInfo TLCD2_create_app(void);
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
 AppInfo TLCD_mis_create_app(void);
 #endif
 

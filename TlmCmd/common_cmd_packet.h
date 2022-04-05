@@ -64,7 +64,7 @@ typedef enum
   CCP_EXEC_TYPE_UTL,    //!< UTL: Unixtime Timeline Command
   CCP_EXEC_TYPE_TL1,
   CCP_EXEC_TYPE_TL2,    // TODO: TL0,1,2を TL_BUS, TL_BC, TL_TLM のように名前変更する
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
   CCP_EXEC_TYPE_TL_MIS,
   CCP_EXEC_TYPE_UTL_MIS,
 #endif

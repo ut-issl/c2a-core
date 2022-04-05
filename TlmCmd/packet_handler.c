@@ -28,7 +28,7 @@ static PL_Node PH_rt_cmd_stock_[PH_RT_CMD_LIST_MAX];
 static PL_Node PH_tl0_cmd_stock_[PH_TL0_CMD_LIST_MAX];
 static PL_Node PH_tl1_cmd_stock_[PH_TL1_CMD_LIST_MAX];
 static PL_Node PH_tl2_cmd_stock_[PH_TL2_CMD_LIST_MAX];
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
 static PL_Node PH_tl_mis_cmd_stock_[PH_TL_MIS_CMD_LIST_MAX];
 #endif
 static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
@@ -42,8 +42,8 @@ static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RT_CMD_LIST_MAX];
 static CommonCmdPacket PH_tl0_cmd_ccp_stock_[PH_TL0_CMD_LIST_MAX];
 static CommonCmdPacket PH_tl1_cmd_ccp_stock_[PH_TL1_CMD_LIST_MAX];
 static CommonCmdPacket PH_tl2_cmd_ccp_stock_[PH_TL2_CMD_LIST_MAX];
-#ifdef TL_IS_ENABLE_MISSION_TL
-static CommonCmdPacket PH_tl_mis_cmd_ccp_stock_[PH_TL2_CMD_LIST_MAX];
+#ifdef TLCD_ENABLE_MISSION_TL
+static CommonCmdPacket PH_tl_mis_cmd_ccp_stock_[PH_TL_MIS_CMD_LIST_MAX];
 #endif
 static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
 #ifdef DR_ENABLE
@@ -79,7 +79,7 @@ void PH_init(void)
   PL_initialize_with_ccp(PH_tl0_cmd_stock_, PH_tl0_cmd_ccp_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[0]);
   PL_initialize_with_ccp(PH_tl1_cmd_stock_, PH_tl1_cmd_ccp_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[1]);
   PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[2]);
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
   PL_initialize_with_ccp(PH_tl_mis_cmd_stock_, PH_tl_mis_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[TL_ID_FROM_GS_FOR_MISSION]);
 #endif
 
@@ -152,7 +152,7 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   case CCP_EXEC_TYPE_TL2:
     return PH_add_tl_cmd_(2, packet, TMGR_get_master_total_cycle());
 
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
   case CCP_EXEC_TYPE_TL_MIS:
     return PH_add_tl_cmd_(3, packet, TMGR_get_master_total_cycle());
 

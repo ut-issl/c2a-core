@@ -27,7 +27,7 @@ static void TLCD1_init_(void);
 static void TLCD1_dispatch_(void);
 static void TLCD2_init_(void);
 static void TLCD2_dispatch_(void);
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
 static void TLCD_mis_init_(void);
 static void TLCD_mis_dispatch_(void);
 #endif
@@ -93,7 +93,7 @@ static void TLCD2_dispatch_(void)
   tlc_dispatcher_(2);
 }
 
-#ifdef TL_IS_ENABLE_MISSION_TL
+#ifdef TLCD_ENABLE_MISSION_TL
 AppInfo TLCD_mis_create_app(void)
 {
   return AI_create_app_info("tlcd_mis", TLCD_mis_init_, TLCD_mis_dispatch_);
