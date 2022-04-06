@@ -1,5 +1,7 @@
 #ifndef APP_REGISTRY_H_
 #define APP_REGISTRY_H_
+#include <src_user/Settings/Applications/timeline_command_dispatcher_define.h>
+
 // こいつの自動生成がほしい．．．
 typedef enum
 {
@@ -13,6 +15,9 @@ typedef enum
   AR_TLC0_DISPATCHER,
   AR_TLC1_DISPATCHER,
   AR_TLC2_DISPATCHER,
+#ifdef TLCD_ENABLE_MISSION_TL
+  AR_TLC_MIS_DISPATCHER,
+#endif
   AR_EVENT_UTILITY,
   AR_ANOMALY_HANDLER,
   AR_MEM_DUMP,

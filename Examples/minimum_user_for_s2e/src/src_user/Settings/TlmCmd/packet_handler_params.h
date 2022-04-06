@@ -5,7 +5,8 @@
 #ifndef PACKET_HANDLER_PARAMS_H_
 #define PACKET_HANDLER_PARAMS_H_
 
-// DR の利用の有無で必要な PL が変わるので， include する
+// TL_MIS, DR の利用の有無で必要な PL が変わるので， include する
+#include "../Applications/timeline_command_dispatcher_define.h"
 #include "../Applications/data_recorder_define.h"
 
 
@@ -17,6 +18,7 @@
 #undef PH_TL0_CMD_LIST_MAX
 #undef PH_TL1_CMD_LIST_MAX
 #undef PH_TL2_CMD_LIST_MAX
+#undef PH_TL_MIS_CMD_LIST_MAX
 #undef PH_MS_TLM_LIST_MAX
 #undef PH_ST_TLM_LIST_MAX
 #undef PH_RP_TLM_LIST_MAX
@@ -31,6 +33,9 @@
                                                                         // TLCD_tl_list_for_tlmの長さがこれなので！！
 #define PH_TL1_CMD_LIST_MAX      (TL_TLM_PAGE_SIZE * 4)
 #define PH_TL2_CMD_LIST_MAX      (TL_TLM_PAGE_SIZE * 4)
+#ifdef TLCD_ENABLE_MISSION_TL
+#define PH_TL_MIS_CMD_LIST_MAX   (TL_TLM_PAGE_SIZE * 4)   // とりあえず TL1,2 と同じ長さにした
+#endif
 #define PH_MS_TLM_LIST_MAX       (16)
 #ifdef DR_ENABLE
 #define PH_ST_TLM_LIST_MAX       (16)
