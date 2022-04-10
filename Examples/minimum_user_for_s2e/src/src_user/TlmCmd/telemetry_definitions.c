@@ -31,10 +31,6 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 static TF_TLM_FUNC_ACK Tlm_GIT_REV_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 static TF_TLM_FUNC_ACK Tlm_UART_TEST_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 
-// AOBC TLM
-static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
   tlm_table[Tlm_CODE_MOBC].tlm_func = Tlm_MOBC_;
@@ -59,10 +55,6 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
   tlm_table[Tlm_CODE_HK].tlm_func = Tlm_HK_;
   tlm_table[Tlm_CODE_GIT_REV].tlm_func = Tlm_GIT_REV_;
   tlm_table[Tlm_CODE_UART_TEST].tlm_func = Tlm_UART_TEST_;
-
-  // AOBC TLM
-  tlm_table[Tlm_CODE_AOBC_AOBC].tlm_func = Tlm_AOBC_AOBC_;
-  tlm_table[Tlm_CODE_AOBC_HK].tlm_func = Tlm_AOBC_HK_;
 }
 
 static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
@@ -299,8 +291,8 @@ static TF_TLM_FUNC_ACK Tlm_TL_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   if (416 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u8(&packet[26], TLCD_update_tl_list_for_tlm((uint8_t)*TLCD_line_no_for_tlm));
-  TF_copy_u8(&packet[27], (uint8_t)(*TLCD_page_no));
+  TF_copy_u8(&packet[26], TLCD_update_tl_list_for_tlm(*TLCD_line_no_for_tlm));
+  TF_copy_u8(&packet[27], *TLCD_page_no);
   TF_copy_u32(&packet[28], (uint32_t)(*TLCD_tl_tlm_updated_at));
   TF_copy_u16(&packet[32], (uint16_t)CCP_get_id(TLCD_tl_list_for_tlm[TL_TLM_PAGE_SIZE*(*TLCD_page_no)+0]));
   TF_copy_u32(&packet[34], (uint32_t)CCP_get_ti(TLCD_tl_list_for_tlm[TL_TLM_PAGE_SIZE*(*TLCD_page_no)+0]));
@@ -3410,16 +3402,6 @@ static TF_TLM_FUNC_ACK Tlm_UART_TEST_(uint8_t* packet, uint16_t* len, uint16_t m
 
   *len = 51;
   return TF_TLM_FUNC_ACK_SUCCESS;
-}
-
-static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
-{
-  return AOBC_pick_up_tlm_buffer(aobc_driver, AOBC_Tlm_CODE_AOBC_AOBC, packet, len, max_len);
-}
-
-static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
-{
-  return AOBC_pick_up_tlm_buffer(aobc_driver, AOBC_Tlm_CODE_AOBC_HK, packet, len, max_len);
 }
 
 #pragma section

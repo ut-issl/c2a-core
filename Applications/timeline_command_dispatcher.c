@@ -7,19 +7,19 @@
 #include "../System/TimeManager/time_manager.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../System/EventManager/event_logger.h"
-#include "../Library/endian_memcpy.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static CommandDispatcher timeline_command_dispatcher_[TL_ID_MAX];
 const CommandDispatcher* const timeline_command_dispatcher = timeline_command_dispatcher_;
 
-static int TLCD_line_no_for_tlm_;
-const int* TLCD_line_no_for_tlm;
+static TL_ID TLCD_line_no_for_tlm_;
+const TL_ID* TLCD_line_no_for_tlm;
 static cycle_t TLCD_tl_tlm_updated_at_;
 const cycle_t* TLCD_tl_tlm_updated_at;
 static CommonCmdPacket TLCD_null_packet_;
 const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0が最長なのでそれに合わせる。
-static int TLCD_page_no_;
-const int* TLCD_page_no;
+static uint8_t TLCD_page_no_;
+const uint8_t* TLCD_page_no;
 
 static void TLCD_gs_init_(void);
 static void TLCD_gs_dispatch_(void);
@@ -31,9 +31,9 @@ static void TLCD_tlm_dispatch_(void);
 static void TLCD_mis_init_(void);
 static void TLCD_mis_dispatch_(void);
 #endif
-static void tlc_dispatcher_(int line_no);
+static void tlc_dispatcher_(TL_ID line_no);
 // FIXME: 返り値が PH_ACK なのはおかしい
-static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time);
+static PH_ACK drop_tl_cmd_at_(TL_ID line_no, cycle_t time);
 
 AppInfo TLCD_gs_create_app(void)
 {
@@ -43,15 +43,15 @@ AppInfo TLCD_gs_create_app(void)
 static void TLCD_gs_init_(void)
 {
   // TLC0 Dispatcherの初期化処理
-  timeline_command_dispatcher_[0] = CDIS_init(&(PH_tl_cmd_list[0]));
+  timeline_command_dispatcher_[TL_ID_FROM_GS] = CDIS_init(&(PH_tl_cmd_list[TL_ID_FROM_GS]));
 
   // タイムラインコマンドのテレメトリ変数初期設定
   // すべてのタイムラインで共用なのでTL0で代表して初期化
   TLCD_line_no_for_tlm = &TLCD_line_no_for_tlm_;
-  TLCD_line_no_for_tlm_ = 0;
+  TLCD_line_no_for_tlm_ = TL_ID_FROM_GS;
   TLCD_tl_tlm_updated_at = &TLCD_tl_tlm_updated_at_;
   memset(&TLCD_null_packet_, 0, sizeof(TLCD_null_packet_));
-  TLCD_update_tl_list_for_tlm(0);
+  TLCD_update_tl_list_for_tlm(TL_ID_FROM_GS);
 
   // テレメトリページ番号を初期値0に設定
   TLCD_page_no_ = 0;
@@ -60,7 +60,7 @@ static void TLCD_gs_init_(void)
 
 static void TLCD_gs_dispatch_(void)
 {
-  tlc_dispatcher_(0);
+  tlc_dispatcher_(TL_ID_FROM_GS);
 }
 
 AppInfo TLCD_bc_create_app(void)
@@ -70,12 +70,12 @@ AppInfo TLCD_bc_create_app(void)
 
 static void TLCD_bc_init_(void)
 {
-  timeline_command_dispatcher_[1] = CDIS_init(&(PH_tl_cmd_list[1]));
+  timeline_command_dispatcher_[TL_ID_DEPLOY_BC] = CDIS_init(&(PH_tl_cmd_list[TL_ID_DEPLOY_BC]));
 }
 
 static void TLCD_bc_dispatch_(void)
 {
-  tlc_dispatcher_(1);
+  tlc_dispatcher_(TL_ID_DEPLOY_BC);
 }
 
 AppInfo TLCD_tlm_create_app(void)
@@ -85,12 +85,12 @@ AppInfo TLCD_tlm_create_app(void)
 
 static void TLCD_tlm_init_(void)
 {
-  timeline_command_dispatcher_[2] = CDIS_init(&(PH_tl_cmd_list[2]));
+  timeline_command_dispatcher_[TL_ID_DEPLOY_TLM] = CDIS_init(&(PH_tl_cmd_list[TL_ID_DEPLOY_TLM]));
 }
 
 static void TLCD_tlm_dispatch_(void)
 {
-  tlc_dispatcher_(2);
+  tlc_dispatcher_(TL_ID_DEPLOY_TLM);
 }
 
 #ifdef TLCD_ENABLE_MISSION_TL
@@ -110,7 +110,7 @@ static void TLCD_mis_dispatch_(void)
 }
 #endif
 
-static void tlc_dispatcher_(int line_no)
+static void tlc_dispatcher_(TL_ID line_no)
 {
   PL_ACK ack = PL_check_tl_cmd(&(PH_tl_cmd_list[line_no]),
                                (size_t)(TMGR_get_master_total_cycle()));
@@ -159,7 +159,7 @@ static void tlc_dispatcher_(int line_no)
   }
 }
 
-uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
+TL_ID TLCD_update_tl_list_for_tlm(TL_ID line_no)
 {
   PL_Node* pos;
   int i;
@@ -188,9 +188,7 @@ uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no)
 
 CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
 {
-  int line_no;
-
-  line_no = CCP_get_param_head(packet)[0];
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (line_no >= TL_ID_MAX)
   {
@@ -204,21 +202,14 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
 {
-  const unsigned char* param = CCP_get_param_head(packet);
-  int line_no;
-  cycle_t time;
-
-  // ライン番号を読み込み
-  line_no = param[0]; // 非明示的なcast
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
+  cycle_t time = CCP_get_param_from_packet(packet, 1, cycle_t);
 
   if (line_no >= TL_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-
-  // 指定TIを読み込み
-  endian_memcpy(&time, packet + 1, sizeof(time));
 
   if (drop_tl_cmd_at_(line_no, time) == PH_ACK_SUCCESS)
   {
@@ -230,7 +221,7 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
   }
 }
 
-static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
+static PH_ACK drop_tl_cmd_at_(TL_ID line_no, cycle_t time)
 {
   int i;
 
@@ -259,20 +250,14 @@ static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time)
 
 CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 {
-  const unsigned char* param = CCP_get_param_head(packet);
-  uint8_t line_no;
-  uint8_t flag;
-
-  // パラメータ読み出し&内容確認
-  line_no = param[0];
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
+  uint8_t flag = CCP_get_param_from_packet(packet, 1, uint8_t);
 
   if (line_no >= TL_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定。
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-
-  flag = param[1];
 
   if ((flag != 0) && (flag != 1))
   {
@@ -287,20 +272,14 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 {
-  const unsigned char* param = CCP_get_param_head(packet);
-  uint8_t line_no;
-  uint8_t flag;
-
-  // パラメータ読み出し&値チェック。
-  line_no = param[0];
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
+  uint8_t flag = CCP_get_param_from_packet(packet, 1, uint8_t);
 
   if (line_no >= TL_ID_MAX)
   {
     // 存在しないライン番号が指定された場合は異常判定。
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-
-  flag = param[1];
 
   if ((flag != 0) && (flag != 1))
   {
@@ -315,10 +294,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet)
 {
-  int line_no;
-
-  // ライン番号を読み込み
-  line_no = CCP_get_param_head(packet)[0];
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (line_no >= TL_ID_MAX)
   {
@@ -334,10 +310,9 @@ CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet
 // FIXME: ELのイベント記録を追加する
 CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 {
-  int      line_no;
-  bct_id_t block_no;
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
+  bct_id_t block_no = CCP_get_param_from_packet(packet, 1, bct_id_t);
   PL_ACK   ack;
-  const uint8_t* param = CCP_get_param_head(packet);
 
   if (CCP_get_param_len(packet) != (1 + SIZE_OF_BCT_ID_T))
   {
@@ -346,16 +321,11 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     return CCP_EXEC_ILLEGAL_LENGTH;
   }
 
-  // ライン番号を読み込み
-  line_no = param[0];
-
   if (line_no >= TL_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-
-  endian_memcpy(&block_no, &param[1], SIZE_OF_BCT_ID_T);
 
   if (block_no >= BCT_MAX_BLOCKS)
   {
@@ -379,9 +349,7 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
-  uint8_t page;
-
-  page = CCP_get_param_head(packet)[0];
+  uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (page >= TL_TLM_PAGE_MAX)
   {
@@ -395,9 +363,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 
 CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
-  uint8_t line_no;
-
-  line_no = CCP_get_param_head(packet)[0];
+  TL_ID line_no = (TL_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (line_no >= TL_ID_MAX)
   {
