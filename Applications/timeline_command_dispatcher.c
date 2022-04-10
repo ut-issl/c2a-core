@@ -21,12 +21,12 @@ const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX]; // TL0が最�
 static int TLCD_page_no_;
 const int* TLCD_page_no;
 
-static void TLCD0_init_(void);
-static void TLCD0_dispatch_(void);
-static void TLCD1_init_(void);
-static void TLCD1_dispatch_(void);
-static void TLCD2_init_(void);
-static void TLCD2_dispatch_(void);
+static void TLCD_gs_init_(void);
+static void TLCD_gs_dispatch_(void);
+static void TLCD_bc_init_(void);
+static void TLCD_bc_dispatch_(void);
+static void TLCD_tlm_init_(void);
+static void TLCD_tlm_dispatch_(void);
 #ifdef TLCD_ENABLE_MISSION_TL
 static void TLCD_mis_init_(void);
 static void TLCD_mis_dispatch_(void);
@@ -35,12 +35,12 @@ static void tlc_dispatcher_(int line_no);
 // FIXME: 返り値が PH_ACK なのはおかしい
 static PH_ACK drop_tl_cmd_at_(int line_no, cycle_t time);
 
-AppInfo TLCD0_create_app(void)
+AppInfo TLCD_gs_create_app(void)
 {
-  return AI_create_app_info("tlc0d", TLCD0_init_, TLCD0_dispatch_);
+  return AI_create_app_info("tlcd_gs", TLCD_gs_init_, TLCD_gs_dispatch_);
 }
 
-static void TLCD0_init_(void)
+static void TLCD_gs_init_(void)
 {
   // TLC0 Dispatcherの初期化処理
   timeline_command_dispatcher_[0] = CDIS_init(&(PH_tl_cmd_list[0]));
@@ -58,37 +58,37 @@ static void TLCD0_init_(void)
   TLCD_page_no = &TLCD_page_no_;
 }
 
-static void TLCD0_dispatch_(void)
+static void TLCD_gs_dispatch_(void)
 {
   tlc_dispatcher_(0);
 }
 
-AppInfo TLCD1_create_app(void)
+AppInfo TLCD_bc_create_app(void)
 {
-  return AI_create_app_info("tlc1d", TLCD1_init_, TLCD1_dispatch_);
+  return AI_create_app_info("tlcd_bc", TLCD_bc_init_, TLCD_bc_dispatch_);
 }
 
-static void TLCD1_init_(void)
+static void TLCD_bc_init_(void)
 {
   timeline_command_dispatcher_[1] = CDIS_init(&(PH_tl_cmd_list[1]));
 }
 
-static void TLCD1_dispatch_(void)
+static void TLCD_bc_dispatch_(void)
 {
   tlc_dispatcher_(1);
 }
 
-AppInfo TLCD2_create_app(void)
+AppInfo TLCD_tlm_create_app(void)
 {
-  return AI_create_app_info("tlc2d", TLCD2_init_, TLCD2_dispatch_);
+  return AI_create_app_info("tlcd_tlm", TLCD_tlm_init_, TLCD_tlm_dispatch_);
 }
 
-static void TLCD2_init_(void)
+static void TLCD_tlm_init_(void)
 {
   timeline_command_dispatcher_[2] = CDIS_init(&(PH_tl_cmd_list[2]));
 }
 
-static void TLCD2_dispatch_(void)
+static void TLCD_tlm_dispatch_(void)
 {
   tlc_dispatcher_(2);
 }

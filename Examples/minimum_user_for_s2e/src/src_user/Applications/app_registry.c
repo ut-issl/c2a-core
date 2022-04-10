@@ -17,11 +17,11 @@ void AR_load_initial_settings(void)
   add_application_(AR_DI_UART_TEST, UART_TEST_update);
   add_application_(AR_GSC_DISPATCHER, GSCD_create_app);
   add_application_(AR_RTC_DISPATCHER, RTCD_create_app);
-  add_application_(AR_TLC0_DISPATCHER, TLCD0_create_app);
-  add_application_(AR_TLC1_DISPATCHER, TLCD1_create_app);
-  add_application_(AR_TLC2_DISPATCHER, TLCD2_create_app);
+  add_application_(AR_TLCD_GS, TLCD_gs_create_app);
+  add_application_(AR_TLCD_BC, TLCD_bc_create_app);
+  add_application_(AR_TLCD_TLM, TLCD_tlm_create_app);
 #ifdef TLCD_ENABLE_MISSION_TL
-  add_application_(AR_TLC_MIS_DISPATCHER, TLCD_mis_create_app);
+  add_application_(AR_TLCD_MIS, TLCD_mis_create_app);
 #endif
   add_application_(AR_EVENT_UTILITY, EVENT_UTIL_create_app);
   add_application_(AR_ANOMALY_HANDLER, AH_create_app);
