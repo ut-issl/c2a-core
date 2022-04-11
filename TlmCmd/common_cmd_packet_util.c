@@ -5,9 +5,7 @@
  */
 
 #include "common_cmd_packet_util.h"
-#include "../Applications/timeline_command_dispatcher.h" // for TL_ID_MAX
 #include "command_analyze.h"
-#include "block_command_table.h" // for BCT_MAX_BLOCKS
 #include "../Library/endian_memcpy.h"
 #include <stddef.h>     // for NULL
 #include <string.h>
@@ -96,7 +94,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, bct_id_t block_no)
+CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TL_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];
 
@@ -107,7 +105,7 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, b
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  param[0] = tl_no;
+  param[0] = (uint8_t)tl_no;
   endian_memcpy(&param[1], &block_no, SIZE_OF_BCT_ID_T);
 
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
