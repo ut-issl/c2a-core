@@ -54,7 +54,7 @@ static CommonTlmPacket PH_rp_tlm_ctp_stock_[PH_RP_TLM_LIST_MAX];
 static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet);
-static PH_ACK PH_add_tl_cmd_(int line_no,
+static PH_ACK PH_add_tl_cmd_(TL_ID line_no,
                              const CommonCmdPacket* packet,
                              cycle_t now);
 /**
@@ -63,7 +63,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
  * @param[in] packet
  * @return PH_ACK
  */
-static PH_ACK PH_add_utl_cmd_(int line_no, const CommonCmdPacket* packet);
+static PH_ACK PH_add_utl_cmd_(TL_ID line_no, const CommonCmdPacket* packet);
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
@@ -76,9 +76,9 @@ void PH_init(void)
   PL_initialize_with_ccp(PH_gs_cmd_stock_, PH_gs_cmd_ccp_stock_, PH_GS_CMD_LIST_MAX, &PH_gs_cmd_list);
   PL_initialize_with_ccp(PH_rt_cmd_stock_, PH_rt_cmd_ccp_stock_, PH_RT_CMD_LIST_MAX, &PH_rt_cmd_list);
 
-  PL_initialize_with_ccp(PH_tl0_cmd_stock_, PH_tl0_cmd_ccp_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[0]);
-  PL_initialize_with_ccp(PH_tl1_cmd_stock_, PH_tl1_cmd_ccp_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[1]);
-  PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[2]);
+  PL_initialize_with_ccp(PH_tl0_cmd_stock_, PH_tl0_cmd_ccp_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[TL_ID_FROM_GS]);
+  PL_initialize_with_ccp(PH_tl1_cmd_stock_, PH_tl1_cmd_ccp_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[TL_ID_DEPLOY_BC]);
+  PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[TL_ID_DEPLOY_TLM]);
 #ifdef TLCD_ENABLE_MISSION_TL
   PL_initialize_with_ccp(PH_tl_mis_cmd_stock_, PH_tl_mis_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[TL_ID_FROM_GS_FOR_MISSION]);
 #endif
@@ -135,7 +135,7 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return PH_add_gs_cmd_(packet);
 
   case CCP_EXEC_TYPE_TL0:
-    return PH_add_tl_cmd_(0, packet, TMGR_get_master_total_cycle());
+    return PH_add_tl_cmd_(TL_ID_FROM_GS, packet, TMGR_get_master_total_cycle());
 
   case CCP_EXEC_TYPE_BC:
     return PH_add_block_cmd_(packet);
@@ -144,20 +144,20 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return PH_add_rt_cmd_(packet);
 
   case CCP_EXEC_TYPE_UTL:
-    return PH_add_utl_cmd_(0, packet);
+    return PH_add_utl_cmd_(TL_ID_FROM_GS, packet);
 
   case CCP_EXEC_TYPE_TL1:
-    return PH_add_tl_cmd_(1, packet, TMGR_get_master_total_cycle());
+    return PH_add_tl_cmd_(TL_ID_DEPLOY_BC, packet, TMGR_get_master_total_cycle());
 
   case CCP_EXEC_TYPE_TL2:
-    return PH_add_tl_cmd_(2, packet, TMGR_get_master_total_cycle());
+    return PH_add_tl_cmd_(TL_ID_DEPLOY_TLM, packet, TMGR_get_master_total_cycle());
 
 #ifdef TLCD_ENABLE_MISSION_TL
   case CCP_EXEC_TYPE_TL_MIS:
-    return PH_add_tl_cmd_(3, packet, TMGR_get_master_total_cycle());
+    return PH_add_tl_cmd_(TL_ID_FROM_GS_FOR_MISSION, packet, TMGR_get_master_total_cycle());
 
   case CCP_EXEC_TYPE_UTL_MIS:
-    return PH_add_utl_cmd_(3, packet);
+    return PH_add_utl_cmd_(TL_ID_FROM_GS_FOR_MISSION, packet);
 #endif
 
   default:
@@ -257,7 +257,7 @@ static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet)
 }
 
 
-static PH_ACK PH_add_tl_cmd_(int line_no,
+static PH_ACK PH_add_tl_cmd_(TL_ID line_no,
                             const CommonCmdPacket* packet,
                             cycle_t now)
 {
@@ -283,7 +283,7 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
 }
 
 
-static PH_ACK PH_add_utl_cmd_(int line_no, const CommonCmdPacket* packet)
+static PH_ACK PH_add_utl_cmd_(TL_ID line_no, const CommonCmdPacket* packet)
 {
   static CommonCmdPacket temp_; // サイズが大きいため静的領域に確保
 
