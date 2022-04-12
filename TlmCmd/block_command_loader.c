@@ -39,6 +39,8 @@ static BlockCommandLoader block_command_loader_;
 
 void BCL_load_bc(bct_id_t pos, void (*BCL_load_func)(void))
 {
+  if (pos >= BCT_MAX_BLOCKS) return;
+
   // 最初にゴミデータを消しておく
   BCL_clear_info_();
 
