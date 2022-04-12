@@ -31,8 +31,21 @@ static void TLCD_tlm_dispatch_(void);
 static void TLCD_mis_init_(void);
 static void TLCD_mis_dispatch_(void);
 #endif
+
+/**
+ * @brief 指定された lien_no の Timeline コマンドを実行する
+ * @param line_no
+ * @return void
+ */
 static void tlc_dispatcher_(TL_ID line_no);
-// FIXME: 返り値が PH_ACK なのはおかしい
+
+/**
+ * @brief 指定された時刻, line_no の TL コマンドを削除する
+ * @note FIXME: 返り値が PH_ACK なのはおかしい
+ * @param[in] line_no
+ * @param[in] time 削除したい TL コマンドが登録されている TI
+ * @return PH_ACK
+ */
 static PH_ACK drop_tl_cmd_at_(TL_ID line_no, cycle_t time);
 
 AppInfo TLCD_gs_create_app(void)
