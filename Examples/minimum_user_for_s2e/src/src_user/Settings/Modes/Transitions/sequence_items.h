@@ -14,6 +14,6 @@ void SI_finish_transition(CommonCmdPacket* packet);
 void SI_start_hk_tlm(CommonCmdPacket* packet);
 
 // BC展開
-void SI_deploy_block(CommonCmdPacket* packet, TL_ID line_no, bct_id_t block_no);
+void SI_deploy_block(CommonCmdPacket* packet, TLCD_ID line_no, bct_id_t block_no);
 
 #endif

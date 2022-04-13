@@ -617,7 +617,7 @@ static void EH_respond_(EH_RULE_ID rule_id)
   CCP_UTIL_ACK form_cmd_ack;
   CCP_EXEC_STS deploy_cmd_ack;
 
-  form_cmd_ack = CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
+  form_cmd_ack = CCP_form_block_deploy_cmd(&packet, TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
   if (form_cmd_ack != CCP_UTIL_ACK_OK)
   {
     // BC 展開 Cmd の生成に失敗

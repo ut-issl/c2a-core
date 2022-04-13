@@ -311,7 +311,7 @@ static void MM_deploy_block_cmd_(bct_id_t bc_index)
 {
   CommonCmdPacket packet;
 
-  CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, bc_index);
+  CCP_form_block_deploy_cmd(&packet, TLCD_ID_DEPLOY_BC, bc_index);
 
   PH_dispatch_command(&packet);
 }

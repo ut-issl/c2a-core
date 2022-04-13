@@ -124,9 +124,9 @@ void BCL_tool_register_limit_combine(cycle_t ti, bct_id_t bct_id, step_t limit_s
   BCL_clear_info_();
 }
 
-void BCL_tool_register_deploy(cycle_t ti, bct_id_t bct_id, TL_ID tl_id)
+void BCL_tool_register_deploy(cycle_t ti, bct_id_t bct_id, TLCD_ID tlcd_id)
 {
-  BCL_tool_prepare_param_uint8((uint8_t)tl_id);
+  BCL_tool_prepare_param_uint8((uint8_t)tlcd_id);
 
 #if SIZE_OF_BCT_ID_T == 1
   BCL_tool_prepare_param_uint8(bct_id);
