@@ -134,7 +134,7 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   case CCP_EXEC_TYPE_GS:
     return PH_add_gs_cmd_(packet);
 
-  case CCP_EXEC_TYPE_TL0:
+  case CCP_EXEC_TYPE_TL:
     return PH_add_tl_cmd_(TLCD_ID_FROM_GS, packet, TMGR_get_master_total_cycle());
 
   case CCP_EXEC_TYPE_BC:
@@ -146,17 +146,17 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   case CCP_EXEC_TYPE_UTL:
     return PH_add_utl_cmd_(TLCD_ID_FROM_GS, packet);
 
-  case CCP_EXEC_TYPE_TL1:
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC:
     return PH_add_tl_cmd_(TLCD_ID_DEPLOY_BC, packet, TMGR_get_master_total_cycle());
 
-  case CCP_EXEC_TYPE_TL2:
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
     return PH_add_tl_cmd_(TLCD_ID_DEPLOY_TLM, packet, TMGR_get_master_total_cycle());
 
 #ifdef TLCD_ENABLE_MISSION_TL
-  case CCP_EXEC_TYPE_TL_MIS:
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
     return PH_add_tl_cmd_(TLCD_ID_FROM_GS_FOR_MISSION, packet, TMGR_get_master_total_cycle());
 
-  case CCP_EXEC_TYPE_UTL_MIS:
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
     return PH_add_utl_cmd_(TLCD_ID_FROM_GS_FOR_MISSION, packet);
 #endif
 
@@ -295,7 +295,7 @@ static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet)
   // TL_cmd に変換して tl_cmd_list に追加する
   CCP_copy_packet(&temp_, packet);
   CCP_set_ti(&temp_, ti);
-  CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0
+  CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL); // UTL -> TL0
 
   return PH_add_tl_cmd_(id, &temp_, TMGR_get_master_total_cycle());
 }

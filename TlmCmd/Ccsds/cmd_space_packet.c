@@ -208,15 +208,15 @@ CCP_EXEC_TYPE CSP_get_exec_type(const CmdSpacePacket* csp)
   switch (exec_type)
   {
   case CCP_EXEC_TYPE_GS:  // FALL THROUGH
-  case CCP_EXEC_TYPE_TL0: // FALL THROUGH
+  case CCP_EXEC_TYPE_TL: // FALL THROUGH
   case CCP_EXEC_TYPE_BC:  // FALL THROUGH
   case CCP_EXEC_TYPE_RT:  // FALL THROUGH
   case CCP_EXEC_TYPE_UTL: // FALL THROUGH
-  case CCP_EXEC_TYPE_TL1: // FALL THROUGH
-  case CCP_EXEC_TYPE_TL2:
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC: // FALL THROUGH
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
 #ifdef TLCD_ENABLE_MISSION_TL
-  case CCP_EXEC_TYPE_TL_MIS:
-  case CCP_EXEC_TYPE_UTL_MIS:
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
 #endif
     return exec_type;
   default:
