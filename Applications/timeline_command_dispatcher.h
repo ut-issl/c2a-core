@@ -82,14 +82,6 @@ AppInfo TLCD_mis_create_app(void);
  */
 TLCD_ID TLCD_update_tl_list_for_tlm(TLCD_ID id);
 
-/**
- * @brief tl_list のうち指定された位置の tl_cmd の packet を取得する
- * @note TLテレメで用いる
- * @param offset その page_no の中で0起算で何番目の packet か
- * @return packet へのポインタ
- */
-const CommonCmdPacket* TLCD_get_packet_for_tl_tlm(uint8_t offset);
-
 CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet);
