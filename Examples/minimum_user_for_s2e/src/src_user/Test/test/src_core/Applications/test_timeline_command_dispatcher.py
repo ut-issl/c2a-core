@@ -32,13 +32,13 @@ def test_tlcd_set_flag():
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS, 2),
+        (c2a_enum.TL_ID_FROM_GS, 2),
         c2a_enum.Tlm_CODE_HK,
     )
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS, 2),
+        (c2a_enum.TL_ID_FROM_GS, 2),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -46,13 +46,13 @@ def test_tlcd_set_flag():
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS, 1),
+        (c2a_enum.TL_ID_FROM_GS, 1),
         c2a_enum.Tlm_CODE_HK,
     )
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS, 1),
+        (c2a_enum.TL_ID_FROM_GS, 1),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -66,13 +66,13 @@ def test_tlcd_set_flag():
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS, 0),
+        (c2a_enum.TL_ID_FROM_GS, 0),
         c2a_enum.Tlm_CODE_HK,
     )
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS, 0),
+        (c2a_enum.TL_ID_FROM_GS, 0),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -111,17 +111,17 @@ def test_tmgr_tl0_and_tl3():
     ti_of_tl3_cmds = generate_random_ti(ti_now, 5)
     send_tl_mis_nops(ti_of_tl3_cmds)
 
-    # 正しいTIで登録されているかチェック
-    check_registered_tl_cmds(ti_of_tl0_cmds, c2a_enum.TL_ID_DEPLOY_FROM_GS)
+    # TL0,3 に正しいTIで登録されているかチェック
+    check_registered_tl_cmds(ti_of_tl0_cmds, c2a_enum.TL_ID_FROM_GS)
     check_registered_tl_cmds(ti_of_tl3_cmds, c2a_enum.TL_ID_FROM_GS_FOR_MISSION)
 
-    # Cmd_TLCD_CLEAR_TIMELINE_AT をチェック
-    # test_tlcd_clear_timeline_at(ti_of_tl0_cmds, c2a_enum.TL_ID_DEPLOY_FROM_GS)
+    # Cmd_TLCD_CLEAR_TIMELINE_AT が正しく動作するかチェック
+    test_tlcd_clear_timeline_at(ti_of_tl0_cmds, c2a_enum.TL_ID_FROM_GS)
 
-    # clear all で正しくクリアされるか（ゼロにリセットされているか）チェック
+    # Cmd_TLCD_CLEAR_ALL_TIMELINE で正しくクリアされるか（ゼロにリセットされているか）チェック
     clear_tl0_and_tl3()
     ti_zeros = [0] * 5
-    check_registered_tl_cmds(ti_zeros, c2a_enum.TL_ID_DEPLOY_FROM_GS)
+    check_registered_tl_cmds(ti_zeros, c2a_enum.TL_ID_FROM_GS)
     check_registered_tl_cmds(ti_zeros, c2a_enum.TL_ID_FROM_GS_FOR_MISSION)
 
 
@@ -135,7 +135,6 @@ def test_tlcd_clear_timeline_at(ti_of_cmds, line_no):
         c2a_enum.Tlm_CODE_HK,
     )
 
-    # 正しく削除されたか確認
     check_registered_tl_cmds(ti_of_cmds[1:-1], line_no)
 
 
@@ -144,7 +143,7 @@ def clear_tl0_and_tl3():
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (c2a_enum.TL_ID_DEPLOY_FROM_GS,),
+        (c2a_enum.TL_ID_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
     # TL3をクリア
@@ -187,6 +186,7 @@ def send_tl_mis_nops(ti_of_cmds):
         )
 
 
+# 指定された TI で登録されているか TL テレメでチェックする関数
 def check_registered_tl_cmds(ti_of_tl_cmds, line_no):
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
@@ -206,9 +206,5 @@ def check_registered_tl_cmds(ti_of_tl_cmds, line_no):
 
 
 if __name__ == "__main__":
-    test_tmgr_tl0_and_tl3()
-    # test_tmgr_set_time()
-    # test_tmgr_set_unixtime()
-    # test_tmgr_set_utl_unixtime_epoch()
-    # test_tmgr_utl_cmd()
+    # test_tmgr_tl0_and_tl3()
     pass
