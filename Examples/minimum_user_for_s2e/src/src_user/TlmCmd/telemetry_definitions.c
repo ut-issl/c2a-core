@@ -3161,7 +3161,7 @@ static TF_TLM_FUNC_ACK Tlm_GS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 
 static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (458 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (414 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], TMGR_get_master_clock().mode_cycle);
@@ -3296,20 +3296,9 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u32(&packet[402], 0);
   TF_copy_u32(&packet[406], 0);
   TF_copy_u32(&packet[410], 0);
-  TF_copy_u32(&packet[414], 0);
-  TF_copy_u32(&packet[418], 0);
-  TF_copy_u32(&packet[422], 0);
-  TF_copy_u32(&packet[426], 0);
-  TF_copy_u32(&packet[430], 0);
-  TF_copy_u32(&packet[434], 0);
-  TF_copy_u32(&packet[438], 0);
-  TF_copy_u32(&packet[442], 0);
-  TF_copy_u32(&packet[446], 0);
-  TF_copy_u32(&packet[450], 0);
-  TF_copy_u32(&packet[454], 0);
 #endif
 
-  *len = 458;
+  *len = 414;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
