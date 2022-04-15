@@ -28,7 +28,7 @@ static void TLCD_mis_dispatch_(void);
  * @param id
  * @return void
  */
-static void tlc_dispatcher_(TLCD_ID id);
+static void TLCD_tlc_dispatcher_(TLCD_ID id);
 
 /**
  * @brief 指定された時刻, id の TL コマンドを削除する
@@ -60,7 +60,7 @@ static void TLCD_gs_init_(void)
 
 static void TLCD_gs_dispatch_(void)
 {
-  tlc_dispatcher_(TLCD_ID_FROM_GS);
+  TLCD_tlc_dispatcher_(TLCD_ID_FROM_GS);
 }
 
 AppInfo TLCD_bc_create_app(void)
@@ -75,7 +75,7 @@ static void TLCD_bc_init_(void)
 
 static void TLCD_bc_dispatch_(void)
 {
-  tlc_dispatcher_(TLCD_ID_DEPLOY_BC);
+  TLCD_tlc_dispatcher_(TLCD_ID_DEPLOY_BC);
 }
 
 AppInfo TLCD_tlm_create_app(void)
@@ -90,7 +90,7 @@ static void TLCD_tlm_init_(void)
 
 static void TLCD_tlm_dispatch_(void)
 {
-  tlc_dispatcher_(TLCD_ID_DEPLOY_TLM);
+  TLCD_tlc_dispatcher_(TLCD_ID_DEPLOY_TLM);
 }
 
 #ifdef TLCD_ENABLE_MISSION_TL
@@ -106,11 +106,11 @@ static void TLCD_mis_init_(void)
 
 static void TLCD_mis_dispatch_(void)
 {
-  tlc_dispatcher_(TLCD_ID_FROM_GS_FOR_MISSION);
+  TLCD_tlc_dispatcher_(TLCD_ID_FROM_GS_FOR_MISSION);
 }
 #endif
 
-static void tlc_dispatcher_(TLCD_ID id)
+static void TLCD_tlc_dispatcher_(TLCD_ID id)
 {
   PL_ACK ack = PL_check_tl_cmd(&(PH_tl_cmd_list[id]),
                                TMGR_get_master_total_cycle());
@@ -171,7 +171,7 @@ TLCD_ID TLCD_update_tl_list_for_tlm(TLCD_ID id)
   timeline_command_dispatcher_.tlm_info_.updated_at = TMGR_get_master_total_cycle();
 
   // 全リスト内容をクリア
-  for (i = 0; i < PH_TL0_CMD_LIST_MAX; ++i)
+  for (i = 0; i < PH_TLC_GS_LIST_MAX; ++i)
   {
     timeline_command_dispatcher_.tlm_info_.tl_list[i] = &TLCD_null_packet_;
   }

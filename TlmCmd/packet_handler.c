@@ -23,13 +23,13 @@ PacketList PH_st_tlm_list;
 PacketList PH_rp_tlm_list;
 #endif
 
-static PL_Node PH_gs_cmd_stock_[PH_GS_CMD_LIST_MAX];
-static PL_Node PH_rt_cmd_stock_[PH_RT_CMD_LIST_MAX];
-static PL_Node PH_tl0_cmd_stock_[PH_TL0_CMD_LIST_MAX];
-static PL_Node PH_tl1_cmd_stock_[PH_TL1_CMD_LIST_MAX];
-static PL_Node PH_tl2_cmd_stock_[PH_TL2_CMD_LIST_MAX];
+static PL_Node PH_gs_cmd_stock_[PH_GSC_LIST_MAX];
+static PL_Node PH_rt_cmd_stock_[PH_RTC_LIST_MAX];
+static PL_Node PH_tl_cmd_gs_stock_[PH_TLC_GS_LIST_MAX];
+static PL_Node PH_tl_cmd_bc_stock_[PH_TLC_BC_LIST_MAX];
+static PL_Node PH_tl_cmd_tlm_stock_[PH_TLC_TLM_LIST_MAX];
 #ifdef TLCD_ENABLE_MISSION_TL
-static PL_Node PH_tl_mis_cmd_stock_[PH_TL_MIS_CMD_LIST_MAX];
+static PL_Node PH_tl_cmd_mis_stock_[PH_TLC_MIS_LIST_MAX];
 #endif
 static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
 #ifdef DR_ENABLE
@@ -37,13 +37,13 @@ static PL_Node PH_st_tlm_stock_[PH_ST_TLM_LIST_MAX];
 static PL_Node PH_rp_tlm_stock_[PH_RP_TLM_LIST_MAX];
 #endif
 
-static CommonCmdPacket PH_gs_cmd_ccp_stock_[PH_GS_CMD_LIST_MAX];
-static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RT_CMD_LIST_MAX];
-static CommonCmdPacket PH_tl0_cmd_ccp_stock_[PH_TL0_CMD_LIST_MAX];
-static CommonCmdPacket PH_tl1_cmd_ccp_stock_[PH_TL1_CMD_LIST_MAX];
-static CommonCmdPacket PH_tl2_cmd_ccp_stock_[PH_TL2_CMD_LIST_MAX];
+static CommonCmdPacket PH_gs_cmd_ccp_stock_[PH_GSC_LIST_MAX];
+static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RTC_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_gs_ccp_stock_[PH_TLC_GS_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_bc_ccp_stock_[PH_TLC_BC_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_tlm_ccp_stock_[PH_TLC_TLM_LIST_MAX];
 #ifdef TLCD_ENABLE_MISSION_TL
-static CommonCmdPacket PH_tl_mis_cmd_ccp_stock_[PH_TL_MIS_CMD_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_mis_ccp_stock_[PH_TLC_MIS_LIST_MAX];
 #endif
 static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
 #ifdef DR_ENABLE
@@ -73,14 +73,14 @@ static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
 
 void PH_init(void)
 {
-  PL_initialize_with_ccp(PH_gs_cmd_stock_, PH_gs_cmd_ccp_stock_, PH_GS_CMD_LIST_MAX, &PH_gs_cmd_list);
-  PL_initialize_with_ccp(PH_rt_cmd_stock_, PH_rt_cmd_ccp_stock_, PH_RT_CMD_LIST_MAX, &PH_rt_cmd_list);
+  PL_initialize_with_ccp(PH_gs_cmd_stock_, PH_gs_cmd_ccp_stock_, PH_GSC_LIST_MAX, &PH_gs_cmd_list);
+  PL_initialize_with_ccp(PH_rt_cmd_stock_, PH_rt_cmd_ccp_stock_, PH_RTC_LIST_MAX, &PH_rt_cmd_list);
 
-  PL_initialize_with_ccp(PH_tl0_cmd_stock_, PH_tl0_cmd_ccp_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS]);
-  PL_initialize_with_ccp(PH_tl1_cmd_stock_, PH_tl1_cmd_ccp_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_DEPLOY_BC]);
-  PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]);
+  PL_initialize_with_ccp(PH_tl_cmd_gs_stock_, PH_tl_cmd_gs_ccp_stock_, PH_TLC_GS_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS]);
+  PL_initialize_with_ccp(PH_tl_cmd_bc_stock_, PH_tl_cmd_bc_ccp_stock_, PH_TLC_BC_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_DEPLOY_BC]);
+  PL_initialize_with_ccp(PH_tl_cmd_tlm_stock_, PH_tl_cmd_tlm_ccp_stock_, PH_TLC_TLM_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]);
 #ifdef TLCD_ENABLE_MISSION_TL
-  PL_initialize_with_ccp(PH_tl_mis_cmd_stock_, PH_tl_mis_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]);
+  PL_initialize_with_ccp(PH_tl_cmd_mis_stock_, PH_tl_cmd_mis_ccp_stock_, PH_TLC_TLM_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]);
 #endif
 
   PL_initialize_with_ctp(PH_ms_tlm_stock_, PH_ms_tlm_ctp_stock_, PH_MS_TLM_LIST_MAX, &PH_ms_tlm_list);

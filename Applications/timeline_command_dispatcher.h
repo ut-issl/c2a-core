@@ -38,7 +38,7 @@ typedef struct
     TLCD_ID id;
     uint8_t page_no;
     cycle_t updated_at;
-    const CommonCmdPacket* tl_list[PH_TL0_CMD_LIST_MAX]; // TL0が最長なのでそれに合わせる。
+    const CommonCmdPacket* tl_list[PH_TLC_GS_LIST_MAX]; // TL0が最長なのでそれに合わせる。
   } tlm_info_;
 } TimelineCommandDispatcher;
 
