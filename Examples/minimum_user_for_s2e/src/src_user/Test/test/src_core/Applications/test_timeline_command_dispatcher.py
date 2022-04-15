@@ -165,40 +165,108 @@ def test_tlcd_send_and_clear_tl():
     )
     ti_now = tlm_TL["TL.SH.TI"]
 
+    # このテストでは代表として Cmd_TLCD_CLEAR_TIMELINE_AT を登録して動作確認しているが, 特に意味はない
     # tl コマンドをランダムなTIで登録
-    ti_of_tl0_cmds = generate_random_ti(ti_now, 5)
-    send_tl_nops(ti_of_tl0_cmds)
+    ti_list_tl0 = generate_random_ti(ti_now, 5)
+    params_tl0 = (1, 123456)
+    send_tl_cmds(ti_list_tl0, c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT, params_tl0)
 
     # tl_mis コマンドをランダムなTIで登録
-    ti_of_tl3_cmds = generate_random_ti(ti_now, 5)
-    send_tl_mis_nops(ti_of_tl3_cmds)
+    ti_list_tl3 = generate_random_ti(ti_now, 5)
+    params_tl3 = (2, 654321)
+    send_tl_mis_cmds(ti_list_tl3, c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT, params_tl3)
 
-    # TL0,3 に正しいTIで登録されているかチェック
-    check_registered_tl_cmds(ti_of_tl0_cmds, c2a_enum.TLCD_ID_FROM_GS)
-    check_registered_tl_cmds(ti_of_tl3_cmds, c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION)
+    # TL0,3 に正しく登録されているかチェック
+    check_registered_tl_cmds(
+        c2a_enum.TLCD_ID_FROM_GS, ti_list_tl0, c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT, params_tl0
+    )
+    check_registered_tl_cmds(
+        c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION,
+        ti_list_tl3,
+        c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT,
+        params_tl3,
+    )
 
     # Cmd_TLCD_CLEAR_TIMELINE_AT が正しく動作するかチェック
-    target_ti = ti_of_tl0_cmds[0]
+    clear_ti = ti_list_tl0[0]
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT,
-        (c2a_enum.TLCD_ID_FROM_GS, target_ti),
+        (c2a_enum.TLCD_ID_FROM_GS, clear_ti),
         c2a_enum.Tlm_CODE_HK,
     )
-    check_registered_tl_cmds(ti_of_tl0_cmds[1:-1], c2a_enum.TLCD_ID_FROM_GS)
+    check_registered_tl_cmds(
+        c2a_enum.TLCD_ID_FROM_GS,
+        ti_list_tl0[1:-1],
+        c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT,
+        params_tl0,
+    )
 
-    # Cmd_TLCD_CLEAR_ALL_TIMELINE で正しくクリアされるか（ゼロにリセットされているか）チェック
+    # Cmd_TLCD_CLEAR_ALL_TIMELINE で正しくクリアされるか（全てゼロにリセットされるか）チェック
     clear_tl0_and_tl3()
     ti_zeros = [0] * 5
-    check_registered_tl_cmds(ti_zeros, c2a_enum.TLCD_ID_FROM_GS)
-    check_registered_tl_cmds(ti_zeros, c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION)
+    check_registered_tl_cmds(c2a_enum.TLCD_ID_FROM_GS, ti_zeros, 0, (0, 0))
+    check_registered_tl_cmds(c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, ti_zeros, 0, (0, 0))
 
 
 @pytest.mark.sils
 @pytest.mark.real
+# 最後のお掃除
 def test_tlcd_final_check():
     reset_id_and_page()
     clear_tl0_and_tl3()
+
+
+# 未来のランダムな時刻の ti を num 個生成する
+def generate_random_ti(ti_now, num):
+    ti_list = [ti_now + 10000 + random.randrange(1000) for i in range(num)]
+    # 重複を削除して時刻順に並べ替え
+    ti_list = list(set(ti_list))
+    ti_list.sort()
+    return ti_list
+
+
+def send_tl_cmds(ti_of_cmds, cmd_id, params):
+    for ti in ti_of_cmds:
+        wings.util.send_tl_cmd(ope, ti, cmd_id, params)
+
+
+def send_tl_mis_cmds(ti_of_cmds, cmd_id, params):
+    for ti in ti_of_cmds:
+        wings.util.send_tl_mis_cmd(ope, ti, cmd_id, params)
+
+
+# 指定された TI, cmd_id, params で登録されているか TL テレメでチェックする
+def check_registered_tl_cmds(line_no, ti_list, cmd_id, params):
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_ID_FOR_TLM,
+        (line_no,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+
+    tlm_TL = wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+    )
+    assert tlm_TL["TL.LINE_NO"] == line_no
+
+    for i, ti in enumerate(ti_list):
+        str_id = "TL.CMD" + str(i) + "_ID"
+        str_ti = "TL.CMD" + str(i) + "_TI"
+        # params のチェックは Cmd_TLCD_CLEAR_TIMELINE_AT を前提としており, パラメタ構成がコマンドだとエラーが出ることに注意
+        str_param = "TL.CMD" + str(i) + "_PARAM"
+        param0 = int(tlm_TL[str_param + "0"], 0)
+        param1 = int(
+            tlm_TL[str_param + "1"]
+            + tlm_TL[str_param + "2"][2:]
+            + tlm_TL[str_param + "3"][2:]
+            + tlm_TL[str_param + "4"][2:],
+            0,
+        )
+        assert int(tlm_TL[str_id], 0) == cmd_id
+        assert tlm_TL[str_ti] == ti
+        assert param0 == params[0]
+        assert param1 == params[1]
 
 
 def reset_id_and_page():
@@ -231,56 +299,6 @@ def clear_tl0_and_tl3():
         (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION,),
         c2a_enum.Tlm_CODE_HK,
     )
-
-
-# 未来のランダムな時刻の ti を num 個生成する
-def generate_random_ti(ti_now, num):
-    tis = [ti_now + 10000 + random.randrange(1000) for i in range(num)]
-    # 重複を削除して時刻順に並べ替え
-    tis = list(set(tis))
-    tis.sort()
-    return tis
-
-
-# 指定された TI で NOP を tl_cmd として送る
-def send_tl_nops(ti_of_cmds):
-    for ti in ti_of_cmds:
-        wings.util.send_tl_cmd(
-            ope,
-            ti,
-            c2a_enum.Cmd_CODE_NOP,
-            (),
-        )
-
-
-# 指定された TI で NOP を tl_mis_cmd として送る
-def send_tl_mis_nops(ti_of_cmds):
-    for ti in ti_of_cmds:
-        wings.util.send_tl_mis_cmd(
-            ope,
-            ti,
-            c2a_enum.Cmd_CODE_NOP,
-            (),
-        )
-
-
-# 指定された TI で登録されているか TL テレメでチェックする関数
-def check_registered_tl_cmds(ti_of_tl_cmds, line_no):
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_ID_FOR_TLM,
-        (line_no,),
-        c2a_enum.Tlm_CODE_HK,
-    )
-
-    tlm_TL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
-    )
-    assert tlm_TL["TL.LINE_NO"] == line_no
-
-    for i, ti in enumerate(ti_of_tl_cmds):
-        tlm_name = "TL.CMD" + str(i) + "_TI"
-        assert tlm_TL[tlm_name] == ti
 
 
 if __name__ == "__main__":
