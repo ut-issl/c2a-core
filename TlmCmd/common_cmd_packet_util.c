@@ -86,7 +86,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 
   CCP_set_common_hdr(packet);
   CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
   CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
   CCP_set_ti(packet, ti);
   CCP_set_param(packet, param, len);
@@ -113,7 +113,7 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
 
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
 {
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
   CCP_set_ti(packet, ti);
 }
 

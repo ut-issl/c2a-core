@@ -59,7 +59,7 @@ AppInfo TLCD_gs_create_app(void);
 AppInfo TLCD_bc_create_app(void);
 
 /**
- * @brief TL2 (TLM を展開する用の Timeline) の実行 App を作成する
+ * @brief TL2 (TLM を登録する用の Timeline) の実行 App を作成する
  * @param void
  * @return AppInfo
  */

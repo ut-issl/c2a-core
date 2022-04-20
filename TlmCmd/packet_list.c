@@ -370,7 +370,7 @@ PL_ACK PL_deploy_block_cmd(PacketList* pl, const bct_id_t block, cycle_t start_a
     BCT_make_pos(&pos, block, i);
     BCT_load_cmd(&pos, &temp_);
     CCP_set_ti(&temp_, (cycle_t)(start_at + adj + CCP_get_ti(&temp_)));
-    CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL); // BLC -> TLC     // FIXME: TaskListもTL012もすべて CCP_EXEC_TYPE_TL になってしまうが，わかりにくくない？
+    CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL_FROM_GS); // BLC -> TLC   // FIXME: TaskListやBC用TLM用もすべて CCP_EXEC_TYPE_TL_FROM_GS になってしまうので, わかりにくい
 
     for (j = 0; j <= pl->active_nodes_; ++j)
     {

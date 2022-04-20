@@ -247,7 +247,6 @@ static PH_ACK TLCD_drop_tl_cmd_at_(TLCD_ID id, cycle_t time)
   return PH_ACK_SUCCESS;
 }
 
-// FIXME: ELのイベント記録を追加する
 CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -287,7 +286,6 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-
 CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -303,7 +301,6 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-
 CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -311,7 +308,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 
   if (id >= TLCD_ID_MAX)
   {
-    // 指定されたライン番号が存在しない場合は異常判定。
+    // 指定されたライン番号が存在しない場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -333,7 +330,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 
   if (id >= TLCD_ID_MAX)
   {
-    // 存在しないライン番号が指定された場合は異常判定。
+    // 指定されたライン番号が存在しない場合は異常判定
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
 
@@ -362,7 +359,6 @@ CCP_EXEC_STS Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
 
   return CCP_EXEC_SUCCESS;
 }
-
 
 CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {

@@ -208,7 +208,7 @@ CCP_EXEC_TYPE CSP_get_exec_type(const CmdSpacePacket* csp)
   switch (exec_type)
   {
   case CCP_EXEC_TYPE_GS:
-  case CCP_EXEC_TYPE_TL:
+  case CCP_EXEC_TYPE_TL_FROM_GS:
   case CCP_EXEC_TYPE_BC:
   case CCP_EXEC_TYPE_RT:
   case CCP_EXEC_TYPE_UTL:
