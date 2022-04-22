@@ -43,7 +43,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
   size_t  id_temp = id;
   endian_memcpy(param, &id_temp, 4);
 
-  CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, 4);
+  CCP_form_tlc(packet, ti, CCP_EXEC_TYPE_TL_FROM_GS, Cmd_CODE_AM_EXECUTE_APP, param, 4);
 }
 
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
@@ -70,7 +70,7 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   if (param == NULL && len != 0)
   {
@@ -88,7 +88,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 
   CCP_set_common_hdr(packet);
   CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
+  CCP_set_exec_type(packet, type);
   CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
   CCP_set_ti(packet, ti);
   CCP_set_param(packet, param, len);
@@ -129,9 +129,9 @@ PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
   return PH_analyze_cmd_packet(CCP_util_packet_);
 }
 
-PH_ACK CCP_register_tlc(cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
-  if (CCP_form_tlc(CCP_util_packet_, ti, cmd_id, param, len) != CCP_UTIL_ACK_OK)
+  if (CCP_form_tlc(CCP_util_packet_, ti, type, cmd_id, param, len) != CCP_UTIL_ACK_OK)
   {
     return PH_ACK_INVALID_PACKET;
   }

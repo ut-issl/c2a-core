@@ -54,7 +54,7 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
  * @param[in]     len:    パラメタ長
  * @return CCP_UTIL_ACK
  */
-CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief  BC展開 command を生成
@@ -100,7 +100,7 @@ PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
  * @param[in] len:    パラメタ長
  * @return CCP_UTIL_ACK
  */
-PH_ACK CCP_register_tlc(cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief  BC展開 command を登録

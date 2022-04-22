@@ -505,7 +505,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   CCP_get_raw_param_from_packet(packet, new_cmd_param, cmd_param_len);
 
   BCT_make_pos(&pos, block, cmd);
-  CCP_form_tlc((CommonCmdPacket*)&new_bct_cmddata, ti, cmd_id, new_cmd_param, cmd_param_len);
+  CCP_form_tlc((CommonCmdPacket*)&new_bct_cmddata, ti, CCP_EXEC_TYPE_TL_DEPLOY_BC, cmd_id, new_cmd_param, cmd_param_len);
   BCT_overwrite_cmd(&pos, (CommonCmdPacket*)&new_bct_cmddata);
 
   return CCP_EXEC_SUCCESS;
@@ -524,7 +524,7 @@ CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
 
   for (ti = 11 - (cycle_t)num_nop; ti < 11; ++ti)
   {
-    CCP_form_tlc(&temp_packet_, ti, Cmd_CODE_NOP, NULL, 0);
+    CCP_form_tlc(&temp_packet_, ti, CCP_EXEC_TYPE_TL_DEPLOY_BC, Cmd_CODE_NOP, NULL, 0);
     BCT_register_cmd(&temp_packet_);
   }
 

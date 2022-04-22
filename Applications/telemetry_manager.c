@@ -326,6 +326,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
 
   ccp_util_ack = CCP_form_tlc(&TLM_MGR_packet_,
                               (cycle_t)bc_cmd_pos,
+                              CCP_EXEC_TYPE_TL_DEPLOY_TLM,
                               Cmd_CODE_GENERATE_TLM,
                               param,
                               CA_get_cmd_param_min_len(Cmd_CODE_GENERATE_TLM));
@@ -560,6 +561,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 
   CCP_form_tlc(&TLM_MGR_packet_,
                TLM_MGR_USE_BC_NUM,
+               CCP_EXEC_TYPE_TL_DEPLOY_TLM,
                Cmd_CODE_TLCD_DEPLOY_BLOCK,
                param,
                1 + SIZE_OF_BCT_ID_T);
@@ -596,6 +598,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
   BCT_make_pos(&bc_register_pos, master_bc_id, bc_cmd_pos);
   CCP_form_tlc(&TLM_MGR_packet_,
                TLM_MGR_USE_BC_NUM,
+               CCP_EXEC_TYPE_TL_DEPLOY_TLM,
                Cmd_CODE_NOP,
                NULL,
                0);

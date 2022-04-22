@@ -214,6 +214,7 @@ void BCL_register_cmd_(cycle_t ti, CMD_CODE cmd_id)
 {
   CCP_form_tlc(&block_command_loader_.packet,
                ti,
+               CCP_EXEC_TYPE_TL_DEPLOY_BC,
                cmd_id,
                &block_command_loader_.params[0],
                (uint16_t)block_command_loader_.param_idx);
