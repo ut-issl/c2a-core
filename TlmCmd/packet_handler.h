@@ -8,13 +8,13 @@
 #define TL_TLM_PAGE_SIZE  (32)
 #define TL_TLM_PAGE_MAX   (8)
 
-#define PH_GS_CMD_LIST_MAX  (8)
-#define PH_RT_CMD_LIST_MAX  (32)
-#define PH_TL0_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX)   // これが最長じゃないといけない
+#define PH_GSC_LIST_MAX  (8)
+#define PH_RTC_LIST_MAX  (32)
+#define PH_TLC_GS_LIST_MAX (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX)   // これが最長じゃないといけない
                                                                    // TLCD_tl_list_for_tlmの長さがこれなので！！
-#define PH_TL1_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
-#define PH_TL2_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
-#define PH_TL_MIS_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)   // とりあえず TL1,2 と同じ長さにした
+#define PH_TLC_BC_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
+#define PH_TLC_TLM_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
+#define PH_TLC_MIS_LIST_MAX (TL_TLM_PAGE_SIZE * 4)   // とりあえず TL1,2 と同じ長さにした
 #define PH_MS_TLM_LIST_MAX  (16)
 #define PH_ST_TLM_LIST_MAX  (16)
 #define PH_RP_TLM_LIST_MAX  (16)
@@ -58,7 +58,7 @@ typedef enum
 
 extern PacketList PH_gs_cmd_list;
 extern PacketList PH_rt_cmd_list;
-extern PacketList PH_tl_cmd_list[TL_ID_MAX];
+extern PacketList PH_tl_cmd_list[TLCD_ID_MAX];
 // extern PacketList PH_hk_tlm_list;    // 現在は MS TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
 extern PacketList PH_ms_tlm_list;
 #ifdef DR_ENABLE

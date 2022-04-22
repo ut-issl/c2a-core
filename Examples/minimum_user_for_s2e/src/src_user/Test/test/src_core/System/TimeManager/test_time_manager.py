@@ -23,9 +23,6 @@ OBCT_STEP_IN_MSEC = 1  # 1 step で何 ms か
 OBCT_STEPS_PER_CYCLE = 100  # 何 step で 1 cycle か
 OBCT_CYCLES_PER_SEC = 1000 // OBCT_STEP_IN_MSEC // OBCT_STEPS_PER_CYCLE  # 1 s で何 cycle か
 TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
-TL_ID_DEPLOY_FROM_GS = 0
-
-TL_DFAULT_PAGE_NO = 0
 
 
 @pytest.mark.sils
@@ -145,14 +142,14 @@ def test_tmgr_utl_cmd():
     # TLテレメをTL0のページ0にセット
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM,
-        (TL_ID_DEPLOY_FROM_GS,),
+        c2a_enum.Cmd_CODE_TLCD_SET_ID_FOR_TLM,
+        (c2a_enum.TLCD_ID_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_PAGE_FOR_TLM,
-        (TL_DFAULT_PAGE_NO,),
+        (0,),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -192,7 +189,7 @@ def test_tmgr_final_check():
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (TL_ID_DEPLOY_FROM_GS,),
+        (c2a_enum.TLCD_ID_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -219,7 +216,7 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
-        (TL_ID_DEPLOY_FROM_GS,),
+        (c2a_enum.TLCD_ID_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
 
@@ -240,8 +237,8 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction
     tlm_TL = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
     )
-    assert tlm_TL["TL.LINE_NO"] == TL_ID_DEPLOY_FROM_GS
-    assert tlm_TL["TL.PAGE_NO"] == TL_DFAULT_PAGE_NO
+    assert tlm_TL["TL.LINE_NO"] == c2a_enum.TLCD_ID_FROM_GS
+    assert tlm_TL["TL.PAGE_NO"] == 0
 
     for i, unixtime in enumerate(unixtime_of_cmds):
         tlm_name = "TL.CMD" + str(i) + "_TI"

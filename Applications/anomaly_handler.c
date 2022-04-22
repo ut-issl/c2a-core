@@ -204,7 +204,7 @@ static void AH_respond_to_anomaly_(size_t id)
   // 対応ブロックコマンドをリアルタイムコマンドで展開
   CommonCmdPacket packet;
   // 通常BCなのでTLC1に展開
-  CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
+  CCP_form_block_deploy_cmd(&packet, TLCD_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
   PH_dispatch_command(&packet);
 
   // 実行したルールを記録し回数を更新

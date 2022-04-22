@@ -6,7 +6,8 @@
 #define COMMON_CMD_PACKET_UTIL_H_
 
 #include "common_cmd_packet.h"
-#include "block_command_table.h"
+#include "../Applications/timeline_command_dispatcher.h" // for TLCD_ID
+#include "block_command_table.h" // for bct_id
 #include <src_user/Applications/app_registry.h>
 
 /**
@@ -60,7 +61,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
  * @param[in]     block_no: BC ID
  * @return CCP_UTIL_ACK
  */
-CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, bct_id_t block_no);
+CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no);
 
 /**
  * @brief  Realtime Command から Timeline Command へ変換

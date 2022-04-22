@@ -16,7 +16,7 @@ void BCL_load_start_hk_tlm(void)
   BCL_tool_prepare_param_uint8(1);
   BCL_tool_register_cmd(1, Cmd_CODE_GENERATE_TLM);
 
-  BCL_tool_register_deploy (10, BC_HK_CYCLIC_TLM, TL_ID_DEPLOY_TLM);
+  BCL_tool_register_deploy (10, BC_HK_CYCLIC_TLM, TLCD_ID_DEPLOY_TLM);
 }
 
 #pragma section

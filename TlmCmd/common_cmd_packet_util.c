@@ -5,9 +5,7 @@
  */
 
 #include "common_cmd_packet_util.h"
-#include "../Applications/timeline_command_dispatcher.h" // for TL_ID_MAX
 #include "command_analyze.h"
-#include "block_command_table.h" // for BCT_MAX_BLOCKS
 #include "../Library/endian_memcpy.h"
 #include <stddef.h>     // for NULL
 #include <string.h>
@@ -88,7 +86,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 
   CCP_set_common_hdr(packet);
   CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL0);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
   CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
   CCP_set_ti(packet, ti);
   CCP_set_param(packet, param, len);
@@ -96,18 +94,18 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, bct_id_t block_no)
+CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];
 
-  if ((tl_no >= TL_ID_MAX) || (block_no >= BCT_MAX_BLOCKS))
+  if ((tl_no >= TLCD_ID_MAX) || (block_no >= BCT_MAX_BLOCKS))
   {
     // タイムラインのline番号、ブロックコマンド番号が範囲外の場合異常判定
     CCP_form_nop_rtc_(packet);
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  param[0] = tl_no;
+  param[0] = (uint8_t)tl_no;
   endian_memcpy(&param[1], &block_no, SIZE_OF_BCT_ID_T);
 
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
@@ -115,7 +113,7 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, b
 
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
 {
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL0);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
   CCP_set_ti(packet, ti);
 }
 

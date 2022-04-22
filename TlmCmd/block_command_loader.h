@@ -74,10 +74,10 @@ void BCL_tool_register_limit_combine(cycle_t ti, bct_id_t bct_id, step_t limit_s
  * @note   BlockCommandDefinitions.cで呼ばれることを想定している
  * @param  ti         コマンドを実行する相対TI
  * @param  bct_id     展開するブロックコマンドID
- * @param  tl_id      展開先のタイムラインID
+ * @param  tlcd_id      展開先のタイムラインID
  * @return void
  */
-void BCL_tool_register_deploy(cycle_t ti, bct_id_t bct_id, TL_ID tl_id);
+void BCL_tool_register_deploy(cycle_t ti, bct_id_t bct_id, TLCD_ID tlcd_id);
 
 /**
  * @brief  ブロックコマンドの最後にアプリの実行コマンドを追加する
