@@ -113,6 +113,12 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
 }
 
+void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
+{
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
+  CCP_set_ti(packet, ti);
+}
+
 PH_ACK CCP_register_app_cmd(cycle_t ti, AR_APP_ID id)
 {
   CCP_form_app_cmd(CCP_util_packet_, ti, id);
@@ -149,10 +155,41 @@ PH_ACK CCP_register_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no)
   return PH_analyze_cmd_packet(CCP_util_packet_);
 }
 
-void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
+const PacketList* CCP_get_packet_list_from_exec_type(CCP_EXEC_TYPE type)
 {
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
-  CCP_set_ti(packet, ti);
+  switch (type)
+  {
+  case CCP_EXEC_TYPE_GS:
+    return &PH_gs_cmd_list;
+
+  case CCP_EXEC_TYPE_TL_FROM_GS:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS];
+
+  case CCP_EXEC_TYPE_RT:
+    return &PH_rt_cmd_list;
+
+  case CCP_EXEC_TYPE_UTL:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS];
+
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC:
+    return &PH_tl_cmd_list[TLCD_ID_DEPLOY_BC];
+
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
+    return &PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM];
+
+#ifdef TLCD_ENABLE_MISSION_TL
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION];
+
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION];
+#endif
+
+  default:
+    break;
+  }
+
+  return NULL;
 }
 
 uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n)

@@ -112,6 +112,14 @@ PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const u
 PH_ACK CCP_register_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no);
 
 /**
+ * @brief CCP_EXEC_TYPE から PacketList を取得する
+ * @note  引数が不正 or 無い場合 NULL を返す
+ * @param[in] type: CCP_EXEC_TYPE
+ * @return PacketList の const ポインタ
+ */
+const PacketList* CCP_get_packet_list_from_exec_type(CCP_EXEC_TYPE type);
+
+/**
  * @brief  CCP packet から，サイズが 1 byte のコマンド引数を取得する
  * @note   セグメンテーション違反の場合は， 0 が代入されたポインタを返す
  * @note   CCP_get_param_from_packet マクロ で使うことを想定し，ユーザーはこの関数を直接叩くことは想定していない
