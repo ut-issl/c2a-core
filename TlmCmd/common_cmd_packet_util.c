@@ -189,6 +189,16 @@ PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const u
   return PH_analyze_cmd_packet(CCP_util_packet_);
 }
 
+CCP_UTIL_ACK CCP_register_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+{
+  if (CCP_form_tlc_asap(packet, ti, type, cmd_id, param, len) != CCP_UTIL_ACK_OK)
+  {
+    return PH_ACK_INVALID_PACKET;
+  }
+
+  return PH_analyze_cmd_packet(packet);
+}
+
 PH_ACK CCP_register_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no)
 {
   if (CCP_form_block_deploy_cmd(CCP_util_packet_, tl_no, block_no) != CCP_UTIL_ACK_OK)

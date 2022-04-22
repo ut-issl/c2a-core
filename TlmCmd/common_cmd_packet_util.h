@@ -116,6 +116,19 @@ PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
+ * @brief  Timeline command を登録
+ * @note   引数が不正なとき， packet は NOP TLC を返す
+ * @note   既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
+ * @param[in,out] packet: CCP
+ * @param[in]     ti:     TI
+ * @param[in]     packet: CMD_CODE
+ * @param[in]     param:  パラメタ
+ * @param[in]     len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_register_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
  * @brief  BC展開 command を登録
  * @note   RTC に登録される
  * @param[in] tl_no: Timeline no
