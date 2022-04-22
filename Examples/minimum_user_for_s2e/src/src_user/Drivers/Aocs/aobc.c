@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
-* @file
-* @brief  AOBC の Driver
-*/
+ * @file
+ * @brief  AOBC の Driver
+ */
 #include "./aobc.h"
 #include "./aobc_command_definitions.h"
 #include "./aobc_telemetry_definitions.h"

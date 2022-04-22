@@ -1,7 +1,7 @@
 /**
-* @file   UART_TEST.h
-* @brief  テスト用UARTのDriver
-*/
+ * @file   UART_TEST.h
+ * @brief  テスト用UARTのDriver
+ */
 #ifndef UART_TEST_H_
 #define UART_TEST_H_
 

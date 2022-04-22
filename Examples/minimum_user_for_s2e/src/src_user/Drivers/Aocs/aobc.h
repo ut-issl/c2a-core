@@ -1,7 +1,7 @@
 /**
-* @file
-* @brief  AOBC の Driver
-*/
+ * @file
+ * @brief  AOBC の Driver
+ */
 #ifndef AOBC_H_
 #define AOBC_H_
 

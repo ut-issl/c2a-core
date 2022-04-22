@@ -1,8 +1,8 @@
 #pragma section REPRO
 /**
-* @file   UART_TEST.h
-* @brief  テスト用UARTのDriver
-*/
+ * @file   UART_TEST.h
+ * @brief  テスト用UARTのDriver
+ */
 
 #include "UART_TEST.h"
 #include <src_core/TlmCmd/common_cmd_packet.h>

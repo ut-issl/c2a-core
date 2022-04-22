@@ -1,8 +1,8 @@
 /**
-* @file
-* @brief  AOBC の DI と AOBC の cmd dispatcher
-* @note   C2A 間通信のデモ用であり， AOBC も C2A 搭載を仮定する
-*/
+ * @file
+ * @brief  AOBC の DI と AOBC の cmd dispatcher
+ * @note   C2A 間通信のデモ用であり， AOBC も C2A 搭載を仮定する
+ */
 #ifndef DI_AOBC_H_
 #define DI_AOBC_H_
 
