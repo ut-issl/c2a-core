@@ -124,9 +124,9 @@ PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const u
  * @param[in]     packet: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
- * @return CCP_UTIL_ACK
+ * @return PH_ACK
  */
-CCP_UTIL_ACK CCP_register_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief  BC展開 command を登録
