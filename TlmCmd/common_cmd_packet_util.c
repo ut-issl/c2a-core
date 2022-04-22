@@ -96,6 +96,50 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE typ
   return CCP_UTIL_ACK_OK;
 }
 
+CCP_UTIL_ACK CCP_form_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+{
+  const PacketList* pl = CCP_get_packet_list_from_exec_type(type);
+
+  if (pl == NULL || PL_is_full(pl)) return CCP_UTIL_ACK_PARAM_ERR;
+
+  if (!PL_is_empty(pl))
+  {
+    cycle_t head = CCP_get_ti((const CommonCmdPacket*)(PL_get_head(pl)->packet));
+    cycle_t tail = CCP_get_ti((const CommonCmdPacket*)(PL_get_tail(pl)->packet));
+
+    if (head <= ti && ti <= tail)
+    {
+      uint16_t i;
+      uint16_t active_nodes = PL_count_active_nodes(pl);
+      const PL_Node* current = PL_get_head(pl);
+
+      for (i = 0; i < active_nodes; ++i)
+      {
+        cycle_t current_ti;
+
+        if (current == NULL) break;
+        current_ti = CCP_get_ti((const CommonCmdPacket*)(current->packet));
+        if (current_ti < ti)
+        {
+          continue;
+        }
+        else if (current_ti == ti)
+        {
+          ++ti;
+        }
+        else
+        {
+          break;
+        }
+
+        current = current->next;
+      }
+    }
+  }
+
+  return CCP_form_tlc(packet, ti, type, cmd_id, param, len);
+}
+
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];
