@@ -71,6 +71,12 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
  */
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
 
+PH_ACK CCP_register_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
+
+PH_ACK CCP_register_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no);
+
 /**
  * @brief  CCP packet から，サイズが 1 byte のコマンド引数を取得する
  * @note   セグメンテーション違反の場合は， 0 が代入されたポインタを返す
