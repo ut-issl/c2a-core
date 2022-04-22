@@ -1,15 +1,15 @@
 #pragma section REPRO
 /**
-* @file ccsds_sils.cpp
-* @brief CCSDS通信ラッパーのクラスです。
-*
-* CCSDS通信ラッパーは、
-* CCSDSのインターフェースを実現し、
-* CCSDSポートの初期化、データ送信、データ受信を行う、
-* CCSDS通信ラッパーのクラスです。
-* 個々の機器のインターフェースモジュールに継承させて使用します。
-* @note OBC模擬コンポ<->SILSとはUARTと同様にデータ通信を行う
-*/
+ * @file ccsds_sils.cpp
+ * @brief CCSDS通信ラッパーのクラスです。
+ *
+ * CCSDS通信ラッパーは、
+ * CCSDSのインターフェースを実現し、
+ * CCSDSポートの初期化、データ送信、データ受信を行う、
+ * CCSDS通信ラッパーのクラスです。
+ * 個々の機器のインターフェースモジュールに継承させて使用します。
+ * @note OBC模擬コンポ<->SILSとはUARTと同様にデータ通信を行う
+ */
 
 #include "../ccsds_user.h"
 

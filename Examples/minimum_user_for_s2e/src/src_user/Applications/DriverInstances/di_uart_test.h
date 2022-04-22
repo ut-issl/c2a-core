@@ -1,7 +1,7 @@
 /**
-* @file   di_uart_test.h
-* @brief  UARTとDriverSuperテスト用
-*/
+ * @file   di_uart_test.h
+ * @brief  UARTとDriverSuperテスト用
+ */
 #ifndef DI_UART_TEST_H_
 #define DI_UART_TEST_H_
 
