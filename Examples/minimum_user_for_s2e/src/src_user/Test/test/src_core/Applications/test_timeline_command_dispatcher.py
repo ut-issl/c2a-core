@@ -44,72 +44,76 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
 
-    # SOE, LOUT ともに Flag を立てる
+    # TL_GS の SOE flag チェック
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
         (c2a_enum.TLCD_ID_FROM_GS, 1),
         c2a_enum.Tlm_CODE_HK,
     )
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TLCD_ID_FROM_GS, 1),
-        c2a_enum.Tlm_CODE_HK,
-    )
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
-        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 1),
-        c2a_enum.Tlm_CODE_HK,
-    )
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 1),
-        c2a_enum.Tlm_CODE_HK,
-    )
-
-    tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
-    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
     assert tlm_HK["HK.OBC_TLC_GS.SOE_FLAG"] == "ENA"
-    assert tlm_HK["HK.OBC_TLC_GS.LOCKOUT_FLAG"] == "YES"
-    assert tlm_HK["HK.OBC_TLC_MIS.SOE_FLAG"] == "ENA"
-    assert tlm_HK["HK.OBC_TLC_MIS.LOCKOUT_FLAG"] == "YES"
-
-    # SOE, LOUT ともに Flag を降ろす
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
         (c2a_enum.TLCD_ID_FROM_GS, 0),
         c2a_enum.Tlm_CODE_HK,
     )
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TLCD_ID_FROM_GS, 0),
-        c2a_enum.Tlm_CODE_HK,
-    )
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
-        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 0),
-        c2a_enum.Tlm_CODE_HK,
-    )
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
-        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 0),
-        c2a_enum.Tlm_CODE_HK,
-    )
-
-    tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
-    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
     assert tlm_HK["HK.OBC_TLC_GS.SOE_FLAG"] == "DIS"
+
+    # TL_GS の LOUT flag チェック
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
+        (c2a_enum.TLCD_ID_FROM_GS, 1),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
+    assert tlm_HK["HK.OBC_TLC_GS.LOCKOUT_FLAG"] == "YES"
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
+        (c2a_enum.TLCD_ID_FROM_GS, 0),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
     assert tlm_HK["HK.OBC_TLC_GS.LOCKOUT_FLAG"] == "NO"
+
+    # TL_MIS の SOE flag チェック
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
+        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 1),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
+    assert tlm_HK["HK.OBC_TLC_MIS.SOE_FLAG"] == "ENA"
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
+        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 0),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
     assert tlm_HK["HK.OBC_TLC_MIS.SOE_FLAG"] == "DIS"
+
+    # TL_MIS の LOUT flag チェック
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
+        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 1),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
+    assert tlm_HK["HK.OBC_TLC_MIS.LOCKOUT_FLAG"] == "YES"
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
+        (c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, 0),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
     assert tlm_HK["HK.OBC_TLC_MIS.LOCKOUT_FLAG"] == "NO"
 
 
@@ -158,7 +162,7 @@ def test_tlcd_set_id_and_page_for_tlm():
 @pytest.mark.real
 def test_tlcd_send_and_clear_tl():
 
-    clear_tl0_and_tl3()
+    clear_tl_gs_and_tl_mis()
 
     tlm_TL = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
@@ -166,29 +170,29 @@ def test_tlcd_send_and_clear_tl():
     ti_now = tlm_TL["TL.SH.TI"]
 
     # このテストでは代表として Cmd_TLCD_CLEAR_TIMELINE_AT を登録して動作確認しているが, 特に意味はない
-    # tl コマンドをランダムなTIで登録
-    ti_list_tl0 = generate_random_ti(ti_now, 5)
-    params_tl0 = (1, 123456)
-    send_tl_cmds(ti_list_tl0, c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT, params_tl0)
+    target_cmd_id = c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT
 
-    # tl_mis コマンドをランダムなTIで登録
-    ti_list_tl3 = generate_random_ti(ti_now, 5)
-    params_tl3 = (2, 654321)
-    send_tl_mis_cmds(ti_list_tl3, c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT, params_tl3)
+    # TL コマンドをランダムなTIで登録
+    tis_tl_gs = generate_random_ti(ti_now, 5)
+    params_tl_gs = (1, 123456)  # params は適当
+    send_tl_cmds(tis_tl_gs, target_cmd_id, params_tl_gs)
 
-    # TL0,3 に正しく登録されているかチェック
-    check_registered_tl_cmds(
-        c2a_enum.TLCD_ID_FROM_GS, ti_list_tl0, c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT, params_tl0
-    )
+    # TL_MIS コマンドをランダムなTIで登録
+    tis_tl_mis = generate_random_ti(ti_now, 5)
+    params_tl_mis = (2, 654321)  # params は適当
+    send_tl_mis_cmds(tis_tl_mis, target_cmd_id, params_tl_mis)
+
+    # TimeLine に正しく登録されているかチェック
+    check_registered_tl_cmds(c2a_enum.TLCD_ID_FROM_GS, tis_tl_gs, target_cmd_id, params_tl_gs)
     check_registered_tl_cmds(
         c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION,
-        ti_list_tl3,
-        c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT,
-        params_tl3,
+        tis_tl_mis,
+        target_cmd_id,
+        params_tl_mis,
     )
 
     # Cmd_TLCD_CLEAR_TIMELINE_AT が正しく動作するかチェック
-    clear_ti = ti_list_tl0[0]
+    clear_ti = tis_tl_gs[0]
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT,
@@ -197,13 +201,13 @@ def test_tlcd_send_and_clear_tl():
     )
     check_registered_tl_cmds(
         c2a_enum.TLCD_ID_FROM_GS,
-        ti_list_tl0[1:-1],
-        c2a_enum.Cmd_CODE_TLCD_CLEAR_TIMELINE_AT,
-        params_tl0,
+        tis_tl_gs[1:],
+        target_cmd_id,
+        params_tl_gs,
     )
 
     # Cmd_TLCD_CLEAR_ALL_TIMELINE で正しくクリアされるか（全てゼロにリセットされるか）チェック
-    clear_tl0_and_tl3()
+    clear_tl_gs_and_tl_mis()
     ti_zeros = [0] * 5
     check_registered_tl_cmds(c2a_enum.TLCD_ID_FROM_GS, ti_zeros, 0, (0, 0))
     check_registered_tl_cmds(c2a_enum.TLCD_ID_FROM_GS_FOR_MISSION, ti_zeros, 0, (0, 0))
@@ -214,30 +218,31 @@ def test_tlcd_send_and_clear_tl():
 # 最後のお掃除
 def test_tlcd_final_check():
     reset_id_and_page()
-    clear_tl0_and_tl3()
+    clear_tl_gs_and_tl_mis()
 
 
 # 未来のランダムな時刻の ti を num 個生成する
 def generate_random_ti(ti_now, num):
-    ti_list = [ti_now + 10000 + random.randrange(1000) for i in range(num)]
+    tis = [ti_now + 10000 + random.randrange(1000) for i in range(num)]
     # 重複を削除して時刻順に並べ替え
-    ti_list = list(set(ti_list))
-    ti_list.sort()
-    return ti_list
+    tis = list(set(tis))
+    tis.sort()
+    return tis
 
 
-def send_tl_cmds(ti_of_cmds, cmd_id, params):
-    for ti in ti_of_cmds:
+def send_tl_cmds(tis, cmd_id, params):
+    for ti in tis:
         wings.util.send_tl_cmd(ope, ti, cmd_id, params)
 
 
-def send_tl_mis_cmds(ti_of_cmds, cmd_id, params):
-    for ti in ti_of_cmds:
+def send_tl_mis_cmds(tis, cmd_id, params):
+    for ti in tis:
         wings.util.send_tl_mis_cmd(ope, ti, cmd_id, params)
 
 
 # 指定された TI, cmd_id, params で登録されているか TL テレメでチェックする
-def check_registered_tl_cmds(line_no, ti_list, cmd_id, params):
+# params のチェックは Cmd_TLCD_CLEAR_TIMELINE_AT を前提としており, パラメタ構成が違うコマンドだとエラーが出ることに注意
+def check_registered_tl_cmds(line_no, tis, cmd_id, params):
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_ID_FOR_TLM,
@@ -250,23 +255,23 @@ def check_registered_tl_cmds(line_no, ti_list, cmd_id, params):
     )
     assert tlm_TL["TL.LINE_NO"] == line_no
 
-    for i, ti in enumerate(ti_list):
+    for i, ti in enumerate(tis):
         str_id = "TL.CMD" + str(i) + "_ID"
         str_ti = "TL.CMD" + str(i) + "_TI"
-        # params のチェックは Cmd_TLCD_CLEAR_TIMELINE_AT を前提としており, パラメタ構成がコマンドだとエラーが出ることに注意
         str_param = "TL.CMD" + str(i) + "_PARAM"
-        param0 = int(tlm_TL[str_param + "0"], 0)
-        param1 = int(
+        param0 = tlm_TL[str_param + "0"]  # uint8_t (例: 0x12)
+        param1 = (
             tlm_TL[str_param + "1"]
             + tlm_TL[str_param + "2"][2:]
             + tlm_TL[str_param + "3"][2:]
-            + tlm_TL[str_param + "4"][2:],
-            0,
-        )
-        assert int(tlm_TL[str_id], 0) == cmd_id
+            + tlm_TL[str_param + "4"][2:]
+        )  # uint32_t (例: 0x12341234)
+
+        # cmd_id, params は16進数に直して比較
+        assert tlm_TL[str_id] == "{:#06x}".format(cmd_id)
         assert tlm_TL[str_ti] == ti
-        assert param0 == params[0]
-        assert param1 == params[1]
+        assert param0 == "{:#04x}".format(params[0])
+        assert param1 == "{:#010x}".format(params[1])
 
 
 def reset_id_and_page():
@@ -284,15 +289,15 @@ def reset_id_and_page():
     )
 
 
-def clear_tl0_and_tl3():
-    # TL0をクリア
+def clear_tl_gs_and_tl_mis():
+    # TL_gs をクリア
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
         (c2a_enum.TLCD_ID_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
     )
-    # TL3をクリア
+    # TL_mis をクリア
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
