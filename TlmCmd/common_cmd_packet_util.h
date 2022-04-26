@@ -23,6 +23,7 @@ typedef enum
 
 /**
  * @brief  App 実行コマンドを生成
+ * @note   TL登録まで行う場合は `CCP_register_app_cmd` を使用
  * @param[in,out] packet: CCP
  * @param[in]     ti: TI
  * @param[in]     id: AR_APP_ID
@@ -33,6 +34,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
 /**
  * @brief  Realtime command を生成
  * @note   引数が不正なとき， packet は NOP RTC を返す
+ * @note   RTC のキューに登録までする場合は `CCP_register_rtc` を使用
  * @param[in,out] packet: CCP
  * @param[in]     packet: CMD_CODE
  * @param[in]     param:  パラメタ
@@ -44,6 +46,7 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
 /**
  * @brief  Timeline command を生成
  * @note   引数が不正なとき， packet は NOP TLC を返す
+ * @note   TL に登録までする場合は `CCP_register_tlc` を使用
  * @param[in,out] packet: CCP
  * @param[in]     ti:     TI
  * @param[in]     packet: CMD_CODE
@@ -56,6 +59,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 /**
  * @brief  BC展開 command を生成
  * @note   引数が不正なとき， packet は NOP RTC を返す
+ * @note   RTC のキューに登録までする場合は `CCP_register_block_deploy_cmd` を使用
  * @param[in,out] packet: CCP
  * @param[in]     tl_no: Timeline no
  * @param[in]     block_no: BC ID
@@ -70,6 +74,42 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
  * @return void
  */
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
+
+/**
+ * @brief  App 実行コマンドを登録
+ * @param[in] ti: TI
+ * @param[in] id: AR_APP_ID
+ * @return PH_ACK
+ */
+PH_ACK CCP_register_app_cmd(cycle_t ti, AR_APP_ID id);
+
+/**
+ * @brief  Realtime command を登録
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief  Timeline command を登録
+ * @param[in] ti:     TI
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+PH_ACK CCP_register_tlc(cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief  BC展開 command を登録
+ * @note   RTC に登録される
+ * @param[in] tl_no: Timeline no
+ * @param[in] block_no: BC ID
+ * @return CCP_UTIL_ACK
+ */
+PH_ACK CCP_register_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no);
 
 /**
  * @brief  CCP packet から，サイズが 1 byte のコマンド引数を取得する
