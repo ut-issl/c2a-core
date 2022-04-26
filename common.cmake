@@ -20,6 +20,7 @@ endif()
 # Build option
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
+  target_compile_options(${PROJECT_NAME} PUBLIC "/MT")
   target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
   target_compile_options(${PROJECT_NAME} PUBLIC "/source-charset:utf-8")
 else()
