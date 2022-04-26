@@ -39,7 +39,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
   // FIXME: この4は環境依存なので，依存しないように直す
   //        適切に直すことで， CCP_form_tlc の返り値をみなくて良くなるはず．
   //        Cmd_AM_EXECUTE_APP の引数取得部分と同時に直すべきだが，パラメタサイズは CmdDB から取得可能なはず．
-  static uint8_t param[4];
+  uint8_t param[4];
   size_t  id_temp = id;
   endian_memcpy(param, &id_temp, 4);
 
