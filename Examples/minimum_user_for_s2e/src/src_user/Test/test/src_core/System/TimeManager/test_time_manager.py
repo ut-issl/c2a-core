@@ -25,8 +25,8 @@ OBCT_CYCLES_PER_SEC = 1000 // OBCT_STEP_IN_MSEC // OBCT_STEPS_PER_CYCLE  # 1 s �
 TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
 
 
-# @pytest.mark.sils
-# @pytest.mark.real
+@pytest.mark.sils
+@pytest.mark.real
 def test_tmgr_set_time():
 
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
@@ -49,8 +49,8 @@ def test_tmgr_set_time():
     assert tlm_HK["HK.SH.TI"] < target_ti + 50
 
 
-# @pytest.mark.sils
-# @pytest.mark.real
+@pytest.mark.sils
+@pytest.mark.real
 def test_tmgr_set_unixtime():
 
     # unixtime_at_ti0 を current_unixtime とランダムな TI で更新
@@ -84,8 +84,8 @@ def test_tmgr_set_unixtime():
     )
 
 
-# @pytest.mark.sils
-# @pytest.mark.real
+@pytest.mark.sils
+@pytest.mark.real
 def test_tmgr_set_utl_unixtime_epoch():
 
     # 負の値ではコマンドが通らないことを確認
@@ -105,8 +105,8 @@ def test_tmgr_set_utl_unixtime_epoch():
     assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == new_epoch
 
 
-# @pytest.mark.sils
-# @pytest.mark.real
+@pytest.mark.sils
+@pytest.mark.real
 def test_tmgr_set_and_reset_cycle_correction():
 
     # 負の値ではコマンドが通らないことを確認
@@ -153,37 +153,25 @@ def test_tmgr_utl_cmd():
         c2a_enum.Tlm_CODE_HK,
     )
 
-    # unixtime を同期する
-    tlm_HK = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)[0]
-    ti_now = tlm_HK["HK.SH.TI"]
-    unixtime_now = time.time()
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME,
-        (unixtime_now, ti_now, 0),
-        c2a_enum.Tlm_CODE_HK,
-    )
-    unixtime_at_ti0 = unixtime_now - ti_now / OBCT_CYCLES_PER_SEC
-
     # ===== 実行unixtime < unixtime_at_ti0 の場合 =====
     # TODO: TL_gsに登録されないことを確認する
 
     # ===== 通常時 =====
-    check_utl_cmd_with(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, 1.0)
+    check_utl_cmd_with(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, 1.0)
 
     # ===== CYCLES_PER_SEC を補正した場合 =====
     # 0.7 <= set_value <= 1.3 でランダムに補正倍率をセット
     set_value = random.uniform(0.7, 1.3)
-    check_utl_cmd_with(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, set_value)
+    check_utl_cmd_with(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, set_value)
 
     # ===== epoch を変えた場合 =====
     # 例えば epoch を30日前の unixtime に変更する
     new_epoch = time.time() - 86400 * 30
-    check_utl_cmd_with(unixtime_at_ti0, new_epoch, 1.0)
+    check_utl_cmd_with(new_epoch, 1.0)
 
     # ===== epoch を変えて CYCLES_PER_SEC も補正した場合 =====
     set_value = random.uniform(0.7, 1.3)
-    check_utl_cmd_with(unixtime_at_ti0, new_epoch, set_value)
+    check_utl_cmd_with(new_epoch, set_value)
 
 
 @pytest.mark.sils
@@ -206,7 +194,7 @@ def test_tmgr_final_check():
     )
 
 
-def check_utl_cmd_with(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction):
+def check_utl_cmd_with(utl_unixtime_epoch, cycle_correction):
     # utl_unixtime_epoch, cycle_correction を設定する
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
@@ -217,6 +205,18 @@ def check_utl_cmd_with(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction):
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_TMGR_SET_CYCLE_CORRECTION, (cycle_correction,), c2a_enum.Tlm_CODE_HK
     )
+
+    # unixtime_info を現在の ti と unixtime で同期する
+    tlm_HK = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)[0]
+    ti_now = tlm_HK["HK.SH.TI"]
+    unixtime_now = time.time()
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME,
+        (unixtime_now, ti_now, 0),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    unixtime_at_ti0 = unixtime_now - ti_now / (OBCT_CYCLES_PER_SEC * cycle_correction)
 
     # 最初にTL_gsをクリアしておく
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
