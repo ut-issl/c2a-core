@@ -153,11 +153,27 @@ def test_tmgr_utl_cmd():
         c2a_enum.Tlm_CODE_HK,
     )
 
-    # ===== 実行unixtime < unixtime_at_ti0 の場合 =====
-    # TODO: TL_gsに登録されないことを確認する
-
     # ===== 通常時 =====
     check_utl_cmd_with(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, 1.0)
+
+    # ===== 過去の時刻を指定した場合 =====
+    # コマンドが登録されず TLC_PAST_TIME のエラーが出ることを確認する
+    # generate_and_receive_tlm を使うとそれが成功して CMD_ACK = SUCCESS と上書きされてしまうので, utl で3秒後に generate_tlm を発火させる
+    wings.util.send_utl_cmd(
+        ope,
+        time.time() + 3,
+        c2a_enum.Cmd_CODE_GENERATE_TLM,
+        (0x40, c2a_enum.Tlm_CODE_GS, 1),
+    )
+    wings.util.send_utl_cmd(
+        ope,
+        time.time() - 100000,
+        c2a_enum.Cmd_CODE_NOP,
+        (),
+    )
+    time.sleep(3)
+    tlm_GS = ope.get_latest_tlm(c2a_enum.Tlm_CODE_GS)[0]
+    assert tlm_GS["GS.CCSDS.RX.CMD_ACK"] == "TLC_PAST_TIME"
 
     # ===== CYCLES_PER_SEC を補正した場合 =====
     # 0.7 <= set_value <= 1.3 でランダムに補正倍率をセット
