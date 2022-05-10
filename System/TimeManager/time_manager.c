@@ -203,12 +203,17 @@ double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime)
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
 {
   double unixtime = TMGR_get_unixtime_from_utl_unixtime(utl_unixtime);
-  double ti_in_sec = unixtime - TMGR_get_unixtime_at_ti0();
+  double ti_double = (unixtime - TMGR_get_unixtime_at_ti0()) * TMGR_get_precice_cycles_per_sec();
 
   // unixtime_at_ti0 より小さい実行時刻は無効なのでゼロを返す
-  if (ti_in_sec < 0) return 0;
+  if (ti_double < 0) return 0;
 
-  return (cycle_t)(ti_in_sec * TMGR_get_precice_cycles_per_sec() );
+  cycle_t ti = (cycle_t)ti_double;
+  if (ti_double - ti >= 0.5)
+  {
+    ti += 1;
+  }
+  return ti;
 }
 
 static TMGR_ACK TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch)

@@ -25,8 +25,8 @@ OBCT_CYCLES_PER_SEC = 1000 // OBCT_STEP_IN_MSEC // OBCT_STEPS_PER_CYCLE  # 1 s �
 TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
 
 
-@pytest.mark.sils
-@pytest.mark.real
+# @pytest.mark.sils
+# @pytest.mark.real
 def test_tmgr_set_time():
 
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
@@ -49,8 +49,8 @@ def test_tmgr_set_time():
     assert tlm_HK["HK.SH.TI"] < target_ti + 50
 
 
-@pytest.mark.sils
-@pytest.mark.real
+# @pytest.mark.sils
+# @pytest.mark.real
 def test_tmgr_set_unixtime():
 
     # unixtime_at_ti0 を current_unixtime とランダムな TI で更新
@@ -84,8 +84,8 @@ def test_tmgr_set_unixtime():
     )
 
 
-@pytest.mark.sils
-@pytest.mark.real
+# @pytest.mark.sils
+# @pytest.mark.real
 def test_tmgr_set_utl_unixtime_epoch():
 
     # 負の値ではコマンドが通らないことを確認
@@ -105,8 +105,8 @@ def test_tmgr_set_utl_unixtime_epoch():
     assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == new_epoch
 
 
-@pytest.mark.sils
-@pytest.mark.real
+# @pytest.mark.sils
+# @pytest.mark.real
 def test_tmgr_set_and_reset_cycle_correction():
 
     # 負の値ではコマンドが通らないことを確認
@@ -139,7 +139,7 @@ def test_tmgr_set_and_reset_cycle_correction():
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_utl_cmd():
-    # TLテレメをTL0のページ0にセット
+    # TLテレメを TL_gs の ページ0 にセット
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_ID_FOR_TLM,
@@ -153,25 +153,37 @@ def test_tmgr_utl_cmd():
         c2a_enum.Tlm_CODE_HK,
     )
 
-    # ===== 実行unixtime > unixtime_at_ti0 の場合 =====
-    unixtime_at_ti0 = time.time()
-    test_utl_cmd_ten_times(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, 1.0)
+    # unixtime を同期する
+    tlm_HK = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)[0]
+    ti_now = tlm_HK["HK.SH.TI"]
+    unixtime_now = time.time()
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME,
+        (unixtime_now, ti_now, 0),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    unixtime_at_ti0 = unixtime_now - ti_now / OBCT_CYCLES_PER_SEC
 
     # ===== 実行unixtime < unixtime_at_ti0 の場合 =====
-    # TODO: TL0に登録されないことを確認する
+    # TODO: TL_gsに登録されないことを確認する
+
+    # ===== 通常時 =====
+    check_utl_cmd_with(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, 1.0)
 
     # ===== CYCLES_PER_SEC を補正した場合 =====
-    # 0.5 <= set_value <= 2.0 でランダムに補正倍率をセットする
-    set_value = random.uniform(0.5, 2.0)
-    test_utl_cmd_ten_times(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, set_value)
+    # 0.7 <= set_value <= 1.3 でランダムに補正倍率をセット
+    set_value = random.uniform(0.7, 1.3)
+    check_utl_cmd_with(unixtime_at_ti0, TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, set_value)
 
-    # ===== epoch が変わった場合 =====
-    new_epoch = time.time()
-    test_utl_cmd_ten_times(unixtime_at_ti0, new_epoch, 1.0)
+    # ===== epoch を変えた場合 =====
+    # 例えば epoch を30日前の unixtime に変更する
+    new_epoch = time.time() - 86400 * 30
+    check_utl_cmd_with(unixtime_at_ti0, new_epoch, 1.0)
 
     # ===== epoch を変えて CYCLES_PER_SEC も補正した場合 =====
-    set_value = random.uniform(0.5, 2.0)
-    test_utl_cmd_ten_times(unixtime_at_ti0, new_epoch, set_value)
+    set_value = random.uniform(0.7, 1.3)
+    check_utl_cmd_with(unixtime_at_ti0, new_epoch, set_value)
 
 
 @pytest.mark.sils
@@ -185,7 +197,7 @@ def test_tmgr_final_check():
         c2a_enum.Tlm_CODE_HK,
     )
 
-    # TL0をクリア
+    # TL_gs をクリア
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
@@ -194,14 +206,8 @@ def test_tmgr_final_check():
     )
 
 
-def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction):
-    # unixtime_at_ti0, utl_unixtime_epoch, cycle_correction を設定する
-    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope,
-        c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME,
-        (unixtime_at_ti0, 0, 0),
-        c2a_enum.Tlm_CODE_HK,
-    )
+def check_utl_cmd_with(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction):
+    # utl_unixtime_epoch, cycle_correction を設定する
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH,
@@ -212,7 +218,7 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction
         ope, c2a_enum.Cmd_CODE_TMGR_SET_CYCLE_CORRECTION, (cycle_correction,), c2a_enum.Tlm_CODE_HK
     )
 
-    # 最初にTL0をクリアしておく
+    # 最初にTL_gsをクリアしておく
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
@@ -220,20 +226,11 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction
         c2a_enum.Tlm_CODE_HK,
     )
 
-    tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
-    )
-    unixtime_now = unixtime_at_ti0 + tlm_HK["HK.SH.TI"] / (OBCT_CYCLES_PER_SEC * cycle_correction)
-
     # NOP を10個, 未来のランダムな unixtime で登録する
-    unixtime_of_cmds = generate_random_unixtime(unixtime_now, 10)
+    unixtime_of_cmds = generate_random_unixtime(10)
     send_utl_nops(unixtime_of_cmds)
 
-    # 重複を削除して時刻順に並べ替え
-    unixtime_of_cmds = list(set(unixtime_of_cmds))
-    unixtime_of_cmds.sort()
-
-    # TL0 に正しく登録されているか確認
+    # TL_gs に正しく登録されているか確認
     tlm_TL = wings.util.generate_and_receive_tlm(
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
     )
@@ -244,16 +241,17 @@ def test_utl_cmd_ten_times(unixtime_at_ti0, utl_unixtime_epoch, cycle_correction
         tlm_name = "TL.CMD" + str(i) + "_TI"
         ti = calc_ti_from_unixtime(unixtime, unixtime_at_ti0, utl_unixtime_epoch, cycle_correction)
 
-        assert tlm_TL[tlm_name] > ti - 1, {"registered_unixtime": unixtime, "tlm_name": tlm_name}
+        assert tlm_TL[tlm_name] > ti - 2, {"registered_unixtime": unixtime, "tlm_name": tlm_name}
         assert tlm_TL[tlm_name] < ti + 1, {"registered_unixtime": unixtime, "tlm_name": tlm_name}
 
 
 # 未来のランダムな時刻の unixtime を num 個生成する
-def generate_random_unixtime(unixtime_now, num):
-    # TODO: wingsがutl_cmdの時刻引数を0.1秒刻みで受け付けるように改修されたら, 整数縛りをなくす
-    unixtime_future = (int)(unixtime_now) + 1000
-
-    return [unixtime_future + random.randrange(100) for i in range(num)]
+# WINGS に合わせて0.1秒精度で指定する
+def generate_random_unixtime(num):
+    unixtime_future = int(time.time() + 1000)
+    # 近すぎる unixtime で登録しないように
+    return [unixtime_future + 10.1 * i + random.randrange(10) for i in range(num)]
+    # return [unixtime_future + random.randrange(1000) * 0.1 for i in range(num)]
 
 
 def send_utl_nops(unixtime_of_cmds):
@@ -267,6 +265,7 @@ def send_utl_nops(unixtime_of_cmds):
         )
 
 
+# unixtime を ti に変換する（小数精度）
 def calc_ti_from_unixtime(unixtime, unixtime_at_ti0, epoch, cycle_correction):
     precise_cycles_per_sec = OBCT_CYCLES_PER_SEC * cycle_correction
 
@@ -278,9 +277,9 @@ def calc_ti_from_unixtime(unixtime, unixtime_at_ti0, epoch, cycle_correction):
 
 
 if __name__ == "__main__":
-    test_tmgr_final_check()
     # test_tmgr_set_time()
     # test_tmgr_set_unixtime()
     # test_tmgr_set_utl_unixtime_epoch()
-    # test_tmgr_utl_cmd()
+    test_tmgr_utl_cmd()
+    test_tmgr_final_check()
     pass
