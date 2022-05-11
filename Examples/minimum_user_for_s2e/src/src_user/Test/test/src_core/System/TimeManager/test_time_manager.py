@@ -181,8 +181,7 @@ def test_tmgr_utl_cmd():
     check_utl_cmd_with(TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL, set_value)
 
     # ===== epoch を変えた場合 =====
-    # 例えば epoch を30日前の unixtime に変更する
-    new_epoch = time.time() - 86400 * 30
+    new_epoch = time.time() - 86400 * 30  # 例えば30日前に変更
     check_utl_cmd_with(new_epoch, 1.0)
 
     # ===== epoch を変えて CYCLES_PER_SEC も補正した場合 =====
@@ -222,10 +221,11 @@ def check_utl_cmd_with(utl_unixtime_epoch, cycle_correction):
         ope, c2a_enum.Cmd_CODE_TMGR_SET_CYCLE_CORRECTION, (cycle_correction,), c2a_enum.Tlm_CODE_HK
     )
 
-    # unixtime_info を現在の ti と unixtime で同期する
+    # unixtime_info を現在の unixtime と ti で同期する
+    # 必ず Cmd_CODE_TMGR_SET_CYCLE_CORRECTION のあとに送ること
+    unixtime_now = time.time()
     tlm_HK = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)[0]
     ti_now = tlm_HK["HK.SH.TI"]
-    unixtime_now = time.time()
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME,
@@ -257,7 +257,7 @@ def check_utl_cmd_with(utl_unixtime_epoch, cycle_correction):
         tlm_name = "TL.CMD" + str(i) + "_TI"
         ti = calc_ti_from_unixtime(unixtime, unixtime_at_ti0, utl_unixtime_epoch, cycle_correction)
 
-        assert tlm_TL[tlm_name] > ti - 2, {"registered_unixtime": unixtime, "tlm_name": tlm_name}
+        assert tlm_TL[tlm_name] > ti - 1, {"registered_unixtime": unixtime, "tlm_name": tlm_name}
         assert tlm_TL[tlm_name] < ti + 1, {"registered_unixtime": unixtime, "tlm_name": tlm_name}
 
 
@@ -265,9 +265,14 @@ def check_utl_cmd_with(utl_unixtime_epoch, cycle_correction):
 # WINGS に合わせて0.1秒精度で指定する
 def generate_random_unixtime(num):
     unixtime_future = int(time.time() + 1000)
-    # 近すぎる unixtime で登録しないように
-    return [unixtime_future + 10.1 * i + random.randrange(10) for i in range(num)]
-    # return [unixtime_future + random.randrange(1000) * 0.1 for i in range(num)]
+    unixtimes = [
+        unixtime_future + random.randrange(0, 1000, 2) * 0.1 for i in range(num)
+    ]  # 少なくとも0.2秒間隔をあける
+
+    # 重複を削除して時刻順に並べ替え
+    unixtimes = list(set(unixtimes))
+    unixtimes.sort()
+    return unixtimes
 
 
 def send_utl_nops(unixtime_of_cmds):
