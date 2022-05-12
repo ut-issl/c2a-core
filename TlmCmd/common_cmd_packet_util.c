@@ -121,7 +121,7 @@ CCP_UTIL_ACK CCP_form_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYP
         current_ti = CCP_get_ti((const CommonCmdPacket*)(current->packet));
         if (current_ti < ti)
         {
-          continue;
+          // do nothing
         }
         else if (current_ti == ti)
         {
