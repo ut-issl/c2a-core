@@ -8,6 +8,7 @@ set(C2A_SRCS
   DriverInstances/di_gs.c
   DriverInstances/di_uart_test.c
   UserDefined/debug_apps.c
+  TestApp/test_ccp_util.c
 )
 
 if(BUILD_C2A_AS_CXX)
