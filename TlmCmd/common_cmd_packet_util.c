@@ -34,7 +34,7 @@ void CCP_form_nop_rtc_(CommonCmdPacket* packet)
   CCP_form_rtc(packet, Cmd_CODE_NOP, NULL, 0);
 }
 
-void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
+void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id)
 {
   // FIXME: この4は環境依存なので，依存しないように直す
   //        適切に直すことで， CCP_form_tlc の返り値をみなくて良くなるはず．
@@ -43,7 +43,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
   size_t  id_temp = id;
   endian_memcpy(param, &id_temp, 4);
 
-  CCP_form_tlc(packet, ti, CCP_EXEC_TYPE_TL_FROM_GS, Cmd_CODE_AM_EXECUTE_APP, param, 4);
+  CCP_form_tlc(packet, ti, type, Cmd_CODE_AM_EXECUTE_APP, param, 4);
 }
 
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
@@ -163,9 +163,9 @@ void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
   CCP_set_ti(packet, ti);
 }
 
-PH_ACK CCP_register_app_cmd(cycle_t ti, AR_APP_ID id)
+PH_ACK CCP_register_app_cmd(cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id)
 {
-  CCP_form_app_cmd(&CCP_util_packet_, ti, id);
+  CCP_form_app_cmd(&CCP_util_packet_, ti, type, id);
   return PH_analyze_cmd_packet(&CCP_util_packet_);
 }
 

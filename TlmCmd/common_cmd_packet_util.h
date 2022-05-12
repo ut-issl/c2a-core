@@ -25,11 +25,12 @@ typedef enum
  * @brief  App 実行コマンドを生成
  * @note   TL登録まで行う場合は `CCP_register_app_cmd` を使用
  * @param[in,out] packet: CCP
- * @param[in]     ti: TI
- * @param[in]     id: AR_APP_ID
+ * @param[in]     ti:     TI
+ * @param[in]     type:   登録する TI type
+ * @param[in]     id:     AR_APP_ID
  * @return void
  */
-void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
+void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id);
 
 /**
  * @brief  Realtime command を生成
@@ -75,8 +76,8 @@ CCP_UTIL_ACK CCP_form_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYP
  * @brief  BC展開 command を生成
  * @note   引数が不正なとき， packet は NOP RTC を返す
  * @note   RTC のキューに登録までする場合は `CCP_register_block_deploy_cmd` を使用
- * @param[in,out] packet: CCP
- * @param[in]     tl_no: Timeline no
+ * @param[in,out] packet:   CCP
+ * @param[in]     tl_no:    Timeline no
  * @param[in]     block_no: BC ID
  * @return CCP_UTIL_ACK
  */
@@ -92,11 +93,12 @@ void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
 
 /**
  * @brief  App 実行コマンドを登録
- * @param[in] ti: TI
- * @param[in] id: AR_APP_ID
+ * @param[in] ti:   TI
+ * @param[in] type: 登録する TI type
+ * @param[in] id:   AR_APP_ID
  * @return PH_ACK
  */
-PH_ACK CCP_register_app_cmd(cycle_t ti, AR_APP_ID id);
+PH_ACK CCP_register_app_cmd(cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id);
 
 /**
  * @brief  Realtime command を登録
@@ -121,10 +123,10 @@ PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const u
  * @brief  Timeline command を登録
  * @note   引数が不正なとき， packet は NOP TLC を返す
  * @note   既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
- * @param[in]     ti:     TI
- * @param[in]     cmd_id: CMD_CODE
- * @param[in]     param:  パラメタ
- * @param[in]     len:    パラメタ長
+ * @param[in] ti:     TI
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
  * @return PH_ACK
  */
 PH_ACK CCP_register_tlc_asap(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
@@ -132,7 +134,7 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, co
 /**
  * @brief  BC展開 command を登録
  * @note   RTC に登録される
- * @param[in] tl_no: Timeline no
+ * @param[in] tl_no:    Timeline no
  * @param[in] block_no: BC ID
  * @return CCP_UTIL_ACK
  */

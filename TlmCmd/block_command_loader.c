@@ -223,7 +223,7 @@ void BCL_register_cmd_(cycle_t ti, CMD_CODE cmd_id)
 
 void BCL_register_app_(cycle_t ti, AR_APP_ID app_id)
 {
-  CCP_form_app_cmd(&block_command_loader_.packet, ti, app_id);
+  CCP_form_app_cmd(&block_command_loader_.packet, ti, CCP_EXEC_TYPE_TL_DEPLOY_BC, app_id);
   BCT_register_cmd(&block_command_loader_.packet);
 }
 
