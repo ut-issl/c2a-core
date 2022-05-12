@@ -36,7 +36,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
  * @note   引数が不正なとき， packet は NOP RTC を返す
  * @note   RTC のキューに登録までする場合は `CCP_register_rtc` を使用
  * @param[in,out] packet: CCP
- * @param[in]     packet: CMD_CODE
+ * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
  * @return CCP_UTIL_ACK
@@ -49,7 +49,8 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
  * @note   TL に登録までする場合は `CCP_register_tlc` を使用
  * @param[in,out] packet: CCP
  * @param[in]     ti:     TI
- * @param[in]     packet: CMD_CODE
+ * @param[in]     type:   登録する TI type
+ * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
  * @return CCP_UTIL_ACK
@@ -62,7 +63,8 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE typ
  * @note   既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
  * @param[in,out] packet: CCP
  * @param[in]     ti:     TI
- * @param[in]     packet: CMD_CODE
+ * @param[in]     type:   登録する TI type
+ * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
  * @return CCP_UTIL_ACK
@@ -119,14 +121,13 @@ PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const u
  * @brief  Timeline command を登録
  * @note   引数が不正なとき， packet は NOP TLC を返す
  * @note   既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
- * @param[in,out] packet: CCP
  * @param[in]     ti:     TI
- * @param[in]     packet: CMD_CODE
+ * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
  * @return PH_ACK
  */
-PH_ACK CCP_register_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_tlc_asap(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief  BC展開 command を登録
