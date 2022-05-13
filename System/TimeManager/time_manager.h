@@ -172,14 +172,14 @@ double TMGR_get_utl_unixtime_epoch(void);
  * @param void
  * @return cycles_per_sec
  */
-double TMGR_get_precice_cycles_per_sec(void);
+double TMGR_get_precise_cycles_per_sec(void);
 
 /**
  * @brief OBC のクロック誤差を反映した正確な ti を秒単位で返す
  * @param[in] time ti を保持している OBCTime
  * @return ti（秒単位, 小数点以下も保持）
  */
-double TMGR_get_precice_ti_in_sec(const ObcTime* time);
+double TMGR_get_precise_ti_in_sec(const ObcTime* time);
 
 /**
  * @brief 現在の unixtime を OBC の ti をもとに計算して返す
