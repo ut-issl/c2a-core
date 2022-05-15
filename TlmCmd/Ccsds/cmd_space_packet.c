@@ -177,6 +177,10 @@ CCP_DEST_TYPE CSP_get_dest_type(const CmdSpacePacket* csp)
   SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_dest_type_, &tmp);
   dest_type = (CCP_DEST_TYPE)tmp;
 
+  // FIXME: 一旦 hotfix
+  return dest_type;
+
+#if 0
   switch (dest_type)
   {
   case CCP_DEST_TYPE_TO_ME:   // FALL THROUGH
@@ -187,6 +191,7 @@ CCP_DEST_TYPE CSP_get_dest_type(const CmdSpacePacket* csp)
   default:
     return CCP_DEST_TYPE_TO_UNKOWN;
   }
+#endif
 }
 
 
