@@ -44,7 +44,7 @@ if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
 endif()
 
-add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
+add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
 
 if(USE_ALL_C2A_CORE_APPS)
   add_subdirectory(Applications)
