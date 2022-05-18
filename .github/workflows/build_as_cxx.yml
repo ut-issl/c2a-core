@@ -22,6 +22,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          cmake --version
           cmake .. -A Win32
 
       - name: build
@@ -42,6 +43,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          cmake --version
           cmake .. -A Win32
 
       - name: build

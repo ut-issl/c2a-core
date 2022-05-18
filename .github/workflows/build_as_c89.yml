@@ -86,6 +86,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          cmake --version
           cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
 
       - name: build
