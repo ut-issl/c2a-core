@@ -48,12 +48,12 @@ add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
 
 if(USE_ALL_C2A_CORE_APPS)
   add_subdirectory(Applications)
-  target_link_libraries(${PROJECT_NAME} C2A_CORE_APPS)
+  target_sources(${PROJECT_NAME} PUBLIC $<TARGET_OBJECTS:C2A_CORE_APPS>)
 endif()
 
 if(USE_ALL_C2A_CORE_LIB)
   add_subdirectory(Library)
-  target_link_libraries(${PROJECT_NAME} C2A_CORE_LIB)
+  target_sources(${PROJECT_NAME} PUBLIC $<TARGET_OBJECTS:C2A_CORE_LIB>)
 endif()
 
 include(common.cmake)
