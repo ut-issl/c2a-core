@@ -60,7 +60,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   {
     dest_flags = CTP_DEST_FLAG_RP;
   }
-  TSP_set_dest_flgas(&ctp_, dest_flags);
+  TSP_set_dest_flags(&ctp_, dest_flags);
   TSP_set_dr_partition(&ctp_, dr_partition);
   TSP_set_tlm_id(&ctp_, id);
   TSP_set_seq_count(&ctp_, TG_get_next_adu_counter_());

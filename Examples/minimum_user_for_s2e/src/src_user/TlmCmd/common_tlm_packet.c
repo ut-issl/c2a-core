@@ -29,12 +29,12 @@ void CTP_set_apid(CommonTlmPacket* packet, APID apid)
 
 ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet)
 {
-  return TSP_get_dest_flgas(packet);
+  return TSP_get_dest_flags(packet);
 }
 
 void CTP_set_dest_flags(CommonTlmPacket* packet, ctp_dest_flags_t flags)
 {
-  TSP_set_dest_flgas(packet, flags);
+  TSP_set_dest_flags(packet, flags);
 }
 
 TLM_CODE CTP_get_id(const CommonTlmPacket* packet)
