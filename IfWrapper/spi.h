@@ -22,7 +22,7 @@ typedef enum
   SPI_MODE_0 = 0,  //!< CPOL=0, CPHA = 0
   SPI_MODE_1 = 1,  //!< CPOL=0, CPHA = 1
   SPI_MODE_2 = 2,  //!< CPOL=1, CPHA = 0
-  SPI_MODE_3 = 3,  //!< CPOL=1, CPHA = 1
+  SPI_MODE_3 = 3   //!< CPOL=1, CPHA = 1
 } SPI_MODE;
 
 /**
@@ -33,7 +33,7 @@ typedef enum
 typedef enum
 {
   SPI_TX_CS_STATE_LOW  = 0,   //!< 送信後にCSをLowのままにし、そのまま受信動作などを行う
-  SPI_TX_CS_STATE_HIGH = 1,   //!< 送信後にCSをHighにする
+  SPI_TX_CS_STATE_HIGH = 1    //!< 送信後にCSをHighにする
 } SPI_TX_CS_STATE;
 
 /**
@@ -68,7 +68,7 @@ typedef enum
   SPI_ERR_ALREADY = -3,           //!< チャンネルオープン済み
   SPI_ERR_FREQUENCY = -2,         //!< 周波数異常
   SPI_ERR_CH = -1,                //!< チャンネル異常 (Port_configに無い)
-  SPI_ERR_OK = 0,                 //!< OKは0を踏襲
+  SPI_ERR_OK = 0                  //!< OKは0を踏襲
 } SPI_ERR_CODE;
 
 /**
