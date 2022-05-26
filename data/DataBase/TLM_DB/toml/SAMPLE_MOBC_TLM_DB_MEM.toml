@@ -1,0 +1,55 @@
+Target = "OBC"
+PacketID = "0x10"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint32_t"
+name = "MEM.BEGIN"
+exp = "memory_dump->begin"
+is_hex = true
+desc = "メモリ操作領域開始アドレス"
+
+[[tlm]]
+type = "uint32_t"
+name = "MEM.END"
+exp = "memory_dump->end"
+is_hex = true
+desc = "メモリ操作領域終端アドレス"
+
+[[tlm]]
+type = "uint32_t"
+name = "MEM.ADU_SIZE"
+exp = "memory_dump->adu_size"
+desc = "メモリ操作領域サイズ = ADUサイズ"
+note = "CCSDSパケットヘッダに設定される"
+
+[[tlm]]
+type = "uint16_t"
+name = "MEM.ADU_SEQ"
+exp = "memory_dump->adu_seq"
+desc = "ADUシーケンスカウンタ"
+note = "CCSDSパケットヘッダに設定される"
+
+[[tlm]]
+type = "uint8_t"
+name = "MEM.ADU_COUNTER"
+exp = "memory_dump->adu_counter"
+desc = "ADUカウンタ"
+note = "CCSDSパケットヘッダに設定される"
+
+[[tlm]]
+type = "uint32_t"
+name = "MEM.DESTINATION"
+exp = "memory_dump->dest"
+is_hex = true
+desc = "コピー先アドレス"
+
+[[tlm]]
+type = "uint32_t"
+name = "MEM.RP"
+exp = "memory_dump->rp"
+is_hex = true
+desc = "コーピー用RP"
+

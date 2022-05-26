@@ -1,0 +1,59 @@
+Target = "OBC"
+PacketID = "0x25"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "int offset = CA_TLM_PAGE_SIZE * (command_analyze->tlm_page_no);##"
+
+[[tlm]]
+type = "uint8_t"
+name = "PAGE_NO"
+exp = "(uint8_t)(command_analyze->tlm_page_no)"
+
+[[tlm]]
+q_range = [0, 31]
+block_num = 2
+[[tlm.block]]
+name = "CMD??.FUNC"
+exp = "(uint32_t)(command_analyze->cmd_table[offset+??].cmd_func)"
+type = "uint32_t"
+is_hex = true
+[[tlm.block]]
+name_base = "CMD??.{}"
+exp_base = "command_analyze->cmd_table[offset+??].{}"
+seq_num = 3
+[[tlm.block.seq]]
+type = "uint8_t"
+[[tlm.block.seq.comp]]
+name = "PARAM0_SIZE"
+exp = "param_size_infos[0].packed_info.bit.first"
+bitlen = 4
+status = "6.2"
+[[tlm.block.seq.comp]]
+name = "PARAM1_SIZE"
+exp = "param_size_infos[0].packed_info.bit.second"
+bitlen = 4
+status = "6.2"
+[[tlm.block.seq]]
+type = "uint8_t"
+[[tlm.block.seq.comp]]
+name = "PARAM2_SIZE"
+bitlen = 4
+exp = "param_size_infos[1].packed_info.bit.first"
+status = "6.2"
+[[tlm.block.seq.comp]]
+name = "PARAM3_SIZE"
+exp = "param_size_infos[1].packed_info.bit.second"
+bitlen = 4
+status = "6.2"
+[[tlm.block.seq]]
+type = "uint8_t"
+[[tlm.block.seq.comp]]
+name = "PARAM4_SIZE"
+bitlen = 4
+exp = "param_size_infos[2].packed_info.bit.first"
+status = "6.2"
+[[tlm.block.seq.comp]]
+name = "PARAM5_SIZE"
+bitlen = 4
+exp = "param_size_infos[2].packed_info.bit.second"
+status = "6.2"

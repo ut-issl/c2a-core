@@ -1,0 +1,1081 @@
+POWER = []
+COM = []
+MISSION = []
+PROP = []
+AOCS = []
+Thermal = []
+Trajectory = []
+HILS = []
+
+[[C2A_CORE]]
+code = "0x0000"
+name = "Cmd_NOP"
+params = 0
+desc = "ダミーコマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_SET_TIME"
+params = 1
+param1type = "uint32_t"
+param1desc = "TI"
+desc = "MOBC時刻設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_UPDATE_UNIXTIME"
+params = 3
+param1type = "double"
+param1desc = "unixtime"
+param2type = "uint32_t"
+param2desc = "total_cycle"
+param3type = "uint32_t"
+param3desc = "step"
+desc = "MOBC UNIXTIME修正コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH"
+params = 1
+param1type = "double"
+param1desc = "ult_unixtime_epoch"
+desc = "UTL_cmdで用いるunixtimeの紀元を変更する"
+note = "utl_unixtime_epoch [s]"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_SET_CYCLE_CORRECTION"
+params = 1
+param1type = "double"
+param1desc = "cycle_correction"
+desc = "CYCLES_PER_SECの補正倍率を変更する, 初期値は1.0"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_RESET_CYCLE_CORRECTION"
+params = 0
+desc = "CYCLES_PER_SECの補正倍率を1.0に初期化する"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_CLEAR_UNIXTIME_INFO"
+params = 0
+desc = "unixtime_info_ を初期化する"
+
+[[C2A_CORE]]
+name = "Cmd_AM_REGISTER_APP"
+params = 3
+param1type = "uint32_t"
+param1desc = "app_id"
+param2type = "uint32_t"
+param2desc = "init_ptr"
+param3type = "uint32_t"
+param3desc = "entry_ptr"
+desc = "アプリ登録コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_AM_INITIALIZE_APP"
+params = 1
+param1type = "uint32_t"
+param1desc = "app_id"
+desc = "アプリ初期化コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_AM_EXECUTE_APP"
+params = 1
+param1type = "uint32_t"
+param1desc = "app_id"
+desc = "アプリ実行コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_AM_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+desc = "テレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_AM_CLEAR_APP_INFO"
+params = 0
+is_danger = true
+desc = "アプリ実行時間計測の初期化"
+
+[[C2A_CORE]]
+name = "Cmd_MM_SET_MODE_LIST"
+params = 2
+param1type = "uint8_t"
+param1desc = "mode"
+param2type = "uint16_t"
+param2desc = "bc_index"
+desc = "モード定義リスト設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_SET_TRANSITION_TABLE"
+params = 3
+param1type = "uint8_t"
+param1desc = "from_mode"
+param2type = "uint8_t"
+param2desc = "to_mode"
+param3type = "uint16_t"
+param3desc = "bc_index"
+desc = "モード遷移定義テーブル書き換えコマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_START_TRANSITION"
+params = 1
+param1type = "uint8_t"
+param1desc = "to_mode"
+desc = "モード遷移開始コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_FINISH_TRANSITION"
+params = 0
+desc = "モード遷移終了通知コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM"
+params = 0
+desc = "モードのTLMテーブル情報更新"
+
+[[C2A_CORE]]
+name = "Cmd_TDSP_SET_TASK_LIST"
+params = 1
+param1type = "uint8_t"
+param1desc = "bc_index"
+desc = "タスクリスト設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_CLEAR_ALL_TIMELINE"
+params = 1
+param1type = "uint8_t"
+param1desc = "TLCD_ID"
+is_danger = true
+desc = "全TLC登録解除"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_CLEAR_TIMELINE_AT"
+params = 2
+param1type = "uint8_t"
+param1desc = "TLCD_ID"
+param2type = "uint32_t"
+param2desc = "TI"
+desc = "TI指定TLC登録解除"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_DEPLOY_BLOCK"
+params = 2
+param1type = "uint8_t"
+param1desc = "TLCD_ID"
+param2type = "uint16_t"
+param2desc = "bc_index"
+desc = "BLC展開 "
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_CLEAR_ERR_LOG"
+params = 1
+param1type = "uint8_t"
+desc = "最新のコマンド実行異常記録をクリア"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_SOE_FLAG"
+params = 2
+param1type = "uint8_t"
+param1desc = "TLCD_ID"
+param2type = "uint8_t"
+desc = "異常時実行停止機能設定(ライン番号, フラグ)"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_LOUT_FLAG"
+params = 2
+param1type = "uint8_t"
+param1desc = "TLCD_ID"
+param2type = "uint8_t"
+desc = "実行停止機能設定(ライン番号, フラグ)"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_ID_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "TLCD_ID"
+desc = "テレメで降ろすTL_IDの設定とTLテレメの更新"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "テレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_GENERATE_TLM"
+params = 3
+param1type = "uint8_t"
+param1desc = "category"
+param2type = "uint8_t"
+param2desc = "TLM_ID"
+param3type = "uint8_t"
+param3desc = "送出回数"
+desc = "TLMパケット生成"
+
+[[C2A_CORE]]
+name = "Cmd_BCT_CLEAR_BLOCK"
+params = 1
+param1type = "uint16_t"
+param1desc = "bc_index"
+desc = "BLC登録解除コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_BCT_SET_BLOCK_POSITION"
+params = 2
+param1type = "uint16_t"
+param1desc = "bc_index"
+param2type = "uint8_t"
+param2desc = "cmd_index"
+desc = "BLC操作ポインタ設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_BCT_COPY_BCT"
+params = 2
+param1type = "uint16_t"
+param1desc = "dst_bc_index"
+param2type = "uint16_t"
+param2desc = "src_bc_index"
+desc = "BCT の内容を別の場所にコピー"
+
+[[C2A_CORE]]
+name = "Cmd_BCT_OVERWRITE_CMD"
+params = 5
+param1type = "uint16_t"
+param1desc = "CMD_CODE"
+param2type = "uint32_t"
+param2desc = "TI"
+param3type = "uint16_t"
+param3desc = "pos.block"
+param4type = "uint8_t"
+param4desc = "pos.cmd"
+param5type = "raw"
+param5desc = "cmd_param (big endian)"
+is_danger = true
+desc = "BCTの内容を上書き"
+
+[[C2A_CORE]]
+name = "Cmd_BCT_FILL_NOP"
+params = 1
+param1type = "uint8_t"
+desc = "テレメ運用時の10個BCをNOP埋めする．（NOP個数）"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_ACTIVATE_BLOCK"
+params = 0
+desc = "BLC有効化コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_ACTIVATE_BLOCK_BY_ID"
+params = 1
+param1type = "uint16_t"
+param1desc = "bc_index"
+desc = "BCを（無条件に）有効化"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_INACTIVATE_BLOCK_BY_ID"
+params = 1
+param1type = "uint16_t"
+param1desc = "bc_index"
+desc = "BCを（無条件に）無効化"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_ROTATE_BLOCK"
+params = 1
+param1type = "uint16_t"
+param1desc = "bc_index"
+desc = "BLC回転コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_COMBINE_BLOCK"
+params = 1
+param1type = "uint16_t"
+param1desc = "bc_index"
+desc = "BLC融合コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_TIMELIMIT_COMBINE_BLOCK"
+params = 2
+param1type = "uint16_t"
+param1desc = "bc_index"
+param2type = "uint8_t"
+param2desc = "limit_step"
+desc = "時間制限付きBLC融合コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_RESET_ROTATOR_INFO"
+params = 0
+is_danger = true
+desc = "カウンタ類リセット"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_RESET_COMBINER_INFO"
+params = 0
+is_danger = true
+desc = "カウンタ類リセット"
+
+[[C2A_CORE]]
+name = "Cmd_BCE_SET_ROTATE_INTERVAL"
+params = 2
+param1type = "uint16_t"
+param2type = "uint16_t"
+desc = "BC回転時の回転間隔周期を設定する"
+
+[[C2A_CORE]]
+name = "Cmd_GSCD_CLEAR_ERR_LOG"
+params = 0
+desc = "最新のコマンド実行異常記録をクリア"
+
+[[C2A_CORE]]
+name = "Cmd_RTCD_CLEAR_ALL_REALTIME"
+params = 0
+is_danger = true
+desc = "全RTC登録解除"
+
+[[C2A_CORE]]
+name = "Cmd_RTCD_CLEAR_ERR_LOG"
+params = 0
+desc = "最新のコマンド実行異常記録をクリア"
+
+[[C2A_CORE]]
+name = "Cmd_MEM_SET_REGION"
+params = 2
+param1type = "uint32_t"
+param1desc = "始点アドレス"
+param2type = "uint32_t"
+param2desc = "終点アドレス"
+desc = "始点アドレスと終点アドレスを指定する"
+
+[[C2A_CORE]]
+name = "Cmd_MEM_LOAD"
+params = 2
+param1type = "uint32_t"
+param1desc = "開始アドレス"
+param2type = "raw"
+param2desc = "HEXBINARY"
+desc = "開始アドレス、データを指定"
+note = "第2パラメータの指定は仮設定"
+
+[[C2A_CORE]]
+name = "Cmd_MEM_SET_DESTINATION"
+params = 1
+param1type = "uint32_t"
+param1desc = "コピー先アドレス"
+desc = "コピー先設定"
+
+[[C2A_CORE]]
+name = "Cmd_MEM_COPY_REGION_SEQ"
+params = 1
+param1type = "uint32_t"
+param1desc = "コピー幅"
+desc = "領域コピー"
+
+[[C2A_CORE]]
+name = "Cmd_AL_ADD_ANOMALY"
+params = 2
+param1type = "uint32_t"
+param1desc = "group"
+param2type = "uint32_t"
+param2desc = "local"
+desc = "アノマリーコード(group, local)を発生させる"
+
+[[C2A_CORE]]
+name = "Cmd_AL_CLEAR_LIST"
+params = 0
+desc = "AnomalyListをクリアする"
+
+[[C2A_CORE]]
+name = "Cmd_AL_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page no"
+desc = "テレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_AL_INIT_LOGGING_ENA_FLAG"
+params = 0
+desc = "ロギングのフラグを初期化（全有効化）"
+
+[[C2A_CORE]]
+name = "Cmd_AL_ENABLE_LOGGING"
+params = 1
+param1type = "uint32_t"
+param1desc = "group"
+desc = "ロギングを有効化"
+
+[[C2A_CORE]]
+name = "Cmd_AL_DISABLE_LOGGING"
+params = 1
+param1type = "uint32_t"
+param1desc = "group"
+desc = "ロギングを無効化"
+
+[[C2A_CORE]]
+name = "Cmd_AL_SET_THRES_OF_NEARLY_FULL"
+params = 1
+param1type = "uint16_t"
+desc = "AL_NEARLY_FULLアノマリを出すしきい値設定"
+
+[[C2A_CORE]]
+name = "Cmd_AH_REGISTER_RULE"
+params = 6
+param1type = "uint8_t"
+param1desc = "id"
+param2type = "uint8_t"
+param2desc = "group"
+param3type = "uint8_t"
+param3desc = "local"
+param4type = "uint8_t"
+param4desc = "cond"
+param5type = "uint8_t"
+param5desc = "threshold"
+param6type = "uint16_t"
+param6desc = "bc_index"
+desc = "AHパラメタを設定する"
+
+[[C2A_CORE]]
+name = "Cmd_AH_ACTIVATE_RULE"
+params = 1
+param1type = "uint8_t"
+param1desc = "id"
+desc = "idで指定したルールを有効化する"
+
+[[C2A_CORE]]
+name = "Cmd_AH_INACTIVATE_RULE"
+params = 1
+param1type = "uint8_t"
+param1desc = "id"
+desc = "idで指定したルールを無効化する"
+
+[[C2A_CORE]]
+name = "Cmd_AH_CLEAR_LOG"
+params = 0
+desc = "アノマリ記録と関連情報を初期化する"
+
+[[C2A_CORE]]
+name = "Cmd_AH_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page no"
+desc = "テレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_AHRES_LOG_CLEAR"
+params = 0
+desc = "アノマリ対処ログをクリア"
+
+[[C2A_CORE]]
+name = "Cmd_AHRES_LOG_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page no"
+desc = "アノマリ対処ログテレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_EL_INIT"
+params = 0
+desc = "EL初期化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_CLEAR_LOG_ALL"
+params = 0
+desc = "全ログ削除"
+
+[[C2A_CORE]]
+name = "Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL"
+params = 1
+param1type = "uint8_t"
+param1desc = "err_level"
+desc = "エラーレベル指定ログ削除"
+
+[[C2A_CORE]]
+name = "Cmd_EL_CLEAR_STATISTICS"
+params = 0
+desc = "統計情報削除"
+
+[[C2A_CORE]]
+name = "Cmd_EL_CLEAR_TLOG"
+params = 1
+param1type = "uint8_t"
+param1desc = "err_level"
+desc = "TLog削除"
+
+[[C2A_CORE]]
+name = "Cmd_EL_CLEAR_CLOG"
+params = 1
+param1type = "uint8_t"
+param1desc = "err_level"
+desc = "CLog削除"
+
+[[C2A_CORE]]
+name = "Cmd_EL_RECORD_EVENT"
+params = 4
+param1type = "uint32_t"
+param1desc = "group"
+param2type = "uint32_t"
+param2desc = "local"
+param3type = "uint8_t"
+param3desc = "err_level"
+param4type = "uint32_t"
+param4desc = "note"
+desc = "イベント記録"
+
+[[C2A_CORE]]
+name = "Cmd_EL_TLOG_SET_PAGE_FOR_TLM"
+params = 2
+param1type = "uint8_t"
+param1desc = "page_no"
+param2type = "uint8_t"
+param2desc = "err_level"
+desc = "TLogのダウンリンクテレメ設定"
+
+[[C2A_CORE]]
+name = "Cmd_EL_CLOG_SET_PAGE_FOR_TLM"
+params = 2
+param1type = "uint8_t"
+param1desc = "page_no"
+param2type = "uint8_t"
+param2desc = "err_level"
+desc = "CLogのダウンリンクテレメ設定"
+
+[[C2A_CORE]]
+name = "Cmd_EL_INIT_LOGGING_SETTINGS"
+params = 0
+desc = "ログ設定を初期化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_ENABLE_LOGGING"
+params = 1
+param1type = "uint32_t"
+param1desc = "group"
+desc = "ロギングを有効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_DISABLE_LOGGING"
+params = 1
+param1type = "uint32_t"
+param1desc = "group"
+desc = "ロギングを無効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_ENABLE_LOGGING_ALL"
+params = 0
+desc = "すべてのロギングを有効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_DISABLE_LOGGING_ALL"
+params = 0
+desc = "すべてのロギングを無効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_ENABLE_TLOG_OVERWRITE"
+params = 1
+param1type = "uint8_t"
+param1desc = "err_level"
+desc = "TLogのログ上書きを有効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_DISABLE_TLOG_OVERWRITE"
+params = 1
+param1type = "uint8_t"
+param1desc = "err_level"
+desc = "TLogのログ上書きを無効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL"
+params = 0
+desc = "すべてのTLogのログ上書きを有効化"
+
+[[C2A_CORE]]
+name = "Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL"
+params = 0
+desc = "すべてのTLogのログ上書きを無効化"
+
+[[C2A_CORE]]
+name = "Cmd_EH_INIT"
+params = 0
+desc = "EHの初期化"
+
+[[C2A_CORE]]
+name = "Cmd_EH_CLEAR_ALL_RULE"
+params = 0
+desc = "EHのすべてのルールをクリア"
+
+[[C2A_CORE]]
+name = "Cmd_EH_LOAD_DEFAULT_RULE"
+params = 0
+desc = "EHのデフォルトルールを読み込み"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM"
+params = 6
+param1type = "uint16_t"
+param1desc = "rule id"
+param2type = "uint32_t"
+param2desc = "event group"
+param3type = "uint32_t"
+param3desc = "event local"
+param4type = "uint8_t"
+param4desc = "event err level"
+param5type = "uint8_t"
+param5desc = "should_match_err_level"
+param6type = "uint16_t"
+param6desc = "deploy bc index"
+desc = "登録するEHルールのイベントパラメータを設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM"
+params = 4
+param1type = "uint8_t"
+param1desc = "condition type"
+param2type = "uint16_t"
+param2desc = "count_threshold"
+param3type = "uint32_t"
+param3desc = "time_threshold [ms]"
+param4type = "uint8_t"
+param4desc = "is_active"
+desc = "登録するEHルールの対応条件パラメタを設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_REGISTER_RULE"
+params = 0
+desc = "設定したパラメタでEHルールを登録"
+
+[[C2A_CORE]]
+name = "Cmd_EH_DELETE_RULE"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを削除"
+
+[[C2A_CORE]]
+name = "Cmd_EH_INIT_RULE"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを初期化（ルールを有効化し，ルールカウンタも初期化）"
+
+[[C2A_CORE]]
+name = "Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを初期化（ルールを有効化し，ルールカウンタも初期化）（多段EH対応用）"
+
+[[C2A_CORE]]
+name = "Cmd_EH_ACTIVATE_RULE"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを有効化"
+
+[[C2A_CORE]]
+name = "Cmd_EH_INACTIVATE_RULE"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを無効化"
+
+[[C2A_CORE]]
+name = "Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを有効化（多段EH対応用）"
+
+[[C2A_CORE]]
+name = "Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "指定したルールを無効化（多段EH対応用）"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_RULE_COUNTER"
+params = 2
+param1type = "uint16_t"
+param1desc = "rule id"
+param2type = "uint16_t"
+param2desc = "counter"
+desc = "EH_Rule の counter をセット"
+
+[[C2A_CORE]]
+name = "Cmd_EH_CLEAR_RULE_COUNTER"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "EH_Rule の counter を0 クリア"
+
+[[C2A_CORE]]
+name = "Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT"
+params = 3
+param1type = "uint32_t"
+param1desc = "group"
+param2type = "uint32_t"
+param2desc = "local"
+param3type = "uint8_t"
+param3desc = "err_level"
+desc = "EH_Rule の counter を EL_Event 指定で 0 クリア"
+
+[[C2A_CORE]]
+name = "Cmd_EH_CLEAR_LOG"
+params = 0
+desc = "EHの対応ログをクリア"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_MAX_RESPONSE_NUM"
+params = 1
+param1type = "uint8_t"
+param1desc = "max_response_num"
+desc = "一度のEH実行で対応するイベントの最大数を設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_MAX_CHECK_EVENT_NUM"
+params = 1
+param1type = "uint16_t"
+param1desc = "max_check_event_num"
+desc = "一度のEH実行でチェックするイベントの最大数を設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_MAX_MULTI_LEVEL_NUM"
+params = 1
+param1type = "uint8_t"
+param1desc = "max_multi_level_num"
+desc = "設定可能な最大段数を設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "EHルールテーブルのテレメページの設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "EHルールのソート済みテーブルのテレメページの設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "EHログテーブルのテレメページの設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM"
+params = 1
+param1type = "uint16_t"
+param1desc = "rule id"
+desc = "EHテレメに表示するルールのID設定"
+
+[[C2A_CORE]]
+name = "Cmd_EH_MATCH_EVENT_COUNTER_TO_EL"
+params = 0
+desc = "イベント発生を検知するためのEHカウンタをELカウンタに強制定期に合わせる"
+
+[[C2A_CORE]]
+name = "Cmd_EVENT_UTIL_ENABLE_EH_EXEC"
+params = 0
+desc = "EHの実行を有効に"
+
+[[C2A_CORE]]
+name = "Cmd_EVENT_UTIL_DISABLE_EH_EXEC"
+params = 0
+desc = "EHの実行を無効に"
+
+[[C2A_CORE]]
+name = "Cmd_EVENT_UTIL_EXEC_EH"
+params = 0
+desc = "EHを単発で実行"
+
+[[C2A_CORE]]
+name = "Cmd_TF_INIT"
+params = 0
+desc = "TFの初期化"
+
+[[C2A_CORE]]
+name = "Cmd_CA_INIT"
+params = 0
+desc = "CAの初期化"
+
+[[C2A_CORE]]
+name = "Cmd_TF_REGISTER_TLM"
+params = 2
+param1type = "uint8_t"
+param1desc = "index"
+param2type = "uint32_t"
+param2desc = "tlm_func"
+desc = "テレメトリ登録コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_CA_REGISTER_CMD"
+params = 3
+param1type = "uint16_t"
+param1desc = "index"
+param2type = "uint32_t"
+param2desc = "cmd_func"
+param3type = "raw"
+param3desc = "param_info"
+desc = "コマンド登録コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TF_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "テレメトリ定義テーブルページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_CA_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "コマンド定義テーブルページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_INIT"
+params = 0
+desc = "初期化"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_INIT_MASTER_BC"
+params = 0
+desc = "master bc の初期化"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_CLEAR_HK_TLM"
+params = 0
+desc = "HKテレメを初期化"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_CLEAR_SYSTEM_TLM"
+params = 0
+desc = "systemテレメを初期化"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_CLEAR_USER_TLM"
+params = 0
+desc = "high_freq_tlm, low_freq_tlm を初期化"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_START_TLM"
+params = 0
+desc = "TLM送出開始"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_STOP_TLM"
+params = 0
+desc = "TLM送出一時停止"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_CLEAR_TLM_TL"
+params = 0
+desc = "TLM送出用TLをクリア"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_REGISTER_HK_TLM"
+params = 3
+param1type = "uint8_t"
+param1desc = "category"
+param2type = "uint8_t"
+param2desc = "TLM_ID"
+param3type = "uint8_t"
+param3desc = "送出回数"
+desc = "HKテレメを登録"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_REGISTER_SYSTEM_TLM"
+params = 3
+param1type = "uint8_t"
+param1desc = "category"
+param2type = "uint8_t"
+param2desc = "TLM_ID"
+param3type = "uint8_t"
+param3desc = "送出回数"
+desc = "systemテレメを登録"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM"
+params = 3
+param1type = "uint8_t"
+param1desc = "category"
+param2type = "uint8_t"
+param2desc = "TLM_ID"
+param3type = "uint8_t"
+param3desc = "送出回数"
+desc = "high_freq_tlm を登録"
+
+[[C2A_CORE]]
+name = "Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM"
+params = 3
+param1type = "uint8_t"
+param1desc = "category"
+param2type = "uint8_t"
+param2desc = "TLM_ID"
+param3type = "uint8_t"
+param3desc = "送出回数"
+desc = "low_freq_tlm を登録"
+
+[[C2A_CORE]]
+name = "Cmd_DCU_ABORT_CMD"
+params = 1
+param1type = "uint16_t"
+param1desc = "Cmd ID"
+desc = "実行中の分割コマンドを停止する"
+
+[[C2A_CORE]]
+name = "Cmd_DCU_DOWN_ABORT_FLAG"
+params = 1
+param1type = "uint16_t"
+param1desc = "Cmd ID"
+desc = "エラー，またはコマンドによって中断ステータスとなっているコマンドを，実行可能状態に戻す"
+
+[[C2A_CORE]]
+name = "Cmd_DCU_CLEAR_LOG"
+params = 0
+desc = "ログをクリアする"
+
+[[CDH]]
+code = "0x0100"
+name = "Cmd_DI_GS_CCSDS_TX_START"
+params = 0
+desc = "CCSDS 通信を有効に"
+
+[[CDH]]
+name = "Cmd_DI_GS_CCSDS_TX_STOP"
+params = 0
+is_danger = true
+desc = "CCSDS通信を無効に"
+
+[[CDH]]
+name = "Cmd_DI_GS_DRIVER_RESET"
+params = 0
+desc = "MS VCDUの排出間隔設定"
+
+[[CDH]]
+name = "Cmd_DI_GS_SET_MS_FLUSH_INTERVAL"
+params = 1
+param1type = "uint32_t"
+param1desc = "排出間隔"
+desc = "MS VCDUの排出間隔設定"
+
+[[CDH]]
+name = "Cmd_DI_GS_SET_RP_FLUSH_INTERVAL"
+params = 1
+param1type = "uint32_t"
+param1desc = "排出間隔"
+desc = "RP VCDUの排出間隔設定"
+
+[[CDH]]
+name = "Cmd_DI_GS_SET_FARM_PW"
+params = 1
+param1type = "uint8_t"
+param1desc = "positive_window_width"
+desc = "FARM-1のPositive Window Width設定"
+
+[[CDH]]
+name = "Cmd_DI_GS_SET_INFO"
+params = 1
+param1type = "uint8_t"
+param1desc = "TLM選択"
+desc = "GS送信TLMが0ならCCSDSに, 1ならUARTの情報が出てくる"
+
+[[CDH]]
+name = "Cmd_DI_GS_CCSDS_GET_BUFFER"
+params = 0
+
+[[CDH]]
+name = "Cmd_DI_GS_CCSDS_SET_RATE"
+params = 1
+param1type = "uint8_t"
+param1desc = "bps セットパラメータ"
+is_danger = true
+desc = "40M/パラメータ が bps になる．初期値は 0xAD で 230.4 Kbps (微妙に対応していない)"
+
+[[CDH]]
+name = "Cmd_WDT_INIT"
+params = 0
+desc = "WDT初期化．WDTがアプリイニシャライザを持たなくなったので追加"
+
+[[CDH]]
+name = "Cmd_WDT_ENABLE"
+params = 0
+desc = "WDT有効化"
+
+[[CDH]]
+name = "Cmd_WDT_DISABLE"
+params = 0
+desc = "WDT無効化"
+
+[[CDH]]
+name = "Cmd_WDT_STOP_CLEAR"
+params = 0
+is_danger = true
+desc = "WDTのカウンタクリアを止める＝リセット実行"
+
+[[CDH]]
+name = "Cmd_WDT_START_CLEAR"
+params = 0
+desc = "WDTのカウンタクリアを開始する"
+
+[[CDH]]
+name = "Cmd_UART_TEST_INIT_DI"
+params = 0
+desc = "DI初期化"
+
+[[CDH]]
+name = "Cmd_UART_TEST_UPDATE"
+params = 0
+desc = "DI update"
+
+[[CDH]]
+name = "Cmd_UART_TEST_SEND_TEST"
+params = 1
+param1type = "uint8_t"
+param1desc = "id"
+desc = "DI send test"
+
+[[Other]]
+code = "0x03E0"
+name = "Cmd_UTIL_CMD_ADD"
+params = 6
+param1type = "uint8_t"
+param2type = "uint32_t"
+param3type = "uint32_t"
+param4type = "uint32_t"
+param5type = "uint32_t"
+param6type = "uint32_t"
+desc = "汎用コマンドのバッファに指定サイズのデータを入れる"
+
+[[Other]]
+code = "0x03E1"
+name = "Cmd_UTIL_CMD_SEND"
+params = 1
+param1type = "uint8_t"
+desc = "引数のCHに汎用コマンドのバッファにあるデータを送信する"
+
+[[Other]]
+name = "Cmd_UTIL_CMD_RESET"
+params = 0
+desc = "汎用コマンドのバッファをクリアする"
+
+[[Other]]
+name = "Cmd_UTIL_COUNTER_INCREMENT"
+params = 1
+param1type = "uint8_t"
+desc = "引数の汎用カウンタをインクリメントする"
+
+[[Other]]
+name = "Cmd_UTIL_COUNTER_RESET"
+params = 1
+param1type = "uint8_t"
+desc = "引数の汎用カウンタをリセットする．0xffでALL_CLR"
+
+[[Other]]
+name = "Cmd_UTIL_COUNTER_SET_PARAM"
+params = 3
+param1type = "uint8_t"
+param2type = "uint32_t"
+param3type = "uint8_t"
+desc = "引数の汎用カウンタの閾値・アノマリ発行有無を設定する"
+

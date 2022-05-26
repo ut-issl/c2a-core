@@ -1,0 +1,206 @@
+Target = "OBC"
+PacketID = "0x5a"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint8_t"
+name = "EVENT_UTIL.IS_ENABLED_EH_EXECUTION"
+exp = "event_utility->is_enabled_eh_execution"
+status = "2.4"
+
+[[tlm]]
+type = "uint32_t"
+name = "EL_EVENT_COUNTER.COUNTER_TOTAL"
+exp = "event_handler->el_event_counter.counter_total"
+
+[[tlm]]
+name_base = "EL_EVENT_COUNTER.COUNTERS.EL_ERROR_LEVEL_{}"
+exp_base = "event_handler->el_event_counter.counters[EL_ERROR_LEVEL_{}]"
+type = "uint32_t"
+seq_num = 5
+[[tlm.seq]]
+name = "HIGH"
+exp = "HIGH"
+[[tlm.seq]]
+name = "MIDDLE"
+exp = "MIDDLE"
+[[tlm.seq]]
+name = "LOW"
+exp = "LOW"
+[[tlm.seq]]
+name = "EL"
+exp = "EL"
+[[tlm.seq]]
+name = "EH"
+exp = "EH"
+
+[[tlm]]
+name_base = "LOG_TABLE.{}"
+exp_base = "event_handler->log_table.{}"
+seq_num = 2
+[[tlm.seq]]
+type = "uint32_t"
+name = "RESPOND_COUNTER"
+exp = "respond_counter"
+[[tlm.seq]]
+type = "uint16_t"
+name = "LOG_WP"
+exp = "log_wp"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_SETTINGS.MAX_RESPONSE_NUM"
+exp = "event_handler->exec_settings.max_response_num"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_SETTINGS.MAX_CHECK_EVENT_NUM"
+exp = "event_handler->exec_settings.max_check_event_num"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_SETTINGS.MAX_MULTI_LEVEL_NUM"
+exp = "event_handler->exec_settings.max_multi_level_num"
+
+[[tlm]]
+type = "uint8_t"
+name = "REG_FROM_CMD.RULE_ID"
+exp = "(uint8_t)event_handler->reg_from_cmd.rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "REG_FROM_CMD.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)event_handler->reg_from_cmd.settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "REG_FROM_CMD.SETTINGS.EVENT.LOCAL"
+exp = "event_handler->reg_from_cmd.settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "REG_FROM_CMD.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)event_handler->reg_from_cmd.settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "REG_FROM_CMD.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "event_handler->reg_from_cmd.settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "REG_FROM_CMD.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "event_handler->reg_from_cmd.settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "REG_FROM_CMD.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)event_handler->reg_from_cmd.settings.condition.type)"
+status = "3.3"
+note = "1 bitあまりあり"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "REG_FROM_CMD.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "event_handler->reg_from_cmd.settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "REG_FROM_CMD.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "event_handler->reg_from_cmd.settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "REG_FROM_CMD.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)event_handler->reg_from_cmd.settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "REG_FROM_CMD.REGISTER_ACK"
+exp = "(uint8_t)event_handler->reg_from_cmd.register_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE.PAGE_NO"
+exp = "event_handler->tlm_info.rule.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE.TARGET_RULE_ID"
+exp = "(uint8_t)event_handler->tlm_info.rule.target_rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE_SORTED_INDEX.PAGE_NO"
+exp = "event_handler->tlm_info.rule_sorted_index.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.LOG.PAGE_NO"
+exp = "event_handler->tlm_info.log.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "TARTGET_RULE.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TARTGET_RULE.SETTINGS.EVENT.LOCAL"
+exp = "event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "TARTGET_RULE.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "TARTGET_RULE.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "TARTGET_RULE.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "TARTGET_RULE.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.type)"
+status = "3.3"
+note = "1 bitあまりあり"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "TARTGET_RULE.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "TARTGET_RULE.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "TARTGET_RULE.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "TARTGET_RULE.COUNTER"
+exp = "event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "TARTGET_RULE.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].last_event_time.total_cycle"
+

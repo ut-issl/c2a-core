@@ -1,0 +1,4 @@
+[submodule "data/tlm-cmd-db"]
+	path = data/tlm-cmd-db
+	url = https://github.com/ut-issl/tlm-cmd-db.git
+    branch = feature/excel2toml

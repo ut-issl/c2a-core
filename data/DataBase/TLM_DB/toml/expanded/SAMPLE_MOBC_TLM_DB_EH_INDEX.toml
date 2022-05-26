@@ -1,0 +1,471 @@
+Target = "OBC"
+PacketID = "0x5d"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint16_t offset = event_handler->tlm_info.rule_sorted_index.page_no * EH_RULE_TLM_PAGE_SIZE;##"
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE_SORTED_INDEX.PAGE_NO"
+exp = "event_handler->tlm_info.rule_sorted_index.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX0.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[0 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX0.LOCAL"
+exp = "event_handler->sorted_idxes[0 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX0.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[0 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX0.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[0 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX1.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[1 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX1.LOCAL"
+exp = "event_handler->sorted_idxes[1 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX1.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[1 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX1.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[1 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX2.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[2 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX2.LOCAL"
+exp = "event_handler->sorted_idxes[2 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX2.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[2 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX2.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[2 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX3.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[3 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX3.LOCAL"
+exp = "event_handler->sorted_idxes[3 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX3.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[3 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX3.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[3 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX4.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[4 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX4.LOCAL"
+exp = "event_handler->sorted_idxes[4 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX4.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[4 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX4.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[4 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX5.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[5 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX5.LOCAL"
+exp = "event_handler->sorted_idxes[5 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX5.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[5 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX5.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[5 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX6.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[6 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX6.LOCAL"
+exp = "event_handler->sorted_idxes[6 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX6.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[6 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX6.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[6 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX7.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[7 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX7.LOCAL"
+exp = "event_handler->sorted_idxes[7 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX7.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[7 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX7.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[7 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX8.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[8 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX8.LOCAL"
+exp = "event_handler->sorted_idxes[8 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX8.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[8 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX8.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[8 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX9.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[9 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX9.LOCAL"
+exp = "event_handler->sorted_idxes[9 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX9.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[9 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX9.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[9 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX10.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[10 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX10.LOCAL"
+exp = "event_handler->sorted_idxes[10 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX10.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[10 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX10.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[10 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX11.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[11 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX11.LOCAL"
+exp = "event_handler->sorted_idxes[11 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX11.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[11 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX11.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[11 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX12.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[12 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX12.LOCAL"
+exp = "event_handler->sorted_idxes[12 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX12.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[12 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX12.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[12 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX13.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[13 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX13.LOCAL"
+exp = "event_handler->sorted_idxes[13 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX13.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[13 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX13.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[13 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX14.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[14 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX14.LOCAL"
+exp = "event_handler->sorted_idxes[14 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX14.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[14 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX14.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[14 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX15.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[15 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX15.LOCAL"
+exp = "event_handler->sorted_idxes[15 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX15.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[15 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX15.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[15 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX16.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[16 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX16.LOCAL"
+exp = "event_handler->sorted_idxes[16 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX16.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[16 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX16.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[16 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX17.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[17 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX17.LOCAL"
+exp = "event_handler->sorted_idxes[17 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX17.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[17 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX17.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[17 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX18.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[18 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX18.LOCAL"
+exp = "event_handler->sorted_idxes[18 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX18.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[18 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX18.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[18 + offset].rule_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX19.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[19 + offset].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "IDX19.LOCAL"
+exp = "event_handler->sorted_idxes[19 + offset].local"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX19.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[19 + offset].duplicate_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "IDX19.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[19 + offset].rule_id"
+

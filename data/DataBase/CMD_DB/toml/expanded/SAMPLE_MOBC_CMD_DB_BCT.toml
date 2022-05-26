@@ -1,0 +1,124 @@
+[[bct]]
+comment = "Block Cmds for Mode Transition (シーケンスリスト)\n./src_user/Settings/Modes/Transitions/ で定義"
+
+[[bct]]
+name = "BC_SL_START_UP_TO_INITIAL"
+bcid = 0
+is_danger = true
+
+[[bct]]
+name = "BC_SL_NOP "
+bcid = 17
+is_danger = true
+
+[[bct]]
+comment = "Block Cmds for TaskList (タスクリスト) : 286-300\n./src_user/Settings/Modes/TaskLists/ で定義"
+
+[[bct]]
+name = "BC_TL_START_UP"
+bcid = 20
+is_danger = true
+
+[[bct]]
+name = "BC_TL_INITIAL"
+bcid = 21
+is_danger = true
+
+[[bct]]
+comment = "Block Cmds for Elements (App Rotator, Combinar)\n./src_user/Settings/Modes/TaskLists/Elements/ で定義"
+
+[[bct]]
+name = "BC_AR_DEBUG_DISPLAY_INI"
+bcid = 40
+is_danger = true
+
+[[bct]]
+name = "BC_AR_DRIVERS_UPDATE_INI"
+bcid = 42
+is_danger = true
+
+[[bct]]
+name = "BC_AR_GS_RELATED_PROCESS"
+bcid = 44
+is_danger = true
+
+[[bct]]
+name = "BC_AC_TLM_CMD_HIRATE"
+bcid = 50
+is_danger = true
+
+[[bct]]
+comment = "==== 各系領域 ====\n./C2A/TlmCmd/NormalBlockCommandDefinition/で定義\nアノマリハンドラはBC_AH_など，接頭辞を適切につけること！\n\nCDH:60-79"
+
+[[bct]]
+name = "BC_HK_CYCLIC_TLM"
+sname = "BC_HK10S"
+bcid = 60
+is_deploy = true
+is_setblockposition = true
+is_clear = true
+is_activate = true
+is_inactivate = true
+
+[[bct]]
+name = "BC_RESERVED_FOR_HK"
+bcid = 77
+desc = "EM電気試験でのコマンドファイルとのバッティングを防ぐ"
+
+[[bct]]
+comment = "COMM:90-99\n\n==== 地上からupする“のみ”領域 ====\nC2Aでは使用しない\n\n==== 追加領域 ====\n\nTelemetry Manager"
+
+[[bct]]
+name = "BC_TLM_MGR0"
+bcid = 350
+
+[[bct]]
+name = "BC_TLM_MGR1"
+bcid = 351
+
+[[bct]]
+name = "BC_TLM_MGR2"
+bcid = 352
+
+[[bct]]
+name = "BC_TLM_MGR3"
+bcid = 353
+
+[[bct]]
+name = "BC_TLM_MGR4"
+bcid = 354
+
+[[bct]]
+name = "BC_TLM_MGR5"
+bcid = 355
+
+[[bct]]
+name = "BC_TLM_MGR6"
+bcid = 356
+
+[[bct]]
+name = "BC_TLM_MGR7"
+bcid = 357
+
+[[bct]]
+name = "BC_TLM_MGR8"
+bcid = 358
+
+[[bct]]
+name = "BC_TLM_MGR9"
+bcid = 359
+
+[[bct]]
+comment = "Test"
+
+[[bct]]
+name = "BC_TEST_EH_RESPOND"
+bcid = 360
+
+[[bct]]
+name = "BC_TEST_BCL"
+bcid = 361
+
+[[bct]]
+comment = "BCT MAX : 382"
+

@@ -1,0 +1,213 @@
+CDH = []
+POWER = []
+COM = []
+MISSION = []
+PROP = []
+AOCS = []
+Thermal = []
+Trajectory = []
+HILS = []
+
+[[C2A_CORE]]
+code = "0x0000"
+name = "Cmd_NOP"
+params = 0
+desc = "ダミーコマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_SET_TIME"
+params = 1
+param1type = "uint32_t"
+param1desc = "TI"
+desc = "MOBC時刻設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_UPDATE_UNIXTIME"
+params = 3
+param1type = "double"
+param1desc = "unixtime"
+param2type = "uint32_t"
+param2desc = "total_cycle"
+param3type = "uint32_t"
+param3desc = "step"
+desc = "MOBC UNIXTIME修正コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH"
+params = 1
+param1type = "double"
+param1desc = "ult_unixtime_epoch"
+desc = "UTL_cmdで用いるunixtimeの紀元を変更する"
+note = "utl_unixtime_epoch [s]"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_SET_CYCLE_CORRECTION"
+params = 1
+param1type = "double"
+param1desc = "cycle_correction"
+desc = "CYCLES_PER_SECの補正倍率を変更する, 初期値は1.0"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_RESET_CYCLE_CORRECTION"
+params = 0
+desc = "CYCLES_PER_SECの補正倍率を1.0に初期化する"
+
+[[C2A_CORE]]
+name = "Cmd_TMGR_CLEAR_UNIXTIME_INFO"
+params = 0
+desc = "unixtime_info_ を初期化する"
+
+[[C2A_CORE]]
+name = "Cmd_AM_REGISTER_APP"
+params = 3
+param1type = "uint32_t"
+param1desc = "app_id"
+param2type = "uint32_t"
+param2desc = "init_ptr"
+param3type = "uint32_t"
+param3desc = "entry_ptr"
+desc = "アプリ登録コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_AM_INITIALIZE_APP"
+params = 1
+param1type = "uint32_t"
+param1desc = "app_id"
+desc = "アプリ初期化コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_AM_EXECUTE_APP"
+params = 1
+param1type = "uint32_t"
+param1desc = "app_id"
+desc = "アプリ実行コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_AM_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+desc = "テレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_AM_CLEAR_APP_INFO"
+params = 0
+is_danger = true
+desc = "アプリ実行時間計測の初期化"
+
+[[C2A_CORE]]
+name = "Cmd_MM_SET_MODE_LIST"
+params = 2
+param1type = "uint8_t"
+param1desc = "mode"
+param2type = "uint16_t"
+param2desc = "bc_index"
+desc = "モード定義リスト設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_SET_TRANSITION_TABLE"
+params = 3
+param1type = "uint8_t"
+param1desc = "from_mode"
+param2type = "uint8_t"
+param2desc = "to_mode"
+param3type = "uint16_t"
+param3desc = "bc_index"
+desc = "モード遷移定義テーブル書き換えコマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_START_TRANSITION"
+params = 1
+param1type = "uint8_t"
+param1desc = "to_mode"
+desc = "モード遷移開始コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_FINISH_TRANSITION"
+params = 0
+desc = "モード遷移終了通知コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM"
+params = 0
+desc = "モードのTLMテーブル情報更新"
+
+[[C2A_CORE]]
+name = "Cmd_TDSP_SET_TASK_LIST"
+params = 1
+param1type = "uint8_t"
+param1desc = "bc_index"
+desc = "タスクリスト設定コマンド"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_CLEAR_ALL_TIMELINE"
+params = 1
+param1type = "uint8_t"
+param1desc = "TL_ID"
+is_danger = true
+desc = "全TLC登録解除"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_CLEAR_TIMELINE_AT"
+params = 2
+param1type = "uint8_t"
+param1desc = "TL_ID"
+param2type = "uint32_t"
+param2desc = "TI"
+desc = "TI指定TLC登録解除"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "TL_ID"
+desc = "TLC状況一覧更新"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_DEPLOY_BLOCK"
+params = 2
+param1type = "uint8_t"
+param1desc = "TL_ID"
+param2type = "uint16_t"
+param2desc = "bc_index"
+desc = "BLC展開 "
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_SOE_FLAG"
+params = 2
+param1type = "uint8_t"
+param1desc = "TL_ID"
+param2type = "uint8_t"
+desc = "異常時実行停止機能設定(ライン番号, フラグ)"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_LOUT_FLAG"
+params = 2
+param1type = "uint8_t"
+param1desc = "TL_ID"
+param2type = "uint8_t"
+desc = "実行停止機能設定(ライン番号, フラグ)"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_SET_PAGE_FOR_TLM"
+params = 1
+param1type = "uint8_t"
+param1desc = "page_no"
+desc = "テレメトリ生成用ページ番号設定"
+
+[[C2A_CORE]]
+name = "Cmd_TLCD_CLEAR_ERR_LOG"
+params = 1
+param1type = "uint8_t"
+desc = "最新のコマンド実行異常記録をクリア"
+
+[[C2A_CORE]]
+name = "Cmd_GENERATE_TLM"
+params = 3
+param1type = "uint8_t"
+param1desc = "category"
+param2type = "uint8_t"
+param2desc = "TLM_ID"
+param3type = "uint8_t"
+param3desc = "送出回数"
+desc = "TLMパケット生成"
+

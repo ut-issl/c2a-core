@@ -1,0 +1,77 @@
+Target = "OBC"
+PacketID = "0x57"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "EL_ERROR_LEVEL err_level = event_logger->tlm_info.tlog.err_level;##uint16_t offset = EL_TLOG_TLM_PAGE_SIZE * event_logger->tlm_info.tlog.page_no;##const EL_Event* events = event_logger->tlogs[err_level].events;##"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.TLOG.PAGE_NO"
+exp = "event_logger->tlm_info.tlog.page_no"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "TLM_INFO.TLOG.ERR_LEVEL"
+bitlen = 4
+exp = "err_level"
+status = "5.1"
+[[tlm.comp]]
+name = "TLOGS.IS_ENABLE_OVERWRITE"
+bitlen = 1
+exp = "event_logger->tlogs[err_level].is_enable_overwrite"
+[[tlm.comp]]
+name = "TLOGS.IS_TABLE_OVERFLOW"
+bitlen = 1
+exp = "event_logger->tlogs[err_level].is_table_overflow"
+[[tlm.comp]]
+name = "TLOGS.DUMMY"
+bitlen = 2
+
+[[tlm]]
+name_base = "STATISTICS.{}"
+exp_base = "event_logger->statistics.{}"
+type = "uint32_t"
+seq_num = 2
+[[tlm.seq]]
+name = "RECORD_COUNTER_TOTAL"
+exp = "record_counter_total"
+[[tlm.seq]]
+name = "RECORD_COUNTERS_ERR_LEVEL"
+exp = "record_counters[err_level]"
+
+[[tlm]]
+name_base = "TLOGS.{}"
+exp_base = "event_logger->tlogs[err_level].{}"
+type = "uint16_t"
+seq_num = 2
+[[tlm.seq]]
+name = "LOG_CAPACITY"
+exp = "log_capacity"
+[[tlm.seq]]
+name = "LOG_WP"
+exp = "log_wp"
+
+[[tlm]]
+q_range = [0, 27]
+block_num = 5
+[[tlm.block]]
+type = "uint8_t"
+name = "TLOGS.EVENTS??.GROUP"
+exp = "(uint8_t)events[offset+??].group"
+[[tlm.block]]
+type = "uint32_t"
+name = "TLOGS.EVENTS??.LOCAL"
+exp = "events[offset+??].local"
+[[tlm.block]]
+type = "uint32_t"
+name = "TLOGS.EVENTS??.TIME.TOTAL_CYCLE"
+exp = "events[offset+??].time.total_cycle"
+[[tlm.block]]
+type = "uint8_t"
+name = "TLOGS.EVENTS??.TIME.STEP"
+exp = "(uint8_t)events[offset+??].time.step"
+[[tlm.block]]
+type = "uint32_t"
+name = "TLOGS.EVENTS??.NOTE"
+exp = "events[offset+??].note"

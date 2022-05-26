@@ -1,0 +1,1041 @@
+Target = "OBC"
+PacketID = "0x5c"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint16_t offset = event_handler->tlm_info.log.page_no * EH_LOG_TLM_PAGE_SIZE;##"
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.LOG.PAGE_NO"
+exp = "event_handler->tlm_info.log.page_no"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG_TABLE.RESPOND_COUNTER"
+exp = "event_handler->log_table.respond_counter"
+
+[[tlm]]
+type = "uint16_t"
+name = "LOG_TABLE.LOG_WP"
+exp = "event_handler->log_table.log_wp"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG0.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(0 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG0.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(0 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG0.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(0 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG1.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(1 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG1.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(1 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG1.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(1 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG2.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(2 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG2.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(2 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG2.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(2 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG3.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(3 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG3.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(3 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG3.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(3 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG4.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(4 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG4.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(4 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG4.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(4 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG5.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(5 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG5.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(5 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG5.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(5 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG6.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(6 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG6.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(6 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG6.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(6 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG7.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(7 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG7.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(7 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG7.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(7 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG8.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(8 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG8.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(8 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG8.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(8 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG9.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(9 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG9.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(9 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG9.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(9 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG10.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(10 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG10.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(10 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG10.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(10 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG11.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(11 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG11.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(11 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG11.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(11 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG12.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(12 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG12.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(12 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG12.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(12 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG13.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(13 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG13.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(13 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG13.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(13 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG14.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(14 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG14.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(14 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG14.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(14 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG15.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(15 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG15.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(15 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG15.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(15 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG16.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(16 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG16.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(16 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG16.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(16 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG17.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(17 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG17.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(17 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG17.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(17 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG18.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(18 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG18.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(18 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG18.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(18 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG19.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(19 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG19.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(19 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG19.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(19 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG20.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(20 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG20.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(20 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG20.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(20 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG21.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(21 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG21.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(21 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG21.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(21 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG22.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(22 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG22.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(22 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG22.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(22 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG23.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(23 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG23.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(23 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG23.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(23 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG24.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(24 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG24.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(24 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG24.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(24 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG25.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(25 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG25.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(25 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG25.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(25 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG26.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(26 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG26.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(26 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG26.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(26 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG27.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(27 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG27.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(27 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG27.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(27 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG28.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(28 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG28.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(28 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG28.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(28 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG29.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(29 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG29.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(29 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG29.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(29 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG30.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(30 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG30.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(30 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG30.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(30 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG31.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(31 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG31.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(31 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG31.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(31 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG32.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(32 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG32.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(32 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG32.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(32 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG33.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(33 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG33.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(33 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG33.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(33 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG34.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(34 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG34.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(34 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG34.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(34 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG35.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(35 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG35.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(35 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG35.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(35 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG36.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(36 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG36.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(36 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG36.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(36 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG37.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(37 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG37.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(37 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG37.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(37 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG38.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(38 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG38.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(38 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG38.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(38 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG39.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(39 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG39.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(39 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG39.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(39 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG40.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(40 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG40.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(40 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG40.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(40 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG41.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(41 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG41.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(41 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG41.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(41 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG42.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(42 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG42.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(42 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG42.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(42 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG43.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(43 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG43.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(43 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG43.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(43 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG44.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(44 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG44.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(44 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG44.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(44 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG45.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(45 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG45.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(45 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG45.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(45 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG46.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(46 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG46.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(46 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG46.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(46 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG47.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(47 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG47.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(47 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG47.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(47 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG48.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(48 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG48.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(48 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG48.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(48 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG49.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(49 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG49.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(49 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG49.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(49 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG50.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(50 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG50.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(50 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG50.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(50 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG51.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(51 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG51.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(51 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG51.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(51 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG52.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(52 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG52.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(52 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG52.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(52 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG53.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(53 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG53.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(53 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG53.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(53 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG54.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(54 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG54.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(54 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG54.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(54 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG55.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(55 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG55.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(55 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG55.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(55 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG56.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(56 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG56.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(56 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG56.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(56 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG57.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(57 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG57.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(57 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG57.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(57 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG58.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(58 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG58.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(58 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG58.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(58 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG59.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(59 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG59.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(59 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG59.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(59 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG60.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(60 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG60.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(60 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG60.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(60 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG61.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(61 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG61.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(61 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG61.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(61 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG62.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(62 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG62.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(62 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG62.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(62 + offset))->deploy_cmd_ack"
+
+[[tlm]]
+type = "uint8_t"
+name = "LOG63.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(63 + offset))->rule_id"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG63.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(63 + offset))->respond_time_in_master_cycle"
+
+[[tlm]]
+type = "int8_t"
+name = "LOG63.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(63 + offset))->deploy_cmd_ack"
+

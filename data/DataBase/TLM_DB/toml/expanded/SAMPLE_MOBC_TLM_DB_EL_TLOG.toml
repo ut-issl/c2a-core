@@ -1,0 +1,811 @@
+Target = "OBC"
+PacketID = "0x57"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "EL_ERROR_LEVEL err_level = event_logger->tlm_info.tlog.err_level;##uint16_t offset = EL_TLOG_TLM_PAGE_SIZE * event_logger->tlm_info.tlog.page_no;##const EL_Event* events = event_logger->tlogs[err_level].events;##"
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.TLOG.PAGE_NO"
+exp = "event_logger->tlm_info.tlog.page_no"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "TLM_INFO.TLOG.ERR_LEVEL"
+bitlen = 4
+exp = "err_level"
+status = "5.1"
+[[tlm.comp]]
+name = "TLOGS.IS_ENABLE_OVERWRITE"
+bitlen = 1
+exp = "event_logger->tlogs[err_level].is_enable_overwrite"
+[[tlm.comp]]
+name = "TLOGS.IS_TABLE_OVERFLOW"
+bitlen = 1
+exp = "event_logger->tlogs[err_level].is_table_overflow"
+[[tlm.comp]]
+name = "TLOGS.DUMMY"
+bitlen = 2
+
+
+[[tlm]]
+type = "uint32_t"
+name = "STATISTICS.RECORD_COUNTER_TOTAL"
+exp = "event_logger->statistics.record_counter_total"
+
+[[tlm]]
+type = "uint32_t"
+name = "STATISTICS.RECORD_COUNTERS_ERR_LEVEL"
+exp = "event_logger->statistics.record_counters[err_level]"
+
+[[tlm]]
+type = "uint16_t"
+name = "TLOGS.LOG_CAPACITY"
+exp = "event_logger->tlogs[err_level].log_capacity"
+
+[[tlm]]
+type = "uint16_t"
+name = "TLOGS.LOG_WP"
+exp = "event_logger->tlogs[err_level].log_wp"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS0.GROUP"
+exp = "(uint8_t)events[offset+0].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS0.LOCAL"
+exp = "events[offset+0].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS0.TIME.TOTAL_CYCLE"
+exp = "events[offset+0].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS0.TIME.STEP"
+exp = "(uint8_t)events[offset+0].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS0.NOTE"
+exp = "events[offset+0].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS1.GROUP"
+exp = "(uint8_t)events[offset+1].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS1.LOCAL"
+exp = "events[offset+1].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS1.TIME.TOTAL_CYCLE"
+exp = "events[offset+1].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS1.TIME.STEP"
+exp = "(uint8_t)events[offset+1].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS1.NOTE"
+exp = "events[offset+1].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS2.GROUP"
+exp = "(uint8_t)events[offset+2].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS2.LOCAL"
+exp = "events[offset+2].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS2.TIME.TOTAL_CYCLE"
+exp = "events[offset+2].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS2.TIME.STEP"
+exp = "(uint8_t)events[offset+2].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS2.NOTE"
+exp = "events[offset+2].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS3.GROUP"
+exp = "(uint8_t)events[offset+3].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS3.LOCAL"
+exp = "events[offset+3].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS3.TIME.TOTAL_CYCLE"
+exp = "events[offset+3].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS3.TIME.STEP"
+exp = "(uint8_t)events[offset+3].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS3.NOTE"
+exp = "events[offset+3].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS4.GROUP"
+exp = "(uint8_t)events[offset+4].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS4.LOCAL"
+exp = "events[offset+4].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS4.TIME.TOTAL_CYCLE"
+exp = "events[offset+4].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS4.TIME.STEP"
+exp = "(uint8_t)events[offset+4].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS4.NOTE"
+exp = "events[offset+4].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS5.GROUP"
+exp = "(uint8_t)events[offset+5].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS5.LOCAL"
+exp = "events[offset+5].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS5.TIME.TOTAL_CYCLE"
+exp = "events[offset+5].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS5.TIME.STEP"
+exp = "(uint8_t)events[offset+5].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS5.NOTE"
+exp = "events[offset+5].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS6.GROUP"
+exp = "(uint8_t)events[offset+6].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS6.LOCAL"
+exp = "events[offset+6].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS6.TIME.TOTAL_CYCLE"
+exp = "events[offset+6].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS6.TIME.STEP"
+exp = "(uint8_t)events[offset+6].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS6.NOTE"
+exp = "events[offset+6].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS7.GROUP"
+exp = "(uint8_t)events[offset+7].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS7.LOCAL"
+exp = "events[offset+7].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS7.TIME.TOTAL_CYCLE"
+exp = "events[offset+7].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS7.TIME.STEP"
+exp = "(uint8_t)events[offset+7].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS7.NOTE"
+exp = "events[offset+7].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS8.GROUP"
+exp = "(uint8_t)events[offset+8].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS8.LOCAL"
+exp = "events[offset+8].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS8.TIME.TOTAL_CYCLE"
+exp = "events[offset+8].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS8.TIME.STEP"
+exp = "(uint8_t)events[offset+8].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS8.NOTE"
+exp = "events[offset+8].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS9.GROUP"
+exp = "(uint8_t)events[offset+9].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS9.LOCAL"
+exp = "events[offset+9].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS9.TIME.TOTAL_CYCLE"
+exp = "events[offset+9].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS9.TIME.STEP"
+exp = "(uint8_t)events[offset+9].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS9.NOTE"
+exp = "events[offset+9].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS10.GROUP"
+exp = "(uint8_t)events[offset+10].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS10.LOCAL"
+exp = "events[offset+10].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS10.TIME.TOTAL_CYCLE"
+exp = "events[offset+10].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS10.TIME.STEP"
+exp = "(uint8_t)events[offset+10].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS10.NOTE"
+exp = "events[offset+10].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS11.GROUP"
+exp = "(uint8_t)events[offset+11].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS11.LOCAL"
+exp = "events[offset+11].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS11.TIME.TOTAL_CYCLE"
+exp = "events[offset+11].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS11.TIME.STEP"
+exp = "(uint8_t)events[offset+11].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS11.NOTE"
+exp = "events[offset+11].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS12.GROUP"
+exp = "(uint8_t)events[offset+12].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS12.LOCAL"
+exp = "events[offset+12].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS12.TIME.TOTAL_CYCLE"
+exp = "events[offset+12].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS12.TIME.STEP"
+exp = "(uint8_t)events[offset+12].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS12.NOTE"
+exp = "events[offset+12].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS13.GROUP"
+exp = "(uint8_t)events[offset+13].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS13.LOCAL"
+exp = "events[offset+13].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS13.TIME.TOTAL_CYCLE"
+exp = "events[offset+13].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS13.TIME.STEP"
+exp = "(uint8_t)events[offset+13].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS13.NOTE"
+exp = "events[offset+13].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS14.GROUP"
+exp = "(uint8_t)events[offset+14].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS14.LOCAL"
+exp = "events[offset+14].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS14.TIME.TOTAL_CYCLE"
+exp = "events[offset+14].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS14.TIME.STEP"
+exp = "(uint8_t)events[offset+14].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS14.NOTE"
+exp = "events[offset+14].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS15.GROUP"
+exp = "(uint8_t)events[offset+15].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS15.LOCAL"
+exp = "events[offset+15].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS15.TIME.TOTAL_CYCLE"
+exp = "events[offset+15].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS15.TIME.STEP"
+exp = "(uint8_t)events[offset+15].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS15.NOTE"
+exp = "events[offset+15].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS16.GROUP"
+exp = "(uint8_t)events[offset+16].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS16.LOCAL"
+exp = "events[offset+16].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS16.TIME.TOTAL_CYCLE"
+exp = "events[offset+16].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS16.TIME.STEP"
+exp = "(uint8_t)events[offset+16].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS16.NOTE"
+exp = "events[offset+16].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS17.GROUP"
+exp = "(uint8_t)events[offset+17].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS17.LOCAL"
+exp = "events[offset+17].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS17.TIME.TOTAL_CYCLE"
+exp = "events[offset+17].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS17.TIME.STEP"
+exp = "(uint8_t)events[offset+17].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS17.NOTE"
+exp = "events[offset+17].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS18.GROUP"
+exp = "(uint8_t)events[offset+18].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS18.LOCAL"
+exp = "events[offset+18].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS18.TIME.TOTAL_CYCLE"
+exp = "events[offset+18].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS18.TIME.STEP"
+exp = "(uint8_t)events[offset+18].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS18.NOTE"
+exp = "events[offset+18].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS19.GROUP"
+exp = "(uint8_t)events[offset+19].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS19.LOCAL"
+exp = "events[offset+19].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS19.TIME.TOTAL_CYCLE"
+exp = "events[offset+19].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS19.TIME.STEP"
+exp = "(uint8_t)events[offset+19].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS19.NOTE"
+exp = "events[offset+19].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS20.GROUP"
+exp = "(uint8_t)events[offset+20].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS20.LOCAL"
+exp = "events[offset+20].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS20.TIME.TOTAL_CYCLE"
+exp = "events[offset+20].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS20.TIME.STEP"
+exp = "(uint8_t)events[offset+20].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS20.NOTE"
+exp = "events[offset+20].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS21.GROUP"
+exp = "(uint8_t)events[offset+21].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS21.LOCAL"
+exp = "events[offset+21].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS21.TIME.TOTAL_CYCLE"
+exp = "events[offset+21].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS21.TIME.STEP"
+exp = "(uint8_t)events[offset+21].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS21.NOTE"
+exp = "events[offset+21].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS22.GROUP"
+exp = "(uint8_t)events[offset+22].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS22.LOCAL"
+exp = "events[offset+22].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS22.TIME.TOTAL_CYCLE"
+exp = "events[offset+22].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS22.TIME.STEP"
+exp = "(uint8_t)events[offset+22].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS22.NOTE"
+exp = "events[offset+22].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS23.GROUP"
+exp = "(uint8_t)events[offset+23].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS23.LOCAL"
+exp = "events[offset+23].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS23.TIME.TOTAL_CYCLE"
+exp = "events[offset+23].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS23.TIME.STEP"
+exp = "(uint8_t)events[offset+23].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS23.NOTE"
+exp = "events[offset+23].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS24.GROUP"
+exp = "(uint8_t)events[offset+24].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS24.LOCAL"
+exp = "events[offset+24].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS24.TIME.TOTAL_CYCLE"
+exp = "events[offset+24].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS24.TIME.STEP"
+exp = "(uint8_t)events[offset+24].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS24.NOTE"
+exp = "events[offset+24].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS25.GROUP"
+exp = "(uint8_t)events[offset+25].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS25.LOCAL"
+exp = "events[offset+25].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS25.TIME.TOTAL_CYCLE"
+exp = "events[offset+25].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS25.TIME.STEP"
+exp = "(uint8_t)events[offset+25].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS25.NOTE"
+exp = "events[offset+25].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS26.GROUP"
+exp = "(uint8_t)events[offset+26].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS26.LOCAL"
+exp = "events[offset+26].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS26.TIME.TOTAL_CYCLE"
+exp = "events[offset+26].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS26.TIME.STEP"
+exp = "(uint8_t)events[offset+26].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS26.NOTE"
+exp = "events[offset+26].note"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS27.GROUP"
+exp = "(uint8_t)events[offset+27].group"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS27.LOCAL"
+exp = "events[offset+27].local"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS27.TIME.TOTAL_CYCLE"
+exp = "events[offset+27].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLOGS.EVENTS27.TIME.STEP"
+exp = "(uint8_t)events[offset+27].time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "TLOGS.EVENTS27.NOTE"
+exp = "events[offset+27].note"
+

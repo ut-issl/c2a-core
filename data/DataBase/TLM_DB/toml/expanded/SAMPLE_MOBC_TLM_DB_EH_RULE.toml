@@ -1,0 +1,1256 @@
+Target = "OBC"
+PacketID = "0x5b"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint16_t offset = event_handler->tlm_info.rule.page_no * EH_RULE_TLM_PAGE_SIZE;##const EH_Rule* rules = event_handler->rule_table.rules;##"
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE.PAGE_NO"
+exp = "event_handler->tlm_info.rule.page_no"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE_TABLE.REGISTERED_RULE_NUM"
+exp = "event_handler->rule_table.registered_rule_num"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE0.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[0 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE0.SETTINGS.EVENT.LOCAL"
+exp = "rules[0 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE0.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[0 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE0.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[0 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE0.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[0 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE0.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[0 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE0.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[0 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE0.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[0 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE0.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[0 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE0.COUNTER"
+exp = "rules[0 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE0.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[0 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE1.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[1 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE1.SETTINGS.EVENT.LOCAL"
+exp = "rules[1 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE1.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[1 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE1.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[1 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE1.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[1 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE1.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[1 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE1.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[1 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE1.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[1 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE1.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[1 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE1.COUNTER"
+exp = "rules[1 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE1.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[1 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE2.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[2 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE2.SETTINGS.EVENT.LOCAL"
+exp = "rules[2 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE2.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[2 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE2.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[2 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE2.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[2 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE2.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[2 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE2.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[2 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE2.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[2 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE2.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[2 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE2.COUNTER"
+exp = "rules[2 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE2.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[2 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE3.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[3 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE3.SETTINGS.EVENT.LOCAL"
+exp = "rules[3 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE3.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[3 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE3.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[3 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE3.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[3 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE3.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[3 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE3.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[3 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE3.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[3 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE3.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[3 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE3.COUNTER"
+exp = "rules[3 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE3.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[3 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE4.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[4 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE4.SETTINGS.EVENT.LOCAL"
+exp = "rules[4 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE4.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[4 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE4.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[4 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE4.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[4 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE4.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[4 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE4.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[4 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE4.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[4 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE4.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[4 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE4.COUNTER"
+exp = "rules[4 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE4.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[4 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE5.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[5 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE5.SETTINGS.EVENT.LOCAL"
+exp = "rules[5 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE5.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[5 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE5.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[5 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE5.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[5 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE5.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[5 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE5.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[5 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE5.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[5 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE5.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[5 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE5.COUNTER"
+exp = "rules[5 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE5.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[5 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE6.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[6 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE6.SETTINGS.EVENT.LOCAL"
+exp = "rules[6 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE6.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[6 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE6.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[6 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE6.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[6 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE6.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[6 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE6.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[6 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE6.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[6 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE6.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[6 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE6.COUNTER"
+exp = "rules[6 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE6.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[6 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE7.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[7 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE7.SETTINGS.EVENT.LOCAL"
+exp = "rules[7 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE7.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[7 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE7.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[7 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE7.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[7 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE7.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[7 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE7.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[7 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE7.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[7 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE7.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[7 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE7.COUNTER"
+exp = "rules[7 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE7.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[7 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE8.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[8 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE8.SETTINGS.EVENT.LOCAL"
+exp = "rules[8 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE8.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[8 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE8.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[8 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE8.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[8 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE8.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[8 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE8.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[8 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE8.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[8 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE8.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[8 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE8.COUNTER"
+exp = "rules[8 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE8.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[8 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE9.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[9 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE9.SETTINGS.EVENT.LOCAL"
+exp = "rules[9 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE9.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[9 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE9.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[9 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE9.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[9 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE9.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[9 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE9.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[9 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE9.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[9 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE9.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[9 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE9.COUNTER"
+exp = "rules[9 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE9.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[9 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE10.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[10 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE10.SETTINGS.EVENT.LOCAL"
+exp = "rules[10 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE10.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[10 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE10.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[10 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE10.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[10 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE10.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[10 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE10.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[10 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE10.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[10 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE10.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[10 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE10.COUNTER"
+exp = "rules[10 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE10.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[10 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE11.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[11 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE11.SETTINGS.EVENT.LOCAL"
+exp = "rules[11 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE11.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[11 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE11.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[11 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE11.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[11 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE11.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[11 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE11.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[11 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE11.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[11 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE11.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[11 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE11.COUNTER"
+exp = "rules[11 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE11.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[11 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE12.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[12 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE12.SETTINGS.EVENT.LOCAL"
+exp = "rules[12 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE12.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[12 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE12.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[12 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE12.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[12 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE12.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[12 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE12.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[12 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE12.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[12 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE12.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[12 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE12.COUNTER"
+exp = "rules[12 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE12.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[12 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE13.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[13 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE13.SETTINGS.EVENT.LOCAL"
+exp = "rules[13 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE13.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[13 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE13.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[13 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE13.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[13 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE13.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[13 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE13.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[13 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE13.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[13 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE13.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[13 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE13.COUNTER"
+exp = "rules[13 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE13.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[13 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE14.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[14 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE14.SETTINGS.EVENT.LOCAL"
+exp = "rules[14 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE14.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[14 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE14.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[14 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE14.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[14 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE14.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[14 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE14.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[14 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE14.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[14 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE14.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[14 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE14.COUNTER"
+exp = "rules[14 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE14.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[14 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE15.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[15 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE15.SETTINGS.EVENT.LOCAL"
+exp = "rules[15 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE15.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[15 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE15.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[15 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE15.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[15 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE15.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[15 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE15.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[15 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE15.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[15 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE15.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[15 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE15.COUNTER"
+exp = "rules[15 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE15.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[15 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE16.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[16 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE16.SETTINGS.EVENT.LOCAL"
+exp = "rules[16 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE16.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[16 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE16.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[16 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE16.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[16 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE16.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[16 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE16.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[16 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE16.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[16 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE16.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[16 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE16.COUNTER"
+exp = "rules[16 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE16.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[16 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE17.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[17 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE17.SETTINGS.EVENT.LOCAL"
+exp = "rules[17 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE17.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[17 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE17.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[17 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE17.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[17 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE17.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[17 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE17.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[17 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE17.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[17 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE17.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[17 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE17.COUNTER"
+exp = "rules[17 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE17.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[17 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE18.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[18 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE18.SETTINGS.EVENT.LOCAL"
+exp = "rules[18 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE18.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[18 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE18.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[18 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE18.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[18 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE18.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[18 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE18.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[18 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE18.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[18 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE18.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[18 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE18.COUNTER"
+exp = "rules[18 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE18.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[18 + offset].last_event_time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "RULE19.SETTINGS.EVENT.GROUP"
+exp = "(uint8_t)rules[19 + offset].settings.event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE19.SETTINGS.EVENT.LOCAL"
+exp = "rules[19 + offset].settings.event.local"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "RULE19.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[19 + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.comp]]
+name = "RULE19.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[19 + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.comp]]
+name = "RULE19.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[19 + offset].settings.is_active"
+status = "2.8"
+[[tlm.comp]]
+name = "RULE19.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[19 + offset].settings.condition.type)"
+status = "3.3"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE19.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[19 + offset].settings.condition.count_threshold"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE19.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[19 + offset].settings.condition.time_threshold_ms"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE19.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[19 + offset].settings.deploy_bct_id"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE19.COUNTER"
+exp = "rules[19 + offset].counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RULE19.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[19 + offset].last_event_time.total_cycle"
+
