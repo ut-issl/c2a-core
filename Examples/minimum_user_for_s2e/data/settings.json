@@ -4,7 +4,7 @@
 
     "db_prefix": "SAMPLE_MOBC",
     "db_path": "DataBase",
-    "dest_path": "../Examples/minimum_user_for_s2e/src/src_user/TlmCmd",
+    "dest_path": "../src/src_user/TlmCmd",
     "max_tlm_num": 432,
 
     "other_obc_data": [
@@ -14,7 +14,7 @@
 
             "db_prefix": "SAMPLE_AOBC",
             "db_path": "DataBaseAobc",
-            "dest_path": "../Examples/minimum_user_for_s2e/src/src_user/Drivers/Aocs",
+            "dest_path": "../src/src_user/Drivers/Aocs",
             "max_tlm_num": 256,
 
             "driver_name": "aobc_driver",
