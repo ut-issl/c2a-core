@@ -78,7 +78,7 @@ exp = "telemetry_manager->bc_info[0].bc_id"
 type = "uint8_t"
 name = "BC_INFO0.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[0].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -89,7 +89,7 @@ exp = "telemetry_manager->bc_info[1].bc_id"
 type = "uint8_t"
 name = "BC_INFO1.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[1].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -100,7 +100,7 @@ exp = "telemetry_manager->bc_info[2].bc_id"
 type = "uint8_t"
 name = "BC_INFO2.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[2].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -111,7 +111,7 @@ exp = "telemetry_manager->bc_info[3].bc_id"
 type = "uint8_t"
 name = "BC_INFO3.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[3].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -122,7 +122,7 @@ exp = "telemetry_manager->bc_info[4].bc_id"
 type = "uint8_t"
 name = "BC_INFO4.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[4].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -133,7 +133,7 @@ exp = "telemetry_manager->bc_info[5].bc_id"
 type = "uint8_t"
 name = "BC_INFO5.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[5].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -144,7 +144,7 @@ exp = "telemetry_manager->bc_info[6].bc_id"
 type = "uint8_t"
 name = "BC_INFO6.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[6].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -155,7 +155,7 @@ exp = "telemetry_manager->bc_info[7].bc_id"
 type = "uint8_t"
 name = "BC_INFO7.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[7].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -166,7 +166,7 @@ exp = "telemetry_manager->bc_info[8].bc_id"
 type = "uint8_t"
 name = "BC_INFO8.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[8].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint16_t"
@@ -177,7 +177,7 @@ exp = "telemetry_manager->bc_info[9].bc_id"
 type = "uint8_t"
 name = "BC_INFO9.BC_TYPE"
 exp = "(uint8_t)telemetry_manager->bc_info[9].bc_type"
-status = "6.1"
+status = "6.2"
 
 [[tlm]]
 type = "uint8_t"

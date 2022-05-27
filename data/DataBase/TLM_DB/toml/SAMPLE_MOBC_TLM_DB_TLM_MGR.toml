@@ -10,507 +10,67 @@ name = "MASTER_BC_ID"
 exp = "telemetry_manager->master_bc_id"
 
 [[tlm]]
+q_range = [0, 9]
+block_num = 2
+[[tlm.block]]
+name = "BC_INFO??.BC_ID"
 type = "uint16_t"
-name = "BC_INFO0.BC_ID"
-exp = "telemetry_manager->bc_info[0].bc_id"
+exp = "telemetry_manager->bc_info[??].bc_id"
+[[tlm.block]]
+name = "BC_INFO??.BC_TYPE"
+type = "uint8_t"
+exp = "(uint8_t)telemetry_manager->bc_info[??].bc_type"
+status = "6.2"
+
+[[tlm]]
+block_num = 4
+seq_num = 6
+[[tlm.block]]
+q_range = [0, 9]
+block_num = 1
+[[tlm.block.block]]
+name = "REG_INFO.{{}}.BC_INFO_IDX????"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.bc_info_idx[????]"
+[[tlm.block]]
+name = "REG_INFO.{{}}.BC_INFO_IDX_USED_NUM"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.bc_info_idx_used_num"
+[[tlm.block]]
+name = "REG_INFO.{{}}.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.tlm_register_pointer_to_idx_of_bc_info_idx"
+[[tlm.block]]
+name = "REG_INFO.{{}}.REG_PNTR_TO_BC_CMD_IDX"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.tlm_register_pointer_to_bc_cmd_idx"
+
+[[tlm.seq]]
+q_range = []
+name = "MASTER"
+exp = "master"
+[[tlm.seq]]
+q_range = []
+name = "HK_TLM"
+exp = "hk_tlm"
+[[tlm.seq]]
+q_range = []
+name = "SYSTEM_TLM"
+exp = "system_tlm"
+[[tlm.seq]]
+q_range = []
+name = "HIGH_FREQ_TLM"
+exp = "high_freq_tlm"
+[[tlm.seq]]
+q_range = []
+name = "LOW_FREQ_TLM"
+exp = "low_freq_tlm"
+[[tlm.seq]]
+q_range = []
+name = "RESERVE"
+exp = "reserve"
 
 [[tlm]]
-type = "uint8_t"
-name = "BC_INFO0.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[0].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO1.BC_ID"
-exp = "telemetry_manager->bc_info[1].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO1.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[1].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO2.BC_ID"
-exp = "telemetry_manager->bc_info[2].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO2.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[2].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO3.BC_ID"
-exp = "telemetry_manager->bc_info[3].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO3.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[3].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO4.BC_ID"
-exp = "telemetry_manager->bc_info[4].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO4.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[4].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO5.BC_ID"
-exp = "telemetry_manager->bc_info[5].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO5.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[5].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO6.BC_ID"
-exp = "telemetry_manager->bc_info[6].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO6.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[6].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO7.BC_ID"
-exp = "telemetry_manager->bc_info[7].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO7.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[7].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO8.BC_ID"
-exp = "telemetry_manager->bc_info[8].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO8.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[8].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint16_t"
-name = "BC_INFO9.BC_ID"
-exp = "telemetry_manager->bc_info[9].bc_id"
-
-[[tlm]]
-type = "uint8_t"
-name = "BC_INFO9.BC_TYPE"
-exp = "(uint8_t)telemetry_manager->bc_info[9].bc_type"
-status = "6.1"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX0"
-exp = "telemetry_manager->register_info.master.bc_info_idx[0]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX1"
-exp = "telemetry_manager->register_info.master.bc_info_idx[1]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX2"
-exp = "telemetry_manager->register_info.master.bc_info_idx[2]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX3"
-exp = "telemetry_manager->register_info.master.bc_info_idx[3]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX4"
-exp = "telemetry_manager->register_info.master.bc_info_idx[4]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX5"
-exp = "telemetry_manager->register_info.master.bc_info_idx[5]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX6"
-exp = "telemetry_manager->register_info.master.bc_info_idx[6]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX7"
-exp = "telemetry_manager->register_info.master.bc_info_idx[7]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX8"
-exp = "telemetry_manager->register_info.master.bc_info_idx[8]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX9"
-exp = "telemetry_manager->register_info.master.bc_info_idx[9]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.BC_INFO_IDX_USED_NUM"
-exp = "telemetry_manager->register_info.master.bc_info_idx_used_num"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
-exp = "telemetry_manager->register_info.master.tlm_register_pointer_to_idx_of_bc_info_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.MASTER.REG_PNTR_TO_BC_CMD_IDX"
-exp = "telemetry_manager->register_info.master.tlm_register_pointer_to_bc_cmd_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX0"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[0]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX1"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[1]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX2"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[2]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX3"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[3]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX4"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[4]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX5"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[5]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX6"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[6]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX7"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[7]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX8"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[8]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX9"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx[9]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.BC_INFO_IDX_USED_NUM"
-exp = "telemetry_manager->register_info.hk_tlm.bc_info_idx_used_num"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
-exp = "telemetry_manager->register_info.hk_tlm.tlm_register_pointer_to_idx_of_bc_info_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HK_TLM.REG_PNTR_TO_BC_CMD_IDX"
-exp = "telemetry_manager->register_info.hk_tlm.tlm_register_pointer_to_bc_cmd_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX0"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[0]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX1"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[1]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX2"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[2]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX3"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[3]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX4"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[4]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX5"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[5]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX6"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[6]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX7"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[7]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX8"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[8]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX9"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx[9]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.BC_INFO_IDX_USED_NUM"
-exp = "telemetry_manager->register_info.system_tlm.bc_info_idx_used_num"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
-exp = "telemetry_manager->register_info.system_tlm.tlm_register_pointer_to_idx_of_bc_info_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.SYSTEM_TLM.REG_PNTR_TO_BC_CMD_IDX"
-exp = "telemetry_manager->register_info.system_tlm.tlm_register_pointer_to_bc_cmd_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX0"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[0]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX1"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[1]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX2"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[2]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX3"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[3]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX4"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[4]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX5"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[5]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX6"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[6]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX7"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[7]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX8"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[8]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX9"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx[9]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.BC_INFO_IDX_USED_NUM"
-exp = "telemetry_manager->register_info.high_freq_tlm.bc_info_idx_used_num"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
-exp = "telemetry_manager->register_info.high_freq_tlm.tlm_register_pointer_to_idx_of_bc_info_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.HIGH_FREQ_TLM.REG_PNTR_TO_BC_CMD_IDX"
-exp = "telemetry_manager->register_info.high_freq_tlm.tlm_register_pointer_to_bc_cmd_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX0"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[0]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX1"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[1]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX2"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[2]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX3"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[3]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX4"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[4]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX5"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[5]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX6"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[6]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX7"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[7]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX8"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[8]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX9"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx[9]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.BC_INFO_IDX_USED_NUM"
-exp = "telemetry_manager->register_info.low_freq_tlm.bc_info_idx_used_num"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
-exp = "telemetry_manager->register_info.low_freq_tlm.tlm_register_pointer_to_idx_of_bc_info_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.LOW_FREQ_TLM.REG_PNTR_TO_BC_CMD_IDX"
-exp = "telemetry_manager->register_info.low_freq_tlm.tlm_register_pointer_to_bc_cmd_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX0"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[0]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX1"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[1]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX2"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[2]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX3"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[3]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX4"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[4]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX5"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[5]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX6"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[6]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX7"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[7]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX8"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[8]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX9"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx[9]"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.BC_INFO_IDX_USED_NUM"
-exp = "telemetry_manager->register_info.reserve.bc_info_idx_used_num"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
-exp = "telemetry_manager->register_info.reserve.tlm_register_pointer_to_idx_of_bc_info_idx"
-
-[[tlm]]
-type = "uint8_t"
-name = "REG_INFO.RESERVE.REG_PNTR_TO_BC_CMD_IDX"
-exp = "telemetry_manager->register_info.reserve.tlm_register_pointer_to_bc_cmd_idx"
-
-[[tlm]]
-type = "uint8_t"
 name = "IS_INITED"
+type = "uint8_t"
 exp = "telemetry_manager->is_inited"
-

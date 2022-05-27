@@ -1127,6 +1127,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 1)->tim
 type = "uint32_t"
 name = "TLOGS.HIGH.EVENTS1.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 1)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1152,6 +1153,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 2)->tim
 type = "uint32_t"
 name = "TLOGS.HIGH.EVENTS2.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 2)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1177,6 +1179,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 3)->tim
 type = "uint32_t"
 name = "TLOGS.HIGH.EVENTS3.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 3)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1202,6 +1205,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 0)->t
 type = "uint32_t"
 name = "TLOGS.MIDDLE.EVENTS0.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 0)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1227,6 +1231,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 1)->t
 type = "uint32_t"
 name = "TLOGS.MIDDLE.EVENTS1.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 1)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1252,6 +1257,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 2)->t
 type = "uint32_t"
 name = "TLOGS.MIDDLE.EVENTS2.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 2)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1277,6 +1283,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 3)->t
 type = "uint32_t"
 name = "TLOGS.MIDDLE.EVENTS3.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_MIDDLE, 3)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1302,6 +1309,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->time
 type = "uint32_t"
 name = "TLOGS.LOW.EVENTS0.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 0)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1327,6 +1335,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 1)->time
 type = "uint32_t"
 name = "TLOGS.LOW.EVENTS1.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 1)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1352,6 +1361,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 2)->time
 type = "uint32_t"
 name = "TLOGS.LOW.EVENTS2.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 2)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1377,6 +1387,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 3)->time
 type = "uint32_t"
 name = "TLOGS.LOW.EVENTS3.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 3)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1402,6 +1413,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 4)->time
 type = "uint32_t"
 name = "TLOGS.LOW.EVENTS4.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 4)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1427,6 +1439,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 5)->time
 type = "uint32_t"
 name = "TLOGS.LOW.EVENTS5.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_LOW, 5)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1452,6 +1465,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 0)->time.
 type = "uint32_t"
 name = "TLOGS.EL.EVENTS0.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 0)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1477,6 +1491,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 1)->time.
 type = "uint32_t"
 name = "TLOGS.EL.EVENTS1.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 1)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1502,6 +1517,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 2)->time.
 type = "uint32_t"
 name = "TLOGS.EL.EVENTS2.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 2)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1527,6 +1543,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 3)->time.
 type = "uint32_t"
 name = "TLOGS.EL.EVENTS3.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EL, 3)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1552,6 +1569,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 0)->time.
 type = "uint32_t"
 name = "TLOGS.EH.EVENTS0.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 0)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1577,6 +1595,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 1)->time.
 type = "uint32_t"
 name = "TLOGS.EH.EVENTS1.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 1)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1602,6 +1621,7 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 2)->time.
 type = "uint32_t"
 name = "TLOGS.EH.EVENTS2.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 2)->note"
+desc = "ここぐらいはu32でおろす"
 
 [[tlm]]
 type = "uint8_t"
@@ -1627,4 +1647,5 @@ exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 3)->time.
 type = "uint32_t"
 name = "TLOGS.EH.EVENTS3.NOTE"
 exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_EH, 3)->note"
+desc = "ここぐらいはu32でおろす"
 
