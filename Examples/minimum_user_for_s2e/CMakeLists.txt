@@ -61,6 +61,7 @@ if(BUILD_C2A_AS_CXX)
 endif()
 
 if(USE_SILS_MOCKUP)
+  add_definitions(-DDEFINE_MAIN_ON_SILS)
   add_executable(${PROJECT_NAME} ${C2A_SRCS})
 else()
   add_library(${PROJECT_NAME} STATIC ${C2A_SRCS})
