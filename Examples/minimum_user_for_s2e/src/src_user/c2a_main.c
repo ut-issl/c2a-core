@@ -4,17 +4,23 @@
 #include <src_core/System/WatchdogTimer/watchdog_timer.h>
 #include "./Settings/sils_define.h"
 
+// SILSの時はmain関数はC2A外にある
+#ifndef SILS_FW
 int main(void);
+#endif
+
 static void address_fixed_main_(void);
 static void C2A_init_(void);
 static void C2A_main_(void);
 static void timer_setting_(void);
 
+#ifndef SILS_FW
 int main(void)
 {
   address_fixed_main_();
   return 0;
 }
+#endif
 
 
 // RAM上でのアドレス固定main関数
