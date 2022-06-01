@@ -1,0 +1,26 @@
+Target = "OBC"
+PacketID = "0x46"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+q_range = [0, 99]
+block_num = 1
+[[tlm.block]]
+type = "uint8_t"
+name_base = "APP??_{}_PROC_TIME"
+exp_base = "(uint8_t)(app_manager->ais[??].{})"
+seq_num = 4
+[[tlm.block.seq]]
+name = "INIT"
+exp = "init_duration"
+[[tlm.block.seq]]
+name = "PREV"
+exp = "prev"
+[[tlm.block.seq]]
+name = "MIN"
+exp = "min"
+[[tlm.block.seq]]
+name = "MAX"
+exp = "max"

@@ -1,0 +1,41 @@
+Target = "OBC"
+PacketID = "0x45"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "int offset = AM_TLM_PAGE_SIZE * app_manager->page_no;##"
+
+[[tlm]]
+type = "uint8_t"
+name = "PAGE_NO"
+exp = "(uint8_t)(app_manager->page_no)"
+
+[[tlm]]
+q_range = [0, 31]
+block_num = 3
+[[tlm.block]]
+name = "APP??_INITIALIZER"
+exp = "(uint32_t)(app_manager->ais[offset+??].initializer)"
+type = "uint32_t"
+is_hex = true
+[[tlm.block]]
+name = "APP??_ENTRYPOINT"
+exp = "(uint32_t)(app_manager->ais[offset+??].entry_point)"
+type = "uint32_t"
+is_hex = true
+[[tlm.block]]
+seq_num = 4
+name_base = "APP??_{}_PROC_TIME"
+exp_base = "(uint8_t)(app_manager->ais[offset+??].{})"
+type = "uint8_t"
+[[tlm.block.seq]]
+name = "INIT"
+exp = "init_duration"
+[[tlm.block.seq]]
+name = "PREV"
+exp = "prev"
+[[tlm.block.seq]]
+name = "MIN"
+exp = "min"
+[[tlm.block.seq]]
+name = "MAX"
+exp = "max"

@@ -1,0 +1,25 @@
+{
+    "is_main_obc": true,
+    "is_c2a_enable": true,
+
+    "db_prefix": "SAMPLE_MOBC",
+    "db_path": "DataBase",
+    "dest_path": "../src/src_user/TlmCmd",
+    "max_tlm_num": 432,
+
+    "other_obc_data": [
+        {
+            "name": "AOBC",
+            "is_enable": true,
+
+            "db_prefix": "SAMPLE_AOBC",
+            "db_path": "DataBaseAobc",
+            "dest_path": "../src/src_user/Drivers/Aocs",
+            "max_tlm_num": 256,
+
+            "driver_name": "aobc_driver",
+            "driver_type": "AOBC_Driver",
+            "code_when_tlm_not_found": "aobc_driver->info.comm.rx_err_code = AOBC_RX_ERR_CODE_TLM_NOT_FOUND;"
+        }
+    ]
+}

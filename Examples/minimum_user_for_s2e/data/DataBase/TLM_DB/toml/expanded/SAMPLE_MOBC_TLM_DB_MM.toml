@@ -1,0 +1,1521 @@
+Target = "OBC"
+PacketID = "0x40"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint8_t"
+name = "CURRENT_MODE"
+exp = "(uint8_t)(mode_manager->current_id)"
+
+[[tlm]]
+type = "uint8_t"
+name = "PREVIOSU_MODE"
+exp = "(uint8_t)(mode_manager->previous_id)"
+
+[[tlm]]
+type = "uint8_t"
+name = "TRANSITION_STATUS"
+exp = "(uint8_t)(mode_manager->stat)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MM_ACK"
+exp = "(uint8_t)(mode_manager->mm_ack)"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_0"
+exp = "(uint16_t)(mode_manager->mode_list[0])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_1"
+exp = "(uint16_t)(mode_manager->mode_list[1])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_2"
+exp = "(uint16_t)(mode_manager->mode_list[2])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_3"
+exp = "(uint16_t)(mode_manager->mode_list[3])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_4"
+exp = "(uint16_t)(mode_manager->mode_list[4])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_5"
+exp = "(uint16_t)(mode_manager->mode_list[5])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_6"
+exp = "(uint16_t)(mode_manager->mode_list[6])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_7"
+exp = "(uint16_t)(mode_manager->mode_list[7])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_8"
+exp = "(uint16_t)(mode_manager->mode_list[8])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_9"
+exp = "(uint16_t)(mode_manager->mode_list[9])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_10"
+exp = "(uint16_t)(mode_manager->mode_list[10])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_11"
+exp = "(uint16_t)(mode_manager->mode_list[11])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_12"
+exp = "(uint16_t)(mode_manager->mode_list[12])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_13"
+exp = "(uint16_t)(mode_manager->mode_list[13])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_14"
+exp = "(uint16_t)(mode_manager->mode_list[14])"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_LIST_15"
+exp = "(uint16_t)(mode_manager->mode_list[15])"
+
+[[tlm]]
+type = "uint16_t"
+name = "EDGE_NUM"
+exp = "MM_update_transition_table_for_tlm()"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_0"
+exp = "mode_manager->transition_table_for_tlm[0].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_0"
+exp = "mode_manager->transition_table_for_tlm[0].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_0"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[0].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_1"
+exp = "mode_manager->transition_table_for_tlm[1].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_1"
+exp = "mode_manager->transition_table_for_tlm[1].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_1"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[1].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_2"
+exp = "mode_manager->transition_table_for_tlm[2].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_2"
+exp = "mode_manager->transition_table_for_tlm[2].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_2"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[2].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_3"
+exp = "mode_manager->transition_table_for_tlm[3].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_3"
+exp = "mode_manager->transition_table_for_tlm[3].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_3"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[3].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_4"
+exp = "mode_manager->transition_table_for_tlm[4].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_4"
+exp = "mode_manager->transition_table_for_tlm[4].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_4"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[4].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_5"
+exp = "mode_manager->transition_table_for_tlm[5].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_5"
+exp = "mode_manager->transition_table_for_tlm[5].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_5"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[5].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_6"
+exp = "mode_manager->transition_table_for_tlm[6].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_6"
+exp = "mode_manager->transition_table_for_tlm[6].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_6"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[6].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_7"
+exp = "mode_manager->transition_table_for_tlm[7].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_7"
+exp = "mode_manager->transition_table_for_tlm[7].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_7"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[7].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_8"
+exp = "mode_manager->transition_table_for_tlm[8].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_8"
+exp = "mode_manager->transition_table_for_tlm[8].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_8"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[8].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_9"
+exp = "mode_manager->transition_table_for_tlm[9].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_9"
+exp = "mode_manager->transition_table_for_tlm[9].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_9"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[9].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_10"
+exp = "mode_manager->transition_table_for_tlm[10].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_10"
+exp = "mode_manager->transition_table_for_tlm[10].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_10"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[10].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_11"
+exp = "mode_manager->transition_table_for_tlm[11].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_11"
+exp = "mode_manager->transition_table_for_tlm[11].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_11"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[11].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_12"
+exp = "mode_manager->transition_table_for_tlm[12].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_12"
+exp = "mode_manager->transition_table_for_tlm[12].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_12"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[12].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_13"
+exp = "mode_manager->transition_table_for_tlm[13].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_13"
+exp = "mode_manager->transition_table_for_tlm[13].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_13"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[13].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_14"
+exp = "mode_manager->transition_table_for_tlm[14].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_14"
+exp = "mode_manager->transition_table_for_tlm[14].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_14"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[14].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_15"
+exp = "mode_manager->transition_table_for_tlm[15].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_15"
+exp = "mode_manager->transition_table_for_tlm[15].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_15"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[15].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_16"
+exp = "mode_manager->transition_table_for_tlm[16].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_16"
+exp = "mode_manager->transition_table_for_tlm[16].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_16"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[16].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_17"
+exp = "mode_manager->transition_table_for_tlm[17].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_17"
+exp = "mode_manager->transition_table_for_tlm[17].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_17"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[17].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_18"
+exp = "mode_manager->transition_table_for_tlm[18].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_18"
+exp = "mode_manager->transition_table_for_tlm[18].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_18"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[18].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_19"
+exp = "mode_manager->transition_table_for_tlm[19].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_19"
+exp = "mode_manager->transition_table_for_tlm[19].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_19"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[19].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_20"
+exp = "mode_manager->transition_table_for_tlm[20].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_20"
+exp = "mode_manager->transition_table_for_tlm[20].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_20"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[20].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_21"
+exp = "mode_manager->transition_table_for_tlm[21].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_21"
+exp = "mode_manager->transition_table_for_tlm[21].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_21"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[21].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_22"
+exp = "mode_manager->transition_table_for_tlm[22].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_22"
+exp = "mode_manager->transition_table_for_tlm[22].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_22"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[22].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_23"
+exp = "mode_manager->transition_table_for_tlm[23].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_23"
+exp = "mode_manager->transition_table_for_tlm[23].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_23"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[23].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_24"
+exp = "mode_manager->transition_table_for_tlm[24].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_24"
+exp = "mode_manager->transition_table_for_tlm[24].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_24"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[24].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_25"
+exp = "mode_manager->transition_table_for_tlm[25].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_25"
+exp = "mode_manager->transition_table_for_tlm[25].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_25"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[25].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_26"
+exp = "mode_manager->transition_table_for_tlm[26].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_26"
+exp = "mode_manager->transition_table_for_tlm[26].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_26"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[26].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_27"
+exp = "mode_manager->transition_table_for_tlm[27].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_27"
+exp = "mode_manager->transition_table_for_tlm[27].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_27"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[27].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_28"
+exp = "mode_manager->transition_table_for_tlm[28].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_28"
+exp = "mode_manager->transition_table_for_tlm[28].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_28"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[28].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_29"
+exp = "mode_manager->transition_table_for_tlm[29].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_29"
+exp = "mode_manager->transition_table_for_tlm[29].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_29"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[29].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_30"
+exp = "mode_manager->transition_table_for_tlm[30].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_30"
+exp = "mode_manager->transition_table_for_tlm[30].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_30"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[30].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_31"
+exp = "mode_manager->transition_table_for_tlm[31].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_31"
+exp = "mode_manager->transition_table_for_tlm[31].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_31"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[31].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_32"
+exp = "mode_manager->transition_table_for_tlm[32].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_32"
+exp = "mode_manager->transition_table_for_tlm[32].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_32"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[32].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_33"
+exp = "mode_manager->transition_table_for_tlm[33].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_33"
+exp = "mode_manager->transition_table_for_tlm[33].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_33"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[33].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_34"
+exp = "mode_manager->transition_table_for_tlm[34].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_34"
+exp = "mode_manager->transition_table_for_tlm[34].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_34"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[34].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_35"
+exp = "mode_manager->transition_table_for_tlm[35].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_35"
+exp = "mode_manager->transition_table_for_tlm[35].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_35"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[35].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_36"
+exp = "mode_manager->transition_table_for_tlm[36].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_36"
+exp = "mode_manager->transition_table_for_tlm[36].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_36"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[36].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_37"
+exp = "mode_manager->transition_table_for_tlm[37].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_37"
+exp = "mode_manager->transition_table_for_tlm[37].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_37"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[37].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_38"
+exp = "mode_manager->transition_table_for_tlm[38].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_38"
+exp = "mode_manager->transition_table_for_tlm[38].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_38"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[38].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_39"
+exp = "mode_manager->transition_table_for_tlm[39].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_39"
+exp = "mode_manager->transition_table_for_tlm[39].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_39"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[39].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_40"
+exp = "mode_manager->transition_table_for_tlm[40].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_40"
+exp = "mode_manager->transition_table_for_tlm[40].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_40"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[40].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_41"
+exp = "mode_manager->transition_table_for_tlm[41].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_41"
+exp = "mode_manager->transition_table_for_tlm[41].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_41"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[41].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_42"
+exp = "mode_manager->transition_table_for_tlm[42].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_42"
+exp = "mode_manager->transition_table_for_tlm[42].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_42"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[42].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_43"
+exp = "mode_manager->transition_table_for_tlm[43].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_43"
+exp = "mode_manager->transition_table_for_tlm[43].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_43"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[43].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_44"
+exp = "mode_manager->transition_table_for_tlm[44].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_44"
+exp = "mode_manager->transition_table_for_tlm[44].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_44"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[44].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_45"
+exp = "mode_manager->transition_table_for_tlm[45].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_45"
+exp = "mode_manager->transition_table_for_tlm[45].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_45"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[45].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_46"
+exp = "mode_manager->transition_table_for_tlm[46].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_46"
+exp = "mode_manager->transition_table_for_tlm[46].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_46"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[46].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_47"
+exp = "mode_manager->transition_table_for_tlm[47].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_47"
+exp = "mode_manager->transition_table_for_tlm[47].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_47"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[47].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_48"
+exp = "mode_manager->transition_table_for_tlm[48].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_48"
+exp = "mode_manager->transition_table_for_tlm[48].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_48"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[48].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_49"
+exp = "mode_manager->transition_table_for_tlm[49].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_49"
+exp = "mode_manager->transition_table_for_tlm[49].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_49"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[49].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_50"
+exp = "mode_manager->transition_table_for_tlm[50].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_50"
+exp = "mode_manager->transition_table_for_tlm[50].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_50"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[50].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_51"
+exp = "mode_manager->transition_table_for_tlm[51].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_51"
+exp = "mode_manager->transition_table_for_tlm[51].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_51"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[51].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_52"
+exp = "mode_manager->transition_table_for_tlm[52].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_52"
+exp = "mode_manager->transition_table_for_tlm[52].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_52"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[52].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_53"
+exp = "mode_manager->transition_table_for_tlm[53].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_53"
+exp = "mode_manager->transition_table_for_tlm[53].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_53"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[53].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_54"
+exp = "mode_manager->transition_table_for_tlm[54].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_54"
+exp = "mode_manager->transition_table_for_tlm[54].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_54"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[54].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_55"
+exp = "mode_manager->transition_table_for_tlm[55].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_55"
+exp = "mode_manager->transition_table_for_tlm[55].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_55"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[55].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_56"
+exp = "mode_manager->transition_table_for_tlm[56].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_56"
+exp = "mode_manager->transition_table_for_tlm[56].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_56"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[56].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_57"
+exp = "mode_manager->transition_table_for_tlm[57].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_57"
+exp = "mode_manager->transition_table_for_tlm[57].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_57"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[57].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_58"
+exp = "mode_manager->transition_table_for_tlm[58].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_58"
+exp = "mode_manager->transition_table_for_tlm[58].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_58"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[58].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_59"
+exp = "mode_manager->transition_table_for_tlm[59].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_59"
+exp = "mode_manager->transition_table_for_tlm[59].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_59"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[59].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_60"
+exp = "mode_manager->transition_table_for_tlm[60].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_60"
+exp = "mode_manager->transition_table_for_tlm[60].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_60"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[60].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_61"
+exp = "mode_manager->transition_table_for_tlm[61].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_61"
+exp = "mode_manager->transition_table_for_tlm[61].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_61"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[61].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_62"
+exp = "mode_manager->transition_table_for_tlm[62].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_62"
+exp = "mode_manager->transition_table_for_tlm[62].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_62"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[62].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_63"
+exp = "mode_manager->transition_table_for_tlm[63].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_63"
+exp = "mode_manager->transition_table_for_tlm[63].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_63"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[63].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_64"
+exp = "mode_manager->transition_table_for_tlm[64].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_64"
+exp = "mode_manager->transition_table_for_tlm[64].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_64"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[64].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_65"
+exp = "mode_manager->transition_table_for_tlm[65].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_65"
+exp = "mode_manager->transition_table_for_tlm[65].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_65"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[65].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_66"
+exp = "mode_manager->transition_table_for_tlm[66].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_66"
+exp = "mode_manager->transition_table_for_tlm[66].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_66"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[66].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_67"
+exp = "mode_manager->transition_table_for_tlm[67].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_67"
+exp = "mode_manager->transition_table_for_tlm[67].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_67"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[67].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_68"
+exp = "mode_manager->transition_table_for_tlm[68].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_68"
+exp = "mode_manager->transition_table_for_tlm[68].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_68"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[68].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_69"
+exp = "mode_manager->transition_table_for_tlm[69].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_69"
+exp = "mode_manager->transition_table_for_tlm[69].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_69"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[69].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_70"
+exp = "mode_manager->transition_table_for_tlm[70].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_70"
+exp = "mode_manager->transition_table_for_tlm[70].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_70"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[70].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_71"
+exp = "mode_manager->transition_table_for_tlm[71].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_71"
+exp = "mode_manager->transition_table_for_tlm[71].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_71"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[71].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_72"
+exp = "mode_manager->transition_table_for_tlm[72].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_72"
+exp = "mode_manager->transition_table_for_tlm[72].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_72"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[72].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_73"
+exp = "mode_manager->transition_table_for_tlm[73].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_73"
+exp = "mode_manager->transition_table_for_tlm[73].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_73"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[73].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_74"
+exp = "mode_manager->transition_table_for_tlm[74].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_74"
+exp = "mode_manager->transition_table_for_tlm[74].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_74"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[74].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_75"
+exp = "mode_manager->transition_table_for_tlm[75].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_75"
+exp = "mode_manager->transition_table_for_tlm[75].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_75"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[75].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_76"
+exp = "mode_manager->transition_table_for_tlm[76].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_76"
+exp = "mode_manager->transition_table_for_tlm[76].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_76"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[76].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_77"
+exp = "mode_manager->transition_table_for_tlm[77].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_77"
+exp = "mode_manager->transition_table_for_tlm[77].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_77"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[77].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_78"
+exp = "mode_manager->transition_table_for_tlm[78].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_78"
+exp = "mode_manager->transition_table_for_tlm[78].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_78"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[78].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_79"
+exp = "mode_manager->transition_table_for_tlm[79].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_79"
+exp = "mode_manager->transition_table_for_tlm[79].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_79"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[79].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_80"
+exp = "mode_manager->transition_table_for_tlm[80].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_80"
+exp = "mode_manager->transition_table_for_tlm[80].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_80"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[80].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_81"
+exp = "mode_manager->transition_table_for_tlm[81].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_81"
+exp = "mode_manager->transition_table_for_tlm[81].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_81"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[81].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_82"
+exp = "mode_manager->transition_table_for_tlm[82].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_82"
+exp = "mode_manager->transition_table_for_tlm[82].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_82"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[82].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_83"
+exp = "mode_manager->transition_table_for_tlm[83].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_83"
+exp = "mode_manager->transition_table_for_tlm[83].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_83"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[83].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_84"
+exp = "mode_manager->transition_table_for_tlm[84].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_84"
+exp = "mode_manager->transition_table_for_tlm[84].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_84"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[84].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_85"
+exp = "mode_manager->transition_table_for_tlm[85].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_85"
+exp = "mode_manager->transition_table_for_tlm[85].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_85"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[85].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_86"
+exp = "mode_manager->transition_table_for_tlm[86].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_86"
+exp = "mode_manager->transition_table_for_tlm[86].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_86"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[86].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_87"
+exp = "mode_manager->transition_table_for_tlm[87].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_87"
+exp = "mode_manager->transition_table_for_tlm[87].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_87"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[87].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_88"
+exp = "mode_manager->transition_table_for_tlm[88].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_88"
+exp = "mode_manager->transition_table_for_tlm[88].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_88"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[88].bc_index)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_FROM_89"
+exp = "mode_manager->transition_table_for_tlm[89].from"
+
+[[tlm]]
+type = "uint8_t"
+name = "MODE_TRANSITION_TABLE_TO_89"
+exp = "mode_manager->transition_table_for_tlm[89].to"
+
+[[tlm]]
+type = "uint16_t"
+name = "MODE_TRANSITION_TABLE_ID_89"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[89].bc_index)"
+

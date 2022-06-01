@@ -1,0 +1,44 @@
+Target = "OBC"
+PacketID = "0x2a"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+q_range = [0, 15]
+block_num = 1
+[[tlm.block]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER??"
+exp = "divided_cmd_utility->exec_log_order[??]"
+
+[[tlm]]
+q_range = [0, 15]
+block_num = 1
+[[tlm.block]]
+name_base = "EXEC_LOGS??.{}"
+exp_base = "{type}(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[??]].{})"
+seq_num = 5
+[[tlm.block.seq]]
+type = "uint16_t"
+name = "CMD_CODE"
+exp = "cmd_code"
+is_hex = true
+[[tlm.block.seq]]
+type = "uint8_t"
+name = "STATUS"
+exp = "status"
+status = "4.1"
+[[tlm.block.seq]]
+type = "uint16_t"
+name = "EXEC_COUNTER"
+exp = "exec_counter"
+[[tlm.block.seq]]
+type = "int8_t"
+name = "LAST_EXEC_STS"
+exp = "last_exec_sts"
+status = "7.1"
+[[tlm.block.seq]]
+type = "uint32_t"
+name = "LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "last_exec_time.total_cycle"

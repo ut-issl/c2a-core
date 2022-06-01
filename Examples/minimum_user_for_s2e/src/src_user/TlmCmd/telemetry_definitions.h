@@ -27,17 +27,11 @@ typedef enum
   Tlm_CODE_EH_LOG = 0x5c,
   Tlm_CODE_EH_INDEX = 0x5d,
   Tlm_CODE_GS = 0x78,
+  Tlm_CODE_AOBC_AOBC = 0x90, // AOBC TLM
+  Tlm_CODE_AOBC_HK = 0x91, // AOBC TLM
   Tlm_CODE_HK = 0xf0,
   Tlm_CODE_GIT_REV = 0xf1,
   Tlm_CODE_UART_TEST = 0xf8,
-
-  // AOBC TLM
-  Tlm_CODE_AOBC_AOBC = 0x90,
-  Tlm_CODE_AOBC_HK = 0x91,
-
-  // FIXME:
-  // 他OBCのTLMをまとめたため，IDが昇順となっていない
-  // TLM_CODE_MAX が意味をなさなくなってしまうが，他で使われていないため，一旦このままにする（今後解決する実装）
 
   TLM_CODE_MAX
 } TLM_CODE;

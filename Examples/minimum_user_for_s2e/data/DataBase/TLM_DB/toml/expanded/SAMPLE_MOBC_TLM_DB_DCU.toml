@@ -1,0 +1,594 @@
+Target = "OBC"
+PacketID = "0x2a"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER0"
+exp = "divided_cmd_utility->exec_log_order[0]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER1"
+exp = "divided_cmd_utility->exec_log_order[1]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER2"
+exp = "divided_cmd_utility->exec_log_order[2]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER3"
+exp = "divided_cmd_utility->exec_log_order[3]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER4"
+exp = "divided_cmd_utility->exec_log_order[4]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER5"
+exp = "divided_cmd_utility->exec_log_order[5]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER6"
+exp = "divided_cmd_utility->exec_log_order[6]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER7"
+exp = "divided_cmd_utility->exec_log_order[7]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER8"
+exp = "divided_cmd_utility->exec_log_order[8]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER9"
+exp = "divided_cmd_utility->exec_log_order[9]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER10"
+exp = "divided_cmd_utility->exec_log_order[10]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER11"
+exp = "divided_cmd_utility->exec_log_order[11]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER12"
+exp = "divided_cmd_utility->exec_log_order[12]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER13"
+exp = "divided_cmd_utility->exec_log_order[13]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER14"
+exp = "divided_cmd_utility->exec_log_order[14]"
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOG_ORDER15"
+exp = "divided_cmd_utility->exec_log_order[15]"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS0.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS0.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS0.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS0.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS0.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS1.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS1.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS1.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS1.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS1.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS2.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[2]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS2.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[2]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS2.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[2]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS2.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[2]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS2.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[2]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS3.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[3]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS3.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[3]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS3.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[3]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS3.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[3]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS3.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[3]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS4.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[4]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS4.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[4]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS4.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[4]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS4.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[4]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS4.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[4]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS5.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[5]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS5.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[5]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS5.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[5]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS5.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[5]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS5.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[5]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS6.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[6]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS6.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[6]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS6.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[6]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS6.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[6]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS6.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[6]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS7.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[7]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS7.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[7]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS7.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[7]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS7.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[7]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS7.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[7]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS8.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[8]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS8.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[8]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS8.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[8]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS8.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[8]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS8.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[8]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS9.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[9]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS9.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[9]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS9.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[9]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS9.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[9]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS9.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[9]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS10.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[10]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS10.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[10]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS10.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[10]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS10.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[10]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS10.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[10]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS11.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[11]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS11.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[11]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS11.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[11]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS11.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[11]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS11.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[11]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS12.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[12]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS12.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[12]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS12.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[12]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS12.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[12]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS12.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[12]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS13.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[13]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS13.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[13]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS13.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[13]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS13.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[13]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS13.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[13]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS14.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[14]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS14.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[14]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS14.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[14]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS14.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[14]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS14.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[14]].last_exec_time.total_cycle)"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS15.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[15]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "EXEC_LOGS15.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[15]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "EXEC_LOGS15.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[15]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "EXEC_LOGS15.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[15]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EXEC_LOGS15.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[15]].last_exec_time.total_cycle)"
+

@@ -1,0 +1,236 @@
+Target = "OBC"
+PacketID = "0x78"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.RX.REC_STATUS"
+exp = "(uint8_t)gs_driver->info[0].rx.rec_status"
+status = "2.12"
+
+[[tlm]]
+type = "int32_t"
+name = "CCSDS.RX.RET_FROM_IF_RX"
+exp = "(int32_t)gs_driver->info[0].rx.ret_from_if_rx"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.RX.LAST_DEST_TYPE"
+exp = "(uint8_t)gs_driver->info[0].rx.last_dest_type"
+status = "5.2"
+
+[[tlm]]
+type = "uint32_t"
+name = "CCSDS.RX.LAST_REC_TIME"
+exp = "(uint32_t)gs_driver->info[0].rx.last_rec_time"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.RX.CMD_ACK"
+exp = "(uint8_t)gs_driver->info[0].rx.cmd_ack"
+status = "13.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TCTF.LAST_REC_TCTF_TYPE"
+exp = "(uint8_t)gs_driver->info[0].rx.tctf.last_rec_tctf_type"
+status = "3.2"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TCTF.AD_REC_STATUS"
+exp = "(uint8_t)gs_driver->info[0].rx.tctf.ad_rec_status"
+status = "18.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TCTF.BC_REC_STATUS"
+exp = "(uint8_t)gs_driver->info[0].rx.tctf.bc_rec_status"
+status = "18.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TCTF.BD_REC_STATUS"
+exp = "(uint8_t)gs_driver->info[0].rx.tctf.bd_rec_status"
+status = "18.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TX.IS_VALID"
+exp = "gs_driver->is_ccsds_tx_valid"
+status = "2.9"
+
+[[tlm]]
+type = "uint32_t"
+name = "CCSDS.TX.SEND_CYCLE"
+exp = "(uint32_t)gs_driver->info[0].tx.send_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TX.VCID"
+exp = "(uint8_t)gs_driver->info[0].tx.vcid"
+status = "3.4"
+
+[[tlm]]
+type = "uint32_t"
+name = "CCSDS.TX.VCDU_COUNTER"
+exp = "gs_driver->info[0].tx.vcdu_counter"
+
+[[tlm]]
+type = "uint8_t"
+name = "CCSDS.TX.BUFFER_AVAILABLE"
+exp = "gs_driver->ccsds_info.buffer_num"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.CH"
+exp = "gs_driver->driver_uart.uart_config.ch"
+
+[[tlm]]
+type = "uint32_t"
+name = "UART.BAUDRATE"
+exp = "gs_driver->driver_uart.uart_config.baudrate"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.PARITY"
+exp = "(uint8_t)gs_driver->driver_uart.uart_config.parity_settings"
+status = "5.3"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.DATA_LENGTH"
+exp = "(uint8_t)gs_driver->driver_uart.uart_config.data_length"
+status = "2.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.STOP_BIT"
+exp = "(uint8_t)gs_driver->driver_uart.uart_config.stop_bit"
+status = "3.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.RX.REC_STATUS"
+exp = "(uint8_t)gs_driver->info[1].rx.rec_status"
+status = "2.12"
+
+[[tlm]]
+type = "int32_t"
+name = "UART.RX.RET_FROM_IF_RX"
+exp = "(int32_t)gs_driver->info[1].rx.ret_from_if_rx"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.RX.LAST_DEST_TYPE"
+exp = "(uint8_t)gs_driver->info[1].rx.last_dest_type"
+status = "5.2"
+
+[[tlm]]
+type = "uint32_t"
+name = "UART.RX.LAST_REC_TIME"
+exp = "(uint32_t)gs_driver->info[1].rx.last_rec_time"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.RX.CMD_ACK"
+exp = "(uint8_t)gs_driver->info[1].rx.cmd_ack"
+status = "13.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.TCTF.LAST_REC_TCTF_TYPE"
+exp = "(uint8_t)gs_driver->info[1].rx.tctf.last_rec_tctf_type"
+status = "3.2"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.TCTF.AD_REC_STATUS"
+exp = "(uint8_t)gs_driver->info[1].rx.tctf.ad_rec_status"
+status = "18.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.TCTF.BC_REC_STATUS"
+exp = "(uint8_t)gs_driver->info[1].rx.tctf.bc_rec_status"
+status = "18.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.TCTF.BD_REC_STATUS"
+exp = "(uint8_t)gs_driver->info[1].rx.tctf.bd_rec_status"
+status = "18.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "UART.TX.SEND_CYCLE"
+exp = "(uint32_t)gs_driver->info[1].tx.send_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "UART.TX.VCID"
+exp = "(uint8_t)gs_driver->info[1].tx.vcid"
+status = "3.4"
+
+[[tlm]]
+type = "uint32_t"
+name = "UART.TX.VCDU_COUNTER"
+exp = "gs_driver->info[1].tx.vcdu_counter"
+
+[[tlm]]
+type = "uint8_t"
+name = "COP-1.TYPE_A_COUNTER"
+exp = "gs_validate_info->type_a_counter"
+
+[[tlm]]
+type = "uint8_t"
+name = "COP-1.TYPE_B_COUNTER"
+exp = "gs_validate_info->type_b_counter"
+
+[[tlm]]
+type = "uint8_t"
+name = "COP-1.LOCKOUT_FLAG"
+exp = "gs_validate_info->lockout_flag"
+
+[[tlm]]
+type = "uint8_t"
+name = "COP-1.RETRANSMIT_FLAG"
+exp = "gs_validate_info->retransmit_flag"
+
+[[tlm]]
+type = "uint8_t"
+name = "COP-1.POSITIVE_WINDOW_WIDTH"
+exp = "gs_validate_info->positive_window_width"
+
+[[tlm]]
+type = "uint32_t"
+name = "MS_TLM.VCDU.FLUSH_INTERVAL"
+exp = "(uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval"
+
+[[tlm]]
+type = "uint32_t"
+name = "MS_TLM.VCDU.LAST_UPDATED"
+exp = "(uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.last_updated"
+
+[[tlm]]
+type = "uint32_t"
+name = "MS_TLM.VCDU.COUNTER"
+exp = "(uint32_t)DI_GS_ms_tlm_packet_handler->vcdu_counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "RP_TLM.VCDU.FLUSH_INTERVAL"
+exp = "(uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval"
+
+[[tlm]]
+type = "uint32_t"
+name = "RP_TLM.VCDU.LAST_UPDATED"
+exp = "(uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated"
+
+[[tlm]]
+type = "uint32_t"
+name = "RP_TLM.VCDU.COUNTER"
+exp = "(uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter"
+

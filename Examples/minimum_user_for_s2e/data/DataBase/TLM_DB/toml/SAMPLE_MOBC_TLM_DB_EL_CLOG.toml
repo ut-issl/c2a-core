@@ -1,0 +1,67 @@
+Target = "OBC"
+PacketID = "0x58"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "EL_ERROR_LEVEL err_level = event_logger->tlm_info.clog.err_level;##uint16_t offset = EL_CLOG_TLM_PAGE_SIZE * event_logger->tlm_info.clog.page_no;##const uint16_t* log_orders = event_logger->clogs[err_level].log_orders;##const EL_CLogElement* logs = event_logger->clogs[err_level].logs;##"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.CLOG.PAGE_NO"
+exp = "event_logger->tlm_info.clog.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.CLOG.ERR_LEVEL"
+exp = "(uint8_t)err_level"
+status = "5.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "STATISTICS.RECORD_COUNTER_TOTAL"
+exp = "event_logger->statistics.record_counter_total"
+
+[[tlm]]
+type = "uint32_t"
+name = "STATISTICS.RECORD_COUNTERS_ERR_LEVEL"
+exp = "event_logger->statistics.record_counters[err_level]"
+
+[[tlm]]
+type = "uint16_t"
+name = "CLOGS.LOG_CAPACITY"
+exp = "event_logger->clogs[err_level].log_capacity"
+
+[[tlm]]
+q_range = [0, 17]
+block_num = 8
+[[tlm.block]]
+type = "uint8_t"
+name = "CLOGS.LOG??.EVENT.GROUP"
+exp = "(uint8_t)logs[log_orders[offset+??]].event.group"
+[[tlm.block]]
+type = "uint32_t"
+name = "CLOGS.LOG??.EVENT.LOCAL"
+exp = "logs[log_orders[offset+??]].event.local"
+[[tlm.block]]
+type = "uint32_t"
+name = "CLOGS.LOG??.EVENT.TIME.TOTAL_CYCLE"
+exp = "logs[log_orders[offset+??]].event.time.total_cycle"
+[[tlm.block]]
+type = "uint8_t"
+name = "CLOGS.LOG??.EVENT.TIME.STEP"
+exp = "(uint8_t)logs[log_orders[offset+??]].event.time.step"
+[[tlm.block]]
+type = "uint32_t"
+name = "CLOGS.LOG??.EVENT.NOTE"
+exp = "logs[log_orders[offset+??]].event.note"
+[[tlm.block]]
+type = "uint16_t"
+name = "CLOGS.LOG??.COUNT"
+exp = "logs[log_orders[offset+??]].count"
+[[tlm.block]]
+type = "uint32_t"
+name = "CLOGS.LOG??.DELTA_RECORD_TIME.TOTAL_CYCLE"
+exp = "logs[log_orders[offset+??]].delta_record_time.total_cycle"
+[[tlm.block]]
+type = "uint8_t"
+name = "CLOGS.LOG??.DELTA_RECORD_TIME.STEP"
+exp = "(uint8_t)logs[log_orders[offset+??]].delta_record_time.step"

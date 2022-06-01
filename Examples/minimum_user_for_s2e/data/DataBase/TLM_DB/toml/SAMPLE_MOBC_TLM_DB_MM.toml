@@ -1,0 +1,54 @@
+Target = "OBC"
+PacketID = "0x40"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint8_t"
+name = "CURRENT_MODE"
+exp = "(uint8_t)(mode_manager->current_id)"
+
+[[tlm]]
+type = "uint8_t"
+name = "PREVIOSU_MODE"
+exp = "(uint8_t)(mode_manager->previous_id)"
+
+[[tlm]]
+type = "uint8_t"
+name = "TRANSITION_STATUS"
+exp = "(uint8_t)(mode_manager->stat)"
+
+[[tlm]]
+type = "uint8_t"
+name = "MM_ACK"
+exp = "(uint8_t)(mode_manager->mm_ack)"
+
+[[tlm]]
+q_range = [0, 15]
+block_num = 1
+[[tlm.block]]
+name = "MODE_LIST_??"
+type = "uint16_t"
+exp = "(uint16_t)(mode_manager->mode_list[??])"
+
+[[tlm]]
+name = "EDGE_NUM"
+type = "uint16_t"
+exp = "MM_update_transition_table_for_tlm()"
+
+[[tlm]]
+q_range = [0, 89]
+block_num = 3
+[[tlm.block]]
+name = "MODE_TRANSITION_TABLE_FROM_??"
+exp = "mode_manager->transition_table_for_tlm[??].from"
+type = "uint8_t"
+[[tlm.block]]
+name = "MODE_TRANSITION_TABLE_TO_??"
+exp = "mode_manager->transition_table_for_tlm[??].to"
+type = "uint8_t"
+[[tlm.block]]
+name = "MODE_TRANSITION_TABLE_ID_??"
+exp = "(uint16_t)(mode_manager->transition_table_for_tlm[??].bc_index)"
+type = "uint16_t"

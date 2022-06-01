@@ -1,0 +1,145 @@
+Target = "OBC"
+PacketID = "0x56"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint32_t"
+name = "STATISTICS.RECORD_COUNTER_TOTAL"
+exp = "event_logger->statistics.record_counter_total"
+
+[[tlm]]
+type = "uint32_t"
+name_base = "STATISTICS.RECORD_COUNTERS_{}"
+exp_base = "event_logger->statistics.record_counters[EL_ERROR_LEVEL_{}]"
+seq_num = 5
+[[tlm.seq]]
+name = "HIGH"
+exp = "HIGH"
+[[tlm.seq]]
+name = "MIDDLE"
+exp = "MIDDLE"
+[[tlm.seq]]
+name = "LOW"
+exp = "LOW"
+[[tlm.seq]]
+name = "EL"
+exp = "EL"
+[[tlm.seq]]
+name = "EH"
+exp = "EH"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.TLOG.PAGE_NO"
+exp = "event_logger->tlm_info.tlog.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.TLOG.ERR_LEVEL"
+exp = "(uint8_t)event_logger->tlm_info.tlog.err_level"
+status = "5.1"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.CLOG.PAGE_NO"
+exp = "event_logger->tlm_info.clog.page_no"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.CLOG.ERR_LEVEL"
+exp = "(uint8_t)event_logger->tlm_info.clog.err_level"
+status = "5.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "LATEST_EVENT.GROUP"
+exp = "(uint32_t)event_logger->latest_event.group"
+note = "他はu8だがここはわざとu32で"
+
+[[tlm]]
+type = "uint32_t"
+name = "LATEST_EVENT.LOCAL"
+exp = "event_logger->latest_event.local"
+
+[[tlm]]
+type = "uint8_t"
+name = "LATEST_EVENT.ERR_LEVEL"
+exp = "(uint8_t)event_logger->latest_event.err_level"
+status = "5.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "LATEST_EVENT.TIME.TOTAL_CYCLE"
+exp = "event_logger->latest_event.time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "LATEST_EVENT.TIME.STEP"
+exp = "(uint8_t)event_logger->latest_event.time.step"
+
+[[tlm]]
+type = "uint32_t"
+name = "LATEST_EVENT.NOTE"
+exp = "event_logger->latest_event.note"
+note = "他はu8だがここはわざとu32で"
+
+[[tlm]]
+q_range = [0, 31]
+block_num = 1
+[[tlm.block]]
+type = "uint8_t"
+exp = "event_logger->is_logging_enable[??]"
+[[tlm.block.comp]]
+q_range = [0, 7, 1] # 3つ目がflag, [i*8 + 0, i*8 + 7]になる
+block_num = 1
+[[tlm.block.comp.block]]
+name = "IS_LOGGING_ENABLE????"
+bitlen = 1
+
+[[tlm]]
+block_num = 5
+seq_num = 5
+[[tlm.block]]
+name = "TLOGS.{{}}.EVENTS??.GROUP"
+exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_{{}}, ??)->group"
+type = "uint8_t"
+[[tlm.block]]
+name = "TLOGS.{{}}.EVENTS??.LOCAL"
+exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_{{}}, ??)->local"
+type = "uint32_t"
+[[tlm.block]]
+name = "TLOGS.{{}}.EVENTS??.TIME.TOTAL_CYCLE"
+exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_{{}}, ??)->time.total_cycle"
+type = "uint32_t"
+[[tlm.block]]
+name = "TLOGS.{{}}.EVENTS??.TIME.STEP"
+exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_{{}}, ??)->time.step"
+type = "uint8_t"
+[[tlm.block]]
+name = "TLOGS.{{}}.EVENTS??.NOTE"
+exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_{{}}, ??)->note"
+type = "uint32_t"
+desc = "ここぐらいはu32でおろす"
+
+[[tlm.seq]]
+q_range = [0, 3]
+name = "HIGH"
+exp = "HIGH"
+[[tlm.seq]]
+q_range = [0, 3]
+name = "MIDDLE"
+exp = "MIDDLE"
+[[tlm.seq]]
+q_range = [0, 5]
+name = "LOW"
+exp =  "LOW"
+[[tlm.seq]]
+q_range = [0, 3]
+name = "EL"
+exp =  "EL"
+[[tlm.seq]]
+q_range = [0, 3]
+name = "EH"
+exp =  "EH"

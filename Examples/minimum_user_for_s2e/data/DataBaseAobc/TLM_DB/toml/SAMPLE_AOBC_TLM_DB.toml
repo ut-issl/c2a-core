@@ -1,0 +1,56 @@
+[[tlm]]
+name_base = "PH.{}"
+seq_num = 3
+[[tlm.seq]]
+type = "uint16_t"
+[[tlm.seq.comp]]
+name = "VER"
+bitlen = 3
+[[tlm.seq.comp]]
+name = "TYPE"
+bitlen = 1
+[[tlm.seq.comp]]
+name = "SH_FLAG"
+bitlen = 1
+[[tlm.seq.comp]]
+name = "APID"
+bitlen = 11
+[[tlm.seq]]
+type = "uint16_t"
+[[tlm.seq.comp]]
+name = "SEQ_FLAG"
+bitlen = 2
+[[tlm.seq.comp]]
+name = "SEQ_COUNT"
+bitlen = 14
+[[tlm.seq]]
+name = "PACKET_LEN"
+type = "uint16_t"
+
+[[tlm]]
+name_base = "SH.{}"
+seq_num = 7
+[[tlm.seq]]
+name = "VER"
+type = "uint8_t"
+[[tlm.seq]]
+name = "TI"
+type = "uint32_t"
+[[tlm.seq]]
+name = "TLM_ID"
+type = "uint8_t"
+is_hex = true
+[[tlm.seq]]
+name = "GLOBAL_TIME"
+type = "double"
+[[tlm.seq]]
+name = "ON_BOARD_SUBNET_TIME"
+type = "uint32_t"
+[[tlm.seq]]
+name = "DEST_FLAGS"
+type = "uint8_t"
+is_hex = true
+[[tlm.seq]]
+name = "DR_PARTITION"
+type = "uint8_t"
+

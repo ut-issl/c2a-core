@@ -1,0 +1,1627 @@
+Target = "OBC"
+PacketID = "0x21"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "const bct_id_t block = block_command_table->pos.block;##"
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.VER"
+bitlen = 3
+[[tlm.comp]]
+name = "PH.TYPE"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.SH_FLAG"
+bitlen = 1
+[[tlm.comp]]
+name = "PH.APID"
+bitlen = 11
+
+
+[[tlm]]
+type = "uint16_t"
+[[tlm.comp]]
+name = "PH.SEQ_FLAG"
+bitlen = 2
+[[tlm.comp]]
+name = "PH.SEQ_COUNT"
+bitlen = 14
+
+
+[[tlm]]
+type = "uint16_t"
+name = "PH.PACKET_LEN"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.VER"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.TI"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.TLM_ID"
+is_hex = true
+
+[[tlm]]
+type = "double"
+name = "SH.GLOBAL_TIME"
+
+[[tlm]]
+type = "uint32_t"
+name = "SH.ON_BOARD_SUBNET_TIME"
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DEST_FLAGS"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "SH.DR_PARTITION"
+
+[[tlm]]
+type = "uint16_t"
+name = "BLOCK_NO"
+exp = "block"
+desc = "テレメトリを生成したブロック番号"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD_POS"
+exp = "block_command_table->pos.cmd"
+
+[[tlm]]
+type = "uint8_t"
+name = "BLOCK_LENGTH"
+exp = "BCT_get_bc_length(block)"
+
+[[tlm]]
+type = "uint8_t"
+name = "ROTATE_NEXT_CMD"
+exp = "BCE_get_bc_exe_params(block)->rotate.next_cmd"
+
+[[tlm]]
+type = "uint16_t"
+name = "ROTATE_COUNTER"
+exp = "BCE_get_bc_exe_params(block)->rotate.counter"
+
+[[tlm]]
+type = "uint16_t"
+name = "ROTATE_INTERVAL"
+exp = "BCE_get_bc_exe_params(block)->rotate.interval"
+
+[[tlm]]
+type = "uint16_t"
+name = "TLCB_CALL_NUM"
+exp = "BCE_get_bc_exe_params(block)->timelimit_combine.call_num"
+
+[[tlm]]
+type = "uint16_t"
+name = "TLCB_TIMEOVER_NUM"
+exp = "BCE_get_bc_exe_params(block)->timelimit_combine.timeover_num"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLCB_LAST_TIMEOVER_POS"
+exp = "BCE_get_bc_exe_params(block)->timelimit_combine.last_timeover_cmd_pos"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLCB_WORST_POS"
+exp = "BCE_get_bc_exe_params(block)->timelimit_combine.worst_cmd_pos"
+
+[[tlm]]
+type = "uint8_t"
+name = "IS_ACTIVE"
+exp = "BCE_get_bc_exe_params(block)->is_active"
+status = "2.8"
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD0_ID"
+exp = "(uint16_t)BCT_get_id(block, 0)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD0_TI"
+exp = "(uint32_t)BCT_get_ti(block, 0)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD0_PARAM0"
+exp = "BCT_get_param_head(block, 0)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD0_PARAM1"
+exp = "BCT_get_param_head(block, 0)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD0_PARAM2"
+exp = "BCT_get_param_head(block, 0)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD0_PARAM3"
+exp = "BCT_get_param_head(block, 0)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD0_PARAM4"
+exp = "BCT_get_param_head(block, 0)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD0_PARAM5"
+exp = "BCT_get_param_head(block, 0)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD1_ID"
+exp = "(uint16_t)BCT_get_id(block, 1)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD1_TI"
+exp = "(uint32_t)BCT_get_ti(block, 1)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD1_PARAM0"
+exp = "BCT_get_param_head(block, 1)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD1_PARAM1"
+exp = "BCT_get_param_head(block, 1)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD1_PARAM2"
+exp = "BCT_get_param_head(block, 1)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD1_PARAM3"
+exp = "BCT_get_param_head(block, 1)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD1_PARAM4"
+exp = "BCT_get_param_head(block, 1)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD1_PARAM5"
+exp = "BCT_get_param_head(block, 1)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD2_ID"
+exp = "(uint16_t)BCT_get_id(block, 2)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD2_TI"
+exp = "(uint32_t)BCT_get_ti(block, 2)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD2_PARAM0"
+exp = "BCT_get_param_head(block, 2)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD2_PARAM1"
+exp = "BCT_get_param_head(block, 2)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD2_PARAM2"
+exp = "BCT_get_param_head(block, 2)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD2_PARAM3"
+exp = "BCT_get_param_head(block, 2)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD2_PARAM4"
+exp = "BCT_get_param_head(block, 2)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD2_PARAM5"
+exp = "BCT_get_param_head(block, 2)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD3_ID"
+exp = "(uint16_t)BCT_get_id(block, 3)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD3_TI"
+exp = "(uint32_t)BCT_get_ti(block, 3)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD3_PARAM0"
+exp = "BCT_get_param_head(block, 3)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD3_PARAM1"
+exp = "BCT_get_param_head(block, 3)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD3_PARAM2"
+exp = "BCT_get_param_head(block, 3)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD3_PARAM3"
+exp = "BCT_get_param_head(block, 3)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD3_PARAM4"
+exp = "BCT_get_param_head(block, 3)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD3_PARAM5"
+exp = "BCT_get_param_head(block, 3)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD4_ID"
+exp = "(uint16_t)BCT_get_id(block, 4)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD4_TI"
+exp = "(uint32_t)BCT_get_ti(block, 4)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD4_PARAM0"
+exp = "BCT_get_param_head(block, 4)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD4_PARAM1"
+exp = "BCT_get_param_head(block, 4)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD4_PARAM2"
+exp = "BCT_get_param_head(block, 4)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD4_PARAM3"
+exp = "BCT_get_param_head(block, 4)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD4_PARAM4"
+exp = "BCT_get_param_head(block, 4)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD4_PARAM5"
+exp = "BCT_get_param_head(block, 4)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD5_ID"
+exp = "(uint16_t)BCT_get_id(block, 5)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD5_TI"
+exp = "(uint32_t)BCT_get_ti(block, 5)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD5_PARAM0"
+exp = "BCT_get_param_head(block, 5)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD5_PARAM1"
+exp = "BCT_get_param_head(block, 5)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD5_PARAM2"
+exp = "BCT_get_param_head(block, 5)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD5_PARAM3"
+exp = "BCT_get_param_head(block, 5)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD5_PARAM4"
+exp = "BCT_get_param_head(block, 5)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD5_PARAM5"
+exp = "BCT_get_param_head(block, 5)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD6_ID"
+exp = "(uint16_t)BCT_get_id(block, 6)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD6_TI"
+exp = "(uint32_t)BCT_get_ti(block, 6)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD6_PARAM0"
+exp = "BCT_get_param_head(block, 6)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD6_PARAM1"
+exp = "BCT_get_param_head(block, 6)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD6_PARAM2"
+exp = "BCT_get_param_head(block, 6)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD6_PARAM3"
+exp = "BCT_get_param_head(block, 6)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD6_PARAM4"
+exp = "BCT_get_param_head(block, 6)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD6_PARAM5"
+exp = "BCT_get_param_head(block, 6)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD7_ID"
+exp = "(uint16_t)BCT_get_id(block, 7)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD7_TI"
+exp = "(uint32_t)BCT_get_ti(block, 7)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD7_PARAM0"
+exp = "BCT_get_param_head(block, 7)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD7_PARAM1"
+exp = "BCT_get_param_head(block, 7)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD7_PARAM2"
+exp = "BCT_get_param_head(block, 7)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD7_PARAM3"
+exp = "BCT_get_param_head(block, 7)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD7_PARAM4"
+exp = "BCT_get_param_head(block, 7)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD7_PARAM5"
+exp = "BCT_get_param_head(block, 7)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD8_ID"
+exp = "(uint16_t)BCT_get_id(block, 8)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD8_TI"
+exp = "(uint32_t)BCT_get_ti(block, 8)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD8_PARAM0"
+exp = "BCT_get_param_head(block, 8)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD8_PARAM1"
+exp = "BCT_get_param_head(block, 8)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD8_PARAM2"
+exp = "BCT_get_param_head(block, 8)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD8_PARAM3"
+exp = "BCT_get_param_head(block, 8)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD8_PARAM4"
+exp = "BCT_get_param_head(block, 8)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD8_PARAM5"
+exp = "BCT_get_param_head(block, 8)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD9_ID"
+exp = "(uint16_t)BCT_get_id(block, 9)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD9_TI"
+exp = "(uint32_t)BCT_get_ti(block, 9)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD9_PARAM0"
+exp = "BCT_get_param_head(block, 9)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD9_PARAM1"
+exp = "BCT_get_param_head(block, 9)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD9_PARAM2"
+exp = "BCT_get_param_head(block, 9)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD9_PARAM3"
+exp = "BCT_get_param_head(block, 9)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD9_PARAM4"
+exp = "BCT_get_param_head(block, 9)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD9_PARAM5"
+exp = "BCT_get_param_head(block, 9)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD10_ID"
+exp = "(uint16_t)BCT_get_id(block, 10)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD10_TI"
+exp = "(uint32_t)BCT_get_ti(block, 10)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD10_PARAM0"
+exp = "BCT_get_param_head(block, 10)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD10_PARAM1"
+exp = "BCT_get_param_head(block, 10)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD10_PARAM2"
+exp = "BCT_get_param_head(block, 10)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD10_PARAM3"
+exp = "BCT_get_param_head(block, 10)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD10_PARAM4"
+exp = "BCT_get_param_head(block, 10)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD10_PARAM5"
+exp = "BCT_get_param_head(block, 10)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD11_ID"
+exp = "(uint16_t)BCT_get_id(block, 11)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD11_TI"
+exp = "(uint32_t)BCT_get_ti(block, 11)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD11_PARAM0"
+exp = "BCT_get_param_head(block, 11)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD11_PARAM1"
+exp = "BCT_get_param_head(block, 11)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD11_PARAM2"
+exp = "BCT_get_param_head(block, 11)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD11_PARAM3"
+exp = "BCT_get_param_head(block, 11)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD11_PARAM4"
+exp = "BCT_get_param_head(block, 11)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD11_PARAM5"
+exp = "BCT_get_param_head(block, 11)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD12_ID"
+exp = "(uint16_t)BCT_get_id(block, 12)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD12_TI"
+exp = "(uint32_t)BCT_get_ti(block, 12)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD12_PARAM0"
+exp = "BCT_get_param_head(block, 12)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD12_PARAM1"
+exp = "BCT_get_param_head(block, 12)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD12_PARAM2"
+exp = "BCT_get_param_head(block, 12)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD12_PARAM3"
+exp = "BCT_get_param_head(block, 12)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD12_PARAM4"
+exp = "BCT_get_param_head(block, 12)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD12_PARAM5"
+exp = "BCT_get_param_head(block, 12)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD13_ID"
+exp = "(uint16_t)BCT_get_id(block, 13)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD13_TI"
+exp = "(uint32_t)BCT_get_ti(block, 13)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD13_PARAM0"
+exp = "BCT_get_param_head(block, 13)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD13_PARAM1"
+exp = "BCT_get_param_head(block, 13)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD13_PARAM2"
+exp = "BCT_get_param_head(block, 13)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD13_PARAM3"
+exp = "BCT_get_param_head(block, 13)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD13_PARAM4"
+exp = "BCT_get_param_head(block, 13)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD13_PARAM5"
+exp = "BCT_get_param_head(block, 13)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD14_ID"
+exp = "(uint16_t)BCT_get_id(block, 14)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD14_TI"
+exp = "(uint32_t)BCT_get_ti(block, 14)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD14_PARAM0"
+exp = "BCT_get_param_head(block, 14)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD14_PARAM1"
+exp = "BCT_get_param_head(block, 14)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD14_PARAM2"
+exp = "BCT_get_param_head(block, 14)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD14_PARAM3"
+exp = "BCT_get_param_head(block, 14)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD14_PARAM4"
+exp = "BCT_get_param_head(block, 14)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD14_PARAM5"
+exp = "BCT_get_param_head(block, 14)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD15_ID"
+exp = "(uint16_t)BCT_get_id(block, 15)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD15_TI"
+exp = "(uint32_t)BCT_get_ti(block, 15)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD15_PARAM0"
+exp = "BCT_get_param_head(block, 15)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD15_PARAM1"
+exp = "BCT_get_param_head(block, 15)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD15_PARAM2"
+exp = "BCT_get_param_head(block, 15)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD15_PARAM3"
+exp = "BCT_get_param_head(block, 15)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD15_PARAM4"
+exp = "BCT_get_param_head(block, 15)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD15_PARAM5"
+exp = "BCT_get_param_head(block, 15)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD16_ID"
+exp = "(uint16_t)BCT_get_id(block, 16)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD16_TI"
+exp = "(uint32_t)BCT_get_ti(block, 16)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD16_PARAM0"
+exp = "BCT_get_param_head(block, 16)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD16_PARAM1"
+exp = "BCT_get_param_head(block, 16)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD16_PARAM2"
+exp = "BCT_get_param_head(block, 16)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD16_PARAM3"
+exp = "BCT_get_param_head(block, 16)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD16_PARAM4"
+exp = "BCT_get_param_head(block, 16)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD16_PARAM5"
+exp = "BCT_get_param_head(block, 16)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD17_ID"
+exp = "(uint16_t)BCT_get_id(block, 17)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD17_TI"
+exp = "(uint32_t)BCT_get_ti(block, 17)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD17_PARAM0"
+exp = "BCT_get_param_head(block, 17)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD17_PARAM1"
+exp = "BCT_get_param_head(block, 17)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD17_PARAM2"
+exp = "BCT_get_param_head(block, 17)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD17_PARAM3"
+exp = "BCT_get_param_head(block, 17)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD17_PARAM4"
+exp = "BCT_get_param_head(block, 17)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD17_PARAM5"
+exp = "BCT_get_param_head(block, 17)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD18_ID"
+exp = "(uint16_t)BCT_get_id(block, 18)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD18_TI"
+exp = "(uint32_t)BCT_get_ti(block, 18)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD18_PARAM0"
+exp = "BCT_get_param_head(block, 18)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD18_PARAM1"
+exp = "BCT_get_param_head(block, 18)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD18_PARAM2"
+exp = "BCT_get_param_head(block, 18)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD18_PARAM3"
+exp = "BCT_get_param_head(block, 18)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD18_PARAM4"
+exp = "BCT_get_param_head(block, 18)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD18_PARAM5"
+exp = "BCT_get_param_head(block, 18)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD19_ID"
+exp = "(uint16_t)BCT_get_id(block, 19)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD19_TI"
+exp = "(uint32_t)BCT_get_ti(block, 19)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD19_PARAM0"
+exp = "BCT_get_param_head(block, 19)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD19_PARAM1"
+exp = "BCT_get_param_head(block, 19)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD19_PARAM2"
+exp = "BCT_get_param_head(block, 19)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD19_PARAM3"
+exp = "BCT_get_param_head(block, 19)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD19_PARAM4"
+exp = "BCT_get_param_head(block, 19)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD19_PARAM5"
+exp = "BCT_get_param_head(block, 19)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD20_ID"
+exp = "(uint16_t)BCT_get_id(block, 20)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD20_TI"
+exp = "(uint32_t)BCT_get_ti(block, 20)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD20_PARAM0"
+exp = "BCT_get_param_head(block, 20)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD20_PARAM1"
+exp = "BCT_get_param_head(block, 20)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD20_PARAM2"
+exp = "BCT_get_param_head(block, 20)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD20_PARAM3"
+exp = "BCT_get_param_head(block, 20)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD20_PARAM4"
+exp = "BCT_get_param_head(block, 20)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD20_PARAM5"
+exp = "BCT_get_param_head(block, 20)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD21_ID"
+exp = "(uint16_t)BCT_get_id(block, 21)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD21_TI"
+exp = "(uint32_t)BCT_get_ti(block, 21)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD21_PARAM0"
+exp = "BCT_get_param_head(block, 21)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD21_PARAM1"
+exp = "BCT_get_param_head(block, 21)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD21_PARAM2"
+exp = "BCT_get_param_head(block, 21)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD21_PARAM3"
+exp = "BCT_get_param_head(block, 21)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD21_PARAM4"
+exp = "BCT_get_param_head(block, 21)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD21_PARAM5"
+exp = "BCT_get_param_head(block, 21)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD22_ID"
+exp = "(uint16_t)BCT_get_id(block, 22)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD22_TI"
+exp = "(uint32_t)BCT_get_ti(block, 22)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD22_PARAM0"
+exp = "BCT_get_param_head(block, 22)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD22_PARAM1"
+exp = "BCT_get_param_head(block, 22)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD22_PARAM2"
+exp = "BCT_get_param_head(block, 22)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD22_PARAM3"
+exp = "BCT_get_param_head(block, 22)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD22_PARAM4"
+exp = "BCT_get_param_head(block, 22)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD22_PARAM5"
+exp = "BCT_get_param_head(block, 22)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD23_ID"
+exp = "(uint16_t)BCT_get_id(block, 23)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD23_TI"
+exp = "(uint32_t)BCT_get_ti(block, 23)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD23_PARAM0"
+exp = "BCT_get_param_head(block, 23)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD23_PARAM1"
+exp = "BCT_get_param_head(block, 23)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD23_PARAM2"
+exp = "BCT_get_param_head(block, 23)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD23_PARAM3"
+exp = "BCT_get_param_head(block, 23)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD23_PARAM4"
+exp = "BCT_get_param_head(block, 23)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD23_PARAM5"
+exp = "BCT_get_param_head(block, 23)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD24_ID"
+exp = "(uint16_t)BCT_get_id(block, 24)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD24_TI"
+exp = "(uint32_t)BCT_get_ti(block, 24)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD24_PARAM0"
+exp = "BCT_get_param_head(block, 24)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD24_PARAM1"
+exp = "BCT_get_param_head(block, 24)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD24_PARAM2"
+exp = "BCT_get_param_head(block, 24)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD24_PARAM3"
+exp = "BCT_get_param_head(block, 24)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD24_PARAM4"
+exp = "BCT_get_param_head(block, 24)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD24_PARAM5"
+exp = "BCT_get_param_head(block, 24)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD25_ID"
+exp = "(uint16_t)BCT_get_id(block, 25)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD25_TI"
+exp = "(uint32_t)BCT_get_ti(block, 25)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD25_PARAM0"
+exp = "BCT_get_param_head(block, 25)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD25_PARAM1"
+exp = "BCT_get_param_head(block, 25)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD25_PARAM2"
+exp = "BCT_get_param_head(block, 25)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD25_PARAM3"
+exp = "BCT_get_param_head(block, 25)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD25_PARAM4"
+exp = "BCT_get_param_head(block, 25)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD25_PARAM5"
+exp = "BCT_get_param_head(block, 25)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD26_ID"
+exp = "(uint16_t)BCT_get_id(block, 26)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD26_TI"
+exp = "(uint32_t)BCT_get_ti(block, 26)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD26_PARAM0"
+exp = "BCT_get_param_head(block, 26)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD26_PARAM1"
+exp = "BCT_get_param_head(block, 26)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD26_PARAM2"
+exp = "BCT_get_param_head(block, 26)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD26_PARAM3"
+exp = "BCT_get_param_head(block, 26)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD26_PARAM4"
+exp = "BCT_get_param_head(block, 26)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD26_PARAM5"
+exp = "BCT_get_param_head(block, 26)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD27_ID"
+exp = "(uint16_t)BCT_get_id(block, 27)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD27_TI"
+exp = "(uint32_t)BCT_get_ti(block, 27)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD27_PARAM0"
+exp = "BCT_get_param_head(block, 27)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD27_PARAM1"
+exp = "BCT_get_param_head(block, 27)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD27_PARAM2"
+exp = "BCT_get_param_head(block, 27)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD27_PARAM3"
+exp = "BCT_get_param_head(block, 27)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD27_PARAM4"
+exp = "BCT_get_param_head(block, 27)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD27_PARAM5"
+exp = "BCT_get_param_head(block, 27)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD28_ID"
+exp = "(uint16_t)BCT_get_id(block, 28)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD28_TI"
+exp = "(uint32_t)BCT_get_ti(block, 28)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD28_PARAM0"
+exp = "BCT_get_param_head(block, 28)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD28_PARAM1"
+exp = "BCT_get_param_head(block, 28)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD28_PARAM2"
+exp = "BCT_get_param_head(block, 28)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD28_PARAM3"
+exp = "BCT_get_param_head(block, 28)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD28_PARAM4"
+exp = "BCT_get_param_head(block, 28)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD28_PARAM5"
+exp = "BCT_get_param_head(block, 28)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD29_ID"
+exp = "(uint16_t)BCT_get_id(block, 29)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD29_TI"
+exp = "(uint32_t)BCT_get_ti(block, 29)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD29_PARAM0"
+exp = "BCT_get_param_head(block, 29)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD29_PARAM1"
+exp = "BCT_get_param_head(block, 29)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD29_PARAM2"
+exp = "BCT_get_param_head(block, 29)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD29_PARAM3"
+exp = "BCT_get_param_head(block, 29)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD29_PARAM4"
+exp = "BCT_get_param_head(block, 29)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD29_PARAM5"
+exp = "BCT_get_param_head(block, 29)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD30_ID"
+exp = "(uint16_t)BCT_get_id(block, 30)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD30_TI"
+exp = "(uint32_t)BCT_get_ti(block, 30)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD30_PARAM0"
+exp = "BCT_get_param_head(block, 30)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD30_PARAM1"
+exp = "BCT_get_param_head(block, 30)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD30_PARAM2"
+exp = "BCT_get_param_head(block, 30)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD30_PARAM3"
+exp = "BCT_get_param_head(block, 30)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD30_PARAM4"
+exp = "BCT_get_param_head(block, 30)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD30_PARAM5"
+exp = "BCT_get_param_head(block, 30)[5]"
+is_hex = true
+
+[[tlm]]
+type = "uint16_t"
+name = "CMD31_ID"
+exp = "(uint16_t)BCT_get_id(block, 31)"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "CMD31_TI"
+exp = "(uint32_t)BCT_get_ti(block, 31)"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD31_PARAM0"
+exp = "BCT_get_param_head(block, 31)[0]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD31_PARAM1"
+exp = "BCT_get_param_head(block, 31)[1]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD31_PARAM2"
+exp = "BCT_get_param_head(block, 31)[2]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD31_PARAM3"
+exp = "BCT_get_param_head(block, 31)[3]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD31_PARAM4"
+exp = "BCT_get_param_head(block, 31)[4]"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD31_PARAM5"
+exp = "BCT_get_param_head(block, 31)[5]"
+is_hex = true
+

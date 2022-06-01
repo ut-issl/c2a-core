@@ -1,0 +1,36 @@
+Target = "OBC"
+PacketID = "0x5c"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint16_t offset = event_handler->tlm_info.log.page_no * EH_LOG_TLM_PAGE_SIZE;##"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.LOG.PAGE_NO"
+exp = "event_handler->tlm_info.log.page_no"
+
+[[tlm]]
+type = "uint32_t"
+name = "LOG_TABLE.RESPOND_COUNTER"
+exp = "event_handler->log_table.respond_counter"
+
+[[tlm]]
+type = "uint16_t"
+name = "LOG_TABLE.LOG_WP"
+exp = "event_handler->log_table.log_wp"
+
+[[tlm]]
+q_range = [0, 63]
+block_num = 3
+[[tlm.block]]
+type = "uint8_t"
+name = "LOG??.RULE_ID"
+exp = "(uint8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(?? + offset))->rule_id"
+[[tlm.block]]
+type = "uint32_t"
+name = "LOG??.RESPOND_TIME_IN_MASTER_CYCLE"
+exp = "EH_get_the_nth_log_from_the_latest((uint16_t)(?? + offset))->respond_time_in_master_cycle"
+[[tlm.block]]
+type = "int8_t"
+name = "LOG??.DEPLOY_CMD_ACK"
+exp = "(int8_t)EH_get_the_nth_log_from_the_latest((uint16_t)(?? + offset))->deploy_cmd_ack"

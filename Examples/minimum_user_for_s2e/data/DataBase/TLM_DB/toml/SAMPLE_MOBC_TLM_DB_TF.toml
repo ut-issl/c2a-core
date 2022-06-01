@@ -1,0 +1,19 @@
+Target = "OBC"
+PacketID = "0x26"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint8_t page = telemetry_frame->tlm_page_no;##int offset = TF_TLM_PAGE_SIZE * (telemetry_frame->tlm_page_no);"
+
+[[tlm]]
+type = "uint8_t"
+name = "PAGE_NO"
+exp = "page"
+
+[[tlm]]
+q_range = [0, 63]
+block_num = 1
+[[tlm.block]]
+name = "TLM??"
+type = "uint32_t"
+exp = "(uint32_t)(telemetry_frame->tlm_table[offset+??].tlm_func)"
+is_hex = true

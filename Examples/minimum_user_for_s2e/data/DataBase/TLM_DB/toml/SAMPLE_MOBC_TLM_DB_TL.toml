@@ -1,0 +1,42 @@
+Target = "OBC"
+PacketID = "0x20"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "int offset = TL_TLM_PAGE_SIZE * (timeline_command_dispatcher->tlm_info_.page_no);##"
+
+[[tlm]]
+type = "uint8_t"
+name = "LINE_NO"
+exp = "TLCD_update_tl_list_for_tlm(timeline_command_dispatcher->tlm_info_.id)"
+desc = "テレメトリを生成したライン番号"
+
+[[tlm]]
+type = "uint8_t"
+name = "PAGE_NO"
+exp = "timeline_command_dispatcher->tlm_info_.page_no"
+
+[[tlm]]
+type = "uint32_t"
+name = "UPDATED_AT"
+exp = "timeline_command_dispatcher->tlm_info_.updated_at"
+
+[[tlm]]
+q_range = [0, 31]
+block_num = 3
+[[tlm.block]]
+name = "CMD??_ID"
+exp = "(uint16_t)CCP_get_id(timeline_command_dispatcher->tlm_info_.tl_list[offset+??])"
+type = "uint16_t"
+is_hex = true
+[[tlm.block]]
+name = "CMD??_TI"
+exp = "(uint32_t)CCP_get_ti(timeline_command_dispatcher->tlm_info_.tl_list[offset+??])"
+type = "uint32_t"
+[[tlm.block]]
+q_range = [0, 5]
+block_num = 1
+[[tlm.block.block]]
+type = "uint8_t"
+name = "CMD??_PARAM????"
+exp = "CCP_get_param_head(timeline_command_dispatcher->tlm_info_.tl_list[offset+??])[????]"
+is_hex = true

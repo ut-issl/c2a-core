@@ -1,0 +1,76 @@
+Target = "OBC"
+PacketID = "0x19"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint16_t"
+name = "MASTER_BC_ID"
+exp = "telemetry_manager->master_bc_id"
+
+[[tlm]]
+q_range = [0, 9]
+block_num = 2
+[[tlm.block]]
+name = "BC_INFO??.BC_ID"
+type = "uint16_t"
+exp = "telemetry_manager->bc_info[??].bc_id"
+[[tlm.block]]
+name = "BC_INFO??.BC_TYPE"
+type = "uint8_t"
+exp = "(uint8_t)telemetry_manager->bc_info[??].bc_type"
+status = "6.2"
+
+[[tlm]]
+block_num = 4
+seq_num = 6
+[[tlm.block]]
+q_range = [0, 9]
+block_num = 1
+[[tlm.block.block]]
+name = "REG_INFO.{{}}.BC_INFO_IDX????"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.bc_info_idx[????]"
+[[tlm.block]]
+name = "REG_INFO.{{}}.BC_INFO_IDX_USED_NUM"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.bc_info_idx_used_num"
+[[tlm.block]]
+name = "REG_INFO.{{}}.REG_PNTR_TO_IDX_OF_BC_INFO_IDX"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.tlm_register_pointer_to_idx_of_bc_info_idx"
+[[tlm.block]]
+name = "REG_INFO.{{}}.REG_PNTR_TO_BC_CMD_IDX"
+type = "uint8_t"
+exp = "telemetry_manager->register_info.{{}}.tlm_register_pointer_to_bc_cmd_idx"
+
+[[tlm.seq]]
+q_range = []
+name = "MASTER"
+exp = "master"
+[[tlm.seq]]
+q_range = []
+name = "HK_TLM"
+exp = "hk_tlm"
+[[tlm.seq]]
+q_range = []
+name = "SYSTEM_TLM"
+exp = "system_tlm"
+[[tlm.seq]]
+q_range = []
+name = "HIGH_FREQ_TLM"
+exp = "high_freq_tlm"
+[[tlm.seq]]
+q_range = []
+name = "LOW_FREQ_TLM"
+exp = "low_freq_tlm"
+[[tlm.seq]]
+q_range = []
+name = "RESERVE"
+exp = "reserve"
+
+[[tlm]]
+name = "IS_INITED"
+type = "uint8_t"
+exp = "telemetry_manager->is_inited"

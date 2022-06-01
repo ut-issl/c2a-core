@@ -1,0 +1,23 @@
+Target = "OBC"
+PacketID = "0xf1"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+q_range = [0, 40]
+block_num = 1
+[[tlm.block]]
+type = "uint8_t"
+name = "CORE??"
+exp = "(uint8_t)GIT_REV_CORE[??]"
+is_hex = true
+
+[[tlm]]
+q_range = [0, 40]
+block_num = 1
+[[tlm.block]]
+type = "uint8_t"
+name = "USER??"
+exp = "(uint8_t)GIT_REV_USER[??]"
+is_hex = true

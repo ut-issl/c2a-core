@@ -1,0 +1,86 @@
+Target = "OBC"
+PacketID = "0x21"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "const bct_id_t block = block_command_table->pos.block;##"
+
+[[tlm]]
+type = "uint16_t"
+name = "BLOCK_NO"
+exp = "block"
+desc = "テレメトリを生成したブロック番号"
+
+[[tlm]]
+type = "uint8_t"
+name = "CMD_POS"
+exp = "block_command_table->pos.cmd"
+
+[[tlm]]
+type = "uint8_t"
+name = "BLOCK_LENGTH"
+exp = "BCT_get_bc_length(block)"
+
+[[tlm]]
+name_base = "ROTATE_{}"
+exp_base = "BCE_get_bc_exe_params(block)->rotate.{}"
+seq_num = 3
+[[tlm.seq]]
+type = "uint8_t"
+name = "NEXT_CMD"
+exp = "next_cmd"
+[[tlm.seq]]
+type = "uint16_t"
+name = "COUNTER"
+exp = "counter"
+[[tlm.seq]]
+type = "uint16_t"
+name = "INTERVAL"
+exp = "interval"
+
+[[tlm]]
+name_base = "TLCB_{}"
+exp_base = "BCE_get_bc_exe_params(block)->timelimit_combine.{}"
+seq_num = 4
+[[tlm.seq]]
+type = "uint16_t"
+name ="CALL_NUM"
+exp = "call_num"
+[[tlm.seq]]
+type = "uint16_t"
+name ="TIMEOVER_NUM"
+exp = "timeover_num"
+[[tlm.seq]]
+type = "uint8_t"
+name ="LAST_TIMEOVER_POS"
+exp = "last_timeover_cmd_pos"
+[[tlm.seq]]
+type = "uint8_t"
+name ="WORST_POS"
+exp = "worst_cmd_pos"
+
+[[tlm]]
+type = "uint8_t"
+name = "IS_ACTIVE"
+exp = "BCE_get_bc_exe_params(block)->is_active"
+status = "2.8"
+
+[[tlm]]
+q_range = [0, 31]
+block_num = 3
+[[tlm.block]]
+name = "CMD??_ID"
+type = "uint16_t"
+exp = "(uint16_t)BCT_get_id(block, ??)"
+is_hex = true
+[[tlm.block]]
+name = "CMD??_TI"
+type = "uint32_t"
+exp = "(uint32_t)BCT_get_ti(block, ??)"
+[[tlm.block]]
+q_range = [0, 5]
+block_num = 1
+[[tlm.block.block]]
+name = "CMD??_PARAM????"
+type = "uint8_t"
+exp = "BCT_get_param_head(block, ??)[????]"
+is_hex = true

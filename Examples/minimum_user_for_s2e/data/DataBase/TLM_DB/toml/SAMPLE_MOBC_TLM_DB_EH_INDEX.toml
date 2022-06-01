@@ -1,0 +1,30 @@
+Target = "OBC"
+PacketID = "0x5d"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint16_t offset = event_handler->tlm_info.rule_sorted_index.page_no * EH_RULE_TLM_PAGE_SIZE;##"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE_SORTED_INDEX.PAGE_NO"
+exp = "event_handler->tlm_info.rule_sorted_index.page_no"
+
+[[tlm]]
+q_range = [0, 19]
+block_num = 4
+[[tlm.block]]
+type = "uint8_t"
+name = "IDX??.GROUP"
+exp = "(uint8_t)event_handler->sorted_idxes[?? + offset].group"
+[[tlm.block]]
+type = "uint32_t"
+name = "IDX??.LOCAL"
+exp = "event_handler->sorted_idxes[?? + offset].local"
+[[tlm.block]]
+type = "uint8_t"
+name = "IDX??.DUPLICATE_ID"
+exp = "event_handler->sorted_idxes[?? + offset].duplicate_id"
+[[tlm.block]]
+type = "uint8_t"
+name = "IDX??.RULE_ID"
+exp = "(uint8_t)event_handler->sorted_idxes[?? + offset].rule_id"

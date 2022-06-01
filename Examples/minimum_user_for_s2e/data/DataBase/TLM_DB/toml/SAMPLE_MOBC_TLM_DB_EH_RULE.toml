@@ -1,0 +1,69 @@
+Target = "OBC"
+PacketID = "0x5b"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = "uint16_t offset = event_handler->tlm_info.rule.page_no * EH_RULE_TLM_PAGE_SIZE;##const EH_Rule* rules = event_handler->rule_table.rules;##"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_INFO.RULE.PAGE_NO"
+exp = "event_handler->tlm_info.rule.page_no"
+
+[[tlm]]
+type = "uint16_t"
+name = "RULE_TABLE.REGISTERED_RULE_NUM"
+exp = "event_handler->rule_table.registered_rule_num"
+
+[[tlm]]
+q_range = [0, 19]
+block_num = 8
+[[tlm.block]]
+name = "RULE??.SETTINGS.EVENT.GROUP"
+type = "uint8_t"
+exp = "(uint8_t)rules[?? + offset].settings.event.group"
+[[tlm.block]]
+name = "RULE??.SETTINGS.EVENT.LOCAL"
+type = "uint32_t"
+exp = "rules[?? + offset].settings.event.local"
+[[tlm.block]]
+type = "uint8_t"
+[[tlm.block.comp]]
+name = "RULE??.SETTINGS.EVENT.ERR_LEVEL"
+bitlen = 3
+exp = "((uint8_t)rules[?? + offset].settings.event.err_level)"
+status = "5.1"
+[[tlm.block.comp]]
+name = "RULE??.SETTINGS.SHOULD_MATCH_ERR_LEVEL"
+bitlen = 1
+exp = "rules[?? + offset].settings.should_match_err_level"
+status = "2.11"
+[[tlm.block.comp]]
+name = "RULE??.SETTINGS.IS_ACTIVE"
+bitlen = 1
+exp = "rules[?? + offset].settings.is_active"
+status = "2.8"
+[[tlm.block.comp]]
+name = "RULE??.SETTINGS.CONDITION.TYPE"
+bitlen = 3
+exp = "((uint8_t)rules[?? + offset].settings.condition.type)"
+status = "3.3"
+[[tlm.block]]
+type = "uint16_t"
+name = "RULE??.SETTINGS.CONDITION.COUNT_THRESHOLD"
+exp = "rules[?? + offset].settings.condition.count_threshold"
+[[tlm.block]]
+type = "uint32_t"
+name = "RULE??.SETTINGS.CONDITION.TIME_THRESHOLD_MS"
+exp = "rules[?? + offset].settings.condition.time_threshold_ms"
+[[tlm.block]]
+type = "uint16_t"
+name = "RULE??.SETTINGS.DEPLOY_BCT_ID"
+exp = "(uint16_t)rules[?? + offset].settings.deploy_bct_id"
+[[tlm.block]]
+type = "uint16_t"
+name = "RULE??.COUNTER"
+exp = "rules[?? + offset].counter"
+[[tlm.block]]
+type = "uint32_t"
+name = "RULE??.LAST_EVENT_TIME.TOTAL_CYCLE"
+exp = "(uint32_t)rules[?? + offset].last_event_time.total_cycle"

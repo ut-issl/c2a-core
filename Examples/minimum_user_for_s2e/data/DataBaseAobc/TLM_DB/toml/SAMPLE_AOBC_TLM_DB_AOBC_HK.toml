@@ -1,0 +1,486 @@
+Target = "OBC"
+PacketID = "0x91"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TM_MODE_TIME"
+exp = "TMGR_get_master_clock().mode_cycle"
+
+[[tlm]]
+type = "double"
+name = "OBC_TM_UNIXTIME_AT_TI0"
+exp = "TMGR_get_unixtime_at_ti0()"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_MM_OPSMODE"
+exp = "(uint8_t)(mode_manager->current_id)"
+status = "17.1"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "OBC_MM_STS"
+bitlen = 1
+exp = "(uint8_t)(mode_manager->stat)"
+status = "2.5"
+[[tlm.comp]]
+name = "OBC_MM_OPSMODE_PREV"
+bitlen = 7
+exp = "(uint8_t)(mode_manager->previous_id)"
+status = "17.1"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_TDSP_CURRENT_ID"
+exp = "TDSP_info->task_list_id"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_TCTF_LAST_RECV_ACK"
+exp = "(uint8_t)gs_driver->latest_info->rec_status"
+status = "2.7"
+desc = "TC Transer Frame 受信処理結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TCTF_LAST_RECV_TIME"
+exp = "(uint32_t)gs_driver->latest_info->last_rec_time"
+desc = "最新TC Transer Frame受信時刻"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_TCP_LAST_RECV_ACK"
+exp = "(uint8_t)(gs_driver->latest_info->cmd_ack)"
+status = "13.1"
+desc = "最新TCPacket受信処理結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_GS_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_gs_cmd_list)"
+desc = "地上局コマンドカウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_GS_CMD_LAST_EXEC_TIME"
+exp = "gs_command_dispatcher->prev.time.total_cycle"
+desc = "最新地上局コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_GS_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(gs_command_dispatcher->prev.code)"
+desc = "最新地上局コマンドID"
+
+[[tlm]]
+type = "int8_t"
+name = "OBC_GS_CMD_LAST_EXEC_STS"
+exp = "(int8_t)(gs_command_dispatcher->prev.sts)"
+status = "7.1"
+desc = "最新地上局コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_GS_CMD_LAST_ERR_TIME"
+exp = "gs_command_dispatcher->prev_err.time.total_cycle"
+desc = "地上局異常コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_GS_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(gs_command_dispatcher->prev_err.code)"
+desc = "地上局異常コマンドID"
+
+[[tlm]]
+type = "int8_t"
+name = "OBC_GS_CMD_LAST_ERR_STS"
+exp = "(int8_t)(gs_command_dispatcher->prev_err.sts)"
+status = "7.1"
+desc = "地上局異常コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TL0_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_tl_cmd_list[0])"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_TL0_CMD_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[0]))"
+desc = "TL0登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TL0_CMD_LAST_EXEC_TIME"
+exp = "timeline_command_dispatcher[0].prev.time.total_cycle"
+desc = "最新TL0コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_TL0_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[0].prev.code)"
+desc = "最新TL0コマンドID"
+
+[[tlm]]
+type = "int8_t"
+name = "OBC_TL0_CMD_LAST_EXEC_STS"
+exp = "(int8_t)(timeline_command_dispatcher[0].prev.sts)"
+status = "7.1"
+desc = "最新TL0コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TL0_CMD_LAST_ERR_TIME"
+exp = "timeline_command_dispatcher[0].prev_err.time.total_cycle"
+desc = "TL0異常コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_TL0_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[0].prev_err.code)"
+desc = "TL0異常コマンドID"
+
+[[tlm]]
+type = "int8_t"
+name = "OBC_TL0_CMD_LAST_ERR_STS"
+exp = "(int8_t)(timeline_command_dispatcher[0].prev_err.sts)"
+status = "7.1"
+desc = "TL0異常コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TL0_NEXT_TIME"
+exp = "(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet)))"
+desc = "次TL0コマンド実行時刻"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_TL0_NEXT_ID"
+exp = "(uint16_t)(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet)))"
+desc = "次TL0コマンドID"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint8_t"
+[[tlm.comp]]
+name = "OBC_TL0_CMD_SOE_FLAG"
+bitlen = 1
+exp = "(uint8_t)timeline_command_dispatcher[0].stop_on_error"
+status = "2.2"
+[[tlm.comp]]
+name = "OBC_TL0_CMD_LOCKOUT_FLAG"
+bitlen = 1
+exp = "(uint8_t)timeline_command_dispatcher[0].lockout"
+status = "2.6"
+[[tlm.comp]]
+name = "OBC_TL1_CMD_SOE_FLAG"
+bitlen = 1
+exp = "(uint8_t)timeline_command_dispatcher[1].stop_on_error"
+status = "2.2"
+[[tlm.comp]]
+name = "OBC_TL1_CMD_LOCKOUT_FLAG"
+bitlen = 1
+exp = "(uint8_t)timeline_command_dispatcher[1].lockout"
+status = "2.6"
+[[tlm.comp]]
+name = "OBC_TL2_CMD_SOE_FLAG"
+bitlen = 1
+exp = "(uint8_t)timeline_command_dispatcher[2].stop_on_error"
+status = "2.2"
+[[tlm.comp]]
+name = "OBC_TL2_CMD_LOCKOUT_FLAG"
+bitlen = 1
+exp = "(uint8_t)timeline_command_dispatcher[2].lockout"
+status = "2.6"
+[[tlm.comp]]
+name = "WDT.IS_ENABLE"
+bitlen = 1
+exp = "wdt_config->is_wdt_enable"
+status = "2.2"
+[[tlm.comp]]
+name = "WDT.IS_CLEAR_ENABLE"
+bitlen = 1
+exp = "wdt_config->is_clear_enable"
+status = "2.2"
+
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_BCT_BLK_PTR"
+exp = "block_command_table->pos.block"
+desc = "BCT ブロックポインタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_BCT_CMD_PTR"
+exp = "(uint8_t)(block_command_table->pos.cmd)"
+desc = "BCT コマンドポインタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_BCT_REGD_TIME"
+exp = "((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1)))"
+desc = "BCT 登録コマンド時刻"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint16_t"
+name = "OBC_BCT_REGD_ID"
+exp = "(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1)))"
+desc = "BCT 登録コマンドID"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint32_t"
+name = "EL.STATISTICS.RECORD_COUNTER_TOTAL"
+exp = "event_logger->statistics.record_counter_total"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.STATISTICS.RECORD_COUNTERS_HIGH"
+exp = "(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH]"
+note = "データサイズ減らすためにu16"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.STATISTICS.RECORD_COUNTERS_MIDDLE"
+exp = "(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE]"
+note = "データサイズ減らすためにu16"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.STATISTICS.RECORD_COUNTERS_LOW"
+exp = "(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW]"
+note = "データサイズ減らすためにu16"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.STATISTICS.RECORD_COUNTERS_EL"
+exp = "(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL]"
+note = "データサイズ減らすためにu16"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.STATISTICS.RECORD_COUNTERS_EH"
+exp = "(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH]"
+note = "データサイズ減らすためにu16"
+
+[[tlm]]
+type = "uint8_t"
+name = "EL.LATEST_EVENT.GROUP"
+exp = "(uint8_t)event_logger->latest_event.group"
+
+[[tlm]]
+type = "uint32_t"
+name = "EL.LATEST_EVENT.LOCAL"
+exp = "event_logger->latest_event.local"
+
+[[tlm]]
+type = "uint8_t"
+name = "EL.LATEST_EVENT.ERR_LEVEL"
+exp = "(uint8_t)event_logger->latest_event.err_level"
+status = "5.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "EL.LATEST_EVENT.TIME.TOTAL_CYCLE"
+exp = "event_logger->latest_event.time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "EL.LATEST_EVENT.TIME.STEP"
+exp = "(uint8_t)event_logger->latest_event.time.step"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.LATEST_EVENT.NOTE"
+exp = "(uint16_t)event_logger->latest_event.note"
+note = "u8にしてもよい"
+
+[[tlm]]
+type = "uint8_t"
+name = "EL.LATEST_HIGH_EVENT.GROUP"
+exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->group"
+
+[[tlm]]
+type = "uint32_t"
+name = "EL.LATEST_HIGH_EVENT.LOCAL"
+exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->local"
+
+[[tlm]]
+type = "uint32_t"
+name = "EL.LATEST_HIGH_EVENT.TIME.TOTAL_CYCLE"
+exp = "EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "EL.LATEST_HIGH_EVENT.TIME.STEP"
+exp = "(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->time.step"
+
+[[tlm]]
+type = "uint16_t"
+name = "EL.LATEST_HIGH_EVENT.NOTE"
+exp = "(uint16_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH, 0)->note"
+note = "u8にしてもよい"
+
+[[tlm]]
+type = "uint32_t"
+name = "EH.LOG_TABLE.RESPOND_COUNTER"
+exp = "event_handler->log_table.respond_counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "ANOMALY_MOBC_AL_COUNTER"
+exp = "(uint32_t)anomaly_logger->counter"
+
+[[tlm]]
+type = "uint32_t"
+name = "ANOMALY_MOBC_AL_LATEST_TIME_MASTER"
+exp = "(uint32_t)anomaly_logger->records[(anomaly_logger->header == 0) ? 0 : anomaly_logger->header - 1].time.total_cycle"
+
+[[tlm]]
+type = "uint8_t"
+name = "ANOMALY_MOBC_AL_LATEST_TIME_STEP"
+exp = "(uint8_t)(anomaly_logger->records[(anomaly_logger->header == 0) ? 0 : anomaly_logger->header - 1].time.step & 0x000000ff)"
+
+[[tlm]]
+type = "uint8_t"
+name = "ANOMALY_MOBC_AL_LATEST_CODE_GROUP"
+exp = "(uint8_t)(anomaly_logger->records[(anomaly_logger->header == 0) ? 0 : anomaly_logger->header - 1].code.group & 0x000000ff)"
+
+[[tlm]]
+type = "uint32_t"
+name = "ANOMALY_MOBC_AL_LATEST_CODE_LOCAL"
+exp = "anomaly_logger->records[(anomaly_logger->header == 0) ? 0 : anomaly_logger->header - 1].code.local"
+
+[[tlm]]
+type = "uint8_t"
+name = "ANOMALY_MOBC_AL_LATEST_RUN_LENGTH"
+exp = "(uint8_t)(anomaly_logger->records[(anomaly_logger->header == 0) ? 0 : anomaly_logger->header - 1].run_length & 0x000000ff)"
+
+[[tlm]]
+type = "uint8_t"
+name = "ANOMALY_MOBC_AL_HEADER"
+exp = "(uint8_t)(anomaly_logger->header)"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TL1_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_tl_cmd_list[1])"
+desc = "TL1コマンドカウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_TL2_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_tl_cmd_list[2])"
+desc = "TL1コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_TL1_CMD_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[1]))"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_TL2_CMD_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[2]))"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_AH_ACTION_COUNTER"
+exp = "(uint8_t)(anomaly_handler->action_counter)"
+desc = "アノマリ対応発生回数"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_AH_LATEST_ID"
+exp = "(uint8_t)(anomaly_handler->latest_id)"
+desc = "アノマリ対応ID"
+
+[[tlm]]
+type = "uint32_t"
+name = "OBC_AH_RESPOND_AT"
+exp = "(uint32_t)(anomaly_handler->respond_at.total_cycle)"
+desc = "アノマリ対応実施時刻"
+
+[[tlm]]
+type = "uint8_t"
+name = "OBC_GS_CMD_ERR_COUNTER"
+exp = "(uint8_t)(gs_command_dispatcher->error_counter)"
+desc = "アノマリ対応発生回数"
+
+[[tlm]]
+type = "uint16_t"
+name = "DCU.EXEC_LOGS0.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "DCU.EXEC_LOGS0.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "DCU.EXEC_LOGS0.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "DCU.EXEC_LOGS0.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "DCU.EXEC_LOGS0.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[0]].last_exec_time.total_cycle"
+
+[[tlm]]
+type = "uint16_t"
+name = "DCU.EXEC_LOGS1.CMD_CODE"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].cmd_code)"
+is_hex = true
+
+[[tlm]]
+type = "uint8_t"
+name = "DCU.EXEC_LOGS1.STATUS"
+exp = "(uint8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].status)"
+status = "4.1"
+
+[[tlm]]
+type = "uint16_t"
+name = "DCU.EXEC_LOGS1.EXEC_COUNTER"
+exp = "(uint16_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].exec_counter)"
+
+[[tlm]]
+type = "int8_t"
+name = "DCU.EXEC_LOGS1.LAST_EXEC_STS"
+exp = "(int8_t)(divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].last_exec_sts)"
+status = "7.1"
+
+[[tlm]]
+type = "uint32_t"
+name = "DCU.EXEC_LOGS1.LAST_EXEC_TIME.TOTAL_CYCLE"
+exp = "divided_cmd_utility->exec_logs[divided_cmd_utility->exec_log_order[1]].last_exec_time.total_cycle"
+
+[[tlm]]
+type = "uint32_t"
+name = "GIT_REV_CORE"
+exp = "GIT_REV_CORE_SHORT"
+is_hex = true
+
+[[tlm]]
+type = "uint32_t"
+name = "GIT_REV_USER"
+exp = "GIT_REV_USER_SHORT"
+is_hex = true
+

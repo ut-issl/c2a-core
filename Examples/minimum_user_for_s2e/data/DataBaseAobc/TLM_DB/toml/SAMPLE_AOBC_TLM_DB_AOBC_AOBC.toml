@@ -1,0 +1,567 @@
+Target = "OBC"
+PacketID = "0x90"
+"Enable/Disable" = "ENABLE"
+IsRestricted = "FALSE"
+"Local Var" = ""
+
+[[tlm]]
+type = "uint32_t"
+name = "TM_MODE_TIME"
+exp = "(uint32_t)(TMGR_get_master_clock().mode_cycle)"
+desc = "モード遷移後経過時刻"
+
+[[tlm]]
+type = "double"
+name = "TM_UTL_UNIXTIME_EPOCH"
+exp = "TMGR_get_utl_unixtime_epoch()"
+desc = "UTL_cmdで用いるunixtimeの紀元"
+
+[[tlm]]
+type = "double"
+name = "TM_CYCLES_PER_SEC_FIX_RATIO"
+exp = "(double)(time_manager->unixtime_info_.cycle_correction)"
+desc = "CYCLES_PER_SECの補正倍率. 初期値は1.0"
+
+[[tlm]]
+type = "uint8_t"
+name = "MM_STS"
+exp = "(uint8_t)(mode_manager->stat)"
+desc = "モード遷移実行状態"
+
+[[tlm]]
+type = "uint8_t"
+name = "MM_OPSMODE"
+exp = "(uint8_t)(mode_manager->current_id)"
+desc = "現状モード番号"
+
+[[tlm]]
+type = "uint8_t"
+name = "MM_OPSMODE_PREV"
+exp = "(uint8_t)(mode_manager->previous_id)"
+desc = "直前モード番号"
+
+[[tlm]]
+type = "uint8_t"
+name = "TDSP_CURRENT_ID"
+exp = "(uint8_t)(TDSP_info->task_list_id)"
+desc = "現状 TaskList ID"
+
+[[tlm]]
+type = "uint32_t"
+name = "TDSP_CMD_LAST_ERR_TIME_MASTER"
+exp = "(uint32_t)(TDSP_info->tskd.prev_err.time.total_cycle)"
+desc = "最新内部コマンド実行時刻"
+
+[[tlm]]
+type = "uint8_t"
+name = "TDSP_CMD_LAST_ERR_TIME_STEP"
+exp = "(uint8_t)(TDSP_info->tskd.prev_err.time.step)"
+
+[[tlm]]
+type = "uint16_t"
+name = "TDSP_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(TDSP_info->tskd.prev_err.code)"
+desc = "最新内部コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TDSP_CMD_LAST_ERR_STS"
+exp = "(int32_t)(TDSP_info->tskd.prev_err.sts)"
+status = "7.1"
+desc = "最新内部コマンド実行結果"
+
+[[tlm]]
+type = "int32_t"
+name = "GS_RET_FROM_IF_RX"
+exp = "(int32_t)gs_driver->latest_info->ret_from_if_rx"
+
+[[tlm]]
+type = "uint8_t"
+name = "TCTF_LAST_RECV_ACK"
+exp = "(uint8_t)gs_driver->latest_info->rec_status"
+status = "2.8"
+desc = "TC Transer Frame DS処理結果"
+
+[[tlm]]
+type = "uint8_t"
+name = "TCTF_VALIDATE_STATUS"
+exp = "(uint8_t)gs_driver->latest_info->tctf_validate_status"
+status = "18.1"
+desc = "TC Transer Frame 検証結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TCTF_LAST_RECV_TIME"
+exp = "(uint32_t)gs_driver->latest_info->last_rec_time"
+desc = "最新TC Transer Frame受信時刻"
+
+[[tlm]]
+type = "uint8_t"
+name = "TCTF_FARM_PW"
+exp = "(uint8_t)gs_validate_info->positive_window_width"
+desc = "FARM-1 Positive Window Width"
+
+[[tlm]]
+type = "uint8_t"
+name = "TCP_LAST_RECV_ACK"
+exp = "(uint8_t)gs_driver->latest_info->cmd_ack"
+status = "13.1"
+desc = "最新TCPacket受信処理結果"
+
+[[tlm]]
+type = "uint8_t"
+name = "TLM_TX_PORT_TYPE"
+exp = "(uint8_t)gs_driver->tlm_tx_port_type"
+status = "2.1"
+desc = "TLM の送信情報がUARTのものかGSのものか"
+
+[[tlm]]
+type = "uint32_t"
+name = "GS_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_gs_cmd_list)"
+desc = "地上局コマンドカウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "GS_CMD_LAST_EXEC_TIME"
+exp = "(uint32_t)(gs_command_dispatcher->prev.time.total_cycle)"
+desc = "最新地上局コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "GS_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(gs_command_dispatcher->prev.code)"
+desc = "最新地上局コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "GS_CMD_LAST_EXEC_STS"
+exp = "(int32_t)(gs_command_dispatcher->prev.sts)"
+status = "7.1"
+desc = "最新地上局コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "GS_CMD_LAST_ERR_TIME"
+exp = "(uint32_t)(gs_command_dispatcher->prev_err.time.total_cycle)"
+desc = "最新地上局コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "GS_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(gs_command_dispatcher->prev_err.code)"
+desc = "最新地上局コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "GS_CMD_LAST_ERR_STS"
+exp = "(int32_t)(gs_command_dispatcher->prev_err.sts)"
+status = "7.1"
+desc = "最新地上局コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "GS_CMD_ERR_COUNTER"
+exp = "(uint32_t)(gs_command_dispatcher->error_counter)"
+desc = "地上局コマンド実行異常カウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "RT_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_rt_cmd_list)"
+desc = "内部コマンドカウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "RT_CMD_LAST_EXEC_TIME"
+exp = "(uint32_t)(realtime_command_dispatcher->prev.time.total_cycle)"
+desc = "最新内部コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "RT_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(realtime_command_dispatcher->prev.code)"
+desc = "最新内部コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "RT_CMD_LAST_EXEC_STS"
+exp = "(int32_t)(realtime_command_dispatcher->prev.sts)"
+status = "7.1"
+desc = "最新内部コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "RT_CMD_LAST_ERR_TIME"
+exp = "(uint32_t)(realtime_command_dispatcher->prev_err.time.total_cycle)"
+desc = "最新内部コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "RT_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(realtime_command_dispatcher->prev_err.code)"
+desc = "最新内部コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "RT_CMD_LAST_ERR_STS"
+exp = "(int32_t)(realtime_command_dispatcher->prev_err.sts)"
+status = "7.1"
+desc = "最新内部コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "RT_CMD_ERR_COUNTER"
+exp = "(uint32_t)(realtime_command_dispatcher->error_counter)"
+desc = "地上局コマンド実行異常カウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL0_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_tl_cmd_list[0])"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL0_CMD_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[0]))"
+desc = "TL0登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL0_CMD_LAST_EXEC_TIME"
+exp = "(uint32_t)(timeline_command_dispatcher[0].prev.time.total_cycle)"
+desc = "最新TL0コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL0_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[0].prev.code)"
+desc = "最新TL0コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TL0_CMD_LAST_EXEC_STS"
+exp = "(int32_t)(timeline_command_dispatcher[0].prev.sts)"
+status = "7.1"
+desc = "最新TL0コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL0_CMD_LAST_ERR_TIME"
+exp = "(uint32_t)(timeline_command_dispatcher[0].prev_err.time.total_cycle)"
+desc = "最新TL0コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL0_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[0].prev_err.code)"
+desc = "最新TL0コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TL0_CMD_LAST_ERR_STS"
+exp = "(int32_t)(timeline_command_dispatcher[0].prev_err.sts)"
+status = "7.1"
+desc = "最新TL0コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL0_CMD_ERR_COUNTER"
+exp = "(uint32_t)(timeline_command_dispatcher[0].error_counter)"
+desc = "地上局コマンド実行異常カウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL0_CMD_SOE_FLAG"
+exp = "(uint8_t)(timeline_command_dispatcher[0].stop_on_error)"
+status = "2.3"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL0_CMD_LOCKOUT_FLAG"
+exp = "(uint8_t)(timeline_command_dispatcher[0].lockout)"
+status = "2.4"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL0_NEXT_TIME"
+exp = "(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet)))"
+desc = "次TL0コマンド実行時刻"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL0_NEXT_ID"
+exp = "(uint16_t)(PL_is_empty(&(PH_tl_cmd_list[0])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[0]))->packet)))"
+desc = "次TL0コマンドID"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL1_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_tl_cmd_list[1])"
+desc = "TL1コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL1_CMD_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[1]))"
+desc = "TL1登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL1_CMD_LAST_EXEC_TIME"
+exp = "(uint32_t)(timeline_command_dispatcher[1].prev.time.total_cycle)"
+desc = "最新TL1コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL1_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[1].prev.code)"
+desc = "最新TL1コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TL1_CMD_LAST_EXEC_STS"
+exp = "(int32_t)(timeline_command_dispatcher[1].prev.sts)"
+status = "7.1"
+desc = "最新TL1コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL1_CMD_LAST_ERR_TIME"
+exp = "(uint32_t)(timeline_command_dispatcher[1].prev_err.time.total_cycle)"
+desc = "最新TL1コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL1_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[1].prev_err.code)"
+desc = "最新TL1コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TL1_CMD_LAST_ERR_STS"
+exp = "(int32_t)(timeline_command_dispatcher[1].prev_err.sts)"
+status = "7.1"
+desc = "最新TL1コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL1_CMD_ERR_COUNTER"
+exp = "(uint32_t)(timeline_command_dispatcher[1].error_counter)"
+desc = "地上局コマンド実行異常カウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL1_CMD_SOE_FLAG"
+exp = "(uint8_t)(timeline_command_dispatcher[1].stop_on_error)"
+status = "2.3"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL1_CMD_LOCKOUT_FLAG"
+exp = "(uint8_t)(timeline_command_dispatcher[1].lockout)"
+status = "2.4"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL1_NEXT_TIME"
+exp = "(PL_is_empty(&(PH_tl_cmd_list[1])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[1]))->packet)))"
+desc = "次TL1コマンド実行時刻"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL1_NEXT_ID"
+exp = "(uint16_t)(PL_is_empty(&(PH_tl_cmd_list[1])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[1]))->packet)))"
+desc = "次TL1コマンドID"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL2_CMD_COUNTER"
+exp = "PL_count_executed_nodes(&PH_tl_cmd_list[2])"
+desc = "TL1コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL2_CMD_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[2]))"
+desc = "TL1登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL2_CMD_LAST_EXEC_TIME"
+exp = "(uint32_t)(timeline_command_dispatcher[2].prev.time.total_cycle)"
+desc = "最新TL1コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL2_CMD_LAST_EXEC_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[2].prev.code)"
+desc = "最新TL1コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TL2_CMD_LAST_EXEC_STS"
+exp = "(int32_t)(timeline_command_dispatcher[2].prev.sts)"
+status = "7.1"
+desc = "最新TL1コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL2_CMD_LAST_ERR_TIME"
+exp = "(uint32_t)(timeline_command_dispatcher[2].prev_err.time.total_cycle)"
+desc = "最新TL1コマンド実行時刻"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL2_CMD_LAST_ERR_ID"
+exp = "(uint16_t)(timeline_command_dispatcher[2].prev_err.code)"
+desc = "最新TL1コマンドID"
+
+[[tlm]]
+type = "int32_t"
+name = "TL2_CMD_LAST_ERR_STS"
+exp = "(int32_t)(timeline_command_dispatcher[2].prev_err.sts)"
+status = "7.1"
+desc = "最新TL1コマンド実行結果"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL2_CMD_ERR_COUNTER"
+exp = "(uint32_t)(timeline_command_dispatcher[2].error_counter)"
+desc = "地上局コマンド実行異常カウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL2_CMD_SOE_FLAG"
+exp = "(uint8_t)(timeline_command_dispatcher[2].stop_on_error)"
+status = "2.3"
+
+[[tlm]]
+type = "uint8_t"
+name = "TL2_CMD_LOCKOUT_FLAG"
+exp = "(uint8_t)(timeline_command_dispatcher[2].lockout)"
+status = "2.4"
+
+[[tlm]]
+type = "uint32_t"
+name = "TL2_NEXT_TIME"
+exp = "(PL_is_empty(&(PH_tl_cmd_list[2])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[2]))->packet)))"
+desc = "次TL1コマンド実行時刻"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint16_t"
+name = "TL2_NEXT_ID"
+exp = "(uint16_t)(PL_is_empty(&(PH_tl_cmd_list[2])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[2]))->packet)))"
+desc = "次TL1コマンドID"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint8_t"
+name = "BCT_BLK_PTR"
+exp = "(uint8_t)(block_command_table->pos.block)"
+desc = "BCT ブロックポインタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "BCT_CMD_PTR"
+exp = "(uint8_t)(block_command_table->pos.cmd)"
+desc = "BCT コマンドポインタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "BCT_REGD_TIME"
+exp = "((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1)))"
+desc = "BCT 登録コマンド時刻"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint16_t"
+name = "BCT_REGD_ID"
+exp = "(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1)))"
+desc = "BCT 登録コマンドID"
+note = "変数指定が大変なことに…"
+
+[[tlm]]
+type = "uint8_t"
+name = "MS_BUFFER_AVAILABLE"
+exp = "gs_driver->ccsds_info.buffer_num"
+desc = "CCSDS MS VCDU 使用量"
+
+[[tlm]]
+type = "uint32_t"
+name = "MS_T2M_FLUSH_INTERVAL"
+exp = "(uint32_t)(DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval)"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "RP_T2M_FLUSH_INTERVAL"
+exp = "(uint32_t)(DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval)"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint32_t"
+name = "MS_TLM_COUNTER"
+exp = "PL_count_executed_nodes(&PH_ms_tlm_list)"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "MS_TLM_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_ms_tlm_list))"
+desc = "TL0登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "ST_TLM_COUNTER"
+exp = "PL_count_executed_nodes(&PH_st_tlm_list)"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "ST_TLM_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_st_tlm_list))"
+desc = "TL0登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "RP_TLM_COUNTER"
+exp = "PL_count_executed_nodes(&PH_rp_tlm_list)"
+desc = "TL0コマンドカウンタ"
+
+[[tlm]]
+type = "uint8_t"
+name = "RP_TLM_QUEUED"
+exp = "(uint8_t)(PL_count_active_nodes(&PH_rp_tlm_list))"
+desc = "TL0登録コマンド数"
+
+[[tlm]]
+type = "uint32_t"
+name = "TCI_TX_CYCLE"
+exp = "(uint32_t)gs_driver->latest_info->send_cycle"
+desc = "時刻校正情報::送出サイクル"
+
+[[tlm]]
+type = "uint32_t"
+name = "TCI_TX_BITRATE"
+exp = "gs_driver->driver_ccsds.ccsds_config.bitrate"
+desc = "時刻校正情報::送出ビットレート"
+
+[[tlm]]
+type = "uint8_t"
+name = "TCI_VCID"
+exp = "(uint8_t)(gs_driver->info[2].vcid)"
+desc = "時刻構成情報::送出VCID"
+
+[[tlm]]
+type = "uint32_t"
+name = "TCI_VCDU_COUNTER"
+exp = "gs_driver->latest_info->vcdu_counter"
+desc = "時刻校正情報::送出VCDUカウンタ"
+
