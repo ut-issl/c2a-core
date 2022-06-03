@@ -17,6 +17,10 @@ else()
   endif()
 endif()
 
+if(BUULD_C2A_AS_SILS_FW)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC SILS_FW)
+endif()
+
 # Build option
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PUBLIC "/W4")
