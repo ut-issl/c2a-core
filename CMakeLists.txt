@@ -6,6 +6,7 @@ project(C2A_CORE)
 option(USE_ALL_C2A_CORE_APPS    "use C2A-core all Applications" ON)
 option(USE_ALL_C2A_CORE_LIB     "use C2A-core all Library" ON)
 option(USE_32BIT_COMPILER       "use 32bit compiler" OFF)
+option(BUILD_C2A_AS_CXX         "build C2A as C++" OFF)
 option(BUILD_C2A_AS_UTF8        "build C2A as UTF-8" ON)
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
