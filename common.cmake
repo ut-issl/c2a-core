@@ -24,7 +24,9 @@ if(MSVC)
   if(BUILD_C2A_AS_CXX)
     target_compile_options(${PROJECT_NAME} PUBLIC "/TP") # Compile C codes as C++
   endif()
-  target_compile_options(${PROJECT_NAME} PUBLIC "/source-charset:utf-8")
+  if(BUILD_C2A_AS_UTF8)
+    target_compile_options(${PROJECT_NAME} PUBLIC "/source-charset:utf-8")
+  endif()
 else()
   # SJIS
   # if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
