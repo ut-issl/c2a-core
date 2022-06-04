@@ -741,10 +741,10 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   target_sorted_idx.group = group;
   target_sorted_idx.local = local;
   p_searched_sorted_idx = (EH_RuleSortedIndex*)bsearch(&target_sorted_idx,
-                                               event_handler_.sorted_idxes,
-                                               event_handler_.rule_table.registered_rule_num,
-                                               sizeof(EH_RuleSortedIndex),
-                                               EH_compare_sorted_index_for_bsearch_);
+                                                       event_handler_.sorted_idxes,
+                                                       event_handler_.rule_table.registered_rule_num,
+                                                       sizeof(EH_RuleSortedIndex),
+                                                       EH_compare_sorted_index_for_bsearch_);
   if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   found_idx = (uint16_t)(p_searched_sorted_idx - (&event_handler_.sorted_idxes[0]));
 
@@ -1145,7 +1145,7 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
-  // 無限ループ回避のため for で
+  // 無限ループ回避のため for
   for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
@@ -1167,7 +1167,7 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
-  // 無限ループ回避のため for で
+  // 無限ループ回避のため for
   for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_inactivate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;

@@ -21,6 +21,7 @@
  *          - 対応 BC 展開後の activate について
  *            - EH Rule がマッチし，対応 BC が展開された時，その EH_RULE_ID は自動的に inactivate される
  *            - そのため，常に対応し続けたいような Rule については，その対応 BC のどこか（基本的には不感時間などを考慮して末尾など）で activate (or init) する cmd を仕込ませておくと良い
+ *          - EH_clear_rule_counter_by_event は適切に使うととても便利（詳細はこの関数の doxygen コメントを参照）
  * @note  多段の EH 対応の組み方
  *        多段の EH を組む場合，
  *          EH_RuleSettings.event.group: EL_CORE_GROUP_EH_MATCH_RULE
