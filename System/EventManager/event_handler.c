@@ -873,6 +873,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_by_event_group_(EL_GR
                                                        EH_compare_sorted_index_by_event_group_for_bsearch_);
   if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   found_idx = (uint16_t)(p_searched_sorted_idx - (&event_handler_.sorted_idxes[0]));
+  *least_found_sorted_idx = found_idx;
 
   // ひとまず見つかったので，最も若いものを探す
   for (i = found_idx; i >= 0; --i)
@@ -1202,8 +1203,8 @@ static EH_CHECK_RULE_ACK EH_check_rule_id_(EH_RULE_ID id)
 static void EH_exec_func_by_event_group_(EL_GROUP group,
                                          EH_CHECK_RULE_ACK (*func)(EH_RULE_ID))
 {
-  uint16_t least_found_sorted_idx;
-  uint16_t found_sorted_idx_num;
+  uint16_t least_found_sorted_idx = 0;
+  uint16_t found_sorted_idx_num = 0;
   EH_RULE_SORTED_INDEX_ACK search_ack;
   uint16_t i;
 
