@@ -1695,6 +1695,92 @@ def test_event_handler_responded_log():
     disable_eh_exec()
 
 
+@pytest.mark.real
+@pytest.mark.sils
+def test_event_handler_by_event_group_func():
+    print("")
+    print("test_event_handler_by_event_group_func")
+
+    # 初期化
+    init_el_and_eh()
+
+    # Cmd_EH_INIT_RULE_BY_EVENT_GROUP
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE,
+        (EH_RULE_TEST0,)
+    )
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_RULE_COUNTER,
+        (EH_RULE_TEST2, 1)
+    )
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_INIT_RULE_BY_EVENT_GROUP,
+        (EL_GROUP_TEST_EH,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST0,)
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+    assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == "ACTIVE"
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST2,)
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.COUNTER"] == 0
+    assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == "ACTIVE"
+
+    # Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_INACTIVATE_RULE_BY_EVENT_GROUP,
+        (EL_GROUP_TEST_EH,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST0,)
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == "INACTIVE"
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST2,)
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == "INACTIVE"
+
+    # Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_EH_ACTIVATE_RULE_BY_EVENT_GROUP,
+        (EL_GROUP_TEST_EH,),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST0,)
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == "ACTIVE"
+    ope.send_rt_cmd(
+        c2a_enum.Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM,
+        (EH_RULE_TEST2,)
+    )
+    tlm_EH = download_eh_tlm()
+    assert tlm_EH["EH.TARTGET_RULE.SETTINGS.IS_ACTIVE"] == "ACTIVE"
+
+    # Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL
+    # Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL
+    # Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL
+    # この３つは結局 group が EL_CORE_GROUP_EH_MATCH_RULE になってしまい，意味がない？
+
+
 # 最後のお掃除
 @pytest.mark.real
 @pytest.mark.sils
