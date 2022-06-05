@@ -77,6 +77,11 @@
  *                EL_CORE_GROUP_EH_MATCH_RULE / EH_Rule1 / EH / err_level
  * @note  多段の EH 対応のため， EL_ERROR_LEVEL_EH の Event をルールに設定することは，
  *        多段対応時 (つまり group == EL_CORE_GROUP_EH_MATCH_RULE) を除いてできない
+ * @note  by_event_group 関数について
+ *        複数の EH_Rule が同じ 対応 BC を設定している場合，その BC ではそのすべての EH_Rule を再度 activate させないといけない．
+ *        それを１つ１つ指定するのはめんどくさいし，漏れが起きやすいので，それらの EH_Rule.settings で共通の event.group を指定しまとめ，
+ *        event.group 単位で操作できるようにしたもの．
+ *        なお， group での操作によって，想定外の EH_Rule まで操作されないように注意すること
  * @note  EH での Event 発行は以下
  *          - EL_CORE_GROUP_EVENT_HANDLER
  *            - EH に関する様々なエラー
@@ -106,11 +111,11 @@
 #define EH_LOG_TLM_PAGE_SIZE  (64)  //!< EH対応のログテーブルの1テレメトリパケット(=1ページ)に格納されるログ数（ページネーション用）
 #define EH_LOG_TLM_PAGE_MAX   (2)   //!< EH対応のログテーブルのページ数（ページネーション用）
 
-#define EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES   (4)     //!< EL_Event の ID が重複した EH_Rule を最大何個まで重複させてよいか
-#define EH_MAX_RESPONSE_NUM_DEFAULT           (8)     //!< 一度の実行で対応する最大数（初期値）
-#define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< 一度の実行でチェックする event_logger の event log の最大値（初期値）
+#define EH_MAX_RULE_NUM_OF_EL_ID_DUPLICATES   (4)     //!< EL_Event の ID が重複した EH_Rule を最大何個まで重複させてよいか (uint8_t を想定)
+#define EH_MAX_RESPONSE_NUM_DEFAULT           (8)     //!< 一度の実行で対応する最大数（初期値） (uint8_t を想定)
+#define EH_MAX_CHECK_EVENT_NUM_DEFAULT        (64)    /*!< 一度の実行でチェックする event_logger の event log の最大値（初期値） (uint16_t を想定)
                                                            TL内での実行時間を調整するために設定する． */
-#define EH_MAX_MULTI_LEVEL_NUM_DEFAULT        (4)     //!< 多段の EH 対応の設定可能な最大段数（初期値）
+#define EH_MAX_MULTI_LEVEL_NUM_DEFAULT        (4)     //!< 多段の EH 対応の設定可能な最大段数（初期値） (uint8_t を想定)
 
 // 以下のファイルにて，次のパラメタを上書き設定できる
 // EH_RULE_TLM_PAGE_SIZE
@@ -395,6 +400,28 @@ EH_CHECK_RULE_ACK EH_init_rule(EH_RULE_ID id);
 EH_CHECK_RULE_ACK EH_init_rule_for_multi_level(EH_RULE_ID id);
 
 /**
+ * @brief  EH_RuleSettings.event.group 指定による一括でのルールの初期化
+ *
+ *         EH_activate_rule した後， EH_clear_rule_counter が実行される
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   group での操作によって，想定外の EH_Rule まで操作されないように注意すること
+ * @param  group: EL_GROUP
+ * @return void
+ */
+void EH_init_rule_by_event_group(EL_GROUP group);
+
+/**
+ * @brief  EH_RuleSettings.event.group 指定による一括でのルールの初期化 (multi-level)
+ *
+ *         EH_activate_rule した後， EH_clear_rule_counter が実行される
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   group での操作によって，想定外の EH_Rule まで操作されないように注意すること
+ * @param  group: EL_GROUP
+ * @return void
+ */
+void EH_init_rule_by_event_group_for_multi_level(EL_GROUP group);
+
+/**
  * @brief  ルールの有効化
  * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
  * @note   rule_counter はクリアされない
@@ -428,6 +455,45 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id);
  * @return EH_CHECK_RULE_ACK
  */
 EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id);
+
+/**
+ * @brief  EH_RuleSettings.event.group 指定による一括でのルールの有効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   rule_counter はクリアされない
+ * @note   group での操作によって，想定外の EH_Rule まで操作されないように注意すること
+ * @param  group: EL_GROUP
+ * @return void
+ */
+void EH_activate_rule_by_event_group(EL_GROUP group);
+
+/**
+ * @brief  EH_RuleSettings.event.group 指定による一括でのルールの無効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   group での操作によって，想定外の EH_Rule まで操作されないように注意すること
+ * @param  group: EL_GROUP
+ * @return void
+ */
+void EH_inactivate_rule_by_event_group(EL_GROUP group);
+
+/**
+ * @brief  EH_RuleSettings.event.group 指定による一括でのルールの有効化 (multi-level)
+ * @note   多段の場合，指定した EL_GROUP で指定された EH_RULE_ID より下位のすべてのルールを有効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   group での操作によって，想定外の EH_Rule まで操作されないように注意すること
+ * @param  group: EL_GROUP
+ * @return void
+ */
+void EH_activate_rule_by_event_group_for_multi_level(EL_GROUP group);
+
+/**
+ * @brief  EH_RuleSettings.event.group 指定による一括でのルールの無効化 (multi-level)
+ * @note   多段の場合，指定した EL_GROUP で指定された EH_RULE_ID より下位のすべてのルールを無効化
+ * @note   基本的にはコマンドで操作するので，直接使うことはあまり想定していない
+ * @note   group での操作によって，想定外の EH_Rule まで操作されないように注意すること
+ * @param  group: EL_GROUP
+ * @return void
+ */
+void EH_inactivate_rule_by_event_group_for_multi_level(EL_GROUP group);
 
 /**
  * @brief ルールが有効かどうか取得する
@@ -534,6 +600,19 @@ CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* p
  * @brief 新しい EL_Event 発生を検出するためのカウンタを強制的に EL のカウンタに合わせる
  */
 CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet);
+
+// by_event_group 関数
+CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
 #endif  // EL_IS_ENABLE_TLOG
 
