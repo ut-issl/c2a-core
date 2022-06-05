@@ -1238,6 +1238,7 @@ EH_CHECK_RULE_ACK EH_init_rule(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
+  EH_activate_rule(id);
   EH_clear_rule_counter(id);
   return EH_CHECK_RULE_ACK_OK;
 }
