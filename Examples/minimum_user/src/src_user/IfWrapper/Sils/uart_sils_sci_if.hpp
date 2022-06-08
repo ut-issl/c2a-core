@@ -7,21 +7,13 @@
 #ifndef UART_SILS_SCI_IF_HPP_
 #define UART_SILS_SCI_IF_HPP_
 
-#include <Windows.h>
+#include "sils_sci_if.hpp"
 
-class SCIComPortUart
+class SCIComPortUart : public SCIComPort
 {
 public:
-  SCIComPortUart(void);
-  ~SCIComPortUart(void);
-
-  int Send(unsigned char* buffer, size_t length, size_t offset);
-  int Receive(unsigned char* buffer, size_t length, size_t offset);
-
-private:
-  HANDLE myHComPort_;
-  DCB config_;
-  bool init_success;
+    SCIComPortUart(int port) : SCIComPort(port) {};
+    ~SCIComPortUart(void) {};
 };
 
 int SILS_SCI_UART_IF_init();
