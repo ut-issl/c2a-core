@@ -115,6 +115,12 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM].cmd_func = Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM;
   cmd_table[Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM].cmd_func = Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM;
   cmd_table[Cmd_CODE_EH_MATCH_EVENT_COUNTER_TO_EL].cmd_func = Cmd_EH_MATCH_EVENT_COUNTER_TO_EL;
+  cmd_table[Cmd_CODE_EH_INIT_RULE_BY_EVENT_GROUP].cmd_func = Cmd_EH_INIT_RULE_BY_EVENT_GROUP;
+  cmd_table[Cmd_CODE_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL].cmd_func = Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL;
+  cmd_table[Cmd_CODE_EH_ACTIVATE_RULE_BY_EVENT_GROUP].cmd_func = Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP;
+  cmd_table[Cmd_CODE_EH_INACTIVATE_RULE_BY_EVENT_GROUP].cmd_func = Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP;
+  cmd_table[Cmd_CODE_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL].cmd_func = Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL;
+  cmd_table[Cmd_CODE_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL].cmd_func = Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL;
   cmd_table[Cmd_CODE_EVENT_UTIL_ENABLE_EH_EXEC].cmd_func = Cmd_EVENT_UTIL_ENABLE_EH_EXEC;
   cmd_table[Cmd_CODE_EVENT_UTIL_DISABLE_EH_EXEC].cmd_func = Cmd_EVENT_UTIL_DISABLE_EH_EXEC;
   cmd_table[Cmd_CODE_EVENT_UTIL_EXEC_EH].cmd_func = Cmd_EVENT_UTIL_EXEC_EH;
@@ -283,6 +289,12 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_EH_INIT_RULE_BY_EVENT_GROUP].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_ACTIVATE_RULE_BY_EVENT_GROUP].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_INACTIVATE_RULE_BY_EVENT_GROUP].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_TF_REGISTER_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TF_REGISTER_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_CA_REGISTER_CMD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
