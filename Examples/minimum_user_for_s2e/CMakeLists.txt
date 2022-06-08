@@ -19,6 +19,8 @@ option(USE_SCI_COM_UART "Use SCI_COM_UART" OFF)
 
 option(USE_SILS_MOCKUP "Use SILS mockup for build C2A with minimal user in C89 only" OFF)
 
+option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
+
 if(USE_SILS_MOCKUP)
   set(BUILD_C2A_AS_CXX OFF)
 endif()
@@ -31,7 +33,6 @@ set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_core)
 set(C2A_USER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/src_user)
 
 include_directories(src)
-add_definitions(-DSILS_FW)
 
 # Output debug print to SILS console window
 option(SHOW_DEBUG_PRINT_ON_SILS "Show debug print")
