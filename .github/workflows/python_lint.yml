@@ -16,7 +16,7 @@ jobs:
       - name: Set up python environment
         uses: actions/setup-python@v4
         with:
-          python-version: '.python-version'
+          python-version-file: .github/workflows/.python-version
 
       - name: flake8 Lint
         uses: reviewdog/action-flake8@v3
