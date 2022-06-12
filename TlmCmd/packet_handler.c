@@ -334,4 +334,37 @@ static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 }
 #endif
 
+const PacketList* PH_get_packet_list_from_exec_type(CCP_EXEC_TYPE type)
+{
+  switch (type)
+  {
+  case CCP_EXEC_TYPE_GS:
+    return &PH_gs_cmd_list;
+
+  case CCP_EXEC_TYPE_TL_FROM_GS:
+  case CCP_EXEC_TYPE_UTL:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS];
+
+  case CCP_EXEC_TYPE_RT:
+    return &PH_rt_cmd_list;
+
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC:
+    return &PH_tl_cmd_list[TLCD_ID_DEPLOY_BC];
+
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
+    return &PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM];
+
+#ifdef TLCD_ENABLE_MISSION_TL
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION];
+#endif
+
+  default:
+    break;
+  }
+
+  return NULL;
+}
+
 #pragma section

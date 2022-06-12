@@ -10,7 +10,7 @@
 #include <stddef.h>     // for NULL
 #include <string.h>
 
-static CommonCmdPacket* CCP_util_packet_;
+static CommonCmdPacket CCP_util_packet_;
 
 /**
  * @brief NOP cmd の RTC CCP を作る
@@ -41,6 +41,8 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
   //        Cmd_AM_EXECUTE_APP の引数取得部分と同時に直すべきだが，パラメタサイズは CmdDB から取得可能なはず．
   uint8_t param[4];
   size_t  id_temp = id;
+
+  if (packet == NULL) return;
   endian_memcpy(param, &id_temp, 4);
 
   CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, 4);
@@ -48,6 +50,11 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
   if (param == NULL && len != 0)
   {
     CCP_form_nop_rtc_(packet);
@@ -72,6 +79,11 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
 
 CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
   if (param == NULL && len != 0)
   {
     CCP_form_nop_rtc_(packet);
@@ -88,7 +100,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 
   CCP_set_common_hdr(packet);
   CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);  // TL なので，一旦仮で入れる
   CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
   CCP_set_ti(packet, ti);
   CCP_set_param(packet, param, len);
@@ -99,6 +111,11 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];
+
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
 
   if ((tl_no >= TLCD_ID_MAX) || (block_no >= BCT_MAX_BLOCKS))
   {
@@ -113,46 +130,113 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
 }
 
-PH_ACK CCP_register_app_cmd(cycle_t ti, AR_APP_ID id)
+void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
 {
-  CCP_form_app_cmd(CCP_util_packet_, ti, id);
-  return PH_analyze_cmd_packet(CCP_util_packet_);
+  if (packet == NULL) return;
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
+  CCP_set_ti(packet, ti);
 }
 
 PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
-  if (CCP_form_rtc(CCP_util_packet_, cmd_id, param, len) != CCP_UTIL_ACK_OK)
+  if (CCP_form_rtc(&CCP_util_packet_, cmd_id, param, len) != CCP_UTIL_ACK_OK)
   {
     return PH_ACK_INVALID_PACKET;
   }
 
-  return PH_analyze_cmd_packet(CCP_util_packet_);
+  return PH_analyze_cmd_packet(&CCP_util_packet_);
 }
 
-PH_ACK CCP_register_tlc(cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
-  if (CCP_form_tlc(CCP_util_packet_, ti, cmd_id, param, len) != CCP_UTIL_ACK_OK)
+  CCP_EXEC_TYPE type = CCP_get_exec_type_from_tlcd_id(tlcd_id);
+
+  if (type == CCP_EXEC_UNKNOWN)
   {
     return PH_ACK_INVALID_PACKET;
   }
 
-  return PH_analyze_cmd_packet(CCP_util_packet_);
-}
-
-PH_ACK CCP_register_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no)
-{
-  if (CCP_form_block_deploy_cmd(CCP_util_packet_, tl_no, block_no) != CCP_UTIL_ACK_OK)
+  if (CCP_form_tlc(&CCP_util_packet_, ti, cmd_id, param, len) != CCP_UTIL_ACK_OK)
   {
     return PH_ACK_INVALID_PACKET;
   }
 
-  return PH_analyze_cmd_packet(CCP_util_packet_);
+  CCP_set_exec_type(&CCP_util_packet_, type);
+  return PH_analyze_cmd_packet(&CCP_util_packet_);
 }
 
-void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
+PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
-  CCP_set_ti(packet, ti);
+  CCP_EXEC_TYPE type = CCP_get_exec_type_from_tlcd_id(tlcd_id);
+  const PacketList* pl = PH_get_packet_list_from_exec_type(type);
+
+  if (pl == NULL) return PH_ACK_INVALID_PACKET;
+  if (PL_is_full(pl)) return PH_ACK_PL_LIST_FULL;
+
+  if (!PL_is_empty(pl))
+  {
+    cycle_t head = CCP_get_ti((const CommonCmdPacket*)(PL_get_head(pl)->packet));
+    cycle_t tail = CCP_get_ti((const CommonCmdPacket*)(PL_get_tail(pl)->packet));
+
+    if (head <= ti && ti <= tail)
+    {
+      uint16_t i;
+      uint16_t active_nodes = PL_count_active_nodes(pl);
+      const PL_Node* current = PL_get_head(pl);
+
+      for (i = 0; i < active_nodes; ++i)
+      {
+        cycle_t current_ti;
+
+        if (current == NULL) break;
+        current_ti = CCP_get_ti((const CommonCmdPacket*)(current->packet));
+        if (current_ti < ti)
+        {
+          // do nothing
+        }
+        else if (current_ti == ti)
+        {
+          ++ti;
+        }
+        else
+        {
+          break;
+        }
+
+        current = current->next;
+      }
+    }
+  }
+
+  if (CCP_form_tlc(&CCP_util_packet_, ti, cmd_id, param, len) != CCP_UTIL_ACK_OK)
+  {
+    return PH_ACK_INVALID_PACKET;
+  }
+  CCP_set_exec_type(&CCP_util_packet_, type);
+  return PH_analyze_cmd_packet(&CCP_util_packet_);
+}
+
+CCP_EXEC_TYPE CCP_get_exec_type_from_tlcd_id(TLCD_ID tlcd_id)
+{
+  switch (tlcd_id)
+  {
+  case TLCD_ID_FROM_GS:
+    return CCP_EXEC_TYPE_TL_FROM_GS;
+
+  case TLCD_ID_DEPLOY_BC:
+    return CCP_EXEC_TYPE_TL_DEPLOY_BC;
+
+  case TLCD_ID_DEPLOY_TLM:
+    return CCP_EXEC_TYPE_TL_DEPLOY_TLM;
+
+#ifdef TLCD_ENABLE_MISSION_TL
+  case TLCD_ID_FROM_GS_FOR_MISSION:
+    return CCP_EXEC_TYPE_TL_FOR_MISSION;
+#endif
+
+  default:
+    return CCP_EXEC_TYPE_UNKNOWN;
+  }
 }
 
 uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n)

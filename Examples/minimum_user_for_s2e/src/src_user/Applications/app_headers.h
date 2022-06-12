@@ -24,6 +24,7 @@
 #include "DriverInstances/di_gs.h"
 
 // UserDefined
+#include "UserDefined/TestApp/test_ccp_util.h"
 #include "UserDefined/debug_apps.h"
 
 #endif
