@@ -41,6 +41,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
   //        Cmd_AM_EXECUTE_APP の引数取得部分と同時に直すべきだが，パラメタサイズは CmdDB から取得可能なはず．
   uint8_t param[4];
   size_t  id_temp = id;
+  if (packet == NULL) return;
   endian_memcpy(param, &id_temp, 4);
 
   CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, 4);
@@ -48,6 +49,11 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
   if (param == NULL && len != 0)
   {
     CCP_form_nop_rtc_(packet);
@@ -72,6 +78,11 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
 
 CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
   if (param == NULL && len != 0)
   {
     CCP_form_nop_rtc_(packet);
@@ -99,6 +110,11 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];
+
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
 
   if ((tl_no >= TLCD_ID_MAX) || (block_no >= BCT_MAX_BLOCKS))
   {

@@ -80,7 +80,7 @@ void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
  * @param[in] cmd_id: CMD_CODE
  * @param[in] param:  パラメタ
  * @param[in] len:    パラメタ長
- * @return CCP_UTIL_ACK
+ * @return PH_ACK
  */
 PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
@@ -91,7 +91,7 @@ PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
  * @param[in] cmd_id:  CMD_CODE
  * @param[in] param:   パラメタ
  * @param[in] len:     パラメタ長
- * @return CCP_UTIL_ACK
+ * @return PH_ACK
  */
 PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
