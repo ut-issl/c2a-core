@@ -96,14 +96,14 @@ PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief Timeline command を登録
+ * @brief Timeline command を登録 (ASAP 版)
  * @note  引数が不正なときは登録されない
  * @note  既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
- * @param[in] ti:     TI
+ * @param[in] ti:      TI
  * @param[in] tlcd_id: 登録する tl id
- * @param[in] cmd_id: CMD_CODE
- * @param[in] param:  パラメタ
- * @param[in] len:    パラメタ長
+ * @param[in] cmd_id:  CMD_CODE
+ * @param[in] param:   パラメタ
+ * @param[in] len:     パラメタ長
  * @return PH_ACK
  */
 PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
