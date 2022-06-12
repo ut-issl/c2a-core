@@ -107,4 +107,12 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet);
  */
 CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet);
 
+/**
+ * @brief CCP_EXEC_TYPE から PacketList を取得する
+ * @note  引数が不正 or 無い場合 NULL を返す
+ * @param[in] type: CCP_EXEC_TYPE
+ * @return PacketList の const ポインタ
+ */
+const PacketList* PH_get_packet_list_from_exec_type(CCP_EXEC_TYPE type);
+
 #endif
