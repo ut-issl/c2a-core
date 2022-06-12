@@ -6,7 +6,7 @@
 
 #include "test_ccp_util.h"
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
-#include "../../TlmCmd/command_definitions.h"
+#include "../../../TlmCmd/command_definitions.h"
 
 CCP_EXEC_STS Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet)
 {
