@@ -11,7 +11,7 @@
 CCP_EXEC_STS Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet)
 {
   cycle_t ti = CCP_get_param_from_packet(packet, 0, cycle_t);
-  PH_ACK ack = CCP_register_tlc_asap(ti, CCP_EXEC_TYPE_TL_FROM_GS, Cmd_CODE_NOP, NULL, 0);
+  PH_ACK ack = CCP_register_tlc_asap(ti, TLCD_ID_FROM_GS, Cmd_CODE_NOP, NULL, 0);
   if (ack != PH_ACK_TLC_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
 
   return CCP_EXEC_SUCCESS;
