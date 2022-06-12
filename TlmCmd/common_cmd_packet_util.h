@@ -22,20 +22,19 @@ typedef enum
 } CCP_UTIL_ACK;
 
 /**
- * @brief  App 実行コマンドを生成
- * @note   TL登録まで行う場合は `CCP_register_app_cmd` を使用
+ * @brief App 実行 TL コマンドを生成
+ * @note  生成した時は CCP_EXEC_TYPE_TL_FROM_GS
  * @param[in,out] packet: CCP
  * @param[in]     ti:     TI
- * @param[in]     type:   登録する TI type
  * @param[in]     id:     AR_APP_ID
  * @return void
  */
-void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id);
+void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
 
 /**
- * @brief  Realtime command を生成
- * @note   引数が不正なとき， packet は NOP RTC を返す
- * @note   RTC のキューに登録までする場合は `CCP_register_rtc` を使用
+ * @brief Realtime command を生成
+ * @note  引数が不正なとき， packet は NOP RTC を返す
+ * @note  RTC のキューに登録までする場合は `CCP_register_rtc` を使用
  * @param[in,out] packet: CCP
  * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
@@ -45,37 +44,21 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, A
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  Timeline command を生成
- * @note   引数が不正なとき， packet は NOP TLC を返す
- * @note   TL に登録までする場合は `CCP_register_tlc` を使用
- * @param[in,out] packet: CCP
- * @param[in]     ti:     TI
- * @param[in]     type:   登録する TI type
- * @param[in]     cmd_id: CMD_CODE
- * @param[in]     param:  パラメタ
- * @param[in]     len:    パラメタ長
+ * @brief Timeline command を生成
+ * @note  引数が不正なとき， packet は NOP TLC を返す
+ * @note  TL に登録までする場合は `CCP_register_tlc` を使用
+ * @param[in,out] packet:  CCP
+ * @param[in]     ti:      TI
+ * @param[in]     cmd_id:  CMD_CODE
+ * @param[in]     param:   パラメタ
+ * @param[in]     len:     パラメタ長
  * @return CCP_UTIL_ACK
  */
-CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  Timeline command を生成
- * @note   引数が不正なとき， packet は NOP TLC を返す
- * @note   既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
- * @param[in,out] packet: CCP
- * @param[in]     ti:     TI
- * @param[in]     type:   登録する TI type
- * @param[in]     cmd_id: CMD_CODE
- * @param[in]     param:  パラメタ
- * @param[in]     len:    パラメタ長
- * @return CCP_UTIL_ACK
- */
-CCP_UTIL_ACK CCP_form_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
-
-/**
- * @brief  BC展開 command を生成
- * @note   引数が不正なとき， packet は NOP RTC を返す
- * @note   RTC のキューに登録までする場合は `CCP_register_block_deploy_cmd` を使用
+ * @brief BC展開 command を生成
+ * @note  引数が不正なとき， packet は NOP RTC を返す
  * @param[in,out] packet:   CCP
  * @param[in]     tl_no:    Timeline no
  * @param[in]     block_no: BC ID
@@ -84,7 +67,7 @@ CCP_UTIL_ACK CCP_form_tlc_asap(CommonCmdPacket* packet, cycle_t ti, CCP_EXEC_TYP
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no);
 
 /**
- * @brief  Realtime Command から Timeline Command へ変換
+ * @brief Realtime Command から Timeline Command へ変換
  * @param[in,out] packet: 変換する packet
  * @param[in]     ti:     TI
  * @return void
@@ -92,16 +75,8 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
 
 /**
- * @brief  App 実行コマンドを登録
- * @param[in] ti:   TI
- * @param[in] type: 登録する TI type
- * @param[in] id:   AR_APP_ID
- * @return PH_ACK
- */
-PH_ACK CCP_register_app_cmd(cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id);
-
-/**
- * @brief  Realtime command を登録
+ * @brief Realtime command を登録
+ * @note  不正な時は登録されない
  * @param[in] cmd_id: CMD_CODE
  * @param[in] param:  パラメタ
  * @param[in] len:    パラメタ長
@@ -110,43 +85,36 @@ PH_ACK CCP_register_app_cmd(cycle_t ti, CCP_EXEC_TYPE type, AR_APP_ID id);
 PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  Timeline command を登録
- * @param[in] ti:     TI
- * @param[in] cmd_id: CMD_CODE
- * @param[in] param:  パラメタ
- * @param[in] len:    パラメタ長
+ * @brief Timeline command を登録
+ * @param[in] ti:      TI
+ * @param[in] tlcd_id: 登録する tl id
+ * @param[in] cmd_id:  CMD_CODE
+ * @param[in] param:   パラメタ
+ * @param[in] len:     パラメタ長
  * @return CCP_UTIL_ACK
  */
-PH_ACK CCP_register_tlc(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  Timeline command を登録
- * @note   引数が不正なとき， packet は NOP TLC を返す
- * @note   既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
+ * @brief Timeline command を登録
+ * @note  引数が不正なときは登録されない
+ * @note  既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
  * @param[in] ti:     TI
+ * @param[in] tlcd_id: 登録する tl id
  * @param[in] cmd_id: CMD_CODE
  * @param[in] param:  パラメタ
  * @param[in] len:    パラメタ長
  * @return PH_ACK
  */
-PH_ACK CCP_register_tlc_asap(cycle_t ti, CCP_EXEC_TYPE type, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  BC展開 command を登録
- * @note   RTC に登録される
- * @param[in] tl_no:    Timeline no
- * @param[in] block_no: BC ID
- * @return CCP_UTIL_ACK
+ * @brief TLCD ID から CCP_EXEC_TYPE を取得する
+ * @param[in] tlcd_id: 
+ * @note 引数が不正な場合は CCP_EXEC_TYPE_UNKNOWN を返す
+ * @return CCP_EXEC_TYPE
  */
-PH_ACK CCP_register_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no);
-
-/**
- * @brief CCP_EXEC_TYPE から PacketList を取得する
- * @note  引数が不正 or 無い場合 NULL を返す
- * @param[in] type: CCP_EXEC_TYPE
- * @return PacketList の const ポインタ
- */
-const PacketList* CCP_get_packet_list_from_exec_type(CCP_EXEC_TYPE type);
+CCP_EXEC_TYPE CCP_get_exec_type_from_tlcd_id(TLCD_ID tlcd_id);
 
 /**
  * @brief  CCP packet から，サイズが 1 byte のコマンド引数を取得する
