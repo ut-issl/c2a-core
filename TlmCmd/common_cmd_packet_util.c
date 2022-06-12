@@ -41,6 +41,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
   //        Cmd_AM_EXECUTE_APP の引数取得部分と同時に直すべきだが，パラメタサイズは CmdDB から取得可能なはず．
   uint8_t param[4];
   size_t  id_temp = id;
+
   if (packet == NULL) return;
   endian_memcpy(param, &id_temp, 4);
 
@@ -131,6 +132,7 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
 
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
 {
+  if (packet == NULL) return;
   CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
   CCP_set_ti(packet, ti);
 }
