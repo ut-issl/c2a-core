@@ -110,7 +110,7 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
 
 /**
  * @brief TLCD ID から CCP_EXEC_TYPE を取得する
- * @param[in] tlcd_id: 
+ * @param[in] tlcd_id: tl id
  * @note 引数が不正な場合は CCP_EXEC_TYPE_UNKNOWN を返す
  * @return CCP_EXEC_TYPE
  */
