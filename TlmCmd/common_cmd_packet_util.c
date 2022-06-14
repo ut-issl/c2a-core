@@ -108,6 +108,59 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
   return CCP_UTIL_ACK_OK;
 }
 
+CCP_UTIL_ACK CCP_form_sub_obc_rtc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+{
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
+  if (param == NULL && len != 0)
+  {
+    CCP_form_nop_rtc_(packet);
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
+  // FIXME: sub OBC のコマンドは cmd_table に保存されていないので param チェックできない
+
+  CCP_set_common_hdr(packet);
+  CCP_set_apid(packet, apid);
+  CCP_set_id(packet, cmd_id);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_RT);
+  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
+  CCP_set_ti(packet, 0); // RTの場合、TIは0固定。
+  CCP_set_param(packet, param, len);
+
+  return CCP_UTIL_ACK_OK;
+}
+
+CCP_UTIL_ACK CCP_form_sub_obc_tlc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+{
+  if (packet == NULL)
+  {
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
+  if (param == NULL && len != 0)
+  {
+    CCP_form_nop_rtc_(packet);
+    CCP_convert_rtc_to_tlc(packet, ti);
+    return CCP_UTIL_ACK_PARAM_ERR;
+  }
+
+  // FIXME: sub OBC のコマンドは cmd_table に保存されていないので param チェックできない
+
+  CCP_set_common_hdr(packet);
+  CCP_set_apid(packet, apid);
+  CCP_set_id(packet, cmd_id);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);  // TL なので，一旦仮で入れる
+  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
+  CCP_set_ti(packet, ti);
+  CCP_set_param(packet, param, len);
+
+  return CCP_UTIL_ACK_OK;
+}
+
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];

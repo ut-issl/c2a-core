@@ -57,6 +57,31 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
 CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
+ * @brief sub OBC のコマンドを MOBC の RT として生成
+ * @note  MOBC で RT として処理されたあと sub OBC に送られ RT として実行される
+ * @note  param チェックは未実装
+ * @param[in] apid: どの OBC かを指定する APID
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_form_sub_obc_rtc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief sub OBC のコマンドを MOBC の TL として生成
+ * @note  MOBC で TL として処理されたあと sub OBC に送られ RT として実行される
+ * @note  param チェックは未実装
+ * @param[in] ti:     TI
+ * @param[in] apid:   どの OBC かを指定する APID
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_form_sub_obc_tlc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
  * @brief BC展開 command を生成
  * @note  引数が不正なとき， packet は NOP RTC を返す
  * @param[in,out] packet:   CCP

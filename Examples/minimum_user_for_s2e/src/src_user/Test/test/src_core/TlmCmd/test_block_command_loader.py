@@ -26,6 +26,8 @@ PARAMS_LIST = [
     # Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH
     [("double", 12345.6789)],
     [("double", -12345.6789)],
+    # AOBC_Cmd_CODE_MM_START_TRANSITION
+    [("uint8", 3)],
 ]
 
 
