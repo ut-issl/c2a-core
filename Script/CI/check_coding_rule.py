@@ -670,6 +670,7 @@ def check_include_guard_(path: str, code_lines: list) -> bool:
             print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
             return False
         if len(line_define.split(" ")) != 2 or line_define.split(" ")[1] != include_guard:
+            print_err_(path, idx + 1, "INCLUDE GUARD DOES NOT MEET CODING RULE", line)
             return False
         return True
 
