@@ -171,22 +171,9 @@ void CSP_set_cmd_id(CmdSpacePacket* csp, CMD_CODE id)
 
 CCP_DEST_TYPE CSP_get_dest_type(const CmdSpacePacket* csp)
 {
-  uint8_t tmp;
-  CCP_DEST_TYPE dest_type;
-
-  SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_dest_type_, &tmp);
-  dest_type = (CCP_DEST_TYPE)tmp;
-
-  switch (dest_type)
-  {
-  case CCP_DEST_TYPE_TO_ME:   // FALL THROUGH
-  case CCP_DEST_TYPE_TO_MOBC: // FALL THROUGH
-  case CCP_DEST_TYPE_TO_AOBC: // FALL THROUGH
-  case CCP_DEST_TYPE_TO_TOBC:
-    return dest_type;
-  default:
-    return CCP_DEST_TYPE_TO_UNKOWN;
-  }
+  uint8_t dest_type;
+  SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_dest_type_, &dest_type);
+  return CCP_get_dest_type_from_uint8(dest_type);
 }
 
 
