@@ -61,4 +61,7 @@ dkms.conf
 Examples/minimum_user_for_s2e/src/src_core
 Examples/minimum_user_for_s2e/build
 Examples/minimum_user_for_s2e/src/src_user/Test/authorization.json
+Examples/minimum_user/src/src_core
+Examples/minimum_user/build
+Examples/minimum_user/src/src_user/Test/authorization.json
 *.pyc
