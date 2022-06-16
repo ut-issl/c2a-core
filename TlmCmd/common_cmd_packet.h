@@ -10,7 +10,7 @@
 #include <src_user/TlmCmd/command_definitions.h>
 
 // ここで CCP_DEST_TYPE を定義する
-// 詳細は /Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h 参照
+// 詳細は /Examples/minimum_user/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h 参照
 /* 例
 typedef enum
 {

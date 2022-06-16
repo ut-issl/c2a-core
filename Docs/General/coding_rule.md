@@ -424,7 +424,7 @@ Settings/Modes/Transitions
 -> void BCL_load_sl_hoge(void);
 ```
 
-例として [Block Command Definitions](https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user_for_s2e/src/src_user/TlmCmd/block_command_definitions.c) を参考にすること．
+例として [Block Command Definitions](https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/TlmCmd/block_command_definitions.c) を参考にすること．
 
 
 ## 細かな記法 [M]

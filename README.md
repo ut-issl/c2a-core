@@ -25,11 +25,11 @@
 ### SILS (Software-In-the-Loop-Simulation) 環境
 - C2A は， [S2E](https://github.com/ut-issl/s2e-core) などの SILS を用いて，フライトソフトウェアがそのまま実行される SILS を構築できる．
 - つまり，ターゲットの OBC 上で動くソフトウェアが， PC などの上で，そのままエミュレートできる．
-- [`Examples/minimum_user_for_s2e`](./Examples/minimum_user_for_s2e) にある， 最小限の C2A 実行サンプルは， [S2E User for C2A Core](https://github.com/ut-issl/s2e-user-for-c2a-core) によってエミュレーション可能である．
+- [`Examples/minimum_user`](./Examples/minimum_user) にある， 最小限の C2A 実行サンプルは， [S2E User for C2A Core](https://github.com/ut-issl/s2e-user-for-c2a-core) によってエミュレーション可能である．
 
 ### テスト
-- 特定のuserを仮定しないと，各種パラメタが確定しないため， [`Examples/minimum_user_for_s2e`](./Examples/minimum_user_for_s2e) でテストする．
-- 詳細は [Test](./Examples/minimum_user_for_s2e/src/src_user/Test) 参照．
+- 特定のuserを仮定しないと，各種パラメタが確定しないため， [`Examples/minimum_user`](./Examples/minimum_user) でテストする．
+- 詳細は [Test](./Examples/minimum_user/src/src_user/Test) 参照．
 
 ### ブランチ
 - `main`: リリース版（[詳細](./Docs/General/release.md)）

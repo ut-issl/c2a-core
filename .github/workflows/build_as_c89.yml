@@ -80,7 +80,7 @@ jobs:
           echo "::set-output name=WEXTRA::${WEXTRA}"
 
       - name: cmake
-        working-directory: ./Examples/minimum_user_for_s2e
+        working-directory: ./Examples/minimum_user
         env:
           CC: ${{ matrix.compiler }}
         run: |
@@ -92,12 +92,12 @@ jobs:
       - name: build
         id: build
         continue-on-error: ${{ matrix.compiler == 'clang' }}
-        working-directory: ./Examples/minimum_user_for_s2e/build
+        working-directory: ./Examples/minimum_user/build
         run: cmake --build .
 
       - name: run
         if: steps.build.outcome == 'success'
-        working-directory: ./Examples/minimum_user_for_s2e/build
+        working-directory: ./Examples/minimum_user/build
         shell: bash
         run: timeout 3 ./C2A || exit 0
 
@@ -112,22 +112,22 @@ jobs:
 
       - name: clang-tidy
         if: matrix.compiler == 'clang'
-        working-directory: ./Examples/minimum_user_for_s2e/build
+        working-directory: ./Examples/minimum_user/build
         run: |
           run-clang-tidy-11 \
             | sed 's/\/home\/runner\/work\/c2a-core\/c2a-core\///g' \
-            | sed 's/Examples\/minimum_user_for_s2e\/src\/src_core\///g' \
+            | sed 's/Examples\/minimum_user\/src\/src_core\///g' \
             > clang_tidy.log
 
       - name: clang-tidy result
         if: matrix.compiler == 'clang'
-        working-directory: ./Examples/minimum_user_for_s2e/build
+        working-directory: ./Examples/minimum_user/build
         run: cat clang_tidy.log
 
       - name: remove duplicate error
         if: matrix.compiler == 'clang'
         run: |
-          python Script/CI/remove_duplicate_error.py ./Examples/minimum_user_for_s2e/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
+          python Script/CI/remove_duplicate_error.py ./Examples/minimum_user/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
 
       - name: reviewdog clang-tidy (github-pr-review)
         if: matrix.compiler == 'clang' && matrix.warning == 'Werror'

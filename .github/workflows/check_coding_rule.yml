@@ -23,7 +23,7 @@ jobs:
         id: check
         shell: bash -e {0}
         continue-on-error: true
-        working-directory: ./Examples/minimum_user_for_s2e/src
+        working-directory: ./Examples/minimum_user/src
         run: |
           python ./src_core/Script/CI/check_coding_rule.py ./src_core/Script/CI/check_coding_rule.json | tee /tmp/coding-rule.log
           status="${PIPESTATUS[0]}"
@@ -38,7 +38,7 @@ jobs:
         run: |
           sed 's/.\/src_core\///g' < /tmp/coding-rule.log \
           | > ./coding-rule.log \
-            sed 's/.\/src_user/Examples\/minimum_user_for_s2e\/src\/src_user/g'
+            sed 's/.\/src_user/Examples\/minimum_user\/src\/src_user/g'
           cat ./coding-rule.log
 
       - name: reviewdog(github-pr-review)
