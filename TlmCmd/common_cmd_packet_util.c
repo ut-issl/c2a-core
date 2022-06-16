@@ -29,6 +29,7 @@ CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset
 
 /**
  * @brief RealTime Command を生成する. CCP_form_* の実体.
+ * @note  packet, param は NULL 出ないことが保証されていることを前提とする
  * @param[in,out] packet: CCP
  * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタの先頭アドレス
