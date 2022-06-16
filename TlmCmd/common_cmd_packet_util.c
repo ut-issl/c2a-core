@@ -3,7 +3,6 @@
  * @file
  * @brief  CCP の汎用 Utility
  */
-
 #include "common_cmd_packet_util.h"
 #include "command_analyze.h"
 #include "../Library/endian_memcpy.h"
@@ -37,6 +36,7 @@ CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset
  * @return void
  */
 static void CCP_form_rtc_(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
 
 void CCP_form_nop_rtc_(CommonCmdPacket* packet)
 {
