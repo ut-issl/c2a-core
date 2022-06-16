@@ -49,7 +49,7 @@ void BCL_tool_register_cmd(cycle_t ti, CMD_CODE cmd_id);
  * @param  cmd_id     実行する sub OBC のコマンドID
  * @return void
  */
-void BCL_tool_register_sub_obc_cmd(cycle_t ti, APID apid, CMD_CODE cmd_id);
+void BCL_tool_register_other_obc_cmd(cycle_t ti, APID apid, CMD_CODE cmd_id);
 
 /**
  * @brief  ブロックコマンドの最後にローテーターの実行コマンドを追加する

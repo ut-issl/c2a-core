@@ -28,6 +28,15 @@ void CCP_form_nop_rtc_(CommonCmdPacket* packet);
  */
 CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset);
 
+/**
+ * @brief RealTime Command を生成する. CCP_form_* の実体.
+ * @param[in,out] packet: CCP
+ * @param[in]     cmd_id: CMD_CODE
+ * @param[in]     param:  パラメタの先頭アドレス
+ * @param[in]     len:    パラメタ長
+ * @return void
+ */
+static void CCP_form_rtc_(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 void CCP_form_nop_rtc_(CommonCmdPacket* packet)
 {
@@ -67,12 +76,7 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  CCP_set_common_hdr(packet);
-  CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_RT);
-  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
-  CCP_set_ti(packet, 0); // RTの場合、TIは0固定。
-  CCP_set_param(packet, param, len);
+  CCP_form_rtc_(packet, cmd_id, param, len);
 
   return CCP_UTIL_ACK_OK;
 }
@@ -98,17 +102,13 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  CCP_set_common_hdr(packet);
-  CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);  // TL なので，一旦仮で入れる
-  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
-  CCP_set_ti(packet, ti);
-  CCP_set_param(packet, param, len);
+  CCP_form_rtc_(packet, cmd_id, param, len);
+  CCP_convert_rtc_to_tlc(packet, ti);
 
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_sub_obc_rtc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+CCP_UTIL_ACK CCP_form_rtc_to_another_obc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   if (packet == NULL)
   {
@@ -121,20 +121,15 @@ CCP_UTIL_ACK CCP_form_sub_obc_rtc(CommonCmdPacket* packet, APID apid, CMD_CODE c
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  // FIXME: sub OBC のコマンドは cmd_table に保存されていないので param チェックできない
+  // NOTE: 他の OBC のコマンドは cmd_table に保存されていないので param チェックできない
 
-  CCP_set_common_hdr(packet);
+  CCP_form_rtc_(packet, cmd_id, param, len);
   CCP_set_apid(packet, apid);
-  CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_RT);
-  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
-  CCP_set_ti(packet, 0); // RTの場合、TIは0固定。
-  CCP_set_param(packet, param, len);
 
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_sub_obc_tlc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+CCP_UTIL_ACK CCP_form_tlc_to_another_obc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   if (packet == NULL)
   {
@@ -148,15 +143,11 @@ CCP_UTIL_ACK CCP_form_sub_obc_tlc(CommonCmdPacket* packet, cycle_t ti, APID apid
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  // FIXME: sub OBC のコマンドは cmd_table に保存されていないので param チェックできない
+  // NOTE: 他の OBC のコマンドは cmd_table に保存されていないので param チェックできない
 
-  CCP_set_common_hdr(packet);
+  CCP_form_rtc_(packet, cmd_id, param, len);
+  CCP_convert_rtc_to_tlc(packet, ti);
   CCP_set_apid(packet, apid);
-  CCP_set_id(packet, cmd_id);
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);  // TL なので，一旦仮で入れる
-  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
-  CCP_set_ti(packet, ti);
-  CCP_set_param(packet, param, len);
 
   return CCP_UTIL_ACK_OK;
 }
@@ -183,10 +174,20 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
 }
 
+static void CCP_form_rtc_(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+{
+  CCP_set_common_hdr(packet);
+  CCP_set_id(packet, cmd_id);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_RT);
+  CCP_set_dest_type(packet, CCP_DEST_TYPE_TO_ME);
+  CCP_set_ti(packet, 0);  // RTの場合、TIは0固定
+  CCP_set_param(packet, param, len);
+}
+
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
 {
   if (packet == NULL) return;
-  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);
+  CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);  // TL なので，一旦仮で入れる
   CCP_set_ti(packet, ti);
 }
 

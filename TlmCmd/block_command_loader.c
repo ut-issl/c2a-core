@@ -18,7 +18,7 @@
 #define BCL_PARAM_MAX_LENGTH BCT_CMD_MAX_LENGTH
 
 static void BCL_register_cmd_(cycle_t ti, CMD_CODE cmd_id);
-static void BCL_register_sub_obc_cmd_(cycle_t ti, APID apid, CMD_CODE cmd_id);
+static void BCL_register_other_obc_cmd_(cycle_t ti, APID apid, CMD_CODE cmd_id);
 static void BCL_register_app_(cycle_t ti, AR_APP_ID app_id);
 static void BCL_clear_info_(void);
 
@@ -75,9 +75,9 @@ void BCL_tool_register_cmd(cycle_t ti, CMD_CODE cmd_id)
   BCL_clear_info_();
 }
 
-void BCL_tool_register_sub_obc_cmd(cycle_t ti, APID apid, CMD_CODE cmd_id)
+void BCL_tool_register_other_obc_cmd(cycle_t ti, APID apid, CMD_CODE cmd_id)
 {
-  BCL_register_sub_obc_cmd_(ti, apid, cmd_id);
+  BCL_register_other_obc_cmd_(ti, apid, cmd_id);
   BCL_clear_info_();
 }
 
@@ -227,14 +227,14 @@ void BCL_register_cmd_(cycle_t ti, CMD_CODE cmd_id)
   BCT_register_cmd(&block_command_loader_.packet);
 }
 
-void BCL_register_sub_obc_cmd_(cycle_t ti, APID apid, CMD_CODE cmd_id)
+void BCL_register_other_obc_cmd_(cycle_t ti, APID apid, CMD_CODE cmd_id)
 {
-  CCP_form_sub_obc_tlc(&block_command_loader_.packet,
-                       ti,
-                       apid,
-                       cmd_id,
-                       &block_command_loader_.params[0],
-                       (uint16_t)block_command_loader_.param_idx);
+  CCP_form_tlc_to_another_obc(&block_command_loader_.packet,
+                              ti,
+                              apid,
+                              cmd_id,
+                              &block_command_loader_.params[0],
+                              (uint16_t)block_command_loader_.param_idx);
   BCT_register_cmd(&block_command_loader_.packet);
 }
 

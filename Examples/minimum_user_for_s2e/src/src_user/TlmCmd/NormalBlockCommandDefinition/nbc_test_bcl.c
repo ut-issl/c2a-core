@@ -31,7 +31,7 @@ void BCL_load_test_bcl(void)
   // sub obc コマンドのチェック
   // FIXME: sub OBC のコマンド数が MOBC より多くなるとキャストできなくて困る
   BCL_tool_prepare_param_uint8(3);
-  BCL_tool_register_sub_obc_cmd(5, APID_AOBC_CMD, (CMD_CODE)AOBC_Cmd_CODE_MM_START_TRANSITION);
+  BCL_tool_register_other_obc_cmd(5, APID_AOBC_CMD, (CMD_CODE)AOBC_Cmd_CODE_MM_START_TRANSITION);
 }
 
 #pragma section
