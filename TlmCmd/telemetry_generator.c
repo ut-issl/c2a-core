@@ -54,27 +54,22 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
   if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
 
-  // Primary Header
+  // Header
   if (APID_is_another_obc_tlm_apid(CTP_get_apid(&ctp_)))
   {
-    // 2nd OBC で生成された TLM の primary header はそのまま維持
+    // 2nd OBC で生成された TLM の primary header, secondary header の board time はそのまま維持
   }
   else
   {
+    // Primary Header
     // FIXME: Space Packet 依存を直す
     TSP_setup_primary_hdr(&ctp_, CTP_APID_FROM_ME, len);
     TSP_set_seq_count(&ctp_, TG_get_next_adu_counter_());
-  }
 
-  // Secondary Header
-  if (APID_is_another_obc_tlm_apid(CTP_get_apid(&ctp_)))
-  {
-    // 2nd OBC で生成された TLM の board time はそのまま維持
-  }
-  else
-  {
+    // Secondary Header
     TSP_set_board_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
   }
+
   // FIXME: 他の時刻も入れる
   TSP_set_global_time(&ctp_, 0.0);
   TSP_set_on_board_subnet_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
