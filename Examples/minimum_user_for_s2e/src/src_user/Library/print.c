@@ -1,8 +1,7 @@
 /**
  * @file
- * @brief  HW依存Print
+ * @brief  HW 依存 Print, つまり ログ情報のフォーマット出力（デバッグ出力）
  */
-
 // こいつもBootLoaderに配置するので，リプロ可能領域のものをincludeしないこと！！
 
 // printはHW依存性が強いため，ヘッダーはcoreにおき，オーバーライドする
@@ -14,26 +13,24 @@
 
 #include "../Settings/sils_define.h"
 
+// バッファサイズよりでかい文字列が来ると死ぬ
+static char PRINT_buffer_[512];
+
 #ifndef SILS_FW
+
 #include <src_core/System/WatchdogTimer/watchdog_timer.h>
 
-
-/*
- *  ログ情報のフォーマット出力（デバッグ出力）
- */
-char printf_buffer[512];
-
-void Printf(char* format, ...)
+void Printf(const char* format, ...)
 {
   va_list argptr;
 
   WDT_clear_wdt();         // 2019/03/10 追加
 
   va_start(argptr, format);
-  vsprintf(printf_buffer, format, argptr);
+  vsprintf(PRINT_buffer_, format, argptr);
 
-  tt_printf("%s", printf_buffer);
-  // Printf_org("%s", printf_buffer);  // LVTTL UART ch1での出力．邪魔なので初期化とともに無効化 (2019-04-09)
+  tt_printf("%s", PRINT_buffer_);
+  // Printf_org("%s", PRINT_buffer_);  // LVTTL UART ch1での出力．邪魔なので初期化とともに無効化 (2019-04-09)
   va_end(argptr);
 
   WDT_clear_wdt();         // 2019/03/10 追加
@@ -41,15 +38,14 @@ void Printf(char* format, ...)
 
 #else
 
-void Printf(char* format, ...)
+void Printf(const char* format, ...)
 {
 #ifdef SHOW_DEBUG_PRINT_ON_SILS
-  char printf_buffer[512];   // バッファサイズよりでかい文字列が来ると死ぬ（が，これは実機環境でも同じか）
   va_list args;
   va_start(args, format);
-  vsprintf(printf_buffer, format, args);
+  vsprintf(PRINT_buffer_, format, args);
 
-  printf("%s", printf_buffer);
+  printf("%s", PRINT_buffer_);
   fflush(stdout);
 
   va_end(args);

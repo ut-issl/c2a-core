@@ -1,5 +1,9 @@
 #ifndef PRINT_H_
 #define PRINT_H_
+/**
+ * @file
+ * @brief  HW 依存 Print, つまり ログ情報のフォーマット出力（デバッグ出力）
+ */
 
 // #include "../Settings/sils_define.h" //ここでincludeしておくと，Printf系のものは全てOKになる
 
@@ -45,6 +49,6 @@
 // #define NG    -1
 // #define OK    0
 
-void Printf(char* format, ...);
+void Printf(const char* format, ...);
 
 #endif
