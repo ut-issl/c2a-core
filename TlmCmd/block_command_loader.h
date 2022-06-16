@@ -42,6 +42,16 @@ void BCL_load_sl(bct_id_t pos, void (*func)(void));
 void BCL_tool_register_cmd(cycle_t ti, CMD_CODE cmd_id);
 
 /**
+ * @brief  ブロックコマンドの最後に他の OBC のコマンドを追加する
+ * @note   ブロックコマンドの定義時に使用する
+ * @param  ti         コマンドを実行する相対TI
+ * @param  apid       sub OBC を識別する APID
+ * @param  cmd_id     実行する sub OBC のコマンドID
+ * @return void
+ */
+void BCL_tool_register_cmd_to_other_obc(cycle_t ti, APID apid, CMD_CODE cmd_id);
+
+/**
  * @brief  ブロックコマンドの最後にローテーターの実行コマンドを追加する
  * @note   ブロックコマンドの定義時に使用する
  * @param  ti         コマンドを実行する相対TI

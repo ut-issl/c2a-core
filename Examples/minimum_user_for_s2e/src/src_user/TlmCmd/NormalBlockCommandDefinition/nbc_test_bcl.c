@@ -8,6 +8,7 @@
 #include <src_core/TlmCmd/block_command_loader.h>
 
 #include "../command_definitions.h"
+#include "../../Drivers/Aocs/aobc_command_definitions.h"
 #include "../block_command_definitions.h"
 
 void BCL_load_test_bcl(void)
@@ -26,6 +27,11 @@ void BCL_load_test_bcl(void)
 
   BCL_tool_prepare_param_double(-12345.6789);
   BCL_tool_register_cmd(4, Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH);
+
+  // other_obc コマンドのチェック
+  // FIXME: other OBC のコマンド数が 本OBC より多くなるとキャストできなくて困る
+  BCL_tool_prepare_param_uint8(3);
+  BCL_tool_register_cmd_to_other_obc(5, APID_AOBC_CMD, (CMD_CODE)AOBC_Cmd_CODE_MM_START_TRANSITION);
 }
 
 #pragma section
