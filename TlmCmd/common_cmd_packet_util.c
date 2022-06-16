@@ -108,7 +108,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_rtc_to_another_obc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+CCP_UTIL_ACK CCP_form_rtc_to_other_obc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   if (packet == NULL)
   {
@@ -129,7 +129,7 @@ CCP_UTIL_ACK CCP_form_rtc_to_another_obc(CommonCmdPacket* packet, APID apid, CMD
   return CCP_UTIL_ACK_OK;
 }
 
-CCP_UTIL_ACK CCP_form_tlc_to_another_obc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   if (packet == NULL)
   {
