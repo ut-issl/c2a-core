@@ -28,8 +28,8 @@ void BCL_load_test_bcl(void)
   BCL_tool_prepare_param_double(-12345.6789);
   BCL_tool_register_cmd(4, Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH);
 
-  // sub obc コマンドのチェック
-  // FIXME: sub OBC のコマンド数が MOBC より多くなるとキャストできなくて困る
+  // other_obc コマンドのチェック
+  // FIXME: other OBC のコマンド数が 本OBC より多くなるとキャストできなくて困る
   BCL_tool_prepare_param_uint8(3);
   BCL_tool_register_other_obc_cmd(5, APID_AOBC_CMD, (CMD_CODE)AOBC_Cmd_CODE_MM_START_TRANSITION);
 }
