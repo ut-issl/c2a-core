@@ -1,13 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(C2A_USER_APPS)
+project(C2A_CORE_TEST_APPS)
 
 set(C2A_SRCS
-  app_registry.c
-  DriverInstances/di_aobc.c
-  DriverInstances/di_gs.c
-  DriverInstances/di_uart_test.c
-  UserDefined/debug_apps.c
+  test_ccp_util.c
 )
 
 if(BUILD_C2A_AS_CXX)
@@ -16,4 +12,4 @@ endif()
 
 add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
 
-include(${C2A_USER_DIR}/common.cmake)
+include(${C2A_CORE_DIR}/common.cmake)
