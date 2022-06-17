@@ -17,6 +17,7 @@ set(C2A_SRCS
   System/event_logger_settings.c
   System/EventHandlerRules/event_handler_rules.c
   System/EventHandlerRules/event_handler_rule_test.c
+  TlmCmd/common_cmd_packet_define.c
   TlmCmd/Ccsds/apid_define.c
 )
 

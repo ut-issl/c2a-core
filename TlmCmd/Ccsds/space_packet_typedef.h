@@ -6,6 +6,8 @@
 #ifndef SPACE_PACKET_TYPEDEF_H_
 #define SPACE_PACKET_TYPEDEF_H_
 
+#include <src_user/Library/stdint.h>
+
 #define TSP_MAX_LEN   (432)   //!< TlmSpacePacket の最大パケット長．VCDU 分割しないならこれが最大値
 #define CSP_MAX_LEN   (128)   //!< CmdSpacePacket の最大パケット長．値は適当においている
 
