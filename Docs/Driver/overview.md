@@ -9,8 +9,8 @@ Driver とは，各コンポーネントとの通信において， HW 依存部
 
 実装方法は，基本的には [driver_super.h](https://github.com/ut-issl/c2a-core/blob/develop/Drivers/Super/driver_super.h) をみればわかるようにしてあるが，現時点で
 
-- UART test: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user_for_s2e/src/src_user/Drivers/Etc/UART_TEST.c
-- GS: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user_for_s2e/src/src_user/Drivers/Com/gs.c
+- UART test: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Etc/UART_TEST.c
+- GS: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Com/gs.c
 - C2A 間通信 (TBA)
 
 が実装されているので，それを参考のこと．  

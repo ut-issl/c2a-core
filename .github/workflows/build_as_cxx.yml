@@ -18,7 +18,7 @@ jobs:
         run: ./setup.bat
 
       - name: cmake
-        working-directory: ./Examples/minimum_user_for_s2e
+        working-directory: ./Examples/minimum_user
         run: |
           mkdir build
           cd build
@@ -26,7 +26,7 @@ jobs:
           cmake .. -A Win32
 
       - name: build
-        working-directory: ./Examples/minimum_user_for_s2e/build
+        working-directory: ./Examples/minimum_user/build
         run: cmake --build .
 
   build_s2e_mockup:
@@ -39,7 +39,7 @@ jobs:
         run: ./setup.bat
 
       - name: cmake
-        working-directory: ./Examples/minimum_user_for_s2e/src/s2e_mockup
+        working-directory: ./Examples/minimum_user/src/s2e_mockup
         run: |
           mkdir build
           cd build
@@ -47,5 +47,5 @@ jobs:
           cmake .. -A Win32
 
       - name: build
-        working-directory: ./Examples/minimum_user_for_s2e/src/s2e_mockup/build
+        working-directory: ./Examples/minimum_user/src/s2e_mockup/build
         run: cmake --build .
