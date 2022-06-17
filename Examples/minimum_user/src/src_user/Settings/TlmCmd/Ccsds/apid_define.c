@@ -26,7 +26,7 @@ APID APID_get_apid_from_uint16(uint16_t apid)
   }
 }
 
-int APID_is_another_obc_tlm_apid(APID apid)
+int APID_is_other_obc_tlm_apid(APID apid)
 {
   switch (apid)
   {

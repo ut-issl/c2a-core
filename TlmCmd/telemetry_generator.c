@@ -39,7 +39,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   }
 
   // ctp の ヘッダ部分の APID をクリア
-  // この後で， APID_is_another_obc_tlm_apid で配送元 OBC を割り出せるように
+  // この後で， APID_is_other_obc_tlm_apid で配送元 OBC を割り出せるように
   CTP_set_apid(&ctp_, APID_UNKNOWN);
 
   // ADU生成
@@ -55,7 +55,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
 
   // Header
-  if (APID_is_another_obc_tlm_apid(CTP_get_apid(&ctp_)))
+  if (APID_is_other_obc_tlm_apid(CTP_get_apid(&ctp_)))
   {
     // 2nd OBC で生成された TLM の primary header, secondary header の board time はそのまま維持
   }

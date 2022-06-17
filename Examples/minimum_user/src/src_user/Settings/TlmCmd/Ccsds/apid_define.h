@@ -43,6 +43,6 @@ APID APID_get_apid_from_uint16(uint16_t apid);
  * @retval 1: 他 OBC で生成された TLM の APID
  * @retval 0: それ以外の APID
  */
-int APID_is_another_obc_tlm_apid(APID apid);
+int APID_is_other_obc_tlm_apid(APID apid);
 
 #endif
