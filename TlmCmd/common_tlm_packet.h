@@ -9,7 +9,7 @@
 #include "../System/TimeManager/obc_time.h"
 #include <src_user/TlmCmd/telemetry_definitions.h>
 
-// ここで， CTP_MAX_LEN, CommonTlmPacket として使うパケット型を指定する
+// ここで， CTP_APID_FROM_ME, CTP_MAX_LEN, CommonTlmPacket として使うパケット型を指定する
 #include <src_user/Settings/TlmCmd/common_tlm_packet_define.h>
 
 // ここで APID を定義する

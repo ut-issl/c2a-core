@@ -6,6 +6,7 @@
 #define COMMON_CMD_PACKET_DEFINE_H_
 
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
+#include "./Ccsds/apid_define.h"
 
 // CommonCmdPacket として CmdSpacePacket をつかう
 typedef CmdSpacePacket CommonCmdPacket;

@@ -81,25 +81,9 @@ void SP_set_2nd_hdr_flag(SpacePacket* sp, SP_2ND_HDR_FLAG flag)
 
 APID SP_get_apid(const SpacePacket* sp)
 {
-  uint16_t tmp;
-  APID apid;
-
-  SP_extract_param_from_packet(sp, &SP_pei_apid_, &tmp);
-  apid = (APID)tmp;
-
-  // FIXME: ここはユーザー依存部分なので直す
-  switch (apid)
-  {
-  case APID_MOBC_CMD:         // FALLTHROUGH
-  case APID_AOBC_CMD:         // FALLTHROUGH
-  case APID_TOBC_CMD:         // FALLTHROUGH
-  case APID_MIS_TLM:          // FALLTHROUGH
-  case APID_DUMP_TLM:
-    return apid;
-
-  default:
-    return APID_UNKNOWN;
-  }
+  uint16_t apid;
+  SP_extract_param_from_packet(sp, &SP_pei_apid_, &apid);
+  return APID_get_apid_from_uint16(apid);
 }
 
 
