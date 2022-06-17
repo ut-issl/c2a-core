@@ -18,13 +18,15 @@
 #include <src_core/Applications/utility_counter.h>
 #include <src_core/Applications/divided_cmd_utility.h>
 
+// Core TestApp
+#include <src_core/Applications/TestApp/test_ccp_util.h>
+
 // DI
 #include "DriverInstances/di_aobc.h"
 #include "DriverInstances/di_uart_test.h"
 #include "DriverInstances/di_gs.h"
 
 // UserDefined
-#include "UserDefined/TestApp/test_ccp_util.h"
 #include "UserDefined/debug_apps.h"
 
 #endif

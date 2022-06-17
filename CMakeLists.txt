@@ -3,13 +3,14 @@ cmake_minimum_required(VERSION 3.13)
 project(C2A_CORE)
 
 # user config
-option(USE_ALL_C2A_CORE_APPS    "use C2A-core all Applications" ON)
-option(USE_ALL_C2A_CORE_LIB     "use C2A-core all Library" ON)
-option(USE_32BIT_COMPILER       "use 32bit compiler" OFF)
+option(USE_ALL_C2A_CORE_APPS        "use C2A-core all Applications" ON)
+option(USE_ALL_C2A_CORE_TEST_APPS   "use C2A-core all Test Applications" ON)
+option(USE_ALL_C2A_CORE_LIB         "use C2A-core all Library" ON)
+option(USE_32BIT_COMPILER           "use 32bit compiler" OFF)
 
-option(BUILD_C2A_AS_SILS_FW     "build C2A as SILS firmware" ON)
-option(BUILD_C2A_AS_CXX         "build C2A as C++" OFF)
-option(BUILD_C2A_AS_UTF8        "build C2A as UTF-8" ON)
+option(BUILD_C2A_AS_SILS_FW         "build C2A as SILS firmware" ON)
+option(BUILD_C2A_AS_CXX             "build C2A as C++" OFF)
+option(BUILD_C2A_AS_UTF8            "build C2A as UTF-8" ON)
 
 set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -53,6 +54,11 @@ add_library(${PROJECT_NAME} OBJECT ${C2A_SRCS})
 if(USE_ALL_C2A_CORE_APPS)
   add_subdirectory(Applications)
   target_sources(${PROJECT_NAME} PUBLIC $<TARGET_OBJECTS:C2A_CORE_APPS>)
+endif()
+
+if(USE_ALL_C2A_CORE_TEST_APPS)
+  add_subdirectory(Applications/TestApp)
+  target_sources(${PROJECT_NAME} PUBLIC $<TARGET_OBJECTS:C2A_CORE_TEST_APPS>)
 endif()
 
 if(USE_ALL_C2A_CORE_LIB)
