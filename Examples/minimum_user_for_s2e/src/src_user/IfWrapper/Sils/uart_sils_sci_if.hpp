@@ -7,22 +7,14 @@
 #ifndef UART_SILS_SCI_IF_HPP_
 #define UART_SILS_SCI_IF_HPP_
 
-#include <Windows.h>
+#include "sils_sci_if.hpp"
 
-class SCIComPortUart
-{
-public:
-  SCIComPortUart(void);
-  ~SCIComPortUart(void);
-
-  int Send(unsigned char* buffer, size_t length, size_t offset);
-  int Receive(unsigned char* buffer, size_t length, size_t offset);
-
-private:
-  HANDLE myHComPort_;
-  DCB config_;
-  bool init_success;
-};
+// 最初だけ初期化して、プログラム終了時にポートを閉じるようにしたい
+#ifdef WIN32
+static SCIComPort SILS_SCI_IF_sci_com_uart_(13);
+#else
+static SCIComPort SILS_SCI_IF_sci_com_uart_(3);
+#endif
 
 int SILS_SCI_UART_IF_init();
 int SILS_SCI_UART_IF_TX(unsigned char* data_v, int count);
