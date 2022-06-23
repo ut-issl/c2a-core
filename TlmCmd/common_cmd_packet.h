@@ -45,7 +45,7 @@ typedef enum
   CCP_EXEC_ILLEGAL_CONTEXT,     //!< コマンド実行時のその他のエラー
   CCP_EXEC_CMD_NOT_DEFINED,     //!< cmdExec で用いる
   CCP_EXEC_ROUTING_FAILED,      //!< command router で用いる
-  CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler で用いる
+  CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler, ccp util で用いる
   CCP_EXEC_UNKNOWN              //!< 内部処理用．使わない．
 } CCP_EXEC_STS;
 
