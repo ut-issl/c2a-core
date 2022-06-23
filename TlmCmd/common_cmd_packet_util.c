@@ -44,6 +44,7 @@ void CCP_form_nop_rtc_(CommonCmdPacket* packet)
   CCP_form_rtc(packet, Cmd_CODE_NOP, NULL, 0);
 }
 
+
 void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 {
   // FIXME: この4は環境依存なので，依存しないように直す
@@ -57,6 +58,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 
   CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, 4);
 }
+
 
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
@@ -81,6 +83,7 @@ CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
 
   return CCP_UTIL_ACK_OK;
 }
+
 
 CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
@@ -109,6 +112,7 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
   return CCP_UTIL_ACK_OK;
 }
 
+
 CCP_UTIL_ACK CCP_form_rtc_to_other_obc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   if (packet == NULL)
@@ -129,6 +133,7 @@ CCP_UTIL_ACK CCP_form_rtc_to_other_obc(CommonCmdPacket* packet, APID apid, CMD_C
 
   return CCP_UTIL_ACK_OK;
 }
+
 
 CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
@@ -153,6 +158,7 @@ CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID
   return CCP_UTIL_ACK_OK;
 }
 
+
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
   uint8_t param[1 + SIZE_OF_BCT_ID_T];
@@ -175,6 +181,7 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
 }
 
+
 static void CCP_form_rtc_(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
   CCP_set_common_hdr(packet);
@@ -185,12 +192,14 @@ static void CCP_form_rtc_(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_
   CCP_set_param(packet, param, len);
 }
 
+
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti)
 {
   if (packet == NULL) return;
   CCP_set_exec_type(packet, CCP_EXEC_TYPE_TL_FROM_GS);  // TL なので，一旦仮で入れる
   CCP_set_ti(packet, ti);
 }
+
 
 PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
@@ -201,6 +210,7 @@ PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 
   return PH_analyze_cmd_packet(&CCP_util_packet_);
 }
+
 
 PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
@@ -219,6 +229,7 @@ PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint
   CCP_set_exec_type(&CCP_util_packet_, type);
   return PH_analyze_cmd_packet(&CCP_util_packet_);
 }
+
 
 PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
@@ -271,6 +282,27 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
   return PH_analyze_cmd_packet(&CCP_util_packet_);
 }
 
+
+CCP_EXEC_STS CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+{
+  CCP_UTIL_ACK ret;
+  ret = CCP_form_rtc(&CCP_util_packet_, cmd_id, param, len);
+  if (ret != CCP_UTIL_ACK_OK) return CCP_EXEC_PACKET_FMT_ERR;
+
+  return PH_dispatch_command(&CCP_util_packet_);
+}
+
+
+CCP_EXEC_STS CCP_form_and_exec_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no)
+{
+  CCP_UTIL_ACK ret;
+  ret = CCP_form_block_deploy_cmd(&CCP_util_packet_, tl_no, block_no);
+  if (ret != CCP_UTIL_ACK_OK) return CCP_EXEC_PACKET_FMT_ERR;
+
+  return PH_dispatch_command(&CCP_util_packet_);
+}
+
+
 CCP_EXEC_TYPE CCP_get_exec_type_from_tlcd_id(TLCD_ID tlcd_id)
 {
   switch (tlcd_id)
@@ -294,6 +326,7 @@ CCP_EXEC_TYPE CCP_get_exec_type_from_tlcd_id(TLCD_ID tlcd_id)
   }
 }
 
+
 uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n)
 {
   static uint8_t ret;
@@ -312,6 +345,7 @@ uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t 
   endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
+
 
 uint16_t* CCP_get_2byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n)
 {
@@ -332,6 +366,7 @@ uint16_t* CCP_get_2byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
   return &ret;
 }
 
+
 uint32_t* CCP_get_4byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n)
 {
   static uint32_t ret;
@@ -351,6 +386,7 @@ uint32_t* CCP_get_4byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
   return &ret;
 }
 
+
 uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t n)
 {
   static uint64_t ret;
@@ -369,6 +405,7 @@ uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
   endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
+
 
 uint16_t CCP_get_raw_param_from_packet(const CommonCmdPacket* packet, void* dest, uint16_t max_copy_len)
 {
@@ -392,6 +429,7 @@ uint16_t CCP_get_raw_param_from_packet(const CommonCmdPacket* packet, void* dest
   memcpy(dest,  CCP_get_param_head(packet) + offset, (size_t)copy_len);
   return (uint16_t)copy_len;
 }
+
 
 CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset)
 {
