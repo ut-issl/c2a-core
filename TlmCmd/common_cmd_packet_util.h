@@ -82,7 +82,7 @@ CCP_UTIL_ACK CCP_form_rtc_to_other_obc(CommonCmdPacket* packet, APID apid, CMD_C
 CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief BC展開 command を生成
+ * @brief BC展開 Realtime command を生成
  * @note  引数が不正なとき， packet は NOP RTC を返す
  * @param[in,out] packet:   CCP
  * @param[in]     tl_no:    Timeline no
@@ -135,7 +135,8 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
 
 /**
  * @brief Realtime command を生成し，即時実行する
- * @note  RTC のキューに登録までする場合は `CCP_register_rtc` を使用
+ * @note  RTC のキューに登録する場合は `CCP_register_rtc` を使用
+ * @note  生成される command は RTC だが，キューイングされずに即時実行されるため RTC Dispatcher にはログは残らない
  * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
