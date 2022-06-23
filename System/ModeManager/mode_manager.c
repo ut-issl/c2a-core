@@ -309,11 +309,7 @@ static MM_ACK MM_finish_transition_(void)
 
 static void MM_deploy_block_cmd_(bct_id_t bc_index)
 {
-  CommonCmdPacket packet;
-
-  CCP_form_block_deploy_cmd(&packet, TLCD_ID_DEPLOY_BC, bc_index);
-
-  PH_dispatch_command(&packet);
+  CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, bc_index);
 }
 
 CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)

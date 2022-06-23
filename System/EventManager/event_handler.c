@@ -648,34 +648,20 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
 static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
-  CommonCmdPacket packet;
-  CCP_UTIL_ACK form_cmd_ack;
-  CCP_EXEC_STS deploy_cmd_ack;
+  CCP_EXEC_STS ack;
 
-  form_cmd_ack = CCP_form_block_deploy_cmd(&packet, TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
-  if (form_cmd_ack != CCP_UTIL_ACK_OK)
-  {
-    // BC 展開 Cmd の生成に失敗
-    // 正しく組んでいる場合，ここに来るはずはない
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
-                    EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
-                    EL_ERROR_LEVEL_HIGH,
-                    (uint32_t)rule_id);
-    return;
-  }
-
-  deploy_cmd_ack = PH_dispatch_command(&packet);
-  if (deploy_cmd_ack != CCP_EXEC_SUCCESS)
+  ack = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
+  if (ack != CCP_EXEC_SUCCESS)
   {
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
                     EL_ERROR_LEVEL_HIGH,
-                    deploy_cmd_ack);
+                    ack);
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
 
-  EH_record_responded_log_(rule_id, deploy_cmd_ack);
+  EH_record_responded_log_(rule_id, ack);
 }
 
 
