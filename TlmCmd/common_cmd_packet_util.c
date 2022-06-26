@@ -438,7 +438,7 @@ const uint8_t* CCP_get_raw_param_head(const CommonCmdPacket* packet)
 
   if (!CA_has_raw_param(cmd_id)) return NULL;
 
-  offset = CA_get_cmd_param_min_len(cmd_id)
+  offset = CA_get_cmd_param_min_len(cmd_id);
   return CCP_get_param_head(packet) + offset;
 }
 
