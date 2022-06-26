@@ -514,8 +514,8 @@ void CCP_init_param_for_packet(CMD_CODE cmd_id)
 
 CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t* param_head, uint16_t* len)
 {
-  *len = 0;
   CCP_ParamGenerator* p_pg = &CCP_param_generator_;
+  *len = 0;
   param_head = CCP_get_param_head(&(p_pg->packet));
 
   if (p_pg->err_flag) return CCP_UTIL_ACK_PARAM_ERR;
