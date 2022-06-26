@@ -517,6 +517,7 @@ CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t* param_head, uint16
   CCP_ParamGenerator* p_pg = &CCP_param_generator_;
   *len = 0;
   param_head = CCP_get_param_head(&(p_pg->packet));
+  (void)param_head;       // Value stored to 'param_head' is never read [clang-analyzer-deadcode.DeadStores] が出るのの回避のため
 
   if (p_pg->err_flag) return CCP_UTIL_ACK_PARAM_ERR;
   if (CA_get_cmd_param_num(p_pg->cmd_id) != p_pg->param_idx) return CCP_UTIL_ACK_PARAM_ERR;
