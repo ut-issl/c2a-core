@@ -213,6 +213,23 @@ uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 uint16_t CCP_get_raw_param_from_packet(const CommonCmdPacket* packet, void* dest, uint16_t max_copy_len);
 
 /**
+ * @brief  CCP packet から，RAW コマンド引数の先頭ポインタを取得する
+ * @note   RAW パラメタが存在しない場合は， NULL を返す
+ * @note   RAW パラメタが存在しつつ，そのサイズが 0 だった場合は， NULL ではなく最終 param の次のアドレスを返す
+ * @param[in]  packet: 取得する packet
+ * @return RAW コマンド引数の先頭ポインタ
+ */
+const uint8_t* CCP_get_raw_param_head(const CommonCmdPacket* packet);
+
+/**
+ * @brief  CCP packet から，RAW コマンド引数の長さを返す
+ * @note   RAW パラメタが存在しない場合や，不正なパケットの場合は 0 を返す
+ * @param[in]  packet: 取得する packet
+ * @return RAW コマンド引数の長さ
+ */
+uint16_t CCP_get_raw_param_len(const CommonCmdPacket* packet);
+
+/**
  * @def    CCP_get_param_from_packet(packet, n, type)
  * @brief  CCP packet から，n番目のコマンド引数を取得する
  * @note   セグメンテーション違反の場合は， 0 を返す
