@@ -78,16 +78,17 @@ void CCP_form_nop_rtc_(CommonCmdPacket* packet)
 
 void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 {
-  // FIXME: この4は環境依存なので，依存しないように直す
+  // FIXME: この uint32_t は環境依存なので，依存しないように直す
   //        適切に直すことで， CCP_form_tlc の返り値をみなくて良くなるはず．
   //        Cmd_AM_EXECUTE_APP の引数取得部分と同時に直すべきだが，パラメタサイズは CmdDB から取得可能なはず．
-  uint8_t param[4];
-  size_t  id_temp = id;
+  const uint8_t* param;
+  uint16_t len;
 
-  if (packet == NULL) return;
-  endian_memcpy(param, &id_temp, 4);
+  CCP_init_param_for_packet(Cmd_CODE_AM_EXECUTE_APP);
+  CCP_prepare_uint32_param_for_packet(id);
+  CCP_get_prepared_param_for_packet(param, &len);
 
-  CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, 4);
+  CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, len);
 }
 
 
@@ -192,7 +193,8 @@ CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID
 
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
-  uint8_t param[1 + SIZE_OF_BCT_ID_T];
+  const uint8_t* param;
+  uint16_t len;
 
   if (packet == NULL)
   {
@@ -206,10 +208,12 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  param[0] = (uint8_t)tl_no;
-  endian_memcpy(&param[1], &block_no, SIZE_OF_BCT_ID_T);
+  CCP_init_param_for_packet(Cmd_CODE_TLCD_DEPLOY_BLOCK);
+  CCP_prepare_uint8_param_for_packet(tl_no);
+  CCP_prepare_bct_id_param_for_packet(block_no);
+  CCP_get_prepared_param_for_packet(param, &len);
 
-  return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
+  return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, len);
 }
 
 
