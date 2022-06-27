@@ -86,7 +86,7 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 
   CCP_init_param_for_packet(Cmd_CODE_AM_EXECUTE_APP);
   CCP_prepare_uint32_param_for_packet(id);
-  CCP_get_prepared_param_for_packet(param, &len);
+  CCP_get_prepared_param_for_packet(&param, &len);
 
   CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, len);
 }
@@ -211,7 +211,7 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
   CCP_init_param_for_packet(Cmd_CODE_TLCD_DEPLOY_BLOCK);
   CCP_prepare_uint8_param_for_packet(tl_no);
   CCP_prepare_bct_id_param_for_packet(block_no);
-  CCP_get_prepared_param_for_packet(param, &len);
+  CCP_get_prepared_param_for_packet(&param, &len);
 
   return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, len);
 }
@@ -516,12 +516,11 @@ void CCP_init_param_for_packet(CMD_CODE cmd_id)
 }
 
 
-CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t* param_head, uint16_t* len)
+CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t** param_head, uint16_t* len)
 {
   CCP_ParamGenerator* p_pg = &CCP_param_generator_;
   *len = 0;
-  param_head = CCP_get_param_head(&(p_pg->packet));
-  (void)param_head;       // Value stored to 'param_head' is never read [clang-analyzer-deadcode.DeadStores] が出るのの回避のため
+  *param_head = CCP_get_param_head(&(p_pg->packet));
 
   if (p_pg->err_flag) return CCP_UTIL_ACK_PARAM_ERR;
   if (CA_get_cmd_param_num(p_pg->cmd_id) != p_pg->param_idx) return CCP_UTIL_ACK_PARAM_ERR;

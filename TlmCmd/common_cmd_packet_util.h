@@ -273,7 +273,7 @@ void CCP_init_param_for_packet(CMD_CODE cmd_id);
  * @retval CCP_UTIL_ACK_OK: 正常終了
  * @retval CCP_UTIL_ACK_PARAM_ERR: これまでの param 生成仮定で何かしらの不整合が発生
  */
-CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t* param_head, uint16_t* len);
+CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t** param_head, uint16_t* len);
 
 /**
  * @brief  Param Generator で uint8_t のパラメタを登録

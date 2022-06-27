@@ -151,7 +151,7 @@ void DCU_abort_cmd(CMD_CODE cmd_code);
  * @brief  ログを探して，指定したコマンドログを取得する
  * @note   exec_log は divided_cmd_utility の該当のログへのポインタに差し替える．
  * @param[in] cmd_code: 探すコマンド
- * @param[out] exec_log: 取得したログ．constポインタで，参照先を書き換えるため，NULLポインタを渡すのもOK
+ * @param[out] exec_log: 取得したログ．constポインタで，参照先を書き換えるため，NULLポインタを渡すのもOK    // FIXME: これバグってない？（ダブルポインタにすべき？）
  * @retval DCU_LOG_ACK_OK:        見つかった
  * @retval DCU_LOG_ACK_NOT_FOUND: 見つからず
  */
