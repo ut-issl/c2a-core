@@ -545,7 +545,7 @@ def check_operator_space_(path: str, code_lines: list) -> bool:
                     reptn = re.compile(ptn)
                     if not reptn.search(match.group(1)) is None:
                         continue
-                if match.group(2) in ["*", "&"] and match.group(1) in g_type_set:
+                if match.group(2) in ["*", "**", "&"] and match.group(1) in g_type_set:
                     continue
                 if match.group(2) == "*" and match.group(3) != "":
                     if match.group(3)[0] == ")":
