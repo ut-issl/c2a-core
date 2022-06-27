@@ -587,6 +587,12 @@ CCP_UTIL_ACK CCP_prepare_double_param_for_packet(double param)
 }
 
 
+CCP_UTIL_ACK CCP_prepare_bct_id_param_for_packet(bct_id_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, SIZE_OF_BCT_ID_T);
+}
+
+
 CCP_UTIL_ACK CCP_prepare_raw_param_for_packet(const uint8_t* param, uint16_t len)
 {
   CCP_ParamGenerator* p_pg = &CCP_param_generator_;

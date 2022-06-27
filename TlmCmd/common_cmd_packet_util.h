@@ -356,6 +356,14 @@ CCP_UTIL_ACK CCP_prepare_float_param_for_packet(float param);
 CCP_UTIL_ACK CCP_prepare_double_param_for_packet(double param);
 
 /**
+ * @brief  Param Generator で bct_id_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_bct_id_param_for_packet(bct_id_t param);
+
+/**
  * @brief  Param Generator で raw パラメタを登録
  * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
  * @param[in] param: 登録するパラメタ配列
