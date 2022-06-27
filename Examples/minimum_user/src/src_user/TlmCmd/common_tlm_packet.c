@@ -27,6 +27,13 @@ void CTP_set_apid(CommonTlmPacket* packet, APID apid)
   TSP_set_apid(packet, apid);
 }
 
+void CTP_set_global_time(CommonTlmPacket* packet)
+{
+  // 何を設定するかはユーザー定義
+  // TMGR_get_curret_unixtime() で現在の unixtime を入れたり, gps_time を入れたり, など
+  TSP_set_global_time(packet, 0.0);
+}
+
 ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet)
 {
   return TSP_get_dest_flags(packet);
