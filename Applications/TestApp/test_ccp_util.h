@@ -8,5 +8,6 @@
 #include "../../TlmCmd/common_cmd_packet.h"
 
 CCP_EXEC_STS Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TEST_CCP_GET_RAW_PARAM_INFO(const CommonCmdPacket* packet);
 
 #endif

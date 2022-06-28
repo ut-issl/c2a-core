@@ -146,6 +146,7 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DCU_DOWN_ABORT_FLAG].cmd_func = Cmd_DCU_DOWN_ABORT_FLAG;
   cmd_table[Cmd_CODE_DCU_CLEAR_LOG].cmd_func = Cmd_DCU_CLEAR_LOG;
   cmd_table[Cmd_CODE_TEST_CCP_REGISTER_TLC_ASAP].cmd_func = Cmd_TEST_CCP_REGISTER_TLC_ASAP;
+  cmd_table[Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO].cmd_func = Cmd_TEST_CCP_GET_RAW_PARAM_INFO;
   cmd_table[Cmd_CODE_DI_GS_CCSDS_TX_START].cmd_func = Cmd_DI_GS_CCSDS_TX_START;
   cmd_table[Cmd_CODE_DI_GS_CCSDS_TX_STOP].cmd_func = Cmd_DI_GS_CCSDS_TX_STOP;
   cmd_table[Cmd_CODE_DI_GS_DRIVER_RESET].cmd_func = Cmd_DI_GS_DRIVER_RESET;
@@ -318,6 +319,9 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DCU_ABORT_CMD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_DCU_DOWN_ABORT_FLAG].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_TEST_CCP_REGISTER_TLC_ASAP].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
+  cmd_table[Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
+  cmd_table[Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_RAW;
   cmd_table[Cmd_CODE_DI_GS_SET_MS_FLUSH_INTERVAL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_GS_SET_RP_FLUSH_INTERVAL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_DI_GS_SET_FARM_PW].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;

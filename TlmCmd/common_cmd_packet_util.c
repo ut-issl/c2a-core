@@ -431,6 +431,30 @@ uint16_t CCP_get_raw_param_from_packet(const CommonCmdPacket* packet, void* dest
 }
 
 
+const uint8_t* CCP_get_raw_param_head(const CommonCmdPacket* packet)
+{
+  uint16_t offset;
+  CMD_CODE cmd_id = CCP_get_id(packet);
+
+  if (!CA_has_raw_param(cmd_id)) return NULL;
+
+  offset = CA_get_cmd_param_min_len(cmd_id);
+  return CCP_get_param_head(packet) + offset;
+}
+
+
+uint16_t CCP_get_raw_param_len(const CommonCmdPacket* packet)
+{
+  int32_t len;
+  CMD_CODE cmd_id = CCP_get_id(packet);
+
+  if (!CA_has_raw_param(cmd_id)) return 0;
+
+  len = CCP_get_param_len(packet) - CA_get_cmd_param_min_len(cmd_id);
+  return (len < 0) ? 0 : (uint16_t)len;
+}
+
+
 CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset)
 {
   uint8_t i;

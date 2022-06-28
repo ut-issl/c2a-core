@@ -16,12 +16,6 @@ c2a_enum = c2a_enum_utils.get_c2a_enum()
 ope = wings_utils.get_wings_operation()
 
 
-def get_latest_tl_tlm():
-    return wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
-    )
-
-
 @pytest.mark.real
 @pytest.mark.sils
 def test_ccp_register_tlc_asap():
@@ -130,6 +124,38 @@ def test_ccp_register_tlc_asap():
     clear_tl_gs()
 
 
+@pytest.mark.real
+@pytest.mark.sils
+def test_ccp_get_raw_param_info():
+    # raw なし
+    assert "CNT" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO,
+        (0, 0, "0x1234"),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    # FIXME: raw パラメタの長さが 0 で送信できず．．．
+    # assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+    #     ope,
+    #     c2a_enum.Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO,
+    #     (0, 0, ),
+    #     c2a_enum.Tlm_CODE_HK,
+    # )
+
+    assert "SUC" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO,
+        (2, 0x12, "0x1234"),
+        c2a_enum.Tlm_CODE_HK,
+    )
+    assert "CNT" == wings.util.send_rt_cmd_and_confirm(
+        ope,
+        c2a_enum.Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO,
+        (2, 0x34, "0x1234"),
+        c2a_enum.Tlm_CODE_HK,
+    )
+
+
 def clear_tl_gs():
     # TL_GS をクリア
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -137,6 +163,12 @@ def clear_tl_gs():
         c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
         (c2a_enum.TLCD_ID_FROM_GS,),
         c2a_enum.Tlm_CODE_HK,
+    )
+
+
+def get_latest_tl_tlm():
+    return wings.util.generate_and_receive_tlm(
+        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
     )
 
 
