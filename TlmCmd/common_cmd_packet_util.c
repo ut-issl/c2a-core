@@ -9,7 +9,22 @@
 #include <stddef.h>     // for NULL
 #include <string.h>
 
+/**
+ * @struct CCP_ParamGenerator
+ * @brief  param を構築するための一時領域
+ */
+typedef struct
+{
+  CommonCmdPacket packet;   //!< 作成する CCP の param を保存するためのバッファ
+  uint8_t  err_flag;        //!< エラーが発生したか
+  uint8_t  param_idx;       //!< 今どこまでの param を作ったか
+  uint16_t len;             //!< param 長
+  CMD_CODE cmd_id;          //!< どのコマンドの param か
+} CCP_ParamGenerator;
+
 static CommonCmdPacket CCP_util_packet_;
+static CCP_ParamGenerator CCP_param_generator_;
+
 
 /**
  * @brief NOP cmd の RTC CCP を作る
@@ -17,15 +32,6 @@ static CommonCmdPacket CCP_util_packet_;
  * @return void
  */
 void CCP_form_nop_rtc_(CommonCmdPacket* packet);
-
-/**
- * @brief CCP パラメタ開始位置に対する n 番目の引数の offset を計算する
- * @param[in]  cmd_id: CMD_CODE
- * @param[in]  n: N番目の引数 （0起算）
- * @param[out] offset: offset
- * @return CCP_UTIL_ACK
- */
-CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset);
 
 /**
  * @brief RealTime Command を生成する. CCP_form_* の実体.
@@ -38,6 +44,31 @@ CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset
  */
 static void CCP_form_rtc_(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
+/**
+ * @brief CCP パラメタ開始位置に対する n 番目の引数の offset を計算する
+ * @param[in]  cmd_id: CMD_CODE
+ * @param[in]  n: N番目の引数 （0起算）
+ * @param[out] offset: offset
+ * @return CCP_UTIL_ACK
+ */
+static CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset);
+
+/**
+ * @brief  Param Generator でエラーを発生した際に呼ぶエラー保存関数
+ * @param void
+ * @retval CCP_UTIL_ACK_PARAM_ERR
+ */
+static CCP_UTIL_ACK CCP_raise_err_at_param_generator_(void);
+
+/**
+ * @brief  Param Generator で n byte のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @param[in] byte: パラメタのサイズ
+ * @return CCP_UTIL_ACK
+ */
+static CCP_UTIL_ACK CCP_prepare_param_for_packet_(void* param, uint8_t byte);
+
 
 void CCP_form_nop_rtc_(CommonCmdPacket* packet)
 {
@@ -47,16 +78,17 @@ void CCP_form_nop_rtc_(CommonCmdPacket* packet)
 
 void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id)
 {
-  // FIXME: この4は環境依存なので，依存しないように直す
+  // FIXME: この uint32_t は環境依存なので，依存しないように直す
   //        適切に直すことで， CCP_form_tlc の返り値をみなくて良くなるはず．
   //        Cmd_AM_EXECUTE_APP の引数取得部分と同時に直すべきだが，パラメタサイズは CmdDB から取得可能なはず．
-  uint8_t param[4];
-  size_t  id_temp = id;
+  const uint8_t* param;
+  uint16_t len;
 
-  if (packet == NULL) return;
-  endian_memcpy(param, &id_temp, 4);
+  CCP_init_param_for_packet(Cmd_CODE_AM_EXECUTE_APP);
+  CCP_prepare_uint32_param_for_packet(id);
+  CCP_get_prepared_param_for_packet(&param, &len);
 
-  CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, 4);
+  CCP_form_tlc(packet, ti, Cmd_CODE_AM_EXECUTE_APP, param, len);
 }
 
 
@@ -161,7 +193,8 @@ CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID
 
 CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no)
 {
-  uint8_t param[1 + SIZE_OF_BCT_ID_T];
+  const uint8_t* param;
+  uint16_t len;
 
   if (packet == NULL)
   {
@@ -175,10 +208,12 @@ CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, b
     return CCP_UTIL_ACK_PARAM_ERR;
   }
 
-  param[0] = (uint8_t)tl_no;
-  endian_memcpy(&param[1], &block_no, SIZE_OF_BCT_ID_T);
+  CCP_init_param_for_packet(Cmd_CODE_TLCD_DEPLOY_BLOCK);
+  CCP_prepare_uint8_param_for_packet(tl_no);
+  CCP_prepare_bct_id_param_for_packet(block_no);
+  CCP_get_prepared_param_for_packet(&param, &len);
 
-  return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, 1 + SIZE_OF_BCT_ID_T);
+  return CCP_form_rtc(packet, Cmd_CODE_TLCD_DEPLOY_BLOCK, param, len);
 }
 
 
@@ -455,7 +490,7 @@ uint16_t CCP_get_raw_param_len(const CommonCmdPacket* packet)
 }
 
 
-CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset)
+static CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset)
 {
   uint8_t i;
   if (cmd_id >= CA_MAX_CMDS) return CCP_UTIL_ACK_PARAM_ERR;
@@ -466,6 +501,148 @@ CCP_UTIL_ACK CCP_calc_param_offset_(CMD_CODE cmd_id, uint8_t n, uint16_t* offset
   {
     (*offset) += CA_get_cmd_param_size(cmd_id, i);
   }
+  return CCP_UTIL_ACK_OK;
+}
+
+
+void CCP_init_param_for_packet(CMD_CODE cmd_id)
+{
+  CCP_param_generator_.err_flag = 0;
+  CCP_param_generator_.param_idx = 0;
+  CCP_param_generator_.len = 0;
+  CCP_param_generator_.cmd_id = cmd_id;
+
+  if (cmd_id >= CA_MAX_CMDS) CCP_raise_err_at_param_generator_();
+}
+
+
+CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t** param_head, uint16_t* len)
+{
+  CCP_ParamGenerator* p_pg = &CCP_param_generator_;
+  *len = 0;
+  *param_head = CCP_get_param_head(&(p_pg->packet));
+
+  if (p_pg->err_flag) return CCP_UTIL_ACK_PARAM_ERR;
+  if (CA_get_cmd_param_num(p_pg->cmd_id) != p_pg->param_idx) return CCP_UTIL_ACK_PARAM_ERR;
+
+  *len = p_pg->len;
+  return CCP_UTIL_ACK_OK;
+}
+
+
+CCP_UTIL_ACK CCP_prepare_uint8_param_for_packet(uint8_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 1);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_int8_param_for_packet(int8_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 1);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_uint16_param_for_packet(uint16_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 2);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_int16_param_for_packet(int16_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 2);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_uint32_param_for_packet(uint32_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 4);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_int32_param_for_packet(int32_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 4);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_uint64_param_for_packet(uint64_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 8);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_int64_param_for_packet(int64_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, 8);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_float_param_for_packet(float param)
+{
+  return CCP_prepare_param_for_packet_(&param, 4);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_double_param_for_packet(double param)
+{
+  return CCP_prepare_param_for_packet_(&param, 8);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_bct_id_param_for_packet(bct_id_t param)
+{
+  return CCP_prepare_param_for_packet_(&param, SIZE_OF_BCT_ID_T);
+}
+
+
+CCP_UTIL_ACK CCP_prepare_raw_param_for_packet(const uint8_t* param, uint16_t len)
+{
+  CCP_ParamGenerator* p_pg = &CCP_param_generator_;
+  uint16_t offset = CA_get_cmd_param_min_len(p_pg->cmd_id);
+
+  if (p_pg->err_flag) return CCP_raise_err_at_param_generator_();
+  if (!CA_has_raw_param(p_pg->cmd_id)) return CCP_raise_err_at_param_generator_();
+  if (CA_get_cmd_param_num(p_pg->cmd_id) != p_pg->param_idx + 1)
+  {
+    return CCP_raise_err_at_param_generator_();
+  }
+  if (CCP_get_max_param_len() < offset + len) return CCP_raise_err_at_param_generator_();
+  if (p_pg->len != offset) return CCP_raise_err_at_param_generator_();
+
+  memcpy((void*)(CCP_get_param_head(&(p_pg->packet)) + offset), param, len);   // const_cast
+  p_pg->len += len;
+  p_pg->param_idx++;
+  return CCP_UTIL_ACK_OK;
+}
+
+
+static CCP_UTIL_ACK CCP_raise_err_at_param_generator_(void)
+{
+  CCP_param_generator_.err_flag = 1;
+  return CCP_UTIL_ACK_PARAM_ERR;
+}
+
+
+static CCP_UTIL_ACK CCP_prepare_param_for_packet_(void* param, uint8_t byte)
+{
+  CCP_ParamGenerator* p_pg = &CCP_param_generator_;
+  uint16_t offset = 0;
+
+  if (p_pg->err_flag) return CCP_raise_err_at_param_generator_();
+  if (CA_get_cmd_param_size(p_pg->cmd_id, p_pg->param_idx) != byte)
+  {
+    return CCP_raise_err_at_param_generator_();
+  }
+  if (CCP_calc_param_offset_(p_pg->cmd_id, p_pg->param_idx, &offset) != CCP_UTIL_ACK_OK)
+  {
+    return CCP_raise_err_at_param_generator_();
+  }
+  if (p_pg->len != offset) return CCP_raise_err_at_param_generator_();
+
+  endian_memcpy((void*)(CCP_get_param_head(&(p_pg->packet)) + offset), param, byte);   // const_cast
+  p_pg->len += byte;
+  p_pg->param_idx++;
   return CCP_UTIL_ACK_OK;
 }
 

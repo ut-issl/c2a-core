@@ -254,4 +254,122 @@ sizeof(type) == 8 ? \
 (void*)CCP_get_8byte_param_from_packet(packet, n) : \
 0)))
 
+/**
+ * @brief  Param Generator を初期化
+ * @note   Param Generator の使い方
+ *           1. CCP_init_param_for_packet で初期化
+ *           2. CCP_prepare_hoge_param_for_packet にて，パラメタを 1 つめからセットしていく
+ *           3. CCP_get_prepared_param_for_packet で完成した param とその長さを取得する
+ * @param[in] cmd_id: これから作成する param の Cmd ID
+ * @return void
+ */
+void CCP_init_param_for_packet(CMD_CODE cmd_id);
+
+/**
+ * @brief  Param Generator から完成した param を取得する
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[out] param_head: 完成した param の先頭ポインタ
+ * @param[out] len: paran の長さ
+ * @retval CCP_UTIL_ACK_OK: 正常終了
+ * @retval CCP_UTIL_ACK_PARAM_ERR: これまでの param 生成仮定で何かしらの不整合が発生
+ */
+CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t** param_head, uint16_t* len);
+
+/**
+ * @brief  Param Generator で uint8_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint8_param_for_packet(uint8_t param);
+
+/**
+ * @brief  Param Generator で int8_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int8_param_for_packet(int8_t param);
+
+/**
+ * @brief  Param Generator で uint16_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint16_param_for_packet(uint16_t param);
+
+/**
+ * @brief  Param Generator で int16_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int16_param_for_packet(int16_t param);
+
+/**
+ * @brief  Param Generator で uint32_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint32_param_for_packet(uint32_t param);
+
+/**
+ * @brief  Param Generator で int32_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int32_param_for_packet(int32_t param);
+
+/**
+ * @brief  Param Generator で uint64_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint64_param_for_packet(uint64_t param);
+
+/**
+ * @brief  Param Generator で int64_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int64_param_for_packet(int64_t param);
+
+/**
+ * @brief  Param Generator で float のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_float_param_for_packet(float param);
+
+/**
+ * @brief  Param Generator で double のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_double_param_for_packet(double param);
+
+/**
+ * @brief  Param Generator で bct_id_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_bct_id_param_for_packet(bct_id_t param);
+
+/**
+ * @brief  Param Generator で raw パラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ配列
+ * @param[in] len: 登録するパラメタの長さ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_raw_param_for_packet(const uint8_t* param, uint16_t len);
+
 #endif
