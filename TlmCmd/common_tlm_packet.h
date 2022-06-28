@@ -63,8 +63,8 @@ APID CTP_get_apid(const CommonTlmPacket* packet);
 void CTP_set_apid(CommonTlmPacket* packet, APID apid);
 
 /**
- * @brief  global_time を設定
- * @note 何を設定するかは user 定義
+ * @brief  現在の global_time を設定
+ * @note   何を設定するかは user 定義
  * @param[in,out] packet: CTP
  * @return void
  */
