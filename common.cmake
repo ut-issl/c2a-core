@@ -1,7 +1,6 @@
 if(BUILD_C2A_AS_CXX)
   # memo: set_source_files_properties() must be set before add_library/add_executable on Visual Studio CMake
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
-  set_target_properties(${PROJECT_NAME} PROPERTIES LANGUAGE CXX) # C++
 else()
   if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
     # TODO: remove this!
