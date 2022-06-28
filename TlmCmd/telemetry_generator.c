@@ -71,7 +71,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   }
 
   // FIXME: 他の時刻も入れる
-  TSP_set_global_time(&ctp_, 0.0);
+  CTP_set_global_time(&ctp_);
   TSP_set_on_board_subnet_time(&ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
 
   // FIXME: 他 OBC からのパケットは別処理する
