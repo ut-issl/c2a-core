@@ -7,10 +7,10 @@ git config --local core.hooksPath Script/GitHooks
 echo done.
 echo
 echo [SET UP DEVELOP ENVIRONMENT FOR C2A MINIMUM USER SAMPLE]
-if [ -e './Examples/minimum_user_for_s2e/src/src_core' ]; then
-  rm -rf './Examples/minimum_user_for_s2e/src/src_core'
+if [ -e './Examples/minimum_user/src/src_core' ]; then
+  rm -rf './Examples/minimum_user/src/src_core'
 fi
-ln -s '../../../' './Examples/minimum_user_for_s2e/src/src_core'
+ln -s '../../../' './Examples/minimum_user/src/src_core'
 echo done.
 echo
 echo The process has been completed.

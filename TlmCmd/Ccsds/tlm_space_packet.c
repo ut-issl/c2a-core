@@ -200,7 +200,7 @@ void TSP_set_tlm_id(TlmSpacePacket* tsp, TLM_CODE id)
 }
 
 
-ctp_dest_flags_t TSP_get_dest_flgas(const TlmSpacePacket* tsp)
+ctp_dest_flags_t TSP_get_dest_flags(const TlmSpacePacket* tsp)
 {
   ctp_dest_flags_t flags;
 
@@ -209,7 +209,7 @@ ctp_dest_flags_t TSP_get_dest_flgas(const TlmSpacePacket* tsp)
 }
 
 
-void TSP_set_dest_flgas(TlmSpacePacket* tsp, ctp_dest_flags_t flags)
+void TSP_set_dest_flags(TlmSpacePacket* tsp, ctp_dest_flags_t flags)
 {
   SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dest_flags_, &flags);
 }

@@ -49,7 +49,7 @@ void TDSP_initialize(void);
  * @brief 指定した BC を TaskList に展開するものとして登録
  * @param[in] id: BC の id
  * @note 展開自体は TDSP_deploy_block_as_task_list_ で行う
- *       "BC を TaskList に展開" とは `src_user\Settings\Modes\TaskLists\InitialTL.c` などを参照.
+ *       "BC を TaskList に展開" とは `src_user\Settings\Modes\TaskLists\tl_initial.c` などを参照.
  */
 TDSP_ACK TDSP_set_task_list_id(bct_id_t id);
 

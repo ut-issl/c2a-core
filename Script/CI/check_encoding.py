@@ -36,22 +36,21 @@ def main():
     for target_dir in settings["target_dirs"]:
         target_dirs.append(settings["root_dir"] + target_dir)
 
-    flag = 0
+    flag = True
     for target_dir in target_dirs:
-        ret = check(target_dir, settings)
-        if ret != 0:
-            flag = 1
+        if not check(target_dir, settings):
+            flag = False
 
-    if flag:
+    if not flag:
         print("The above files are invalid encoding.")
         sys.exit(1)
     print("Completed!")
     sys.exit(0)
 
 
-# 0: OK, 1: NG
+# True: OK, False: NG
 def check(target_dir, settings):
-    flag = 0
+    flag = True
     for root, dirs, files in os.walk(target_dir):
         for file in files:
             ext = (os.path.splitext(file))[1].replace(".", "")
@@ -68,14 +67,13 @@ def check(target_dir, settings):
                 continue
 
             path = root + r"/" + file
-            ret = check_encoding(path, encoding)
-            if ret != 0:
+            if not check_encoding(path, encoding):
                 print(path)
-                flag = 1
+                flag = False
     return flag
 
 
-# 0: OK, 1: NG
+# True: OK, False: NG
 def check_encoding(path, encoding):
     with open(path, "rb") as f:
         # print(path)
@@ -84,22 +82,22 @@ def check_encoding(path, encoding):
     # print(enc)
     if encoding == "utf-8":
         if enc == "utf-8" or enc == "ascii":
-            return 0
+            return True
         # なぜか以下のような誤認もあるので
         if enc == "Windows-1252" or enc == "ISO-8859-1" or enc is None:
-            return 0
+            return True
     elif encoding == "shift_jis":
         if enc == "SHIFT_JIS" or enc == "CP932" or enc == "ascii":
-            return 0
+            return True
         # なぜか以下のような誤認もあるので
         if enc == "Windows-1252" or enc == "Windows-1254" or enc is None:
-            return 0
+            return True
     else:
         print("Invalid encoding in setting file!")
-        return 1
+        return False
 
     print(ret)
-    return 1
+    return False
 
 
 if __name__ == "__main__":

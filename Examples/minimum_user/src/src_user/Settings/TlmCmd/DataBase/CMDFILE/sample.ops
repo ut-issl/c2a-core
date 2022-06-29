@@ -1,0 +1,44 @@
+.# ************************************* #
+ # =        Sample Command File        = #
+ # ************************************* #
+.#
+.# =======================================
+ #  NOP
+ # =======================================
+.MOBC_RT.Cmd_NOP
+.#
+.#
+.# =======================================
+ #  テレメダウンリンク
+ # =======================================
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x00 1   # MOBC
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x56 1   # EL
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x5a 1   # EH
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x46 1   # App Time
+.#
+.#
+.# =======================================
+ #  定期的なテレメダウンリンク
+ # =======================================
+.MOBC_RT.Cmd_BCT_CLEAR_BLOCK 77     # BCT 77 を使用
+ wait_sec 1
+ MOBC_BL.Cmd_GENERATE_TLM 1 0x40 0xf0 1 # HK
+ wait_sec 1
+ MOBC_BL.Cmd_GENERATE_TLM 3 0x40 0x56 1 # EL
+ wait_sec 1
+ MOBC_BL.Cmd_TLCD_DEPLOY_BLOCK 10 2 77
+ wait_sec 1
+ MOBC_RT.Cmd_BCE_ACTIVATE_BLOCK
+ wait_sec 1
+ MOBC_RT.Cmd_TLCD_CLEAR_ALL_TIMELINE 2
+ wait_sec 1
+ # BCを展開し，TLM出力開始
+ MOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 2 77
+.#
+.#
+.# =======================================
+ #  イベント登録
+ # =======================================
+.MOBC_RT.Cmd_EL_RECORD_EVENT 255 1 0 0
+.MOBC_RT.Cmd_EL_RECORD_EVENT 255 2 1 0
+.MOBC_RT.Cmd_EL_RECORD_EVENT 255 3 2 1

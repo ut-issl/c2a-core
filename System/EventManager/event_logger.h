@@ -48,11 +48,11 @@
 // EL_GROUP (uint32_t を想定) をここで定義する
 #include <src_user/Settings/System/event_logger_group.h>
 
-#define EL_TLOG_TLM_PAGE_SIZE         (32)    //!< TLogにて，テレメ１ページにおろせるlog数
+#define EL_TLOG_TLM_PAGE_SIZE         (28)    //!< TLogにて，テレメ１ページにおろせるlog数
 #define EL_TLOG_TLM_PAGE_MAX_HIGH     (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_HIGH)
 #define EL_TLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_MIDDLE)
 #define EL_TLOG_TLM_PAGE_MAX_LOW      (4)     //!< TLogで保存するログのページ数 (EL_ERROR_LEVEL_LOW)
-#define EL_CLOG_TLM_PAGE_SIZE         (20)    //!< CLogにて，テレメ１ページにおろせるlog数
+#define EL_CLOG_TLM_PAGE_SIZE         (18)    //!< CLogにて，テレメ１ページにおろせるlog数
 #define EL_CLOG_TLM_PAGE_MAX_HIGH     (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_HIGH)
 #define EL_CLOG_TLM_PAGE_MAX_MIDDLE   (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_MIDDLE)
 #define EL_CLOG_TLM_PAGE_MAX_LOW      (4)     //!< CLogで保存するログのページ数 (EL_ERROR_LEVEL_LOW)
@@ -215,6 +215,8 @@ typedef enum
   EL_CORE_GROUP_EH_MATCH_RULE,        //!< EH_Rule でマッチした（詳細は event_handler.h 参照）
   EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,  //!< EH_Rule でマッチしたが，そのルールで対応せずに，上位のルールで対応させた（詳細は event_handler.h 参照）
   EL_CORE_GROUP_COMMAND_ANALYZE,
+  EL_CORE_GROUP_CDIS_INTERNAL_ERR,
+  EL_CORE_GROUP_CDIS_EXEC_ERR,
   // TODO: Driver Super
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   EL_CORE_GROUP_EL_DROP_CLOG1,        //!< EL CLogs で古いエラーを上書きするとき (group, err_level を保存)

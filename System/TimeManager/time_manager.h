@@ -172,14 +172,14 @@ double TMGR_get_utl_unixtime_epoch(void);
  * @param void
  * @return cycles_per_sec
  */
-double TMGR_get_precice_cycles_per_sec(void);
+double TMGR_get_precise_cycles_per_sec(void);
 
 /**
  * @brief OBC のクロック誤差を反映した正確な ti を秒単位で返す
  * @param[in] time ti を保持している OBCTime
  * @return ti（秒単位, 小数点以下も保持）
  */
-double TMGR_get_precice_ti_in_sec(const ObcTime* time);
+double TMGR_get_precise_ti_in_sec(const ObcTime* time);
 
 /**
  * @brief 現在の unixtime を OBC の ti をもとに計算して返す
@@ -196,20 +196,28 @@ double TMGR_get_current_unixtime(void);
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time);
 
 /**
- * @brief unixtime を ObcTime に変換する
- * @param[in] unixtime
- * @retval {0, 0, 0} : 引数の unixtime が unixtime_at_ti0 より小さいとき
- * @retval ObcTime   : それ以外
- */
-ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
-
-/**
  * @brief UTL_cmdで用いる utl_unixtime を 一般的なunixtimeに変換する
  * @note utl_unixtime の単位としての cycle は, OBC のクロック誤差を含まない定義通りの値であることに注意
  * @param[in] utl_unixtime
  * @return unixtime
  */
 double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime);
+
+/**
+ * @brief unixtime を TI (cycle単位) に変換する
+ * @param[in] unixtime
+ * @retval 0  : 引数の unixtime が unixtime_at_ti0 より小さいとき
+ * @retval TI : それ以外. 整数に丸めず double のまま返す
+ */
+double TMGR_get_precise_ti_from_unixtime(const double unixtime);
+
+/**
+ * @brief unixtime を ObcTime に変換する
+ * @param[in] unixtime
+ * @retval {0, 0, 0} : 引数の unixtime が unixtime_at_ti0 より小さいとき
+ * @retval ObcTime   : それ以外
+ */
+ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
 
 /**
  * @brief 引数で指定された utl_unixtime に対応する TI を返す

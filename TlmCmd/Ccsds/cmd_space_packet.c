@@ -171,22 +171,9 @@ void CSP_set_cmd_id(CmdSpacePacket* csp, CMD_CODE id)
 
 CCP_DEST_TYPE CSP_get_dest_type(const CmdSpacePacket* csp)
 {
-  uint8_t tmp;
-  CCP_DEST_TYPE dest_type;
-
-  SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_dest_type_, &tmp);
-  dest_type = (CCP_DEST_TYPE)tmp;
-
-  switch (dest_type)
-  {
-  case CCP_DEST_TYPE_TO_ME:   // FALL THROUGH
-  case CCP_DEST_TYPE_TO_MOBC: // FALL THROUGH
-  case CCP_DEST_TYPE_TO_AOBC: // FALL THROUGH
-  case CCP_DEST_TYPE_TO_TOBC:
-    return dest_type;
-  default:
-    return CCP_DEST_TYPE_TO_UNKOWN;
-  }
+  uint8_t dest_type;
+  SP_extract_param_from_packet(CSP_CAST_TO_SP(csp), &CSP_pei_dest_type_, &dest_type);
+  return CCP_get_dest_type_from_uint8(dest_type);
 }
 
 
@@ -207,14 +194,18 @@ CCP_EXEC_TYPE CSP_get_exec_type(const CmdSpacePacket* csp)
 
   switch (exec_type)
   {
-  case CCP_EXEC_TYPE_GS:  // FALL THROUGH
-  case CCP_EXEC_TYPE_TL0: // FALL THROUGH
-  case CCP_EXEC_TYPE_BC:  // FALL THROUGH
-  case CCP_EXEC_TYPE_RT:  // FALL THROUGH
-  case CCP_EXEC_TYPE_UTL: // FALL THROUGH
-  case CCP_EXEC_TYPE_TL1: // FALL THROUGH
-  case CCP_EXEC_TYPE_TL2:
-    return exec_type;
+  case CCP_EXEC_TYPE_GS:
+  case CCP_EXEC_TYPE_TL_FROM_GS:
+  case CCP_EXEC_TYPE_BC:
+  case CCP_EXEC_TYPE_RT:
+  case CCP_EXEC_TYPE_UTL:
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC:
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
+#ifdef TLCD_ENABLE_MISSION_TL
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
+#endif
+    return exec_type;  // ここまで FALL THROUGH
   default:
     return CCP_EXEC_TYPE_UNKNOWN;
   }

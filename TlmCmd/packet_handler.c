@@ -16,34 +16,45 @@
 
 PacketList PH_gs_cmd_list;
 PacketList PH_rt_cmd_list;
-PacketList PH_tl_cmd_list[TL_ID_MAX];
+PacketList PH_tl_cmd_list[TLCD_ID_MAX];
 PacketList PH_ms_tlm_list;
+#ifdef DR_ENABLE
 PacketList PH_st_tlm_list;
 PacketList PH_rp_tlm_list;
+#endif
 
-static PL_Node PH_gs_cmd_stock_[PH_GS_CMD_LIST_MAX];
-static PL_Node PH_rt_cmd_stock_[PH_RT_CMD_LIST_MAX];
-static PL_Node PH_tl0_cmd_stock_[PH_TL0_CMD_LIST_MAX];
-static PL_Node PH_tl1_cmd_stock_[PH_TL1_CMD_LIST_MAX];
-static PL_Node PH_tl2_cmd_stock_[PH_TL2_CMD_LIST_MAX];
+static PL_Node PH_gs_cmd_stock_[PH_GSC_LIST_MAX];
+static PL_Node PH_rt_cmd_stock_[PH_RTC_LIST_MAX];
+static PL_Node PH_tl_cmd_gs_stock_[PH_TLC_GS_LIST_MAX];
+static PL_Node PH_tl_cmd_bc_stock_[PH_TLC_BC_LIST_MAX];
+static PL_Node PH_tl_cmd_tlm_stock_[PH_TLC_TLM_LIST_MAX];
+#ifdef TLCD_ENABLE_MISSION_TL
+static PL_Node PH_tl_cmd_mis_stock_[PH_TLC_MIS_LIST_MAX];
+#endif
 static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
+#ifdef DR_ENABLE
 static PL_Node PH_st_tlm_stock_[PH_ST_TLM_LIST_MAX];
 static PL_Node PH_rp_tlm_stock_[PH_RP_TLM_LIST_MAX];
+#endif
 
-static CommonCmdPacket PH_gs_cmd_ccp_stock_[PH_GS_CMD_LIST_MAX];
-static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RT_CMD_LIST_MAX];
-static CommonCmdPacket PH_tl0_cmd_ccp_stock_[PH_TL0_CMD_LIST_MAX];
-static CommonCmdPacket PH_tl1_cmd_ccp_stock_[PH_TL1_CMD_LIST_MAX];
-static CommonCmdPacket PH_tl2_cmd_ccp_stock_[PH_TL2_CMD_LIST_MAX];
+static CommonCmdPacket PH_gs_cmd_ccp_stock_[PH_GSC_LIST_MAX];
+static CommonCmdPacket PH_rt_cmd_ccp_stock_[PH_RTC_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_gs_ccp_stock_[PH_TLC_GS_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_bc_ccp_stock_[PH_TLC_BC_LIST_MAX];
+static CommonCmdPacket PH_tl_cmd_tlm_ccp_stock_[PH_TLC_TLM_LIST_MAX];
+#ifdef TLCD_ENABLE_MISSION_TL
+static CommonCmdPacket PH_tl_cmd_mis_ccp_stock_[PH_TLC_MIS_LIST_MAX];
+#endif
 static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
+#ifdef DR_ENABLE
 static CommonTlmPacket PH_st_tlm_ctp_stock_[PH_ST_TLM_LIST_MAX];
 static CommonTlmPacket PH_rp_tlm_ctp_stock_[PH_RP_TLM_LIST_MAX];
+#endif
 
-static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet);
-
+static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet);
 static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet);
-static PH_ACK PH_add_tl_cmd_(int line_no,
+static PH_ACK PH_add_tl_cmd_(TLCD_ID id,
                              const CommonCmdPacket* packet,
                              cycle_t now);
 /**
@@ -52,24 +63,31 @@ static PH_ACK PH_add_tl_cmd_(int line_no,
  * @param[in] packet
  * @return PH_ACK
  */
-static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet);
+static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet);
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
+#ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
+#endif
 
 
 void PH_init(void)
 {
-  PL_initialize_with_ccp(PH_gs_cmd_stock_, PH_gs_cmd_ccp_stock_, PH_GS_CMD_LIST_MAX, &PH_gs_cmd_list);
-  PL_initialize_with_ccp(PH_rt_cmd_stock_, PH_rt_cmd_ccp_stock_, PH_RT_CMD_LIST_MAX, &PH_rt_cmd_list);
+  PL_initialize_with_ccp(PH_gs_cmd_stock_, PH_gs_cmd_ccp_stock_, PH_GSC_LIST_MAX, &PH_gs_cmd_list);
+  PL_initialize_with_ccp(PH_rt_cmd_stock_, PH_rt_cmd_ccp_stock_, PH_RTC_LIST_MAX, &PH_rt_cmd_list);
 
-  PL_initialize_with_ccp(PH_tl0_cmd_stock_, PH_tl0_cmd_ccp_stock_, PH_TL0_CMD_LIST_MAX, &PH_tl_cmd_list[0]);
-  PL_initialize_with_ccp(PH_tl1_cmd_stock_, PH_tl1_cmd_ccp_stock_, PH_TL1_CMD_LIST_MAX, &PH_tl_cmd_list[1]);
-  PL_initialize_with_ccp(PH_tl2_cmd_stock_, PH_tl2_cmd_ccp_stock_, PH_TL2_CMD_LIST_MAX, &PH_tl_cmd_list[2]);
+  PL_initialize_with_ccp(PH_tl_cmd_gs_stock_, PH_tl_cmd_gs_ccp_stock_, PH_TLC_GS_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS]);
+  PL_initialize_with_ccp(PH_tl_cmd_bc_stock_, PH_tl_cmd_bc_ccp_stock_, PH_TLC_BC_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_DEPLOY_BC]);
+  PL_initialize_with_ccp(PH_tl_cmd_tlm_stock_, PH_tl_cmd_tlm_ccp_stock_, PH_TLC_TLM_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]);
+#ifdef TLCD_ENABLE_MISSION_TL
+  PL_initialize_with_ccp(PH_tl_cmd_mis_stock_, PH_tl_cmd_mis_ccp_stock_, PH_TLC_TLM_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]);
+#endif
 
   PL_initialize_with_ctp(PH_ms_tlm_stock_, PH_ms_tlm_ctp_stock_, PH_MS_TLM_LIST_MAX, &PH_ms_tlm_list);
+#ifdef DR_ENABLE
   PL_initialize_with_ctp(PH_st_tlm_stock_, PH_st_tlm_ctp_stock_, PH_ST_TLM_LIST_MAX, &PH_st_tlm_list);
   PL_initialize_with_ctp(PH_rp_tlm_stock_, PH_rp_tlm_ctp_stock_, PH_RP_TLM_LIST_MAX, &PH_rp_tlm_list);
+#endif
 
   PH_user_init();
 }
@@ -77,7 +95,7 @@ void PH_init(void)
 
 PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
 {
-  if (packet == NULL) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CTCP_is_valid_packet(packet)) return PH_ACK_INVALID_PACKET;
 
   switch (CTCP_get_packet_type(packet))
   {
@@ -90,23 +108,23 @@ PH_ACK PH_analyze_packet(const CommonTlmCmdPacket* packet)
     return PH_analyze_cmd_packet(CTCP_convert_to_ccp(packet));
 
   default:
-    return PH_INVALID_DISCRIMINATOR;    // FIXME: 返り値変えたい
+    return PH_ACK_INVALID_PACKET;
   }
 
-  return PH_UNKNOWN;
+  return PH_ACK_UNKNOWN;
 }
 
 
 PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
 {
   PH_ACK ack;
-  if (!CCP_is_valid_packet(packet)) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CCP_is_valid_packet(packet)) return PH_ACK_INVALID_PACKET;
 
   // ユーザー定義部
   // 基本的には，接続されているC2Aを搭載したボードに
   // この段階（キューイングされ，時刻調整され， PH_user_cmd_router で実行されるのではなく，この段階）で転送したいときに使う
   ack = PH_user_analyze_cmd(packet);
-  if (ack != PH_UNKNOWN)
+  if (ack != PH_ACK_UNKNOWN)
   {
     return ack;
   }
@@ -116,51 +134,59 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   case CCP_EXEC_TYPE_GS:
     return PH_add_gs_cmd_(packet);
 
-  case CCP_EXEC_TYPE_TL0:
-    return PH_add_tl_cmd_(0, packet, TMGR_get_master_total_cycle());
+  case CCP_EXEC_TYPE_TL_FROM_GS:
+    return PH_add_tl_cmd_(TLCD_ID_FROM_GS, packet, TMGR_get_master_total_cycle());
 
   case CCP_EXEC_TYPE_BC:
-    return PH_analyze_block_cmd_(packet);
+    return PH_add_block_cmd_(packet);
 
   case CCP_EXEC_TYPE_RT:
     return PH_add_rt_cmd_(packet);
 
   case CCP_EXEC_TYPE_UTL:
-    return PH_add_utl_cmd_(packet);
+    return PH_add_utl_cmd_(TLCD_ID_FROM_GS, packet);
 
-  case CCP_EXEC_TYPE_TL1:
-    return PH_add_tl_cmd_(1, packet, TMGR_get_master_total_cycle());
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC:
+    return PH_add_tl_cmd_(TLCD_ID_DEPLOY_BC, packet, TMGR_get_master_total_cycle());
 
-  case CCP_EXEC_TYPE_TL2:
-    return PH_add_tl_cmd_(2, packet, TMGR_get_master_total_cycle());
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
+    return PH_add_tl_cmd_(TLCD_ID_DEPLOY_TLM, packet, TMGR_get_master_total_cycle());
+
+#ifdef TLCD_ENABLE_MISSION_TL
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
+    return PH_add_tl_cmd_(TLCD_ID_FROM_GS_FOR_MISSION, packet, TMGR_get_master_total_cycle());
+
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
+    return PH_add_utl_cmd_(TLCD_ID_FROM_GS_FOR_MISSION, packet);
+#endif
 
   default:
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
 
-static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
+static PH_ACK PH_add_block_cmd_(const CommonCmdPacket* packet)
 {
   switch (BCT_register_cmd(packet))
   {
   case BCT_SUCCESS:
-    return PH_BC_REGISTERED;
+    return PH_ACK_BC_SUCCESS;
 
   case BCT_INVALID_BLOCK_NO:
-    return PH_BC_INVALID_BLOCK_NO;
+    return PH_ACK_BC_INVALID_BLOCK_NO;
 
   case BCT_INVALID_CMD_NO:
-    return PH_BC_INVALID_CMD_NO;
+    return PH_ACK_INVALID_PACKET;
 
   case BCT_ISORATED_CMD:
-    return PH_BC_ISORATED_CMD;
+    return PH_ACK_BC_ISORATED_CMD;
 
   case BCT_CMD_TOO_LONG:
-    return PH_BC_CMD_TOO_LONG;
+    return PH_ACK_BC_CMD_TOO_LONG;
 
   default:
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
@@ -168,7 +194,7 @@ static PH_ACK PH_analyze_block_cmd_(const CommonCmdPacket* packet)
 PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 {
   ctp_dest_flags_t flags;
-  if (!CTP_is_valid_packet(packet)) return PH_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CTP_is_valid_packet(packet)) return PH_ACK_UNKNOWN;    // FIXME: 返り値変えたい
 
   flags = CTP_get_dest_flags(packet);
 
@@ -180,14 +206,16 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
   // Mission Telemetry
   if (flags & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
 
+#ifdef DR_ENABLE
   // Stored Telemetry
   if (flags & CTP_DEST_FLAG_ST) PH_add_st_tlm_(packet);
 
   // Replay Telemetry
   if (flags & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
+#endif
 
   // [TODO] 要検討:各Queue毎の登録エラー判定は未実装
-  return PH_SUCCESS;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -213,9 +241,9 @@ static PH_ACK PH_add_gs_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_gs_cmd_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_SUCCESS;
+  return PH_ACK_SUCCESS;
 }
 
 
@@ -223,39 +251,39 @@ static PH_ACK PH_add_rt_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rt_cmd_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
 
 
-static PH_ACK PH_add_tl_cmd_(int line_no,
+static PH_ACK PH_add_tl_cmd_(TLCD_ID id,
                             const CommonCmdPacket* packet,
                             cycle_t now)
 {
-  PL_ACK ack = PL_insert_tl_cmd(&(PH_tl_cmd_list[line_no]), packet, now);
+  PL_ACK ack = PL_insert_tl_cmd(&(PH_tl_cmd_list[id]), packet, now);
 
   switch (ack)
   {
   case PL_SUCCESS:
-    return PH_TLC_REGISTERD;
+    return PH_ACK_TLC_SUCCESS;
 
   case PL_LIST_FULL:
-    return PH_PL_LIST_FULL;
+    return PH_ACK_PL_LIST_FULL;
 
   case PL_TLC_PAST_TIME:
-    return PH_TLC_PAST_TIME;
+    return PH_ACK_TLC_PAST_TIME;
 
   case PL_TLC_ALREADY_EXISTS:
-    return PH_TLC_ALREADY_EXISTS;
+    return PH_ACK_TLC_ALREADY_EXISTS;
 
   default:
-    return PH_UNKNOWN;
+    return PH_ACK_UNKNOWN;
   }
 }
 
 
-static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
+static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet)
 {
   static CommonCmdPacket temp_; // サイズが大きいため静的領域に確保
 
@@ -267,9 +295,9 @@ static PH_ACK PH_add_utl_cmd_(const CommonCmdPacket* packet)
   // TL_cmd に変換して tl_cmd_list に追加する
   CCP_copy_packet(&temp_, packet);
   CCP_set_ti(&temp_, ti);
-  CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL0); // UTL -> TL0
+  CCP_set_exec_type(&temp_, CCP_EXEC_TYPE_TL_FROM_GS); // UTL -> TL
 
-  return PH_add_tl_cmd_(0, &temp_, TMGR_get_master_total_cycle());
+  return PH_add_tl_cmd_(id, &temp_, TMGR_get_master_total_cycle());
 }
 
 
@@ -277,29 +305,66 @@ static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
 
 
+#ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
 }
+#endif
 
 
+#ifdef DR_ENABLE
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
 
-  if (ack != PL_SUCCESS) return PH_PL_LIST_FULL;
+  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
-  return PH_REGISTERED;
+  return PH_ACK_SUCCESS;
+}
+#endif
+
+const PacketList* PH_get_packet_list_from_exec_type(CCP_EXEC_TYPE type)
+{
+  switch (type)
+  {
+  case CCP_EXEC_TYPE_GS:
+    return &PH_gs_cmd_list;
+
+  case CCP_EXEC_TYPE_TL_FROM_GS:
+  case CCP_EXEC_TYPE_UTL:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS];
+
+  case CCP_EXEC_TYPE_RT:
+    return &PH_rt_cmd_list;
+
+  case CCP_EXEC_TYPE_TL_DEPLOY_BC:
+    return &PH_tl_cmd_list[TLCD_ID_DEPLOY_BC];
+
+  case CCP_EXEC_TYPE_TL_DEPLOY_TLM:
+    return &PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM];
+
+#ifdef TLCD_ENABLE_MISSION_TL
+  case CCP_EXEC_TYPE_TL_FOR_MISSION:
+  case CCP_EXEC_TYPE_UTL_FOR_MISSION:
+    return &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION];
+#endif
+
+  default:
+    break;
+  }
+
+  return NULL;
 }
 
 #pragma section

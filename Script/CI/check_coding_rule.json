@@ -13,6 +13,18 @@
   "ignore_files" : [
     "src_user/TlmCmd/telemetry_definitions.c"
   ],
+  "ignore_rules" : [
+  ],
+  "comment_ignore_rules" : [
+    "以下を指定すると，該当ルールが無視される",
+    "comment",
+    "newline",
+    "eof",
+    "space",
+    "operator_space",
+    "preprocessor",
+    "include_guard"
+  ],
   "additional_type" : [
     "TCP",
     "CommonTlmCmdPacket",

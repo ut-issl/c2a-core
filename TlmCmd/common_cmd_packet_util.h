@@ -6,7 +6,8 @@
 #define COMMON_CMD_PACKET_UTIL_H_
 
 #include "common_cmd_packet.h"
-#include "block_command_table.h"
+#include "../Applications/timeline_command_dispatcher.h" // for TLCD_ID
+#include "block_command_table.h" // for bct_id
 #include <src_user/Applications/app_registry.h>
 
 /**
@@ -21,19 +22,21 @@ typedef enum
 } CCP_UTIL_ACK;
 
 /**
- * @brief  App 実行コマンドを生成
+ * @brief App 実行 TL コマンドを生成
+ * @note  生成した時は CCP_EXEC_TYPE_TL_FROM_GS
  * @param[in,out] packet: CCP
- * @param[in]     ti: TI
- * @param[in]     id: AR_APP_ID
+ * @param[in]     ti:     TI
+ * @param[in]     id:     AR_APP_ID
  * @return void
  */
 void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
 
 /**
- * @brief  Realtime command を生成
- * @note   引数が不正なとき， packet は NOP RTC を返す
+ * @brief Realtime command を生成
+ * @note  引数が不正なとき， packet は NOP RTC を返す
+ * @note  RTC のキューに登録までする場合は `CCP_register_rtc` を使用
  * @param[in,out] packet: CCP
- * @param[in]     packet: CMD_CODE
+ * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
  * @return CCP_UTIL_ACK
@@ -41,34 +44,123 @@ void CCP_form_app_cmd(CommonCmdPacket* packet, cycle_t ti, AR_APP_ID id);
 CCP_UTIL_ACK CCP_form_rtc(CommonCmdPacket* packet, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  Timeline command を生成
- * @note   引数が不正なとき， packet は NOP TLC を返す
- * @param[in,out] packet: CCP
- * @param[in]     ti:     TI
- * @param[in]     packet: CMD_CODE
- * @param[in]     param:  パラメタ
- * @param[in]     len:    パラメタ長
+ * @brief Timeline command を生成
+ * @note  引数が不正なとき， packet は NOP TLC を返す
+ * @note  TL に登録までする場合は `CCP_register_tlc` を使用
+ * @param[in,out] packet:  CCP
+ * @param[in]     ti:      TI
+ * @param[in]     cmd_id:  CMD_CODE
+ * @param[in]     param:   パラメタ
+ * @param[in]     len:     パラメタ長
  * @return CCP_UTIL_ACK
  */
 CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
- * @brief  BC展開 command を生成
- * @note   引数が不正なとき， packet は NOP RTC を返す
- * @param[in,out] packet: CCP
- * @param[in]     tl_no: Timeline no
+ * @brief 他の OBC のコマンドを RT として生成
+ * @note  本OBC で RT として処理されたあと 他の OBC に送られ RT として実行される
+ * @note  param チェックは未実装
+ * @param[in] apid:   どの OBC かを指定する APID
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_form_rtc_to_other_obc(CommonCmdPacket* packet, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief 他の OBC のコマンドを TL として生成
+ * @note  本OBC で TL として処理されたあと 他の OBC に送られ RT として実行される
+ * @note  param チェックは未実装
+ * @param[in] ti:     TI
+ * @param[in] apid:   どの OBC かを指定する APID
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_form_tlc_to_other_obc(CommonCmdPacket* packet, cycle_t ti, APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief BC展開 Realtime command を生成
+ * @note  引数が不正なとき， packet は NOP RTC を返す
+ * @param[in,out] packet:   CCP
+ * @param[in]     tl_no:    Timeline no
  * @param[in]     block_no: BC ID
  * @return CCP_UTIL_ACK
  */
-CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, uint8_t tl_no, bct_id_t block_no);
+CCP_UTIL_ACK CCP_form_block_deploy_cmd(CommonCmdPacket* packet, TLCD_ID tl_no, bct_id_t block_no);
 
 /**
- * @brief  Realtime Command から Timeline Command へ変換
+ * @brief Realtime Command から Timeline Command へ変換
  * @param[in,out] packet: 変換する packet
  * @param[in]     ti:     TI
  * @return void
  */
 void CCP_convert_rtc_to_tlc(CommonCmdPacket* packet, cycle_t ti);
+
+/**
+ * @brief Realtime command を登録
+ * @note  不正な時は登録されない
+ * @param[in] cmd_id: CMD_CODE
+ * @param[in] param:  パラメタ
+ * @param[in] len:    パラメタ長
+ * @return PH_ACK
+ */
+PH_ACK CCP_register_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief Timeline command を登録
+ * @param[in] ti:      TI
+ * @param[in] tlcd_id: 登録する tl id
+ * @param[in] cmd_id:  CMD_CODE
+ * @param[in] param:   パラメタ
+ * @param[in] len:     パラメタ長
+ * @return PH_ACK
+ */
+PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief Timeline command を登録 (ASAP 版)
+ * @note  引数が不正なときは登録されない
+ * @note  既にその TI が埋まっていた場合その後で最速の TI が勝手に設定される
+ * @param[in] ti:      TI
+ * @param[in] tlcd_id: 登録する tl id
+ * @param[in] cmd_id:  CMD_CODE
+ * @param[in] param:   パラメタ
+ * @param[in] len:     パラメタ長
+ * @return PH_ACK
+ */
+PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief Realtime command を生成し，即時実行する
+ * @note  RTC のキューに登録する場合は `CCP_register_rtc` を使用
+ * @note  生成される command は RTC だが，キューイングされずに即時実行されるため RTC Dispatcher にはログは残らない
+ * @param[in]     cmd_id: CMD_CODE
+ * @param[in]     param:  パラメタ
+ * @param[in]     len:    パラメタ長
+ * @retval CCP_EXEC_PACKET_FMT_ERR: 引数が不正なとき
+ * @retval それ以外: PH_dispatch_command の返り値
+ */
+CCP_EXEC_STS CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief BC展開 command を生成し，即時実行する
+ * @param[in]     tl_no:    Timeline no
+ * @param[in]     block_no: BC ID
+ * @retval CCP_EXEC_PACKET_FMT_ERR: 引数が不正なとき
+ * @retval それ以外: PH_dispatch_command の返り値
+ */
+CCP_EXEC_STS CCP_form_and_exec_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no);
+
+/**
+ * @brief TLCD ID から CCP_EXEC_TYPE を取得する
+ * @param[in] tlcd_id: tl id
+ * @note 引数が不正な場合は CCP_EXEC_TYPE_UNKNOWN を返す
+ * @return CCP_EXEC_TYPE
+ */
+CCP_EXEC_TYPE CCP_get_exec_type_from_tlcd_id(TLCD_ID tlcd_id);
 
 /**
  * @brief  CCP packet から，サイズが 1 byte のコマンド引数を取得する
@@ -121,6 +213,23 @@ uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 uint16_t CCP_get_raw_param_from_packet(const CommonCmdPacket* packet, void* dest, uint16_t max_copy_len);
 
 /**
+ * @brief  CCP packet から，RAW コマンド引数の先頭ポインタを取得する
+ * @note   RAW パラメタが存在しない場合は， NULL を返す
+ * @note   RAW パラメタが存在しつつ，そのサイズが 0 だった場合は， NULL ではなく最終 param の次のアドレスを返す
+ * @param[in]  packet: 取得する packet
+ * @return RAW コマンド引数の先頭ポインタ
+ */
+const uint8_t* CCP_get_raw_param_head(const CommonCmdPacket* packet);
+
+/**
+ * @brief  CCP packet から，RAW コマンド引数の長さを返す
+ * @note   RAW パラメタが存在しない場合や，不正なパケットの場合は 0 を返す
+ * @param[in]  packet: 取得する packet
+ * @return RAW コマンド引数の長さ
+ */
+uint16_t CCP_get_raw_param_len(const CommonCmdPacket* packet);
+
+/**
  * @def    CCP_get_param_from_packet(packet, n, type)
  * @brief  CCP packet から，n番目のコマンド引数を取得する
  * @note   セグメンテーション違反の場合は， 0 を返す
@@ -144,5 +253,123 @@ sizeof(type) == 4 ? \
 sizeof(type) == 8 ? \
 (void*)CCP_get_8byte_param_from_packet(packet, n) : \
 0)))
+
+/**
+ * @brief  Param Generator を初期化
+ * @note   Param Generator の使い方
+ *           1. CCP_init_param_for_packet で初期化
+ *           2. CCP_prepare_hoge_param_for_packet にて，パラメタを 1 つめからセットしていく
+ *           3. CCP_get_prepared_param_for_packet で完成した param とその長さを取得する
+ * @param[in] cmd_id: これから作成する param の Cmd ID
+ * @return void
+ */
+void CCP_init_param_for_packet(CMD_CODE cmd_id);
+
+/**
+ * @brief  Param Generator から完成した param を取得する
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[out] param_head: 完成した param の先頭ポインタ
+ * @param[out] len: paran の長さ
+ * @retval CCP_UTIL_ACK_OK: 正常終了
+ * @retval CCP_UTIL_ACK_PARAM_ERR: これまでの param 生成仮定で何かしらの不整合が発生
+ */
+CCP_UTIL_ACK CCP_get_prepared_param_for_packet(const uint8_t** param_head, uint16_t* len);
+
+/**
+ * @brief  Param Generator で uint8_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint8_param_for_packet(uint8_t param);
+
+/**
+ * @brief  Param Generator で int8_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int8_param_for_packet(int8_t param);
+
+/**
+ * @brief  Param Generator で uint16_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint16_param_for_packet(uint16_t param);
+
+/**
+ * @brief  Param Generator で int16_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int16_param_for_packet(int16_t param);
+
+/**
+ * @brief  Param Generator で uint32_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint32_param_for_packet(uint32_t param);
+
+/**
+ * @brief  Param Generator で int32_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int32_param_for_packet(int32_t param);
+
+/**
+ * @brief  Param Generator で uint64_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_uint64_param_for_packet(uint64_t param);
+
+/**
+ * @brief  Param Generator で int64_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_int64_param_for_packet(int64_t param);
+
+/**
+ * @brief  Param Generator で float のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_float_param_for_packet(float param);
+
+/**
+ * @brief  Param Generator で double のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_double_param_for_packet(double param);
+
+/**
+ * @brief  Param Generator で bct_id_t のパラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_bct_id_param_for_packet(bct_id_t param);
+
+/**
+ * @brief  Param Generator で raw パラメタを登録
+ * @note   Param Generator の使い方は CCP_reset_param_for_packet の doxygen コメントを参照のこと
+ * @param[in] param: 登録するパラメタ配列
+ * @param[in] len: 登録するパラメタの長さ
+ * @return CCP_UTIL_ACK
+ */
+CCP_UTIL_ACK CCP_prepare_raw_param_for_packet(const uint8_t* param, uint16_t len);
 
 #endif

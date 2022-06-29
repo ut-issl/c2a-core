@@ -210,7 +210,7 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
                                                             uint8_t* found_id_num);
 
 /**
- * @brief  bsearch 用の EH_RuleSortedIndex 比較関数
+ * @brief  EH_search_rule_table_index_ での bsearch 用の EH_RuleSortedIndex 比較関数
  * @note   duplicate_id が 0 であるものを見つける想定
  * @param[in]  key:  bsearch で検索する EH_RuleSortedIndex
  * @param[in]  elem: bsearch 検索対象の EH_RuleSortedIndex 配列要素
@@ -219,6 +219,32 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
  * @retval -1: key < elem
  */
 static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* elem);
+
+/**
+ * @brief  EH_RuleSortedIndex から，指定した EL_GROUP の EH_Rule を指す最も若い EH_RuleSortedIndex を取得する
+ * @note   引数はアサーション済みを仮定する
+ * @note   by_event_group 関数用
+ * @param[in]  group: 検索する EL_Event.group
+ * @param[out] least_found_sorted_idx: 見つかった EH_RuleSortedIndex の index のうち最小のもの
+ * @param[out] found_sorted_idx_num: 見つかった EH_RuleSortedIndex の index の数
+ * @retval EH_RULE_SORTED_INDEX_ACK_NOT_FOUND: 見つからず
+ * @retval EH_RULE_SORTED_INDEX_ACK_OK: 正常に探索完了
+ */
+static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_by_event_group_(EL_GROUP group,
+                                                                           uint16_t* least_found_sorted_idx,
+                                                                           uint16_t* found_sorted_idx_num);
+
+/**
+ * @brief  EH_search_rule_table_index_by_event_group_ での bsearch 用の EH_RuleSortedIndex 比較関数
+ * @note   group 指定では最も若いものを見つけることができないので，これを用いて bsearch した場合，同じ group が複数ある時，どれを返すかは未規定となることに注意
+ * @note   by_event_group 関数用
+ * @param[in]  key:  bsearch で検索する EH_RuleSortedIndex
+ * @param[in]  elem: bsearch 検索対象の EH_RuleSortedIndex 配列要素
+ * @retval 1:  key > elem
+ * @retval 0:  key == elem
+ * @retval -1: key < elem
+ */
+static int EH_compare_sorted_index_by_event_group_for_bsearch_(const void* key, const void* elem);
 
 /**
  * @brief  EH_Rule を EH_RuleTable と EH_RuleSortedIndex に挿入する
@@ -250,6 +276,15 @@ static EH_RULE_SORTED_INDEX_ACK EH_delete_rule_table_(EH_RULE_ID id);
  */
 static EH_CHECK_RULE_ACK EH_check_rule_id_(EH_RULE_ID id);
 
+/**
+ * @brief  by_event_group 関数を実行する主体
+ * @param[in] group: 操作する EL_GROUP
+ * @param[in] func:  実行する関数
+ * @return void
+ */
+static void EH_exec_func_by_event_group_(EL_GROUP group,
+                                         EH_CHECK_RULE_ACK (*func)(EH_RULE_ID));
+
 
 static EventHandler event_handler_;
 const EventHandler* const event_handler = &event_handler_;
@@ -277,14 +312,14 @@ static void EH_clear_rules_(void)
   int i;
   memset(&event_handler_.rule_table, 0x00, sizeof(EH_RuleTable));
   // 現時点で EL_CORE_GROUP_NULL == 0 であるため，以下は不要．
-  // for (i = 0; i < EH_RULE_MAX; ++i)
+  // for (i = 0; i < (int)EH_RULE_MAX; ++i)
   // {
   //   event_handler_.rule_table.rules[i].settings.event.group = (EL_GROUP)EL_CORE_GROUP_NULL;
   // }
 
   // EH_RuleSortedIndex もクリア
   memset(event_handler_.sorted_idxes, 0x00, sizeof(EH_RuleSortedIndex) * EH_RULE_MAX);
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     // 現時点で EL_CORE_GROUP_NULL == 0 であるため，以下は不要．
     // event_handler_.sorted_idxes[i].group = (EL_GROUP)EL_CORE_GROUP_NULL;
@@ -335,7 +370,7 @@ static EH_ACK EH_check_el_event_counter_(void)
   int32_t delta_counter = event_logger->statistics.record_counter_total - event_handler_.el_event_counter.counter_total;
   int32_t delta_counters[EL_ERROR_LEVEL_MAX];
   uint8_t err_level;
-  uint32_t subtotal = 0;
+  int32_t subtotal = 0;
 
   // カウンタ不整合を調べる．
   // エラー等は定期的にリセットされているはずなので，オーバーフローは考慮していない
@@ -369,7 +404,7 @@ static EH_ACK EH_check_el_event_counter_(void)
     subtotal += delta_counters[err_level];
   }
 
-  if (delta_counter != subtotal)
+  if (delta_counter != (int32_t)subtotal)
   {
     // 不整合
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
@@ -613,34 +648,20 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
 static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
-  CommonCmdPacket packet;
-  CCP_UTIL_ACK form_cmd_ack;
-  CCP_EXEC_STS deploy_cmd_ack;
+  CCP_EXEC_STS ack;
 
-  form_cmd_ack = CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
-  if (form_cmd_ack != CCP_UTIL_ACK_OK)
-  {
-    // BC 展開 Cmd の生成に失敗
-    // 正しく組んでいる場合，ここに来るはずはない
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
-                    EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
-                    EL_ERROR_LEVEL_HIGH,
-                    (uint32_t)rule_id);
-    return;
-  }
-
-  deploy_cmd_ack = PH_dispatch_command(&packet);
-  if (deploy_cmd_ack != CCP_EXEC_SUCCESS)
+  ack = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
+  if (ack != CCP_EXEC_SUCCESS)
   {
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
                     EL_ERROR_LEVEL_HIGH,
-                    deploy_cmd_ack);
+                    ack);
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
 
-  EH_record_responded_log_(rule_id, deploy_cmd_ack);
+  EH_record_responded_log_(rule_id, ack);
 }
 
 
@@ -741,10 +762,10 @@ static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_(EL_GROUP group,
   target_sorted_idx.group = group;
   target_sorted_idx.local = local;
   p_searched_sorted_idx = (EH_RuleSortedIndex*)bsearch(&target_sorted_idx,
-                                               event_handler_.sorted_idxes,
-                                               event_handler_.rule_table.registered_rule_num,
-                                               sizeof(EH_RuleSortedIndex),
-                                               EH_compare_sorted_index_for_bsearch_);
+                                                       event_handler_.sorted_idxes,
+                                                       event_handler_.rule_table.registered_rule_num,
+                                                       sizeof(EH_RuleSortedIndex),
+                                                       EH_compare_sorted_index_for_bsearch_);
   if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
   found_idx = (uint16_t)(p_searched_sorted_idx - (&event_handler_.sorted_idxes[0]));
 
@@ -799,6 +820,86 @@ static int EH_compare_sorted_index_for_bsearch_(const void* key, const void* ele
     {
       return -1;
     }
+  }
+  else if (p_elem->group < p_key->group)
+  {
+    return 1;
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+
+static EH_RULE_SORTED_INDEX_ACK EH_search_rule_table_index_by_event_group_(EL_GROUP group,
+                                                                           uint16_t* least_found_sorted_idx,
+                                                                           uint16_t* found_sorted_idx_num)
+{
+  // idx: 0 ~ rule_table.registered_rule_num の間で二分探索する
+  // 重複もあり得ることを考慮する (duplicate_id は異なる)
+
+  uint16_t found_idx = EH_RULE_MAX;
+  uint16_t last_found_sorted_idx = 0;
+  const EH_RuleSortedIndex* p_searched_sorted_idx = NULL;
+  EH_RuleSortedIndex target_sorted_idx;
+  uint16_t i;
+
+  if (event_handler_.rule_table.registered_rule_num == 0)
+  {
+    return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
+  }
+
+  memset(&target_sorted_idx, 0x00, sizeof(EH_RuleSortedIndex));
+  target_sorted_idx.group = group;
+  p_searched_sorted_idx = (EH_RuleSortedIndex*)bsearch(&target_sorted_idx,
+                                                       event_handler_.sorted_idxes,
+                                                       event_handler_.rule_table.registered_rule_num,
+                                                       sizeof(EH_RuleSortedIndex),
+                                                       EH_compare_sorted_index_by_event_group_for_bsearch_);
+  if (p_searched_sorted_idx == NULL) return EH_RULE_SORTED_INDEX_ACK_NOT_FOUND;
+  found_idx = (uint16_t)(p_searched_sorted_idx - (&event_handler_.sorted_idxes[0]));
+  *least_found_sorted_idx = found_idx;
+
+  // ひとまず見つかったので，最も若いものを探す
+  for (i = found_idx; i >= 0; --i)
+  {
+    if (event_handler_.sorted_idxes[i].group == group)
+    {
+      *least_found_sorted_idx = i;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  // 最も後ろのものを探す
+  for (i = found_idx; i < event_handler_.rule_table.registered_rule_num; ++i)
+  {
+    if (event_handler_.sorted_idxes[i].group == group)
+    {
+      last_found_sorted_idx = i;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  *found_sorted_idx_num = (uint16_t)(last_found_sorted_idx - *least_found_sorted_idx + 1);
+  return EH_RULE_SORTED_INDEX_ACK_OK;
+}
+
+
+static int EH_compare_sorted_index_by_event_group_for_bsearch_(const void* key, const void* elem)
+{
+  const EH_RuleSortedIndex* p_key  = (const EH_RuleSortedIndex*)key;
+  const EH_RuleSortedIndex* p_elem = (const EH_RuleSortedIndex*)elem;
+
+  if (p_elem->group == p_key->group)
+  {
+    return 0;       // 注意: 同じ group のものが複数あった時，どれを bsearch が返すかは未規定
   }
   else if (p_elem->group < p_key->group)
   {
@@ -1085,14 +1186,91 @@ static EH_CHECK_RULE_ACK EH_check_rule_id_(EH_RULE_ID id)
 }
 
 
+static void EH_exec_func_by_event_group_(EL_GROUP group,
+                                         EH_CHECK_RULE_ACK (*func)(EH_RULE_ID))
+{
+  uint16_t least_found_sorted_idx = 0;
+  uint16_t found_sorted_idx_num = 0;
+  EH_RULE_SORTED_INDEX_ACK search_ack;
+  uint16_t i;
+
+  search_ack = EH_search_rule_table_index_by_event_group_(group,
+                                                          &least_found_sorted_idx,
+                                                          &found_sorted_idx_num);
+  if (search_ack == EH_RULE_SORTED_INDEX_ACK_NOT_FOUND)
+  {
+    // 操作すべき EH_Rule はなし
+    return;
+  }
+  if (search_ack != EH_RULE_SORTED_INDEX_ACK_OK || found_sorted_idx_num == 0)
+  {
+    // 何かがおかしい（ありえないが，安全のため入れている．問題なさそうなら消してよし）
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                    EH_EL_LOCAL_ID_UNKNOWN_ERR,
+                    EL_ERROR_LEVEL_HIGH,
+                    (uint32_t)group);
+    return;
+  }
+
+  for (i = 0; i < found_sorted_idx_num; ++i)
+  {
+    func(event_handler_.sorted_idxes[least_found_sorted_idx + i].rule_id);
+  }
+}
+
+
+EH_CHECK_RULE_ACK EH_init_rule(EH_RULE_ID id)
+{
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  EH_activate_rule(id);
+  EH_clear_rule_counter(id);
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
+EH_CHECK_RULE_ACK EH_init_rule_for_multi_level(EH_RULE_ID id)
+{
+  int i;
+  EH_RULE_ID next_rule_id = id;
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return ack;
+
+  // 無限ループ回避のため for で
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
+  {
+    if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
+    EH_clear_rule_counter(next_rule_id);
+    if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
+    {
+      break;
+    }
+    next_rule_id = (EH_RULE_ID)event_handler_.rule_table.rules[next_rule_id].settings.event.local;
+  }
+
+  return EH_CHECK_RULE_ACK_OK;
+}
+
+
+void EH_init_rule_by_event_group(EL_GROUP group)
+{
+  EH_exec_func_by_event_group_(group, EH_init_rule);
+}
+
+
+void EH_init_rule_by_event_group_for_multi_level(EL_GROUP group)
+{
+  EH_exec_func_by_event_group_(group, EH_init_rule_for_multi_level);
+}
+
+
 EH_CHECK_RULE_ACK EH_activate_rule(EH_RULE_ID id)
 {
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
   event_handler_.rule_table.rules[id].settings.is_active = 1;
-  // 急に発火しても困るので
-  EH_clear_rule_counter(id);
   return EH_CHECK_RULE_ACK_OK;
 }
 
@@ -1114,8 +1292,8 @@ EH_CHECK_RULE_ACK EH_activate_rule_for_multi_level(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
-  // 無限ループ回避のため for で
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  // 無限ループ回避のため for
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_activate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
     if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
@@ -1136,8 +1314,8 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
   if (ack != EH_CHECK_RULE_ACK_OK) return ack;
 
-  // 無限ループ回避のため for で
-  for (i = 0; i < EH_RULE_MAX; ++i)
+  // 無限ループ回避のため for
+  for (i = 0; i < (int)EH_RULE_MAX; ++i)
   {
     if (EH_inactivate_rule(next_rule_id) != EH_CHECK_RULE_ACK_OK) break;
     if (event_handler_.rule_table.rules[next_rule_id].settings.event.group != (EL_GROUP)EL_CORE_GROUP_EH_MATCH_RULE)
@@ -1150,6 +1328,38 @@ EH_CHECK_RULE_ACK EH_inactivate_rule_for_multi_level(EH_RULE_ID id)
   return EH_CHECK_RULE_ACK_OK;
 }
 
+
+void EH_activate_rule_by_event_group(EL_GROUP group)
+{
+  EH_exec_func_by_event_group_(group, EH_activate_rule);
+}
+
+
+void EH_inactivate_rule_by_event_group(EL_GROUP group)
+{
+  EH_exec_func_by_event_group_(group, EH_inactivate_rule);
+}
+
+
+void EH_activate_rule_by_event_group_for_multi_level(EL_GROUP group)
+{
+  EH_exec_func_by_event_group_(group, EH_activate_rule_for_multi_level);
+}
+
+
+void EH_inactivate_rule_by_event_group_for_multi_level(EL_GROUP group)
+{
+  EH_exec_func_by_event_group_(group, EH_inactivate_rule_for_multi_level);
+}
+
+
+uint8_t EH_get_rule_is_active(EH_RULE_ID id)
+{
+  EH_CHECK_RULE_ACK ack = EH_check_rule_id_(id);
+  if (ack != EH_CHECK_RULE_ACK_OK) return 0;
+
+  return event_handler_.rule_table.rules[id].settings.is_active;
+}
 
 EH_CHECK_RULE_ACK EH_set_rule_counter(EH_RULE_ID id, uint16_t counter)
 {
@@ -1341,6 +1551,44 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
 }
 
 
+CCP_EXEC_STS Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_init_rule(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+{
+  EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
+  EH_CHECK_RULE_ACK ack = EH_init_rule_for_multi_level(rule_id);
+
+  switch (ack)
+  {
+  case EH_CHECK_RULE_ACK_OK:
+    return CCP_EXEC_SUCCESS;
+  case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
+    return CCP_EXEC_ILLEGAL_PARAMETER;
+  case EH_CHECK_RULE_ACK_UNREGISTERED:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  default:
+    return CCP_EXEC_ILLEGAL_CONTEXT;
+  }
+}
+
+
 CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
@@ -1522,6 +1770,7 @@ CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
+
 CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
@@ -1535,10 +1784,59 @@ CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* p
   return CCP_EXEC_SUCCESS;
 }
 
+
 CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_match_event_counter_to_el();
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
+{
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  EH_init_rule_by_event_group(group);
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+{
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  EH_init_rule_by_event_group_for_multi_level(group);
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
+{
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  EH_activate_rule_by_event_group(group);
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
+{
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  EH_inactivate_rule_by_event_group(group);
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+{
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  EH_activate_rule_by_event_group_for_multi_level(group);
+  return CCP_EXEC_SUCCESS;
+}
+
+
+CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+{
+  EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
+  EH_inactivate_rule_by_event_group_for_multi_level(group);
   return CCP_EXEC_SUCCESS;
 }
 

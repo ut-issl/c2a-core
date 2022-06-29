@@ -5,6 +5,7 @@
  */
 #include "time_manager.h"
 #include <string.h>
+#include "../../Library/c2a_round.h"
 #include "../TaskManager/task_dispatcher.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
 
@@ -133,7 +134,7 @@ void TMGR_clear_unixtime_info(void)
 
 TMGR_ACK TMGR_update_unixtime(const double unixtime, const ObcTime* time)
 {
-  double ti_sec = TMGR_get_precice_ti_in_sec(time);
+  double ti_sec = TMGR_get_precise_ti_in_sec(time);
 
   // unixtime が ti より小さいと困る
   if (unixtime < ti_sec) return TMGR_ACK_PARAM_ERR;
@@ -153,38 +154,49 @@ double TMGR_get_utl_unixtime_epoch(void)
   return time_manager_.unixtime_info_.utl_unixtime_epoch;
 }
 
-double TMGR_get_precice_cycles_per_sec(void)
+double TMGR_get_precise_cycles_per_sec(void)
 {
   return OBCT_CYCLES_PER_SEC * time_manager_.unixtime_info_.cycle_correction;
 }
 
-double TMGR_get_precice_ti_in_sec(const ObcTime* time)
+double TMGR_get_precise_ti_in_sec(const ObcTime* time)
 {
   double cycle = time->total_cycle + (double)time->step / OBCT_STEPS_PER_CYCLE;
-  return cycle / TMGR_get_precice_cycles_per_sec();
+  return cycle / TMGR_get_precise_cycles_per_sec();
 }
 
 double TMGR_get_current_unixtime(void)
 {
-  return TMGR_get_unixtime_at_ti0() + TMGR_get_precice_ti_in_sec(&time_manager_.master_clock_);
+  return TMGR_get_unixtime_at_ti0() + TMGR_get_precise_ti_in_sec(&time_manager_.master_clock_);
 }
 
 double TMGR_get_unixtime_from_obc_time(const ObcTime* time)
 {
-  return TMGR_get_unixtime_at_ti0() + TMGR_get_precice_ti_in_sec(time);
+  return TMGR_get_unixtime_at_ti0() + TMGR_get_precise_ti_in_sec(time);
+}
+
+double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime)
+{
+  return TMGR_get_utl_unixtime_epoch() + (double)utl_unixtime / OBCT_CYCLES_PER_SEC;
+}
+
+double TMGR_get_precise_ti_from_unixtime(const double unixtime)
+{
+  double ti = (unixtime - TMGR_get_unixtime_at_ti0()) * TMGR_get_precise_cycles_per_sec();
+
+  // unixtime_at_ti0 より小さい引数は無効なのでゼロを返す
+  if (ti < 0) return 0;
+
+  return ti;
 }
 
 ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
 {
-  double diff_in_cycle = (unixtime - TMGR_get_unixtime_at_ti0()) * TMGR_get_precice_cycles_per_sec();
+  double diff_in_cycle = TMGR_get_precise_ti_from_unixtime(unixtime);
   cycle_t cycle;
   step_t step;
   ObcTime res;
 
-  if (diff_in_cycle < 0)  // あり得ない, おかしい
-  {
-    return OBCT_create(0, 0, 0);
-  }
   cycle = (cycle_t)diff_in_cycle; // cycle未満は切り捨て
   step = (step_t)((diff_in_cycle - cycle) * OBCT_STEPS_PER_CYCLE); // step未満は切り捨て
 
@@ -195,20 +207,12 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime)
   return res;
 }
 
-double TMGR_get_unixtime_from_utl_unixtime(const cycle_t utl_unixtime)
-{
-  return TMGR_get_utl_unixtime_epoch() + (double)utl_unixtime / OBCT_CYCLES_PER_SEC;
-}
-
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime)
 {
   double unixtime = TMGR_get_unixtime_from_utl_unixtime(utl_unixtime);
-  double ti_in_sec = unixtime - TMGR_get_unixtime_at_ti0();
+  double ti = TMGR_get_precise_ti_from_unixtime(unixtime);
 
-  // unixtime_at_ti0 より小さい実行時刻は無効なのでゼロを返す
-  if (ti_in_sec < 0) return 0;
-
-  return (cycle_t)(ti_in_sec * TMGR_get_precice_cycles_per_sec() );
+  return (cycle_t)c2a_round(ti);
 }
 
 static TMGR_ACK TMGR_set_utl_unixtime_epoch_(double utl_unixtime_epoch)

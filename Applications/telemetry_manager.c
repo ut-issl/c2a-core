@@ -372,7 +372,7 @@ static void TLM_MGR_load_master_bc_(void)
     }
   }
 
-  BCL_tool_register_deploy(TLM_MGR_USE_BC_NUM, telemetry_manager_.master_bc_id, TL_ID_DEPLOY_TLM);
+  BCL_tool_register_deploy(TLM_MGR_USE_BC_NUM, telemetry_manager_.master_bc_id, TLCD_ID_DEPLOY_TLM);
 }
 
 
@@ -555,7 +555,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
   bc_cmd_pos = TLM_MGR_USE_BC_NUM - 1;
 
   BCT_make_pos(&bc_register_pos, master_bc_id, bc_cmd_pos);
-  param[0] = TL_ID_DEPLOY_TLM;
+  param[0] = TLCD_ID_DEPLOY_TLM;
   endian_memcpy(&param[1], &master_bc_id, SIZE_OF_BCT_ID_T);
 
   CCP_form_tlc(&TLM_MGR_packet_,
@@ -566,7 +566,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
   BCT_overwrite_cmd(&bc_register_pos, &TLM_MGR_packet_);
 
   // master bc 展開
-  CCP_form_block_deploy_cmd(&TLM_MGR_packet_, TL_ID_DEPLOY_TLM, master_bc_id);
+  CCP_form_block_deploy_cmd(&TLM_MGR_packet_, TLCD_ID_DEPLOY_TLM, master_bc_id);
   PH_analyze_cmd_packet(&TLM_MGR_packet_);
 
   return CCP_EXEC_SUCCESS;
@@ -612,7 +612,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
 
-  param[0] = TL_ID_DEPLOY_TLM;
+  param[0] = TLCD_ID_DEPLOY_TLM;
   CCP_form_rtc(&TLM_MGR_packet_, Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, param, 1);
   PH_analyze_cmd_packet(&TLM_MGR_packet_);
 

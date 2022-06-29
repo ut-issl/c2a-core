@@ -1,13 +1,14 @@
 #pragma section REPRO
 #include "anomaly_handler.h"
+#ifdef AL_ENABLE
 
 #include "../Library/print.h"
-#include <src_user/Library/VT100.h>
+#include <src_user/Library/vt100.h>
 #include "../System/TimeManager/time_manager.h"
 #include "../Library/endian_memcpy.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
 #include "timeline_command_dispatcher.h"
-// #include "../anomaly_group.h"
+// #include "../anomaly_logger_group.h"
 // #include "../../TlmCmd/block_command_definitions.h"
 
 static void   AH_init_(void);
@@ -201,10 +202,8 @@ static void AH_respond_to_anomaly_(size_t id)
   // これが呼ばれてるには，anomaly_handler_.elements[].is_active == 1は保証されている．
 
   // 対応ブロックコマンドをリアルタイムコマンドで展開
-  CommonCmdPacket packet;
   // 通常BCなのでTLC1に展開
-  CCP_form_block_deploy_cmd(&packet, TL_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
-  PH_dispatch_command(&packet);
+  CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, anomaly_handler_.elements[id].rule.bc_id);
 
   // 実行したルールを記録し回数を更新
   anomaly_handler_.respond_at = TMGR_get_master_clock();
@@ -428,5 +427,7 @@ void AH_add_rule(size_t id, const AH_Rule* ahr, uint8_t is_active)
   AH_add_rule_(id, ahr);
   anomaly_handler_.elements[id].is_active = is_active;
 }
+
+#endif
 
 #pragma section

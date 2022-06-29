@@ -13,7 +13,7 @@
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"
-#include <src_user/Library/VT100.h>
+#include <src_user/Library/vt100.h>
 
 static TDSP_Info TDSP_info_;
 const TDSP_Info* const TDSP_info = &TDSP_info_;

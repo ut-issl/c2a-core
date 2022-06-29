@@ -278,15 +278,15 @@ void TSP_set_tlm_id(TlmSpacePacket* tsp, TLM_CODE id);
  * @param  tsp: TlmSpacePacket
  * @return Destination Flags
  */
-ctp_dest_flags_t TSP_get_dest_flgas(const TlmSpacePacket* tsp);
+ctp_dest_flags_t TSP_get_dest_flags(const TlmSpacePacket* tsp);
 
 /**
  * @brief  Destination Flags を設定
  * @param[in,out] tsp:   TlmSpacePacket
- * @param[in]     flgas: Destination Flags
+ * @param[in]     flags: Destination Flags
  * @return void
  */
-void TSP_set_dest_flgas(TlmSpacePacket* tsp, ctp_dest_flags_t flags);
+void TSP_set_dest_flags(TlmSpacePacket* tsp, ctp_dest_flags_t flags);
 
 /**
  * @brief  DR Partition を取得

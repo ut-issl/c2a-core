@@ -8,17 +8,30 @@
 #define TL_TLM_PAGE_SIZE  (32)
 #define TL_TLM_PAGE_MAX   (8)
 
-#define PH_GS_CMD_LIST_MAX  (8)
-#define PH_RT_CMD_LIST_MAX  (32)
-#define PH_TL0_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX)   // これが最長じゃないといけない
+#define PH_GSC_LIST_MAX  (8)
+#define PH_RTC_LIST_MAX  (32)
+#define PH_TLC_GS_LIST_MAX (TL_TLM_PAGE_SIZE * TL_TLM_PAGE_MAX)   // これが最長じゃないといけない
                                                                    // TLCD_tl_list_for_tlmの長さがこれなので！！
-#define PH_TL1_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
-#define PH_TL2_CMD_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
+#define PH_TLC_BC_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
+#define PH_TLC_TLM_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
+#define PH_TLC_MIS_LIST_MAX (TL_TLM_PAGE_SIZE * 4)   // とりあえず TL1,2 と同じ長さにした
 #define PH_MS_TLM_LIST_MAX  (16)
 #define PH_ST_TLM_LIST_MAX  (16)
 #define PH_RP_TLM_LIST_MAX  (16)
 
+// 以下で，上記の PL のキューサイズを再定義する
+// また， data_recorder_define.h の #define DR_ENABLE をコメントアウトすると，
+// DR 関連 PL がすべて無効となり，メモリが節約できる
 #include <src_user/Settings/TlmCmd/packet_handler_params.h>
+
+#ifndef DR_ENABLE
+#ifdef PH_ST_TLM_LIST_MAX
+#undef PH_ST_TLM_LIST_MAX
+#endif
+#ifdef PH_RP_TLM_LIST_MAX
+#undef PH_RP_TLM_LIST_MAX
+#endif
+#endif
 
 // 循環参照を防ぐためにここでinclude
 #include "common_tlm_cmd_packet.h"
@@ -28,40 +41,30 @@
 // FIXME: 整理したい
 typedef enum
 {
-  PH_SUCCESS,
-  PH_REGISTERED,
-  PH_FORWARDED,
-  PH_INVALID_LENGTH,
-  PH_INVALID_CRC,
-  PH_INVALID_TO_ID,
-  PH_INVALID_DISCRIMINATOR,
-  PH_INVALID_CMD_TYPE,
-  PH_PL_LIST_FULL,
-  PH_TLC_REGISTERD,
-  PH_TLC_PAST_TIME,
-  PH_TLC_ALREADY_EXISTS,
-  PH_TLC_NOT_EXECUTED,
-  PH_TLC_NOT_FOUND,
-  PH_BC_REGISTERED,
-  PH_BC_INVALID_BLOCK_NO,
-  PH_BC_INVALID_CMD_NO,
-  PH_BC_ISORATED_CMD,
-  PH_BC_CMD_TOO_LONG,
-  PH_BC_INACTIVE_BLOCK,
-  PH_BC_COMBINE_FAILED,
-  PH_BC_ROTATE_FAILED,
-  PH_BC_ZERO_PERIOD,         // BCT_rotate_block_cmd_で使う(本来このenumに乗せるべきかは要検討)
-  PH_TLM_INVALID_DIST_FLAG,
-  PH_UNKNOWN
+  PH_ACK_SUCCESS,             //!< OK
+  PH_ACK_FORWARDED,           //!< 別 OBC に転送された
+  PH_ACK_PL_LIST_FULL,        //!< PL が一杯だった
+  PH_ACK_PACKET_NOT_FOUND,    //!< パケットが無い
+  PH_ACK_INVALID_PACKET,      //!< 無効な Packet
+  PH_ACK_TLC_SUCCESS,         //!< TL に登録された
+  PH_ACK_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
+  PH_ACK_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
+  PH_ACK_BC_SUCCESS,         //!< BC 展開に成功した
+  PH_ACK_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
+  PH_ACK_BC_ISORATED_CMD,     //!< 飛ばして BC 登録しようとした
+  PH_ACK_BC_CMD_TOO_LONG,     //!< CMD が BC には長すぎる
+  PH_ACK_UNKNOWN
 } PH_ACK;
 
 extern PacketList PH_gs_cmd_list;
 extern PacketList PH_rt_cmd_list;
-extern PacketList PH_tl_cmd_list[TL_ID_MAX];
+extern PacketList PH_tl_cmd_list[TLCD_ID_MAX];
 // extern PacketList PH_hk_tlm_list;    // 現在は MS TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
 extern PacketList PH_ms_tlm_list;
+#ifdef DR_ENABLE
 extern PacketList PH_st_tlm_list;
 extern PacketList PH_rp_tlm_list;
+#endif
 
 /**
  * @brief Packet Handler を初期化
@@ -103,5 +106,13 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet);
  * @return CCP_EXEC_STS
  */
 CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet);
+
+/**
+ * @brief CCP_EXEC_TYPE から PacketList を取得する
+ * @note  引数が不正 or 無い場合 NULL を返す
+ * @param[in] type: CCP_EXEC_TYPE
+ * @return PacketList の const ポインタ
+ */
+const PacketList* PH_get_packet_list_from_exec_type(CCP_EXEC_TYPE type);
 
 #endif

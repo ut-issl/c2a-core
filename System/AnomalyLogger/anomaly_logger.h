@@ -1,11 +1,14 @@
 #ifndef ANOMALY_LOGGER_H_
 #define ANOMALY_LOGGER_H_
 
+#include <src_user/Settings/System/anomaly_logger_define.h>
+#ifdef AL_ENABLE
+
 #include <stddef.h> // for size_t
 
 #include "../TimeManager/obc_time.h"
 #include "../../TlmCmd/common_cmd_packet.h"
-#include <src_user/Settings/AnomalyLogger/anomaly_group.h>
+#include <src_user/Settings/System/anomaly_logger_group.h>
 
 #define AL_TLM_PAGE_SIZE (32)                                 //!< アノマリロガーのログテーブルの1テレメトリパケット(=1ページ)に格納されるログ数（ページネーション用）
 #define AL_TLM_PAGE_MAX  (4)                                  //!< アノマリロガーのログテーブルのページ数（ページネーション用）
@@ -107,5 +110,9 @@ CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
 CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet);
+
+#else
+#define AL_DISALBE_AT_C2A_CORE
+#endif
 
 #endif

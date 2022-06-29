@@ -10,7 +10,7 @@
 #include <src_user/TlmCmd/command_definitions.h>
 
 // ここで CCP_DEST_TYPE を定義する
-// 詳細は /Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h 参照
+// 詳細は /Examples/minimum_user/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h 参照
 /* 例
 typedef enum
 {
@@ -28,6 +28,8 @@ typedef enum
 // 詳細は common_tlm_cmd_packet.h を参照
 #include <src_user/Settings/TlmCmd/Ccsds/apid_define.h>
 
+// TL_MIS を有効にするかどうか
+#include <src_user/Settings/Applications/timeline_command_dispatcher_define.h>
 
 /**
  * @enum   CCP_EXEC_STS
@@ -43,7 +45,7 @@ typedef enum
   CCP_EXEC_ILLEGAL_CONTEXT,     //!< コマンド実行時のその他のエラー
   CCP_EXEC_CMD_NOT_DEFINED,     //!< cmdExec で用いる
   CCP_EXEC_ROUTING_FAILED,      //!< command router で用いる
-  CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler で用いる
+  CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler, ccp util で用いる
   CCP_EXEC_UNKNOWN              //!< 内部処理用．使わない．
 } CCP_EXEC_STS;
 
@@ -55,13 +57,17 @@ typedef enum
  */
 typedef enum
 {
-  CCP_EXEC_TYPE_GS,     //!< GS : Ground Station Command
-  CCP_EXEC_TYPE_TL0,    //!< TL : Timeline Command
-  CCP_EXEC_TYPE_BC,     //!< BC : Block Command
-  CCP_EXEC_TYPE_RT,     //!< RT : Realtime Command
-  CCP_EXEC_TYPE_UTL,    //!< UTL: Unixtime Timeline Command
-  CCP_EXEC_TYPE_TL1,
-  CCP_EXEC_TYPE_TL2,
+  CCP_EXEC_TYPE_GS,              //!< GS : Ground Station Command
+  CCP_EXEC_TYPE_TL_FROM_GS,      //!< TL : Timeline Command
+  CCP_EXEC_TYPE_BC,              //!< BC : Block Command
+  CCP_EXEC_TYPE_RT,              //!< RT : Realtime Command
+  CCP_EXEC_TYPE_UTL,             //!< UTL: Unixtime Timeline Command
+  CCP_EXEC_TYPE_TL_DEPLOY_BC,
+  CCP_EXEC_TYPE_TL_DEPLOY_TLM,
+#ifdef TLCD_ENABLE_MISSION_TL
+  CCP_EXEC_TYPE_TL_FOR_MISSION,  //!< TL_MIS  : Timeline Command for Mission
+  CCP_EXEC_TYPE_UTL_FOR_MISSION, //!< UTL_MIS : Unixtime Timeline Command for Mission
+#endif
   CCP_EXEC_TYPE_UNKNOWN
 } CCP_EXEC_TYPE;
 

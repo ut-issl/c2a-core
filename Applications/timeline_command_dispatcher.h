@@ -1,20 +1,24 @@
 #ifndef TIMELINE_COMMAND_DISPATCHER_H_
 #define TIMELINE_COMMAND_DISPATCHER_H_
 
+#include <src_user/Settings/Applications/timeline_command_dispatcher_define.h>
+
 /**
- * @enum   TL_ID
+ * @enum   TLCD_ID
  * @brief  TimeLineを選ぶときに統一的に使うコード
  * @note   uint8_tを想定
  */
 typedef enum
 {
-  TL_ID_DEPLOY_FROM_GS = 0,
-  TL_ID_DEPLOY_BC      = 1,
-  TL_ID_DEPLOY_TLM     = 2,
-  TL_ID_MAX
-} TL_ID;
-// FIXME: 全体的に， line_no が int なので， enum にする
-// FIXME: TLを3本以上にできるようにする
+  TLCD_ID_FROM_GS = 0,
+  TLCD_ID_DEPLOY_BC,
+  TLCD_ID_DEPLOY_TLM,
+#ifdef TLCD_ENABLE_MISSION_TL
+  TLCD_ID_FROM_GS_FOR_MISSION,
+#endif
+  TLCD_ID_MAX
+} TLCD_ID;
+// FIXME: TL本数を可変にできるようにする
 
 // 循環参照を防ぐためにここでinclude
 #include "../TlmCmd/command_dispatcher.h"
@@ -22,32 +26,69 @@ typedef enum
 #include "../TlmCmd/packet_handler.h"
 #include "../System/ApplicationManager/app_info.h"
 
-// FIXME: 構造体にする
-extern const CommandDispatcher* const timeline_command_dispatcher;
-extern const int* TLCD_line_no_for_tlm;
-extern const cycle_t* TLCD_tl_tlm_updated_at;
-extern const CommonCmdPacket* TLCD_tl_list_for_tlm[PH_TL0_CMD_LIST_MAX];
-extern const int* TLCD_page_no;
+/**
+ * @struct TimelineCommandDispatcher
+ * @brief Timeline コマンドの実行部と, TLテレメの情報を保持する
+ */
+typedef struct
+{
+  CommandDispatcher dispatcher[TLCD_ID_MAX];
+  struct
+  {
+    TLCD_ID id;
+    uint8_t page_no;
+    cycle_t updated_at;
+    const CommonCmdPacket* tl_list[PH_TLC_GS_LIST_MAX]; // TL0が最長なのでそれに合わせる。
+  } tlm_info_;
+} TimelineCommandDispatcher;
 
-AppInfo TLCD0_create_app(void);
-AppInfo TLCD1_create_app(void);
-AppInfo TLCD2_create_app(void);
+extern const TimelineCommandDispatcher* const timeline_command_dispatcher;
 
 /**
- * @brief TLM の内容を自動更新する.
- * @param[in] line_no TLCD_line_no_for_tlm が入ることを想定している
- * @return uint8_t 引数の line_no を返し, TL TLM にも反映される.
+ * @brief TL0 (GS から登録されるバス用の Timeline) の実行 App を作成する
+ * @param void
+ * @return AppInfo
+ */
+AppInfo TLCD_gs_create_app(void);
+
+/**
+ * @brief TL1 (BC を展開する用の Timeline) の実行 App を作成する
+ * @param void
+ * @return AppInfo
+ */
+AppInfo TLCD_bc_create_app(void);
+
+/**
+ * @brief TL2 (TLM を登録する用の Timeline) の実行 App を作成する
+ * @param void
+ * @return AppInfo
+ */
+AppInfo TLCD_tlm_create_app(void);
+
+#ifdef TLCD_ENABLE_MISSION_TL
+/**
+ * @brief TL3 (GS から登録されるミッション用の Timeline) の実行 App を作成する
+ * @param void
+ * @return AppInfo
+ */
+AppInfo TLCD_mis_create_app(void);
+#endif
+
+/**
+ * @brief テレメの内容を自動更新する.
+ * @param[in] id テレメを表示する TL の id
+ * @return TLCD_ID 引数の id を返し, TL テレメにも反映される.
  * @note これが TLM の冒頭で呼ばれることで TLM の内容が勝手に更新される.
  */
-uint8_t TLCD_update_tl_list_for_tlm(uint8_t line_no);
+TLCD_ID TLCD_update_tl_list_for_tlm(TLCD_ID id);
 
 CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_TLCD_SET_LINE_NO_FOR_TIMELINE_TLM(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet);
+CCP_EXEC_STS Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet);
 CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

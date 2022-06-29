@@ -9,7 +9,7 @@
 #include "../System/TimeManager/obc_time.h"
 #include <src_user/TlmCmd/telemetry_definitions.h>
 
-// ここで， CTP_MAX_LEN, CommonTlmPacket として使うパケット型を指定する
+// ここで， CTP_APID_FROM_ME, CTP_MAX_LEN, CommonTlmPacket として使うパケット型を指定する
 #include <src_user/Settings/TlmCmd/common_tlm_packet_define.h>
 
 // ここで APID を定義する
@@ -61,6 +61,14 @@ APID CTP_get_apid(const CommonTlmPacket* packet);
  * @return void
  */
 void CTP_set_apid(CommonTlmPacket* packet, APID apid);
+
+/**
+ * @brief  現在の global_time を設定
+ * @note   何を設定するかは user 定義
+ * @param[in,out] packet: CTP
+ * @return void
+ */
+void CTP_set_global_time(CommonTlmPacket* packet);
 
 /**
  * @brief  CTP_DEST_FLAG の & を取った flags を取得

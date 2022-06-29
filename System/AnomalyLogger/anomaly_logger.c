@@ -1,6 +1,8 @@
 #pragma section REPRO
 #include "anomaly_logger.h"
-#include <src_user/Settings/AnomalyLogger/al_default_settings.h>
+#ifdef AL_ENABLE
+
+#include <src_user/Settings/System/anomaly_logger_settings.h>
 
 #include <string.h> // memset
 
@@ -256,7 +258,6 @@ static int  AL_is_logging_enable_(uint32_t group)
     return -1;
   }
 
-
   info = anomaly_logger_.is_logging_enable[group_idx];
   mask = (uint8_t)(0x01 << group_subidx);
   ret  = (uint8_t)(info & mask);
@@ -322,7 +323,6 @@ CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
 }
 
 
-
 // 2019/04/26 公開した
 int AL_enable_logging(uint32_t group)
 {
@@ -339,5 +339,6 @@ int  AL_is_logging_enable(uint32_t group)
   return AL_is_logging_enable_(group);
 }
 
+#endif
 
 #pragma section

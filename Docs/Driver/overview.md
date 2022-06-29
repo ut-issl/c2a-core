@@ -9,8 +9,8 @@ Driver とは，各コンポーネントとの通信において， HW 依存部
 
 実装方法は，基本的には [driver_super.h](https://github.com/ut-issl/c2a-core/blob/develop/Drivers/Super/driver_super.h) をみればわかるようにしてあるが，現時点で
 
-- UART test: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user_for_s2e/src/src_user/Drivers/Etc/UART_TEST.c
-- GS: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user_for_s2e/src/src_user/Drivers/Com/gs.c
+- UART test: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Etc/UART_TEST.c
+- GS: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Com/gs.c
 - C2A 間通信 (TBA)
 
 が実装されているので，それを参考のこと．  
@@ -86,7 +86,7 @@ TBW
 - コードの見通しの良さの大幅改良
 - 高速化
 - 複数のフレーム定義（＝ヘッダフッタやフレーム長）に対応するためのStreamの新設
-  - これまでは定期・非定期で２つあったが，これがコードの見通しの良さとバグの温床になっていた
+    - これまでは定期・非定期で２つあったが，これがコードの見通しの良さとバグの温床になっていた
 - varidationの強化
 
 各ドライバの実装方法は，上で述べたように既存コードを参照してほしいが，初期化時にユーザー設定をデフォルト設定で上書きするための `load_init_setting` 関数ポインタを渡す必要がある．  
