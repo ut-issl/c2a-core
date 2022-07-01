@@ -44,9 +44,7 @@ else()
 
   # debug
   target_compile_options(${PROJECT_NAME} PUBLIC "-g")
-  if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${PROJECT_NAME} PUBLIC "-rdynamic")
-  endif()
+  target_link_options(${PROJECT_NAME} PUBLIC "-rdynamic")
 
   # warning
   target_compile_options(${PROJECT_NAME} PUBLIC "-Wpedantic")
