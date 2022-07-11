@@ -32,9 +32,9 @@ typedef enum
  */
 typedef enum
 {
-  SPI_TX_CS_STATE_LOW  = 0,   //!< 送信後にCSをLowのままにし、そのまま受信動作などを行う
-  SPI_TX_CS_STATE_HIGH = 1    //!< 送信後にCSをHighにする
-} SPI_TX_CS_STATE;
+  SPI_CS_STATE_AFTER_TX_LOW  = 0,   //!< 送信後にCSをLowのままにし、そのまま受信動作などを行う
+  SPI_CS_STATE_AFTER_TX_HIGH = 1    //!< 送信後にCSをHighにする
+} SPI_CS_STATE_AFTER_TX;
 
 /**
  * @struct SPI_Config
@@ -42,13 +42,13 @@ typedef enum
  */
 typedef struct
 {
-  uint8_t  comm_ch;            //!< 継承先の機器がつながっている通信ポート番号
-  uint8_t  gpio_ch;            //!< 継承先の機器がつながっているChip Select用GPIOポート番号
-  uint32_t frequency_khz;      //!< SPIクロックの周波数 単位:kHz
-  SPI_MODE mode;               //!< SPI動作モード
-  uint8_t  tx_data_for_rx;     //!< RX動作をするために定期的に送るTXデータ
-  uint16_t rx_length;          //!< 受信するデータ数、受信動作前に設定する
-  SPI_TX_CS_STATE tx_cs_state; //!< 送信動作後にChip SelectをHighにするかどうかのフラグ
+  uint8_t  comm_ch;                        //!< 継承先の機器がつながっている通信ポート番号
+  uint8_t  gpio_ch;                        //!< 継承先の機器がつながっているChip Select用GPIOポート番号
+  uint32_t frequency_khz;                  //!< SPIクロックの周波数 単位:kHz
+  SPI_MODE mode;                           //!< SPI動作モード
+  uint8_t  tx_data_for_rx;                 //!< RX動作をするために定期的に送るTXデータ
+  uint16_t rx_length;                      //!< 受信するデータ数、受信動作前に設定する
+  SPI_CS_STATE_AFTER_TX cs_state_after_tx; //!< 送信動作後にChip SelectをHighにするかどうかのフラグ
 } SPI_Config;
 
 /**
@@ -118,11 +118,11 @@ int SPI_reopen(void* my_spi_v, int reason);
 void SPI_set_rx_length(void* my_spi_v, const uint16_t rx_length);
 
 /**
- * @brief cs_up_after_txを設定する
- * @param[in] my_spi_v       : 対象とするSPI_Config構造体へのポインタ
- * @param[in] tx_cs_state    : 設定するtx_cs_state
+ * @brief cs_state_after_txを設定する
+ * @param[in] my_spi_v           : 対象とするSPI_Config構造体へのポインタ
+ * @param[in] cs_state_after_tx  : 設定するcs_state_after_tx
  * @return なし
  */
-void SPI_set_tx_cs_state(void* my_spi_v, const SPI_TX_CS_STATE tx_cs_state);
+void SPI_set_cs_state_after_tx(void* my_spi_v, const SPI_CS_STATE_AFTER_TX cs_state_after_tx);
 
 #endif
