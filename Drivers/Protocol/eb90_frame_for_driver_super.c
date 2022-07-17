@@ -3,7 +3,6 @@
  * @file
  * @brief コンポ間通信などで標準的に使う データリンク層 の EB90 Frame
  */
-
 #include "eb90_frame_for_driver_super.h"
 #include "../../Library/endian_memcpy.h"
 #include "../../Library/crc.h"

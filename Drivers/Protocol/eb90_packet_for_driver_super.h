@@ -31,7 +31,6 @@
 
 #define EB90_PACKET_HEADER_SIZE  (4)  //!< EB90 Packet のヘッダサイズ
 
-
 /**
  * @brief  Version ID の取得
  * @note   フレームが確定しているときに呼び出すこと

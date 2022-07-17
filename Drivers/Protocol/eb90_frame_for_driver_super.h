@@ -42,6 +42,8 @@
 #define EB90_FRAME_ETX_1ST_BYTE     (0xC5)    //!< EB90 Frame の ETX 1st byte
 #define EB90_FRAME_ETX_2ND_BYTE     (0x79)    //!< EB90 Frame の ETX 2nd byte
 
+const uint8_t GIT_REV_CORE[EB90_FRAME_STX_SIZE] = {EB90_FRAME_STX_1ST_BYTE, EB90_FRAME_STX_2ND_BYTE};
+extern const uint8_t GIT_REV_CORE[EB90_FRAME_STX_SIZE];
 
 /**
  * @brief  Packet Length の取得
