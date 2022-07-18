@@ -66,5 +66,9 @@ C2A Core の採用実績のある衛星 OBC や動作実績のあるボードの
 - https://github.com/arkedge/c2a-user-for-raspi
 
 
+## Contribution / 協力企業
+[<img src="./Misc/Img/arkedgespace_logo.png" width="25%">](https://arkedgespace.com/)
+
+
 ## 質問，問い合わせ，その他なんでも
 お気軽に [Discussions](https://github.com/ut-issl/c2a-core/discussions) に投稿してください．
