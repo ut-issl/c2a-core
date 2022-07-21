@@ -67,7 +67,7 @@ C2A Core の採用実績のある衛星 OBC や動作実績のあるボードの
 
 
 ## 協力
-[<img src="./Docs/Img/arkedgespace_logo.png" width="25%">](https://arkedgespace.com/)
+[<img src="./Docs/Img/arkedgespace_logo.png" width="25%" alt="ArkEdge Space Inc.">](https://arkedgespace.com/)
 
 
 ## 質問，問い合わせ，その他なんでも
