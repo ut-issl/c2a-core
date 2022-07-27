@@ -23,7 +23,7 @@ echo done.
 echo
 
 echo [SET UP DEVELOP ENVIRONMENT FOR 2ND OBC USER SAMPLE]
-make_link './Examples/minimum_user/src/src_core' '../../../'
+make_link './Examples/2nd_obc_user/src/src_core' '../../../'
 echo done.
 echo
 
