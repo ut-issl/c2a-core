@@ -10,6 +10,5 @@
 #endif
 
 // #define BUILD_SETTINGS_FAST_BUILD    //!< 高速ビルドオプション（検証時は必ずコメントアウトすること）
-#define BUILD_SETTINGS_AUTO_FPGA_RESET
 
 #endif

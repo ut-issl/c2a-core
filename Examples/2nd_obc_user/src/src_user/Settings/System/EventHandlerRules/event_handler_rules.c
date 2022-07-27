@@ -7,7 +7,6 @@
 
 void EH_load_default_rules(void)
 {
-  EH_load_rule_test();
 }
 
 #pragma section

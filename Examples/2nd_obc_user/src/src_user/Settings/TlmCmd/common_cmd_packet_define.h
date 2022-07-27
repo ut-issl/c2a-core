@@ -15,7 +15,7 @@ typedef CmdSpacePacket CommonCmdPacket;
 
 // 自分宛て CMD を示す AIPD を定義
 // FIXME: Space Packet が整備されたら直す
-#define CCP_APID_TO_ME (APID_MOBC_CMD)
+#define CCP_APID_TO_ME (APID_AOBC_CMD)
 
 /**
  * @enum   CCP_DEST_TYPE

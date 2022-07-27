@@ -5,8 +5,6 @@
 #ifndef TLM_SPACE_PACKET_PARAMS_H_
 #define TLM_SPACE_PACKET_PARAMS_H_
 
-#undef TSP_2ND_HDR_VER_TO_USE
-
-#define TSP_2ND_HDR_VER_TO_USE  (TSP_2ND_HDR_VER_1)
+// Core のデフォルト設定をそのまま使う
 
 #endif

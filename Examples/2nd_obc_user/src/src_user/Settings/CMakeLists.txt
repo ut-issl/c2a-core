@@ -6,14 +6,12 @@ set(C2A_SRCS
   Modes/mode_definitions.c
   Modes/TaskLists/tl_initial.c
   Modes/TaskLists/Elements/tl_elem_debug_display.c
-  Modes/TaskLists/Elements/tl_elem_drivers_update.c
   Modes/TaskLists/Elements/tl_elem_gs_related_process.c
   Modes/TaskLists/Elements/tl_elem_tlm_cmd_hirate.c
   Modes/Transitions/sl_initial.c
   Modes/Transitions/sl_nop.c
   System/event_logger_settings.c
   System/EventHandlerRules/event_handler_rules.c
-  System/EventHandlerRules/event_handler_rule_test.c
   TlmCmd/common_cmd_packet_define.c
   TlmCmd/Ccsds/apid_define.c
 )
