@@ -43,10 +43,10 @@ jobs:
 
   build_2nd_obc_user_as_c89_for_2nd_obc:
     runs-on: ubuntu-latest
-    needs: gen_build_matrix
+    needs: gen_build_matrix_for_2nd_obc
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.gen_build_matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.gen_build_matrix_for_2nd_obc.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v3
