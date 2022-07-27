@@ -11,6 +11,8 @@ static AM_ACK add_application_(size_t id,
 void AR_load_initial_settings(void)
 {
   add_application_(AR_NOP, NOP_create_app);
+  add_application_(AR_DI_MOBC_CMD_PH, DI_MOBC_update);
+  add_application_(AR_DI_MOBC_MST_PH, DI_MOBC_ms_tlm_packet_handler);
   // add_application_(AR_DI_GS_CMD_PH, DI_GS_cmd_packet_handler);
   // add_application_(AR_DI_GS_MST_PH, DI_GS_mst_packet_handler);
   // add_application_(AR_DI_GS_RPT_PH, DI_GS_rpt_packet_handler);

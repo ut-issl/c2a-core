@@ -12,7 +12,7 @@
 void BCL_load_start_hk_tlm(void)
 {
   BCL_tool_prepare_param_uint8(0x40);
-  BCL_tool_prepare_param_uint8(Tlm_CODE_HK);
+  BCL_tool_prepare_param_uint8(Tlm_CODE_AOBC_HK);
   BCL_tool_prepare_param_uint8(1);
   BCL_tool_register_cmd(1, Cmd_CODE_GENERATE_TLM);
 

@@ -19,7 +19,7 @@ void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (309 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (299 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], (uint32_t)(TMGR_get_master_clock().mode_cycle));
@@ -88,32 +88,15 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[233], (uint8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].lockout));
   TF_copy_u32(&packet[234], (PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]))->packet))));
   TF_copy_u16(&packet[238], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]))->packet))));
-  TF_copy_u32(&packet[240], PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]));
-  TF_copy_u8(&packet[244], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])));
-  TF_copy_u32(&packet[245], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.time.total_cycle));
-  TF_copy_u16(&packet[249], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.code));
-  TF_copy_i32(&packet[251], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.sts));
-  TF_copy_u32(&packet[255], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.time.total_cycle));
-  TF_copy_u16(&packet[259], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.code));
-  TF_copy_i32(&packet[261], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.sts));
-  TF_copy_u32(&packet[265], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].error_counter));
-  TF_copy_u8(&packet[269], (uint8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].stop_on_error));
-  TF_copy_u8(&packet[270], (uint8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].lockout));
-  TF_copy_u32(&packet[271], (PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]))->packet))));
-  TF_copy_u16(&packet[275], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]))->packet))));
   TF_copy_u8(&packet[277], (uint8_t)(block_command_table->pos.block));
   TF_copy_u8(&packet[278], (uint8_t)(block_command_table->pos.cmd));
   TF_copy_u32(&packet[279], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u16(&packet[283], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u32(&packet[294], PL_count_executed_nodes(&PH_ms_tlm_list));
   TF_copy_u8(&packet[298], (uint8_t)(PL_count_active_nodes(&PH_ms_tlm_list)));
-  TF_copy_u32(&packet[299], PL_count_executed_nodes(&PH_st_tlm_list));
-  TF_copy_u8(&packet[303], (uint8_t)(PL_count_active_nodes(&PH_st_tlm_list)));
-  TF_copy_u32(&packet[304], PL_count_executed_nodes(&PH_rp_tlm_list));
-  TF_copy_u8(&packet[308], (uint8_t)(PL_count_active_nodes(&PH_rp_tlm_list)));
 #endif
 
-  *len = 309;
+  *len = 299;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
@@ -148,16 +131,6 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[95], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC])));
   TF_copy_u32(&packet[96], PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]));
   TF_copy_u8(&packet[100], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])));
-  TF_copy_u32(&packet[101], PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]));
-  TF_copy_u8(&packet[105], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])));
-  TF_copy_u32(&packet[106], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.time.total_cycle);
-  TF_copy_u16(&packet[110], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.code));
-  TF_copy_i8(&packet[112], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.sts));
-  TF_copy_u32(&packet[113], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.time.total_cycle);
-  TF_copy_u16(&packet[117], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.code));
-  TF_copy_i8(&packet[119], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.sts));
-  TF_copy_u32(&packet[120], (PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]))->packet))));
-  TF_copy_u16(&packet[124], (uint16_t)(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]))->packet))));
   TF_copy_u8(&packet[126], (uint8_t)(((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].stop_on_error << 7 & 0x80) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].lockout << 6 & 0x40) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].stop_on_error << 5 & 0x20) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].lockout << 4 & 0x10) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].stop_on_error << 3 & 0x08) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].lockout << 2 & 0x04) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].stop_on_error << 1 & 0x02) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].lockout & 0x01) ));
   TF_copy_u8(&packet[127], (uint8_t)((wdt_config->is_wdt_enable << 7 & 0x80) | (wdt_config->is_clear_enable << 6 & 0x40) | 0x00));
   TF_copy_u16(&packet[128], block_command_table->pos.block);

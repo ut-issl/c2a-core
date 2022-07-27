@@ -6,6 +6,8 @@
 typedef enum
 {
   AR_NOP,
+  AR_DI_MOBC_CMD_PH,
+  AR_DI_MOBC_MST_PH,
   // AR_DI_GS_CMD_PH,
   // AR_DI_GS_MST_PH,
   // AR_DI_GS_RPT_PH,

@@ -4,6 +4,7 @@ project(C2A_USER_APPS)
 
 set(C2A_SRCS
   app_registry.c
+  DriverInstances/di_mobc.c
   UserDefined/debug_apps.c
 )
 

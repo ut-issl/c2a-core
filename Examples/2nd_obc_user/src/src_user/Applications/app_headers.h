@@ -22,6 +22,7 @@
 #include <src_core/Applications/TestApp/test_ccp_util.h>
 
 // DI
+#include "DriverInstances/di_mobc.h"
 
 // UserDefined
 #include "UserDefined/debug_apps.h"
