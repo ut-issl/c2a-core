@@ -11,7 +11,6 @@ set(C2A_SRCS
   Modes/TaskLists/Elements/tl_elem_tlm_cmd_hirate.c
   Modes/Transitions/sl_initial.c
   Modes/Transitions/sl_nop.c
-  Modes/Transitions/sequence_items.c
   System/event_logger_settings.c
   System/EventHandlerRules/event_handler_rules.c
   System/EventHandlerRules/event_handler_rule_test.c
