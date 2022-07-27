@@ -45,7 +45,7 @@ endif()
 add_subdirectory(${C2A_CORE_DIR})
 
 add_subdirectory(${C2A_USER_DIR}/Applications)
-# add_subdirectory(${C2A_USER_DIR}/Drivers)
+add_subdirectory(${C2A_USER_DIR}/Drivers)
 add_subdirectory(${C2A_USER_DIR}/IfWrapper)
 add_subdirectory(${C2A_USER_DIR}/Library)
 add_subdirectory(${C2A_USER_DIR}/Settings)
@@ -71,7 +71,7 @@ endif()
 set(C2A_USER_MODULES
   C2A_USER_APPS
   C2A_USER_CMD_TLM
-  # C2A_USER_DRIVERS
+  C2A_USER_DRIVERS
   C2A_USER_IF_WRAPPER
   C2A_USER_LIB
   C2A_USER_SETTINGS
