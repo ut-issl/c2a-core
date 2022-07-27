@@ -32,7 +32,7 @@ int SILS_SCI_UART_IF_RX(unsigned char* data_v, int count)
 SCIComPortUart::SCIComPortUart(void)
 {
   // ビルド通らなかったので，ZEUSからちょっと変えた
-  myHComPort_ = CreateFile("\\\\.\\COM13", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  myHComPort_ = CreateFile("\\\\.\\COM14", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
   if ((int)myHComPort_ == -1)
   {
