@@ -1,0 +1,14 @@
+#pragma section REPRO
+/**
+ * @file
+ * @brief git revisionをコードに埋め込む 
+ */
+
+#include "git_revision.h"
+
+const char GIT_REV_CORE[41] = "git_rev_core_hash"; 
+const uint32_t GIT_REV_CORE_SHORT = 0xgit_rev_core_short_hash;
+const char GIT_REV_USER[41] = "git_rev_user_hash"; 
+const uint32_t GIT_REV_USER_SHORT = 0xgit_rev_user_short_hash;
+
+#pragma section
