@@ -27,12 +27,12 @@ call :sync_file ".\src\src_user\TlmCmd\common_cmd_packet.c" "..\minimum_user\src
 call :sync_file ".\src\src_user\TlmCmd\common_tlm_cmd_packet.c" "..\minimum_user\src\src_user\TlmCmd\common_tlm_cmd_packet.c"
 call :sync_file ".\src\src_user\TlmCmd\common_tlm_packet.c" "..\minimum_user\src\src_user\TlmCmd\common_tlm_packet.c"
 
-call :sync_file ".\src\src_user\Test\test\conftest.py" "..src\src_user\Test\test\conftest.py"
-call :sync_file ".\src\src_user\Test\utils\c2a_enum_utils.py" "..src\src_user\Test\utils\c2a_enum_utils.py"
-call :sync_file ".\src\src_user\Test\utils\wings_utils.py" "..src\src_user\Test\utils\wings_utils.py"
-call :sync_file ".\src\src_user\Test\authorization.json.temp" "..src\src_user\Test\authorization.json.temp"
-call :sync_file ".\src\src_user\Test\pytest.ini" "..src\src_user\Test\pytest.ini"
-call :sync_file ".\src\src_user\Test\settings.json" "..src\src_user\Test\settings.json"
+call :sync_file ".\src\src_user\Test\test\conftest.py" "..\minimum_user\src\src_user\Test\test\conftest.py"
+call :sync_file ".\src\src_user\Test\utils\c2a_enum_utils.py" "..\minimum_user\src\src_user\Test\utils\c2a_enum_utils.py"
+call :sync_file ".\src\src_user\Test\utils\wings_utils.py" "..\minimum_user\src\src_user\Test\utils\wings_utils.py"
+call :sync_file ".\src\src_user\Test\authorization.json.temp" "..\minimum_user\src\src_user\Test\authorization.json.temp"
+call :sync_file ".\src\src_user\Test\pytest.ini" "..\minimum_user\src\src_user\Test\pytest.ini"
+call :sync_file ".\src\src_user\Test\settings.json" "..\minimum_user\src\src_user\Test\settings.json"
 
 
 echo.
