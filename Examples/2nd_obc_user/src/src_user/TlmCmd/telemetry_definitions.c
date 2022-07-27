@@ -8,16 +8,16 @@
 #include "telemetry_definitions.h"
 #include "telemetry_source.h"
 
-static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len);
-static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len);
+static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len);
 
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS])
 {
-  tlm_table[Tlm_CODE_MOBC].tlm_func = Tlm_MOBC_;
-  tlm_table[Tlm_CODE_HK].tlm_func = Tlm_HK_;
+  tlm_table[Tlm_CODE_AOBC_AOBC].tlm_func = Tlm_AOBC_AOBC_;
+  tlm_table[Tlm_CODE_AOBC_HK].tlm_func = Tlm_AOBC_HK_;
 }
 
-static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (309 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
@@ -117,7 +117,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
-static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
+static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
   if (413 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
