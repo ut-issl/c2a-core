@@ -27,6 +27,14 @@ call :sync_file ".\src\src_user\TlmCmd\common_cmd_packet.c" "..\minimum_user\src
 call :sync_file ".\src\src_user\TlmCmd\common_tlm_cmd_packet.c" "..\minimum_user\src\src_user\TlmCmd\common_tlm_cmd_packet.c"
 call :sync_file ".\src\src_user\TlmCmd\common_tlm_packet.c" "..\minimum_user\src\src_user\TlmCmd\common_tlm_packet.c"
 
+call :sync_file ".\src\src_user\Test\test\conftest.py" "..src\src_user\Test\test\conftest.py"
+call :sync_file ".\src\src_user\Test\utils\c2a_enum_utils.py" "..src\src_user\Test\utils\c2a_enum_utils.py"
+call :sync_file ".\src\src_user\Test\utils\wings_utils.py" "..src\src_user\Test\utils\wings_utils.py"
+call :sync_file ".\src\src_user\Test\authorization.json.temp" "..src\src_user\Test\authorization.json.temp"
+call :sync_file ".\src\src_user\Test\pytest.ini" "..src\src_user\Test\pytest.ini"
+call :sync_file ".\src\src_user\Test\settings.json" "..src\src_user\Test\settings.json"
+
+
 echo.
 echo The process has been completed.
 echo Press any key to exit...
