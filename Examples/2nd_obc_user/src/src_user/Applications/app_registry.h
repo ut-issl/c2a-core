@@ -6,9 +6,9 @@
 typedef enum
 {
   AR_NOP,
-  AR_DI_GS_CMD_PH,
-  AR_DI_GS_MST_PH,
-  AR_DI_GS_RPT_PH,
+  // AR_DI_GS_CMD_PH,
+  // AR_DI_GS_MST_PH,
+  // AR_DI_GS_RPT_PH,
   AR_DI_UART_TEST,
   AR_GSC_DISPATCHER,
   AR_RTC_DISPATCHER,

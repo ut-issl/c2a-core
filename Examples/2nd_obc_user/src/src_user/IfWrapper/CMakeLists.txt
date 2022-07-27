@@ -12,14 +12,12 @@ if(USE_SILS_MOCKUP)
 
   #target_sources(${PROJECT_NAME} PRIVATE
   list(APPEND C2A_SRCS
-    SilsMockup/ccsds_sils.c
     SilsMockup/uart_sils.c
     SilsMockup/wdt_sils.c
   )
 else()
   #target_sources(${PROJECT_NAME} PUBLIC
   list(APPEND C2A_SRCS
-    Sils/ccsds_sils.cpp
     Sils/uart_sils.cpp
     Sils/wdt_sils.cpp
   )
@@ -29,7 +27,6 @@ if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
   add_definitions(-DUSE_SCI_COM_WINGS)
   #target_sources(${PROJECT_NAME} PUBLIC
   list(APPEND C2A_SRCS
-    Sils/ccsds_sils_sci_if.cpp
   )
   message("USE SCI_COM_WINGS")
 endif()

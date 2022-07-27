@@ -9,9 +9,6 @@
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/TlmCmd/packet_handler.h>
 
-extern PacketList PH_aobc_cmd_list;
-extern PacketList PH_tobc_cmd_list;
-
 /**
  * @brief  PH のユーザー固有部初期化処理
  *

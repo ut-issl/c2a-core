@@ -17,7 +17,6 @@
 #include <src_core/Applications/gs_command_dispatcher.h>
 #include <src_core/Applications/realtime_command_dispatcher.h>
 #include <src_core/Applications/timeline_command_dispatcher.h>
-#include "../../Applications/DriverInstances/di_gs.h"
 // #include <src_core/TlmCmd/telemetry_generator.h>
 #include "../../Library/git_revision.h"
 #include "../../Library/vt100.h"
@@ -88,11 +87,11 @@ void APP_DBG_print_time_stamp_(void)
 
 void APP_DBG_print_cmd_status_(void)
 {
-  VT100_erase_line();
-  Printf("CMD: GS %3d, RT %3d, Ack %3d, Code 0x%02x, Sts %3d\n",
-         (PL_count_executed_nodes(&PH_gs_cmd_list) & 0xff),
-         (PL_count_executed_nodes(&PH_rt_cmd_list) & 0xff),
-         gs_driver->info[gs_driver->tlm_tx_port_type].rx.cmd_ack, gs_command_dispatcher->prev.code, gs_command_dispatcher->prev.sts);
+  // VT100_erase_line();
+  // Printf("CMD: GS %3d, RT %3d, Ack %3d, Code 0x%02x, Sts %3d\n",
+  //        (PL_count_executed_nodes(&PH_gs_cmd_list) & 0xff),
+  //        (PL_count_executed_nodes(&PH_rt_cmd_list) & 0xff),
+  //        gs_driver->info[gs_driver->tlm_tx_port_type].rx.cmd_ack, gs_command_dispatcher->prev.code, gs_command_dispatcher->prev.sts);
 }
 
 void APP_DBG_print_event_logger0_(void)

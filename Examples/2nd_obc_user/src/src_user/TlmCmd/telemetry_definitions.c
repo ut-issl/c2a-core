@@ -81,12 +81,12 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[54], (uint8_t)(TDSP_info->tskd.prev_err.time.step));
   TF_copy_u16(&packet[55], (uint16_t)(TDSP_info->tskd.prev_err.code));
   TF_copy_i32(&packet[57], (int32_t)(TDSP_info->tskd.prev_err.sts));
-  TF_copy_i32(&packet[61], (int32_t)gs_driver->latest_info->rx.ret_from_if_rx);
-  TF_copy_u8(&packet[65], (uint8_t)gs_driver->latest_info->rx.rec_status);
-  TF_copy_u32(&packet[66], (uint32_t)gs_driver->latest_info->rx.last_rec_time);
-  TF_copy_u8(&packet[70], (uint8_t)gs_validate_info->positive_window_width);
-  TF_copy_u8(&packet[71], (uint8_t)gs_driver->latest_info->rx.cmd_ack);
-  TF_copy_u8(&packet[72], (uint8_t)gs_driver->tlm_tx_port_type);
+  // TF_copy_i32(&packet[61], (int32_t)gs_driver->latest_info->rx.ret_from_if_rx);
+  // TF_copy_u8(&packet[65], (uint8_t)gs_driver->latest_info->rx.rec_status);
+  // TF_copy_u32(&packet[66], (uint32_t)gs_driver->latest_info->rx.last_rec_time);
+  // TF_copy_u8(&packet[70], (uint8_t)gs_validate_info->positive_window_width);
+  // TF_copy_u8(&packet[71], (uint8_t)gs_driver->latest_info->rx.cmd_ack);
+  // TF_copy_u8(&packet[72], (uint8_t)gs_driver->tlm_tx_port_type);
   TF_copy_u32(&packet[73], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[77], (uint32_t)(gs_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[81], (uint16_t)(gs_command_dispatcher->prev.code));
@@ -159,19 +159,19 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[278], (uint8_t)(block_command_table->pos.cmd));
   TF_copy_u32(&packet[279], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u16(&packet[283], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
-  TF_copy_u8(&packet[285], gs_driver->ccsds_info.buffer_num);
-  TF_copy_u32(&packet[286], (uint32_t)(DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
-  TF_copy_u32(&packet[290], (uint32_t)(DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
+  // TF_copy_u8(&packet[285], gs_driver->ccsds_info.buffer_num);
+  // TF_copy_u32(&packet[286], (uint32_t)(DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
+  // TF_copy_u32(&packet[290], (uint32_t)(DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
   TF_copy_u32(&packet[294], PL_count_executed_nodes(&PH_ms_tlm_list));
   TF_copy_u8(&packet[298], (uint8_t)(PL_count_active_nodes(&PH_ms_tlm_list)));
   TF_copy_u32(&packet[299], PL_count_executed_nodes(&PH_st_tlm_list));
   TF_copy_u8(&packet[303], (uint8_t)(PL_count_active_nodes(&PH_st_tlm_list)));
   TF_copy_u32(&packet[304], PL_count_executed_nodes(&PH_rp_tlm_list));
   TF_copy_u8(&packet[308], (uint8_t)(PL_count_active_nodes(&PH_rp_tlm_list)));
-  TF_copy_u32(&packet[309], (uint32_t)gs_driver->latest_info->tx.send_cycle);
-  TF_copy_u32(&packet[313], gs_driver->driver_ccsds.ccsds_config.bitrate);
-  TF_copy_u8(&packet[317], (uint8_t)gs_driver->latest_info->tx.vcid);
-  TF_copy_u32(&packet[318], gs_driver->latest_info->tx.vcdu_counter);
+  // TF_copy_u32(&packet[309], (uint32_t)gs_driver->latest_info->tx.send_cycle);
+  // TF_copy_u32(&packet[313], gs_driver->driver_ccsds.ccsds_config.bitrate);
+  // TF_copy_u8(&packet[317], (uint8_t)gs_driver->latest_info->tx.vcid);
+  // TF_copy_u32(&packet[318], gs_driver->latest_info->tx.vcdu_counter);
 #endif
 
   *len = 322;
@@ -3127,48 +3127,48 @@ static TF_TLM_FUNC_ACK Tlm_GS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   if (113 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u8(&packet[26], (uint8_t)gs_driver->info[0].rx.rec_status);
-  TF_copy_i32(&packet[27], (int32_t)gs_driver->info[0].rx.ret_from_if_rx);
-  TF_copy_u8(&packet[31], (uint8_t)gs_driver->info[0].rx.last_dest_type);
-  TF_copy_u32(&packet[32], (uint32_t)gs_driver->info[0].rx.last_rec_time);
-  TF_copy_u8(&packet[36], (uint8_t)gs_driver->info[0].rx.cmd_ack);
-  TF_copy_u8(&packet[37], (uint8_t)gs_driver->info[0].rx.tctf.last_rec_tctf_type);
-  TF_copy_u8(&packet[38], (uint8_t)gs_driver->info[0].rx.tctf.ad_rec_status);
-  TF_copy_u8(&packet[39], (uint8_t)gs_driver->info[0].rx.tctf.bc_rec_status);
-  TF_copy_u8(&packet[40], (uint8_t)gs_driver->info[0].rx.tctf.bd_rec_status);
-  TF_copy_u8(&packet[41], gs_driver->is_ccsds_tx_valid);
-  TF_copy_u32(&packet[42], (uint32_t)gs_driver->info[0].tx.send_cycle);
-  TF_copy_u8(&packet[46], (uint8_t)gs_driver->info[0].tx.vcid);
-  TF_copy_u32(&packet[47], gs_driver->info[0].tx.vcdu_counter);
-  TF_copy_u8(&packet[51], gs_driver->ccsds_info.buffer_num);
-  TF_copy_u8(&packet[52], gs_driver->driver_uart.uart_config.ch);
-  TF_copy_u32(&packet[53], gs_driver->driver_uart.uart_config.baudrate);
-  TF_copy_u8(&packet[57], (uint8_t)gs_driver->driver_uart.uart_config.parity_settings);
-  TF_copy_u8(&packet[58], (uint8_t)gs_driver->driver_uart.uart_config.data_length);
-  TF_copy_u8(&packet[59], (uint8_t)gs_driver->driver_uart.uart_config.stop_bit);
-  TF_copy_u8(&packet[60], (uint8_t)gs_driver->info[1].rx.rec_status);
-  TF_copy_i32(&packet[61], (int32_t)gs_driver->info[1].rx.ret_from_if_rx);
-  TF_copy_u8(&packet[65], (uint8_t)gs_driver->info[1].rx.last_dest_type);
-  TF_copy_u32(&packet[66], (uint32_t)gs_driver->info[1].rx.last_rec_time);
-  TF_copy_u8(&packet[70], (uint8_t)gs_driver->info[1].rx.cmd_ack);
-  TF_copy_u8(&packet[71], (uint8_t)gs_driver->info[1].rx.tctf.last_rec_tctf_type);
-  TF_copy_u8(&packet[72], (uint8_t)gs_driver->info[1].rx.tctf.ad_rec_status);
-  TF_copy_u8(&packet[73], (uint8_t)gs_driver->info[1].rx.tctf.bc_rec_status);
-  TF_copy_u8(&packet[74], (uint8_t)gs_driver->info[1].rx.tctf.bd_rec_status);
-  TF_copy_u32(&packet[75], (uint32_t)gs_driver->info[1].tx.send_cycle);
-  TF_copy_u8(&packet[79], (uint8_t)gs_driver->info[1].tx.vcid);
-  TF_copy_u32(&packet[80], gs_driver->info[1].tx.vcdu_counter);
-  TF_copy_u8(&packet[84], gs_validate_info->type_a_counter);
-  TF_copy_u8(&packet[85], gs_validate_info->type_b_counter);
-  TF_copy_u8(&packet[86], gs_validate_info->lockout_flag);
-  TF_copy_u8(&packet[87], gs_validate_info->retransmit_flag);
-  TF_copy_u8(&packet[88], gs_validate_info->positive_window_width);
-  TF_copy_u32(&packet[89], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
-  TF_copy_u32(&packet[93], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
-  TF_copy_u32(&packet[97], (uint32_t)DI_GS_ms_tlm_packet_handler->vcdu_counter);
-  TF_copy_u32(&packet[101], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
-  TF_copy_u32(&packet[105], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
-  TF_copy_u32(&packet[109], (uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter);
+  // TF_copy_u8(&packet[26], (uint8_t)gs_driver->info[0].rx.rec_status);
+  // TF_copy_i32(&packet[27], (int32_t)gs_driver->info[0].rx.ret_from_if_rx);
+  // TF_copy_u8(&packet[31], (uint8_t)gs_driver->info[0].rx.last_dest_type);
+  // TF_copy_u32(&packet[32], (uint32_t)gs_driver->info[0].rx.last_rec_time);
+  // TF_copy_u8(&packet[36], (uint8_t)gs_driver->info[0].rx.cmd_ack);
+  // TF_copy_u8(&packet[37], (uint8_t)gs_driver->info[0].rx.tctf.last_rec_tctf_type);
+  // TF_copy_u8(&packet[38], (uint8_t)gs_driver->info[0].rx.tctf.ad_rec_status);
+  // TF_copy_u8(&packet[39], (uint8_t)gs_driver->info[0].rx.tctf.bc_rec_status);
+  // TF_copy_u8(&packet[40], (uint8_t)gs_driver->info[0].rx.tctf.bd_rec_status);
+  // TF_copy_u8(&packet[41], gs_driver->is_ccsds_tx_valid);
+  // TF_copy_u32(&packet[42], (uint32_t)gs_driver->info[0].tx.send_cycle);
+  // TF_copy_u8(&packet[46], (uint8_t)gs_driver->info[0].tx.vcid);
+  // TF_copy_u32(&packet[47], gs_driver->info[0].tx.vcdu_counter);
+  // TF_copy_u8(&packet[51], gs_driver->ccsds_info.buffer_num);
+  // TF_copy_u8(&packet[52], gs_driver->driver_uart.uart_config.ch);
+  // TF_copy_u32(&packet[53], gs_driver->driver_uart.uart_config.baudrate);
+  // TF_copy_u8(&packet[57], (uint8_t)gs_driver->driver_uart.uart_config.parity_settings);
+  // TF_copy_u8(&packet[58], (uint8_t)gs_driver->driver_uart.uart_config.data_length);
+  // TF_copy_u8(&packet[59], (uint8_t)gs_driver->driver_uart.uart_config.stop_bit);
+  // TF_copy_u8(&packet[60], (uint8_t)gs_driver->info[1].rx.rec_status);
+  // TF_copy_i32(&packet[61], (int32_t)gs_driver->info[1].rx.ret_from_if_rx);
+  // TF_copy_u8(&packet[65], (uint8_t)gs_driver->info[1].rx.last_dest_type);
+  // TF_copy_u32(&packet[66], (uint32_t)gs_driver->info[1].rx.last_rec_time);
+  // TF_copy_u8(&packet[70], (uint8_t)gs_driver->info[1].rx.cmd_ack);
+  // TF_copy_u8(&packet[71], (uint8_t)gs_driver->info[1].rx.tctf.last_rec_tctf_type);
+  // TF_copy_u8(&packet[72], (uint8_t)gs_driver->info[1].rx.tctf.ad_rec_status);
+  // TF_copy_u8(&packet[73], (uint8_t)gs_driver->info[1].rx.tctf.bc_rec_status);
+  // TF_copy_u8(&packet[74], (uint8_t)gs_driver->info[1].rx.tctf.bd_rec_status);
+  // TF_copy_u32(&packet[75], (uint32_t)gs_driver->info[1].tx.send_cycle);
+  // TF_copy_u8(&packet[79], (uint8_t)gs_driver->info[1].tx.vcid);
+  // TF_copy_u32(&packet[80], gs_driver->info[1].tx.vcdu_counter);
+  // TF_copy_u8(&packet[84], gs_validate_info->type_a_counter);
+  // TF_copy_u8(&packet[85], gs_validate_info->type_b_counter);
+  // TF_copy_u8(&packet[86], gs_validate_info->lockout_flag);
+  // TF_copy_u8(&packet[87], gs_validate_info->retransmit_flag);
+  // TF_copy_u8(&packet[88], gs_validate_info->positive_window_width);
+  // TF_copy_u32(&packet[89], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
+  // TF_copy_u32(&packet[93], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
+  // TF_copy_u32(&packet[97], (uint32_t)DI_GS_ms_tlm_packet_handler->vcdu_counter);
+  // TF_copy_u32(&packet[101], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
+  // TF_copy_u32(&packet[105], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
+  // TF_copy_u32(&packet[109], (uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter);
 #endif
 
   *len = 113;
@@ -3185,9 +3185,9 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u8(&packet[38], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[39], (uint8_t)( ((uint8_t)(mode_manager->stat) << 7 & 0x80) | ((uint8_t)(mode_manager->previous_id) & 0x7F) ));
   TF_copy_u16(&packet[40], TDSP_info->task_list_id);
-  TF_copy_u8(&packet[42], (uint8_t)gs_driver->latest_info->rx.rec_status);
-  TF_copy_u32(&packet[43], (uint32_t)gs_driver->latest_info->rx.last_rec_time);
-  TF_copy_u8(&packet[47], (uint8_t)(gs_driver->latest_info->rx.cmd_ack));
+  // TF_copy_u8(&packet[42], (uint8_t)gs_driver->latest_info->rx.rec_status);
+  // TF_copy_u32(&packet[43], (uint32_t)gs_driver->latest_info->rx.last_rec_time);
+  // TF_copy_u8(&packet[47], (uint8_t)(gs_driver->latest_info->rx.cmd_ack));
   TF_copy_u32(&packet[48], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[52], gs_command_dispatcher->prev.time.total_cycle);
   TF_copy_u16(&packet[56], (uint16_t)(gs_command_dispatcher->prev.code));
@@ -3415,18 +3415,18 @@ static TF_TLM_FUNC_ACK Tlm_UART_TEST_(uint8_t* packet, uint16_t* len, uint16_t m
   if (51 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
-  TF_copy_u8(&packet[26], (uint8_t)(uart_test_instance->driver.super.config.rec_status_.ret_from_if_rx));
-  TF_copy_u32(&packet[27], uart_test_instance->driver.super.config.rx_count_);
-  TF_copy_u8(&packet[31], (uint8_t)(uart_test_instance->driver.super.stream_config[0].rec_status_.status_code));
-  TF_copy_u16(&packet[32], uart_test_instance->driver.super.stream_config[0].rec_status_.fixed_frame_len);
-  TF_copy_u32(&packet[34], uart_test_instance->driver.super.stream_config[0].rx_frame_fix_count_);
-  TF_copy_u16(&packet[38], uart_test_instance->driver.super.stream_config[0].rx_frame_rec_len_);
-  TF_copy_u8(&packet[40], uart_test_instance->driver.super.stream_config[0].is_rx_buffer_carry_over_);
-  TF_copy_u8(&packet[41], (uint8_t)(uart_test_instance->driver.super.stream_config[1].rec_status_.status_code));
-  TF_copy_u16(&packet[42], uart_test_instance->driver.super.stream_config[1].rec_status_.fixed_frame_len);
-  TF_copy_u32(&packet[44], uart_test_instance->driver.super.stream_config[1].rx_frame_fix_count_);
-  TF_copy_u16(&packet[48], uart_test_instance->driver.super.stream_config[1].rx_frame_rec_len_);
-  TF_copy_u8(&packet[50], uart_test_instance->driver.super.stream_config[1].is_rx_buffer_carry_over_);
+  // TF_copy_u8(&packet[26], (uint8_t)(uart_test_instance->driver.super.config.rec_status_.ret_from_if_rx));
+  // TF_copy_u32(&packet[27], uart_test_instance->driver.super.config.rx_count_);
+  // TF_copy_u8(&packet[31], (uint8_t)(uart_test_instance->driver.super.stream_config[0].rec_status_.status_code));
+  // TF_copy_u16(&packet[32], uart_test_instance->driver.super.stream_config[0].rec_status_.fixed_frame_len);
+  // TF_copy_u32(&packet[34], uart_test_instance->driver.super.stream_config[0].rx_frame_fix_count_);
+  // TF_copy_u16(&packet[38], uart_test_instance->driver.super.stream_config[0].rx_frame_rec_len_);
+  // TF_copy_u8(&packet[40], uart_test_instance->driver.super.stream_config[0].is_rx_buffer_carry_over_);
+  // TF_copy_u8(&packet[41], (uint8_t)(uart_test_instance->driver.super.stream_config[1].rec_status_.status_code));
+  // TF_copy_u16(&packet[42], uart_test_instance->driver.super.stream_config[1].rec_status_.fixed_frame_len);
+  // TF_copy_u32(&packet[44], uart_test_instance->driver.super.stream_config[1].rx_frame_fix_count_);
+  // TF_copy_u16(&packet[48], uart_test_instance->driver.super.stream_config[1].rx_frame_rec_len_);
+  // TF_copy_u8(&packet[50], uart_test_instance->driver.super.stream_config[1].is_rx_buffer_carry_over_);
 #endif
 
   *len = 51;
@@ -3435,12 +3435,12 @@ static TF_TLM_FUNC_ACK Tlm_UART_TEST_(uint8_t* packet, uint16_t* len, uint16_t m
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  return AOBC_pick_up_tlm_buffer(aobc_driver, AOBC_Tlm_CODE_AOBC_AOBC, packet, len, max_len);
+  return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  return AOBC_pick_up_tlm_buffer(aobc_driver, AOBC_Tlm_CODE_AOBC_HK, packet, len, max_len);
+  return TF_TLM_FUNC_ACK_SUCCESS;
 }
 
 #pragma section

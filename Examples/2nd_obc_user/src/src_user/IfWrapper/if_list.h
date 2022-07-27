@@ -7,7 +7,6 @@
 
 typedef enum
 {
-  CCSDS,
   UART,
   IF_LIST_MAX
 } IF_LIST_ENUM;

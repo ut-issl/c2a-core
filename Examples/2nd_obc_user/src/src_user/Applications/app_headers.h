@@ -22,9 +22,6 @@
 #include <src_core/Applications/TestApp/test_ccp_util.h>
 
 // DI
-#include "DriverInstances/di_aobc.h"
-#include "DriverInstances/di_uart_test.h"
-#include "DriverInstances/di_gs.h"
 
 // UserDefined
 #include "UserDefined/debug_apps.h"

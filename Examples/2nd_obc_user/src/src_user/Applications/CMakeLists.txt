@@ -4,9 +4,6 @@ project(C2A_USER_APPS)
 
 set(C2A_SRCS
   app_registry.c
-  DriverInstances/di_aobc.c
-  DriverInstances/di_gs.c
-  DriverInstances/di_uart_test.c
   UserDefined/debug_apps.c
 )
 
