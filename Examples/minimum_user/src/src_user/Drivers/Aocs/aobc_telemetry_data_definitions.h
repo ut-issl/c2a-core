@@ -41,13 +41,6 @@ typedef struct
     uint8_t tdsp_cmd_last_err_time_step;
     uint16_t tdsp_cmd_last_err_id;
     int32_t tdsp_cmd_last_err_sts;
-    int32_t gs_ret_from_if_rx;
-    uint8_t tctf_last_recv_ack;
-    uint8_t tctf_validate_status;
-    uint32_t tctf_last_recv_time;
-    uint8_t tctf_farm_pw;
-    uint8_t tcp_last_recv_ack;
-    uint8_t tlm_tx_port_type;
     uint32_t gs_cmd_counter;
     uint32_t gs_cmd_last_exec_time;
     uint16_t gs_cmd_last_exec_id;
@@ -64,62 +57,60 @@ typedef struct
     uint16_t rt_cmd_last_err_id;
     int32_t rt_cmd_last_err_sts;
     uint32_t rt_cmd_err_counter;
-    uint32_t tl0_cmd_counter;
-    uint8_t tl0_cmd_queued;
-    uint32_t tl0_cmd_last_exec_time;
-    uint16_t tl0_cmd_last_exec_id;
-    int32_t tl0_cmd_last_exec_sts;
-    uint32_t tl0_cmd_last_err_time;
-    uint16_t tl0_cmd_last_err_id;
-    int32_t tl0_cmd_last_err_sts;
-    uint32_t tl0_cmd_err_counter;
-    uint8_t tl0_cmd_soe_flag;
-    uint8_t tl0_cmd_lockout_flag;
-    uint32_t tl0_next_time;
-    uint16_t tl0_next_id;
-    uint32_t tl1_cmd_counter;
-    uint8_t tl1_cmd_queued;
-    uint32_t tl1_cmd_last_exec_time;
-    uint16_t tl1_cmd_last_exec_id;
-    int32_t tl1_cmd_last_exec_sts;
-    uint32_t tl1_cmd_last_err_time;
-    uint16_t tl1_cmd_last_err_id;
-    int32_t tl1_cmd_last_err_sts;
-    uint32_t tl1_cmd_err_counter;
-    uint8_t tl1_cmd_soe_flag;
-    uint8_t tl1_cmd_lockout_flag;
-    uint32_t tl1_next_time;
-    uint16_t tl1_next_id;
-    uint32_t tl2_cmd_counter;
-    uint8_t tl2_cmd_queued;
-    uint32_t tl2_cmd_last_exec_time;
-    uint16_t tl2_cmd_last_exec_id;
-    int32_t tl2_cmd_last_exec_sts;
-    uint32_t tl2_cmd_last_err_time;
-    uint16_t tl2_cmd_last_err_id;
-    int32_t tl2_cmd_last_err_sts;
-    uint32_t tl2_cmd_err_counter;
-    uint8_t tl2_cmd_soe_flag;
-    uint8_t tl2_cmd_lockout_flag;
-    uint32_t tl2_next_time;
-    uint16_t tl2_next_id;
+    struct
+    {
+      uint32_t counter;
+      uint8_t queued;
+      uint32_t last_exec_time;
+      uint16_t last_exec_id;
+      int32_t last_exec_sts;
+      uint32_t last_err_time;
+      uint16_t last_err_id;
+      int32_t last_err_sts;
+      uint32_t err_counter;
+      uint8_t soe_flag;
+      uint8_t lockout_flag;
+      uint32_t next_time;
+      uint16_t next_id;
+    } tlc_gs;
+    struct
+    {
+      uint32_t counter;
+      uint8_t queued;
+      uint32_t last_exec_time;
+      uint16_t last_exec_id;
+      int32_t last_exec_sts;
+      uint32_t last_err_time;
+      uint16_t last_err_id;
+      int32_t last_err_sts;
+      uint32_t err_counter;
+      uint8_t soe_flag;
+      uint8_t lockout_flag;
+      uint32_t next_time;
+      uint16_t next_id;
+    } tlc_bc;
+    struct
+    {
+      uint32_t counter;
+      uint8_t queued;
+      uint32_t last_exec_time;
+      uint16_t last_exec_id;
+      int32_t last_exec_sts;
+      uint32_t last_err_time;
+      uint16_t last_err_id;
+      int32_t last_err_sts;
+      uint32_t err_counter;
+      uint8_t soe_flag;
+      uint8_t lockout_flag;
+      uint32_t next_time;
+      uint16_t next_id;
+    } tlc_tlm;
     uint8_t bct_blk_ptr;
     uint8_t bct_cmd_ptr;
     uint32_t bct_regd_time;
     uint16_t bct_regd_id;
-    uint8_t ms_buffer_available;
-    uint32_t ms_t2m_flush_interval;
-    uint32_t rp_t2m_flush_interval;
     uint32_t ms_tlm_counter;
     uint8_t ms_tlm_queued;
-    uint32_t st_tlm_counter;
-    uint8_t st_tlm_queued;
-    uint32_t rp_tlm_counter;
-    uint8_t rp_tlm_queued;
-    uint32_t tci_tx_cycle;
-    uint32_t tci_tx_bitrate;
-    uint8_t tci_vcid;
-    uint32_t tci_vcdu_counter;
   } aobc_aobc;
   struct
   {
@@ -149,9 +140,6 @@ typedef struct
     uint8_t obc_mm_sts;
     uint8_t obc_mm_opsmode_prev;
     uint16_t obc_tdsp_current_id;
-    uint8_t obc_tctf_last_recv_ack;
-    uint32_t obc_tctf_last_recv_time;
-    uint8_t obc_tcp_last_recv_ack;
     uint32_t obc_gs_cmd_counter;
     uint32_t obc_gs_cmd_last_exec_time;
     uint16_t obc_gs_cmd_last_exec_id;
@@ -159,27 +147,41 @@ typedef struct
     uint32_t obc_gs_cmd_last_err_time;
     uint16_t obc_gs_cmd_last_err_id;
     int8_t obc_gs_cmd_last_err_sts;
-    uint32_t obc_tl0_cmd_counter;
-    uint8_t obc_tl0_cmd_queued;
-    uint32_t obc_tl0_cmd_last_exec_time;
-    uint16_t obc_tl0_cmd_last_exec_id;
-    int8_t obc_tl0_cmd_last_exec_sts;
-    uint32_t obc_tl0_cmd_last_err_time;
-    uint16_t obc_tl0_cmd_last_err_id;
-    int8_t obc_tl0_cmd_last_err_sts;
-    uint32_t obc_tl0_next_time;
-    uint16_t obc_tl0_next_id;
-    uint8_t obc_tl0_cmd_soe_flag;
-    uint8_t obc_tl0_cmd_lockout_flag;
-    uint8_t obc_tl1_cmd_soe_flag;
-    uint8_t obc_tl1_cmd_lockout_flag;
-    uint8_t obc_tl2_cmd_soe_flag;
-    uint8_t obc_tl2_cmd_lockout_flag;
+    struct
+    {
+      uint32_t counter;
+      uint8_t queued;
+      uint32_t last_exec_time;
+      uint16_t last_exec_id;
+      int8_t last_exec_sts;
+      uint32_t last_err_time;
+      uint16_t last_err_id;
+      int8_t last_err_sts;
+      uint32_t next_time;
+      uint16_t next_id;
+      uint8_t soe_flag;
+      uint8_t lockout_flag;
+    } obc_tlc_gs;
+    struct
+    {
+      uint32_t counter;
+      uint8_t queued;
+      uint8_t soe_flag;
+      uint8_t lockout_flag;
+    } obc_tlc_bc;
+    struct
+    {
+      uint32_t counter;
+      uint8_t queued;
+      uint8_t soe_flag;
+      uint8_t lockout_flag;
+    } obc_tlc_tlm;
     struct
     {
       uint8_t is_enable;
       uint8_t is_clear_enable;
     } wdt;
+    uint8_t dummy_data0;
     uint16_t obc_bct_blk_ptr;
     uint8_t obc_bct_cmd_ptr;
     uint32_t obc_bct_regd_time;
@@ -205,7 +207,7 @@ typedef struct
           uint32_t total_cycle;
           uint8_t step;
         } time;
-        uint16_t note;
+        uint32_t note;
       } latest_event;
       struct
       {
@@ -226,48 +228,77 @@ typedef struct
         uint32_t respond_counter;
       } log_table;
     } eh;
-    uint32_t anomaly_mobc_al_counter;
-    uint32_t anomaly_mobc_al_latest_time_master;
-    uint8_t anomaly_mobc_al_latest_time_step;
-    uint8_t anomaly_mobc_al_latest_code_group;
-    uint32_t anomaly_mobc_al_latest_code_local;
-    uint8_t anomaly_mobc_al_latest_run_length;
-    uint8_t anomaly_mobc_al_header;
-    uint32_t obc_tl1_cmd_counter;
-    uint32_t obc_tl2_cmd_counter;
-    uint8_t obc_tl1_cmd_queued;
-    uint8_t obc_tl2_cmd_queued;
-    uint8_t obc_ah_action_counter;
-    uint8_t obc_ah_latest_id;
-    uint32_t obc_ah_respond_at;
     uint8_t obc_gs_cmd_err_counter;
-    struct
-    {
-      struct
-      {
-        uint16_t cmd_code;
-        uint8_t status;
-        uint16_t exec_counter;
-        int8_t last_exec_sts;
-        struct
-        {
-          uint32_t total_cycle;
-        } last_exec_time;
-      } exec_logs0;
-      struct
-      {
-        uint16_t cmd_code;
-        uint8_t status;
-        uint16_t exec_counter;
-        int8_t last_exec_sts;
-        struct
-        {
-          uint32_t total_cycle;
-        } last_exec_time;
-      } exec_logs1;
-    } dcu;
     uint32_t git_rev_core;
     uint32_t git_rev_user;
+    uint32_t dummy_data1;
+    uint32_t dummy_data2;
+    uint32_t dummy_data3;
+    uint32_t dummy_data4;
+    uint32_t dummy_data5;
+    uint32_t dummy_data6;
+    uint32_t dummy_data7;
+    uint32_t dummy_data8;
+    uint32_t dummy_data9;
+    uint32_t dummy_data10;
+    uint32_t dummy_data11;
+    uint32_t dummy_data12;
+    uint32_t dummy_data13;
+    uint32_t dummy_data14;
+    uint32_t dummy_data15;
+    uint32_t dummy_data16;
+    uint32_t dummy_data17;
+    uint32_t dummy_data18;
+    uint32_t dummy_data19;
+    uint32_t dummy_data20;
+    uint32_t dummy_data21;
+    uint32_t dummy_data22;
+    uint32_t dummy_data23;
+    uint32_t dummy_data24;
+    uint32_t dummy_data25;
+    uint32_t dummy_data26;
+    uint32_t dummy_data27;
+    uint32_t dummy_data28;
+    uint32_t dummy_data29;
+    uint32_t dummy_data30;
+    uint32_t dummy_data31;
+    uint32_t dummy_data32;
+    uint32_t dummy_data33;
+    uint32_t dummy_data34;
+    uint32_t dummy_data35;
+    uint32_t dummy_data36;
+    uint32_t dummy_data37;
+    uint32_t dummy_data38;
+    uint32_t dummy_data39;
+    uint32_t dummy_data40;
+    uint32_t dummy_data41;
+    uint32_t dummy_data42;
+    uint32_t dummy_data43;
+    uint32_t dummy_data44;
+    uint32_t dummy_data45;
+    uint32_t dummy_data46;
+    uint32_t dummy_data47;
+    uint32_t dummy_data48;
+    uint32_t dummy_data49;
+    uint32_t dummy_data50;
+    uint32_t dummy_data51;
+    uint32_t dummy_data52;
+    uint32_t dummy_data53;
+    uint32_t dummy_data54;
+    uint32_t dummy_data55;
+    uint32_t dummy_data56;
+    uint32_t dummy_data57;
+    uint32_t dummy_data58;
+    uint32_t dummy_data59;
+    uint32_t dummy_data60;
+    uint32_t dummy_data61;
+    uint32_t dummy_data62;
+    uint32_t dummy_data63;
+    uint32_t dummy_data64;
+    uint32_t dummy_data65;
+    uint32_t dummy_data66;
+    uint32_t dummy_data67;
+    uint32_t dummy_data68;
   } aobc_hk;
 } AOBC_TlmData;
 

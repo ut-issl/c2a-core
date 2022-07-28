@@ -1,0 +1,93 @@
+name: build with S2E for 2nd obc
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+env:
+  S2E_CORE_VERSION: v5.0.0
+
+jobs:
+  build_s2e_win_for_2nd_obc:
+    name: Build on Windows VS2022
+    runs-on: windows-2022
+
+    steps:
+      - name: checkout S2E core
+        uses: actions/checkout@v3
+        with:
+          path: s2e-core
+          repository: ut-issl/s2e-core
+          ref: '${{ env.S2E_CORE_VERSION }}'
+          fetch-depth: 1
+
+      - name: checkout S2E user
+        uses: actions/checkout@v3
+        with:
+          path: s2e-user
+          repository: ut-issl/s2e-user-for-c2a-core
+          fetch-depth: 1
+
+      - name: checkout C2A user
+        uses: actions/checkout@v3
+        with:
+          path: c2a-core
+
+      - name: setup C2A
+        shell: cmd
+        working-directory: c2a-core
+        run: setup.bat
+
+      - name: Configure build for x86
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64_x86
+
+      - name: cache extlib
+        id: cache-extlib
+        uses: actions/cache@v3
+        with:
+          key: extlib-${{ runner.os }}-${{ hashFiles('./s2e-core/ExtLibraries/**') }}
+          path: ./s2e-core/ExtLibraries
+
+      - name: build extlib
+        if: steps.cache-extlib.outputs.cache-hit != 'true'
+        shell: powershell
+        working-directory: ./s2e-core/ExtLibraries
+        run: |
+          $extlib_dir=(pwd).Path
+          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR="${extlib_dir}"
+          cmake --build . --clean-first
+
+      - name: install extlib
+        if: steps.cache-extlib.outputs.cache-hit != 'true'
+        shell: powershell
+        working-directory: ./s2e-core/ExtLibraries
+        run: |
+          cmake --install .
+
+      - name: check extlib
+        shell: powershell
+        working-directory: ./s2e-core/ExtLibraries
+        run: |
+          ls cspice
+          ls cspice/cspice_msvs/lib
+          ls cspice/include
+          ls cspice/generic_kernels
+          ls nrlmsise00
+          ls nrlmsise00/table
+          ls nrlmsise00/lib
+          ls nrlmsise00/lib/libnrlmsise00.lib
+          ls nrlmsise00/src
+
+      - name: build
+        working-directory: ./s2e-user
+        shell: cmd
+        run: |
+          cl.exe
+          cmake --version
+          cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../c2a-core -DC2A_NAME=Examples/2nd_obc_user -DUSE_C2A=ON
+          cmake --build . --clean-first

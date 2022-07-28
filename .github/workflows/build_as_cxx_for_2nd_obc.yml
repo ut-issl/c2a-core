@@ -1,0 +1,51 @@
+name: build as C++ for S2E for 2nd obc
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  build_2nd_obc_user_as_cxx_for_2nd_obc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup
+        shell: cmd
+        run: ./setup.bat
+
+      - name: cmake
+        working-directory: ./Examples/2nd_obc_user
+        run: |
+          mkdir build
+          cd build
+          cmake --version
+          cmake .. -A Win32
+
+      - name: build
+        working-directory: ./Examples/2nd_obc_user/build
+        run: cmake --build .
+
+  build_s2e_mockup_for_2nd_obc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup
+        shell: cmd
+        run: ./setup.bat
+
+      - name: cmake
+        working-directory: ./Examples/2nd_obc_user/src/s2e_mockup
+        run: |
+          mkdir build
+          cd build
+          cmake --version
+          cmake .. -A Win32
+
+      - name: build
+        working-directory: ./Examples/2nd_obc_user/src/s2e_mockup/build
+        run: cmake --build .

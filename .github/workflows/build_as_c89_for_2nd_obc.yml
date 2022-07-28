@@ -1,0 +1,173 @@
+name: build as C89 using SILS Mockup for 2nd obc
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  gen_build_matrix_for_2nd_obc:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.gen-matrix.outputs.matrix }}
+    steps:
+      - name: generate matrix json
+        id: gen-matrix
+        shell: bash
+        run: |
+          compiler=(
+            "gcc"
+            "clang"
+          )
+          warning=(
+          "Werror"
+          "Wextra"
+          )
+          echo "[" > tmp
+          for c in "${compiler[@]}"; do
+            for w in "${warning[@]}"; do
+              if [ "$c" == "gcc" ] && [ "$w" == "Werror" ]; then
+                continue
+              fi
+              echo "{ \"compiler\": \"${c}\", \"warning\": \"${w}\" }" >> tmp
+              echo "," >> tmp
+            done
+          done
+          sed -i -e '$d' tmp # remove final comma
+          echo "]" >> tmp
+          sed -i -z 's/\n//g' tmp # remove newline
+          jq < tmp
+          echo "::set-output name=matrix::{\"include\": $(cat tmp) }"
+
+  build_2nd_obc_user_as_c89_for_2nd_obc:
+    runs-on: ubuntu-latest
+    needs: gen_build_matrix_for_2nd_obc
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.gen_build_matrix_for_2nd_obc.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libc6-dev-i386 nkf
+
+      # - name: convert Shift-JIS to UTF-8
+      #   if: matrix.compiler == 'clang'
+      #   run: find -- . -type f \( -name '*.h' -or -name '*.c' \) -exec nkf --overwrite -S -w80 "{}" \;
+
+      - name: setup
+        shell: bash
+        run: ./setup.sh
+
+      - name: generate compile option
+        id: compile_flags
+        shell: bash
+        run: |
+          WERROR="OFF"
+          WEXTRA="OFF"
+          if ${{ contains(matrix.warning, 'Werror') }}; then
+            WERROR="ON"
+          fi
+          if ${{ contains(matrix.warning, 'Wextra') }}; then
+            WEXTRA="ON"
+          fi
+          echo "::set-output name=WERROR::${WERROR}"
+          echo "::set-output name=WEXTRA::${WEXTRA}"
+
+      - name: cmake
+        working-directory: ./Examples/2nd_obc_user
+        env:
+          CC: ${{ matrix.compiler }}
+        run: |
+          mkdir build
+          cd build
+          cmake --version
+          cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DUSE_SILS_MOCKUP=ON -DADD_WERROR_FLAGS=${{ steps.compile_flags.outputs.WERROR }} -DADD_WEXTRA_FLAGS=${{ steps.compile_flags.outputs.WEXTRA }}
+
+      - name: build
+        id: build
+        continue-on-error: ${{ matrix.compiler == 'clang' }}
+        working-directory: ./Examples/2nd_obc_user/build
+        run: cmake --build .
+
+      - name: run
+        if: steps.build.outcome == 'success'
+        working-directory: ./Examples/2nd_obc_user/build
+        shell: bash
+        run: timeout 3 ./C2A || exit 0
+
+
+      - name: install reviewdog
+        if: matrix.compiler == 'clang'
+        uses: reviewdog/action-setup@v1.0.3
+
+      - name: install clang-tidy
+        if: matrix.compiler == 'clang'
+        run: sudo apt-get install -y clang-tidy-11
+
+      - name: clang-tidy
+        if: matrix.compiler == 'clang'
+        working-directory: ./Examples/2nd_obc_user/build
+        run: |
+          run-clang-tidy-11 \
+            | sed 's/\/home\/runner\/work\/c2a-core\/c2a-core\///g' \
+            | sed 's/Examples\/2nd_obc_user\/src\/src_core\///g' \
+            > clang_tidy.log
+
+      - name: clang-tidy result
+        if: matrix.compiler == 'clang'
+        working-directory: ./Examples/2nd_obc_user/build
+        run: cat clang_tidy.log
+
+      - name: remove duplicate error
+        if: matrix.compiler == 'clang'
+        run: |
+          python Script/CI/remove_duplicate_error.py ./Examples/2nd_obc_user/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
+
+      - name: reviewdog clang-tidy (github-pr-review)
+        if: matrix.compiler == 'clang' && matrix.warning == 'Werror'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog \
+            -name 'clang-tidy(Werror)' \
+            -level warning \
+            -fail-on-error=true \
+            -filter-mode=added \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-pr-review \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
+
+      - name: reviewdog clang-tidy (github-check)
+        if: matrix.compiler == 'clang' && matrix.warning == 'Wextra'
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog \
+            -name 'clang-tidy(Wextra)' \
+            -level warning \
+            -fail-on-error=true \
+            -filter-mode=nofilter \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-check \
+            -efm="%-Gclang-tidy%s" \
+            -efm="%-GError while processing%s" \
+            -efm="%W%f:%l:%c: warning: %m" \
+            -efm="%E%f:%l:%c: error: %m" \
+            -efm="%C%m" \
+            < clang_tidy.log
+
+      - name: build failed
+        if: steps.build.outcome == 'failure'
+        shell: bash
+        run: exit 1
