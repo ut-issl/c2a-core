@@ -1,4 +1,4 @@
-name: check_coding_rule
+name: check_coding_rule for 2nd obc
 
 on:
   push:

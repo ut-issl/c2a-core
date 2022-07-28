@@ -1,4 +1,4 @@
-name: build as C89 using SILS Mockup
+name: build as C89 using SILS Mockup for 2nd obc
 
 on:
   push:

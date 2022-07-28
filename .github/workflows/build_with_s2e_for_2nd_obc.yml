@@ -1,4 +1,4 @@
-name: build with S2E
+name: build with S2E for 2nd obc
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: build as C++ for S2E
+name: build as C++ for S2E for 2nd obc
 
 on:
   push:
