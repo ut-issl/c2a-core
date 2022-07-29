@@ -85,7 +85,7 @@ typedef enum
  */
 typedef enum
 {
-  TCTF_SCID_SAMPLE_SATELLITE = 0x35C, // SCID for command of sample satellite
+  TCTF_SCID_SAMPLE_SATELLITE = 0x157, // SCID for command of sample satellite
   TCTF_SCID_UNKNOWN
 } TCTF_SCID;
 
