@@ -153,7 +153,7 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
         - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
     - APID: AOBC, Destination Type: AOBC
-        - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で GSC としてキューイング & 実行される．
+        - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
         - TLC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で TLC としてキューイング & 実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録されずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で BC として登録 & 実行される．
 - 地上局 SW での実装まとめ
