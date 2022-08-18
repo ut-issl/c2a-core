@@ -12,6 +12,7 @@ import c2a_enum_utils
 import wings_utils
 
 c2a_enum = c2a_enum_utils.get_c2a_enum()
+mobc_c2a_enum = c2a_enum_utils.get_mobc_c2a_enum()
 ope = wings_utils.get_wings_operation()
 
 
@@ -24,38 +25,38 @@ def increase_hk_frequency():
 def _increase_hk_frequency():
 
     ope.send_rt_cmd(
-        c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
+        mobc_c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
         (2,),
     )
     time.sleep(0.1)
 
     ope.send_rt_cmd(
-        c2a_enum.Cmd_CODE_BCT_CLEAR_BLOCK,
-        (c2a_enum.BC_HK_CYCLIC_TLM,),
+        mobc_c2a_enum.Cmd_CODE_BCT_CLEAR_BLOCK,
+        (mobc_c2a_enum.BC_HK_CYCLIC_TLM,),
     )
     time.sleep(0.1)
 
     for ti in range(1, 10, 2):
         ope.send_bl_cmd(
             ti,
-            c2a_enum.Cmd_CODE_GENERATE_TLM,
-            (0x40, c2a_enum.Tlm_CODE_HK, 1),
+            mobc_c2a_enum.Cmd_CODE_GENERATE_TLM,
+            (0x40, mobc_c2a_enum.Tlm_CODE_HK, 1),
         )
         time.sleep(0.1)
 
     ope.send_bl_cmd(
         10,
-        c2a_enum.Cmd_CODE_TLCD_DEPLOY_BLOCK,
-        (2, c2a_enum.BC_HK_CYCLIC_TLM),
+        mobc_c2a_enum.Cmd_CODE_TLCD_DEPLOY_BLOCK,
+        (2, mobc_c2a_enum.BC_HK_CYCLIC_TLM),
     )
     time.sleep(0.1)
 
-    ope.send_rt_cmd(c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK, ())
+    ope.send_rt_cmd(mobc_c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK, ())
     time.sleep(0.1)
 
     ope.send_rt_cmd(
-        c2a_enum.Cmd_CODE_TLCD_DEPLOY_BLOCK,
-        (2, c2a_enum.BC_HK_CYCLIC_TLM),
+        mobc_c2a_enum.Cmd_CODE_TLCD_DEPLOY_BLOCK,
+        (2, mobc_c2a_enum.BC_HK_CYCLIC_TLM),
     )
 
 

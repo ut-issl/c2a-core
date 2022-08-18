@@ -8,9 +8,10 @@
 - SILS 環境 [S2E User for C2A Core](https://github.com/ut-issl/s2e-user-for-c2a-core) を 2 セット準備し， MOBC，AOBC それぞれを立ち上げる．
     - S2E の使い方は S2E Document を参照すること．
     - この時， MOBC の CCSDS ポートは WINGS の仮想ポートに接続（ループバック）し， MOBC の UART ポートは AOBC の UART ポートに接続（ループバック）させる．
+    - MOBC 側で AOBC への COM ポートへの出力を有効化するために，以下を ON にする．
+        - https://github.com/ut-issl/c2a-core/blob/8edef3b03a6facd932ae921abe04f9c09d5b613a/Examples/minimum_user/CMakeLists.txt#L17
     - デフォルトでは，以下のようになっている．
         - MOBC CCSDS: COM11
         - MOBC UART: COM13
         - AOBC UART: COM14
 - テストを実行する．
-
