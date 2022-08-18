@@ -147,6 +147,13 @@ typedef struct
     uint32_t obc_gs_cmd_last_err_time;
     uint16_t obc_gs_cmd_last_err_id;
     int8_t obc_gs_cmd_last_err_sts;
+    uint32_t obc_rt_cmd_counter;
+    uint32_t obc_rt_cmd_last_exec_time;
+    uint16_t obc_rt_cmd_last_exec_id;
+    int32_t obc_rt_cmd_last_exec_sts;
+    uint32_t obc_rt_cmd_last_err_time;
+    uint16_t obc_rt_cmd_last_err_id;
+    int32_t obc_rt_cmd_last_err_sts;
     struct
     {
       uint32_t counter;
@@ -292,13 +299,6 @@ typedef struct
     uint32_t dummy_data59;
     uint32_t dummy_data60;
     uint32_t dummy_data61;
-    uint32_t dummy_data62;
-    uint32_t dummy_data63;
-    uint32_t dummy_data64;
-    uint32_t dummy_data65;
-    uint32_t dummy_data66;
-    uint32_t dummy_data67;
-    uint32_t dummy_data68;
   } aobc_hk;
 } AOBC_TlmData;
 
