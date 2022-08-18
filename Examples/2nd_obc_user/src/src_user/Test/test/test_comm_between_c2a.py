@@ -60,7 +60,6 @@ def test_c2a_comm_tlc():
     check_tlc_ack(second_obc_ti + wait_ti, USE_DUMMY_CMD_ID)
     send_2nd_obc_gsc_directly(c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, (0,))
 
-
     mobc_ti = get_mobc_ti()
 
     send_mobc_gsc(mobc_c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, (0,))
@@ -69,7 +68,7 @@ def test_c2a_comm_tlc():
 
     # MOBC TL の発火の確認
     time.sleep(wait_sec)
-    g_second_obc_rtc_cnt += 1       # TL 経由で1つ実行
+    g_second_obc_rtc_cnt += 1  # TL 経由で1つ実行
     check_rtc_ack(USE_DUMMY_CMD_ID, "SUC")
 
 
@@ -90,9 +89,11 @@ def test_c2a_comm_blc():
 
     # MOBC BL の発火の確認
     send_mobc_gsc(mobc_c2a_enum.Cmd_CODE_BCE_ACTIVATE_BLOCK, ())
-    send_mobc_gsc(mobc_c2a_enum.Cmd_CODE_TLCD_DEPLOY_BLOCK, (mobc_c2a_enum.TLCD_ID_FROM_GS, USE_BCT_ID))
+    send_mobc_gsc(
+        mobc_c2a_enum.Cmd_CODE_TLCD_DEPLOY_BLOCK, (mobc_c2a_enum.TLCD_ID_FROM_GS, USE_BCT_ID)
+    )
     time.sleep(2)
-    g_second_obc_rtc_cnt += 1       # TL 経由で1つ実行
+    g_second_obc_rtc_cnt += 1  # TL 経由で1つ実行
     check_rtc_ack(USE_DUMMY_CMD_ID, "SUC")
 
 
@@ -103,12 +104,20 @@ def test_c2a_comm_tlm_buffer():
 
     # MOBC の tlm buffer が空なのでエラー
     assert "CNT" == wings.util.send_rt_cmd_and_confirm(
-        ope, mobc_c2a_enum.Cmd_CODE_GENERATE_TLM, (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1), mobc_c2a_enum.Tlm_CODE_HK
+        ope,
+        mobc_c2a_enum.Cmd_CODE_GENERATE_TLM,
+        (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1),
+        mobc_c2a_enum.Tlm_CODE_HK,
     )
-    send_2nd_obc_gsc_directly(c2a_enum.Cmd_CODE_GENERATE_TLM, (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1))
+    send_2nd_obc_gsc_directly(
+        c2a_enum.Cmd_CODE_GENERATE_TLM, (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1)
+    )
     time.sleep(2)
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
-        ope, mobc_c2a_enum.Cmd_CODE_GENERATE_TLM, (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1), mobc_c2a_enum.Tlm_CODE_HK
+        ope,
+        mobc_c2a_enum.Cmd_CODE_GENERATE_TLM,
+        (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1),
+        mobc_c2a_enum.Tlm_CODE_HK,
     )
 
 
@@ -139,7 +148,7 @@ def send_2nd_obc_gsc_via_mobc(cmd_id, params):
     global g_second_obc_rtc_cnt
     ope.send_rt_cmd(cmd_id, params, SECOND_OBC, True)
     g_second_obc_rtc_cnt += 1
-    g_mobc_gsc_cnt += 1       # MOBC キュー を経由
+    g_mobc_gsc_cnt += 1  # MOBC キュー を経由
 
 
 def send_2nd_obc_tlc_directly(ti, cmd_id, params):
