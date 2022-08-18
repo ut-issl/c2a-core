@@ -18,7 +18,7 @@ int UART_rx(void* my_uart_v, void* data_v, int buffer_size)
 {
   UART_Config* my_uart = (UART_Config*)my_uart_v;
 
-  if (my_uart->ch != PORT_CH_RS422_MOBC_EXT)
+  if (my_uart->ch != PORT_CH_UART_TEST)
   {
     return OBC_C2A_ReceivedByObc(my_uart->ch, (unsigned char*)data_v, 0, buffer_size);
   }
@@ -34,7 +34,7 @@ int UART_tx(void* my_uart_v, void* data_v, int data_size)
 {
   UART_Config* my_uart = (UART_Config*)my_uart_v;
 
-  if (my_uart->ch != PORT_CH_RS422_MOBC_EXT)
+  if (my_uart->ch != PORT_CH_UART_TEST)
   {
     if (OBC_C2A_SendFromObc(my_uart->ch, (unsigned char*)data_v, 0, data_size) < 0)
     {
