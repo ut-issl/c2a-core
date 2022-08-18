@@ -102,7 +102,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
 
 static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
 {
-  if (428 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
+  if (432 > max_len) return TF_TLM_FUNC_ACK_TOO_SHORT_LEN;
 
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u32(&packet[26], TMGR_get_master_clock().mode_cycle);
@@ -165,8 +165,10 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[175], (uint8_t)(gs_command_dispatcher->error_counter));
   TF_copy_u32(&packet[176], GIT_REV_CORE_SHORT);
   TF_copy_u32(&packet[180], GIT_REV_USER_SHORT);
-  TF_copy_u32(&packet[184], 0);
-  TF_copy_u32(&packet[188], 0);
+  TF_copy_u8(&packet[184], (uint8_t)(block_command_table->pos.block));
+  TF_copy_u8(&packet[185], (uint8_t)(block_command_table->pos.cmd));
+  TF_copy_u32(&packet[186], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
+  TF_copy_u16(&packet[190], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u32(&packet[192], 0);
   TF_copy_u32(&packet[196], 0);
   TF_copy_u32(&packet[200], 0);
@@ -210,25 +212,26 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u32(&packet[352], 0);
   TF_copy_u32(&packet[356], 0);
   TF_copy_u32(&packet[360], 0);
-  TF_copy_u32(&packet[364], 1);
-  TF_copy_u32(&packet[368], 2);
-  TF_copy_u32(&packet[372], 3);
-  TF_copy_u32(&packet[376], 4);
-  TF_copy_u32(&packet[380], 5);
-  TF_copy_u32(&packet[384], 6);
-  TF_copy_u32(&packet[388], 7);
-  TF_copy_u32(&packet[392], 8);
-  TF_copy_u32(&packet[396], 9);
-  TF_copy_u32(&packet[400], 10);
-  TF_copy_u32(&packet[404], 11);
-  TF_copy_u32(&packet[408], 12);
-  TF_copy_u32(&packet[412], 13);
-  TF_copy_u32(&packet[416], 14);
-  TF_copy_u32(&packet[420], 15);
-  TF_copy_u32(&packet[424], 16);
+  TF_copy_u32(&packet[364], 0);
+  TF_copy_u32(&packet[368], 0);
+  TF_copy_u32(&packet[372], 0);
+  TF_copy_u32(&packet[376], 0);
+  TF_copy_u32(&packet[380], 0);
+  TF_copy_u32(&packet[384], 0);
+  TF_copy_u32(&packet[388], 0);
+  TF_copy_u32(&packet[392], 0);
+  TF_copy_u32(&packet[396], 0);
+  TF_copy_u32(&packet[400], 0);
+  TF_copy_u32(&packet[404], 0);
+  TF_copy_u32(&packet[408], 0);
+  TF_copy_u32(&packet[412], 0);
+  TF_copy_u32(&packet[416], 0);
+  TF_copy_u32(&packet[420], 0);
+  TF_copy_u32(&packet[424], 0);
+  TF_copy_u32(&packet[428], 0);
 #endif
 
-  *len = 428;
+  *len = 432;
   return TF_TLM_FUNC_ACK_SUCCESS;
 }
 

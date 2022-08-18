@@ -238,6 +238,10 @@ typedef struct
     uint8_t obc_gs_cmd_err_counter;
     uint32_t git_rev_core;
     uint32_t git_rev_user;
+    uint8_t bct_blk_ptr;
+    uint8_t bct_cmd_ptr;
+    uint32_t bct_regd_time;
+    uint16_t bct_regd_id;
     uint32_t dummy_data1;
     uint32_t dummy_data2;
     uint32_t dummy_data3;
@@ -298,7 +302,6 @@ typedef struct
     uint32_t dummy_data58;
     uint32_t dummy_data59;
     uint32_t dummy_data60;
-    uint32_t dummy_data61;
   } aobc_hk;
 } AOBC_TlmData;
 
