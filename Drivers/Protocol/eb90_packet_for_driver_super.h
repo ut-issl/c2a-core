@@ -67,4 +67,7 @@ uint32_t EB90_PACKET_get_id_from_dssc(const DS_StreamConfig* p_stream_config);
  */
 const uint8_t* EB90_PACKET_get_user_data_head_from_dssc(const DS_StreamConfig* p_stream_config);
 
+// TODO: dssc の tx_frame に packet を EB90 frame につめてから挿入する関数を作る
+//       CTCP_set_tx_frane_to_dssc の EB90 packet 用
+
 #endif

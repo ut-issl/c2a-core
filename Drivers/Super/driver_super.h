@@ -328,6 +328,7 @@ struct DS_StreamConfig
                                                             /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
                                                                  次の受信時にまとめて処理させる */
 };
+// TODO: Protocol 用に data_link_layer_ を追加
 
 /**
  * @struct DriverSuper
