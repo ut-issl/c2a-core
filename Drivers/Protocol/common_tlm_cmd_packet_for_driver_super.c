@@ -12,44 +12,44 @@
 
 // FIXME: DS_StreamConfig.data_link_layer_ をちゃんと見る！
 
-DS_ERR_CODE CTCP_get_ctcp_from_dssc(const DS_StreamConfig* p_stream_config, CommonTlmCmdPacket* ctcp)
+DS_ERR_CODE CTCP_get_ctcp_from_dssc(const DS_StreamConfig* p_stream_config, CommonTlmCmdPacket* received_packet)
 {
   const uint16_t packet_len = EB90_FRAME_get_packet_length_from_dssc(p_stream_config);
 
   if (packet_len > CTCP_MAX_LEN) return DS_ERR_CODE_ERR;
 
   // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
-  memcpy(&ctcp->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
-  if (CTCP_get_packet_len(ctcp) != packet_len) return DS_ERR_CODE_ERR;
-  if (!CTCP_is_valid_packet(ctcp)) return DS_ERR_CODE_ERR;
+  memcpy(&received_packet->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
+  if (CTCP_get_packet_len(received_packet) != packet_len) return DS_ERR_CODE_ERR;
+  if (!CTCP_is_valid_packet(received_packet)) return DS_ERR_CODE_ERR;
   return DS_ERR_CODE_OK;
 }
 
 
-DS_ERR_CODE CTP_get_ctp_from_dssc(const DS_StreamConfig* p_stream_config, CommonTlmPacket* ctp)
+DS_ERR_CODE CTP_get_ctp_from_dssc(const DS_StreamConfig* p_stream_config, CommonTlmPacket* received_packet)
 {
   const uint16_t packet_len = EB90_FRAME_get_packet_length_from_dssc(p_stream_config);
 
   if (packet_len > CTP_MAX_LEN) return DS_ERR_CODE_ERR;
 
   // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
-  memcpy(&ctp->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
-  if (CTP_get_packet_len(ctp) != packet_len) return DS_ERR_CODE_ERR;
-  if (!CTP_is_valid_packet(ctp)) return DS_ERR_CODE_ERR;
+  memcpy(&received_packet->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
+  if (CTP_get_packet_len(received_packet) != packet_len) return DS_ERR_CODE_ERR;
+  if (!CTP_is_valid_packet(received_packet)) return DS_ERR_CODE_ERR;
   return DS_ERR_CODE_OK;
 }
 
 
-DS_ERR_CODE CCP_get_ccp_from_dssc(const DS_StreamConfig* p_stream_config, CommonCmdPacket* ccp)
+DS_ERR_CODE CCP_get_ccp_from_dssc(const DS_StreamConfig* p_stream_config, CommonCmdPacket* received_packet)
 {
   const uint16_t packet_len = EB90_FRAME_get_packet_length_from_dssc(p_stream_config);
 
   if (packet_len > CCP_MAX_LEN) return DS_ERR_CODE_ERR;
 
   // まず， 受信データ長だけコピーしてしまってから，アサーションする（効率のため）
-  memcpy(&ccp->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
-  if (CCP_get_packet_len(ccp) != packet_len) return DS_ERR_CODE_ERR;
-  if (!CCP_is_valid_packet(ccp)) return DS_ERR_CODE_ERR;
+  memcpy(&received_packet->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
+  if (CCP_get_packet_len(received_packet) != packet_len) return DS_ERR_CODE_ERR;
+  if (!CCP_is_valid_packet(received_packet)) return DS_ERR_CODE_ERR;
   return DS_ERR_CODE_OK;
 }
 
