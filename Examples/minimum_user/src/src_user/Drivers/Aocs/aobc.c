@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
  * @file
- * @brief  AOBC の Driver
+ * @brief AOBC の Driver
  */
 #include "./aobc.h"
 #include "./aobc_command_definitions.h"
@@ -9,13 +9,8 @@
 #include "./aobc_telemetry_buffer.h"
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
+#include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
 #include <string.h>
-
-// ヘッダーフッター
-static const uint8_t AOBC_stx_[DS_ISSLFMT_STX_SIZE] = {DS_ISSLFMT_STX_1ST_BYTE,
-                                                       DS_ISSLFMT_STX_2ND_BYTE};
-static const uint8_t AOBC_etx_[DS_ISSLFMT_ETX_SIZE] = {DS_ISSLFMT_ETX_1ST_BYTE,
-                                                       DS_ISSLFMT_ETX_2ND_BYTE};
 
 #define AOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
 
@@ -23,9 +18,9 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
                                           void* p_driver);
 
-static uint8_t AOBC_tx_frame_[DS_ISSLFMT_COMMON_HEADER_SIZE +
+static uint8_t AOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               CTCP_MAX_LEN +
-                              DS_ISSLFMT_COMMON_FOOTER_SIZE];
+                              EB90_FRAME_FOOTER_SIZE];
 
 
 int AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
@@ -63,14 +58,15 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   DSSC_set_tx_frame(p_stream_config, AOBC_tx_frame_);  // 送る直前に中身を memcpy する
   DSSC_set_tx_frame_size(p_stream_config, 0);          // 送る直前に値をセットする
 
+  // TODO: 標準なので， Util を common_tlm_cmd_packet_for_driver_super.c で整備
   // 定期的な受信はする
-  DSSC_set_rx_header(p_stream_config, AOBC_stx_, DS_ISSLFMT_STX_SIZE);
-  DSSC_set_rx_footer(p_stream_config, AOBC_etx_, DS_ISSLFMT_ETX_SIZE);
+  DSSC_set_rx_header(p_stream_config, EB90_FRAME_kStx, EB90_FRAME_STX_SIZE);
+  DSSC_set_rx_footer(p_stream_config, EB90_FRAME_kEtx, EB90_FRAME_ETX_SIZE);
   DSSC_set_rx_frame_size(p_stream_config, -1);    // 可変
-  DSSC_set_rx_framelength_pos(p_stream_config, DS_ISSLFMT_STX_SIZE);
+  DSSC_set_rx_framelength_pos(p_stream_config, EB90_FRAME_STX_SIZE);
   DSSC_set_rx_framelength_type_size(p_stream_config, 2);
   DSSC_set_rx_framelength_offset(p_stream_config,
-                                 DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE);
+                                 EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE);
   DSSC_set_data_analyzer(p_stream_config, AOBC_analyze_rec_data_);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
@@ -113,6 +109,7 @@ static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
 }
 
 
+// TODO: DS protocol 改修にともなって古くなったので治す
 #if 0
 // 非C2A系列はこのように書く
 static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)
@@ -148,29 +145,30 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
 
   p_stream_config = &(aobc_driver->driver.super.stream_config[AOBC_STREAM_TLM_CMD]);
 
+  // TODO: 標準なので， Util を common_tlm_cmd_packet_for_driver_super.c で整備
   // tx_frameの設定
   ccp_len = CCP_get_packet_len(packet);
   DSSC_set_tx_frame_size(p_stream_config,
-                         (uint16_t)(ccp_len + DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE));
+                         (uint16_t)(ccp_len + EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE));
 
   pos  = 0;
-  size = DS_ISSLFMT_STX_SIZE;
-  memcpy(&(AOBC_tx_frame_[pos]), AOBC_stx_, size);
+  size = EB90_FRAME_STX_SIZE;
+  memcpy(&(AOBC_tx_frame_[pos]), EB90_FRAME_kStx, size);
   pos += size;
-  size = DS_ISSLFMT_LEN_SIZE;
+  size = EB90_FRAME_LEN_SIZE;
   endian_memcpy(&(AOBC_tx_frame_[pos]), &ccp_len, size);       // ここはエンディアンを気にする！
   pos += size;
   size = (size_t)ccp_len;
   memcpy(&(AOBC_tx_frame_[pos]), packet->packet, size);
   pos += size;
 
-  crc = DS_ISSLFMT_calc_crc(AOBC_tx_frame_, pos);
+  crc = EB90_FRAME_calc_crc(AOBC_tx_frame_ + EB90_FRAME_HEADER_SIZE, pos - EB90_FRAME_HEADER_SIZE);
 
-  size = DS_ISSLFMT_CRC_SIZE;
+  size = EB90_FRAME_CRC_SIZE;
   endian_memcpy(&(AOBC_tx_frame_[pos]), &crc, size);       // ここはエンディアンを気にする！
   pos += size;
-  size = DS_ISSLFMT_ETX_SIZE;
-  memcpy(&(AOBC_tx_frame_[pos]), AOBC_etx_, size);
+  size = EB90_FRAME_ETX_SIZE;
+  memcpy(&(AOBC_tx_frame_[pos]), EB90_FRAME_kEtx, size);
 
   cmd_code = (AOBC_CMD_CODE)CCP_get_id(packet);
 
