@@ -13,7 +13,7 @@
 
 typedef struct AOBC_Driver AOBC_Driver;
 
-#define AOBC_MAX_TLM_NUM (432)
+#define AOBC_MAX_TLM_NUM (256)
 
 typedef struct
 {

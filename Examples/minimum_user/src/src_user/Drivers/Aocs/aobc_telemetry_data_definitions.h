@@ -147,6 +147,13 @@ typedef struct
     uint32_t obc_gs_cmd_last_err_time;
     uint16_t obc_gs_cmd_last_err_id;
     int8_t obc_gs_cmd_last_err_sts;
+    uint32_t obc_rt_cmd_counter;
+    uint32_t obc_rt_cmd_last_exec_time;
+    uint16_t obc_rt_cmd_last_exec_id;
+    int32_t obc_rt_cmd_last_exec_sts;
+    uint32_t obc_rt_cmd_last_err_time;
+    uint16_t obc_rt_cmd_last_err_id;
+    int32_t obc_rt_cmd_last_err_sts;
     struct
     {
       uint32_t counter;
@@ -231,6 +238,10 @@ typedef struct
     uint8_t obc_gs_cmd_err_counter;
     uint32_t git_rev_core;
     uint32_t git_rev_user;
+    uint8_t bct_blk_ptr;
+    uint8_t bct_cmd_ptr;
+    uint32_t bct_regd_time;
+    uint16_t bct_regd_id;
     uint32_t dummy_data1;
     uint32_t dummy_data2;
     uint32_t dummy_data3;
@@ -291,14 +302,6 @@ typedef struct
     uint32_t dummy_data58;
     uint32_t dummy_data59;
     uint32_t dummy_data60;
-    uint32_t dummy_data61;
-    uint32_t dummy_data62;
-    uint32_t dummy_data63;
-    uint32_t dummy_data64;
-    uint32_t dummy_data65;
-    uint32_t dummy_data66;
-    uint32_t dummy_data67;
-    uint32_t dummy_data68;
   } aobc_hk;
 } AOBC_TlmData;
 

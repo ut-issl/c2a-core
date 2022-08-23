@@ -70,7 +70,7 @@ void APP_DBG_flush_screen_(void)
   VT100_erase_down();
   VT100_reset_cursor();
   VT100_erase_line();
-  Printf("-- C2A SAMPLE Flight S/W (H-ON, F-ON) --\n");
+  Printf("-- C2A 2nd OBC SAMPLE Flight S/W --\n");
   VT100_erase_line();
   Printf("BUILD: %s %s\n", __DATE__, __TIME__);
 }
