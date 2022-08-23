@@ -56,7 +56,7 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super);
  */
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
 
-int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
+DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
 {
   DS_ERR_CODE ret_uart, ret_ccsds;
   int i;
@@ -86,7 +86,7 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
 
   ret_ccsds = DS_init(&gs_driver->driver_ccsds.super, &gs_driver->driver_ccsds.ccsds_config, GS_load_ccsds_driver_super_init_settings_);
   ret_uart  = DS_init(&gs_driver->driver_uart.super, &gs_driver->driver_uart.uart_config, GS_load_uart_driver_super_init_settings_);
-  if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK) return 1;
+  if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
   gs_driver->latest_info = &gs_driver->info[GS_PORT_TYPE_CCSDS];
   gs_driver->tlm_tx_port_type = GS_PORT_TYPE_CCSDS;
   gs_driver->is_ccsds_tx_valid = 0;
@@ -115,7 +115,7 @@ int GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
 
   gs_driver->ccsds_info.buffer_num = 8;
 
-  return 0;
+  return DS_INIT_OK;
 }
 
 static DS_ERR_CODE GS_load_ccsds_driver_super_init_settings_(DriverSuper* p_super)
@@ -157,7 +157,7 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
   }
 }
 
-int GS_rec_tctf(GS_Driver* gs_driver)
+DS_REC_ERR_CODE GS_rec_tctf(GS_Driver* gs_driver)
 {
   uint8_t i, stream;
 
@@ -191,7 +191,8 @@ int GS_rec_tctf(GS_Driver* gs_driver)
     }
   }
 
-  return 0;
+  // TODO: 常に OK を返すのでいいのか検討
+  return DS_REC_OK;
 }
 
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)

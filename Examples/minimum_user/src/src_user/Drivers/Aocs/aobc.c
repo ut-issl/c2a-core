@@ -24,7 +24,7 @@ static uint8_t AOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               EB90_FRAME_FOOTER_SIZE];
 
 
-int AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
+DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
 {
   DS_ERR_CODE ret;
 
@@ -40,8 +40,8 @@ int AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
   ret = DS_init(&(aobc_driver->driver.super),
                 &(aobc_driver->driver.uart_config),
                 AOBC_load_driver_super_init_settings_);
-  if (ret != DS_ERR_CODE_OK) return 1;
-  return 0;
+  if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
+  return DS_INIT_OK;
 }
 
 
@@ -76,23 +76,23 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super)
 }
 
 
-int AOBC_rec(AOBC_Driver* aobc_driver)
+DS_REC_ERR_CODE AOBC_rec(AOBC_Driver* aobc_driver)
 {
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
 
   ret = DS_receive(&(aobc_driver->driver.super));
 
-  if (ret != DS_ERR_CODE_OK) return 1;
+  if (ret != DS_ERR_CODE_OK) return DS_REC_DS_RECEIVE_ERR;
 
   p_stream_config = &(aobc_driver->driver.super.stream_config[AOBC_STREAM_TLM_CMD]);
-  if (DSSC_get_rec_status(p_stream_config)->status_code != DS_STREAM_REC_STATUS_FIXED_FRAME) return 0;    // 受信せず（[TODO] 詳細なエラー処理は一旦しない）
+  if (DSSC_get_rec_status(p_stream_config)->status_code != DS_STREAM_REC_STATUS_FIXED_FRAME) return DS_REC_OK;    // 受信せず（[TODO] 詳細なエラー処理は一旦しない）
 
   ret = DS_analyze_rec_data(&(aobc_driver->driver.super), AOBC_STREAM_TLM_CMD, aobc_driver);
 
-  if (ret != DS_ERR_CODE_OK) return 1;
+  if (ret != DS_ERR_CODE_OK) return DS_REC_ANALYZE_ERR;
 
-  return 0;
+  return DS_REC_OK;
 }
 
 
