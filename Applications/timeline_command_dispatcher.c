@@ -279,7 +279,7 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
                     (uint32_t)ack,
                     EL_ERROR_LEVEL_LOW,
-                    (uint32_t)id);
+                    (uint32_t)block_no);
     if (ack == PL_BC_TIME_ADJUSTED)
     {
       return CCP_EXEC_SUCCESS;
