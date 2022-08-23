@@ -280,7 +280,14 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
                     (uint32_t)ack,
                     EL_ERROR_LEVEL_LOW,
                     (uint32_t)id);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    if (ack == PL_BC_TIME_ADJUSTED)
+    {
+      return CCP_EXEC_SUCCESS;
+    }
+    else
+    {
+      return CCP_EXEC_ILLEGAL_CONTEXT;
+    }
   }
 
   return CCP_EXEC_SUCCESS;
