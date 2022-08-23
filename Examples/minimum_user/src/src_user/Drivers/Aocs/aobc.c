@@ -7,6 +7,7 @@
 #include "./aobc_command_definitions.h"
 #include "./aobc_telemetry_definitions.h"
 #include "./aobc_telemetry_buffer.h"
+#include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
