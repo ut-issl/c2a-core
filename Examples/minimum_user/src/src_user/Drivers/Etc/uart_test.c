@@ -4,7 +4,7 @@
  * @brief テスト用UARTのDriver
  */
 
-#include "UART_TEST.h"
+#include "uart_test.h"
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
 #include <src_core/Library/print.h>

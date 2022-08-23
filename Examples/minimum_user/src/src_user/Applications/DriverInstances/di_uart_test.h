@@ -5,7 +5,7 @@
 #ifndef DI_UART_TEST_H_
 #define DI_UART_TEST_H_
 
-#include "../../Drivers/Etc/UART_TEST.h"
+#include "../../Drivers/Etc/uart_test.h"
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 
