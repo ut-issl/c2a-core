@@ -9,9 +9,11 @@ Driver とは，各コンポーネントとの通信において， HW 依存部
 
 実装方法は，基本的には [driver_super.h](https://github.com/ut-issl/c2a-core/blob/develop/Drivers/Super/driver_super.h) をみればわかるようにしてあるが，現時点で
 
-- UART test: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Etc/UART_TEST.c
+- UART test: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Etc/uart_test.c
 - GS: https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Com/gs.c
-- C2A 間通信 (TBA)
+- C2A 間通信:
+    - https://github.com/ut-issl/c2a-core/blob/develop/Examples/minimum_user/src/src_user/Drivers/Aocs/aobc.c
+    - https://github.com/ut-issl/c2a-core/blob/develop/Examples/2nd_obc_user/src/src_user/Drivers/Etc/mobc.c
 
 が実装されているので，それを参考のこと．  
 `load_init_setting` については下を参照．
