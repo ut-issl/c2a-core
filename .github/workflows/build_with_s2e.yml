@@ -1,11 +1,6 @@
 name: build with S2E
 
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
+on: push
 
 env:
   S2E_CORE_VERSION: v5.0.0

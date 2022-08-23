@@ -1,11 +1,6 @@
 name: build as C++ for S2E
 
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
+on: push
 
 jobs:
   build_minimum_user_as_cxx:

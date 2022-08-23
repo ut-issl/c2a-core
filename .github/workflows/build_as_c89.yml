@@ -1,11 +1,6 @@
 name: build as C89 using SILS Mockup
 
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
+on: push
 
 jobs:
   gen_build_matrix:

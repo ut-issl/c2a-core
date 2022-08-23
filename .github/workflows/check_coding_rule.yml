@@ -1,11 +1,6 @@
 name: check_coding_rule
 
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
+on: push
 
 jobs:
   check_coding_rule:

@@ -1,9 +1,6 @@
 name: reviewdog / actionlint
 
-on:
-  pull_request:
-    paths:
-      - '.github/workflows/**'
+on: push
 
 jobs:
   actionlint:
