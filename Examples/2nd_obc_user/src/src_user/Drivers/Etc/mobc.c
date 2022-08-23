@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
- * @file   mobc.c
- * @brief  MOBC の Driver
+ * @file
+ * @brief MOBC の Driver
  */
 
 // FIXME: DS 側の TCP が整理されたら， TCP 関連を撲滅し， CTCP に統一する
@@ -9,19 +9,14 @@
 #include "./mobc.h"
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
-#include <src_core/Drivers/Super/driver_super_issl_format.h>
+#include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
 #include <string.h>
 
 #define MOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
 
-// ヘッダーフッター
-static const uint8_t MOBC_stx_[DS_ISSLFMT_STX_SIZE] = {DS_ISSLFMT_STX_1ST_BYTE,
-                                                       DS_ISSLFMT_STX_2ND_BYTE};
-static const uint8_t MOBC_etx_[DS_ISSLFMT_ETX_SIZE] = {DS_ISSLFMT_ETX_1ST_BYTE,
-                                                       DS_ISSLFMT_ETX_2ND_BYTE};
-static uint8_t MOBC_tx_frame_[DS_ISSLFMT_COMMON_HEADER_SIZE +
+static uint8_t MOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               CTCP_MAX_LEN +
-                              DS_ISSLFMT_COMMON_FOOTER_SIZE];
+                              EB90_FRAME_FOOTER_SIZE];
 
 static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
@@ -63,13 +58,13 @@ static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   DSSC_set_tx_frame_size(p_stream_config, 0);          // 送る直前に値をセットする
 
   // 定期的な受信はする
-  DSSC_set_rx_header(p_stream_config, MOBC_stx_, DS_ISSLFMT_STX_SIZE);
-  DSSC_set_rx_footer(p_stream_config, MOBC_etx_, DS_ISSLFMT_ETX_SIZE);
+  DSSC_set_rx_header(p_stream_config, EB90_FRAME_kStx, EB90_FRAME_STX_SIZE);
+  DSSC_set_rx_footer(p_stream_config, EB90_FRAME_kEtx, EB90_FRAME_ETX_SIZE);
   DSSC_set_rx_frame_size(p_stream_config, -1);    // 可変
-  DSSC_set_rx_framelength_pos(p_stream_config, DS_ISSLFMT_STX_SIZE);
+  DSSC_set_rx_framelength_pos(p_stream_config, EB90_FRAME_STX_SIZE);
   DSSC_set_rx_framelength_type_size(p_stream_config, 2);
   DSSC_set_rx_framelength_offset(p_stream_config,
-                                 DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE);
+                                 EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE);
   DSSC_set_data_analyzer(p_stream_config, MOBC_analyze_rec_data_);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
@@ -104,7 +99,7 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void
   CommonCmdPacket packet;   // FIXME: これは static にする？
                             //        static のほうがコンパイル時にアドレスが確定して安全． Out of stack space を回避できる
                             //        一方でメモリ使用量は増える．
-  DS_ERR_CODE ret =  DS_C2AFMT_get_ccp(p_stream_config, &packet);
+  DS_ERR_CODE ret =  CCP_get_ccp_from_dssc(p_stream_config, &packet);
   if (ret != DS_ERR_CODE_OK)
   {
     mobc_driver->info.comm.rx_err_code = MOBC_RX_ERR_CODE_INVALID_PACKET;
@@ -150,26 +145,26 @@ DS_CMD_ERR_CODE MOBC_send(MOBC_Driver* mobc_driver, const CommonTlmPacket* packe
   // tx_frame の設定
   ctp_len = CTP_get_packet_len(packet);
   DSSC_set_tx_frame_size(p_stream_config,
-                         (uint16_t)(ctp_len + DS_ISSLFMT_COMMON_HEADER_SIZE + DS_ISSLFMT_COMMON_FOOTER_SIZE));
+                         (uint16_t)(ctp_len + EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE));
 
   pos  = 0;
-  size = DS_ISSLFMT_STX_SIZE;
-  memcpy(&(MOBC_tx_frame_[pos]), MOBC_stx_, size);
+  size = EB90_FRAME_STX_SIZE;
+  memcpy(&(MOBC_tx_frame_[pos]), EB90_FRAME_kStx, size);
   pos += size;
-  size = DS_ISSLFMT_LEN_SIZE;
+  size = EB90_FRAME_LEN_SIZE;
   endian_memcpy(&(MOBC_tx_frame_[pos]), &ctp_len, size);       // ここはエンディアンを気にする！
   pos += size;
   size = (size_t)ctp_len;
   memcpy(&(MOBC_tx_frame_[pos]), packet->packet, size);
   pos += size;
 
-  crc = DS_ISSLFMT_calc_crc(MOBC_tx_frame_, pos);
+  crc = EB90_FRAME_calc_crc(MOBC_tx_frame_ + EB90_FRAME_HEADER_SIZE, pos - EB90_FRAME_HEADER_SIZE);
 
-  size = DS_ISSLFMT_CRC_SIZE;
+  size = EB90_FRAME_CRC_SIZE;
   endian_memcpy(&(MOBC_tx_frame_[pos]), &crc, size);       // ここはエンディアンを気にする！
   pos += size;
-  size = DS_ISSLFMT_ETX_SIZE;
-  memcpy(&(MOBC_tx_frame_[pos]), MOBC_etx_, size);
+  size = EB90_FRAME_ETX_SIZE;
+  memcpy(&(MOBC_tx_frame_[pos]), EB90_FRAME_kEtx, size);
 
   ret = DS_send_general_cmd(&(mobc_driver->driver.super), MOBC_STREAM_TLM_CMD);
 

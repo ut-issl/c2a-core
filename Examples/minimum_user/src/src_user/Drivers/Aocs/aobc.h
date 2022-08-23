@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  AOBC の Driver
+ * @brief AOBC の Driver
  */
 #ifndef AOBC_H_
 #define AOBC_H_
@@ -9,7 +9,6 @@
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/System/TimeManager/obc_time.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include <src_core/Drivers/Super/driver_super_issl_format.h>       //!< 自動生成コードである aobc_telemetry_buffer で用いる
 #include "./aobc_telemetry_data_definitions.h"
 #include "./aobc_telemetry_buffer.h"
 

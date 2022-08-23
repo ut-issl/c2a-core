@@ -4,6 +4,7 @@
  * @brief  テレメトリバッファー（テレメ中継）
  * @note   このコードは自動生成されています！
  */
+#include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include "./aobc_telemetry_definitions.h"
 #include "./aobc_telemetry_buffer.h"
 #include "./aobc.h"
@@ -29,7 +30,7 @@ DS_ERR_CODE AOBC_buffer_tlm_packet(DS_StreamConfig* p_stream_config, AOBC_Driver
   AOBC_TLM_CODE tlm_id;
   DS_ERR_CODE ret;
 
-  ret = DS_C2AFMT_get_ctp(p_stream_config, &AOBC_ctp_);
+  ret = CTP_get_ctp_from_dssc(p_stream_config, &AOBC_ctp_);
   if (ret != DS_ERR_CODE_OK) return ret;
 
   tlm_id  = (AOBC_TLM_CODE)CTP_get_id(&AOBC_ctp_);

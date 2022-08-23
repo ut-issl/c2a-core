@@ -16,8 +16,10 @@ set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
   c2a_core_main.c
+  Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.c
+  Drivers/Protocol/eb90_frame_for_driver_super.c
+  Drivers/Protocol/eb90_packet_for_driver_super.c
   Drivers/Super/driver_super.c
-  Drivers/Super/driver_super_issl_format.c
   # System/AnomalyLogger/anomaly_logger.c    # deprecated. 使いたい場合は， user 側でビルドターゲットに入れる．
   System/ApplicationManager/app_info.c
   System/ApplicationManager/app_manager.c
