@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
- * @file   di_mobc.c
- * @brief  MOBC の DI． MOBC における GS との DI に相当する
+ * @file
+ * @brief MOBC の DI． MOBC における GS との DI に相当する
  */
 
 #include "di_mobc.h"
