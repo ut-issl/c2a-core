@@ -59,7 +59,7 @@ DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
                            int16_t tx_frame_buffer_size,
                            DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver))
 {
-  if (tx_frame_buffer_size <= EB90_FRAME_HEADER_SIZE + CTCP_MAX_LEN + EB90_FRAME_FOOTER_SIZE)
+  if (tx_frame_buffer_size < EB90_FRAME_HEADER_SIZE + CTCP_MAX_LEN + EB90_FRAME_FOOTER_SIZE)
   {
     return DS_ERR_CODE_ERR;
   }
