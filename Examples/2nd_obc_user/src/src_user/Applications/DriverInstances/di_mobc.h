@@ -1,6 +1,6 @@
 /**
- * @file   di_mobc.h
- * @brief  MOBC の DI． MOBC における GS との DI に相当する
+ * @file
+ * @brief MOBC の DI． MOBC における GS との DI に相当する
  */
 #ifndef DI_MOBC_H_
 #define DI_MOBC_H_

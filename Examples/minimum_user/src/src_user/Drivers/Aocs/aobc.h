@@ -79,18 +79,16 @@ struct AOBC_Driver
  *         AOBC_Driver 構造体のポインタを渡すことでポートを初期化し， AOBC_Driver の各メンバも初期化する
  * @param  aobc_driver: 初期化する AOBC_Driver 構造体へのポインタ
  * @param  ch         : AOBC が接続されている UART ポート番号
- * @return 0     : 正常終了
- * @return 0 以外: 異常終了
+ * @return DS_INIT_ERR_CODE
  */
-int AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch);
+DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch);
 
 /**
  * @brief  AOBC のデータ（テレメ）受信
  * @param  aobc_driver: AOBC_Driver 構造体へのポインタ
- * @return 0     : 正常終了
- * @return 0 以外: 異常終了
+ * @return DS_REC_ERR_CODE
  */
-int AOBC_rec(AOBC_Driver* aobc_driver);
+DS_REC_ERR_CODE AOBC_rec(AOBC_Driver* aobc_driver);
 
 /**
  * @brief  AOB Cへのコマンド送信
