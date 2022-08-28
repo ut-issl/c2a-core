@@ -43,7 +43,7 @@ uint8_t EB90_FRAME_is_valid_crc_of_dssc(const DS_StreamConfig* p_stream_config)
 
 uint16_t EB90_FRAME_calc_crc(const uint8_t* data, size_t len)
 {
-  return crc_16_ibm_right(0x0000, (unsigned char*)data, len, 0);    // FIXME: キャストなくしたい: https://github.com/ut-issl/c2a-core/issues/392
+  return CRC_calc_crc_16_ibm_right(0x0000, data, len, 0);
 }
 
 #pragma section
