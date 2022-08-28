@@ -86,7 +86,7 @@ DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
 }
 
 
-DS_ERR_CODE CTCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+DS_ERR_CODE CTCP_set_tx_frame_to_dssc(DS_StreamConfig* p_stream_config,
                                       const CommonTlmCmdPacket* send_packet)
 {
   size_t pos;
@@ -123,21 +123,21 @@ DS_ERR_CODE CTCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
 }
 
 
-DS_ERR_CODE CTP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+DS_ERR_CODE CTP_set_tx_frame_to_dssc(DS_StreamConfig* p_stream_config,
                                      const CommonTlmPacket* send_packet)
 {
   const CommonTlmCmdPacket* ctcp = CTCP_convert_from_ctp(send_packet);
   if (ctcp == NULL) return DS_ERR_CODE_ERR;
-  return CTCP_set_tx_frane_to_dssc(p_stream_config, ctcp);
+  return CTCP_set_tx_frame_to_dssc(p_stream_config, ctcp);
 }
 
 
-DS_ERR_CODE CCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+DS_ERR_CODE CCP_set_tx_frame_to_dssc(DS_StreamConfig* p_stream_config,
                                      const CommonCmdPacket* send_packet)
 {
   const CommonTlmCmdPacket* ctcp = CTCP_convert_from_ccp(send_packet);
   if (ctcp == NULL) return DS_ERR_CODE_ERR;
-  return CTCP_set_tx_frane_to_dssc(p_stream_config, ctcp);
+  return CTCP_set_tx_frame_to_dssc(p_stream_config, ctcp);
 }
 
 #pragma section

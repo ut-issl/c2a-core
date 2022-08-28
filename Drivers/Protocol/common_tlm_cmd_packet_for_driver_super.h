@@ -66,7 +66,7 @@ DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
  * @retval DS_ERR_CODE_OK:  正常終了
  * @retval DS_ERR_CODE_ERR: DSSC 内部の設定不足などのエラー
  */
-DS_ERR_CODE CTCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+DS_ERR_CODE CTCP_set_tx_frame_to_dssc(DS_StreamConfig* p_stream_config,
                                       const CommonTlmCmdPacket* send_packet);
 
 /**
@@ -76,7 +76,7 @@ DS_ERR_CODE CTCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
  * @retval DS_ERR_CODE_OK:  正常終了
  * @retval DS_ERR_CODE_ERR: DSSC 内部の設定不足などのエラー
  */
-DS_ERR_CODE CTP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+DS_ERR_CODE CTP_set_tx_frame_to_dssc(DS_StreamConfig* p_stream_config,
                                      const CommonTlmPacket* send_packet);
 
 /**
@@ -86,7 +86,7 @@ DS_ERR_CODE CTP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
  * @retval DS_ERR_CODE_OK:  正常終了
  * @retval DS_ERR_CODE_ERR: DSSC 内部の設定不足などのエラー
  */
-DS_ERR_CODE CCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+DS_ERR_CODE CCP_set_tx_frame_to_dssc(DS_StreamConfig* p_stream_config,
                                      const CommonCmdPacket* send_packet);
 
 #endif

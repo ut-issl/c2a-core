@@ -135,7 +135,7 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
   p_stream_config = &(aobc_driver->driver.super.stream_config[AOBC_STREAM_TLM_CMD]);
 
   // tx_frameの設定
-  CCP_set_tx_frane_to_dssc(p_stream_config, packet);
+  CCP_set_tx_frame_to_dssc(p_stream_config, packet);
 
   cmd_code = (AOBC_CMD_CODE)CCP_get_id(packet);
 

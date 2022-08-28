@@ -132,7 +132,7 @@ DS_CMD_ERR_CODE MOBC_send(MOBC_Driver* mobc_driver, const CommonTlmPacket* packe
   p_stream_config = &(mobc_driver->driver.super.stream_config[MOBC_STREAM_TLM_CMD]);
 
   // tx_frameの設定
-  CTP_set_tx_frane_to_dssc(p_stream_config, packet);
+  CTP_set_tx_frame_to_dssc(p_stream_config, packet);
 
   ret = DS_send_general_cmd(&(mobc_driver->driver.super), MOBC_STREAM_TLM_CMD);
 
