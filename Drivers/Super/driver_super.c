@@ -1270,13 +1270,14 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
   p_stream_config->rx_frame_fix_time_   = TMGR_get_master_clock();
 
-  p_stream_config->tx_frame_       = NULL;
-  p_stream_config->tx_frame_size_  = 0;
-  p_stream_config->rx_header_      = NULL;
-  p_stream_config->rx_header_size_ = 0;
-  p_stream_config->rx_footer_      = NULL;
-  p_stream_config->rx_footer_size_ = 0;
-  p_stream_config->rx_frame_size_  = 0;
+  p_stream_config->tx_frame_             = NULL;
+  p_stream_config->tx_frame_size_        = 0;
+  p_stream_config->tx_frame_buffer_size_ = -1;
+  p_stream_config->rx_header_            = NULL;
+  p_stream_config->rx_header_size_       = 0;
+  p_stream_config->rx_footer_            = NULL;
+  p_stream_config->rx_footer_size_       = 0;
+  p_stream_config->rx_frame_size_        = 0;
 
   p_stream_config->rx_framelength_pos_       = -1;
   p_stream_config->rx_framelength_type_size_ = 0;
@@ -1524,6 +1525,16 @@ void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
   p_stream_config->is_validation_needed_for_send_ = 1;
 }
 
+const uint8_t* DSSC_get_tx_frame(DS_StreamConfig* p_stream_config)
+{
+  return p_stream_config->tx_frame_;
+}
+
+uint8_t* DSSC_get_tx_frame_as_non_const_pointer(DS_StreamConfig* p_stream_config)
+{
+  return p_stream_config->tx_frame_;
+}
+
 void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
                             const uint16_t tx_frame_size)
 {
@@ -1534,6 +1545,18 @@ void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
 uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config)
 {
   return (uint16_t)p_stream_config->tx_frame_size_;
+}
+
+void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
+                                   const int16_t tx_frame_buffer_size)
+{
+  p_stream_config->tx_frame_buffer_size_ = tx_frame_buffer_size;
+  p_stream_config->is_validation_needed_for_send_ = 1;
+}
+
+int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config)
+{
+  return (int16_t)p_stream_config->tx_frame_buffer_size_;
 }
 
 const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
