@@ -43,7 +43,9 @@ uint8_t EB90_FRAME_is_valid_crc_of_dssc(const DS_StreamConfig* p_stream_config)
 
 uint16_t EB90_FRAME_calc_crc(const uint8_t* data, size_t len)
 {
-  return CRC_calc_crc_16_ibm_right(0x0000, data, len, 0);
+  // CRC-16/CCITT-FALSE (CRC-16/AUTOSAR, CRC-16/IBM-3740 とも)
+  // https://reveng.sourceforge.io/crc-catalogue/16.htm
+  return CRC_calc_crc_16_ccitt_left(0xffff, data, len, 0);
 }
 
 #pragma section
