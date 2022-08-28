@@ -11,6 +11,7 @@
 #include <src_core/TlmCmd/common_cmd_packet.h>
 #include <src_core/Library/endian_memcpy.h>
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
+#include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include <string.h>
 
 #define AOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
@@ -51,26 +52,14 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super)
 
   p_super->interface = UART;
 
-  // streamは0のみ
+  // stream は 0 のみ
   p_stream_config = &(p_super->stream_config[AOBC_STREAM_TLM_CMD]);
-  DSSC_enable(p_stream_config);
 
-  // 送信はする
-  DSSC_set_tx_frame(p_stream_config, AOBC_tx_frame_);  // 送る直前に中身を memcpy する
-  DSSC_set_tx_frame_size(p_stream_config, 0);          // 送る直前に値をセットする
-
-  // TODO: 標準なので， Util を common_tlm_cmd_packet_for_driver_super.c で整備
-  // 定期的な受信はする
-  DSSC_set_rx_header(p_stream_config, EB90_FRAME_kStx, EB90_FRAME_STX_SIZE);
-  DSSC_set_rx_footer(p_stream_config, EB90_FRAME_kEtx, EB90_FRAME_ETX_SIZE);
-  DSSC_set_rx_frame_size(p_stream_config, -1);    // 可変
-  DSSC_set_rx_framelength_pos(p_stream_config, EB90_FRAME_STX_SIZE);
-  DSSC_set_rx_framelength_type_size(p_stream_config, 2);
-  DSSC_set_rx_framelength_offset(p_stream_config,
-                                 EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE);
-  DSSC_set_data_analyzer(p_stream_config, AOBC_analyze_rec_data_);
+  CTCP_init_dssc(p_stream_config, AOBC_tx_frame_, sizeof(AOBC_tx_frame_), AOBC_analyze_rec_data_);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
+
+  DSSC_enable(p_stream_config);
 
   return DS_ERR_CODE_OK;
 }

@@ -53,4 +53,36 @@ DS_ERR_CODE CCP_get_ccp_from_dssc(const DS_StreamConfig* p_stream_config, Common
   return DS_ERR_CODE_OK;
 }
 
+
+DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
+                           uint8_t* tx_frame_buffer,
+                           int16_t tx_frame_buffer_size,
+                           DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver))
+{
+  if (tx_frame_buffer_size <= EB90_FRAME_HEADER_SIZE + CTCP_MAX_LEN + EB90_FRAME_FOOTER_SIZE)
+  {
+    return DS_ERR_CODE_ERR;
+  }
+
+  // 送信はする
+  DSSC_set_tx_frame(p_stream_config, tx_frame_buffer);  // 送る直前に中身を memcpy する
+  DSSC_set_tx_frame_buffer_size(p_stream_config, tx_frame_buffer_size);
+  DSSC_set_tx_frame_size(p_stream_config, 0);           // 送る直前に値をセットする
+
+  // 定期的な受信はする
+  DSSC_set_rx_header(p_stream_config, EB90_FRAME_kStx, EB90_FRAME_STX_SIZE);
+  DSSC_set_rx_footer(p_stream_config, EB90_FRAME_kEtx, EB90_FRAME_ETX_SIZE);
+  DSSC_set_rx_frame_size(p_stream_config, -1);          // 可変
+  DSSC_set_rx_framelength_pos(p_stream_config, EB90_FRAME_STX_SIZE);
+  DSSC_set_rx_framelength_type_size(p_stream_config, 2);
+  DSSC_set_rx_framelength_offset(p_stream_config,
+                                 EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE);
+  DSSC_set_data_analyzer(p_stream_config, data_analyzer);
+
+  // 定期 TLM の監視機能の有効化はここではしないので， Driver 側でやる
+  // enable もここではしない
+
+  return DS_ERR_CODE_OK;
+}
+
 #pragma section

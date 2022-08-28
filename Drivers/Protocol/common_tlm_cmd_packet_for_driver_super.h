@@ -42,6 +42,23 @@ DS_ERR_CODE CTP_get_ctp_from_dssc(const DS_StreamConfig* p_stream_config, Common
  */
 DS_ERR_CODE CCP_get_ccp_from_dssc(const DS_StreamConfig* p_stream_config, CommonCmdPacket* received_packet);
 
+/**
+ * @brief  C2A 間通信など， CTCP をコンポ間通信に用いるとき，DS_init で渡す初期化関数内部用の Init Util
+ *
+ *         これを呼び出すと，まるっと DSSC の初期設定ができる．
+ * @note   DSSC_enable は Driver 側でやること
+ * @param[in]  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @param[in]  tx_frame_buffer: コマンドフレーム（送信フレーム）のバッファ
+ * @param[in]  tx_frame_buffer_size: バッファサイズ
+ * @param[in]  data_analyzer: DSSC_set_data_analyzer で渡すための data_analyzer
+ * @retval DS_ERR_CODE_OK:  正常終了
+ * @retval DS_ERR_CODE_ERR: フレームバッファのサイズ不足などのエラー
+ */
+DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
+                           uint8_t* tx_frame_buffer,
+                           int16_t tx_frame_buffer_size,
+                           DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver));
+
 // TODO: aobc.c の TODO 時に実装（標準処理の共通化）
 // DS_ERR_CODE CTCP_set_tx_frane_to_dssc(const DS_StreamConfig* p_stream_config,
 //                                       const CommonTlmCmdPacket* send_packet);
