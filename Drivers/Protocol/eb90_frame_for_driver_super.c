@@ -36,8 +36,9 @@ uint16_t EB90_FRAME_get_crc_from_dssc(const DS_StreamConfig* p_stream_config)
 
 uint8_t EB90_FRAME_is_valid_crc_of_dssc(const DS_StreamConfig* p_stream_config)
 {
-  // TODO: CRC を IBM から CCITT に変えてから実装する
-  return 1;
+  uint16_t len = EB90_FRAME_get_packet_length_from_dssc(p_stream_config);
+  const uint8_t* head = EB90_FRAME_get_packet_head_from_dssc(p_stream_config);
+  return (EB90_FRAME_calc_crc(head, len + EB90_FRAME_CRC_SIZE) == 0) ? 1 : 0;
 }
 
 

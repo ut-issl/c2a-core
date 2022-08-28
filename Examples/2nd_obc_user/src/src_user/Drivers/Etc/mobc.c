@@ -108,8 +108,11 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void
 
   mobc_driver->info.comm.rx_err_code = MOBC_RX_ERR_CODE_OK;
 
-  // TODO: ここに CRC チェックをいれる
-  // MOBC_RX_ERR_CODE_CRC_ERR を入れる
+  if (!EB90_FRAME_is_valid_crc_of_dssc(p_stream_config))
+  {
+    mobc_driver->info.comm.rx_err_code = MOBC_RX_ERR_CODE_CRC_ERR;
+    return DS_ERR_CODE_ERR;
+  }
 
   // MOBC からのコマンドは以下のパターン
   //  APID:
