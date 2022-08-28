@@ -20,9 +20,14 @@
  *        |---------+-------+-------+------------------|
  *        | === Footer =============================== |
  *        |---------+-------+-------+------------------|
- *        |   N - 4 |     0 |    16 | CRC-16-CCITT     |
+ *        |   N - 4 |     0 |    16 | CRC              |
  *        |   N - 2 |     0 |    16 | ETX              |
  *        |---------+-------+-------+------------------|
+ *
+ *        CRC
+ *          CRC-16/CCITT-FALSE (CRC-16/AUTOSAR, CRC-16/IBM-3740 とも)
+ *          Packet Field の CRC
+ *          Header は含めない
  */
 #ifndef EB90_FRAME_FOR_DRIVER_SUPER_H_
 #define EB90_FRAME_FOR_DRIVER_SUPER_H_
