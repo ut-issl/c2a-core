@@ -19,7 +19,7 @@
  */
 typedef enum
 {
-  MOBC_TX_ERR_CODE_OK   = 0
+  MOBC_TX_ERR_CODE_OK = 0
   // MOBC_TX_ERR_CODE_CMD_NOT_FOUND,
 } MOBC_TX_ERR_CODE;
 
@@ -31,7 +31,7 @@ typedef enum
  */
 typedef enum
 {
-  MOBC_RX_ERR_CODE_OK   = 0,
+  MOBC_RX_ERR_CODE_OK = 0,
   // MOBC_RX_ERR_CODE_TLM_NOT_FOUND,
   MOBC_RX_ERR_CODE_CRC_ERR,
   MOBC_RX_ERR_CODE_INVALID_PACKET

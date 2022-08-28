@@ -19,7 +19,7 @@
  */
 typedef enum
 {
-  AOBC_TX_ERR_CODE_OK   = 0,
+  AOBC_TX_ERR_CODE_OK = 0,
   AOBC_TX_ERR_CODE_CMD_NOT_FOUND
 } AOBC_TX_ERR_CODE;
 
@@ -30,7 +30,7 @@ typedef enum
  */
 typedef enum
 {
-  AOBC_RX_ERR_CODE_OK   = 0,
+  AOBC_RX_ERR_CODE_OK = 0,
   AOBC_RX_ERR_CODE_TLM_NOT_FOUND,
   AOBC_RX_ERR_CODE_CRC_ERR
 } AOBC_RX_ERR_CODE;

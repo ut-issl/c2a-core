@@ -103,8 +103,11 @@ static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
 
   aobc_driver->info.comm.rx_err_code = AOBC_RX_ERR_CODE_OK;
 
-  // [TODO] ここに CRC チェックをいれる
-  // AOBC_RX_ERR_CODE_CRC_ERR を入れる
+  if (!EB90_FRAME_is_valid_crc_of_dssc(p_stream_config))
+  {
+    aobc_driver->info.comm.rx_err_code = AOBC_RX_ERR_CODE_CRC_ERR;
+    return DS_ERR_CODE_ERR;
+  }
 
   return AOBC_buffer_tlm_packet(p_stream_config, aobc_driver);
 }

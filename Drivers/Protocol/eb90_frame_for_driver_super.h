@@ -24,6 +24,8 @@
  *        |   N - 2 |     0 |    16 | ETX              |
  *        |---------+-------+-------+------------------|
  *
+ *        Packet Length:
+ *          Packet Field の長さ
  *        CRC
  *          CRC-16/CCITT-FALSE (CRC-16/AUTOSAR, CRC-16/IBM-3740 とも)
  *          Packet Field の CRC
