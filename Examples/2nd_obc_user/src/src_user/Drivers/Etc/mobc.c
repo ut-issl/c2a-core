@@ -128,36 +128,11 @@ DS_CMD_ERR_CODE MOBC_send(MOBC_Driver* mobc_driver, const CommonTlmPacket* packe
 {
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
-  uint16_t    ctp_len;
-  uint16_t    crc;
-  size_t      pos;
-  size_t      size;
 
   p_stream_config = &(mobc_driver->driver.super.stream_config[MOBC_STREAM_TLM_CMD]);
 
-  // tx_frame の設定
-  ctp_len = CTP_get_packet_len(packet);
-  DSSC_set_tx_frame_size(p_stream_config,
-                         (uint16_t)(ctp_len + EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE));
-
-  pos  = 0;
-  size = EB90_FRAME_STX_SIZE;
-  memcpy(&(MOBC_tx_frame_[pos]), EB90_FRAME_kStx, size);
-  pos += size;
-  size = EB90_FRAME_LEN_SIZE;
-  endian_memcpy(&(MOBC_tx_frame_[pos]), &ctp_len, size);       // ここはエンディアンを気にする！
-  pos += size;
-  size = (size_t)ctp_len;
-  memcpy(&(MOBC_tx_frame_[pos]), packet->packet, size);
-  pos += size;
-
-  crc = EB90_FRAME_calc_crc(MOBC_tx_frame_ + EB90_FRAME_HEADER_SIZE, pos - EB90_FRAME_HEADER_SIZE);
-
-  size = EB90_FRAME_CRC_SIZE;
-  endian_memcpy(&(MOBC_tx_frame_[pos]), &crc, size);       // ここはエンディアンを気にする！
-  pos += size;
-  size = EB90_FRAME_ETX_SIZE;
-  memcpy(&(MOBC_tx_frame_[pos]), EB90_FRAME_kEtx, size);
+  // tx_frameの設定
+  CTP_set_tx_frane_to_dssc(p_stream_config, packet);
 
   ret = DS_send_general_cmd(&(mobc_driver->driver.super), MOBC_STREAM_TLM_CMD);
 

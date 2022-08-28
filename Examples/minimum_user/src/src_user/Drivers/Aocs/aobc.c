@@ -131,37 +131,11 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
   AOBC_CMD_CODE cmd_code;
-  uint16_t      ccp_len;
-  uint16_t      crc;
-  size_t        pos;
-  size_t        size;
 
   p_stream_config = &(aobc_driver->driver.super.stream_config[AOBC_STREAM_TLM_CMD]);
 
-  // TODO: 標準なので， Util を common_tlm_cmd_packet_for_driver_super.c で整備
   // tx_frameの設定
-  ccp_len = CCP_get_packet_len(packet);
-  DSSC_set_tx_frame_size(p_stream_config,
-                         (uint16_t)(ccp_len + EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE));
-
-  pos  = 0;
-  size = EB90_FRAME_STX_SIZE;
-  memcpy(&(AOBC_tx_frame_[pos]), EB90_FRAME_kStx, size);
-  pos += size;
-  size = EB90_FRAME_LEN_SIZE;
-  endian_memcpy(&(AOBC_tx_frame_[pos]), &ccp_len, size);       // ここはエンディアンを気にする！
-  pos += size;
-  size = (size_t)ccp_len;
-  memcpy(&(AOBC_tx_frame_[pos]), packet->packet, size);
-  pos += size;
-
-  crc = EB90_FRAME_calc_crc(AOBC_tx_frame_ + EB90_FRAME_HEADER_SIZE, pos - EB90_FRAME_HEADER_SIZE);
-
-  size = EB90_FRAME_CRC_SIZE;
-  endian_memcpy(&(AOBC_tx_frame_[pos]), &crc, size);       // ここはエンディアンを気にする！
-  pos += size;
-  size = EB90_FRAME_ETX_SIZE;
-  memcpy(&(AOBC_tx_frame_[pos]), EB90_FRAME_kEtx, size);
+  CCP_set_tx_frane_to_dssc(p_stream_config, packet);
 
   cmd_code = (AOBC_CMD_CODE)CCP_get_id(packet);
 

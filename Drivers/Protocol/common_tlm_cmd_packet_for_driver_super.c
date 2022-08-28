@@ -85,4 +85,59 @@ DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
   return DS_ERR_CODE_OK;
 }
 
+
+DS_ERR_CODE CTCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+                                      const CommonTlmCmdPacket* send_packet)
+{
+  size_t pos;
+  size_t size;
+  uint16_t crc;
+  uint16_t packet_len = CTCP_get_packet_len(send_packet);
+  uint16_t frame_len = (uint16_t)(packet_len + EB90_FRAME_HEADER_SIZE + EB90_FRAME_FOOTER_SIZE);
+  uint8_t* tx_frame = DSSC_get_tx_frame_as_non_const_pointer(p_stream_config);
+
+  if (frame_len > DSSC_get_tx_frame_buffer_size(p_stream_config)) return DS_ERR_CODE_ERR;
+
+  DSSC_set_tx_frame_size(p_stream_config, frame_len);
+
+  pos  = 0;
+  size = EB90_FRAME_STX_SIZE;
+  memcpy(&(tx_frame[pos]), EB90_FRAME_kStx, size);
+  pos += size;
+  size = EB90_FRAME_LEN_SIZE;
+  endian_memcpy(&(tx_frame[pos]), &packet_len, size);       // ここはエンディアンを気にする！
+  pos += size;
+
+  size = (size_t)packet_len;
+  memcpy(&(tx_frame[pos]), send_packet->packet, size);
+  pos += size;
+
+  crc = EB90_FRAME_calc_crc(tx_frame + EB90_FRAME_HEADER_SIZE, pos - EB90_FRAME_HEADER_SIZE);
+  size = EB90_FRAME_CRC_SIZE;
+  endian_memcpy(&(tx_frame[pos]), &crc, size);       // ここはエンディアンを気にする！
+  pos += size;
+  size = EB90_FRAME_ETX_SIZE;
+  memcpy(&(tx_frame[pos]), EB90_FRAME_kEtx, size);
+
+  return DS_ERR_CODE_OK;
+}
+
+
+DS_ERR_CODE CTP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+                                     const CommonTlmPacket* send_packet)
+{
+  const CommonTlmCmdPacket* ctcp = CTCP_convert_from_ctp(send_packet);
+  if (ctcp == NULL) return DS_ERR_CODE_ERR;
+  return CTCP_set_tx_frane_to_dssc(p_stream_config, ctcp);
+}
+
+
+DS_ERR_CODE CCP_set_tx_frane_to_dssc(DS_StreamConfig* p_stream_config,
+                                     const CommonCmdPacket* send_packet)
+{
+  const CommonTlmCmdPacket* ctcp = CTCP_convert_from_ccp(send_packet);
+  if (ctcp == NULL) return DS_ERR_CODE_ERR;
+  return CTCP_set_tx_frane_to_dssc(p_stream_config, ctcp);
+}
+
 #pragma section
