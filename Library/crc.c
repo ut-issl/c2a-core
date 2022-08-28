@@ -5,7 +5,7 @@
  */
 #include "crc.h"
 
-static const uint16_t crc_16_ibm_right_table_[256] = {
+static const uint16_t CRC_kCrc16IbmRightTable_[256] = {
     0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241,
     0xc601, 0x06c0, 0x0780, 0xc741, 0x0500, 0xc5c1, 0xc481, 0x0440,
     0xcc01, 0x0cc0, 0x0d80, 0xcd41, 0x0f00, 0xcfc1, 0xce81, 0x0e40,
@@ -40,7 +40,7 @@ static const uint16_t crc_16_ibm_right_table_[256] = {
     0x8201, 0x42c0, 0x4380, 0x8341, 0x4100, 0x81c1, 0x8081, 0x4040
 };
 
-static const uint16_t crc_16_ccitt_left_table_[256] = {
+static const uint16_t CRC_kCrc16CcittLeftTable_[256] = {
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
     0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
     0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
@@ -75,7 +75,8 @@ static const uint16_t crc_16_ccitt_left_table_[256] = {
     0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
 };
 
-static const uint16_t crc_16_ccitt_right_table_[256] = {
+#if 0
+static const uint16_t CRC_kCrc16CcittRightTable_[256] = {
     0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
     0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
     0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
@@ -109,47 +110,50 @@ static const uint16_t crc_16_ccitt_right_table_[256] = {
     0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330,
     0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
 };
+#endif
 
-uint16_t crc_16_ibm_right(uint16_t crc, const unsigned char* c, size_t n, int rev_flag)
+uint16_t CRC_calc_crc_16_ibm_right(uint16_t crc, const uint8_t* c, size_t n, int rev_flag)
 {
   size_t i;
 
   for (i = 0; i < n; ++i)
   {
-    crc = (uint16_t)(crc_16_ibm_right_table_[(crc ^ c[i]) & 0xff] ^ (crc >> 8));
+    crc = (uint16_t)(CRC_kCrc16IbmRightTable_[(crc ^ c[i]) & 0xff] ^ (crc >> 8));
   }
 
   if (rev_flag) return (uint16_t)~crc;
   else return crc;
 }
 
-uint16_t crc_16_ccitt_left(uint16_t crc, const unsigned char* c, size_t n, int rev_flag)
+uint16_t CRC_calc_crc_16_ccitt_left(uint16_t crc, const uint8_t* c, size_t n, int rev_flag)
 {
   size_t i;
 
   for (i = 0; i < n; ++i)
   {
-    crc = (uint16_t)(crc_16_ccitt_left_table_[((crc >> 8) ^ c[i]) & 0xff] ^ (crc << 8));
+    crc = (uint16_t)(CRC_kCrc16CcittLeftTable_[((crc >> 8) ^ c[i]) & 0xff] ^ (crc << 8));
   }
 
   if (rev_flag) return (uint16_t)~crc;
   else return crc;
 }
 
-uint16_t crc_16_ccitt_right(uint16_t crc, const unsigned char* c, size_t n, int rev_flag)
+#if 0
+uint16_t CRC_calc_crc_16_ccitt_right(uint16_t crc, const uint8_t* c, size_t n, int rev_flag)
 {
   size_t i;
 
   for (i = 0; i < n; ++i)
   {
-    crc = (uint16_t)(crc_16_ccitt_right_table_[(crc ^ c[i]) & 0xff] ^ (crc >> 8));
+    crc = (uint16_t)(CRC_kCrc16CcittRightTable_[(crc ^ c[i]) & 0xff] ^ (crc >> 8));
   }
 
   if (rev_flag) return (uint16_t)~crc;
   else return crc;
 }
+#endif
 
-void make_crc_8_table(uint8_t* table, uint8_t crc_poly, uint8_t shift)
+void CRC_make_crc_8_table(uint8_t* table, uint8_t crc_poly, uint8_t shift)
 {
   int i, j;
 
@@ -173,7 +177,7 @@ void make_crc_8_table(uint8_t* table, uint8_t crc_poly, uint8_t shift)
   }
 }
 
-void make_crc_16_table(uint16_t* table, uint16_t crc_poly, uint8_t shift)
+void CRC_make_crc_16_table(uint16_t* table, uint16_t crc_poly, uint8_t shift)
 {
   int i, j;
 
@@ -198,7 +202,7 @@ void make_crc_16_table(uint16_t* table, uint16_t crc_poly, uint8_t shift)
   }
 }
 
-void make_crc_32_table(uint32_t* table, uint32_t crc_poly, uint8_t shift)
+void CRC_make_crc_32_table(uint32_t* table, uint32_t crc_poly, uint8_t shift)
 {
   int i, j;
 
@@ -224,16 +228,16 @@ void make_crc_32_table(uint32_t* table, uint32_t crc_poly, uint8_t shift)
 }
 
 /*
-uint16_t crc_16_right_calc(uint16_t crc, uint16_t crc_poly, const unsigned char* c, size_t n, int rev_flag)
+uint16_t CRC_calc_crc_16_right(uint16_t crc, uint16_t crc_poly, const uint8_t* c, size_t n, int rev_flag)
 {
   size_t i;
   uint8_t j;
-  for (i = 0 ;i < n; ++i)
+  for (i = 0; i < n; ++i)
   {
     crc ^= c[i];
-    for (j = 0;j < 8;++j)
+    for (j = 0; j < 8; ++j)
     {
-      if (crc & 1) crc = (crc >> 1)^crc_poly;
+      if (crc & 1) crc = (crc >> 1) ^ crc_poly;
       else crc >>= 1;
     }
   }
@@ -242,16 +246,16 @@ uint16_t crc_16_right_calc(uint16_t crc, uint16_t crc_poly, const unsigned char*
   else return crc;
 }
 
-uint16_t crc_16_left_calc(uint16_t crc, uint16_t crc_poly, const unsigned char* c, size_t n, int rev_flag)
+uint16_t CRC_calc_crc_16_left(uint16_t crc, uint16_t crc_poly, const uint8_t* c, size_t n, int rev_flag)
 {
   size_t i;
   uint8_t j;
-  for (i = 0 ;i < n; ++i)
+  for (i = 0; i < n; ++i)
   {
     crc ^= (c[i] << 8);
-    for (j = 0;j < 8;++j)
+    for (j = 0; j < 8; ++j)
     {
-      if (crc & 0x8000) crc = (crc << 1)^crc_poly;
+      if (crc & 0x8000) crc = (crc << 1) ^ crc_poly;
       else crc <<= 1;
     }
   }
