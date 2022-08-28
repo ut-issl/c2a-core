@@ -1330,6 +1330,11 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
 
   if (p_stream_config->rx_frame_size_ > DS_RX_FRAME_SIZE_MAX) return DS_ERR_CODE_ERR;   // [TODO] 現在はBigData未実装（詳細はヘッダファイル参照）のため，ここで弾く
 
+  if (p_stream_config->tx_frame_buffer_size_ >= 0)
+  {
+    if (p_stream_config->tx_frame_size_ > p_stream_config->tx_frame_buffer_size_) return DS_ERR_CODE_ERR;
+  }
+
   if (p_stream_config->rx_frame_size_ < 0)
   {
     // テレメトリ可変長
