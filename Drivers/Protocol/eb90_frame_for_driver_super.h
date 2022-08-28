@@ -20,7 +20,7 @@
  *        |---------+-------+-------+------------------|
  *        | === Footer =============================== |
  *        |---------+-------+-------+------------------|
- *        |   N - 4 |     0 |    16 | CRC-16-IBM       |
+ *        |   N - 4 |     0 |    16 | CRC-16-CCITT     |
  *        |   N - 2 |     0 |    16 | ETX              |
  *        |---------+-------+-------+------------------|
  */
@@ -79,7 +79,7 @@ uint8_t EB90_FRAME_is_valid_crc_of_dssc(const DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  EB90 Frame の CRC の計算
- * @note   CRC-16-IBM を使う
+ * @note   CRC-16-CCITT を使う
  * @param  data: CRC を計算するデータのポインタ
  * @param  len:  データ長
  * @return CRC
