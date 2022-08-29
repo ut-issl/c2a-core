@@ -1,7 +1,9 @@
 # Communication
 
 ## 概要
-通信関連，ネットワーク関連などをまとめる．
+通信関連，ネットワーク関連などをまとめる．  
+コンポーネント間通信については [Driver/Communication with Components](../Driver/communication_with_components.md) などを参照のこと．
+
 
 ## C2A 内部を流れるパケットについて (Common Packet)
 C2A 内部を流れるパケットは以下の 3 つである．
@@ -21,6 +23,9 @@ C2A 標準として， Space Packet が Core 内で定義されており，基�
 
 
 ## C2A 標準 Space Packet 定義
+C2A 標準 Space Packet は，CCSDS の Space Packet に準拠したものである．
+CCSDS Space Packet において， Secondary Header はユーザー定義とされており， C2A 用に Secondary Header がカスタムされたものが C2A 標準 Space Packet である．
+
 現在，C2A 標準 Space Packet として，テレメパケット，コマンドパケットともに， Ver.1 のみ策定している．  
 ここでは， Ver.1 について記載する．
 
@@ -174,6 +179,10 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
 - https://github.com/ut-issl/c2a-core/blob/f3197d549559d1f571eb3e28497c9a488611f07f/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_tlm_cmd_packet_define.h#L10-L11
 - https://github.com/ut-issl/c2a-core/blob/f3197d549559d1f571eb3e28497c9a488611f07f/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_tlm_packet_define.h#L10-L11
 - https://github.com/ut-issl/c2a-core/blob/f3197d549559d1f571eb3e28497c9a488611f07f/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h#L10-L11
+
+
+## C2A 間通信について
+上記 [#コマンド配送におけるルーティングについて](#コマンド配送におけるルーティングについて) や [Driver/Communication with Components#c2a-間通信](../Driver/communication_with_components.md#c2a-間通信) などを参照すること．
 
 
 ## CCSDS 準拠状況

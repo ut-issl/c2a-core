@@ -39,6 +39,7 @@ C2A に関する説明の棲み分けは，次のようになっています．
     1. [Tips](./Core/tips.md)
 1. Driver
     1. [Overview](./Driver/overview.md)
+    1. [Communication with Components](./Driver/communication_with_components.md)
 1. SILS
     1. Overview
     1. [S2E Integration](./Sils/s2e_integration.md)

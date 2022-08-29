@@ -83,6 +83,8 @@ typedef struct DriverSuperStreamConfig DriverSuperStreamConfig;
 ### DriverSuper と C2A 間通信
 TBW
 
+[Driver/Communication with Components](../Driver/communication_with_components.md) なども参照．
+
 ### その他
 2021年の改良としては，大きく以下がある．
 - コードの見通しの良さの大幅改良
