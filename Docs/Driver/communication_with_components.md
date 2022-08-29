@@ -60,6 +60,8 @@ https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950
 - User Data Field
     - バイト単位で格納されたユーザーデータ
 
+なお，すべてのフィールドのバイトオーダはビッグエンディアンとする．
+
 
 ## データリンク層 (Frame)
 ### FB90 Frame
@@ -76,7 +78,7 @@ https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950
     - Packet Field の長さ
 - CRC
     - Packet Field 部分の CRC (Header は含めない)
-    - CRC-16/CCITT-FALSE (CRC-16/AUTOSAR, CRC-16/IBM-3740 とも)
+    - 使用する CRC の種類は CRC-16/CCITT-FALSE (CRC-16/AUTOSAR, CRC-16/IBM-3740 とも)
     - `width=16, poly=0x1021, init=0xffff, refin=false, refout=false, xorout=0x0000, check=0x29b1, residue=0x0000`
 - ETX
     - Frame 終端識別子
@@ -84,6 +86,8 @@ https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950
 - Packet Field
     - バイト単位で格納された送信 Packet
     - EB90 Packet や Common Packet などが格納される
+
+なお，すべてのフィールドのバイトオーダはビッグエンディアンとする．
 
 
 ## C2A 間通信
