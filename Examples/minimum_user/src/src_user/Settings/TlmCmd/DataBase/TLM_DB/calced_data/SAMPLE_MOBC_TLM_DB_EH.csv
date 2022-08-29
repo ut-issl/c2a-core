@@ -4,7 +4,7 @@
 ,IsRestricted,FALSE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,,,,,,,Description,Note
-,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (ƒ°a_i * x^i),,,,,,Status,,
+,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (Î£a_i * x^i),,,,,,Status,,
 ,,,,,Octet%%##Pos.,bit%%##Pos.,bit%%##Len.,,a0,a1,a2,a3,a4,a5,,,
 ,PH.VER,uint16_t,,PACKET,0,0,3,NONE,,,,,,,,,
 ,PH.TYPE,,,PACKET,0,3,1,NONE,,,,,,,,,
@@ -38,7 +38,7 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,REG_FROM_CMD.SETTINGS.EVENT.ERR_LEVEL,uint8_t,(uint8_t)((((uint8_t)event_handler->reg_from_cmd.settings.event.err_level) << 5 & 0xe0) | (event_handler->reg_from_cmd.settings.should_match_err_level << 4 & 0x10) | (event_handler->reg_from_cmd.settings.is_active << 3 & 0x08) | (((uint8_t)event_handler->reg_from_cmd.settings.condition.type) & 0x07)),PACKET,67,0,3,STATUS,,,,,,,0=HIGH@@ 1=MIDDLE@@ 2=LOW@@ 3=EL@@ 4=EH@@ *=N/A,,
 ,REG_FROM_CMD.SETTINGS.SHOULD_MATCH_ERR_LEVEL,,,PACKET,67,3,1,STATUS,,,,,,,0=NO@@ 1=YES@@ *=N/A,,
 ,REG_FROM_CMD.SETTINGS.IS_ACTIVE,,,PACKET,67,4,1,STATUS,,,,,,,0=INACTIVE@@ 1=ACTIVE@@ *=N/A,,
-,REG_FROM_CMD.SETTINGS.CONDITION.TYPE,,,PACKET,67,5,3,STATUS,,,,,,,0=SINGLE@@ 1=CONTINUOUS@@ 2=CUMULATIVE@@ *=N/A,,1 bit‚ ‚Ü‚è‚ ‚è
+,REG_FROM_CMD.SETTINGS.CONDITION.TYPE,,,PACKET,67,5,3,STATUS,,,,,,,0=SINGLE@@ 1=CONTINUOUS@@ 2=CUMULATIVE@@ *=N/A,,1 bitã‚ã¾ã‚Šã‚ã‚Š
 ,REG_FROM_CMD.SETTINGS.CONDITION.COUNT_THRESHOLD,uint16_t,event_handler->reg_from_cmd.settings.condition.count_threshold,PACKET,68,0,16,NONE,,,,,,,,,
 ,REG_FROM_CMD.SETTINGS.CONDITION.TIME_THRESHOLD_MS,uint32_t,event_handler->reg_from_cmd.settings.condition.time_threshold_ms,PACKET,70,0,32,NONE,,,,,,,,,
 ,REG_FROM_CMD.SETTINGS.DEPLOY_BCT_ID,uint16_t,(uint16_t)event_handler->reg_from_cmd.settings.deploy_bct_id,PACKET,74,0,16,NONE,,,,,,,,,
@@ -52,7 +52,7 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,TARTGET_RULE.SETTINGS.EVENT.ERR_LEVEL,uint8_t,(uint8_t)((((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.event.err_level) << 5 & 0xe0) | (event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.should_match_err_level << 4 & 0x10) | (event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.is_active << 3 & 0x08) | (((uint8_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.type) & 0x07)),PACKET,86,0,3,STATUS,,,,,,,0=HIGH@@ 1=MIDDLE@@ 2=LOW@@ 3=EL@@ 4=EH@@ *=N/A,,
 ,TARTGET_RULE.SETTINGS.SHOULD_MATCH_ERR_LEVEL,,,PACKET,86,3,1,STATUS,,,,,,,0=NO@@ 1=YES@@ *=N/A,,
 ,TARTGET_RULE.SETTINGS.IS_ACTIVE,,,PACKET,86,4,1,STATUS,,,,,,,0=INACTIVE@@ 1=ACTIVE@@ *=N/A,,
-,TARTGET_RULE.SETTINGS.CONDITION.TYPE,,,PACKET,86,5,3,STATUS,,,,,,,0=SINGLE@@ 1=CONTINUOUS@@ 2=CUMULATIVE@@ *=N/A,,1 bit‚ ‚Ü‚è‚ ‚è
+,TARTGET_RULE.SETTINGS.CONDITION.TYPE,,,PACKET,86,5,3,STATUS,,,,,,,0=SINGLE@@ 1=CONTINUOUS@@ 2=CUMULATIVE@@ *=N/A,,1 bitã‚ã¾ã‚Šã‚ã‚Š
 ,TARTGET_RULE.SETTINGS.CONDITION.COUNT_THRESHOLD,uint16_t,event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.count_threshold,PACKET,87,0,16,NONE,,,,,,,,,
 ,TARTGET_RULE.SETTINGS.CONDITION.TIME_THRESHOLD_MS,uint32_t,event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.condition.time_threshold_ms,PACKET,89,0,32,NONE,,,,,,,,,
 ,TARTGET_RULE.SETTINGS.DEPLOY_BCT_ID,uint16_t,(uint16_t)event_handler->rule_table.rules[event_handler->tlm_info.rule.target_rule_id].settings.deploy_bct_id,PACKET,93,0,16,NONE,,,,,,,,,

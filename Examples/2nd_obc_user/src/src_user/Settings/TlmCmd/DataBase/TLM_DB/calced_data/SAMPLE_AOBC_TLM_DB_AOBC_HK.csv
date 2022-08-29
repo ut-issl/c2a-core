@@ -4,7 +4,7 @@
 ,IsRestricted,FALSE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,,,,,,,Description,Note
-,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (ƒ°a_i * x^i),,,,,,Status,,
+,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (Î£a_i * x^i),,,,,,Status,,
 ,,,,,Octet%%##Pos.,bit%%##Pos.,bit%%##Len.,,a0,a1,a2,a3,a4,a5,,,
 ,PH.VER,uint16_t,,PACKET,0,0,3,NONE,,,,,,,,,
 ,PH.TYPE,,,PACKET,0,3,1,NONE,,,,,,,,,
@@ -26,34 +26,34 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,OBC_MM_STS,uint8_t,(uint8_t)( ((uint8_t)(mode_manager->stat) << 7 & 0x80) | ((uint8_t)(mode_manager->previous_id) & 0x7F) ),PACKET,39,0,1,STATUS,,,,,,,0=FINISHED@@1=PROGRESS@@*=N/A,,
 ,OBC_MM_OPSMODE_PREV,,,PACKET,39,1,7,STATUS,,,,,,,0=START_UP@@1=INITIAL@@2=GND_TEST@@3=WDFAR@@4=RTC_HIGH_RATE@@5=5@@6=6@@7=7@@8=8@@9=9@@10=10@@11=11@@12=12@@13=13@@14=14@@15=15@@16=MAX@@*=N/A,,
 ,OBC_TDSP_CURRENT_ID,uint16_t,TDSP_info->task_list_id,PACKET,40,0,16,NONE,,,,,,,,,
-,OBC_GS_CMD_COUNTER,uint32_t,PL_count_executed_nodes(&PH_gs_cmd_list),PACKET,42,0,32,NONE,,,,,,,,’nã‹ÇƒRƒ}ƒ“ƒhƒJƒEƒ“ƒ^,
-,OBC_GS_CMD_LAST_EXEC_TIME,uint32_t,gs_command_dispatcher->prev.time.total_cycle,PACKET,46,0,32,NONE,,,,,,,,ÅV’nã‹ÇƒRƒ}ƒ“ƒhŽÀsŽž,
-,OBC_GS_CMD_LAST_EXEC_ID,uint16_t,(uint16_t)(gs_command_dispatcher->prev.code),PACKET,50,0,16,NONE,,,,,,,,ÅV’nã‹ÇƒRƒ}ƒ“ƒhID,
-,OBC_GS_CMD_LAST_EXEC_STS,int8_t,(int8_t)(gs_command_dispatcher->prev.sts),PACKET,52,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ÅV’nã‹ÇƒRƒ}ƒ“ƒhŽÀsŒ‹‰Ê,
-,OBC_GS_CMD_LAST_ERR_TIME,uint32_t,gs_command_dispatcher->prev_err.time.total_cycle,PACKET,53,0,32,NONE,,,,,,,,’nã‹ÇˆÙíƒRƒ}ƒ“ƒhŽÀsŽž,
-,OBC_GS_CMD_LAST_ERR_ID,uint16_t,(uint16_t)(gs_command_dispatcher->prev_err.code),PACKET,57,0,16,NONE,,,,,,,,’nã‹ÇˆÙíƒRƒ}ƒ“ƒhID,
-,OBC_GS_CMD_LAST_ERR_STS,int8_t,(int8_t)(gs_command_dispatcher->prev_err.sts),PACKET,59,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,’nã‹ÇˆÙíƒRƒ}ƒ“ƒhŽÀsŒ‹‰Ê,
-,OBC_RT_CMD_COUNTER,uint32_t,PL_count_executed_nodes(&PH_rt_cmd_list),PACKET,60,0,32,NONE,,,,,,,,“à•”ƒRƒ}ƒ“ƒhƒJƒEƒ“ƒ^,
-,OBC_RT_CMD_LAST_EXEC_TIME,uint32_t,(uint32_t)(realtime_command_dispatcher->prev.time.total_cycle),PACKET,64,0,32,NONE,,,,,,,,ÅV“à•”ƒRƒ}ƒ“ƒhŽÀsŽž,
-,OBC_RT_CMD_LAST_EXEC_ID,uint16_t,(uint16_t)(realtime_command_dispatcher->prev.code),PACKET,68,0,16,NONE,,,,,,,,ÅV“à•”ƒRƒ}ƒ“ƒhID,
-,OBC_RT_CMD_LAST_EXEC_STS,int32_t,(int32_t)(realtime_command_dispatcher->prev.sts),PACKET,70,0,32,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ÅV“à•”ƒRƒ}ƒ“ƒhŽÀsŒ‹‰Ê,
-,OBC_RT_CMD_LAST_ERR_TIME,uint32_t,(uint32_t)(realtime_command_dispatcher->prev_err.time.total_cycle),PACKET,74,0,32,NONE,,,,,,,,ÅV“à•”ƒRƒ}ƒ“ƒhŽÀsŽž,
-,OBC_RT_CMD_LAST_ERR_ID,uint16_t,(uint16_t)(realtime_command_dispatcher->prev_err.code),PACKET,78,0,16,NONE,,,,,,,,ÅV“à•”ƒRƒ}ƒ“ƒhID,
-,OBC_RT_CMD_LAST_ERR_STS,int32_t,(int32_t)(realtime_command_dispatcher->prev_err.sts),PACKET,80,0,32,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ÅV“à•”ƒRƒ}ƒ“ƒhŽÀsŒ‹‰Ê,
-,OBC_TLC_GS.COUNTER,uint32_t,PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS]),PACKET,84,0,32,NONE,,,,,,,,ƒoƒX—pTL‚ÌƒRƒ}ƒ“ƒhƒJƒEƒ“ƒ^,
-,OBC_TLC_GS.QUEUED,uint8_t,(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS])),PACKET,88,0,8,NONE,,,,,,,,ƒoƒX—pTL‚Ì“o˜^ƒRƒ}ƒ“ƒh”,
-,OBC_TLC_GS.LAST_EXEC_TIME,uint32_t,timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.time.total_cycle,PACKET,89,0,32,NONE,,,,,,,,ƒoƒX—pTL‚ÌÅVƒRƒ}ƒ“ƒhŽÀsŽž,
-,OBC_TLC_GS.LAST_EXEC_ID,uint16_t,(uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.code),PACKET,93,0,16,NONE,,,,,,,,ƒoƒX—pTL‚ÌÅVƒRƒ}ƒ“ƒhID,
-,OBC_TLC_GS.LAST_EXEC_STS,int8_t,(int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts),PACKET,95,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ƒoƒX—pTL‚ÌÅVƒRƒ}ƒ“ƒhŽÀsŒ‹‰Ê,
-,OBC_TLC_GS.LAST_ERR_TIME,uint32_t,timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.time.total_cycle,PACKET,96,0,32,NONE,,,,,,,,ƒoƒX—pTL‚ÌˆÙíƒRƒ}ƒ“ƒhŽÀsŽž,
-,OBC_TLC_GS.LAST_ERR_ID,uint16_t,(uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.code),PACKET,100,0,16,NONE,,,,,,,,ƒoƒX—pTL‚ÌˆÙíƒRƒ}ƒ“ƒhID,
-,OBC_TLC_GS.LAST_ERR_STS,int8_t,(int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.sts),PACKET,102,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ƒoƒX—pTL‚ÌˆÙíƒRƒ}ƒ“ƒhŽÀsŒ‹‰Ê,
-,OBC_TLC_GS.NEXT_TIME,uint32_t,(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS]))->packet))),PACKET,103,0,32,NONE,,,,,,,,ƒoƒX—pTL‚ÌŽŸƒRƒ}ƒ“ƒhŽÀsŽž,•Ï”Žw’è‚ª‘å•Ï‚È‚±‚Æ‚Éc
-,OBC_TLC_GS.NEXT_ID,uint16_t,(uint16_t)(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS]))->packet))),PACKET,107,0,16,NONE,,,,,,,,ƒoƒX—pTL‚ÌŽŸƒRƒ}ƒ“ƒhID,•Ï”Žw’è‚ª‘å•Ï‚È‚±‚Æ‚Éc
-,OBC_TLC_BC.COUNTER,uint32_t,PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC]),PACKET,109,0,32,NONE,,,,,,,,BC—pTL‚ÌƒRƒ}ƒ“ƒhƒJƒEƒ“ƒ^,
-,OBC_TLC_BC.QUEUED,uint8_t,(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC])),PACKET,113,0,8,NONE,,,,,,,,BC—pTL‚Ì“o˜^ƒRƒ}ƒ“ƒh”,
-,OBC_TLC_TLM.COUNTER,uint32_t,PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]),PACKET,114,0,32,NONE,,,,,,,,ƒeƒŒƒ—pTL‚ÌƒRƒ}ƒ“ƒhƒJƒEƒ“ƒ^,
-,OBC_TLC_TLM.QUEUED,uint8_t,(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])),PACKET,118,0,8,NONE,,,,,,,,ƒeƒŒƒ—pTL‚Ì“o˜^ƒRƒ}ƒ“ƒh”,
+,OBC_GS_CMD_COUNTER,uint32_t,PL_count_executed_nodes(&PH_gs_cmd_list),PACKET,42,0,32,NONE,,,,,,,,åœ°ä¸Šå±€ã‚³ãƒžãƒ³ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿,
+,OBC_GS_CMD_LAST_EXEC_TIME,uint32_t,gs_command_dispatcher->prev.time.total_cycle,PACKET,46,0,32,NONE,,,,,,,,æœ€æ–°åœ°ä¸Šå±€ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,
+,OBC_GS_CMD_LAST_EXEC_ID,uint16_t,(uint16_t)(gs_command_dispatcher->prev.code),PACKET,50,0,16,NONE,,,,,,,,æœ€æ–°åœ°ä¸Šå±€ã‚³ãƒžãƒ³ãƒ‰ID,
+,OBC_GS_CMD_LAST_EXEC_STS,int8_t,(int8_t)(gs_command_dispatcher->prev.sts),PACKET,52,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,æœ€æ–°åœ°ä¸Šå±€ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œçµæžœ,
+,OBC_GS_CMD_LAST_ERR_TIME,uint32_t,gs_command_dispatcher->prev_err.time.total_cycle,PACKET,53,0,32,NONE,,,,,,,,åœ°ä¸Šå±€ç•°å¸¸ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,
+,OBC_GS_CMD_LAST_ERR_ID,uint16_t,(uint16_t)(gs_command_dispatcher->prev_err.code),PACKET,57,0,16,NONE,,,,,,,,åœ°ä¸Šå±€ç•°å¸¸ã‚³ãƒžãƒ³ãƒ‰ID,
+,OBC_GS_CMD_LAST_ERR_STS,int8_t,(int8_t)(gs_command_dispatcher->prev_err.sts),PACKET,59,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,åœ°ä¸Šå±€ç•°å¸¸ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œçµæžœ,
+,OBC_RT_CMD_COUNTER,uint32_t,PL_count_executed_nodes(&PH_rt_cmd_list),PACKET,60,0,32,NONE,,,,,,,,å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿,
+,OBC_RT_CMD_LAST_EXEC_TIME,uint32_t,(uint32_t)(realtime_command_dispatcher->prev.time.total_cycle),PACKET,64,0,32,NONE,,,,,,,,æœ€æ–°å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,
+,OBC_RT_CMD_LAST_EXEC_ID,uint16_t,(uint16_t)(realtime_command_dispatcher->prev.code),PACKET,68,0,16,NONE,,,,,,,,æœ€æ–°å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰ID,
+,OBC_RT_CMD_LAST_EXEC_STS,int32_t,(int32_t)(realtime_command_dispatcher->prev.sts),PACKET,70,0,32,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,æœ€æ–°å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œçµæžœ,
+,OBC_RT_CMD_LAST_ERR_TIME,uint32_t,(uint32_t)(realtime_command_dispatcher->prev_err.time.total_cycle),PACKET,74,0,32,NONE,,,,,,,,æœ€æ–°å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,
+,OBC_RT_CMD_LAST_ERR_ID,uint16_t,(uint16_t)(realtime_command_dispatcher->prev_err.code),PACKET,78,0,16,NONE,,,,,,,,æœ€æ–°å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰ID,
+,OBC_RT_CMD_LAST_ERR_STS,int32_t,(int32_t)(realtime_command_dispatcher->prev_err.sts),PACKET,80,0,32,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,æœ€æ–°å†…éƒ¨ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œçµæžœ,
+,OBC_TLC_GS.COUNTER,uint32_t,PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS]),PACKET,84,0,32,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®ã‚³ãƒžãƒ³ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿,
+,OBC_TLC_GS.QUEUED,uint8_t,(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS])),PACKET,88,0,8,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰æ•°,
+,OBC_TLC_GS.LAST_EXEC_TIME,uint32_t,timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.time.total_cycle,PACKET,89,0,32,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®æœ€æ–°ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,
+,OBC_TLC_GS.LAST_EXEC_ID,uint16_t,(uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.code),PACKET,93,0,16,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®æœ€æ–°ã‚³ãƒžãƒ³ãƒ‰ID,
+,OBC_TLC_GS.LAST_EXEC_STS,int8_t,(int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts),PACKET,95,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ãƒã‚¹ç”¨TLã®æœ€æ–°ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œçµæžœ,
+,OBC_TLC_GS.LAST_ERR_TIME,uint32_t,timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.time.total_cycle,PACKET,96,0,32,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®ç•°å¸¸ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,
+,OBC_TLC_GS.LAST_ERR_ID,uint16_t,(uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.code),PACKET,100,0,16,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®ç•°å¸¸ã‚³ãƒžãƒ³ãƒ‰ID,
+,OBC_TLC_GS.LAST_ERR_STS,int8_t,(int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.sts),PACKET,102,0,8,STATUS,,,,,,,0=SUC@@ 1=LEN@@ 2=PRM@@ 3=CNT@@ 4=NDF@@ 5=RUT@@ 6=FMT@@ *=ERR,ãƒã‚¹ç”¨TLã®ç•°å¸¸ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œçµæžœ,
+,OBC_TLC_GS.NEXT_TIME,uint32_t,(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS])) ? 0 : (uint32_t)CCP_get_ti((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS]))->packet))),PACKET,103,0,32,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®æ¬¡ã‚³ãƒžãƒ³ãƒ‰å®Ÿè¡Œæ™‚åˆ»,å¤‰æ•°æŒ‡å®šãŒå¤§å¤‰ãªã“ã¨ã«â€¦
+,OBC_TLC_GS.NEXT_ID,uint16_t,(uint16_t)(PL_is_empty(&(PH_tl_cmd_list[TLCD_ID_FROM_GS])) ? 0 : CCP_get_id((const CommonCmdPacket*)(PL_get_head(&(PH_tl_cmd_list[TLCD_ID_FROM_GS]))->packet))),PACKET,107,0,16,NONE,,,,,,,,ãƒã‚¹ç”¨TLã®æ¬¡ã‚³ãƒžãƒ³ãƒ‰ID,å¤‰æ•°æŒ‡å®šãŒå¤§å¤‰ãªã“ã¨ã«â€¦
+,OBC_TLC_BC.COUNTER,uint32_t,PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC]),PACKET,109,0,32,NONE,,,,,,,,BCç”¨TLã®ã‚³ãƒžãƒ³ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿,
+,OBC_TLC_BC.QUEUED,uint8_t,(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC])),PACKET,113,0,8,NONE,,,,,,,,BCç”¨TLã®ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰æ•°,
+,OBC_TLC_TLM.COUNTER,uint32_t,PL_count_executed_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM]),PACKET,114,0,32,NONE,,,,,,,,ãƒ†ãƒ¬ãƒ¡ç”¨TLã®ã‚³ãƒžãƒ³ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿,
+,OBC_TLC_TLM.QUEUED,uint8_t,(uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])),PACKET,118,0,8,NONE,,,,,,,,ãƒ†ãƒ¬ãƒ¡ç”¨TLã®ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰æ•°,
 ,OBC_TLC_GS.SOE_FLAG,uint8_t,(uint8_t)(((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].stop_on_error << 7 & 0x80) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].lockout << 6 & 0x40) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].stop_on_error << 5 & 0x20) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].lockout << 4 & 0x10) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].stop_on_error << 3 & 0x08) | ((uint8_t)timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].lockout << 2 & 0x04) | (0 << 1 & 0x02) | (0 & 0x01) ),PACKET,119,0,1,STATUS,,,,,,,0=DIS@@ 1=ENA,,
 ,OBC_TLC_GS.LOCKOUT_FLAG,,,PACKET,119,1,1,STATUS,,,,,,,0=NO@@ 1=YES,,
 ,OBC_TLC_BC.SOE_FLAG,,,PACKET,119,2,1,STATUS,,,,,,,0=DIS@@ 1=ENA,,
@@ -65,35 +65,35 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,WDT.IS_ENABLE,uint8_t,(uint8_t)((wdt_config->is_wdt_enable << 7 & 0x80) | (wdt_config->is_clear_enable << 6 & 0x40) | 0x00),PACKET,120,0,1,STATUS,,,,,,,0=DIS@@ 1=ENA,,
 ,WDT.IS_CLEAR_ENABLE,,,PACKET,120,1,1,STATUS,,,,,,,0=DIS@@ 1=ENA,,
 ,DUMMY_DATA0,,,PACKET,120,2,6,NONE,,,,,,,,,
-,OBC_BCT_BLK_PTR,uint16_t,block_command_table->pos.block,PACKET,121,0,16,NONE,,,,,,,,BCT ƒuƒƒbƒNƒ|ƒCƒ“ƒ^,
-,OBC_BCT_CMD_PTR,uint8_t,(uint8_t)(block_command_table->pos.cmd),PACKET,123,0,8,NONE,,,,,,,,BCT ƒRƒ}ƒ“ƒhƒ|ƒCƒ“ƒ^,
-,OBC_BCT_REGD_TIME,uint32_t,((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,124,0,32,NONE,,,,,,,,BCT “o˜^ƒRƒ}ƒ“ƒhŽž,•Ï”Žw’è‚ª‘å•Ï‚È‚±‚Æ‚Éc
-,OBC_BCT_REGD_ID,uint16_t,(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,128,0,16,NONE,,,,,,,,BCT “o˜^ƒRƒ}ƒ“ƒhID,•Ï”Žw’è‚ª‘å•Ï‚È‚±‚Æ‚Éc
+,OBC_BCT_BLK_PTR,uint16_t,block_command_table->pos.block,PACKET,121,0,16,NONE,,,,,,,,BCT ãƒ–ãƒ­ãƒƒã‚¯ãƒã‚¤ãƒ³ã‚¿,
+,OBC_BCT_CMD_PTR,uint8_t,(uint8_t)(block_command_table->pos.cmd),PACKET,123,0,8,NONE,,,,,,,,BCT ã‚³ãƒžãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿,
+,OBC_BCT_REGD_TIME,uint32_t,((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,124,0,32,NONE,,,,,,,,BCT ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰æ™‚åˆ»,å¤‰æ•°æŒ‡å®šãŒå¤§å¤‰ãªã“ã¨ã«â€¦
+,OBC_BCT_REGD_ID,uint16_t,(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,128,0,16,NONE,,,,,,,,BCT ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰ID,å¤‰æ•°æŒ‡å®šãŒå¤§å¤‰ãªã“ã¨ã«â€¦
 ,EL.STATISTICS.RECORD_COUNTER_TOTAL,uint32_t,event_logger->statistics.record_counter_total,PACKET,130,0,32,NONE,,,,,,,,,
-,EL.STATISTICS.RECORD_COUNTERS_HIGH,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH],PACKET,134,0,16,NONE,,,,,,,,,ƒf[ƒ^ƒTƒCƒYŒ¸‚ç‚·‚½‚ß‚Éu16
-,EL.STATISTICS.RECORD_COUNTERS_MIDDLE,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE],PACKET,136,0,16,NONE,,,,,,,,,ƒf[ƒ^ƒTƒCƒYŒ¸‚ç‚·‚½‚ß‚Éu16
-,EL.STATISTICS.RECORD_COUNTERS_LOW,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW],PACKET,138,0,16,NONE,,,,,,,,,ƒf[ƒ^ƒTƒCƒYŒ¸‚ç‚·‚½‚ß‚Éu16
-,EL.STATISTICS.RECORD_COUNTERS_EL,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL],PACKET,140,0,16,NONE,,,,,,,,,ƒf[ƒ^ƒTƒCƒYŒ¸‚ç‚·‚½‚ß‚Éu16
-,EL.STATISTICS.RECORD_COUNTERS_EH,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH],PACKET,142,0,16,NONE,,,,,,,,,ƒf[ƒ^ƒTƒCƒYŒ¸‚ç‚·‚½‚ß‚Éu16
+,EL.STATISTICS.RECORD_COUNTERS_HIGH,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_HIGH],PACKET,134,0,16,NONE,,,,,,,,,ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºæ¸›ã‚‰ã™ãŸã‚ã«u16
+,EL.STATISTICS.RECORD_COUNTERS_MIDDLE,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_MIDDLE],PACKET,136,0,16,NONE,,,,,,,,,ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºæ¸›ã‚‰ã™ãŸã‚ã«u16
+,EL.STATISTICS.RECORD_COUNTERS_LOW,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_LOW],PACKET,138,0,16,NONE,,,,,,,,,ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºæ¸›ã‚‰ã™ãŸã‚ã«u16
+,EL.STATISTICS.RECORD_COUNTERS_EL,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EL],PACKET,140,0,16,NONE,,,,,,,,,ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºæ¸›ã‚‰ã™ãŸã‚ã«u16
+,EL.STATISTICS.RECORD_COUNTERS_EH,uint16_t,(uint16_t)event_logger->statistics.record_counters[EL_ERROR_LEVEL_EH],PACKET,142,0,16,NONE,,,,,,,,,ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºæ¸›ã‚‰ã™ãŸã‚ã«u16
 ,EL.LATEST_EVENT.GROUP,uint8_t,(uint8_t)event_logger->latest_event.group,PACKET,144,0,8,NONE,,,,,,,,,
 ,EL.LATEST_EVENT.LOCAL,uint32_t,event_logger->latest_event.local,PACKET,145,0,32,NONE,,,,,,,,,
 ,EL.LATEST_EVENT.ERR_LEVEL,uint8_t,(uint8_t)event_logger->latest_event.err_level,PACKET,149,0,8,STATUS,,,,,,,0=HIGH@@ 1=MIDDLE@@ 2=LOW@@ 3=EL@@ 4=EH@@ *=N/A,,
 ,EL.LATEST_EVENT.TIME.TOTAL_CYCLE,uint32_t,event_logger->latest_event.time.total_cycle,PACKET,150,0,32,NONE,,,,,,,,,
 ,EL.LATEST_EVENT.TIME.STEP,uint8_t,(uint8_t)event_logger->latest_event.time.step,PACKET,154,0,8,NONE,,,,,,,,,
-,EL.LATEST_EVENT.NOTE,uint32_t,event_logger->latest_event.note,PACKET,155,0,32,NONE,,,,,,,,,u8‚É‚µ‚Ä‚à‚æ‚¢
+,EL.LATEST_EVENT.NOTE,uint32_t,event_logger->latest_event.note,PACKET,155,0,32,NONE,,,,,,,,,u8ã«ã—ã¦ã‚‚ã‚ˆã„
 ,EL.LATEST_HIGH_EVENT.GROUP,uint8_t,(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH@@ 0)->group,PACKET,159,0,8,NONE,,,,,,,,,
 ,EL.LATEST_HIGH_EVENT.LOCAL,uint32_t,EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH@@ 0)->local,PACKET,160,0,32,NONE,,,,,,,,,
 ,EL.LATEST_HIGH_EVENT.TIME.TOTAL_CYCLE,uint32_t,EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH@@ 0)->time.total_cycle,PACKET,164,0,32,NONE,,,,,,,,,
 ,EL.LATEST_HIGH_EVENT.TIME.STEP,uint8_t,(uint8_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH@@ 0)->time.step,PACKET,168,0,8,NONE,,,,,,,,,
-,EL.LATEST_HIGH_EVENT.NOTE,uint16_t,(uint16_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH@@ 0)->note,PACKET,169,0,16,NONE,,,,,,,,,u8‚É‚µ‚Ä‚à‚æ‚¢
+,EL.LATEST_HIGH_EVENT.NOTE,uint16_t,(uint16_t)EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL_HIGH@@ 0)->note,PACKET,169,0,16,NONE,,,,,,,,,u8ã«ã—ã¦ã‚‚ã‚ˆã„
 ,EH.LOG_TABLE.RESPOND_COUNTER,uint32_t,event_handler->log_table.respond_counter,PACKET,171,0,32,NONE,,,,,,,,,
-,OBC_GS_CMD_ERR_COUNTER,uint8_t,(uint8_t)(gs_command_dispatcher->error_counter),PACKET,175,0,8,NONE,,,,,,,,ƒAƒmƒ}ƒŠ‘Î‰ž”­¶‰ñ”,
+,OBC_GS_CMD_ERR_COUNTER,uint8_t,(uint8_t)(gs_command_dispatcher->error_counter),PACKET,175,0,8,NONE,,,,,,,,ã‚¢ãƒŽãƒžãƒªå¯¾å¿œç™ºç”Ÿå›žæ•°,
 ,GIT_REV_CORE,uint32_t,GIT_REV_CORE_SHORT,PACKET,176,0,32,HEX,,,,,,,,,
 ,GIT_REV_USER,uint32_t,GIT_REV_USER_SHORT,PACKET,180,0,32,HEX,,,,,,,,,
-,BCT_BLK_PTR,uint8_t,(uint8_t)(block_command_table->pos.block),PACKET,184,0,8,NONE,,,,,,,,BCT ƒuƒƒbƒNƒ|ƒCƒ“ƒ^,
-,BCT_CMD_PTR,uint8_t,(uint8_t)(block_command_table->pos.cmd),PACKET,185,0,8,NONE,,,,,,,,BCT ƒRƒ}ƒ“ƒhƒ|ƒCƒ“ƒ^,
-,BCT_REGD_TIME,uint32_t,((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,186,0,32,NONE,,,,,,,,BCT “o˜^ƒRƒ}ƒ“ƒhŽž,
-,BCT_REGD_ID,uint16_t,(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,190,0,16,NONE,,,,,,,,BCT “o˜^ƒRƒ}ƒ“ƒhID,
+,BCT_BLK_PTR,uint8_t,(uint8_t)(block_command_table->pos.block),PACKET,184,0,8,NONE,,,,,,,,BCT ãƒ–ãƒ­ãƒƒã‚¯ãƒã‚¤ãƒ³ã‚¿,
+,BCT_CMD_PTR,uint8_t,(uint8_t)(block_command_table->pos.cmd),PACKET,185,0,8,NONE,,,,,,,,BCT ã‚³ãƒžãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿,
+,BCT_REGD_TIME,uint32_t,((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,186,0,32,NONE,,,,,,,,BCT ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰æ™‚åˆ»,
+,BCT_REGD_ID,uint16_t,(uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block@@ (uint8_t)(block_command_table->pos.cmd-1))),PACKET,190,0,16,NONE,,,,,,,,BCT ç™»éŒ²ã‚³ãƒžãƒ³ãƒ‰ID,
 ,DUMMY_DATA1,uint32_t,0,PACKET,192,0,32,NONE,,,,,,,,,
 ,DUMMY_DATA2,uint32_t,0,PACKET,196,0,32,NONE,,,,,,,,,
 ,DUMMY_DATA3,uint32_t,0,PACKET,200,0,32,NONE,,,,,,,,,
