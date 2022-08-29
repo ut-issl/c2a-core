@@ -4,8 +4,8 @@
 ,,,,
 ,,,,
 ,,,,
-,割り当てテーブル,,,
-,系,個数,開始ID,終了ID
+,蜑ｲ繧雁ｽ薙※繝�繝ｼ繝悶Ν,,,
+,邉ｻ,蛟区焚,髢句ｧ紀D,邨ゆｺ�ID
 ,C2A_CORE,=16*16,=DEC2HEX(0@@ 4),=DEC2HEX(HEX2DEC(D9)+C9-1@@ 4)
 ,CDH,=16*16,=DEC2HEX(HEX2DEC(E9)+1@@ 4),=DEC2HEX(HEX2DEC(D10)+C10-1@@ 4)
 ,POWER,96,=DEC2HEX(HEX2DEC(E10)+1@@ 4),=DEC2HEX(HEX2DEC(D11)+C11-1@@ 4)
