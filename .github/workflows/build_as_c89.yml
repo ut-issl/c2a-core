@@ -25,14 +25,20 @@ jobs:
           "Werror"
           "Wextra"
           )
+          examples=(
+          "minimum_user"
+          "2nd_obc_user"
+          )
           echo "[" > tmp
-          for c in "${compiler[@]}"; do
-            for w in "${warning[@]}"; do
-              if [ "$c" == "gcc" ] && [ "$w" == "Werror" ]; then
-                continue
-              fi
-              echo "{ \"compiler\": \"${c}\", \"warning\": \"${w}\" }" >> tmp
-              echo "," >> tmp
+          for e in "${examples[@]}"; do
+            for c in "${compiler[@]}"; do
+              for w in "${warning[@]}"; do
+                if [ "$c" == "gcc" ] && [ "$w" == "Werror" ]; then
+                  continue
+                fi
+                echo "{ \"compiler\": \"${c}\", \"warning\": \"${w}\", \"example\": \"${e}\" }" >> tmp
+                echo "," >> tmp
+              done
             done
           done
           sed -i -e '$d' tmp # remove final comma
@@ -41,7 +47,7 @@ jobs:
           jq < tmp
           echo "::set-output name=matrix::{\"include\": $(cat tmp) }"
 
-  build_minimum_user_as_c89:
+  build_examples_as_c89:
     runs-on: ubuntu-latest
     needs: gen_build_matrix
     strategy:
@@ -80,7 +86,7 @@ jobs:
           echo "::set-output name=WEXTRA::${WEXTRA}"
 
       - name: cmake
-        working-directory: ./Examples/minimum_user
+        working-directory: ./Examples/${{ matrix.example }}
         env:
           CC: ${{ matrix.compiler }}
         run: |
@@ -92,12 +98,12 @@ jobs:
       - name: build
         id: build
         continue-on-error: ${{ matrix.compiler == 'clang' }}
-        working-directory: ./Examples/minimum_user/build
+        working-directory: ./Examples/${{ matrix.example }}/build
         run: cmake --build .
 
       - name: run
         if: steps.build.outcome == 'success'
-        working-directory: ./Examples/minimum_user/build
+        working-directory: ./Examples/${{ matrix.example }}/build
         shell: bash
         run: timeout 3 ./C2A || exit 0
 
@@ -112,22 +118,22 @@ jobs:
 
       - name: clang-tidy
         if: matrix.compiler == 'clang'
-        working-directory: ./Examples/minimum_user/build
+        working-directory: ./Examples/${{ matrix.example }}/build
         run: |
           run-clang-tidy-11 \
             | sed 's/\/home\/runner\/work\/c2a-core\/c2a-core\///g' \
-            | sed 's/Examples\/minimum_user\/src\/src_core\///g' \
+            | sed 's/Examples\/${{ matrix.example }}\/src\/src_core\///g' \
             > clang_tidy.log
 
       - name: clang-tidy result
         if: matrix.compiler == 'clang'
-        working-directory: ./Examples/minimum_user/build
+        working-directory: ./Examples/${{ matrix.example }}/build
         run: cat clang_tidy.log
 
       - name: remove duplicate error
         if: matrix.compiler == 'clang'
         run: |
-          python Script/CI/remove_duplicate_error.py ./Examples/minimum_user/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
+          python Script/CI/remove_duplicate_error.py ./Examples/${{ matrix.example }}/build/clang_tidy.log "clang-tidy" | tee clang_tidy.log
 
       - name: reviewdog clang-tidy (github-pr-review)
         if: matrix.compiler == 'clang' && matrix.warning == 'Werror'
