@@ -47,7 +47,7 @@ Common Packet ほどリッチな情報をやり取りしない通信に用いる
 
 現在は Ver.1 のみ策定されており，その定義は以下を参照すること．
 
-https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950b/Drivers/Protocol/eb90_packet_for_driver_super.h#L1-L25
+https://github.com/ut-issl/c2a-core/blob/9f5154ddc5684f8e626b77c8f8bc7c8215c0e096/Drivers/Protocol/eb90_packet_for_driver_super.h#L1-L25
 
 #### 各フィールドの説明
 - Version ID
@@ -68,7 +68,7 @@ https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950
 UART などで接続されたコンポーネント間の通信といった，軽微な通信ノイズの誤り検出のみ必要な場合に用いる．
 ネットワーク層として EB90 Packet や Common Packet などが標準的に使用される．
 
-https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950b/Drivers/Protocol/eb90_frame_for_driver_super.h#L1-L33
+https://github.com/ut-issl/c2a-core/blob/9f5154ddc5684f8e626b77c8f8bc7c8215c0e096/Drivers/Protocol/eb90_frame_for_driver_super.h#L1-L33
 
 #### 各フィールドの説明
 - STX
@@ -106,8 +106,8 @@ C2A 間通信によって，以下のような機能が提供される．
 C2A 間通信の具体的な実装については，本リポジトリに同封されている User Sample である [`Examples/minimum_user`](/Examples/minimum_user) と [`Examples/2nd_obc_user`](/Examples/2nd_obc_user) での通信（前者が MOBC，後者が AOBC を想定）を参考にされたい．
 具体的なドライバのコードは以下となる．
 
-- https://github.com/ut-issl/c2a-core/blob/2bf20f854d4201bd7ff45e88515ae72ee0418288/Examples/minimum_user/src/src_user/Drivers/Aocs/aobc.c#L1-L164
-- https://github.com/ut-issl/c2a-core/blob/2bf20f854d4201bd7ff45e88515ae72ee0418288/Examples/2nd_obc_user/src/src_user/Drivers/Etc/mobc.c#L1-L150
+- https://github.com/ut-issl/c2a-core/blob/9f5154ddc5684f8e626b77c8f8bc7c8215c0e096/Examples/minimum_user/src/src_user/Drivers/Aocs/aobc.c#L1-L164
+- https://github.com/ut-issl/c2a-core/blob/9f5154ddc5684f8e626b77c8f8bc7c8215c0e096/Examples/2nd_obc_user/src/src_user/Drivers/Etc/mobc.c#L1-L150
 
 地上局からのコマンドルーティングについては [Core Layer/Communication#コマンド配送におけるルーティングについて](../Core/communication.md#コマンド配送におけるルーティングについて) などを参照すること．
 
