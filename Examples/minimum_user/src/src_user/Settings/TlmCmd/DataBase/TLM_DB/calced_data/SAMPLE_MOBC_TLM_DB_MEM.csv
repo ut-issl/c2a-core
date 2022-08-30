@@ -4,7 +4,7 @@
 ,IsRestricted,FALSE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,,,,,,,Description,Note
-,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (��a_i * x^i),,,,,,Status,,
+,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (Σa_i * x^i),,,,,,Status,,
 ,,,,,Octet%%##Pos.,bit%%##Pos.,bit%%##Len.,,a0,a1,a2,a3,a4,a5,,,
 ,PH.VER,uint16_t,,PACKET,0,0,3,NONE,,,,,,,,,
 ,PH.TYPE,,,PACKET,0,3,1,NONE,,,,,,,,,
@@ -20,13 +20,13 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,SH.ON_BOARD_SUBNET_TIME,uint32_t,,PACKET,20,0,32,NONE,,,,,,,,,
 ,SH.DEST_FLAGS,uint8_t,,PACKET,24,0,8,HEX,,,,,,,,,
 ,SH.DR_PARTITION,uint8_t,,PACKET,25,0,8,NONE,,,,,,,,,
-,MEM.BEGIN,uint32_t,memory_dump->begin,PACKET,26,0,32,HEX,,,,,,,,����������̈�J�n�A�h���X,
-,MEM.END,uint32_t,memory_dump->end,PACKET,30,0,32,HEX,,,,,,,,����������̈�I�[�A�h���X,
-,MEM.ADU_SIZE,uint32_t,memory_dump->adu_size,PACKET,34,0,32,NONE,,,,,,,,����������̈�T�C�Y = ADU�T�C�Y,CCSDS�p�P�b�g�w�b�_�ɐݒ肳���
-,MEM.ADU_SEQ,uint16_t,memory_dump->adu_seq,PACKET,38,0,16,NONE,,,,,,,,ADU�V�[�P���X�J�E���^,CCSDS�p�P�b�g�w�b�_�ɐݒ肳���
-,MEM.ADU_COUNTER,uint8_t,memory_dump->adu_counter,PACKET,40,0,8,NONE,,,,,,,,ADU�J�E���^,CCSDS�p�P�b�g�w�b�_�ɐݒ肳���
-,MEM.DESTINATION,uint32_t,memory_dump->dest,PACKET,41,0,32,HEX,,,,,,,,�R�s�[��A�h���X,
-,MEM.RP,uint32_t,memory_dump->rp,PACKET,45,0,32,HEX,,,,,,,,�R�[�s�[�pRP,
+,MEM.BEGIN,uint32_t,memory_dump->begin,PACKET,26,0,32,HEX,,,,,,,,メモリ操作領域開始アドレス,
+,MEM.END,uint32_t,memory_dump->end,PACKET,30,0,32,HEX,,,,,,,,メモリ操作領域終端アドレス,
+,MEM.ADU_SIZE,uint32_t,memory_dump->adu_size,PACKET,34,0,32,NONE,,,,,,,,メモリ操作領域サイズ = ADUサイズ,CCSDSパケットヘッダに設定される
+,MEM.ADU_SEQ,uint16_t,memory_dump->adu_seq,PACKET,38,0,16,NONE,,,,,,,,ADUシーケンスカウンタ,CCSDSパケットヘッダに設定される
+,MEM.ADU_COUNTER,uint8_t,memory_dump->adu_counter,PACKET,40,0,8,NONE,,,,,,,,ADUカウンタ,CCSDSパケットヘッダに設定される
+,MEM.DESTINATION,uint32_t,memory_dump->dest,PACKET,41,0,32,HEX,,,,,,,,コピー先アドレス,
+,MEM.RP,uint32_t,memory_dump->rp,PACKET,45,0,32,HEX,,,,,,,,コーピー用RP,
 ,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
