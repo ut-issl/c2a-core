@@ -23,7 +23,7 @@ C2A 標準として， Space Packet が Core 内で定義されており，基�
 
 
 ## C2A 標準 Space Packet 定義
-C2A 標準 Space Packet は，CCSDS の Space Packet に準拠したものである．
+C2A 標準 Space Packet は，CCSDS の Space Packet に準拠したものである（参考: [CCSDS SPACE PACKET PROTOCOL](https://public.ccsds.org/Pubs/133x0b2e1.pdf)）．
 CCSDS Space Packet において， Secondary Header はユーザー定義とされており， C2A 用に Secondary Header がカスタムされたものが C2A 標準 Space Packet である．
 
 現在，C2A 標準 Space Packet として，テレメパケット，コマンドパケットともに， Ver.1 のみ策定している．  

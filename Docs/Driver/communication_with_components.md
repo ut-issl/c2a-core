@@ -32,7 +32,7 @@ C2A では，CCSDS に準拠した地上局との通信では，それに準拠�
 ### Common Packet
 [Core Layer/Communication](../Core/communication.md) を参照のこと．
 
-### FB90 Packet
+### EB90 Packet
 Common Packet ほどリッチな情報をやり取りしない通信に用いる．
 したがって， User Data Field 以外の Header には，
 
@@ -64,7 +64,7 @@ https://github.com/ut-issl/c2a-core/blob/182c8d9ca7f67169aebf0756f4928ff51302950
 
 
 ## データリンク層 (Frame)
-### FB90 Frame
+### EB90 Frame
 UART などで接続されたコンポーネント間の通信といった，軽微な通信ノイズの誤り検出のみ必要な場合に用いる．
 ネットワーク層として EB90 Packet や Common Packet などが標準的に使用される．
 
