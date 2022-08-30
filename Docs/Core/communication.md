@@ -52,6 +52,7 @@ https://github.com/ut-issl/c2a-core/blob/217c3156a07ec503cd60fc7b75978a3234ec2c5
         - 以下は CCSDS で規定
             - `0b11111111000` - `0b11111111110`: CCSDS Reserved
             - `0b11111111111`: Idle Packet
+- Packet Sequence Control Field
     - Sequence Flag
         - `0b00`: Continuation component of higher data structure
         - `0b01`: First component of higher data structure
@@ -59,9 +60,9 @@ https://github.com/ut-issl/c2a-core/blob/217c3156a07ec503cd60fc7b75978a3234ec2c5
         - `0b11`: Standalone Packet
     - Sequence Count
         - APID ごとにパケットの伝送順番を示すカウンタ
-    - Packet Data Length
-        - パケット全長から Primary Header 長を引き，さらに 1 を引いたもの
-        - つまり，これが 0 の時， Secondary Header + User Data Field 長は 1 byte である
+- Packet Data Length
+    - パケット全長から Primary Header 長を引き，さらに 1 を引いたもの
+    - つまり，これが 0 の時， Secondary Header + User Data Field 長は 1 byte である
 
 
 ### Secondary Header (Telemetry)
