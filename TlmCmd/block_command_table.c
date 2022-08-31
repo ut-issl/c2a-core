@@ -391,7 +391,7 @@ CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   case BCT_INVALID_BLOCK_NO:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   case BCT_INVALID_CMD_NO:
     return CCP_EXEC_CMD_NOT_DEFINED;
@@ -400,13 +400,13 @@ CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
     return CCP_EXEC_ILLEGAL_CONTEXT;
 
   case BCT_CMD_TOO_LONG:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   case BCT_BC_FULL:
     return CCP_EXEC_ILLEGAL_CONTEXT;
 
   case BCT_ZERO_PERIOD:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   default:
     return CCP_EXEC_UNKNOWN;
@@ -519,7 +519,7 @@ CCP_CmdRet Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
   cycle_t ti;
   uint8_t num_nop = CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  if (num_nop > 10 || num_nop < 1) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (num_nop > 10 || num_nop < 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   if (block_command_table_.pos.cmd + num_nop != 10) return CCP_EXEC_ILLEGAL_CONTEXT;
 
   for (ti = 11 - (cycle_t)num_nop; ti < 11; ++ti)

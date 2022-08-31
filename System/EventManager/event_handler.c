@@ -1520,7 +1520,7 @@ CCP_CmdRet Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
   case EH_REGISTER_ACK_ILLEGAL_BCT_ID:
   case EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG:
   case EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL:
-    return CCP_EXEC_ILLEGAL_PARAMETER;    // 正確にはこのコマンドのパラメタではないが．．．
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);    // 正確にはこのコマンドのパラメタではないが．．．
   case EH_REGISTER_ACK_ERR_FULL:
   case EH_REGISTER_ACK_ERR_RULE_OVERWRITE:
   case EH_REGISTER_ACK_ERR_DUPLICATE_FULL:
@@ -1542,7 +1542,7 @@ CCP_CmdRet Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
   case EH_RULE_SORTED_INDEX_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_RULE_SORTED_INDEX_ACK_NOT_FOUND:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1561,7 +1561,7 @@ CCP_CmdRet Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1580,7 +1580,7 @@ CCP_CmdRet Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1599,7 +1599,7 @@ CCP_CmdRet Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1618,7 +1618,7 @@ CCP_CmdRet Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1637,7 +1637,7 @@ CCP_CmdRet Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1656,7 +1656,7 @@ CCP_CmdRet Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1676,7 +1676,7 @@ CCP_CmdRet Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1695,7 +1695,7 @@ CCP_CmdRet Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   default:
@@ -1747,7 +1747,7 @@ CCP_CmdRet Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   event_handler_.tlm_info.rule.page_no = page;
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -1756,7 +1756,7 @@ CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   event_handler_.tlm_info.rule_sorted_index.page_no = page;
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -1765,7 +1765,7 @@ CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* pac
 CCP_CmdRet Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (page >= EH_LOG_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (page >= EH_LOG_TLM_PAGE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   event_handler_.tlm_info.log.page_no = page;
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -1777,7 +1777,7 @@ CCP_CmdRet Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* pac
 
   if (EH_check_rule_id_(rule_id) == EH_CHECK_RULE_ACK_INVALID_RULE_ID)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   event_handler_.tlm_info.rule.target_rule_id = rule_id;

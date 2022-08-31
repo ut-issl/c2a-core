@@ -35,7 +35,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // ctp の ヘッダ部分の APID をクリア
@@ -51,7 +51,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
                              TSP_MAX_LEN);
 
   // 範囲外のTLM IDを除外
-  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
 
   // Header

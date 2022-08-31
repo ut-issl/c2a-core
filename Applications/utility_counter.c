@@ -74,7 +74,7 @@ CCP_CmdRet Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
@@ -100,7 +100,7 @@ CCP_CmdRet Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -120,12 +120,12 @@ CCP_CmdRet Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
     if (utility_counter_.cnt[index].anomaly_active > 1)
     {
       utility_counter_.cnt[index].anomaly_active = 0;
-      return CCP_EXEC_ILLEGAL_PARAMETER;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     }
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

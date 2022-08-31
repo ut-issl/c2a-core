@@ -78,7 +78,7 @@ CCP_CmdRet Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
   if (span > MEM_MAX_SPAN)
   {
     // 指定ダンプ幅が最大量を超えている場合は異常終了。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   memory_dump_.begin = begin;
@@ -109,7 +109,7 @@ CCP_CmdRet Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   return MEM_dump_region_(category, num_dumps);
@@ -131,7 +131,7 @@ CCP_CmdRet Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   endian_memcpy(&adu_seq, param + 2, 2);
@@ -169,7 +169,7 @@ CCP_CmdRet Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   endian_memcpy(&start_addr, param + 2, 4);
@@ -231,7 +231,7 @@ CCP_CmdRet Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
   {
     // 宛先アドレスが領域内部に含まれる場合。
     // これを認めると処理が複雑になるので禁止する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // 宛先アドレスを設定し、RPを領域先頭に合わせる。

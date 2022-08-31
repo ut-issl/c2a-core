@@ -514,7 +514,7 @@ CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
   if (interval == 0 || block >= BCT_MAX_BLOCKS)
   {
     // 0で割りに行くのでここではじく
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   bc_exe_params = BCE_get_bc_exe_params_(block);

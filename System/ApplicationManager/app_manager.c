@@ -79,7 +79,7 @@ CCP_CmdRet Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
   case AM_SUCCESS:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
@@ -98,7 +98,7 @@ CCP_CmdRet Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
   case AM_NOT_REGISTERED:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
@@ -152,7 +152,7 @@ CCP_CmdRet Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
   case AM_NOT_REGISTERED:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
@@ -215,7 +215,7 @@ CCP_CmdRet Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= AM_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   app_manager_.page_no = page;

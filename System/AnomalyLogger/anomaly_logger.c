@@ -162,7 +162,7 @@ CCP_CmdRet Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= AL_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   anomaly_logger_.page_no = page;
@@ -201,7 +201,7 @@ CCP_CmdRet Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   ret = AL_enable_logging_(group);
@@ -227,7 +227,7 @@ CCP_CmdRet Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   ret = AL_disable_logging_(group);

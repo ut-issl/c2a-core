@@ -94,12 +94,12 @@ CCP_CmdRet Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
     }
      else
       {
-        return CCP_EXEC_ILLEGAL_PARAMETER;
+        return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
       }
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -120,7 +120,7 @@ CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

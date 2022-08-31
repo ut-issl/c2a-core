@@ -269,12 +269,12 @@ CCP_CmdRet Cmd_AH_REGISTER_RULE(const CommonCmdPacket* packet)
   else if (param[ID] >= AH_MAX_RULES)
   {
     // 登録指定位置が許容範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
   else if (param[COND] > AH_CUMULATE)
   {
     // 判定条件が定義されたものと一致しない
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   ahr.code.group = (uint32_t)param[GROUP];
@@ -306,7 +306,7 @@ CCP_CmdRet Cmd_AH_ACTIVATE_RULE(const CommonCmdPacket* packet)
   if (id >= AH_MAX_RULES)
   {
     // 指定位置が範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   AH_activate_rule(id);
@@ -330,7 +330,7 @@ CCP_CmdRet Cmd_AH_INACTIVATE_RULE(const CommonCmdPacket* packet)
   if (id >= AH_MAX_RULES)
   {
     // 指定位置が範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   AH_inactivate_rule(id);
@@ -375,7 +375,7 @@ CCP_CmdRet Cmd_AH_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= AH_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   anomaly_handler_.page_no = page;
@@ -412,7 +412,7 @@ CCP_CmdRet Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= AH_LOG_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   AH_respond_log_.page_no = page;

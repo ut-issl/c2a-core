@@ -204,7 +204,7 @@ CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
   if (cmd_code >= CA_MAX_CMDS)
   {
     // 登録指定位置がコマンド数上限を超えている場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // ローレベルコマンドなので，アサーションしない
@@ -225,7 +225,7 @@ CCP_CmdRet Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= CA_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   command_analyze_.tlm_page_no = page;

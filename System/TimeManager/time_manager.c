@@ -239,7 +239,7 @@ static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
   case TMGR_ACK_OK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case TMGR_ACK_PARAM_ERR:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
@@ -261,9 +261,9 @@ CCP_CmdRet Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
   step_t step = CCP_get_param_from_packet(packet, 2, cycle_t);
   TMGR_ACK ack;
 
-  if (unixtime < 0) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (total_cycle >= OBCT_MAX_CYCLE) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (step >= OBCT_STEPS_PER_CYCLE) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (unixtime < 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (total_cycle >= OBCT_MAX_CYCLE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (step >= OBCT_STEPS_PER_CYCLE) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   time.total_cycle = total_cycle;
   time.step = step;
