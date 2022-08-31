@@ -285,7 +285,7 @@ CCP_CmdRet Cmd_AH_REGISTER_RULE(const CommonCmdPacket* packet)
 
   AH_add_rule_((size_t)param[ID], &ahr);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -310,7 +310,7 @@ CCP_CmdRet Cmd_AH_ACTIVATE_RULE(const CommonCmdPacket* packet)
   }
 
   AH_activate_rule(id);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -334,7 +334,7 @@ CCP_CmdRet Cmd_AH_INACTIVATE_RULE(const CommonCmdPacket* packet)
   }
 
   AH_inactivate_rule(id);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -348,7 +348,7 @@ CCP_CmdRet Cmd_AH_CLEAR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
   AH_clear_log_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -379,7 +379,7 @@ CCP_CmdRet Cmd_AH_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   anomaly_handler_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -399,7 +399,7 @@ CCP_CmdRet Cmd_AHRES_LOG_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
   AH_respond_log_clear();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -416,7 +416,7 @@ CCP_CmdRet Cmd_AHRES_LOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   AH_respond_log_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

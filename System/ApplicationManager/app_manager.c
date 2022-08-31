@@ -77,7 +77,7 @@ CCP_CmdRet Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
   switch (AM_register_ai(id, &ai))
   {
   case AM_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -96,7 +96,7 @@ CCP_CmdRet Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
   {
   case AM_SUCCESS:
   case AM_NOT_REGISTERED:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -149,7 +149,7 @@ CCP_CmdRet Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
   switch (AM_execute_app_(id))
   {
   case AM_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
   case AM_NOT_REGISTERED:
     return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -219,7 +219,7 @@ CCP_CmdRet Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   app_manager_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
@@ -234,7 +234,7 @@ CCP_CmdRet Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
     app_manager_.ais[i].min  = 0xffffffff;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

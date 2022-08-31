@@ -237,7 +237,7 @@ static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
   switch (ack)
   {
   case TMGR_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case TMGR_ACK_PARAM_ERR:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -295,7 +295,7 @@ CCP_CmdRet Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
   (void)packet;
   TMGR_set_cycle_correction_(1.0);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet)
@@ -303,7 +303,7 @@ CCP_CmdRet Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet)
   (void)packet;
   TMGR_clear_unixtime_info();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

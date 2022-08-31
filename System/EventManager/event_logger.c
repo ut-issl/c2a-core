@@ -752,7 +752,7 @@ CCP_CmdRet Cmd_EL_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_initialize();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -771,7 +771,7 @@ CCP_CmdRet Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet)
   EL_clear_latest_event_();
   EL_clear_statistics_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -790,7 +790,7 @@ CCP_CmdRet Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet)
   EL_clear_clog_(err_level);
 #endif
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -798,7 +798,7 @@ CCP_CmdRet Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_clear_statistics_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -812,7 +812,7 @@ CCP_CmdRet Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet)
 
   EL_clear_tlog_(err_level);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 
@@ -827,7 +827,7 @@ CCP_CmdRet Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet)
 
   EL_clear_clog_(err_level);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 
@@ -844,10 +844,10 @@ CCP_CmdRet Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EL_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EL_ACK_TLOG_FULL:
     // 要検討だが，これは正常ではあるのでこれでよし
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EL_ACK_ILLEGAL_GROUP:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   case EL_ACK_ILLEGAL_ERROR_LEVEL:
@@ -894,7 +894,7 @@ CCP_CmdRet Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   event_logger_.tlm_info.tlog.page_no = page_no;
   event_logger_.tlm_info.tlog.err_level = err_level;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 
@@ -933,7 +933,7 @@ CCP_CmdRet Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   event_logger_.tlm_info.clog.page_no = page_no;
   event_logger_.tlm_info.clog.err_level = err_level;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 
@@ -943,7 +943,7 @@ CCP_CmdRet Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet)
   (void)packet;
   EL_enable_all_logging();
   EL_load_default_settings();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -956,7 +956,7 @@ CCP_CmdRet Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EL_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EL_ACK_ILLEGAL_GROUP:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -974,7 +974,7 @@ CCP_CmdRet Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EL_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EL_ACK_ILLEGAL_GROUP:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -987,7 +987,7 @@ CCP_CmdRet Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_all_logging();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -995,7 +995,7 @@ CCP_CmdRet Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_disable_all_logging();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -1009,7 +1009,7 @@ CCP_CmdRet Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EL_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EL_ACK_ILLEGAL_ERROR_LEVEL:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -1027,7 +1027,7 @@ CCP_CmdRet Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EL_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EL_ACK_ILLEGAL_ERROR_LEVEL:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   default:
@@ -1040,7 +1040,7 @@ CCP_CmdRet Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_enable_tlog_overwrite_all();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -1048,7 +1048,7 @@ CCP_CmdRet Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EL_disable_tlog_overwrite_all();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 

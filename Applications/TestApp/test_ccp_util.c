@@ -14,7 +14,7 @@ CCP_CmdRet Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet)
   PH_ACK ack = CCP_register_tlc_asap(ti, TLCD_ID_FROM_GS, Cmd_CODE_NOP, NULL, 0);
   if (ack != PH_ACK_TLC_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TEST_CCP_GET_RAW_PARAM_INFO(const CommonCmdPacket* packet)
@@ -38,7 +38,7 @@ CCP_CmdRet Cmd_TEST_CCP_GET_RAW_PARAM_INFO(const CommonCmdPacket* packet)
   if (len == 0)
   {
     // raw param なし
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 
   data = CCP_get_raw_param_head(packet);
@@ -47,7 +47,7 @@ CCP_CmdRet Cmd_TEST_CCP_GET_RAW_PARAM_INFO(const CommonCmdPacket* packet)
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

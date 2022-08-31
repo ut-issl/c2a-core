@@ -76,7 +76,7 @@ CCP_CmdRet Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
 }
 
@@ -102,7 +102,7 @@ CCP_CmdRet Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
@@ -127,7 +127,7 @@ CCP_CmdRet Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #endif

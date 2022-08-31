@@ -291,7 +291,7 @@ CCP_CmdRet Cmd_DCU_ABORT_CMD(const CommonCmdPacket* packet)
 
   DCU_abort_cmd(target_cmd);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -302,7 +302,7 @@ CCP_CmdRet Cmd_DCU_DOWN_ABORT_FLAG(const CommonCmdPacket* packet)
 
   DCU_donw_abort_flag(target_cmd);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -312,7 +312,7 @@ CCP_CmdRet Cmd_DCU_CLEAR_LOG(const CommonCmdPacket* packet)
 
   DCU_clear_log_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

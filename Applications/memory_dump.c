@@ -89,7 +89,7 @@ CCP_CmdRet Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
   // 領域設定1回毎に独立したADUカウント値を割り当てる。
   memory_dump_.adu_counter = MEM_get_next_adu_counter_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // FIXME: CTCP 大改修が終わったら直す
@@ -197,7 +197,7 @@ CCP_CmdRet Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
   // 生成したパケットを送出
   MEM_send_packet_(&MEM_ctp_, num_dumps);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 
@@ -217,7 +217,7 @@ CCP_CmdRet Cmd_MEM_LOAD(const CommonCmdPacket* packet)
 
   // 指定した開始アドレスから始まる領域にデータを書き込み
   memcpy((void*)start_addr, &(param[4]), data_len);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
@@ -237,7 +237,7 @@ CCP_CmdRet Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
   // 宛先アドレスを設定し、RPを領域先頭に合わせる。
   memory_dump_.dest = dest;
   memory_dump_.rp = memory_dump_.begin;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
@@ -249,7 +249,7 @@ CCP_CmdRet Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
   {
     // 既に領域全体の読み出しが完了している場合。
     // 処理は行わず正常終了する。
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 
   // パラメータ読み出し。
@@ -268,7 +268,7 @@ CCP_CmdRet Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
   // 指定されたコピー幅だけ領域をコピーし、RPを更新。
   memcpy((uint8_t*)wp, (const uint8_t*)memory_dump_.rp, copy_width);
   memory_dump_.rp += copy_width;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static uint8_t MEM_get_next_adu_counter_(void)
@@ -295,11 +295,11 @@ static CCP_EXEC_STS MEM_dump_region_(uint8_t category,
     // 生成したパケットを送出し、ADU Sequence Counterの値を更新
     MEM_send_packet_(&MEM_ctp_, num_dumps);
     ++memory_dump_.adu_seq;
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   case MEM_NO_DATA:
     // すでに全領域ダンプ済みなら何もせず終了
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   default:
     // それ以外のエラーはないはず

@@ -197,7 +197,7 @@ CCP_CmdRet Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
   }
 
   CDIS_clear_command_list(&timeline_command_dispatcher_.dispatcher[id]);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
@@ -213,7 +213,7 @@ CCP_CmdRet Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
 
   if (TLCD_drop_tl_cmd_at_(id, time) == PH_ACK_SUCCESS)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
@@ -283,7 +283,7 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
@@ -298,7 +298,7 @@ CCP_CmdRet Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 
   // 当該コマンド処理機能のエラー記録を解除。
   CDIS_clear_error_status(&timeline_command_dispatcher_.dispatcher[id]);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
@@ -320,7 +320,7 @@ CCP_CmdRet Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 
   // 異常時実行中断フラグを設定
   timeline_command_dispatcher_.dispatcher[id].stop_on_error = flag;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
@@ -342,7 +342,7 @@ CCP_CmdRet Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 
   // コマンド実行フラグを設定。
   timeline_command_dispatcher_.dispatcher[id].lockout = flag;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
@@ -357,7 +357,7 @@ CCP_CmdRet Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
 
   timeline_command_dispatcher_.tlm_info_.id = id;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
@@ -371,7 +371,7 @@ CCP_CmdRet Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   timeline_command_dispatcher_.tlm_info_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

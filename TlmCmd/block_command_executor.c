@@ -239,7 +239,7 @@ static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
   if (bc_exe_params->rotate.counter < bc_exe_params->rotate.interval)
   {
     BCE_set_bc_exe_params_(block, bc_exe_params);
-    return CCP_EXEC_SUCCESS; // スキップ
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS); // スキップ
   }
 
   bc_exe_params->rotate.counter = 0;
@@ -295,7 +295,7 @@ static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
     if (ack != CCP_EXEC_SUCCESS) return ack;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // 2019/10/01 追加
@@ -375,14 +375,14 @@ static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
       }
 
       BCE_set_bc_exe_params_(block, bc_exe_params);
-      return CCP_EXEC_SUCCESS;    // 異常ではないのでこれを返す
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);    // 異常ではないのでこれを返す
     }
   }
 
   BCE_set_bc_exe_params_(block, bc_exe_params);
 
   // 最後まで実行できた
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 BCT_ACK BCE_reset_rotator_info(const bct_id_t block)
@@ -521,7 +521,7 @@ CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
   bc_exe_params->rotate.interval = interval;
   BCE_set_bc_exe_params_(block, bc_exe_params);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

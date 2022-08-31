@@ -388,7 +388,7 @@ CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
   switch (ack)
   {
   case BCT_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   case BCT_INVALID_BLOCK_NO:
     return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -508,7 +508,7 @@ CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   CCP_form_tlc((CommonCmdPacket*)&new_bct_cmddata, ti, cmd_id, new_cmd_param, cmd_param_len);
   BCT_overwrite_cmd(&pos, (CommonCmdPacket*)&new_bct_cmddata);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // 長さ 10 の BC に NOP を登録するコマンド. 使用前提が狭すぎるか??
@@ -528,7 +528,7 @@ CCP_CmdRet Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
     BCT_register_cmd(&temp_packet_);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

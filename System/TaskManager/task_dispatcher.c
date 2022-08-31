@@ -192,7 +192,7 @@ CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
   switch (ack)
   {
   case TDSP_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case TDSP_INVAILD_BCT_ID:
     return CCP_EXEC_ILLEGAL_PARAMETER;
   case TDSP_INACTIVE_BCT_ID:

@@ -49,7 +49,7 @@ CCP_CmdRet Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 
   // 記録されたエラー情報をクリア
   CDIS_clear_error_status(&gs_command_dispatcher_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

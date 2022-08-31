@@ -101,7 +101,7 @@ CCP_CmdRet Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
@@ -122,14 +122,14 @@ CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_PARAMETER;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
   UTIL_CMD_reset_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

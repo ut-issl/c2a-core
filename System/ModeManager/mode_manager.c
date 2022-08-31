@@ -104,7 +104,7 @@ CCP_CmdRet Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
@@ -157,7 +157,7 @@ CCP_CmdRet Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 MM_ACK MM_set_transition_table(MD_MODEID from,
@@ -203,7 +203,7 @@ CCP_CmdRet Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static MM_ACK MM_start_transition_(MD_MODEID id)
@@ -267,7 +267,7 @@ CCP_CmdRet Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
   {
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static MM_ACK MM_finish_transition_(void)
@@ -317,7 +317,7 @@ CCP_CmdRet Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)
   (void)packet;
   MM_update_transition_table_for_tlm();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 uint16_t MM_update_transition_table_for_tlm(void)

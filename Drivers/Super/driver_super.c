@@ -1694,7 +1694,7 @@ CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
   default:
     // ここに来るのは以下
     // DS_DRIVER_ERR_CODE_OK
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 }
 
@@ -1716,7 +1716,7 @@ CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code)
     // DS_CMD_UNKNOWN_ERR
     // 下２つのエラーはDriver側の問題で，そちらでエラー情報を持つべき
     // ここでは SUCCESSを返す
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 }
 

@@ -61,7 +61,7 @@ CCP_CmdRet Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
 
   if (ret == AL_ADD_SUCCESS)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
@@ -124,7 +124,7 @@ CCP_CmdRet Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_clear();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // こいつは，AHからも呼ばれるので注意！
@@ -166,7 +166,7 @@ CCP_CmdRet Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   anomaly_logger_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -177,7 +177,7 @@ CCP_CmdRet Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_init_logging_ena_flag_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static void AL_init_logging_ena_flag_(void)
@@ -208,7 +208,7 @@ CCP_CmdRet Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 
   if (ret == 0)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
@@ -234,7 +234,7 @@ CCP_CmdRet Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 
   if (ret == 0)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
@@ -319,7 +319,7 @@ CCP_CmdRet Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
   endian_memcpy(&thres, param, 2);
 
   anomaly_logger_.threshold_of_nearly_full = thres;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

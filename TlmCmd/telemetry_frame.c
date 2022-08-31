@@ -103,7 +103,7 @@ CCP_CmdRet Cmd_TF_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   TF_initialize();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
@@ -118,7 +118,7 @@ CCP_CmdRet Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
   }
 
   telemetry_frame_.tlm_table[tlm_id].tlm_func = (TF_TLM_FUNC_ACK (*)(uint8_t*, uint16_t*, uint16_t))tlm_func;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
@@ -132,7 +132,7 @@ CCP_CmdRet Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   telemetry_frame_.tlm_page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

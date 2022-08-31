@@ -184,7 +184,7 @@ CCP_CmdRet Cmd_CA_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   CA_initialize();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
@@ -215,7 +215,7 @@ CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
     command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.second = param_size_infos[i] & 0x0f;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
@@ -229,7 +229,7 @@ CCP_CmdRet Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   }
 
   command_analyze_.tlm_page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

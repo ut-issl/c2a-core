@@ -74,7 +74,7 @@ CCP_CmdRet Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet)
 
   UART_TEST_init_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -84,7 +84,7 @@ CCP_CmdRet Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet)
 
   UART_TEST_update_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

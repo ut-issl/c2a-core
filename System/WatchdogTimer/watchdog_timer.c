@@ -48,7 +48,7 @@ CCP_CmdRet Cmd_WDT_INIT(const CommonCmdPacket* packet)
   (void)packet;
 
   wdt_init_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
@@ -64,7 +64,7 @@ CCP_CmdRet Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
@@ -80,7 +80,7 @@ CCP_CmdRet Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
     return CCP_EXEC_ILLEGAL_CONTEXT;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
@@ -89,7 +89,7 @@ CCP_CmdRet Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
 
   wdt_config_.is_clear_enable = 0;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 CCP_CmdRet Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
@@ -98,7 +98,7 @@ CCP_CmdRet Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
 
   wdt_config_.is_clear_enable = 1;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
