@@ -81,7 +81,7 @@ CCP_CmdRet Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
   case AM_INVALID_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -100,7 +100,7 @@ CCP_CmdRet Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
   case AM_INVALID_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -154,7 +154,7 @@ CCP_CmdRet Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
   case AM_NOT_REGISTERED:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

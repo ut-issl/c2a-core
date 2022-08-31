@@ -52,7 +52,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
 
   // 範囲外のTLM IDを除外
   if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
-  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // Header
   if (APID_is_other_obc_tlm_apid(CTP_get_apid(&ctp_)))

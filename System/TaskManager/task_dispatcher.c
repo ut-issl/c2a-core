@@ -198,7 +198,7 @@ CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
   case TDSP_INACTIVE_BCT_ID:
   case TDSP_EMPTY_BC:
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

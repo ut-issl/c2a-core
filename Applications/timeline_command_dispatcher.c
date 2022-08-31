@@ -280,7 +280,7 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
                     (uint32_t)ack,
                     EL_ERROR_LEVEL_LOW,
                     (uint32_t)id);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);

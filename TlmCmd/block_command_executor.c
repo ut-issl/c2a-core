@@ -232,8 +232,8 @@ static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
   if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
-  if (!bc_exe_params->is_active) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (bc_exe_params->rotate.interval == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!bc_exe_params->is_active) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (bc_exe_params->rotate.interval == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   ++bc_exe_params->rotate.counter;
   if (bc_exe_params->rotate.counter < bc_exe_params->rotate.interval)
@@ -282,7 +282,7 @@ static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
 
   length = BCT_get_bc_length(block);
 
-  if (!BCE_is_active(block)) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!BCE_is_active(block)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   for (cmd = 0; cmd < length; ++cmd)
   {
@@ -334,7 +334,7 @@ static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
   if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
-  if (!bc_exe_params->is_active) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!bc_exe_params->is_active) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   ++bc_exe_params->timelimit_combine.call_num;
   length = BCT_get_bc_length(block);

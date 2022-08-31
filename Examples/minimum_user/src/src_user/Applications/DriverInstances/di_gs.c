@@ -149,7 +149,7 @@ CCP_CmdRet Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

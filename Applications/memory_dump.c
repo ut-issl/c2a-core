@@ -70,7 +70,7 @@ CCP_CmdRet Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
   if (begin > end)
   {
     // 領域の開始と終了の大小関係が逆の場合は異常終了
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   span = end - begin;
@@ -149,7 +149,7 @@ CCP_CmdRet Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
   else
   {
     // 指定されたADU Sequence Counterが領域外であれば異常終了
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

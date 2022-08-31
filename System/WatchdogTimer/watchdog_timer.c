@@ -61,7 +61,7 @@ CCP_CmdRet Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
 
   if (ret != 0)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
@@ -77,7 +77,7 @@ CCP_CmdRet Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
 
   if (ret != 0)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);

@@ -241,7 +241,7 @@ static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
   case TMGR_ACK_PARAM_ERR:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

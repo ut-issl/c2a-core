@@ -115,7 +115,7 @@ CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
     ret = UTIL_CMD_send_(uart_ch);
     if (ret != 0)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
   }
   else

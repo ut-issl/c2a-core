@@ -1525,9 +1525,9 @@ CCP_CmdRet Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
   case EH_REGISTER_ACK_ERR_RULE_OVERWRITE:
   case EH_REGISTER_ACK_ERR_DUPLICATE_FULL:
   case EH_REGISTER_ACK_UNKNOWN_ERR:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1544,9 +1544,9 @@ CCP_CmdRet Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
   case EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_RULE_SORTED_INDEX_ACK_NOT_FOUND:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1563,9 +1563,9 @@ CCP_CmdRet Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1582,9 +1582,9 @@ CCP_CmdRet Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1601,9 +1601,9 @@ CCP_CmdRet Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1620,9 +1620,9 @@ CCP_CmdRet Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1639,9 +1639,9 @@ CCP_CmdRet Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1658,9 +1658,9 @@ CCP_CmdRet Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1678,9 +1678,9 @@ CCP_CmdRet Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1697,9 +1697,9 @@ CCP_CmdRet Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet)
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

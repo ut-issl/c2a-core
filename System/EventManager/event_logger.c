@@ -853,9 +853,9 @@ CCP_CmdRet Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet)
   case EL_ACK_ILLEGAL_ERROR_LEVEL:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EL_ACK_DISABLE_LOGGING:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -960,7 +960,7 @@ CCP_CmdRet Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet)
   case EL_ACK_ILLEGAL_GROUP:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -978,7 +978,7 @@ CCP_CmdRet Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet)
   case EL_ACK_ILLEGAL_GROUP:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1013,7 +1013,7 @@ CCP_CmdRet Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
   case EL_ACK_ILLEGAL_ERROR_LEVEL:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -1031,7 +1031,7 @@ CCP_CmdRet Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet)
   case EL_ACK_ILLEGAL_ERROR_LEVEL:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

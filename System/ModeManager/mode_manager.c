@@ -102,7 +102,7 @@ CCP_CmdRet Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_set_mode_list(mode, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -155,7 +155,7 @@ CCP_CmdRet Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_set_transition_table((MD_MODEID)from, (MD_MODEID)to, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -201,7 +201,7 @@ CCP_CmdRet Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_start_transition_(id);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
@@ -265,7 +265,7 @@ CCP_CmdRet Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_finish_transition_();
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
