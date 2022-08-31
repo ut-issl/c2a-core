@@ -68,7 +68,7 @@ static void UART_TEST_update_(void)
 }
 
 
-CCP_EXEC_STS Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -78,7 +78,7 @@ CCP_EXEC_STS Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -88,7 +88,7 @@ CCP_EXEC_STS Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t id;

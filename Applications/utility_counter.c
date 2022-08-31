@@ -59,7 +59,7 @@ static void UTIL_COUNTER_incl_(UTIL_COUNTER_NAME num)
 
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
@@ -80,7 +80,7 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
 
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
@@ -105,7 +105,7 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 

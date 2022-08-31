@@ -413,7 +413,7 @@ CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
   }
 }
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK  ack;
@@ -446,7 +446,7 @@ BCT_ACK BCT_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   BCT_Pos pos;
@@ -467,7 +467,7 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   uint16_t dst_block, src_block;
@@ -481,7 +481,7 @@ CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_id = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
   cycle_t  ti     = (cycle_t)CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -513,7 +513,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
 
 // 長さ 10 の BC に NOP を登録するコマンド. 使用前提が狭すぎるか??
 // パス運用時に使用するので, 一応厳密にしておいたほうがいい気もする.
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
 {
   static CommonCmdPacket temp_packet_;
   cycle_t ti;

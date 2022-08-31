@@ -389,7 +389,7 @@ static void TLM_MGR_load_nop_bc_(void)
 
 // FIXME: 実行時間やばい： 21ms
 // 適当に分割しないと
-CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 {
   uint8_t ret;
   uint16_t exec_counter;
@@ -448,7 +448,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -463,7 +463,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -475,7 +475,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -489,7 +489,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
 
 // FIXME: 実行時間チェック :9ms
 // 結局，NOP BC作るのが重い
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
 {
   uint16_t exec_counter;
   (void)packet;
@@ -533,7 +533,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -573,7 +573,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -604,7 +604,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 {
   uint8_t param[1];
 
@@ -620,7 +620,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -639,7 +639,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -658,7 +658,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
@@ -677,7 +677,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;

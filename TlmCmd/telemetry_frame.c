@@ -99,14 +99,14 @@ void TF_copy_double(uint8_t* ptr, double data)
   endian_memcpy(ptr, &data, sizeof(double));
 }
 
-CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TF_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   TF_initialize();
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
 {
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint32_t tlm_func = CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -121,7 +121,7 @@ CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 

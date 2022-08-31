@@ -58,7 +58,7 @@ static void MEM_init_(void)
   memory_dump_.adu_counter = 0;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t begin, end, span;
@@ -95,7 +95,7 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
 // FIXME: CTCP 大改修が終わったら直す
 // https://github.com/ut-issl/c2a-core/pull/217
 #if 0
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -115,7 +115,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
   return MEM_dump_region_(category, num_dumps);
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -153,7 +153,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
   }
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -201,7 +201,7 @@ CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
 }
 #endif
 
-CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_LOAD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t param_len = CCP_get_param_len(packet);
@@ -220,7 +220,7 @@ CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t dest;
@@ -240,7 +240,7 @@ CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t copy_width, wp;

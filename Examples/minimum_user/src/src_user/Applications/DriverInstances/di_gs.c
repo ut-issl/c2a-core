@@ -130,7 +130,7 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
   gs_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval = flush_interval;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.is_ccsds_tx_valid = 1;
@@ -138,7 +138,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.is_ccsds_tx_valid = 0;
@@ -146,7 +146,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
   if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_EXEC_ILLEGAL_CONTEXT;
@@ -154,7 +154,7 @@ CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   endian_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
@@ -164,7 +164,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   endian_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
@@ -174,7 +174,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet)
 {
   uint8_t pw = CCP_get_param_head(packet)[0];
   if (pw < 1 || pw > 127) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -183,7 +183,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
 {
   uint8_t which = CCP_get_param_head(packet)[0];
   if (which >= GS_PORT_TYPE_NUM) return CCP_EXEC_ILLEGAL_PARAMETER;
@@ -193,7 +193,7 @@ CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.ccsds_info.buffer_num = CCSDS_get_buffer_num();
@@ -201,7 +201,7 @@ CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet)
 {
   uint32_t ui_rate = (uint32_t)CCP_get_param_head(packet)[0];
   if (ui_rate == 0) return CCP_EXEC_ILLEGAL_PARAMETER;

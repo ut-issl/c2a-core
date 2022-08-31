@@ -124,14 +124,14 @@ BCT_ACK BCE_swap_address(const bct_id_t block_a, const bct_id_t block_b);
  */
 BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
 
-CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet);
 
 #endif

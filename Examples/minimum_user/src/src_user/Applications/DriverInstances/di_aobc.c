@@ -99,7 +99,7 @@ CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -108,7 +108,7 @@ CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 

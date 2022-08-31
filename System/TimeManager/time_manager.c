@@ -245,7 +245,7 @@ static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
   }
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
 {
   cycle_t set_value = CCP_get_param_from_packet(packet, 0, cycle_t);
   TMGR_ACK ack = TMGR_set_master_total_cycle_(set_value);
@@ -253,7 +253,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
   return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
-CCP_EXEC_STS Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
 {
   ObcTime time;
   double unixtime = CCP_get_param_from_packet(packet, 0, double);
@@ -274,7 +274,7 @@ CCP_EXEC_STS Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
   return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
 {
   double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
   TMGR_ACK ack = TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);
@@ -282,7 +282,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
   return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
-CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
 {
   double cycle_correction = CCP_get_param_from_packet(packet, 0, double);
   TMGR_ACK ack = TMGR_set_cycle_correction_(cycle_correction);
@@ -290,7 +290,7 @@ CCP_EXEC_STS Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
   return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
 }
 
-CCP_EXEC_STS Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
 {
   (void)packet;
   TMGR_set_cycle_correction_(1.0);
@@ -298,7 +298,7 @@ CCP_EXEC_STS Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet)
 {
   (void)packet;
   TMGR_clear_unixtime_info();

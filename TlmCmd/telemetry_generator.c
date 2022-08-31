@@ -17,7 +17,7 @@ static uint8_t TG_get_next_adu_counter_(void);
 
 // FIXME: 現在のコードは，MOBC と 2nd OBC の Tlm id がユニークであることを想定している
 //        本来被っても良いはず
-CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
 {
   static CommonTlmPacket ctp_;
   uint8_t category = CCP_get_param_from_packet(packet, 0, uint8_t);

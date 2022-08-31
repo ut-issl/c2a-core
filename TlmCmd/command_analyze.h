@@ -149,10 +149,10 @@ int CA_has_raw_param(CMD_CODE cmd_code);
  */
 void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS]);
 
-CCP_EXEC_STS Cmd_CA_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_CA_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
 #endif

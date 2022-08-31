@@ -548,71 +548,71 @@ void EH_match_event_counter_to_el(void);
 const EH_Log* EH_get_the_nth_log_from_the_latest(uint16_t n);
 
 
-CCP_EXEC_STS Cmd_EH_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_CLEAR_ALL_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_LOAD_DEFAULT_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INIT_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief 新しい EL_Event 発生を検出するためのカウンタを強制的に EL のカウンタに合わせる
  */
-CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet);
 
 // by_event_group 関数
-CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INIT_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet);
 
 #endif  // EL_IS_ENABLE_TLOG
 

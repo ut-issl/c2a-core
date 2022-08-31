@@ -8,7 +8,7 @@
 #include "../../TlmCmd/common_cmd_packet_util.h"
 #include <src_user/TlmCmd/command_definitions.h>
 
-CCP_EXEC_STS Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet)
 {
   cycle_t ti = CCP_get_param_from_packet(packet, 0, cycle_t);
   PH_ACK ack = CCP_register_tlc_asap(ti, TLCD_ID_FROM_GS, Cmd_CODE_NOP, NULL, 0);
@@ -17,7 +17,7 @@ CCP_EXEC_STS Cmd_TEST_CCP_REGISTER_TLC_ASAP(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TEST_CCP_GET_RAW_PARAM_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TEST_CCP_GET_RAW_PARAM_INFO(const CommonCmdPacket* packet)
 {
   uint16_t len = CCP_get_param_from_packet(packet, 0, uint16_t);
   uint8_t first_data = CCP_get_param_from_packet(packet, 1, uint8_t);

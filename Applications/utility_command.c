@@ -77,7 +77,7 @@ static int UTIL_CMD_send_(unsigned char ch)
   return ret;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
 {
   unsigned char size = CCP_get_param_head(packet)[0];
   if (CCP_get_param_len(packet) != 21)
@@ -104,7 +104,7 @@ CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
 {
   unsigned char uart_ch = CCP_get_param_head(packet)[0];
   int ret;
@@ -125,7 +125,7 @@ CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
   UTIL_CMD_reset_();

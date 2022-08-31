@@ -43,7 +43,7 @@ void WDT_clear_wdt(void)
 // ここからリプロ対象内！！
 
 
-CCP_EXEC_STS Cmd_WDT_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -51,7 +51,7 @@ CCP_EXEC_STS Cmd_WDT_INIT(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
 {
   int ret;
   (void)packet;
@@ -67,7 +67,7 @@ CCP_EXEC_STS Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
 {
   int ret;
   (void)packet;
@@ -83,7 +83,7 @@ CCP_EXEC_STS Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -92,7 +92,7 @@ CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
 

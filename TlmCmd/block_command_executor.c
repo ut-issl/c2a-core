@@ -115,7 +115,7 @@ BCT_ACK BCE_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
 {
   BCT_ACK ack;
   (void)packet;
@@ -146,7 +146,7 @@ BCT_ACK BCE_activate_block(void)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -163,7 +163,7 @@ CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
 }
 
-CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -207,7 +207,7 @@ BCT_ACK BCE_inactivate_block_by_id(bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -256,7 +256,7 @@ static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
   return ack;
 }
 
-CCP_EXEC_STS Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -301,7 +301,7 @@ static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
 // 2019/10/01 追加
 // 時間制限付きコンバイナ
 // （時間が来たら打ち切り．したがって，必ず設定時間はすぎる）
-CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   bct_id_t block;
@@ -462,7 +462,7 @@ BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -478,7 +478,7 @@ CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_rotator_info(block));
 }
 
-CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
@@ -494,7 +494,7 @@ CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
   return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_combiner_info(block));
 }
 
-CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   bct_id_t block;

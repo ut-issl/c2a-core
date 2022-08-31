@@ -186,7 +186,7 @@ TLCD_ID TLCD_update_tl_list_for_tlm(TLCD_ID id)
   return id;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -200,7 +200,7 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   cycle_t time = CCP_get_param_from_packet(packet, 1, cycle_t);
@@ -247,7 +247,7 @@ static PH_ACK TLCD_drop_tl_cmd_at_(TLCD_ID id, cycle_t time)
   return PH_ACK_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   bct_id_t block_no = CCP_get_param_from_packet(packet, 1, bct_id_t);
@@ -286,7 +286,7 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -301,7 +301,7 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint8_t flag = CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -323,7 +323,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint8_t flag = CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -345,7 +345,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
@@ -360,7 +360,7 @@ CCP_EXEC_STS Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 

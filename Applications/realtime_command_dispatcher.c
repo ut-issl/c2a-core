@@ -24,7 +24,7 @@ static void RTCD_dispatch_(void)
   CDIS_dispatch_command(&realtime_command_dispatcher_);
 }
 
-CCP_EXEC_STS Cmd_RTCD_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_RTCD_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
 {
   (void)packet;
 
@@ -32,7 +32,7 @@ CCP_EXEC_STS Cmd_RTCD_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
   return CCP_EXEC_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_RTCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_RTCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 

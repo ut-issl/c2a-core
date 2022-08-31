@@ -24,8 +24,8 @@ extern const UtilityCommand* const utility_command;
 AppInfo UTIL_CMD_create_app(void);
 
 // コマンド
-CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet);
 
 #endif
