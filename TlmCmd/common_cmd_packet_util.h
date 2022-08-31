@@ -21,6 +21,23 @@ typedef enum
   CCP_UTIL_ACK_PARAM_ERR     //!< パラメタエラー
 } CCP_UTIL_ACK;
 
+
+/**
+ * @brief コマンド返り値である CCP_CmdRet を作成
+ * @note  err_code を使わないときはそれを明示するために CCP_make_cmd_ret_without_err_code をつかうこと
+ * @param[in] exec_sts: コマンド実行結果 (CCP_EXEC_STS)
+ * @param[in] err_code: ユーザー定義エラーコード
+ * @return CCP_CmdRet
+ */
+CCP_CmdRet CCP_make_cmd_ret(CCP_EXEC_STS exec_sts, uint32_t err_code);
+
+/**
+ * @brief コマンド返り値である CCP_CmdRet を作成（エラーコード不使用版）
+ * @param[in] exec_sts: コマンド実行結果 (CCP_EXEC_STS)
+ * @return CCP_CmdRet
+ */
+CCP_CmdRet CCP_make_cmd_ret_without_err_code(CCP_EXEC_STS exec_sts);
+
 /**
  * @brief App 実行 TL コマンドを生成
  * @note  生成した時は CCP_EXEC_TYPE_TL_FROM_GS
