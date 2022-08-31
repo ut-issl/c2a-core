@@ -21,7 +21,7 @@
     - この後リリースを控えるので，念の為すべてのテストを再度回す．
     - `#define C2A_CORE_VER_PRE` は `("")` とする．
     - PR 名は `Update version (v3.4.0)` のようにする．
-    - 例: TBA
+    - これまでの PR 一覧: https://github.com/ut-issl/c2a-core/pulls?q=is%3Apr+Update+version
 1. バージョン上げ PR がマージされたら，直ちに（他の PR を止め） `develop` から `main` に PR を発行し，すべてのテストを回し，マージする．
     - PR 名は以下のようにする．
         - `Update main (v3.4.0) on 2021-12-31`
