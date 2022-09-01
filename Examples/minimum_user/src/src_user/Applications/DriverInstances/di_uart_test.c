@@ -98,7 +98,7 @@ CCP_CmdRet Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
   id = param[0];
 
   ret = UART_TEST_send(&uart_test_instance_, id);
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 #pragma section

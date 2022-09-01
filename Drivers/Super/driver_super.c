@@ -1680,7 +1680,7 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 
 // ###### Driver汎用Util関数 ######
 
-CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
+CCP_CmdRet DS_conv_driver_err_to_ccp_cmd_ret(DS_DRIVER_ERR_CODE code)
 {
   switch (code)
   {
@@ -1700,7 +1700,7 @@ CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
 }
 
 
-CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code)
+CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
 {
   switch (code)
   {

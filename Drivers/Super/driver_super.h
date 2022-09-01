@@ -35,7 +35,7 @@ typedef struct DS_StreamConfig DS_StreamConfig;
  * @note   受信関数呼び出し時については， DS_REC_ERR_CODE を用いること
  * @note   接続先機器へ送るCmd呼び出し時については， DS_CMD_ERR_CODE を用いること
  * @note   DI の Cmd の返り値である CCP_EXEC_STS との整合性を多少意識している
- * @note   CCP_EXEC_STS への変換は DS_conv_driver_err_to_ccp_exec_sts を用いる
+ * @note   CCP_EXEC_STS への変換は DS_conv_driver_err_to_ccp_cmd_ret を用いる
  * @note   より詳細なエラー情報を返したい場合は， Driver ごとに独自 enum を定義して良い
  */
 typedef enum
@@ -80,7 +80,7 @@ typedef enum
  * @brief  各DIが Driver にコマンドを送るときに，統一的に使うコード
  * @note   uint8_t を想定
  * @note   DI の Cmd の返り値である CCP_EXEC_STS との整合性を多少意識している
- * @note   CCP_EXEC_STS への変換は DS_conv_cmd_err_to_ccp_exec_sts を用いる
+ * @note   CCP_EXEC_STS への変換は DS_conv_cmd_err_to_ccp_cmd_ret を用いる
  */
 typedef enum
 {
@@ -537,23 +537,23 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 // ###### Driver汎用Util関数 ######
 
 /**
- * @brief  DS_DRIVER_ERR_CODE から CCP_EXEC_STS への変換関数
+ * @brief  DS_DRIVER_ERR_CODE から CCP_CmdRet への変換関数
  *
  *         DI から Driver の関数を呼び出したときのエラーコードの変換に用いる
  * @note   汎用Util関数
  * @param  DS_DRIVER_ERR_CODE
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code);
+CCP_CmdRet DS_conv_driver_err_to_ccp_cmd_ret(DS_DRIVER_ERR_CODE code);
 
 /**
- * @brief  DS_CMD_ERR_CODE から CCP_EXEC_STS への変換関数
+ * @brief  DS_CMD_ERR_CODE から CCP_CmdRet への変換関数
  *
  *         DI から Driver の関数を呼び出したときのエラーコードの変換に用いる
  * @note   汎用Util関数
  * @param  DS_CMD_ERR_CODE
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code);
+CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code);
 
 #endif
