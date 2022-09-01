@@ -383,7 +383,7 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
+CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack)
 {
   switch (ack)
   {
@@ -430,7 +430,7 @@ CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
   // 指定されたブロック番号のクリアを実行。
   ack = BCT_clear_block(block);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 BCT_ACK BCT_clear_block(const bct_id_t block)
@@ -464,7 +464,7 @@ CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 
   ack = BCT_set_position_(&pos);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
@@ -478,7 +478,7 @@ CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
   endian_memcpy(&src_block, param + SIZE_OF_BCT_ID_T, SIZE_OF_BCT_ID_T);
 
   ack = BCT_copy_bct(dst_block, src_block);
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)

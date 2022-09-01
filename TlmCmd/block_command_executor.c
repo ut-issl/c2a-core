@@ -122,7 +122,7 @@ CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
 
   ack = BCE_activate_block();
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 BCT_ACK BCE_activate_block(void)
@@ -160,7 +160,7 @@ CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
   ack = BCE_activate_block_by_id(block);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
@@ -178,7 +178,7 @@ CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 
   ack = BCE_inactivate_block_by_id(block);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 BCT_ACK BCE_activate_block_by_id(bct_id_t block)
@@ -229,7 +229,7 @@ static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
   BCE_Params* bc_exe_params;
   BCT_Pos pos;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
   if (!bc_exe_params->is_active) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
@@ -278,7 +278,7 @@ static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
   CCP_EXEC_STS ack;
   uint8_t length;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
 
   length = BCT_get_bc_length(block);
 
@@ -331,7 +331,7 @@ static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
   ObcTime finish;
   step_t diff;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
   if (!bc_exe_params->is_active) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
@@ -475,7 +475,7 @@ CCP_CmdRet Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
   // パラメータを読み出し。
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_rotator_info(block));
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(BCE_reset_rotator_info(block));
 }
 
 CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
@@ -491,7 +491,7 @@ CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
   // パラメータを読み出し。
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_combiner_info(block));
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(BCE_reset_combiner_info(block));
 }
 
 CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
