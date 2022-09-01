@@ -53,10 +53,11 @@ void CA_initialize(void)
   CA_load_cmd_table(command_analyze_.cmd_table);
 }
 
+// FIXME: 本当は CCP_CmdRet を返すべきだが，一旦ここで握りつぶす（あとで直す．PRを分割したい）
 CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_code = CCP_get_id(packet);
-  CCP_EXEC_STS (*cmd_func)(const CommonCmdPacket*) = NULL;
+  CCP_CmdRet (*cmd_func)(const CommonCmdPacket*) = NULL;
 
   if (cmd_code >= CA_MAX_CMDS)
   {
@@ -73,9 +74,9 @@ CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
   {
     // ここで最低限のパラメタ長チェックをするが， bct_id_t など，内部定義を使っているものは各コマンド内部でもアサーションすること
     uint16_t param_len = CCP_get_param_len(packet);
-    if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
+    if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK) return CCP_EXEC_ILLEGAL_LENGTH;
 
-    return cmd_func(packet);
+    return cmd_func(packet).exec_sts;
   }
   else
   {
