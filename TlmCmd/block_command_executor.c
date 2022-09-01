@@ -36,28 +36,28 @@ static void BCE_set_bc_exe_params_(const bct_id_t block, const BCE_Params* bc_ex
 /**
  * @brief rotator の実行主体
  * @param[in] block: BC の idx
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  * @note  rotator はひたすらその BC に含まれる Cmd をループで実行し続ける
  *        interval[cycle] ごとに 1つの Cmd が実行される.
  */
-static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block);
+static CCP_CmdRet BCE_rotate_block_cmd_(bct_id_t block);
 
 /**
  * @brief BC をまとめて一括で実行する
  * @param[in] block: BC の idx
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  * @note  BC の内部で BC を実行する時など
  */
-static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block);
+static CCP_CmdRet BCE_combine_block_cmd_(bct_id_t block);
 
 /**
  * @brief BC をまとめて一括で実行する
  * @param[in] block: BC の idx
  * @param[in] limit_step: 実行制限時間 [step]
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  * @note 時間を制限を設けてBCを実行したい時など
  */
-static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step);
+static CCP_CmdRet BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step);
 
 /**
  * @brief 時間制限付きの combiner
@@ -223,7 +223,7 @@ CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
   return BCE_rotate_block_cmd_(block);
 }
 
-static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
+static CCP_CmdRet BCE_rotate_block_cmd_(bct_id_t block)
 {
   CCP_EXEC_STS ack;
   BCE_Params* bc_exe_params;
@@ -253,7 +253,7 @@ static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
   BCT_load_cmd(&pos, &BCE_packet_);
   ack = PH_dispatch_command(&BCE_packet_);
 
-  return ack;
+  return CCP_make_cmd_ret_without_err_code(ack);
 }
 
 CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
@@ -272,7 +272,7 @@ CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
   return BCE_combine_block_cmd_(block);
 }
 
-static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
+static CCP_CmdRet BCE_combine_block_cmd_(bct_id_t block)
 {
   uint8_t cmd;
   CCP_EXEC_STS ack;
@@ -292,7 +292,7 @@ static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
     BCT_load_cmd(&pos, &BCE_packet_);
     ack = PH_dispatch_command(&BCE_packet_);
 
-    if (ack != CCP_EXEC_SUCCESS) return ack;
+    if (ack != CCP_EXEC_SUCCESS) return CCP_make_cmd_ret_without_err_code(ack);
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
@@ -320,7 +320,7 @@ CCP_CmdRet Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
   return BCE_timelimit_combine_block_cmd_(block, limit_step);
 }
 
-static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step)
+static CCP_CmdRet BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step)
 {
   uint8_t cmd;
   uint8_t length;
@@ -358,7 +358,7 @@ static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
     if (ack != CCP_EXEC_SUCCESS)
     {
       BCE_set_bc_exe_params_(block, bc_exe_params);
-      return ack;
+      return CCP_make_cmd_ret_without_err_code(ack);
     }
 
     // 時間判定
