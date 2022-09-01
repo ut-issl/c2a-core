@@ -73,7 +73,7 @@ CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
   {
     // ここで最低限のパラメタ長チェックをするが， bct_id_t など，内部定義を使っているものは各コマンド内部でもアサーションすること
     uint16_t param_len = CCP_get_param_len(packet);
-    if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK) return CCP_EXEC_ILLEGAL_LENGTH;
+    if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
     return cmd_func(packet);
   }
@@ -196,10 +196,10 @@ CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
   uint8_t i;
 
   // raw パラメタなので，引数長チェック
-  if (CCP_get_param_len(packet) != 6 + sizeof(param_size_infos)) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (CCP_get_param_len(packet) != 6 + sizeof(param_size_infos)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   ret = CCP_get_raw_param_from_packet(packet, param_size_infos, sizeof(param_size_infos));
-  if (ret != sizeof(param_size_infos)) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (ret != sizeof(param_size_infos)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   if (cmd_code >= CA_MAX_CMDS)
   {

@@ -154,7 +154,7 @@ CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
@@ -171,7 +171,7 @@ CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
@@ -214,7 +214,7 @@ CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -263,7 +263,7 @@ CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -310,7 +310,7 @@ CCP_CmdRet Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T + 1)
   {
     // パラメータはブロック番号 + 制限時間 [step]
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -469,7 +469,7 @@ CCP_CmdRet Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -485,7 +485,7 @@ CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -504,7 +504,7 @@ CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (SIZE_OF_BCT_ID_T + 2))
   {
     // パラメータはブロック番号2Byte＋周期2Byte = 4Bytes
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。

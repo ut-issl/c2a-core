@@ -1690,7 +1690,7 @@ CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
   case DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case DS_DRIVER_ERR_CODE_ILLEGAL_LENGTH:
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   default:
     // ここに来るのは以下
     // DS_DRIVER_ERR_CODE_OK
@@ -1708,7 +1708,7 @@ CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code)
   case DS_CMD_ILLEGAL_PARAMETER:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case DS_CMD_ILLEGAL_LENGTH:
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   default:
     // ここに来るのは以下の３つ
     // DS_CMD_OK

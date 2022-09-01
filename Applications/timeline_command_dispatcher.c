@@ -258,7 +258,7 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
   {
     // パラメータはTLライン番号(1Byte)とブロック番号。
     // 一致しない場合は異常判定。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   if (id >= TLCD_ID_MAX)

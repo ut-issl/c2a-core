@@ -421,7 +421,7 @@ CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -455,7 +455,7 @@ CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (SIZE_OF_BCT_ID_T + 1))
   {
     // パラメータはブロック番号とコマンド番号1Byte。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し
@@ -473,7 +473,7 @@ CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
   uint16_t dst_block, src_block;
   BCT_ACK ack;
 
-  if (CCP_get_param_len(packet) != 2 * SIZE_OF_BCT_ID_T) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (CCP_get_param_len(packet) != 2 * SIZE_OF_BCT_ID_T) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   endian_memcpy(&dst_block, param, SIZE_OF_BCT_ID_T);
   endian_memcpy(&src_block, param + SIZE_OF_BCT_ID_T, SIZE_OF_BCT_ID_T);
 
@@ -499,7 +499,7 @@ CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   uint16_t cmd_param_len;
 
   // raw なので引数長チェック
-  if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   cmd_param_len = real_param_len - min_cmd_param_len;
   CCP_get_raw_param_from_packet(packet, new_cmd_param, cmd_param_len);

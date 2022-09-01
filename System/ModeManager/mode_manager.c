@@ -92,7 +92,7 @@ CCP_CmdRet Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (1 + SIZE_OF_BCT_ID_T))
   {
     // パラメータはパケットヘッダとuint8_t 2個（mode, index)。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // どのモードにどのブロックコマンドを登録するかを引数から読み出す
@@ -144,7 +144,7 @@ CCP_CmdRet Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != 1 + 1 + SIZE_OF_BCT_ID_T)
   {
     // コマンドはパケットヘッダとuint8_t 3個（from, to, index)。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // どのモード遷移にどのブロックコマンドを登録するかを引数から読み出す

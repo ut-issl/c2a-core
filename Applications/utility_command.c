@@ -84,7 +84,7 @@ CCP_CmdRet Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != 21)
   {
     // パラメータ長確認(21Bytes)
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
   if (size <= 20)
   {
