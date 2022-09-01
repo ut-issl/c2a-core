@@ -90,7 +90,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u32(&packet[73], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[77], (uint32_t)(gs_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[81], (uint16_t)(gs_command_dispatcher->prev.code));
-  TF_copy_i32(&packet[83], (int32_t)(gs_command_dispatcher->prev.sts));
+  // TF_copy_i32(&packet[83], (int32_t)(gs_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[87], (uint32_t)(gs_command_dispatcher->prev_err.time.total_cycle));
   TF_copy_u16(&packet[91], (uint16_t)(gs_command_dispatcher->prev_err.code));
   // TF_copy_i32(&packet[93], (int32_t)(gs_command_dispatcher->prev_err.sts));
@@ -98,7 +98,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u32(&packet[101], PL_count_executed_nodes(&PH_rt_cmd_list));
   TF_copy_u32(&packet[105], (uint32_t)(realtime_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[109], (uint16_t)(realtime_command_dispatcher->prev.code));
-  TF_copy_i32(&packet[111], (int32_t)(realtime_command_dispatcher->prev.sts));
+  // TF_copy_i32(&packet[111], (int32_t)(realtime_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[115], (uint32_t)(realtime_command_dispatcher->prev_err.time.total_cycle));
   TF_copy_u16(&packet[119], (uint16_t)(realtime_command_dispatcher->prev_err.code));
   // TF_copy_i32(&packet[121], (int32_t)(realtime_command_dispatcher->prev_err.sts));
@@ -107,7 +107,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[133], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS])));
   TF_copy_u32(&packet[134], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.time.total_cycle));
   TF_copy_u16(&packet[138], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.code));
-  TF_copy_i32(&packet[140], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
+  // TF_copy_i32(&packet[140], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
   TF_copy_u32(&packet[144], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.time.total_cycle));
   TF_copy_u16(&packet[148], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.code));
   // TF_copy_i32(&packet[150], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.sts));
@@ -120,7 +120,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[170], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC])));
   TF_copy_u32(&packet[171], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.time.total_cycle));
   TF_copy_u16(&packet[175], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.code));
-  TF_copy_i32(&packet[177], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.sts));
+  // TF_copy_i32(&packet[177], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.sts));
   TF_copy_u32(&packet[181], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev_err.time.total_cycle));
   TF_copy_u16(&packet[185], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev_err.code));
   // TF_copy_i32(&packet[187], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev_err.sts));
@@ -133,7 +133,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[207], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])));
   TF_copy_u32(&packet[208], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.time.total_cycle));
   TF_copy_u16(&packet[212], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.code));
-  TF_copy_i32(&packet[214], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.sts));
+  // TF_copy_i32(&packet[214], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.sts));
   TF_copy_u32(&packet[218], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev_err.time.total_cycle));
   TF_copy_u16(&packet[222], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev_err.code));
   // TF_copy_i32(&packet[224], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev_err.sts));
@@ -146,7 +146,7 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[244], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])));
   TF_copy_u32(&packet[245], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.time.total_cycle));
   TF_copy_u16(&packet[249], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.code));
-  TF_copy_i32(&packet[251], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.sts));
+  // TF_copy_i32(&packet[251], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.sts));
   TF_copy_u32(&packet[255], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.time.total_cycle));
   TF_copy_u16(&packet[259], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.code));
   // TF_copy_i32(&packet[261], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.sts));
@@ -3191,7 +3191,7 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u32(&packet[48], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[52], gs_command_dispatcher->prev.time.total_cycle);
   TF_copy_u16(&packet[56], (uint16_t)(gs_command_dispatcher->prev.code));
-  TF_copy_i8(&packet[58], (int8_t)(gs_command_dispatcher->prev.sts));
+  // TF_copy_i8(&packet[58], (int8_t)(gs_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[59], gs_command_dispatcher->prev_err.time.total_cycle);
   TF_copy_u16(&packet[63], (uint16_t)(gs_command_dispatcher->prev_err.code));
   // TF_copy_i8(&packet[65], (int8_t)(gs_command_dispatcher->prev_err.sts));
@@ -3199,7 +3199,7 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u8(&packet[70], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS])));
   TF_copy_u32(&packet[71], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.time.total_cycle);
   TF_copy_u16(&packet[75], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.code));
-  TF_copy_i8(&packet[77], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
+  // TF_copy_i8(&packet[77], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
   TF_copy_u32(&packet[78], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.time.total_cycle);
   TF_copy_u16(&packet[82], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.code));
   // TF_copy_i8(&packet[84], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.sts));
@@ -3213,7 +3213,7 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u8(&packet[105], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION])));
   TF_copy_u32(&packet[106], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.time.total_cycle);
   TF_copy_u16(&packet[110], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.code));
-  TF_copy_i8(&packet[112], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.sts));
+  // TF_copy_i8(&packet[112], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev.sts));
   TF_copy_u32(&packet[113], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.time.total_cycle);
   TF_copy_u16(&packet[117], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.code));
   // TF_copy_i8(&packet[119], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS_FOR_MISSION].prev_err.sts));

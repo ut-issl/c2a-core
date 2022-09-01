@@ -36,7 +36,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u32(&packet[61], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[65], (uint32_t)(gs_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[69], (uint16_t)(gs_command_dispatcher->prev.code));
-  TF_copy_i32(&packet[71], (int32_t)(gs_command_dispatcher->prev.sts));
+  // TF_copy_i32(&packet[71], (int32_t)(gs_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[75], (uint32_t)(gs_command_dispatcher->prev_err.time.total_cycle));
   TF_copy_u16(&packet[79], (uint16_t)(gs_command_dispatcher->prev_err.code));
   // TF_copy_i32(&packet[81], (int32_t)(gs_command_dispatcher->prev_err.sts));
@@ -44,7 +44,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u32(&packet[89], PL_count_executed_nodes(&PH_rt_cmd_list));
   TF_copy_u32(&packet[93], (uint32_t)(realtime_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[97], (uint16_t)(realtime_command_dispatcher->prev.code));
-  TF_copy_i32(&packet[99], (int32_t)(realtime_command_dispatcher->prev.sts));
+  // TF_copy_i32(&packet[99], (int32_t)(realtime_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[103], (uint32_t)(realtime_command_dispatcher->prev_err.time.total_cycle));
   TF_copy_u16(&packet[107], (uint16_t)(realtime_command_dispatcher->prev_err.code));
   // TF_copy_i32(&packet[109], (int32_t)(realtime_command_dispatcher->prev_err.sts));
@@ -53,7 +53,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[121], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS])));
   TF_copy_u32(&packet[122], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.time.total_cycle));
   TF_copy_u16(&packet[126], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.code));
-  TF_copy_i32(&packet[128], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
+  // TF_copy_i32(&packet[128], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
   TF_copy_u32(&packet[132], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.time.total_cycle));
   TF_copy_u16(&packet[136], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.code));
   // TF_copy_i32(&packet[138], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.sts));
@@ -66,7 +66,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[158], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_BC])));
   TF_copy_u32(&packet[159], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.time.total_cycle));
   TF_copy_u16(&packet[163], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.code));
-  TF_copy_i32(&packet[165], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.sts));
+  // TF_copy_i32(&packet[165], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev.sts));
   TF_copy_u32(&packet[169], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev_err.time.total_cycle));
   TF_copy_u16(&packet[173], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev_err.code));
   // TF_copy_i32(&packet[175], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_BC].prev_err.sts));
@@ -79,7 +79,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[195], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_DEPLOY_TLM])));
   TF_copy_u32(&packet[196], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.time.total_cycle));
   TF_copy_u16(&packet[200], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.code));
-  TF_copy_i32(&packet[202], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.sts));
+  // TF_copy_i32(&packet[202], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev.sts));
   TF_copy_u32(&packet[206], (uint32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev_err.time.total_cycle));
   TF_copy_u16(&packet[210], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev_err.code));
   // TF_copy_i32(&packet[212], (int32_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_DEPLOY_TLM].prev_err.sts));
@@ -113,14 +113,14 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u32(&packet[42], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[46], gs_command_dispatcher->prev.time.total_cycle);
   TF_copy_u16(&packet[50], (uint16_t)(gs_command_dispatcher->prev.code));
-  TF_copy_i8(&packet[52], (int8_t)(gs_command_dispatcher->prev.sts));
+  // TF_copy_i8(&packet[52], (int8_t)(gs_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[53], gs_command_dispatcher->prev_err.time.total_cycle);
   TF_copy_u16(&packet[57], (uint16_t)(gs_command_dispatcher->prev_err.code));
   // TF_copy_i8(&packet[59], (int8_t)(gs_command_dispatcher->prev_err.sts));
   TF_copy_u32(&packet[60], PL_count_executed_nodes(&PH_rt_cmd_list));
   TF_copy_u32(&packet[64], (uint32_t)(realtime_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[68], (uint16_t)(realtime_command_dispatcher->prev.code));
-  TF_copy_i32(&packet[70], (int32_t)(realtime_command_dispatcher->prev.sts));
+  // TF_copy_i32(&packet[70], (int32_t)(realtime_command_dispatcher->prev.sts));
   TF_copy_u32(&packet[74], (uint32_t)(realtime_command_dispatcher->prev_err.time.total_cycle));
   TF_copy_u16(&packet[78], (uint16_t)(realtime_command_dispatcher->prev_err.code));
   // TF_copy_i32(&packet[80], (int32_t)(realtime_command_dispatcher->prev_err.sts));
@@ -128,7 +128,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[88], (uint8_t)(PL_count_active_nodes(&PH_tl_cmd_list[TLCD_ID_FROM_GS])));
   TF_copy_u32(&packet[89], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.time.total_cycle);
   TF_copy_u16(&packet[93], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.code));
-  TF_copy_i8(&packet[95], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
+  // TF_copy_i8(&packet[95], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev.sts));
   TF_copy_u32(&packet[96], timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.time.total_cycle);
   TF_copy_u16(&packet[100], (uint16_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.code));
   // TF_copy_i8(&packet[102], (int8_t)(timeline_command_dispatcher->dispatcher[TLCD_ID_FROM_GS].prev_err.sts));
