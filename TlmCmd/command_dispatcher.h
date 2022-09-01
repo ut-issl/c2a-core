@@ -9,6 +9,7 @@
 #include "common_cmd_packet.h"
 #include "packet_list.h"
 #include <src_user/TlmCmd/command_definitions.h>
+#include "common_cmd_packet_util.h"
 
 /**
  * @struct CDIS_ExecInfo
@@ -16,9 +17,9 @@
  */
 typedef struct
 {
-  ObcTime time;       //!< 実行時刻
-  CMD_CODE code;      //!< 実行コマンドID
-  CCP_EXEC_STS sts;   //!< 実行結果
+  ObcTime time;         //!< 実行時刻
+  CMD_CODE code;        //!< 実行コマンドID
+  CCP_CmdRet cmd_ret;   //!< 実行結果
 } CDIS_ExecInfo;
 
 /**
