@@ -4,7 +4,7 @@
 ,IsRestricted,FALSE,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,,,,,,,Description,Note
-,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (ƒ°a_i * x^i),,,,,,Status,,
+,Name,Var.%%##Type,Variable or Function Name,Ext.%%##Type,Pos. Desiginator,,,Conv.%%##Type,Poly (Î£a_i * x^i),,,,,,Status,,
 ,,,,,Octet%%##Pos.,bit%%##Pos.,bit%%##Len.,,a0,a1,a2,a3,a4,a5,,,
 ,PH.VER,uint16_t,,PACKET,0,0,3,NONE,,,,,,,,,
 ,PH.TYPE,||,,PACKET,=R[-1]C+INT((R[-1]C[1]+R[-1]C[2])/8),=MOD((R[-1]C+R[-1]C[1])@@8),1,NONE,,,,,,,,,

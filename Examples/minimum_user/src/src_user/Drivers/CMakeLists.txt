@@ -7,7 +7,7 @@ set(C2A_SRCS
   Aocs/aobc.c
   Com/gs.c
   Com/gs_validate.c
-  Etc/UART_TEST.c
+  Etc/uart_test.c
 )
 
 if(BUILD_C2A_AS_CXX)

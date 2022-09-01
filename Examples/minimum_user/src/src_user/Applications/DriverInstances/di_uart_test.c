@@ -1,7 +1,7 @@
 #pragma section REPRO
 /**
- * @file   di_uart_test.c
- * @brief  UARTとDriverSuperテスト用
+ * @file
+ * @brief UART と DriverSuper テスト用
  */
 #include "di_uart_test.h"
 

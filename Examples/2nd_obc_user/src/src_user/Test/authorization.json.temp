@@ -1,0 +1,7 @@
+{
+    "client_id": "hoge_id",
+    "client_secret": "hoge_secret",
+    "grant_type": "hoge",
+    "username": "hoge@fuga",
+    "password": "piyopiyo"
+}

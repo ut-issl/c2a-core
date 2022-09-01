@@ -262,9 +262,14 @@ struct DS_StreamConfig
   ObcTime  req_tlm_cmd_tx_time_;                            //!< テレメ要求コマンド最終送信時刻
   ObcTime  rx_frame_fix_time_;                              //!< フレーム確定時刻
 
-  uint8_t  *tx_frame_;                                      //!< コマンドフレーム
+  uint8_t* tx_frame_;                                       //!< コマンドフレーム
   uint16_t tx_frame_size_;                                  /*!< コマンドフレームサイズ
+                                                                 tx_frame_ のうち実際に送信するバイト数
                                                                  送信データがない場合は 0 */
+  int16_t  tx_frame_buffer_size_;                           /*!< 与えた tx_frame_ の最大サイズ
+                                                                 Drivers/Protocol などで， Util が tx_frame_ を使うときに使用
+                                                                 Protocol を使うときは設定しておくと良い（一部の関数は設定しないと使えない）
+                                                                 未指定の場合は負数とする */
 
   uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< データ受信フレームバッファ
                                                                  DS_RX_FRAME_SIZE_MAX を超えるような巨大なフレーム（ビッグデータ）には未対応（将来実装予定）
@@ -277,7 +282,7 @@ struct DS_StreamConfig
                                                                  ヘッダがなく，可変長の場合は，受信前（例えば DS_send_req_tlm_cmd 呼び出し前） に
                                                                  rx_frame_size_ を設定することで固定長のように扱うことで対応する．
                                                                  また，初期化時の Validation を通すためにも，初期値は適切な正数にしておくこと */
-  const uint8_t  *rx_footer_;                               //!< 受信データのフッタ
+  const uint8_t* rx_footer_;                                //!< 受信データのフッタ
   uint16_t rx_footer_size_;                                 /*!< 受信データのフッタサイズ
                                                                  ヘッダがない場合は0に設定 */
   int16_t  rx_frame_size_;                                  /*!< 受信データ（テレメトリ）フレームサイズ
@@ -328,6 +333,7 @@ struct DS_StreamConfig
                                                             /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
                                                                  次の受信時にまとめて処理させる */
 };
+// TODO: Protocol 用に data_link_layer_ を追加
 
 /**
  * @struct DriverSuper
@@ -338,7 +344,7 @@ struct DriverSuper
 {
   // 【継承先まで公開】
   IF_LIST_ENUM      interface;                              //!< 継承先の機器の使用IF
-  void              *if_config;                             //!< IF設定
+  void*             if_config;                              //!< IF設定
 
   DS_Config         config;                                 //!< DriverSuperの設定
 
@@ -484,10 +490,16 @@ const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_conf
 const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config);
 
-void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config, uint8_t* tx_frame);
+void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
+                       uint8_t* tx_frame);
+const uint8_t* DSSC_get_tx_frame(DS_StreamConfig* p_stream_config);
+uint8_t* DSSC_get_tx_frame_as_non_const_pointer(DS_StreamConfig* p_stream_config);
 void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
                             const uint16_t tx_frame_size);
 uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config);
+void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
+                                   const int16_t tx_frame_buffer_size);
+int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
 const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,

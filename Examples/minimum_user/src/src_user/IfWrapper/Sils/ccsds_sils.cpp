@@ -1,6 +1,6 @@
 #pragma section REPRO
 /**
- * @file ccsds_sils.cpp
+ * @file
  * @brief CCSDS通信ラッパーのクラスです。
  *
  * CCSDS通信ラッパーは、

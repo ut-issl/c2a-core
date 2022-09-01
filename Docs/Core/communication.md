@@ -1,7 +1,9 @@
 # Communication
 
 ## 概要
-通信関連，ネットワーク関連などをまとめる．
+通信関連，ネットワーク関連などをまとめる．  
+コンポーネント間通信については [Driver/Communication with Components](../Driver/communication_with_components.md) などを参照のこと．
+
 
 ## C2A 内部を流れるパケットについて (Common Packet)
 C2A 内部を流れるパケットは以下の 3 つである．
@@ -21,6 +23,9 @@ C2A 標準として， Space Packet が Core 内で定義されており，基�
 
 
 ## C2A 標準 Space Packet 定義
+C2A 標準 Space Packet は，CCSDS (Consultative Committee for Space Data Systems．宇宙データシステムの標準化を進めている機関) の Space Packet に準拠したものである（参考: [CCSDS SPACE PACKET PROTOCOL](https://public.ccsds.org/Pubs/133x0b2e1.pdf)）．
+CCSDS Space Packet において， Secondary Header はユーザー定義とされており， C2A 用に Secondary Header がカスタムされたものが C2A 標準 Space Packet である．
+
 現在，C2A 標準 Space Packet として，テレメパケット，コマンドパケットともに， Ver.1 のみ策定している．  
 ここでは， Ver.1 について記載する．
 
@@ -47,6 +52,7 @@ https://github.com/ut-issl/c2a-core/blob/217c3156a07ec503cd60fc7b75978a3234ec2c5
         - 以下は CCSDS で規定
             - `0b11111111000` - `0b11111111110`: CCSDS Reserved
             - `0b11111111111`: Idle Packet
+- Packet Sequence Control Field
     - Sequence Flag
         - `0b00`: Continuation component of higher data structure
         - `0b01`: First component of higher data structure
@@ -54,9 +60,9 @@ https://github.com/ut-issl/c2a-core/blob/217c3156a07ec503cd60fc7b75978a3234ec2c5
         - `0b11`: Standalone Packet
     - Sequence Count
         - APID ごとにパケットの伝送順番を示すカウンタ
-    - Packet Data Length
-        - パケット全長から Primary Header 長を引き，さらに 1 を引いたもの
-        - つまり，これが 0 の時， Secondary Header + User Data Field 長は 1 byte である
+- Packet Data Length
+    - パケット全長から Primary Header 長を引き，さらに 1 を引いたもの
+    - つまり，これが 0 の時， Secondary Header + User Data Field 長は 1 byte である
 
 
 ### Secondary Header (Telemetry)
@@ -153,7 +159,7 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
         - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
     - APID: AOBC, Destination Type: AOBC
-        - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で GSC としてキューイング & 実行される．
+        - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
         - TLC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で TLC としてキューイング & 実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録されずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で BC として登録 & 実行される．
 - 地上局 SW での実装まとめ
@@ -174,6 +180,10 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
 - https://github.com/ut-issl/c2a-core/blob/f3197d549559d1f571eb3e28497c9a488611f07f/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_tlm_cmd_packet_define.h#L10-L11
 - https://github.com/ut-issl/c2a-core/blob/f3197d549559d1f571eb3e28497c9a488611f07f/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_tlm_packet_define.h#L10-L11
 - https://github.com/ut-issl/c2a-core/blob/f3197d549559d1f571eb3e28497c9a488611f07f/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h#L10-L11
+
+
+## C2A 間通信について
+上記 [#コマンド配送におけるルーティングについて](#コマンド配送におけるルーティングについて) や [Driver/Communication with Components#c2a-間通信](../Driver/communication_with_components.md#c2a-間通信) などを参照すること．
 
 
 ## CCSDS 準拠状況

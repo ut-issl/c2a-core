@@ -7,7 +7,7 @@
 ### C2A core
 - 各 C2A で共通利用される C2A の中核部のコード
 - 基本的には，各々の C2A user repository （サンプル： TBW） にて， git submodule で参照される．
-- core 開発のための最小限の user 部は `Examples/` にあり，これを用いてビルドし，検証する．
+- core 開発のための最小限の user 部は [`Examples`](./Examples) にあり，これを用いてビルドし，検証する．
 
 
 ## ドキュメント
@@ -17,7 +17,7 @@
 
 ## 開発
 ### セットアップ
-1. clone 後， setup.bat or setup.sh を実行
+1. clone 後， [`setup.bat`](./setup.bat) or [`setup.sh`](./setup.sh) を実行
 
 ### Kanban (開発マイルストーンなど)
 - https://github.com/orgs/ut-issl/projects/1
@@ -26,14 +26,16 @@
 - C2A は， [S2E](https://github.com/ut-issl/s2e-core) などの SILS を用いて，フライトソフトウェアがそのまま実行される SILS を構築できる．
 - つまり，ターゲットの OBC 上で動くソフトウェアが， PC などの上で，そのままエミュレートできる．
 - [`Examples/minimum_user`](./Examples/minimum_user) にある， 最小限の C2A 実行サンプルは， [S2E User for C2A Core](https://github.com/ut-issl/s2e-user-for-c2a-core) によってエミュレーション可能である．
+    - また， [`Examples/2nd_obc_user`](./Examples/2nd_obc_user) にある 2nd OBC (非 MOBC) の user 部を使うことで， C2A 間通信も模擬できる．
 
 ### テスト
-- 特定のuserを仮定しないと，各種パラメタが確定しないため， [`Examples/minimum_user`](./Examples/minimum_user) でテストする．
+- 特定の user を仮定しないと，各種パラメタが確定しないため， [`Examples/minimum_user`](./Examples/minimum_user) でテストする．
+- C2A 間通信に関連する部分のテストのみは [`Examples/2nd_obc_user`](./Examples/2nd_obc_user) を用いる．
 - 詳細は [Test](./Examples/minimum_user/src/src_user/Test) 参照．
 
 ### ブランチ
 - `main`: リリース版（[詳細](./Docs/General/release.md)）
-- `develop`: 概ね検証された最新版（beta機能含む）
+- `develop`: 概ね検証された最新版（beta 機能含む）
 - `feature/*` : 開発ブランチ
 - `hotfix/*` : 重大バグ修正用ブランチ
 
@@ -64,6 +66,10 @@ C2A Core の採用実績のある衛星 OBC や動作実績のあるボードの
 
 ### User 実装例
 - https://github.com/arkedge/c2a-user-for-raspi
+
+
+## 協力
+[<img src="./Docs/Img/arkedgespace_logo.png" width="25%" alt="ArkEdge Space Inc.">](https://arkedgespace.com/)
 
 
 ## 質問，問い合わせ，その他なんでも

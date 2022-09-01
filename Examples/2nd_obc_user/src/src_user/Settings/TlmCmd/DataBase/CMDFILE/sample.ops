@@ -1,0 +1,42 @@
+.# ************************************* #
+ # =        Sample Command File        = #
+ # ************************************* #
+.# MOBC と 2nd OBC (AOBC) のサンプル
+.#
+.# =======================================
+ #  NOP
+ # =======================================
+.MOBC_RT.Cmd_NOP
+.AOBC_RT.Cmd_NOP
+.#
+.# =======================================
+ #  HK の生成
+ #  AOBC > MOBC に AOBC HK が定期送信されている前提
+ # =======================================
+.MOBC_RT.Cmd_BCT_CLEAR_BLOCK 77     # BCT 77 を使用
+ wait_sec 1
+ MOBC_BL.Cmd_GENERATE_TLM 1 0x40 0xf0 1 # HK
+ wait_sec 1
+ MOBC_BL.Cmd_GENERATE_TLM 3 0x40 0x91 1 # AOBC HK
+ wait_sec 1
+ MOBC_BL.Cmd_TLCD_DEPLOY_BLOCK 10 2 77
+ wait_sec 1
+ MOBC_RT.Cmd_BCE_ACTIVATE_BLOCK
+ wait_sec 1
+ MOBC_RT.Cmd_TLCD_CLEAR_ALL_TIMELINE 2
+ wait_sec 1
+ # BCを展開し，TLM出力開始
+ MOBC_RT.Cmd_TLCD_DEPLOY_BLOCK 2 77
+.#
+.# =======================================
+ #  AOBC Tlm
+ # =======================================
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x90 1 # AOBC AOBC   → CNT ERR が出るはず
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x90 1 # AOBC AOBC
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x90 1 # AOBC AOBC
+.#
+.# AOBCリセット
+.MOBC_RT.Cmd_AM_INITIALIZE_APP 4      # AR_DI_AOBC
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x90 1 # AOBC AOBC   → CNT ERR が出るはず
+.AOBC_RT.Cmd_GENERATE_TLM 0x40 0x90 1 # AOBC AOBC
+.MOBC_RT.Cmd_GENERATE_TLM 0x40 0x90 1 # AOBC AOBC

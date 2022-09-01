@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief  AOBC の Driver
+ * @brief AOBC の Driver
  */
 #ifndef AOBC_H_
 #define AOBC_H_
@@ -9,7 +9,6 @@
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/System/TimeManager/obc_time.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include <src_core/Drivers/Super/driver_super_issl_format.h>       //!< 自動生成コードである aobc_telemetry_buffer で用いる
 #include "./aobc_telemetry_data_definitions.h"
 #include "./aobc_telemetry_buffer.h"
 
@@ -20,7 +19,7 @@
  */
 typedef enum
 {
-  AOBC_TX_ERR_CODE_OK   = 0,
+  AOBC_TX_ERR_CODE_OK = 0,
   AOBC_TX_ERR_CODE_CMD_NOT_FOUND
 } AOBC_TX_ERR_CODE;
 
@@ -31,7 +30,7 @@ typedef enum
  */
 typedef enum
 {
-  AOBC_RX_ERR_CODE_OK   = 0,
+  AOBC_RX_ERR_CODE_OK = 0,
   AOBC_RX_ERR_CODE_TLM_NOT_FOUND,
   AOBC_RX_ERR_CODE_CRC_ERR
 } AOBC_RX_ERR_CODE;
@@ -80,18 +79,16 @@ struct AOBC_Driver
  *         AOBC_Driver 構造体のポインタを渡すことでポートを初期化し， AOBC_Driver の各メンバも初期化する
  * @param  aobc_driver: 初期化する AOBC_Driver 構造体へのポインタ
  * @param  ch         : AOBC が接続されている UART ポート番号
- * @return 0     : 正常終了
- * @return 0 以外: 異常終了
+ * @return DS_INIT_ERR_CODE
  */
-int AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch);
+DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch);
 
 /**
  * @brief  AOBC のデータ（テレメ）受信
  * @param  aobc_driver: AOBC_Driver 構造体へのポインタ
- * @return 0     : 正常終了
- * @return 0 以外: 異常終了
+ * @return DS_REC_ERR_CODE
  */
-int AOBC_rec(AOBC_Driver* aobc_driver);
+DS_REC_ERR_CODE AOBC_rec(AOBC_Driver* aobc_driver);
 
 /**
  * @brief  AOB Cへのコマンド送信

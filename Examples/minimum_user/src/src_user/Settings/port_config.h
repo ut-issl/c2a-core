@@ -13,7 +13,7 @@
 #define  PORT_CH_RS422_SAMPLE6             (6)  //!< RS-422 UART ch7
 #define  PORT_CH_RS422_SAMPLE7             (7)  //!< RS-422 UART ch8
 
-#define  PORT_CH_UART_TEST                 (1)  //!< RS-422 UART ch1
+#define  PORT_CH_UART_TEST                 (PORT_CH_RS422_AOBC)
 
 #define  PORT_CH_MAX_UART_PORT             (8)  //!< UARTポート上限
 

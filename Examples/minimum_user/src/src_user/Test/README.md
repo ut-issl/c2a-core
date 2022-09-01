@@ -1,6 +1,7 @@
 # C2A PYTEST
-- CIなどで自動でテストできるようにしたpytest．
-- C2Aは現状関数レベルのテストはなく，コマンド送信とテレメ結果で判断する，結合テストのみしかない．
+- CI などで自動でテストできるようにした pytest．
+- C2A は現状関数レベルのテストはなく，コマンド送信とテレメ結果で判断する，結合テストのみしかない．
+- なお， C2A 間通信のテストについては， [Examples/2nd_obc_user/src/src_user/Test](../../../../2nd_obc_user/src/src_user/Test) を参照すること．
 
 ## 環境
 - python3 系列と以下のライブラリ
@@ -11,7 +12,7 @@
 
 ## 構成
 ### フォルダ構成
-- C2Aと揃える．
+- C2A と揃える．
 - ファイル名は， `test_${c2a_src_filename}.py`．例えば次のようなもの．
     - './test/src_core/Applications/test_nop.py'
     - './test/src_user/Applications/UserDefined/test_tlm_mem_dump.py'
@@ -21,7 +22,7 @@
 
 ### デコレーター
 - 実機実行のものは `@pytest.mark.real`
-- SILS実行のものは `@pytest.mark.sils`
+- SILS 実行のものは `@pytest.mark.sils`
 - 両方のものは両方のデコレータをつける．
 
 ### 注意
@@ -33,7 +34,7 @@
 ```
 pytest -m real -v ./test/  # 実機の場合
 pytest -m sils -v ./test/  # SILSの場合
-# --capture=no オプションをつけると，printなども表示される
+# --capture=no オプションをつけると，print なども表示される
 # 簡易表示にするには -v を取り除く
 ```
 これにて，すべてのファイルに対してテストが走る．
