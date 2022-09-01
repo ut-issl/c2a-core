@@ -209,7 +209,7 @@ CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
   }
 
   // ローレベルコマンドなので，アサーションしない
-  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CommonCmdPacket*))cmd_func;
+  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_CmdRet (*)(const CommonCmdPacket*))cmd_func;
   for (i = 0; i < sizeof(param_size_infos); ++i)
   {
     command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.first = ( param_size_infos[i] & 0xf0 ) >> 4;
