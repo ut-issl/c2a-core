@@ -1,7 +1,7 @@
 #pragma section REPRO
 #include "realtime_command_dispatcher.h"
-
 #include "../TlmCmd/packet_handler.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static CommandDispatcher realtime_command_dispatcher_;
 const CommandDispatcher* const realtime_command_dispatcher = &realtime_command_dispatcher_;

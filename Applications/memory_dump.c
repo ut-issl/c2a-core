@@ -6,6 +6,7 @@
 #include "../System/TimeManager/time_manager.h"
 #include "../TlmCmd/packet_handler.h"
 #include "../Library/endian_memcpy.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static MemoryDump memory_dump_;
 const MemoryDump* const memory_dump = &memory_dump_;

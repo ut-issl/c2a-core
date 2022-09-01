@@ -9,6 +9,7 @@
 #include "../../Drivers/Aocs/aobc.h"
 #include "../../TlmCmd/user_packet_handler.h"
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
 
 

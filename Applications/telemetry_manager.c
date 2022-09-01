@@ -17,6 +17,7 @@
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 /**
  * @brief  App初期化関数

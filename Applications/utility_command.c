@@ -4,6 +4,7 @@
 #include "../IfWrapper/uart.h"
 #include <src_user/Settings/port_config.h>
 #include <string.h>                     // for memcpy
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 
 static UtilityCommand utility_command_;
