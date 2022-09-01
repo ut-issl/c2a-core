@@ -304,7 +304,7 @@ static CCP_EXEC_STS MEM_dump_region_(uint8_t category,
 
   default:
     // それ以外のエラーはないはず
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 

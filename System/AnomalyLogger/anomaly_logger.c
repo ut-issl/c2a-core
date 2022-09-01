@@ -66,7 +66,7 @@ CCP_CmdRet Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
@@ -213,7 +213,7 @@ CCP_CmdRet Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
@@ -239,7 +239,7 @@ CCP_CmdRet Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
