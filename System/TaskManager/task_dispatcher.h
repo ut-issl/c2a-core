@@ -59,7 +59,7 @@ TDSP_ACK TDSP_set_task_list_id(bct_id_t id);
  *        展開されているタスクリストの実行時刻 (cycle レベル) を比較し, task_list_ に登録されているタスクを順番に実行する．
  *        1つタスクを消化すると return する． (while(1) で回っているのですぐ戻ってくる．)
  *        実行 cycle が現在だった場合, 各タスクの step によって実行する, しないを switch に合わせて処理する．
- *        実際にタスクを処理する場合, CDIS_dispatch_command -> PH_dispatch_command -> cmdExec の順に実行される(真の Executer は cmdExec)．
+ *        実際にタスクを処理する場合, CDIS_dispatch_command -> PH_dispatch_command -> CA_execute_cmd の順に実行される(真の Executer は CA_execute_cmd)．
  */
 void TDSP_execute_pl_as_task_list(void);
 

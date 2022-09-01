@@ -225,7 +225,6 @@ CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
 
 static CCP_CmdRet BCE_rotate_block_cmd_(bct_id_t block)
 {
-  CCP_EXEC_STS ack;
   BCE_Params* bc_exe_params;
   BCT_Pos pos;
 
@@ -251,9 +250,7 @@ static CCP_CmdRet BCE_rotate_block_cmd_(bct_id_t block)
 
   BCT_make_pos(&pos, block, bc_exe_params->rotate.next_cmd);
   BCT_load_cmd(&pos, &BCE_packet_);
-  ack = PH_dispatch_command(&BCE_packet_);
-
-  return CCP_make_cmd_ret_without_err_code(ack);
+  return PH_dispatch_command(&BCE_packet_);
 }
 
 CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
@@ -275,7 +272,6 @@ CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
 static CCP_CmdRet BCE_combine_block_cmd_(bct_id_t block)
 {
   uint8_t cmd;
-  CCP_EXEC_STS ack;
   uint8_t length;
 
   if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
@@ -286,13 +282,15 @@ static CCP_CmdRet BCE_combine_block_cmd_(bct_id_t block)
 
   for (cmd = 0; cmd < length; ++cmd)
   {
+    CCP_CmdRet cmd_ret;
     BCT_Pos pos;
+
     pos.block = block;
     pos.cmd = cmd;
     BCT_load_cmd(&pos, &BCE_packet_);
-    ack = PH_dispatch_command(&BCE_packet_);
+    cmd_ret = PH_dispatch_command(&BCE_packet_);
 
-    if (ack != CCP_EXEC_SUCCESS) return CCP_make_cmd_ret_without_err_code(ack);
+    if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS) return cmd_ret;
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
@@ -324,7 +322,6 @@ static CCP_CmdRet BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_
 {
   uint8_t cmd;
   uint8_t length;
-  CCP_EXEC_STS ack;
   BCE_Params* bc_exe_params;
 
   ObcTime start = TMGR_get_master_clock();
@@ -350,15 +347,18 @@ static CCP_CmdRet BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_
 
   for (cmd = 0; cmd < length; ++cmd)
   {
+    CCP_CmdRet cmd_ret;
     BCT_Pos pos;
+
     pos.block = block;
     pos.cmd = cmd;
     BCT_load_cmd(&pos, &BCE_packet_);
-    ack = PH_dispatch_command(&BCE_packet_);
-    if (ack != CCP_EXEC_SUCCESS)
+    cmd_ret = PH_dispatch_command(&BCE_packet_);
+
+    if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
     {
       BCE_set_bc_exe_params_(block, bc_exe_params);
-      return CCP_make_cmd_ret_without_err_code(ack);
+      return cmd_ret;
     }
 
     // 時間判定
