@@ -6,6 +6,7 @@
  */
 #include "watchdog_timer.h"
 #include "../../Library/print.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 static WDT_Config wdt_config_;
 const WDT_Config* const wdt_config = &wdt_config_;

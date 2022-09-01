@@ -6,6 +6,7 @@
 
 #include "../../TlmCmd/packet_list_util.h"
 #include "../../TlmCmd/block_command_executor.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
 #include "../AnomalyLogger/anomaly_logger.h"
