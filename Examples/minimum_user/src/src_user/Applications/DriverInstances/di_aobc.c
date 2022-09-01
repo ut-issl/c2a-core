@@ -96,7 +96,8 @@ CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
   CCP_set_dest_type(pckt, CCP_DEST_TYPE_TO_ME);
 
   ret = AOBC_send_cmd(&aobc_driver_, pckt);
-  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
+  // FIXME: ここも一旦握りつぶす（後で直す）
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret).exec_sts;
 }
 
 
