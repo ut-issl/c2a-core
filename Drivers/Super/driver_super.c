@@ -1687,15 +1687,15 @@ CCP_CmdRet DS_conv_driver_err_to_ccp_cmd_ret(DS_DRIVER_ERR_CODE code)
   case DS_DRIVER_ERR_CODE_ILLEGAL_CONTEXT:
   case DS_DRIVER_ERR_CODE_UNKNOWN_ERR:
     // 全てこれでいいのかは，要検討
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)code);
   case DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, (uint32_t)code);
   case DS_DRIVER_ERR_CODE_ILLEGAL_LENGTH:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_LENGTH, (uint32_t)code);
   default:
     // ここに来るのは以下
     // DS_DRIVER_ERR_CODE_OK
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+    return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)code);
   }
 }
 
@@ -1705,11 +1705,11 @@ CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
   switch (code)
   {
   case DS_CMD_ILLEGAL_CONTEXT:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)code);
   case DS_CMD_ILLEGAL_PARAMETER:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, (uint32_t)code);
   case DS_CMD_ILLEGAL_LENGTH:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_LENGTH, (uint32_t)code);
   default:
     // ここに来るのは以下の３つ
     // DS_CMD_OK
@@ -1717,7 +1717,7 @@ CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
     // DS_CMD_UNKNOWN_ERR
     // 下２つのエラーはDriver側の問題で，そちらでエラー情報を持つべき
     // ここでは SUCCESSを返す
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+    return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)code);
   }
 }
 
