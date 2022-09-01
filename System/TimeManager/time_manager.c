@@ -36,9 +36,9 @@ static TMGR_ACK TMGR_set_cycle_correction_(double cycle_correction);
 /**
  * @brief enum 変換用関数
  * @param[in] ack: TMGR_ACK
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack);
+static CCP_CmdRet TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(TMGR_ACK ack);
 
 void TMGR_init(void)
 {
@@ -232,7 +232,7 @@ static TMGR_ACK TMGR_set_cycle_correction_(double cycle_correction)
   return TMGR_ACK_OK;
 }
 
-static CCP_EXEC_STS TMGR_conv_tmgr_ack_to_ccp_exec_sts_(TMGR_ACK ack)
+static CCP_CmdRet TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(TMGR_ACK ack)
 {
   switch (ack)
   {
@@ -250,7 +250,7 @@ CCP_CmdRet Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet)
   cycle_t set_value = CCP_get_param_from_packet(packet, 0, cycle_t);
   TMGR_ACK ack = TMGR_set_master_total_cycle_(set_value);
 
-  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(ack);
 }
 
 CCP_CmdRet Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
@@ -271,7 +271,7 @@ CCP_CmdRet Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet)
 
   ack = TMGR_update_unixtime(unixtime, &time);
 
-  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(ack);
 }
 
 CCP_CmdRet Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
@@ -279,7 +279,7 @@ CCP_CmdRet Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet)
   double utl_unixtime_epoch = CCP_get_param_from_packet(packet, 0, double);
   TMGR_ACK ack = TMGR_set_utl_unixtime_epoch_(utl_unixtime_epoch);
 
-  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(ack);
 }
 
 CCP_CmdRet Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
@@ -287,7 +287,7 @@ CCP_CmdRet Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
   double cycle_correction = CCP_get_param_from_packet(packet, 0, double);
   TMGR_ACK ack = TMGR_set_cycle_correction_(cycle_correction);
 
-  return TMGR_conv_tmgr_ack_to_ccp_exec_sts_(ack);
+  return TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(ack);
 }
 
 CCP_CmdRet Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet)
