@@ -53,8 +53,7 @@ void CA_initialize(void)
   CA_load_cmd_table(command_analyze_.cmd_table);
 }
 
-// FIXME: 本当は CCP_CmdRet を返すべきだが，一旦ここで握りつぶす（あとで直す．PRを分割したい）
-CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
+CCP_CmdRet CA_execute_cmd(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_code = CCP_get_id(packet);
   CCP_CmdRet (*cmd_func)(const CommonCmdPacket*) = NULL;
@@ -65,7 +64,7 @@ CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
                     CA_EL_LOCAL_ID_ILLEGAL_CMD_CODE,
                     EL_ERROR_LEVEL_LOW,
                     (uint32_t)cmd_code);
-    return CCP_EXEC_CMD_NOT_DEFINED;
+    return CCP_make_cmd_ret(CCP_EXEC_CMD_NOT_DEFINED, CA_MAX_CMDS);
   }
 
   cmd_func = command_analyze->cmd_table[cmd_code].cmd_func;
@@ -74,9 +73,12 @@ CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
   {
     // ここで最低限のパラメタ長チェックをするが， bct_id_t など，内部定義を使っているものは各コマンド内部でもアサーションすること
     uint16_t param_len = CCP_get_param_len(packet);
-    if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK) return CCP_EXEC_ILLEGAL_LENGTH;
+    if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK)
+    {
+      return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_LENGTH, (uint32_t)cmd_code);
+    }
 
-    return cmd_func(packet).exec_sts;
+    return cmd_func(packet);
   }
   else
   {
@@ -84,7 +86,7 @@ CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
                     CA_EL_LOCAL_ID_NULL_CMD_CODE,
                     EL_ERROR_LEVEL_LOW,
                     (uint32_t)cmd_code);
-    return CCP_EXEC_CMD_NOT_DEFINED;
+    return CCP_make_cmd_ret(CCP_EXEC_CMD_NOT_DEFINED, (uint32_t)cmd_code);
   }
 }
 

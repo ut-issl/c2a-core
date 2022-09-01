@@ -74,7 +74,7 @@ static void DI_AOBC_cmd_dispatcher_(void)
 }
 
 
-CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
+CCP_CmdRet DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   CommonCmdPacket* pckt = (CommonCmdPacket*)packet; // const_cast
@@ -97,7 +97,7 @@ CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
 
   ret = AOBC_send_cmd(&aobc_driver_, pckt);
   // FIXME: ここも一旦握りつぶす（後で直す）
-  return DS_conv_cmd_err_to_ccp_cmd_ret(ret).exec_sts;
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 

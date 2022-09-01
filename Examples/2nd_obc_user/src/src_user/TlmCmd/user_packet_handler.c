@@ -26,13 +26,14 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
 }
 
 
-CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet)
+CCP_CmdRet PH_user_cmd_router(const CommonCmdPacket* packet)
 {
-  switch (CCP_get_apid(packet))
+  APID apid = CCP_get_apid(packet);
+  switch (apid)
   {
   default:
-    // 該当する配送先が定義されていない場合。
-    return CCP_EXEC_ROUTING_FAILED;
+    // 該当する配送先が定義されていない場合
+    return CCP_make_cmd_ret(CCP_EXEC_ROUTING_FAILED, apid);
   }
 }
 

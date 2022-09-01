@@ -102,9 +102,9 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet);
 /**
  * @brief  CCP をコマンドとして解釈して実行，ないしは別機器へ配送する
  * @param  packet: 実行 or 配送するコマンドパケット
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet);
+CCP_CmdRet PH_dispatch_command(const CommonCmdPacket* packet);
 
 /**
  * @brief CCP_EXEC_TYPE から PacketList を取得する
