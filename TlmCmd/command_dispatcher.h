@@ -5,11 +5,11 @@
 #ifndef COMMAND_DISPATCHER_H_
 #define COMMAND_DISPATCHER_H_
 
-#include "../System/TimeManager/obc_time.h"
+#include "common_cmd_packet_util.h"
 #include "common_cmd_packet.h"
 #include "packet_list.h"
+#include "../System/TimeManager/obc_time.h"
 #include <src_user/TlmCmd/command_definitions.h>
-#include "common_cmd_packet_util.h"
 
 /**
  * @struct CDIS_ExecInfo

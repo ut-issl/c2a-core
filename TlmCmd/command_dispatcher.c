@@ -4,7 +4,6 @@
  * @brief 各種コマンドの実行管理
  */
 #include "command_dispatcher.h"
-
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
