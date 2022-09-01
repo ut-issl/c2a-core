@@ -48,7 +48,7 @@ typedef enum
   PH_ACK_TLC_SUCCESS,         //!< TL に登録された
   PH_ACK_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
   PH_ACK_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
-  PH_ACK_BC_SUCCESS,         //!< BC 展開に成功した
+  PH_ACK_BC_SUCCESS,          //!< BC 展開に成功した
   PH_ACK_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
   PH_ACK_BC_ISORATED_CMD,     //!< 飛ばして BC 登録しようとした
   PH_ACK_BC_CMD_TOO_LONG,     //!< CMD が BC には長すぎる
