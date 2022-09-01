@@ -390,11 +390,12 @@ CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack)
   case BCT_SUCCESS:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
+  // FIXME: これだめじゃん？
   case BCT_INVALID_BLOCK_NO:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   case BCT_INVALID_CMD_NO:
-    return CCP_EXEC_CMD_NOT_DEFINED;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_CMD_NOT_DEFINED);
 
   case BCT_DEFECTIVE_BLOCK:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
@@ -408,8 +409,9 @@ CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack)
   case BCT_ZERO_PERIOD:
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
+  // FIXME: これだめじゃん？
   default:
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
