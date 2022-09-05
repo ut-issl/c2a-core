@@ -15,7 +15,7 @@
 #include "../../TlmCmd/common_cmd_packet_util.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../TlmCmd/packet_handler.h"
-#include "../../Applications/timeline_command_dispatcher.h"
+#include "../../Applications/timeline_command_dispatcher_id_define.h"
 #include "../../Library/endian_memcpy.h"
 
 /**

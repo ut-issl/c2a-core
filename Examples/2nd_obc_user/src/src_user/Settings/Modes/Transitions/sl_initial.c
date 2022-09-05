@@ -4,7 +4,7 @@
 #include "../../../TlmCmd/block_command_definitions.h"
 #include "../../../TlmCmd/command_definitions.h"
 
-#include <src_core/Applications/timeline_command_dispatcher.h>
+#include <src_core/Applications/timeline_command_dispatcher_id_define.h>
 #include <src_core/TlmCmd/block_command_loader.h>
 #include <src_core/System/TimeManager/obc_time.h>
 

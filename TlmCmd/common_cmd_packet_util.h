@@ -6,7 +6,8 @@
 #define COMMON_CMD_PACKET_UTIL_H_
 
 #include "common_cmd_packet.h"
-#include "../Applications/timeline_command_dispatcher.h" // for TLCD_ID
+#include "packet_handler.h"
+#include "../Applications/timeline_command_dispatcher_id_define.h"
 #include "block_command_table.h" // for bct_id
 #include <src_user/Applications/app_registry.h>
 

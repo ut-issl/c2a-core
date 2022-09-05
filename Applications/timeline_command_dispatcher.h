@@ -1,26 +1,7 @@
 #ifndef TIMELINE_COMMAND_DISPATCHER_H_
 #define TIMELINE_COMMAND_DISPATCHER_H_
 
-#include <src_user/Settings/Applications/timeline_command_dispatcher_define.h>
-
-/**
- * @enum   TLCD_ID
- * @brief  TimeLineを選ぶときに統一的に使うコード
- * @note   uint8_tを想定
- */
-typedef enum
-{
-  TLCD_ID_FROM_GS = 0,
-  TLCD_ID_DEPLOY_BC,
-  TLCD_ID_DEPLOY_TLM,
-#ifdef TLCD_ENABLE_MISSION_TL
-  TLCD_ID_FROM_GS_FOR_MISSION,
-#endif
-  TLCD_ID_MAX
-} TLCD_ID;
-// FIXME: TL本数を可変にできるようにする
-
-// 循環参照を防ぐためにここでinclude
+#include "timeline_command_dispatcher_id_define.h"
 #include "../TlmCmd/command_dispatcher.h"
 #include "../TlmCmd/common_cmd_packet.h"
 #include "../TlmCmd/packet_handler.h"

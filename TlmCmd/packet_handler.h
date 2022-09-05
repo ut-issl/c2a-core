@@ -5,6 +5,10 @@
 #ifndef PACKET_HANDLER_H_
 #define PACKET_HANDLER_H_
 
+#include "common_tlm_cmd_packet.h"
+#include "packet_list.h"
+#include "../Applications/timeline_command_dispatcher_id_define.h"
+
 #define TL_TLM_PAGE_SIZE  (32)
 #define TL_TLM_PAGE_MAX   (8)
 
@@ -32,11 +36,6 @@
 #undef PH_RP_TLM_LIST_MAX
 #endif
 #endif
-
-// 循環参照を防ぐためにここでinclude
-#include "common_tlm_cmd_packet.h"
-#include "packet_list.h"
-#include "../Applications/timeline_command_dispatcher.h"
 
 // FIXME: 整理したい
 typedef enum
