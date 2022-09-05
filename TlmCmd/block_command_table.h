@@ -288,14 +288,14 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
 /**
  * @brief  返り値用 enum 変換用関数
  * @param  ack: BCT_ACK
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack);
+CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack);
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
 
 #endif

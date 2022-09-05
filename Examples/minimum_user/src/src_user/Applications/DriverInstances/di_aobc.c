@@ -9,6 +9,7 @@
 #include "../../Drivers/Aocs/aobc.h"
 #include "../../TlmCmd/user_packet_handler.h"
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
 
 
@@ -95,26 +96,27 @@ CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
   CCP_set_dest_type(pckt, CCP_DEST_TYPE_TO_ME);
 
   ret = AOBC_send_cmd(&aobc_driver_, pckt);
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // FIXME: ここも一旦握りつぶす（後で直す）
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret).exec_sts;
 }
 
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   CDIS_clear_command_list(&DI_AOBC_cdis_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   // 記録されたエラー情報を解除
   CDIS_clear_error_status(&DI_AOBC_cdis_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

@@ -67,7 +67,7 @@ typedef enum
  */
 typedef struct
 {
-  CCP_EXEC_STS (*cmd_func)(const CommonCmdPacket*);                         //!< コマンドとなる関数
+  CCP_CmdRet (*cmd_func)(const CommonCmdPacket*);                           //!< コマンドとなる関数
   CA_PackedParamSizeInfo param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];  //!< パラメタサイズ情報
 } CA_CmdInfo;
 
@@ -149,10 +149,10 @@ int CA_has_raw_param(CMD_CODE cmd_code);
  */
 void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS]);
 
-CCP_EXEC_STS Cmd_CA_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_CA_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
 #endif

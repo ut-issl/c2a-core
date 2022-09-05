@@ -71,6 +71,16 @@ typedef enum
   CCP_EXEC_TYPE_UNKNOWN
 } CCP_EXEC_TYPE;
 
+/**
+ * @struct CCP_CmdRet
+ * @brief  コマンド返り値
+ */
+typedef struct
+{
+  CCP_EXEC_STS exec_sts;    //!< CCP_EXEC_STS．Cmd の統一的なエラーコード
+  uint32_t     err_code;    //!< 各 Cmd ユニークなエラーコード．各 App で定義する enum などを入れることを想定．
+} CCP_CmdRet;
+
 
 /**
  * @brief  有効なパケットかチェックする

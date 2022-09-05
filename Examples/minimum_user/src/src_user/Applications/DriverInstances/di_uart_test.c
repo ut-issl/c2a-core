@@ -8,6 +8,7 @@
 #include <stddef.h> // for NULL
 
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
 
 
@@ -68,27 +69,27 @@ static void UART_TEST_update_(void)
 }
 
 
-CCP_EXEC_STS Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   UART_TEST_init_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   UART_TEST_update_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t id;
@@ -97,7 +98,7 @@ CCP_EXEC_STS Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
   id = param[0];
 
   ret = UART_TEST_send(&uart_test_instance_, id);
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 #pragma section

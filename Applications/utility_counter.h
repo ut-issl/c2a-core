@@ -66,9 +66,9 @@ extern const UtilityCounter* const utility_counter;
 AppInfo UTIL_COUNTER_create_app(void);
 
 // コマンド
-CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet);
 
 #endif
 #endif

@@ -6,6 +6,7 @@
 
 #include "../../TlmCmd/packet_list_util.h"
 #include "../../TlmCmd/block_command_executor.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
 #include "../AnomalyLogger/anomaly_logger.h"
@@ -184,7 +185,7 @@ void TDSP_resync_internal_counter(void)
   TDSP_info_.activated_at = TMGR_get_master_total_cycle();
 }
 
-CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
 {
   // FIXME: u8 でいいのか？ まあ，いい気もする．
   TDSP_ACK ack = TDSP_set_task_list_id((bct_id_t)(CCP_get_param_head(packet)[0]));
@@ -192,13 +193,13 @@ CCP_EXEC_STS Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
   switch (ack)
   {
   case TDSP_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case TDSP_INVAILD_BCT_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case TDSP_INACTIVE_BCT_ID:
   case TDSP_EMPTY_BC:
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 

@@ -12,6 +12,7 @@
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"   // for Printf
 #include "../../Library/endian_memcpy.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 static AM_ACK AM_initialize_app_(size_t id);
 static AM_ACK AM_execute_app_(size_t id);
@@ -58,7 +59,7 @@ void AM_initialize_all_apps(void)
   }
 }
 
-CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t id;
@@ -77,15 +78,15 @@ CCP_EXEC_STS Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
   switch (AM_register_ai(id, &ai))
   {
   case AM_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
-CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
 {
   size_t id = AM_MAX_APPS;
 
@@ -96,11 +97,11 @@ CCP_EXEC_STS Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
   {
   case AM_SUCCESS:
   case AM_NOT_REGISTERED:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -139,7 +140,7 @@ static AM_ACK AM_initialize_app_(size_t id)
   return AM_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
 {
   size_t id = AM_MAX_APPS;
 
@@ -149,12 +150,12 @@ CCP_EXEC_STS Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
   switch (AM_execute_app_(id))
   {
   case AM_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case AM_INVALID_ID:
   case AM_NOT_REGISTERED:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
@@ -206,7 +207,7 @@ static AM_ACK AM_execute_app_(size_t id)
   return AM_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -215,14 +216,14 @@ CCP_EXEC_STS Cmd_AM_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= AM_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   app_manager_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
 {
   int i;
   (void)packet;
@@ -234,7 +235,7 @@ CCP_EXEC_STS Cmd_AM_CLEAR_APP_INFO(const CommonCmdPacket* packet)
     app_manager_.ais[i].min  = 0xffffffff;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

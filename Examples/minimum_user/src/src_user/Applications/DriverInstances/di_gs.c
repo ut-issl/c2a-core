@@ -7,6 +7,7 @@
 #include "di_gs.h"
 
 #include <src_core/TlmCmd/packet_handler.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
 #include "../../Drivers/Com/gs_validate.h"
 #include "../../Settings/port_config.h"
@@ -130,85 +131,85 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
   gs_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval = flush_interval;
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.is_ccsds_tx_valid = 1;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.is_ccsds_tx_valid = 0;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   endian_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
 
   DI_GS_set_t2m_flush_interval_(flush_interval, &DI_GS_ms_tlm_packet_handler_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   endian_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
 
   DI_GS_set_t2m_flush_interval_(flush_interval, &DI_GS_rp_tlm_packet_handler_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet)
 {
   uint8_t pw = CCP_get_param_head(packet)[0];
-  if (pw < 1 || pw > 127) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (pw < 1 || pw > 127) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   GS_set_farm_pw(pw);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet)
 {
   uint8_t which = CCP_get_param_head(packet)[0];
-  if (which >= GS_PORT_TYPE_NUM) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (which >= GS_PORT_TYPE_NUM) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   gs_driver_.latest_info = &gs_driver_.info[(GS_PORT_TYPE)which];
   gs_driver_.tlm_tx_port_type = (GS_PORT_TYPE)which;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet)
 {
   (void)packet;
   gs_driver_.ccsds_info.buffer_num = CCSDS_get_buffer_num();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet)
 {
   uint32_t ui_rate = (uint32_t)CCP_get_param_head(packet)[0];
-  if (ui_rate == 0) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (ui_rate == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   CCSDS_set_rate(ui_rate, &gs_driver_.driver_ccsds.ccsds_config);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

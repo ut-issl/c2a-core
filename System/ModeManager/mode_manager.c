@@ -83,7 +83,7 @@ void MM_clear_transition_table_(void)
  * @brief
  * モード遷移後にタスクリストとして実行するブロックコマンドを設定するコマンド
  */
-CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
 {
   MD_MODEID mode;
   bct_id_t  bc_index;
@@ -92,7 +92,7 @@ CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (1 + SIZE_OF_BCT_ID_T))
   {
     // パラメータはパケットヘッダとuint8_t 2個（mode, index)。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // どのモードにどのブロックコマンドを登録するかを引数から読み出す
@@ -102,9 +102,9 @@ CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_set_mode_list(mode, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
@@ -135,7 +135,7 @@ MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
  * @brief
  * モード遷移時に実行するブロックコマンドを設定するコマンド
  */
-CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
 {
   unsigned char from, to;
   bct_id_t bc_index;
@@ -144,7 +144,7 @@ CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != 1 + 1 + SIZE_OF_BCT_ID_T)
   {
     // コマンドはパケットヘッダとuint8_t 3個（from, to, index)。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // どのモード遷移にどのブロックコマンドを登録するかを引数から読み出す
@@ -155,9 +155,9 @@ CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_set_transition_table((MD_MODEID)from, (MD_MODEID)to, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 MM_ACK MM_set_transition_table(MD_MODEID from,
@@ -190,7 +190,7 @@ MM_ACK MM_set_transition_table(MD_MODEID from,
  * @brief
  * モード遷移を開始するコマンド
  */
-CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
 {
   MD_MODEID id;
 
@@ -201,9 +201,9 @@ CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_start_transition_(id);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static MM_ACK MM_start_transition_(MD_MODEID id)
@@ -258,16 +258,16 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
  * モード遷移のブロックコマンドの最後に入れて使う
  * 入っていない場合、タスクリストが遷移先のモードに置き換わらないので注意
  */
-CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   mode_manager_.mm_ack = MM_finish_transition_();
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static MM_ACK MM_finish_transition_(void)
@@ -312,12 +312,12 @@ static void MM_deploy_block_cmd_(bct_id_t bc_index)
   CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, bc_index);
 }
 
-CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
   MM_update_transition_table_for_tlm();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 uint16_t MM_update_transition_table_for_tlm(void)

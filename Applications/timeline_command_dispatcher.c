@@ -5,6 +5,7 @@
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../System/EventManager/event_logger.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 #include <string.h> // for memset
 
@@ -186,21 +187,21 @@ TLCD_ID TLCD_update_tl_list_for_tlm(TLCD_ID id)
   return id;
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_CLEAR_ALL_TIMELINE(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   CDIS_clear_command_list(&timeline_command_dispatcher_.dispatcher[id]);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   cycle_t time = CCP_get_param_from_packet(packet, 1, cycle_t);
@@ -208,16 +209,16 @@ CCP_EXEC_STS Cmd_TLCD_CLEAR_TIMELINE_AT(const CommonCmdPacket* packet)
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   if (TLCD_drop_tl_cmd_at_(id, time) == PH_ACK_SUCCESS)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 }
 
@@ -247,7 +248,7 @@ static PH_ACK TLCD_drop_tl_cmd_at_(TLCD_ID id, cycle_t time)
   return PH_ACK_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   bct_id_t block_no = CCP_get_param_from_packet(packet, 1, bct_id_t);
@@ -257,19 +258,19 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
   {
     // パラメータはTLライン番号(1Byte)とブロック番号。
     // 一致しない場合は異常判定。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   if (block_no >= BCT_MAX_BLOCKS)
   {
     // 指定されたブロック番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   ack = PL_deploy_block_cmd(&(PH_tl_cmd_list[id]), block_no, TMGR_get_master_total_cycle());
@@ -280,28 +281,28 @@ CCP_EXEC_STS Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
                     (uint32_t)ack,
                     EL_ERROR_LEVEL_LOW,
                     (uint32_t)id);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (id >= TLCD_ID_MAX)
   {
     // ライン番号が不正。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // 当該コマンド処理機能のエラー記録を解除。
   CDIS_clear_error_status(&timeline_command_dispatcher_.dispatcher[id]);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint8_t flag = CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -309,21 +310,21 @@ CCP_EXEC_STS Cmd_TLCD_SET_SOE_FLAG(const CommonCmdPacket* packet)
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   if ((flag != 0) && (flag != 1))
   {
     // フラグ内容が0/1でないなら異常判定。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // 異常時実行中断フラグを設定
   timeline_command_dispatcher_.dispatcher[id].stop_on_error = flag;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint8_t flag = CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -331,47 +332,47 @@ CCP_EXEC_STS Cmd_TLCD_SET_LOUT_FLAG(const CommonCmdPacket* packet)
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   if ((flag != 0) && (flag != 1))
   {
     // フラグ情報が0/1でない場合は異常判定。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // コマンド実行フラグを設定。
   timeline_command_dispatcher_.dispatcher[id].lockout = flag;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_ID_FOR_TLM(const CommonCmdPacket* packet)
 {
   TLCD_ID id = (TLCD_ID)CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   timeline_command_dispatcher_.tlm_info_.id = id;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLCD_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (page >= TL_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   timeline_command_dispatcher_.tlm_info_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

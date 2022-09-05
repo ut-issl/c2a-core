@@ -383,37 +383,39 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack)
+CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack)
 {
   switch (ack)
   {
   case BCT_SUCCESS:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
+  // FIXME: これだめじゃん？
   case BCT_INVALID_BLOCK_NO:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   case BCT_INVALID_CMD_NO:
-    return CCP_EXEC_CMD_NOT_DEFINED;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_CMD_NOT_DEFINED);
 
   case BCT_DEFECTIVE_BLOCK:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   case BCT_CMD_TOO_LONG:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
   case BCT_BC_FULL:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   case BCT_ZERO_PERIOD:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
 
+  // FIXME: これだめじゃん？
   default:
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK  ack;
@@ -421,7 +423,7 @@ CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
@@ -430,7 +432,7 @@ CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
   // 指定されたブロック番号のクリアを実行。
   ack = BCT_clear_block(block);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 BCT_ACK BCT_clear_block(const bct_id_t block)
@@ -446,7 +448,7 @@ BCT_ACK BCT_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   BCT_Pos pos;
@@ -455,7 +457,7 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (SIZE_OF_BCT_ID_T + 1))
   {
     // パラメータはブロック番号とコマンド番号1Byte。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し
@@ -464,24 +466,24 @@ CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
 
   ack = BCT_set_position_(&pos);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   uint16_t dst_block, src_block;
   BCT_ACK ack;
 
-  if (CCP_get_param_len(packet) != 2 * SIZE_OF_BCT_ID_T) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (CCP_get_param_len(packet) != 2 * SIZE_OF_BCT_ID_T) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   endian_memcpy(&dst_block, param, SIZE_OF_BCT_ID_T);
   endian_memcpy(&src_block, param + SIZE_OF_BCT_ID_T, SIZE_OF_BCT_ID_T);
 
   ack = BCT_copy_bct(dst_block, src_block);
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_id = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
   cycle_t  ti     = (cycle_t)CCP_get_param_from_packet(packet, 1, uint32_t);
@@ -499,7 +501,7 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   uint16_t cmd_param_len;
 
   // raw なので引数長チェック
-  if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (real_param_len < min_cmd_param_len || real_param_len > max_cmd_param_len) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   cmd_param_len = real_param_len - min_cmd_param_len;
   CCP_get_raw_param_from_packet(packet, new_cmd_param, cmd_param_len);
@@ -508,19 +510,19 @@ CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet)
   CCP_form_tlc((CommonCmdPacket*)&new_bct_cmddata, ti, cmd_id, new_cmd_param, cmd_param_len);
   BCT_overwrite_cmd(&pos, (CommonCmdPacket*)&new_bct_cmddata);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // 長さ 10 の BC に NOP を登録するコマンド. 使用前提が狭すぎるか??
 // パス運用時に使用するので, 一応厳密にしておいたほうがいい気もする.
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
 {
   static CommonCmdPacket temp_packet_;
   cycle_t ti;
   uint8_t num_nop = CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  if (num_nop > 10 || num_nop < 1) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (block_command_table_.pos.cmd + num_nop != 10) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (num_nop > 10 || num_nop < 1) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (block_command_table_.pos.cmd + num_nop != 10) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   for (ti = 11 - (cycle_t)num_nop; ti < 11; ++ti)
   {
@@ -528,7 +530,7 @@ CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet)
     BCT_register_cmd(&temp_packet_);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

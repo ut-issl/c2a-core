@@ -5,6 +5,7 @@
 #include "../TlmCmd/packet_handler.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include <string.h>   // for memcpy
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static UtilityCounter utility_counter_;
 const UtilityCounter* const utility_counter = &utility_counter_;
@@ -59,7 +60,7 @@ static void UTIL_COUNTER_incl_(UTIL_COUNTER_NAME num)
 
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
@@ -74,13 +75,13 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_INCREMENT(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
@@ -100,12 +101,12 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_RESET(const CommonCmdPacket* packet)
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
 {
   UTIL_COUNTER_NAME index;
 
@@ -120,14 +121,14 @@ CCP_EXEC_STS Cmd_UTIL_COUNTER_SET_PARAM(const CommonCmdPacket* packet)
     if (utility_counter_.cnt[index].anomaly_active > 1)
     {
       utility_counter_.cnt[index].anomaly_active = 0;
-      return CCP_EXEC_ILLEGAL_PARAMETER;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
     }
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #endif

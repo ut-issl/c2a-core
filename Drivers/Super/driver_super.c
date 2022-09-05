@@ -13,6 +13,7 @@
 #include "../../Library/print.h"
 #include <string.h>     // for memsetなどのmem系
 #include <stddef.h>     // for NULL
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 // #define DS_DEBUG                       // 適切なときにコメントアウトする
 // #define DS_DEBUG_SHOW_REC_DATA         // 適切なときにコメントアウトする
@@ -1679,36 +1680,36 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 
 // ###### Driver汎用Util関数 ######
 
-CCP_EXEC_STS DS_conv_driver_err_to_ccp_exec_sts(DS_DRIVER_ERR_CODE code)
+CCP_CmdRet DS_conv_driver_err_to_ccp_cmd_ret(DS_DRIVER_ERR_CODE code)
 {
   switch (code)
   {
   case DS_DRIVER_ERR_CODE_ILLEGAL_CONTEXT:
   case DS_DRIVER_ERR_CODE_UNKNOWN_ERR:
     // 全てこれでいいのかは，要検討
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   case DS_DRIVER_ERR_CODE_ILLEGAL_PARAMETER:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case DS_DRIVER_ERR_CODE_ILLEGAL_LENGTH:
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   default:
     // ここに来るのは以下
     // DS_DRIVER_ERR_CODE_OK
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 }
 
 
-CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code)
+CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
 {
   switch (code)
   {
   case DS_CMD_ILLEGAL_CONTEXT:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   case DS_CMD_ILLEGAL_PARAMETER:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case DS_CMD_ILLEGAL_LENGTH:
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   default:
     // ここに来るのは以下の３つ
     // DS_CMD_OK
@@ -1716,7 +1717,7 @@ CCP_EXEC_STS DS_conv_cmd_err_to_ccp_exec_sts(DS_CMD_ERR_CODE code)
     // DS_CMD_UNKNOWN_ERR
     // 下２つのエラーはDriver側の問題で，そちらでエラー情報を持つべき
     // ここでは SUCCESSを返す
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 }
 

@@ -8,6 +8,7 @@
 
 #include "../TimeManager/time_manager.h"
 #include "../../Library/endian_memcpy.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 static void AL_clear_records_(void);
 static int  AC_is_equal_(const AL_AnomalyCode* lhs,
@@ -46,7 +47,7 @@ void AL_initialize(void)
   AL_load_default_settings();
 }
 
-CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group, local;
@@ -61,11 +62,11 @@ CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
 
   if (ret == AL_ADD_SUCCESS)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
@@ -120,11 +121,11 @@ int AL_add_anomaly(uint32_t group, uint32_t local)
   return AL_ADD_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_clear();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // こいつは，AHからも呼ばれるので注意！
@@ -153,7 +154,7 @@ static int AC_is_equal_(const AL_AnomalyCode* lhs,
   return ((lhs->group == rhs->group) && (lhs->local == rhs->local));
 }
 
-CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page;
 
@@ -162,22 +163,22 @@ CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
   if (page >= AL_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   anomaly_logger_.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
 // 2019-01-18
 // 追加
 
-CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet)
 {
   (void)packet;
   AL_init_logging_ena_flag_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static void AL_init_logging_ena_flag_(void)
@@ -190,7 +191,7 @@ static void AL_init_logging_ena_flag_(void)
   }
 }
 
-CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group;
@@ -201,22 +202,22 @@ CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   ret = AL_enable_logging_(group);
 
   if (ret == 0)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
-CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t group;
@@ -227,18 +228,18 @@ CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   ret = AL_disable_logging_(group);
 
   if (ret == 0)
   {
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
   else
   {
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 
@@ -310,7 +311,7 @@ static int  AL_disable_logging_(uint32_t group)
 }
 
 
-CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint16_t thres;
@@ -319,7 +320,7 @@ CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
   endian_memcpy(&thres, param, 2);
 
   anomaly_logger_.threshold_of_nearly_full = thres;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 

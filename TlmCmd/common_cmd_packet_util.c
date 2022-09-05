@@ -70,6 +70,21 @@ static CCP_UTIL_ACK CCP_raise_err_at_param_generator_(void);
 static CCP_UTIL_ACK CCP_prepare_param_for_packet_(void* param, uint8_t byte);
 
 
+CCP_CmdRet CCP_make_cmd_ret(CCP_EXEC_STS exec_sts, uint32_t err_code)
+{
+  CCP_CmdRet ret;
+  ret.exec_sts = exec_sts;
+  ret.err_code = err_code;
+  return ret;
+}
+
+
+CCP_CmdRet CCP_make_cmd_ret_without_err_code(CCP_EXEC_STS exec_sts)
+{
+  return CCP_make_cmd_ret(exec_sts, 0);
+}
+
+
 void CCP_form_nop_rtc_(CommonCmdPacket* packet)
 {
   CCP_form_rtc(packet, Cmd_CODE_NOP, NULL, 0);

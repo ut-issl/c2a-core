@@ -78,11 +78,11 @@ TF_TLM_FUNC_ACK TF_generate_contents(TLM_CODE tlm_id,
  */
 void TF_load_tlm_table(TF_TlmInfo tlm_table[TF_MAX_TLMS]);
 
-CCP_EXEC_STS Cmd_TF_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TF_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TF_REGISTER_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TF_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
 void TF_copy_u8(uint8_t* ptr, uint8_t data);
 

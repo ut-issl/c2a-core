@@ -97,19 +97,19 @@ int  AL_is_logging_enable(uint32_t group);
 
 void AL_clear(void);
 
-CCP_EXEC_STS Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_CLEAR_LIST(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_INIT_LOGGING_ENA_FLAG(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet);
 
 #else
 #define AL_DISALBE_AT_C2A_CORE

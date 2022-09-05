@@ -53,10 +53,11 @@ void CA_initialize(void)
   CA_load_cmd_table(command_analyze_.cmd_table);
 }
 
+// FIXME: 本当は CCP_CmdRet を返すべきだが，一旦ここで握りつぶす（あとで直す．PRを分割したい）
 CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
 {
   CMD_CODE cmd_code = CCP_get_id(packet);
-  CCP_EXEC_STS (*cmd_func)(const CommonCmdPacket*) = NULL;
+  CCP_CmdRet (*cmd_func)(const CommonCmdPacket*) = NULL;
 
   if (cmd_code >= CA_MAX_CMDS)
   {
@@ -75,7 +76,7 @@ CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet)
     uint16_t param_len = CCP_get_param_len(packet);
     if (CA_ckeck_cmd_param_len(cmd_code, param_len) != CA_ACK_OK) return CCP_EXEC_ILLEGAL_LENGTH;
 
-    return cmd_func(packet);
+    return cmd_func(packet).exec_sts;
   }
   else
   {
@@ -180,14 +181,14 @@ static CA_PARAM_SIZE_TYPE CA_get_param_size_type_(CMD_CODE cmd_code, uint8_t n)
   }
 }
 
-CCP_EXEC_STS Cmd_CA_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_CA_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   CA_initialize();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
 {
   uint8_t param_size_infos[(CA_MAX_CMD_PARAM_NUM + 1) / 2];
   CMD_CODE cmd_code = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
@@ -196,40 +197,40 @@ CCP_EXEC_STS Cmd_CA_REGISTER_CMD(const CommonCmdPacket* packet)
   uint8_t i;
 
   // raw パラメタなので，引数長チェック
-  if (CCP_get_param_len(packet) != 6 + sizeof(param_size_infos)) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (CCP_get_param_len(packet) != 6 + sizeof(param_size_infos)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   ret = CCP_get_raw_param_from_packet(packet, param_size_infos, sizeof(param_size_infos));
-  if (ret != sizeof(param_size_infos)) return CCP_EXEC_ILLEGAL_LENGTH;
+  if (ret != sizeof(param_size_infos)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
 
   if (cmd_code >= CA_MAX_CMDS)
   {
     // 登録指定位置がコマンド数上限を超えている場合は異常判定
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // ローレベルコマンドなので，アサーションしない
-  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_EXEC_STS (*)(const CommonCmdPacket*))cmd_func;
+  command_analyze_.cmd_table[cmd_code].cmd_func = (CCP_CmdRet (*)(const CommonCmdPacket*))cmd_func;
   for (i = 0; i < sizeof(param_size_infos); ++i)
   {
     command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.first = ( param_size_infos[i] & 0xf0 ) >> 4;
     command_analyze_.cmd_table[cmd_code].param_size_infos[i].packed_info.bit.second = param_size_infos[i] & 0x0f;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_CA_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
 
   if (page >= CA_TLM_PAGE_MAX)
   {
     // ページ番号がコマンドテーブル範囲外
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   command_analyze_.tlm_page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
