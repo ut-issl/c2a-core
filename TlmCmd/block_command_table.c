@@ -388,30 +388,30 @@ CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack)
   switch (ack)
   {
   case BCT_SUCCESS:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+    return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
 
   // FIXME: これだめじゃん？
   case BCT_INVALID_BLOCK_NO:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, (uint32_t)ack);
 
   case BCT_INVALID_CMD_NO:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_CMD_NOT_DEFINED);
+    return CCP_make_cmd_ret(CCP_EXEC_CMD_NOT_DEFINED, (uint32_t)ack);
 
   case BCT_DEFECTIVE_BLOCK:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
 
   case BCT_CMD_TOO_LONG:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, (uint32_t)ack);
 
   case BCT_BC_FULL:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
 
   case BCT_ZERO_PERIOD:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, (uint32_t)ack);
 
   // FIXME: これだめじゃん？
   default:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
+    return CCP_make_cmd_ret(CCP_EXEC_UNKNOWN, (uint32_t)ack);
   }
 }
 

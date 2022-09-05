@@ -237,11 +237,11 @@ static CCP_CmdRet TMGR_conv_tmgr_ack_to_ccp_cmd_ret_(TMGR_ACK ack)
   switch (ack)
   {
   case TMGR_ACK_OK:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+    return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
   case TMGR_ACK_PARAM_ERR:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, (uint32_t)ack);
   default:
-    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
   }
 }
 
