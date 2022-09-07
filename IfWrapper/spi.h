@@ -32,8 +32,8 @@ typedef enum
  */
 typedef enum
 {
-  SPI_CS_STATE_AFTER_TX_LOW  = 0,   //!< 送信後にCSをLowのままにし、そのまま受信動作などを行う
-  SPI_CS_STATE_AFTER_TX_HIGH = 1    //!< 送信後にCSをHighにする
+  SPI_CS_STATE_AFTER_TX_HIGH = 0,   //!< 送信後にCSをHighにする
+  SPI_CS_STATE_AFTER_TX_LOW  = 1    //!< 送信後にCSをLowのままにし、そのまま受信動作などを行う
 } SPI_CS_STATE_AFTER_TX;
 
 /**
