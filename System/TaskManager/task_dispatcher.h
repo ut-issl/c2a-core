@@ -40,7 +40,6 @@ typedef enum
   TDSP_UNKNOWN
 } TDSP_ACK;
 
-// FIXME: extern const TaskDsipatcher* const task_dispathcer; に直す
 extern const TaskDsipatcher* const task_dispathcer;
 
 /**
