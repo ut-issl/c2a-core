@@ -41,7 +41,7 @@ typedef enum
 } TDSP_ACK;
 
 // FIXME: extern const TaskDsipatcher* const task_dispathcer; に直す
-extern const TaskDsipatcher* const TDSP_info;
+extern const TaskDsipatcher* const task_dispathcer;
 
 /**
  * @brief タスク管理を行うTaskDsipatcher構造体(TaskDsipatcher_)の初期化
