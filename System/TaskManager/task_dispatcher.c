@@ -1,4 +1,10 @@
 #pragma section REPRO
+/**
+ * @file
+ * @brief TL (task list) に設定されたタスクを実行する主体
+ * @note  これは， RT OS のタスク時分割処理に相当する
+ *        したがって，これによって， 1 cycle を step 刻みで各 task に振り分けて実行していくことになる
+ */
 #include "task_dispatcher.h"
 
 #include <stdlib.h>
@@ -14,11 +20,13 @@
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
 
-static TDSP_Info TDSP_info_;
-const TDSP_Info* const TDSP_info = &TDSP_info_;
+#define TDSP_TASK_MAX BCT_MAX_CMD_NUM
+
+static TaskDsipatcher TDSP_info_;
+const TaskDsipatcher* const TDSP_info = &TDSP_info_;
 
 // 現在のサイクルで実行すべきタスク一覧を保存したもの
-static PacketList task_list_;
+static PacketList TDSP_task_list_;
 
 /**
  * @brief `TDSP_info_.task_list_id` に登録された BC を TaskListに展開.
@@ -36,18 +44,20 @@ static void TDSP_deploy_block_as_task_list_(void);
 static void TDSP_print_tdsp_status_(void);
 #endif
 
+
 void TDSP_initialize(void)
 {
   static PL_Node task_stock_[TDSP_TASK_MAX];
   static CommonCmdPacket packet_stock_[TDSP_TASK_MAX];
-  PL_initialize_with_ccp(task_stock_, packet_stock_, TDSP_TASK_MAX, &task_list_);
+  PL_initialize_with_ccp(task_stock_, packet_stock_, TDSP_TASK_MAX, &TDSP_task_list_);
 
   // タスクリストを初期化し、INITIALモードのブロックコマンドを展開する
-  TDSP_info_.tskd = CDIS_init(&task_list_);
+  TDSP_info_.tskd = CDIS_init(&TDSP_task_list_);
   TDSP_info_.task_list_id = MM_get_tasklist_id_of_mode(MD_MODEID_START_UP);
   TDSP_deploy_block_as_task_list_();
   TDSP_info_.activated_at = 0;
 }
+
 
 TDSP_ACK TDSP_set_task_list_id(bct_id_t id)
 {
@@ -59,6 +69,7 @@ TDSP_ACK TDSP_set_task_list_id(bct_id_t id)
   return TDSP_SUCCESS;
 }
 
+
 static void TDSP_deploy_block_as_task_list_(void)
 {
   PL_ACK ack;
@@ -67,7 +78,7 @@ static void TDSP_deploy_block_as_task_list_(void)
   // まず次Master Cycleの情報を更新する。
   TDSP_info_.activated_at = TMGR_get_master_total_cycle() + 1;
 
-  ack = PL_deploy_block_cmd(&task_list_, TDSP_info_.task_list_id, 0);
+  ack = PL_deploy_block_cmd(&TDSP_task_list_, TDSP_info_.task_list_id, 0);
 
   if (ack != PL_SUCCESS)
   {
@@ -81,6 +92,7 @@ static void TDSP_deploy_block_as_task_list_(void)
   }
 }
 
+
 void TDSP_execute_pl_as_task_list(void)
 {
   // まずは (1)ブロックコマンドがタスクリストに展開された時のサイクル数 と (2)現在のサイクル数 を比較
@@ -91,7 +103,7 @@ void TDSP_execute_pl_as_task_list(void)
   if (TDSP_info_.activated_at == TMGR_get_master_total_cycle())
   {
     // タスクリストの先頭コマンド実行予定時刻と現在時刻を比較
-    PL_ACK ack = PL_check_tl_cmd(&task_list_,
+    PL_ACK ack = PL_check_tl_cmd(&TDSP_task_list_,
                                  (size_t)(TMGR_get_master_step()));
 
     switch (ack)
@@ -104,7 +116,7 @@ void TDSP_execute_pl_as_task_list(void)
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_STEP_OVERRUN,
                       EL_ERROR_LEVEL_LOW,
-                      (uint32_t)CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(&task_list_)->packet) ));
+                      (uint32_t)CCP_get_ti( (const CommonCmdPacket*)(PL_get_head(&TDSP_task_list_)->packet) ));
 
       // FALL THROUGH
 
@@ -131,7 +143,7 @@ void TDSP_execute_pl_as_task_list(void)
       // ・タスクリストが空
       // ・次のコマンドの実行時刻がまだ
 
-      if (PL_count_active_nodes(&task_list_) == 0)
+      if (PL_count_active_nodes(&TDSP_task_list_) == 0)
       {
         // task_listが空なら再度タスクリストを展開
         // これを行うとTDSP_info_.activated_atがインクリメントされるので、"次のサイクル実行待ち状態"になる
@@ -177,16 +189,18 @@ void TDSP_execute_pl_as_task_list(void)
                       0);
 
       // リストをクリア->再展開し次サイクルから再実行
-      PL_clear_list(&task_list_);
+      PL_clear_list(&TDSP_task_list_);
       TDSP_deploy_block_as_task_list_();
     }
   }
 }
 
+
 void TDSP_resync_internal_counter(void)
 {
   TDSP_info_.activated_at = TMGR_get_master_total_cycle();
 }
+
 
 CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
 {
@@ -206,12 +220,14 @@ CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
   }
 }
 
+
 // debug_apps にあるべき & 今はつわかないので無効化
 #if 0
 AppInfo TDSP_print_tdsp_status(void)
 {
   return AI_create_app_info("tstm", NULL, TDSP_print_tdsp_status_);
 }
+
 
 void TDSP_print_tdsp_status_(void)
 {
