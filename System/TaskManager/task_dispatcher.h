@@ -73,6 +73,9 @@ void TDSP_resync_internal_counter(void);
  */
 CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet);
 
-AppInfo print_tdsp_status(void);
+// debug_apps にあるべき & 今はつわかないので無効化
+#if 0
+AppInfo TDSP_print_tdsp_status(void);
+#endif
 
 #endif

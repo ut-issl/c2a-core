@@ -13,8 +13,6 @@
 #include "../EventManager/event_logger.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
-#include "../../Library/print.h"
-#include <src_user/Library/vt100.h>
 
 static TDSP_Info TDSP_info_;
 const TDSP_Info* const TDSP_info = &TDSP_info_;
@@ -28,10 +26,15 @@ static PacketList task_list_;
  */
 static void TDSP_deploy_block_as_task_list_(void);
 
+// debug_apps にあるべき & 今はつわかないので無効化
+#if 0
+#include "../../Library/print.h"
+#include <src_user/Library/vt100.h>
 /**
  * @brief デバッグ情報表示
  */
-static void print_tdsp_status_(void);
+static void TDSP_print_tdsp_status_(void);
+#endif
 
 void TDSP_initialize(void)
 {
@@ -203,12 +206,14 @@ CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet)
   }
 }
 
-AppInfo print_tdsp_status(void)
+// debug_apps にあるべき & 今はつわかないので無効化
+#if 0
+AppInfo TDSP_print_tdsp_status(void)
 {
-  return AI_create_app_info("tstm", NULL, print_tdsp_status_);
+  return AI_create_app_info("tstm", NULL, TDSP_print_tdsp_status_);
 }
 
-void print_tdsp_status_(void)
+void TDSP_print_tdsp_status_(void)
 {
   VT100_erase_line();
   Printf("TASK: BC %d, ERR (TOTAL, STEP, STS, CODE) = (%10u, %3u, %d, %d)\n",
@@ -218,5 +223,6 @@ void print_tdsp_status_(void)
          TDSP_info->tskd.prev_err.cmd_ret.exec_sts,
          TDSP_info->tskd.prev_err.cmd_ret.err_code);
 }
+#endif
 
 #pragma section
