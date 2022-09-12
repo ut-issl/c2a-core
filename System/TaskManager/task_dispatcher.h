@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief TL (task list) に設定されたタスクを実行する主体
+ * @brief task list に設定されたタスクを実行する主体
  * @note  これは， RT OS のタスク時分割処理に相当する
  *        したがって，これによって， 1 cycle を step 刻みで各 task に振り分けて実行していくことになる
  */
