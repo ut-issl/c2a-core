@@ -72,8 +72,8 @@ def test_tmgr_set_unixtime():
         - (ti / OBCT_CYCLES_PER_SEC)
         - (step / OBCT_CYCLES_PER_SEC / OBCT_STEPS_PER_CYCLE)
     )
-    assert tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] < unixtime_at_ti0 + OBCT_STEP_IN_MSEC / 1000
-    assert tlm_HK["HK.OBC_TM_UNIXTIME_AT_TI0"] > unixtime_at_ti0 - OBCT_STEP_IN_MSEC / 1000
+    assert tlm_HK["HK.OBC.TM_UNIXTIME_AT_TI0"] < unixtime_at_ti0 + OBCT_STEP_IN_MSEC / 1000
+    assert tlm_HK["HK.OBC.TM_UNIXTIME_AT_TI0"] > unixtime_at_ti0 - OBCT_STEP_IN_MSEC / 1000
 
     # unixtime_at_ti0 < ti ではコマンドが通らないことを確認
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(

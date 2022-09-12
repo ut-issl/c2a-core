@@ -171,52 +171,52 @@ def check_gsc_ack(exec_cmd, sts):
     wait_for_2nd_obc_hk_tlm()
     assert g_mobc_gsc_cnt == get_mobc_gsc_counter()
     tlm_2ND_HK = get_2nd_obc_hk_tlm()
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"] == g_second_obc_gsc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"] == g_second_obc_rtc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_LAST_EXEC_ID"] == exec_cmd
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_LAST_EXEC_STS"] == sts
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.LAST_EXEC.ID"] == exec_cmd
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.LAST_EXEC.STS"] == sts
 
 
 def check_rtc_ack(exec_cmd, sts):
     wait_for_2nd_obc_hk_tlm()
     assert g_mobc_gsc_cnt == get_mobc_gsc_counter()
     tlm_2ND_HK = get_2nd_obc_hk_tlm()
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"] == g_second_obc_gsc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"] == g_second_obc_rtc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_LAST_EXEC_ID"] == exec_cmd
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_LAST_EXEC_STS"] == sts
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.LAST_EXEC.ID"] == exec_cmd
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.LAST_EXEC.STS"] == sts
 
 
 def check_tlc_ack(ti, exec_cmd):
     wait_for_2nd_obc_hk_tlm()
     assert g_mobc_gsc_cnt == get_mobc_gsc_counter()
     tlm_2ND_HK = get_2nd_obc_hk_tlm()
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"] == g_second_obc_gsc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"] == g_second_obc_rtc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_TLC_GS.QUEUED"] == 1
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_TLC_GS.NEXT_TIME"] == ti
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_TLC_GS.NEXT_ID"] == exec_cmd
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.TLC_GS.QUEUED"] == 1
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.TLC_GS.NEXT_TIME"] == ti
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.TLC_GS.NEXT_ID"] == exec_cmd
 
 
 def check_mobc_tlc_ack(ti, exec_cmd):
     wait_for_2nd_obc_hk_tlm()
     assert g_mobc_gsc_cnt == get_mobc_gsc_counter()
     tlm_HK = get_mobc_hk_tlm()
-    assert tlm_HK["HK.OBC_TLC_GS.QUEUED"] == 1
-    assert tlm_HK["HK.OBC_TLC_GS.NEXT_TIME"] == ti
-    assert tlm_HK["HK.OBC_TLC_GS.NEXT_ID"] == exec_cmd
+    assert tlm_HK["HK.OBC.TLC_GS.QUEUED"] == 1
+    assert tlm_HK["HK.OBC.TLC_GS.NEXT_TIME"] == ti
+    assert tlm_HK["HK.OBC.TLC_GS.NEXT_ID"] == exec_cmd
     tlm_2ND_HK = get_2nd_obc_hk_tlm()
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"] == g_second_obc_gsc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"] == g_second_obc_rtc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_TLC_GS.QUEUED"] == 0
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.TLC_GS.QUEUED"] == 0
 
 
 def ckeck_bct_ack(ti, exec_cmd, bct_id):
     wait_for_2nd_obc_hk_tlm()
     assert g_mobc_gsc_cnt == get_mobc_gsc_counter()
     tlm_2ND_HK = get_2nd_obc_hk_tlm()
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"] == g_second_obc_gsc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"] == g_second_obc_rtc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
     assert tlm_2ND_HK[SECOND_OBC + "_HK.BCT_BLK_PTR"] == bct_id
     assert tlm_2ND_HK[SECOND_OBC + "_HK.BCT_CMD_PTR"] == 1
     assert tlm_2ND_HK[SECOND_OBC + "_HK.BCT_REGD_TIME"] == ti
@@ -238,8 +238,8 @@ def ckeck_mobc_bct_ack(ti, exec_cmd, bct_id):
     assert tlm_MOBC["MOBC.BCT_REGD_ID"] == exec_cmd
 
     tlm_2ND_HK = get_2nd_obc_hk_tlm()
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"] == g_second_obc_gsc_cnt
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"] == g_second_obc_rtc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
     assert tlm_2ND_HK[SECOND_OBC + "_HK.BCT_BLK_PTR"] == bct_id
     assert tlm_2ND_HK[SECOND_OBC + "_HK.BCT_CMD_PTR"] == 0
 
@@ -269,15 +269,15 @@ def get_2nd_obc_ti():
 
 
 def get_mobc_gsc_counter():
-    return get_mobc_hk_tlm()["HK.OBC_GS_CMD_COUNTER"]
+    return get_mobc_hk_tlm()["HK.OBC.GS_CMD.COUNTER"]
 
 
 def get_2nd_obc_gsc_counter():
-    return get_2nd_obc_hk_tlm()[SECOND_OBC + "_HK.OBC_GS_CMD_COUNTER"]
+    return get_2nd_obc_hk_tlm()[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"]
 
 
 def get_2nd_obc_rtc_counter():
-    return get_2nd_obc_hk_tlm()[SECOND_OBC + "_HK.OBC_RT_CMD_COUNTER"]
+    return get_2nd_obc_hk_tlm()[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"]
 
 
 def wait_for_2nd_obc_hk_tlm():

@@ -52,7 +52,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_GS.SOE_FLAG"] == "ENA"
+    assert tlm_HK["HK.OBC.TLC_GS.SOE_FLAG"] == "ENA"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
@@ -60,7 +60,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_GS.SOE_FLAG"] == "DIS"
+    assert tlm_HK["HK.OBC.TLC_GS.SOE_FLAG"] == "DIS"
 
     # TL_GS の LOUT flag チェック
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -70,7 +70,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_GS.LOCKOUT_FLAG"] == "YES"
+    assert tlm_HK["HK.OBC.TLC_GS.LOCKOUT_FLAG"] == "YES"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
@@ -78,7 +78,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_GS.LOCKOUT_FLAG"] == "NO"
+    assert tlm_HK["HK.OBC.TLC_GS.LOCKOUT_FLAG"] == "NO"
 
     # TL_MIS の SOE flag チェック
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -88,7 +88,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_MIS.SOE_FLAG"] == "ENA"
+    assert tlm_HK["HK.OBC.TLC_MIS.SOE_FLAG"] == "ENA"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_SOE_FLAG,
@@ -96,7 +96,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_MIS.SOE_FLAG"] == "DIS"
+    assert tlm_HK["HK.OBC.TLC_MIS.SOE_FLAG"] == "DIS"
 
     # TL_MIS の LOUT flag チェック
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -106,7 +106,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_MIS.LOCKOUT_FLAG"] == "YES"
+    assert tlm_HK["HK.OBC.TLC_MIS.LOCKOUT_FLAG"] == "YES"
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_TLCD_SET_LOUT_FLAG,
@@ -114,7 +114,7 @@ def test_tlcd_set_flag():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_HK, rec_time = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-    assert tlm_HK["HK.OBC_TLC_MIS.LOCKOUT_FLAG"] == "NO"
+    assert tlm_HK["HK.OBC.TLC_MIS.LOCKOUT_FLAG"] == "NO"
 
 
 @pytest.mark.sils
