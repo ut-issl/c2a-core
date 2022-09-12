@@ -23,7 +23,7 @@ typedef enum
   EH_EL_LOCAL_ID_EL_TOTAL_COUNTER_ERR = 0,  //!< ELとEHのカウンタの不整合エラー (counter_total)
   EH_EL_LOCAL_ID_EL_COUNTER_ERR,            //!< ELとEHのカウンタの不整合エラー (counters)
   EH_EL_LOCAL_ID_TOO_MANY_EVENT,            //!< イベントが発生しすぎて，TLogが失われている
-  EH_EL_LOCAL_ID_FAIL_FORM_CTCP,            //!< BC 展開 Cmd の生成に失敗
+  EH_EL_LOCAL_ID_FAIL_TO_RESPOND,           //!< EH 対応時に BC 展開に失敗
   EH_EL_LOCAL_ID_LOG_TABLE_FULL,            //!< EH_LogTable が満杯になり， wp が 0 に戻った
   EH_EL_LOCAL_ID_SEARCH_ERR,                //!< EH_search_rule_table_index_ の返り値不正
   EH_EL_LOCAL_ID_RECURSION_ERR,             //!< 多段対応時に再帰呼び出し回数が設定値を超えた
@@ -653,10 +653,21 @@ static void EH_respond_(EH_RULE_ID rule_id)
   cmd_ret = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
   if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
   {
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
-                    EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
-                    EL_ERROR_LEVEL_HIGH,
-                    cmd_ret.exec_sts);
+    uint32_t note = ((0x0000ffff & cmd_ret.exec_sts) << 16) | (0x0000ffff & cmd_ret.err_code);
+    if ((PL_ACK)cmd_ret.err_code == PL_BC_TIME_ADJUSTED)
+    {
+      EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                      EH_EL_LOCAL_ID_FAIL_TO_RESPOND,
+                      EL_ERROR_LEVEL_LOW,
+                      note);
+    }
+    else
+    {
+      EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                      EH_EL_LOCAL_ID_FAIL_TO_RESPOND,
+                      EL_ERROR_LEVEL_HIGH,
+                      note);
+    }
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
