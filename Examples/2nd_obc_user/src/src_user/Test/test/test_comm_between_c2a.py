@@ -174,7 +174,7 @@ def check_gsc_ack(exec_cmd, sts):
     assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.COUNTER"] == g_second_obc_gsc_cnt
     assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.RT_CMD.COUNTER"] == g_second_obc_rtc_cnt
     assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.LAST_EXEC.ID"] == exec_cmd
-    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.LAST_EXEC.STS"] == sts
+    assert tlm_2ND_HK[SECOND_OBC + "_HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == sts
 
 
 def check_rtc_ack(exec_cmd, sts):

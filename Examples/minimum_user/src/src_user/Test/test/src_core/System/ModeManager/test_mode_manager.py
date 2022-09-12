@@ -47,7 +47,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == ""
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == ""
 
 #     # ===== 範囲外のブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
@@ -57,7 +57,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 無効化されているブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
@@ -73,7 +73,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
@@ -89,7 +89,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "SUC"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 
 #     tlm_MM = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MM
@@ -114,7 +114,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     wings.util.send_cmd_and_confirm(
 #         ope,
@@ -123,7 +123,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 範囲外のブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
@@ -133,7 +133,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 無効化されているブロックコマンド =====
 #     wings.util.send_cmd_and_confirm(
@@ -149,7 +149,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
@@ -165,7 +165,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK, _ = ope.get_latest_tlm(c2a_enum.Tlm_CODE_HK)
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "SUC"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 
 #     tlm_MM = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MM
@@ -196,7 +196,7 @@ def test_mm_nop():
 #     tlm_HK = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
 #     )
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 存在しないモード遷移 =====
 #     wings.util.send_cmd_and_confirm(
@@ -208,7 +208,7 @@ def test_mm_nop():
 #     tlm_HK = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
 #     )
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "ERR"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
 #     # ===== 成功 =====
 #     wings.util.send_cmd_and_confirm(
@@ -232,7 +232,7 @@ def test_mm_nop():
 #     tlm_HK = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
 #     )
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "SUC"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 #     assert tlm_HK["HK.OBC.MM_OPSMODE"] == "RESERVE_3"
 #     assert tlm_HK["HK.OBC.MM_STS"] == "PROGRESS:G"
 
@@ -258,7 +258,7 @@ def test_mm_nop():
 #     tlm_HK = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
 #     )
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "SUC"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 #     assert tlm_HK["HK.OBC.MM_OPSMODE"] == "INITIAL"
 #     assert tlm_HK["HK.OBC.MM_STS"] == "PROGRESS:G"
 
@@ -277,7 +277,7 @@ def test_mm_nop():
 #     tlm_HK = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
 #     )
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "SUC"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 #     wings.util.send_cmd_and_confirm(
 #         ope,
 #         c2a_enum.Cmd_CODE_MM_SET_TRANSITION_TABLE,
@@ -287,7 +287,7 @@ def test_mm_nop():
 #     tlm_HK = wings.util.generate_and_receive_tlm(
 #         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
 #     )
-#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.STS"] == "SUC"
+#     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 
 
 # @pytest.mark.sils
