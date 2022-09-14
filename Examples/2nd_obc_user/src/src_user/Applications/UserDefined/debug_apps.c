@@ -88,12 +88,13 @@ void APP_DBG_print_time_stamp_(void)
 void APP_DBG_print_cmd_status_(void)
 {
   VT100_erase_line();
-  Printf("CMD: GS %3d, RT %3d, Ack %3d, Code 0x%02x, Sts %3d\n",
+  Printf("CMD: GS %3d, RT %3d, Ack %2d, ID 0x%02x, Sts %1d, EC %d\n",
          (PL_count_executed_nodes(&PH_gs_cmd_list) & 0xff),
          (PL_count_executed_nodes(&PH_rt_cmd_list) & 0xff),
          mobc_driver->info.c2a.ph_ack,
          gs_command_dispatcher->prev.code,
-         gs_command_dispatcher->prev.sts);
+         gs_command_dispatcher->prev.cmd_ret.exec_sts,
+         gs_command_dispatcher->prev.cmd_ret.err_code);
 }
 
 void APP_DBG_print_event_logger0_(void)

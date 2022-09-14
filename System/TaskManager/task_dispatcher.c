@@ -109,7 +109,7 @@ void TDSP_execute_pl_as_task_list(void)
       // 実行時刻が過ぎている、もしくは実行時刻ピッタリの場合はコマンドを実行
       CDIS_dispatch_command(&(TDSP_info_.tskd));
 
-      if (TDSP_info_.tskd.prev.sts != CCP_EXEC_SUCCESS)
+      if (TDSP_info_.tskd.prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
       {
         // コマンド実行時に異常が発生した場合はアノマリを登録。
 #ifndef AL_DISALBE_AT_C2A_CORE
@@ -118,7 +118,7 @@ void TDSP_execute_pl_as_task_list(void)
         EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_TASK_EXEC_FAILED,
                       EL_ERROR_LEVEL_HIGH,
-                      TDSP_info_.tskd.prev.sts);
+                      TDSP_info_.tskd.prev.cmd_ret.exec_sts);
       }
 
       break;
@@ -211,11 +211,12 @@ AppInfo print_tdsp_status(void)
 void print_tdsp_status_(void)
 {
   VT100_erase_line();
-  Printf("TASK: BC %d, ERR (TOTAL, STEP, STS) = (%10u, %3u, %d)\n",
+  Printf("TASK: BC %d, ERR (TOTAL, STEP, STS, CODE) = (%10u, %3u, %d, %d)\n",
          TDSP_info->task_list_id,
          TDSP_info->tskd.prev_err.time.total_cycle,
          TDSP_info->tskd.prev_err.time.step,
-         TDSP_info->tskd.prev_err.sts);
+         TDSP_info->tskd.prev_err.cmd_ret.exec_sts,
+         TDSP_info->tskd.prev_err.cmd_ret.err_code);
 }
 
 #pragma section

@@ -6,6 +6,7 @@
 #define COMMAND_ANALYZE_H_
 
 #include "common_cmd_packet.h"
+#include "common_cmd_packet_util.h"
 #include <src_user/TlmCmd/command_definitions.h>
 
 #define CA_TLM_PAGE_SIZE      (32)                                  //!< コマンドテーブルの1テレメトリパケット(=1ページ)に格納されるコマンド数（ページネーション用）
@@ -94,9 +95,9 @@ void CA_initialize(void);
 /**
  * @brief  コマンド実行の本体
  * @param  packet: 実行するコマンド
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-CCP_EXEC_STS CA_execute_cmd(const CommonCmdPacket* packet);
+CCP_CmdRet CA_execute_cmd(const CommonCmdPacket* packet);
 
 /**
  * @brief  コマンドパラメタ数を取得する

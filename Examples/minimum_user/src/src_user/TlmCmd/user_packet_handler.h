@@ -7,6 +7,7 @@
 
 #include <src_core/TlmCmd/packet_list.h>
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/TlmCmd/packet_handler.h>
 
 extern PacketList PH_aobc_cmd_list;
@@ -36,15 +37,15 @@ void PH_user_init(void);
 PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet);
 
 /**
- * @brief  PH の cmd_router_ のユーザー処理関数
+ * @brief  PH の PH_dispatch_command のユーザー処理関数
  *
  *         C2A を搭載したコンポに Cmd が転送される．
  *         つまり，転送対象 OBC にとっては RTC 扱いになる
- *         ここから Driver を叩いて送信まで行うことになる（実行時間は cmdExec と同じだけ許容されているので OK）
+ *         ここから Driver を叩いて送信まで行うことになる（実行時間は CA_execute_cmd と同じだけ許容されているので OK）
  * @param  packet: CCP
- * @retval CCP_EXEC_SUCCESS など:   無事に転送された．転送先の結果を返す
- * @retval CCP_EXEC_ROUTING_FAILED: 転送失敗（詳細エラーは DriverSuper を参照）
+ * @retval CCP_CmdRet{CCP_EXEC_SUCCESS, *} など:   無事に転送された．転送先の結果を返す
+ * @retval CCP_CmdRet{CCP_EXEC_ROUTING_FAILED, *}: 転送失敗（詳細エラーは DriverSuper を参照）
  */
-CCP_EXEC_STS PH_user_cmd_router(const CommonCmdPacket* packet);
+CCP_CmdRet PH_user_cmd_router(const CommonCmdPacket* packet);
 
 #endif

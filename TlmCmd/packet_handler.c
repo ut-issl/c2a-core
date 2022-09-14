@@ -219,9 +219,12 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 }
 
 
-CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
+CCP_CmdRet PH_dispatch_command(const CommonCmdPacket* packet)
 {
-  if (!CCP_is_valid_packet(packet)) return CCP_EXEC_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CCP_is_valid_packet(packet))
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);    // FIXME: 返り値変えたい
+  }
 
   // FIXME: CTCP, SpacePacket 整理で直す
   if (CCP_get_apid(packet) == CCP_APID_TO_ME)

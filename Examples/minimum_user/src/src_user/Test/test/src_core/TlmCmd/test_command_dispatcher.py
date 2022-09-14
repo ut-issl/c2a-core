@@ -58,16 +58,16 @@ def test_cdis_exec_err():
         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL
     )
     # GS_cmd_dispatcher
-    assert tlm_EL["EL.TLOGS.LOW.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR
-    assert tlm_EL["EL.TLOGS.LOW.EVENTS2.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR
+    assert tlm_EL["EL.TLOGS.LOW.EVENTS3.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS
+    assert tlm_EL["EL.TLOGS.LOW.EVENTS2.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS
     assert tlm_EL["EL.TLOGS.LOW.EVENTS3.LOCAL"] == tlm_EL["EL.TLOGS.LOW.EVENTS2.LOCAL"]
     note = (c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME << 16) | c2a_enum.CCP_EXEC_ILLEGAL_PARAMETER
     assert tlm_EL["EL.TLOGS.LOW.EVENTS3.NOTE"] == note
     note = (c2a_enum.Cmd_CODE_AM_SET_PAGE_FOR_TLM << 16) | c2a_enum.CCP_EXEC_ILLEGAL_PARAMETER
     assert tlm_EL["EL.TLOGS.LOW.EVENTS2.NOTE"] == note
     # TL_cmd_dispatcher
-    assert tlm_EL["EL.TLOGS.LOW.EVENTS1.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR
-    assert tlm_EL["EL.TLOGS.LOW.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR
+    assert tlm_EL["EL.TLOGS.LOW.EVENTS1.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS
+    assert tlm_EL["EL.TLOGS.LOW.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS
     assert tlm_EL["EL.TLOGS.LOW.EVENTS1.LOCAL"] == tlm_EL["EL.TLOGS.LOW.EVENTS0.LOCAL"]
     note = (c2a_enum.Cmd_CODE_TMGR_UPDATE_UNIXTIME << 16) | c2a_enum.CCP_EXEC_ILLEGAL_PARAMETER
     assert tlm_EL["EL.TLOGS.LOW.EVENTS1.NOTE"] == note

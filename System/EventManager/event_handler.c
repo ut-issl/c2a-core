@@ -648,23 +648,24 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
 static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
-  CCP_EXEC_STS ack;
+  CCP_CmdRet cmd_ret;
 
-  ack = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
-  if (ack != CCP_EXEC_SUCCESS)
+  cmd_ret = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
+  if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
   {
     EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
                     EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
                     EL_ERROR_LEVEL_HIGH,
-                    ack);
+                    cmd_ret.exec_sts);
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
 
-  EH_record_responded_log_(rule_id, ack);
+  EH_record_responded_log_(rule_id, cmd_ret.exec_sts);
 }
 
 
+// FIXME: CCP_EXEC_STS -> CCP_CmdRet にしてもいいかも？
 static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd_ack)
 {
   EH_LogTable* log_table = &event_handler_.log_table;

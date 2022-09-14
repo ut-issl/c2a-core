@@ -760,7 +760,7 @@ def initialize_el():
     ret = wings.util.send_rt_cmd_and_confirm(
         ope,
         c2a_enum.Cmd_CODE_EL_DISABLE_LOGGING,
-        (c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR,),
+        (c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS,),
         c2a_enum.Tlm_CODE_HK,
     )
     assert ret == "SUC"

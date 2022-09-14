@@ -43,8 +43,8 @@ typedef enum
   CCP_EXEC_ILLEGAL_LENGTH,      //!< コマンド実行時のコマンド引数長エラー
   CCP_EXEC_ILLEGAL_PARAMETER,   //!< コマンド実行時のパラメタエラー
   CCP_EXEC_ILLEGAL_CONTEXT,     //!< コマンド実行時のその他のエラー
-  CCP_EXEC_CMD_NOT_DEFINED,     //!< cmdExec で用いる
-  CCP_EXEC_ROUTING_FAILED,      //!< command router で用いる
+  CCP_EXEC_CMD_NOT_DEFINED,     //!< CA_execute_cmd で用いる
+  CCP_EXEC_ROUTING_FAILED,      //!< PH_dispatch_command, PH_user_cmd_router で用いる
   CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler, ccp util で用いる
   CCP_EXEC_UNKNOWN              //!< 内部処理用．使わない．
 } CCP_EXEC_STS;
