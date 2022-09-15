@@ -76,12 +76,12 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u8(&packet[46], (uint8_t)(mode_manager->stat));
   TF_copy_u8(&packet[47], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[48], (uint8_t)(mode_manager->previous_id));
-  TF_copy_u8(&packet[49], (uint8_t)(TDSP_info->task_list_id));
-  TF_copy_u32(&packet[50], (uint32_t)(TDSP_info->tskd.prev_err.time.total_cycle));
-  TF_copy_u8(&packet[54], (uint8_t)(TDSP_info->tskd.prev_err.time.step));
-  TF_copy_u16(&packet[55], (uint16_t)(TDSP_info->tskd.prev_err.code));
-  TF_copy_u8(&packet[57], (uint8_t)(TDSP_info->tskd.prev_err.cmd_ret.exec_sts));
-  TF_copy_u32(&packet[58], TDSP_info->tskd.prev_err.cmd_ret.err_code);
+  TF_copy_u8(&packet[49], (uint8_t)(task_dispathcer->task_list_id));
+  TF_copy_u32(&packet[50], (uint32_t)(task_dispathcer->tskd.prev_err.time.total_cycle));
+  TF_copy_u8(&packet[54], (uint8_t)(task_dispathcer->tskd.prev_err.time.step));
+  TF_copy_u16(&packet[55], (uint16_t)(task_dispathcer->tskd.prev_err.code));
+  TF_copy_u8(&packet[57], (uint8_t)(task_dispathcer->tskd.prev_err.cmd_ret.exec_sts));
+  TF_copy_u32(&packet[58], task_dispathcer->tskd.prev_err.cmd_ret.err_code);
   TF_copy_i32(&packet[62], (int32_t)gs_driver->latest_info->rx.ret_from_if_rx);
   TF_copy_u8(&packet[66], (uint8_t)gs_driver->latest_info->rx.rec_status);
   TF_copy_u32(&packet[67], (uint32_t)gs_driver->latest_info->rx.last_rec_time);
@@ -3197,7 +3197,7 @@ static TF_TLM_FUNC_ACK Tlm_HK_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_double(&packet[30], TMGR_get_unixtime_at_ti0());
   TF_copy_u8(&packet[38], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[39], (uint8_t)( ((uint8_t)(mode_manager->stat) << 7 & 0x80) | ((uint8_t)(mode_manager->previous_id) & 0x7F) ));
-  TF_copy_u16(&packet[40], TDSP_info->task_list_id);
+  TF_copy_u16(&packet[40], task_dispathcer->task_list_id);
   TF_copy_u8(&packet[42], (uint8_t)gs_driver->latest_info->rx.rec_status);
   TF_copy_u32(&packet[43], (uint32_t)gs_driver->latest_info->rx.last_rec_time);
   TF_copy_u8(&packet[47], (uint8_t)(gs_driver->latest_info->rx.cmd_ack));

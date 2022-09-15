@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @brief task list に設定されたタスクを実行する主体
+ * @note  これは， RT OS のタスク時分割処理に相当する
+ *        したがって，これによって， 1 cycle を step 刻みで各 task に振り分けて実行していくことになる
+ */
 #ifndef TASK_DISPATCHER_H_
 #define TASK_DISPATCHER_H_
 
@@ -5,10 +11,8 @@
 #include "../../TlmCmd/command_dispatcher.h"
 #include "../ApplicationManager/app_info.h"
 
-#define TDSP_TASK_MAX BCT_MAX_CMD_NUM
-
 /**
- * @struct TDSP_Info
+ * @struct TaskDsipatcher
  * @brief TaskDispatcherの状態
  */
 typedef struct
@@ -16,7 +20,7 @@ typedef struct
   CommandDispatcher tskd;     //!< タスクリストへのポインタと、その他実行情報を保存する構造体
   bct_id_t task_list_id;      //!< タスクリストに展開するブロックコマンドのID
   cycle_t  activated_at;      //!< ブロックコマンドがタスクリストに展開された時のサイクル数
-} TDSP_Info;
+} TaskDsipatcher;
 
 /**
  * @enum  TDSP_ACK
@@ -36,11 +40,10 @@ typedef enum
   TDSP_UNKNOWN
 } TDSP_ACK;
 
-// FIXME: extern const TaskDsipatcher* const task_dispathcer; に直す
-extern const TDSP_Info* const TDSP_info;
+extern const TaskDsipatcher* const task_dispathcer;
 
 /**
- * @brief タスク管理を行うTDSP_Info構造体(TDSP_Info_)の初期化
+ * @brief タスク管理を行うTaskDsipatcher構造体(TaskDsipatcher_)の初期化
  * @note  データ構造は Packet List
  */
 void TDSP_initialize(void);
@@ -73,6 +76,9 @@ void TDSP_resync_internal_counter(void);
  */
 CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet);
 
-AppInfo print_tdsp_status(void);
+// debug_apps にあるべき & 今はつわかないので無効化
+#if 0
+AppInfo TDSP_print_tdsp_status(void);
+#endif
 
 #endif
