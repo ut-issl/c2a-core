@@ -147,8 +147,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DCU_CLEAR_LOG].cmd_func = Cmd_DCU_CLEAR_LOG;
   cmd_table[Cmd_CODE_TEST_CCP_REGISTER_TLC_ASAP].cmd_func = Cmd_TEST_CCP_REGISTER_TLC_ASAP;
   cmd_table[Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO].cmd_func = Cmd_TEST_CCP_GET_RAW_PARAM_INFO;
-  cmd_table[Cmd_CODE_DI_GS_CCSDS_TX_START].cmd_func = Cmd_DI_GS_CCSDS_TX_START;
-  cmd_table[Cmd_CODE_DI_GS_CCSDS_TX_STOP].cmd_func = Cmd_DI_GS_CCSDS_TX_STOP;
   cmd_table[Cmd_CODE_DI_GS_DRIVER_RESET].cmd_func = Cmd_DI_GS_DRIVER_RESET;
   cmd_table[Cmd_CODE_DI_GS_SET_MS_FLUSH_INTERVAL].cmd_func = Cmd_DI_GS_SET_MS_FLUSH_INTERVAL;
   cmd_table[Cmd_CODE_DI_GS_SET_RP_FLUSH_INTERVAL].cmd_func = Cmd_DI_GS_SET_RP_FLUSH_INTERVAL;
