@@ -37,6 +37,7 @@ void VCDU_setup_replay_vcdu_hdr(VCDU* vcdu,
                                 uint32_t counter)
 {
   VCDU_set_common_hdr_(vcdu);
+  VCDU_set_replay_flag(vcdu, VCDU_REPLAY_TRUE);
   VCDU_set_vcid(vcdu, VCDU_VCID_REPLAY);
   VCDU_set_vcdu_counter(vcdu, counter);
 }
