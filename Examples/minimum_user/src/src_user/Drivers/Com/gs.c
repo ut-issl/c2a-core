@@ -89,11 +89,6 @@ DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
   gs_driver->latest_info = &gs_driver->info[GS_PORT_TYPE_CCSDS];
   gs_driver->tlm_tx_port_type = GS_PORT_TYPE_CCSDS;
-  gs_driver->is_ccsds_tx_valid = 0;
-
-#ifdef SILS_FW
-  gs_driver->is_ccsds_tx_valid = 1; // SILS でこれが最初から ON になってないと何も降りてこない
-#endif
 
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
   {
@@ -272,10 +267,10 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   {
     if (i == GS_PORT_TYPE_CCSDS)
     {
-      // CCSDS 無効, 又は バッファー空きが無いで下の処理は端折る
+      // バッファー空きが無い場合は 下の処理は端折る
       // FIXME: 一杯だった時の処理
       gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
-      if (!gs_driver->is_ccsds_tx_valid || !gs_driver->ccsds_info.buffer_num) continue;
+      if (gs_driver->ccsds_info.buffer_num == 0) continue;
     }
 
     gs_driver->info[i].tx.send_cycle = TMGR_get_master_total_cycle();

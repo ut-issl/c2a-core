@@ -131,22 +131,6 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
   gs_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval = flush_interval;
 }
 
-CCP_CmdRet Cmd_DI_GS_CCSDS_TX_START(const CommonCmdPacket* packet)
-{
-  (void)packet;
-  gs_driver_.is_ccsds_tx_valid = 1;
-
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
-}
-
-CCP_CmdRet Cmd_DI_GS_CCSDS_TX_STOP(const CommonCmdPacket* packet)
-{
-  (void)packet;
-  gs_driver_.is_ccsds_tx_valid = 0;
-
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
-}
-
 CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;

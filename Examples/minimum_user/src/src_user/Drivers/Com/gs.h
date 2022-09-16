@@ -80,7 +80,6 @@ typedef struct
   const GS_Info* latest_info;
   CCSDS_Info ccsds_info;
   GS_PORT_TYPE tlm_tx_port_type;
-  uint8_t is_ccsds_tx_valid;      //!< CCSDS TX が有効になっているか (地上試験で突然電波を出すと危険なので)
 } GS_Driver;
 
 /**
