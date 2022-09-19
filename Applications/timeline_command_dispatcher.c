@@ -5,7 +5,6 @@
 #include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../System/EventManager/event_logger.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
-#include "../TlmCmd/common_cmd_packet_util.h"
 
 #include <string.h> // for memset
 
