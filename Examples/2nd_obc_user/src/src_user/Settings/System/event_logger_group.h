@@ -14,7 +14,7 @@
  */
 typedef enum
 {
-  // C2A CORE: 0-19
+  // C2A CORE: 0-49
   // src_core/System/EventManager/event_logger.h の EL_CORE_GROUP にて定義
 
   // とりあえず最大値は0xffに！
