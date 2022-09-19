@@ -14,11 +14,11 @@
  */
 typedef enum
 {
-  // C2A CORE: 0-19
+  // C2A CORE: 0-49
   // src_core/System/EventManager/event_logger.h の EL_CORE_GROUP にて定義
 
-  // CDH: 20-39
-  EL_GROUP_UART = 20,         // TODO
+  // CDH: 50-69
+  EL_GROUP_UART = 50,         // TODO
   EL_GROUP_UART_REOPEN,
 
   // TEST
