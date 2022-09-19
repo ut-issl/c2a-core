@@ -279,7 +279,7 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
                     (uint32_t)ack,
                     EL_ERROR_LEVEL_LOW,
-                    (uint32_t)id);
+                    (uint32_t)( ((0x000000ff & id) << 24) | (0x00ffffff & block_no) );
     return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
   }
 
