@@ -36,8 +36,6 @@ uint16_t CRC_calc_crc_16_ibm_right(uint16_t crc, const uint8_t* c, size_t n, int
  */
 uint16_t CRC_calc_crc_16_ccitt_left(uint16_t crc, const uint8_t* c, size_t n, int rev_flag);
 
-// 右送りの CCITT は一般的ではないこと， table でメモリを使うので，一旦無効化
-#if 0
 /**
  * @brief CRC-16-CCITT
  *
@@ -51,7 +49,6 @@ uint16_t CRC_calc_crc_16_ccitt_left(uint16_t crc, const uint8_t* c, size_t n, in
  * @return uint16_t: 計算結果
  */
 uint16_t CRC_calc_crc_16_ccitt_right(uint16_t crc, const uint8_t* c, size_t n, int rev_flag);
-#endif
 
 /**
  * @brief crc用のテーブル作成
