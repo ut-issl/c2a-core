@@ -6,8 +6,6 @@ set(C2A_SRCS
   ascii_conv.c
   c2a_round.c
   crc.c
-  endian_conv.c
-  endian_memcpy.c
   endian.c
   majority_vote_for3.c
 )
