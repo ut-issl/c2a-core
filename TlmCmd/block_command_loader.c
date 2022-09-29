@@ -13,7 +13,7 @@
 #include "block_command_executor.h"
 #include <src_user/TlmCmd/command_definitions.h> // for rotate/combine block
 #include "common_cmd_packet_util.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 
 #define BCL_PARAM_MAX_LENGTH BCT_CMD_MAX_LENGTH
 

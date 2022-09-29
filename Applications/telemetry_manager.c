@@ -13,7 +13,7 @@
 #include "../TlmCmd/block_command_executor.h"
 #include "../TlmCmd/command_analyze.h"
 #include "../Library/print.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>

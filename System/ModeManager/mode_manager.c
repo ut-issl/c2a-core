@@ -16,7 +16,7 @@
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../TlmCmd/packet_handler.h"
 #include "../../Applications/timeline_command_dispatcher_id_define.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 
 /**
  * @brief Cmd_MM_START_TRANSITIONの実体

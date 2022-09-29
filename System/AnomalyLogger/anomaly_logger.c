@@ -7,7 +7,7 @@
 #include <string.h> // memset
 
 #include "../TimeManager/time_manager.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
 
 static void AL_clear_records_(void);

@@ -8,7 +8,7 @@
  */
 #include "eb90_packet_for_driver_super.h"
 #include "eb90_frame_for_driver_super.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 
 // FIXME: DS_StreamConfig.data_link_layer_ をちゃんと見る！
 

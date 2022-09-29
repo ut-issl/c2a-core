@@ -16,7 +16,7 @@
 #include "command_analyze.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include "common_cmd_packet_util.h"
 

@@ -12,7 +12,7 @@
 
 #include <src_user/IfWrapper/if_list.h>
 #include <src_user/Library/stdint.h>
-#include "../../Library/endian_memcpy.h"        // パスが不定な自動生成コード類で使えるように
+#include "../../Library/endian.h"        // パスが不定な自動生成コード類で使えるように
 #include "../../System/TimeManager/time_manager.h"
 
 #define DS_STREAM_MAX          (3)         /*!< DS_StreamConfigの最大数

@@ -11,7 +11,7 @@
 #include "../WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"   // for Printf
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
 
 static AM_ACK AM_initialize_app_(size_t id);

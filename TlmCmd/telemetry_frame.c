@@ -7,7 +7,7 @@
 
 #include <src_user/Library/stdint.h>
 #include "../Library/print.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "./common_cmd_packet_util.h"
 
 static void initialize_tlm_table_(void);
