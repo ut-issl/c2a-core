@@ -6,6 +6,26 @@
  *         各制御センサ・アクチュエータ等とのインターフェースを実現し，
  *         初期化，コマンド発行，テレメトリリクエスト，テレメトリ受信，テレメトリ解析などを行う，ドライバ群のスーパークラスです．
  *         個々の機器のインターフェースドライバに継承させて使用します．
+ * @note   バッファのサイズ設定について
+ *         rx_buffer_size:
+ *           - IF_RX から受信できる最大数を規定する
+ *           - OBC の物理的な信号ラインのバッファサイズと同サイズにしておくともっともパフォーマンスが出る
+ *           - Driver ごとに定義
+ *         rx_frame_buffer_size:
+ *           - 受信フレームバッファサイズ
+ *           - 受信フレームはこのサイズよりも小さくないといけない（TODO: 将来的にこの制約を無くす可能性はある）
+ *           - Driver Stream ごとに定義
+ *         rx_frame_carry_over_buffer_size:
+ *           - フレーム確定中に次のフレームが受信された時などの繰越用バッファ
+ *           - rx_frame_buffer_size 以上を要求
+ *           - 大きければ大きいほど，バースト的なテレメ受信への耐性が大きくなる
+ *           - このサイズが溢れた時，このバッファは一旦全てクリアされる（バッファが詰まってるため，古いものが削除される）
+ *           - Driver Stream ごとに定義
+ *         DS_RX_PROCESSING_BUFFER_SIZE:
+ *           - 様々なバッファをハンドリングするための一次メモリ
+ *           - すべての Driver Stream で以下を満たす必要がある
+ *             - rx_buffer_size + rx_frame_carry_over_buffer_size < DS_RX_PROCESSING_BUFFER_SIZE
+ *           - C2A 全体で 1 つ定義
  */
 #ifndef DRIVER_SUPER_H_
 #define DRIVER_SUPER_H_
@@ -15,10 +35,9 @@
 #include "../../Library/endian.h"        // パスが不定な自動生成コード類で使えるように
 #include "../../System/TimeManager/time_manager.h"
 
-#define DS_STREAM_MAX          (3)         /*!< DS_StreamConfigの最大数
-                                                uint8_t を想定          */
-#define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< 受信データバッファの最大長
-#define DS_RX_FRAME_SIZE_MAX   (1024)      //!< 受信データフレームの最大長
+#define DS_STREAM_MAX                 (3)         /*!< DS_StreamConfigの最大数
+                                                       uint8_t を想定          */
+#define DS_RX_PROCESSING_BUFFER_SIZE  (1024 * 2)  //!< DS 内での処理のためのバッファサイズ．@note 参照
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
