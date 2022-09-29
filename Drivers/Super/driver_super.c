@@ -22,7 +22,7 @@
  * @brief  コマンド送信処理
  *
  *         DS_send_general_cmd と DS_send_req_tlm_cmdの共通部分
- * @param  p_super: DriverSuper構造体へのポインタ
+ * @param  p_super: DriverSuper 構造体へのポインタ
  * @param  stream:  どのconfigを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
  * @retval DS_ERR_CODE_OK:  正常終了
  * @retval DS_ERR_CODE_ERR: IF_TX でのエラーあり
@@ -33,7 +33,7 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream);
 /**
  * @brief  継承先の機器にコマンドを発行する
  * @note   この関数の実行前に，tx_frame_, tx_frame_size_の設定が必要である
- * @param  p_super: DriverSuper構造体へのポインタ
+ * @param  p_super: DriverSuper 構造体へのポインタ
  * @param  stream:  どのconfigを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
  * @retval DS_ERR_CODE_OK (0): 正常終了
  * @retval 0 以外: IF_TX の戻り値
@@ -42,7 +42,7 @@ static int DS_tx_(DriverSuper* p_super, uint8_t stream);
 
 /**
  * @brief  継承先の機器からの受信データがあるか確認し，受信する
- * @param  p_super: DriverSuper構造体へのポインタ
+ * @param  p_super: DriverSuper 構造体へのポインタ
  * @retval 0:    受信データなし
  * @retval 正数: 受信データ長 [Byte]
  * @retval 負数: IF_RXのエラー
@@ -51,7 +51,7 @@ static int DS_rx_(DriverSuper* p_super);
 
 /**
  * @brief  受信フレーム解析関数
- * @param  p_super:      DriverSuper構造体へのポインタ
+ * @param  p_super:      DriverSuper 構造体へのポインタ
  * @param  stream:       どのconfigを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
  * @param  rec_data_len: 受信データのバッファの長さ
  * @return void 詳細は DS_StreamRecStatus
@@ -64,7 +64,7 @@ static void DS_analyze_rx_buffer_(DriverSuper* p_super,
  * @brief  解析用受信バッファの準備
  *
  *         繰り越されたデータと今回受信したデータの結合を行い，受信データ解析の準備をする
- * @param[in]  p_super:      DriverSuper構造体へのポインタ
+ * @param[in]  p_super:      DriverSuper 構造体へのポインタ
  * @param[in]  stream:       どのconfigを使用するか．streamは0-MAXなので，継承先でENUMなど宣言して使いやすくすればいいと思う．
  * @param[out] rx_buffer:    解析用受信バッファ
  * @param[in]  rec_data_len: 受信データのバッファの長さ
@@ -223,10 +223,11 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  DS_StreamConfig 構造体のバリデーション
+ * @param  p_super:         DriverSuper 構造体へのポインタ
  * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @return DS_ERR_CODE
  */
-static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config);
+static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config);
 
 // ダミー関数
 // EQUだと関数ポインタの初期値をNULLにしていたためにぬるぽで事故ったので
@@ -298,7 +299,7 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super)
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
-    DS_ERR_CODE ret = DS_validate_stream_config_(&p_super->stream_config[stream]);
+    DS_ERR_CODE ret = DS_validate_stream_config_(p_super, &p_super->stream_config[stream]);
     if (ret != DS_ERR_CODE_OK) return ret;
   }
 
@@ -388,7 +389,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     // そもそもこの validation は打ち上げ時というよりむしろ地上試験時に有用なので，ここに置く
     if (p_stream_config->internal.is_validation_needed_for_rec_)
     {
-      DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
+      DS_ERR_CODE ret = DS_validate_stream_config_(p_super, p_stream_config);
       if (ret != DS_ERR_CODE_OK)
       {
         p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_VALIDATE_ERR;
@@ -531,7 +532,7 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
   // そもそもこの validation は打ち上げじというよりむしろ地上試験時に有用なので，ここに置く
   if (p_stream_config->internal.is_validation_needed_for_send_)
   {
-    DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
+    DS_ERR_CODE ret = DS_validate_stream_config_(p_super, p_stream_config);
     if (ret != DS_ERR_CODE_OK)
     {
       p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_VALIDATE_ERR;
@@ -1359,7 +1360,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
 }
 
 
-static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
+static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config)
 {
   if (!p_stream_config->settings.is_enabled_) return DS_ERR_CODE_OK;
 
@@ -1415,12 +1416,17 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
     if (p_stream_config->settings.rx_header_size_ == 0) return DS_ERR_CODE_ERR;
   }
 
+  // バッファ
+  if (p_stream_config->settings.rx_carry_over_buffer_size_ < p_stream_config->settings.rx_frame_buffer_size_) return DS_ERR_CODE_ERR;
+  if (p_super->config.settings.rx_buffer_size_ + p_stream_config->settings.rx_carry_over_buffer_size_ > DS_RX_PROCESSING_BUFFER_SIZE)
+  {
+    return DS_ERR_CODE_ERR;
+  }
+
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_ = 0;
-  return DS_ERR_CODE_OK;
 
-  // FIXME: buffer size チェック
-  // frame buffer のサイズが header よりでかいなど
+  return DS_ERR_CODE_OK;
 }
 
 

@@ -24,7 +24,7 @@
  *         DS_RX_PROCESSING_BUFFER_SIZE:
  *           - 様々なバッファをハンドリングするための一次メモリ
  *           - すべての Driver Stream で以下を満たす必要がある
- *             - rx_buffer_size_ + rx_carry_over_buffer_size_ < DS_RX_PROCESSING_BUFFER_SIZE
+ *             - rx_buffer_size_ + rx_carry_over_buffer_size_ <= DS_RX_PROCESSING_BUFFER_SIZE
  *           - C2A 全体で 1 つ定義
  */
 #ifndef DRIVER_SUPER_H_
