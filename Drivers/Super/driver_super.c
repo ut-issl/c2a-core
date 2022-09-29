@@ -1263,15 +1263,6 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->settings.is_enabled_ = 0;
   p_stream_config->settings.is_strict_frame_search_ = 0;
 
-  p_stream_config->info.general_cmd_tx_count_               = 0;
-  p_stream_config->info.req_tlm_cmd_tx_count_               = 0;
-  p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_ = 0;
-  p_stream_config->info.rx_frame_fix_count_                 = 0;
-
-  p_stream_config->info.general_cmd_tx_time_ = TMGR_get_master_clock();
-  p_stream_config->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
-  p_stream_config->info.rx_frame_fix_time_   = TMGR_get_master_clock();
-
   p_stream_config->settings.tx_frame_             = NULL;
   p_stream_config->settings.tx_frame_size_        = 0;
   p_stream_config->settings.tx_frame_buffer_size_ = -1;
@@ -1286,14 +1277,9 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->settings.rx_framelength_offset_    = 0;
 
   p_stream_config->settings.data_analyzer_ = DS_data_analyzer_dummy_;
-  p_stream_config->info.ret_from_data_analyzer_ = DS_ERR_CODE_OK;
 
   p_stream_config->settings.should_monitor_for_tlm_disruption_ = 0;
   p_stream_config->settings.time_threshold_for_tlm_disruption_ = 60 * 1000;      // この値はよく考えること
-
-  memset(p_stream_config->info.rx_frame_,
-         0x00,
-         sizeof(p_stream_config->info.rx_frame_));
 
   // DS_StreamSendStatus の初期化
   p_stream_config->info.send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
@@ -1304,6 +1290,21 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->info.rec_status_.fixed_frame_len              = 0;
   p_stream_config->info.rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
   p_stream_config->info.rec_status_.count_of_carry_over_failures = 0;
+
+  p_stream_config->info.general_cmd_tx_count_               = 0;
+  p_stream_config->info.req_tlm_cmd_tx_count_               = 0;
+  p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_ = 0;
+  p_stream_config->info.rx_frame_fix_count_                 = 0;
+
+  p_stream_config->info.general_cmd_tx_time_ = TMGR_get_master_clock();
+  p_stream_config->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
+  p_stream_config->info.rx_frame_fix_time_   = TMGR_get_master_clock();
+
+  memset(p_stream_config->info.rx_frame_,
+         0x00,
+         sizeof(p_stream_config->info.rx_frame_));
+
+  p_stream_config->info.ret_from_data_analyzer_ = DS_ERR_CODE_OK;
 
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_  = 0;
