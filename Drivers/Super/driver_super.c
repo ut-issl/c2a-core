@@ -610,7 +610,7 @@ static void DS_analyze_rx_buffer_(DriverSuper* p_super,
 {
   // 解析用受信バッファ
   // 巨大なデータなので，staticで予め確保しておき，実行時のスタック枯渇を避ける
-  static uint8_t rx_buffer[DS_RX_BUFFER_SIZE_MAX * 2];
+  static uint8_t rx_buffer[DS_RX_PROCESSING_BUFFER_SIZE];
   DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
   uint16_t total_processed_data_len;
 
