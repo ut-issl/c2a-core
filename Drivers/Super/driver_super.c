@@ -1364,7 +1364,11 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
   else
   {
     // テレメトリ固定長
-    if (p_stream_config->settings.rx_frame_size_ < (p_stream_config->settings.rx_header_size_ + p_stream_config->settings.rx_footer_size_)) return DS_ERR_CODE_ERR;
+    if ( p_stream_config->settings.rx_frame_size_ <
+        (p_stream_config->settings.rx_header_size_ + p_stream_config->settings.rx_footer_size_) )
+    {
+      return DS_ERR_CODE_ERR;
+    }
   }
 
   if (p_stream_config->settings.is_strict_frame_search_)
