@@ -679,6 +679,8 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
                           uint16_t rec_data_len);
   p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ = 0;
 
+  if (p_stream_config->settings.rx_frame_size_ == 0) return 0;
+
   // TODO: ビッグデータ対応
   if (p_stream_config->settings.rx_frame_size_ > 0 && p_stream_config->settings.rx_frame_size_ < DS_RX_FRAME_SIZE_MAX)
   {
@@ -690,7 +692,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
     pickup_func = NULL;
     return rec_data_len;
   }
-  else if (p_stream_config->settings.rx_frame_size_ < 0 && p_stream_config->settings.rx_frame_size_ < DS_RX_FRAME_SIZE_MAX)
+  else if (p_stream_config->settings.rx_frame_size_ < 0)
   {
     // フレームにフレーム長データが含まれているか？
     if (p_stream_config->settings.rx_framelength_pos_ >= 0)
