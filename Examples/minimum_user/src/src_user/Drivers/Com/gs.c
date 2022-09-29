@@ -31,6 +31,7 @@ static uint8_t GS_tx_frame_[VCDU_LEN];
 
 // バッファ
 static uint8_t GS_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
+static uint8_t GS_rx_frame_buffer_[GS_RX_HEADER_NUM][DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
 
 /**
  * @brief CCSDS 側 Driver の DS 上での初期化設定
@@ -156,6 +157,8 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
     DSSC_set_rx_framelength_type_size(p_stream_config, GS_RX_FRAMELENGTH_TYPE_SIZE);
     DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCTF の framelength は 0 起算
     DSSC_set_data_analyzer(p_stream_config, GS_analyze_rec_data_);
+
+    DSSC_set_rx_frame_buffer(p_stream_config, GS_rx_frame_buffer_[stream], DS_RX_FRAME_BUFFER_SIZE_DEFAULT);
   }
 }
 

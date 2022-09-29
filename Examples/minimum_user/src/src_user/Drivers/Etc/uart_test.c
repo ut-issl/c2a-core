@@ -28,6 +28,8 @@ static uint8_t UART_TEST_tx_frame_[UART_TEST_TX_FRAME_SIZE_MAX];
 
 // バッファ
 static uint8_t UART_TEST_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
+static uint8_t UART_TEST_rx_frame_buffer0_[DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
+static uint8_t UART_TEST_rx_frame_buffer1_[DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
 
 static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
@@ -72,6 +74,7 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
   DSSC_set_rx_frame_size(p_stream_config, 12);
   DSSC_set_data_analyzer(p_stream_config, UART_TEST_analyze_rec_data_);
 
+  DSSC_set_rx_frame_buffer(p_stream_config, UART_TEST_rx_frame_buffer0_, DS_RX_FRAME_BUFFER_SIZE_DEFAULT);
 
   // stream1の設定
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_VAR]);
@@ -88,6 +91,8 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
   DSSC_set_rx_framelength_type_size(p_stream_config, 2);
   DSSC_set_rx_framelength_offset(p_stream_config, UART_TEST_HEADER_SIZE + UART_TEST_FOOTER_SIZE);
   DSSC_set_data_analyzer(p_stream_config, UART_TEST_analyze_rec_data_);
+
+  DSSC_set_rx_frame_buffer(p_stream_config, UART_TEST_rx_frame_buffer1_, DS_RX_FRAME_BUFFER_SIZE_DEFAULT);
 
   // 定期TLMの監視機能の有効化しない → ので設定上書きなし
 
