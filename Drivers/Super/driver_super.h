@@ -195,7 +195,7 @@ typedef struct
   DS_STREAM_TLM_DISRUPTION_STATUS_CODE tlm_disruption_status;         //!< テレメ途絶判定
   uint32_t                             count_of_carry_over_failures;  /*!< 受信バッファの繰越に失敗した回数
                                                                            DS_receive の呼び出し頻度がおそすぎることが原因 */
-  // 今後詳細情報を拡張するなら，ここに入れる（ref. EQU Driver Super の DRIVE_Super_recなど）
+  // 今後詳細情報を拡張するなら，ここに入れる（ref. EQU Driver Super の DRIVE_Super_rec など）
 } DS_StreamRecStatus;
 
 /**
@@ -241,107 +241,111 @@ typedef struct
  */
 struct DS_StreamConfig
 {
-  // 【継承先まで公開】
-  // 現状なし
-  // setter/getterで操作する
+  // struct
+  // {
+    uint8_t  is_enabled_;                                     //!< 有効か？
 
-  // 【ユーザー設定／取得値】（DS_StreamConfigのメンバはすべてのDriverから非公開とする）
-  uint8_t  is_enabled_;                                     //!< 有効か？
+    uint8_t  is_strict_frame_search_;                         /*!< 厳格なフレーム探索が有効か？
+                                                                  ノイズ発生時や複数stream使用時にフレーム受信漏れを完全になくすモード
+                                                                  - OFFの場合（通常はこちら）
+                                                                      ヘッダを見つけて，フレーム候補を見つけた後，次のフレームはフレーム候補から探索する
+                                                                  - ONの場合
+                                                                      ヘッダを見つけて，フレーム候補を見つけた後，次のフレームは，見つけたヘッダ先頭の次バイトから探索する
+                                                                      実行時間は長くなる
+                                                                  複数streamやノイズが入ってしまった場合など，本来ヘッダでない部分をヘッダとして認識してしまう場合に有効化すると，
+                                                                  論理的なフレーム受信漏れの確率を限りなく 0 に近づけることができる．
+                                                                  ヘッダがあるフレームの場合のみ，有効にできる */
 
-  uint8_t  is_strict_frame_search_;                         /*!< 厳格なフレーム探索が有効か？
-                                                                 ノイズ発生時や複数stream使用時にフレーム受信漏れを完全になくすモード
-                                                                 - OFFの場合（通常はこちら）
-                                                                    ヘッダを見つけて，フレーム候補を見つけた後，次のフレームはフレーム候補から探索する
-                                                                 - ONの場合
-                                                                    ヘッダを見つけて，フレーム候補を見つけた後，次のフレームは，見つけたヘッダ先頭の次バイトから探索する
-                                                                    実行時間は長くなる
-                                                                 複数streamやノイズが入ってしまった場合など，本来ヘッダでない部分をヘッダとして認識してしまう場合に有効化すると，
-                                                                 論理的なフレーム受信漏れの確率を限りなく 0 に近づけることができる．
-                                                                 ヘッダがあるフレームの場合のみ，有効にできる */
+    uint8_t* tx_frame_;                                       //!< コマンドフレーム
+    uint16_t tx_frame_size_;                                  /*!< コマンドフレームサイズ
+                                                                  tx_frame_ のうち実際に送信するバイト数
+                                                                  送信データがない場合は 0 */
+    int16_t  tx_frame_buffer_size_;                           /*!< 与えた tx_frame_ の最大サイズ
+                                                                  Drivers/Protocol などで， Util が tx_frame_ を使うときに使用
+                                                                  Protocol を使うときは設定しておくと良い（一部の関数は設定しないと使えない）
+                                                                  未指定の場合は負数とする */
 
-  DS_StreamSendStatus send_status_;                         //!< フレーム送信状況
-  DS_StreamRecStatus  rec_status_;                          //!< フレーム受信状況
+    const uint8_t* rx_header_;                                //!< 受信データのヘッダ
+    uint16_t rx_header_size_;                                 /*!< 受信データのヘッダサイズ
+                                                                  ヘッダがない場合は0に設定
+                                                                  この場合，基本的には固定長（ rx_frame_size が正）を使う．
+                                                                  ヘッダがなく，可変長の場合は，受信前（例えば DS_send_req_tlm_cmd 呼び出し前） に
+                                                                  rx_frame_size_ を設定することで固定長のように扱うことで対応する．
+                                                                  また，初期化時の Validation を通すためにも，初期値は適切な正数にしておくこと */
+    const uint8_t* rx_footer_;                                //!< 受信データのフッタ
+    uint16_t rx_footer_size_;                                 /*!< 受信データのフッタサイズ
+                                                                  ヘッダがない場合は0に設定 */
+    int16_t  rx_frame_size_;                                  /*!< 受信データ（テレメトリ）フレームサイズ
+                                                                  受信データがない場合は0に設定
+                                                                  受信データが可変の場合は負数に設定 */
+    int16_t  rx_framelength_pos_;                             /*!< 受信データ内のフレームサイズデータの存在する場所（先頭から数えて何 byte 目に位置するか．0 起算）
+                                                                  受信データが可変長の場合のみ使用される．
+                                                                  フレームサイズデータがない場合には負に設定する．
+                                                                  可変長でかつフレームサイズデータのないフレームは，フッタが設定されている場合は有効である．
+                                                                  ただし，フッタの探索が必要なため，実行時間は若干遅くなる．
+                                                                  もちろん，ヘッダがあることを推奨する．ヘッダがない場合は，受信したデータの冒頭からフレームとみなす．
+                                                                  受信されるフレーム長が受信前に判明している場合は，
+                                                                  ヘッダがない場合のときと同様に，受信前（例えば DS_send_req_tlm_cmd 呼び出し前） に
+                                                                  rx_frame_size_ を設定することで，固定長のように扱うことで対応することを推奨する． */
+    uint16_t rx_framelength_type_size_;                       /*!< フレームサイズデータの型サイズ [Byte]
+                                                                  受信データが可変長の場合のみ使用される．
+                                                                  例えば uint8 なら 1， uint32 なら 4 */
+    uint16_t rx_framelength_offset_;                          /*!< フレームサイズデータのオフセット値
+                                                                  受信データが可変長の場合のみ使用される
+                                                                  フレームサイズデータによる可変長データの解析は「フレームの全サイズ」により行われるが，
+                                                                  機器の中にはヘッダとフッタの分は除いたデータ数としてサイズが表現される場合がある
+                                                                  その場合のサイズ調整のために使う
+                                                                  フレームサイズデータが「フレームの全サイズ」を示している場合には0に設定する */
 
-  uint32_t general_cmd_tx_count_;                           //!< 通常コマンド送信回数
-  uint32_t req_tlm_cmd_tx_count_;                           //!< テレメ要求コマンド送信回数
-  uint32_t req_tlm_cmd_tx_count_after_last_tx_;             /*!< 最後にテレメを受信してからのテレメ要求コマンド送信回数
-                                                                 これが 0 でない場合，テレメが最新ではない可能性がある */
-  uint32_t rx_frame_fix_count_;                             //!< フレーム受信確定回数
+    uint8_t  should_monitor_for_tlm_disruption_;              //!< テレメ途絶判定をするか？
+    uint32_t time_threshold_for_tlm_disruption_;              //!< テレメ途絶判定の閾値 [ms]
 
-  ObcTime  general_cmd_tx_time_;                            //!< 通常コマンド最終送信時刻
-  ObcTime  req_tlm_cmd_tx_time_;                            //!< テレメ要求コマンド最終送信時刻
-  ObcTime  rx_frame_fix_time_;                              //!< フレーム確定時刻
+    DS_ERR_CODE (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver);
+                                                              /*!< 受信データの解析関数
+                                                                  p_driver は継承先機器のドライバ構造体など
+                                                                  返り値は DS_ERR_CODE */
+  // } settings;       //!< 設定値
 
-  uint8_t* tx_frame_;                                       //!< コマンドフレーム
-  uint16_t tx_frame_size_;                                  /*!< コマンドフレームサイズ
-                                                                 tx_frame_ のうち実際に送信するバイト数
-                                                                 送信データがない場合は 0 */
-  int16_t  tx_frame_buffer_size_;                           /*!< 与えた tx_frame_ の最大サイズ
-                                                                 Drivers/Protocol などで， Util が tx_frame_ を使うときに使用
-                                                                 Protocol を使うときは設定しておくと良い（一部の関数は設定しないと使えない）
-                                                                 未指定の場合は負数とする */
+  // struct
+  // {
+    DS_StreamSendStatus send_status_;                         //!< フレーム送信状況
+    DS_StreamRecStatus  rec_status_;                          //!< フレーム受信状況
 
-  uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< データ受信フレームバッファ
-                                                                 DS_RX_FRAME_SIZE_MAX を超えるような巨大なフレーム（ビッグデータ）には未対応（将来実装予定）
-                                                                 対応させる場合，この配列変数を外部の大きな配列のポインタに上書きする必要がある． */
+    uint32_t general_cmd_tx_count_;                           //!< 通常コマンド送信回数
+    uint32_t req_tlm_cmd_tx_count_;                           //!< テレメ要求コマンド送信回数
+    uint32_t req_tlm_cmd_tx_count_after_last_tx_;             /*!< 最後にテレメを受信してからのテレメ要求コマンド送信回数
+                                                                  これが 0 でない場合，テレメが最新ではない可能性がある */
+    uint32_t rx_frame_fix_count_;                             //!< フレーム受信確定回数
 
-  const uint8_t* rx_header_;                                //!< 受信データのヘッダ
-  uint16_t rx_header_size_;                                 /*!< 受信データのヘッダサイズ
-                                                                 ヘッダがない場合は0に設定
-                                                                 この場合，基本的には固定長（ rx_frame_size が正）を使う．
-                                                                 ヘッダがなく，可変長の場合は，受信前（例えば DS_send_req_tlm_cmd 呼び出し前） に
-                                                                 rx_frame_size_ を設定することで固定長のように扱うことで対応する．
-                                                                 また，初期化時の Validation を通すためにも，初期値は適切な正数にしておくこと */
-  const uint8_t* rx_footer_;                                //!< 受信データのフッタ
-  uint16_t rx_footer_size_;                                 /*!< 受信データのフッタサイズ
-                                                                 ヘッダがない場合は0に設定 */
-  int16_t  rx_frame_size_;                                  /*!< 受信データ（テレメトリ）フレームサイズ
-                                                                 受信データがない場合は0に設定
-                                                                 受信データが可変の場合は負数に設定 */
-  int16_t  rx_framelength_pos_;                             /*!< 受信データ内のフレームサイズデータの存在する場所（先頭から数えて何 byte 目に位置するか．0 起算）
-                                                                 受信データが可変長の場合のみ使用される．
-                                                                 フレームサイズデータがない場合には負に設定する．
-                                                                 可変長でかつフレームサイズデータのないフレームは，フッタが設定されている場合は有効である．
-                                                                 ただし，フッタの探索が必要なため，実行時間は若干遅くなる．
-                                                                 もちろん，ヘッダがあることを推奨する．ヘッダがない場合は，受信したデータの冒頭からフレームとみなす．
-                                                                 受信されるフレーム長が受信前に判明している場合は，
-                                                                 ヘッダがない場合のときと同様に，受信前（例えば DS_send_req_tlm_cmd 呼び出し前） に
-                                                                 rx_frame_size_ を設定することで，固定長のように扱うことで対応することを推奨する． */
-  uint16_t rx_framelength_type_size_;                       /*!< フレームサイズデータの型サイズ [Byte]
-                                                                 受信データが可変長の場合のみ使用される．
-                                                                 例えば uint8 なら 1， uint32 なら 4 */
-  uint16_t rx_framelength_offset_;                          /*!< フレームサイズデータのオフセット値
-                                                                 受信データが可変長の場合のみ使用される
-                                                                 フレームサイズデータによる可変長データの解析は「フレームの全サイズ」により行われるが，
-                                                                 機器の中にはヘッダとフッタの分は除いたデータ数としてサイズが表現される場合がある
-                                                                 その場合のサイズ調整のために使う
-                                                                 フレームサイズデータが「フレームの全サイズ」を示している場合には0に設定する */
+    ObcTime  general_cmd_tx_time_;                            //!< 通常コマンド最終送信時刻
+    ObcTime  req_tlm_cmd_tx_time_;                            //!< テレメ要求コマンド最終送信時刻
+    ObcTime  rx_frame_fix_time_;                              //!< フレーム確定時刻
 
-  uint8_t  should_monitor_for_tlm_disruption_;              //!< テレメ途絶判定をするか？
-  uint32_t time_threshold_for_tlm_disruption_;              //!< テレメ途絶判定の閾値 [ms]
+    uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< データ受信フレームバッファ
+                                                                  DS_RX_FRAME_SIZE_MAX を超えるような巨大なフレーム（ビッグデータ）には未対応（将来実装予定）
+                                                                  対応させる場合，この配列変数を外部の大きな配列のポインタに上書きする必要がある． */
 
-  DS_ERR_CODE (*data_analyzer_)(DS_StreamConfig* p_stream_config, void* p_driver);
-                                                            /*!< 受信データの解析関数
-                                                                 p_driver は継承先機器のドライバ構造体など
-                                                                 返り値は DS_ERR_CODE */
-  DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ の返り値
+    DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ の返り値
+  // } info;           //!< 取得値
 
-  // 【内部処理で用いる値】
-  uint8_t  is_validation_needed_for_send_;                  //!< 送信前に設定値の Validation が必要か？
-  uint8_t  is_validation_needed_for_rec_;                   //!< 受信前に設定値の Validation が必要か？
+  struct
+  {
+    uint8_t  is_validation_needed_for_send_;                  //!< 送信前に設定値の Validation が必要か？
+    uint8_t  is_validation_needed_for_rec_;                   //!< 受信前に設定値の Validation が必要か？
 
-  uint16_t rx_frame_rec_len_;                               //!< 受信データフレームの受信済みByte．rx_frame_ に対する操作ポインタになる
-  uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< 受信バッファ解析時に，フレーム候補としたフレームの先頭位置（0 起算）
-                                                                 DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ から呼ばれる関数で，
-                                                                 フレーム候補がロジカルなエラー（フッタの不一致やフレーム長の不整合）等が起きた時に，
-                                                                 再度フレームを探索できるようにするために使う */
+    uint16_t rx_frame_rec_len_;                               //!< 受信データフレームの受信済みByte．rx_frame_ に対する操作ポインタになる
+    uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< 受信バッファ解析時に，フレーム候補としたフレームの先頭位置（0 起算）
+                                                                  DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ から呼ばれる関数で，
+                                                                  フレーム候補がロジカルなエラー（フッタの不一致やフレーム長の不整合）等が起きた時に，
+                                                                  再度フレームを探索できるようにするために使う */
 
-  uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
-  uint16_t carry_over_buffer_size_;                         //!< 繰越する受信データのサイズ
-  uint16_t carry_over_buffer_next_pos_;                     //!< 次回探索を始めるバッファ位置（0 起算）
-  uint8_t  rx_buffer_for_carry_over_[DS_RX_BUFFER_SIZE_MAX];
-                                                            /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
-                                                                 次の受信時にまとめて処理させる */
+    uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
+    uint16_t carry_over_buffer_size_;                         //!< 繰越する受信データのサイズ
+    uint16_t carry_over_buffer_next_pos_;                     //!< 次回探索を始めるバッファ位置（0 起算）
+    uint8_t  rx_buffer_for_carry_over_[DS_RX_BUFFER_SIZE_MAX];
+                                                              /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
+                                                                  次の受信時にまとめて処理させる */
+  } internal;       //!< 内部処理用
 };
 // TODO: Protocol 用に data_link_layer_ を追加
 
@@ -481,10 +485,14 @@ const ObcTime* DSC_get_rx_time(const DriverSuper* p_super);
 
 DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super);
 
-// ###### DS_StreamConfig Getter/Setter ######
+// ###### DS_StreamConfig Getter/Setter of Settings ######
 uint8_t DSSC_get_is_enabled(const DS_StreamConfig* p_stream_config);
 void DSSC_enable(DS_StreamConfig* p_stream_config);
 void DSSC_disable(DS_StreamConfig* p_stream_config);
+
+
+// ###### DS_StreamConfig Getter/Setter of Info ######
+
 
 uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config);

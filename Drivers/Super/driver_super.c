@@ -262,9 +262,8 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) の様な使い方をするのでセグフォが起こる可能性があり
   p_super->if_config = NULL;        // FIXME: NULLポインタはこの関数がReset単体で使われるとマズい
 
-  memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
-
-  p_super->config.internal.load_init_setting = DS_load_init_setting_dummy_;
+  p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
+  p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
 
   p_super->config.info.rec_status_.ret_from_if_rx       = 0;
   p_super->config.info.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_OK;
@@ -273,8 +272,9 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->config.info.rx_call_count_ = 0;
   p_super->config.info.rx_time_       = TMGR_get_master_clock();
 
-  p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
-  p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
+  memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
+
+  p_super->config.internal.load_init_setting = DS_load_init_setting_dummy_;
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -306,21 +306,21 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
   uint8_t stream;
 
   // 以下，各種 buffer を memsetで念の為0クリアしておくが，
-  // 情報は carry_over_buffer_size_ にあるので，動作上意味はない．
+  // 情報は internal.carry_over_buffer_size_ にあるので，動作上意味はない．
   memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
-    p_super->stream_config[stream].rx_frame_rec_len_ = 0;
-    p_super->stream_config[stream].is_rx_buffer_carry_over_ = 0;
-    p_super->stream_config[stream].carry_over_buffer_size_  = 0;
+    p_super->stream_config[stream].internal.rx_frame_rec_len_ = 0;
+    p_super->stream_config[stream].internal.is_rx_buffer_carry_over_ = 0;
+    p_super->stream_config[stream].internal.carry_over_buffer_size_  = 0;
 
     memset(p_super->stream_config[stream].rx_frame_,
            0x00,
            sizeof(p_super->stream_config[stream].rx_frame_));
-    memset(p_super->stream_config[stream].rx_buffer_for_carry_over_,
+    memset(p_super->stream_config[stream].internal.rx_buffer_for_carry_over_,
            0x00,
-           sizeof(p_super->stream_config[stream].rx_buffer_for_carry_over_));
+           sizeof(p_super->stream_config[stream].internal.rx_buffer_for_carry_over_));
   }
 
   return DS_ERR_CODE_OK;
@@ -372,7 +372,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
 
     // setter で validation かけると，初期化などで何度もかかることや，
     // そもそもこの validation は打ち上げ時というよりむしろ地上試験時に有用なので，ここに置く
-    if (p_stream_config->is_validation_needed_for_rec_)
+    if (p_stream_config->internal.is_validation_needed_for_rec_)
     {
       DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
       if (ret != DS_ERR_CODE_OK)
@@ -394,7 +394,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     {
       // 受信データなし
       // 繰越データがあれば処理する
-      if (p_stream_config->is_rx_buffer_carry_over_)
+      if (p_stream_config->internal.is_rx_buffer_carry_over_)
       {
         // 繰越があるので，ここで continue せずへ次へ
       }
@@ -515,7 +515,7 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
 
   // setter で validation かけると，初期化などで何度もかかることや，
   // そもそもこの validation は打ち上げじというよりむしろ地上試験時に有用なので，ここに置く
-  if (p_stream_config->is_validation_needed_for_send_)
+  if (p_stream_config->internal.is_validation_needed_for_send_)
   {
     DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
     if (ret != DS_ERR_CODE_OK)
@@ -631,12 +631,12 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
   uint16_t buffer_offset = 0;
 
   // 繰越受信データのとりこみ
-  if (p_stream_config->is_rx_buffer_carry_over_)
+  if (p_stream_config->internal.is_rx_buffer_carry_over_)
   {
     memcpy(rx_buffer,
-           p_stream_config->rx_buffer_for_carry_over_,
-           (size_t)p_stream_config->carry_over_buffer_size_);
-    buffer_offset += p_stream_config->carry_over_buffer_size_;
+           p_stream_config->internal.rx_buffer_for_carry_over_,
+           (size_t)p_stream_config->internal.carry_over_buffer_size_);
+    buffer_offset += p_stream_config->internal.carry_over_buffer_size_;
   }
 
   // 今回受信分のとりこみ
@@ -644,9 +644,9 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
          p_super->config.internal.rx_buffer_,
          (size_t)rec_data_len);
 
-  if (p_stream_config->is_rx_buffer_carry_over_)
+  if (p_stream_config->internal.is_rx_buffer_carry_over_)
   {
-    rec_data_len += p_stream_config->carry_over_buffer_size_;
+    rec_data_len += p_stream_config->internal.carry_over_buffer_size_;
   }
 
   return rec_data_len;
@@ -663,7 +663,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
                           uint8_t* rx_buffer,
                           uint16_t total_processed_data_len,
                           uint16_t rec_data_len);
-  p_stream_config->rx_frame_head_pos_of_frame_candidate_ = 0;
+  p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ = 0;
 
   // TODO: ビッグデータ対応
   if (p_stream_config->rx_frame_size_ > 0 && p_stream_config->rx_frame_size_ < DS_RX_FRAME_SIZE_MAX)
@@ -696,7 +696,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
   }
 
   // 受信バッファからデータをピックアップしていく
-  total_processed_data_len = p_stream_config->carry_over_buffer_next_pos_;
+  total_processed_data_len = p_stream_config->internal.carry_over_buffer_next_pos_;
   while (total_processed_data_len < rec_data_len)
   {
     uint16_t processed_data_len = pickup_func(p_stream_config,
@@ -716,7 +716,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
         p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG ||
         p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT)
     {
-      total_processed_data_len = (uint16_t)(p_stream_config->rx_frame_head_pos_of_frame_candidate_ + 1);
+      total_processed_data_len = (uint16_t)(p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ + 1);
 
       // 他の部分での条件分岐のために，詳細エラー情報を現在のステータスに上書きする
       p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
@@ -734,22 +734,22 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
                                                     uint16_t total_processed_data_len,
                                                     uint16_t rec_data_len)
 {
-  p_stream_config->carry_over_buffer_size_ = 0;
+  p_stream_config->internal.carry_over_buffer_size_ = 0;
   if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
     if (p_stream_config->is_strict_frame_search_)
     {
       // 確定フレームの先頭 + 1 バイト目以降を次回に引き継ぐ
-      p_stream_config->carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->rx_frame_head_pos_of_frame_candidate_ - 1);
+      p_stream_config->internal.carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ - 1);
       // 次回は，引き継いだデータの先頭から再びフレーム探索
-      p_stream_config->carry_over_buffer_next_pos_ = 0;
+      p_stream_config->internal.carry_over_buffer_next_pos_ = 0;
     }
     else
     {
       // フレーム確定して，解析できなかった受信データがある場合，次回に引き継ぐ
-      p_stream_config->carry_over_buffer_size_ = (uint16_t)(rec_data_len - total_processed_data_len);
+      p_stream_config->internal.carry_over_buffer_size_ = (uint16_t)(rec_data_len - total_processed_data_len);
       // 次回は，引き継いだデータの先頭から再びフレーム探索
-      p_stream_config->carry_over_buffer_next_pos_ = 0;
+      p_stream_config->internal.carry_over_buffer_next_pos_ = 0;
     }
   }
   else
@@ -757,37 +757,37 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
     if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
     {
       // 引き継ぎデータはなし
-      p_stream_config->carry_over_buffer_size_ = 0;
+      p_stream_config->internal.carry_over_buffer_size_ = 0;
       // 次回は，先頭から再びフレーム探索
-      p_stream_config->carry_over_buffer_next_pos_ = 0;
+      p_stream_config->internal.carry_over_buffer_next_pos_ = 0;
     }
     else
     {
       // 確定フレームの先頭以降を次回に引き継ぐ
-      p_stream_config->carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->rx_frame_head_pos_of_frame_candidate_);
+      p_stream_config->internal.carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_);
       // 次回は，引き継いだデータはスキップし，受信したものの先頭からフレーム
-      p_stream_config->carry_over_buffer_next_pos_ = p_stream_config->carry_over_buffer_size_;
+      p_stream_config->internal.carry_over_buffer_next_pos_ = p_stream_config->internal.carry_over_buffer_size_;
     }
   }
 
-  if (p_stream_config->carry_over_buffer_size_ > 0 && p_stream_config->carry_over_buffer_size_ <= DS_RX_BUFFER_SIZE_MAX)
+  if (p_stream_config->internal.carry_over_buffer_size_ > 0 && p_stream_config->internal.carry_over_buffer_size_ <= DS_RX_BUFFER_SIZE_MAX)
   {
-    uint16_t pos = (uint16_t)(rec_data_len - p_stream_config->carry_over_buffer_size_);
-    p_stream_config->is_rx_buffer_carry_over_ = 1;
-    memcpy(p_stream_config->rx_buffer_for_carry_over_,
+    uint16_t pos = (uint16_t)(rec_data_len - p_stream_config->internal.carry_over_buffer_size_);
+    p_stream_config->internal.is_rx_buffer_carry_over_ = 1;
+    memcpy(p_stream_config->internal.rx_buffer_for_carry_over_,
            &(rx_buffer[pos]),
-           (size_t)p_stream_config->carry_over_buffer_size_);
+           (size_t)p_stream_config->internal.carry_over_buffer_size_);
   }
   else
   {
     // 引き継ぐサイズが DS_RX_BUFFER_SIZE_MAX を超えた場合，処理のキャパを超えてしまっているので，リセット．
-    if (p_stream_config->carry_over_buffer_size_ > 0)
+    if (p_stream_config->internal.carry_over_buffer_size_ > 0)
     {
       p_stream_config->rec_status_.count_of_carry_over_failures++;
     }
-    p_stream_config->is_rx_buffer_carry_over_    = 0;
-    p_stream_config->carry_over_buffer_size_     = 0;
-    p_stream_config->carry_over_buffer_next_pos_ = 0;
+    p_stream_config->internal.is_rx_buffer_carry_over_    = 0;
+    p_stream_config->internal.carry_over_buffer_size_     = 0;
+    p_stream_config->internal.carry_over_buffer_next_pos_ = 0;
   }
 
   return;
@@ -802,7 +802,7 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
   uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // このキャストは若干危ない（コードが論理的に正しければ問題ないが）
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列indexなどがみずらいので...
 
-  if (p->rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
+  if (p->internal.rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
     return DS_analyze_rx_buffer_finding_header_(p_stream_config,
@@ -810,26 +810,26 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
                                                 total_processed_data_len,
                                                 rec_data_len);
   }
-  else if (p->rx_frame_rec_len_ < p->rx_header_size_)
+  else if (p->internal.rx_frame_rec_len_ < p->rx_header_size_)
   {
     // ヘッダ受信中
     return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len);
   }
-  else if (p->rx_frame_rec_len_ < p->rx_frame_size_ - p->rx_footer_size_)
+  else if (p->internal.rx_frame_rec_len_ < p->rx_frame_size_ - p->rx_footer_size_)
   {
     // データ受信中
     // ここは高速化のために一括処理
     uint16_t pickup_data_len;
 
     // ヘッダなしの場合は，ここがフレーム先頭
-    if (p->rx_frame_rec_len_ == 0)
+    if (p->internal.rx_frame_rec_len_ == 0)
     {
-      p->rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
+      p->internal.rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
     }
 
-    pickup_data_len = (uint16_t)(p->rx_frame_size_ - p->rx_footer_size_ - p->rx_frame_rec_len_);
+    pickup_data_len = (uint16_t)(p->rx_frame_size_ - p->rx_footer_size_ - p->internal.rx_frame_rec_len_);
 
     // 今回で全部受信しきらない場合
     if (pickup_data_len > unprocessed_data_len)
@@ -837,21 +837,21 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->rx_frame_[p->rx_frame_rec_len_]),
+    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
-    p->rx_frame_rec_len_ += pickup_data_len;
+    p->internal.rx_frame_rec_len_ += pickup_data_len;
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
     // フッタがなく，data受信仕切った場合はフレーム確定
     // これがないと，DS_analyze_rx_buffer_fixed_ で
     // 今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
-    if (p->rx_footer_size_ == 0 && p->rx_frame_rec_len_ == p->rx_frame_size_)
+    if (p->rx_footer_size_ == 0 && p->internal.rx_frame_rec_len_ == p->rx_frame_size_)
     {
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-      p->rec_status_.fixed_frame_len = p->rx_frame_rec_len_;
-      p->rx_frame_rec_len_ = 0;
+      p->rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
+      p->internal.rx_frame_rec_len_ = 0;
     }
 
     return pickup_data_len;
@@ -876,7 +876,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列indexなどがみずらいので...
   uint32_t rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);      // まだ受信していない場合は不定値が入ることに留意すること！！
 
-  if (p->rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
+  if (p->internal.rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
     return DS_analyze_rx_buffer_finding_header_(p_stream_config,
@@ -884,26 +884,26 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
                                                 total_processed_data_len,
                                                 rec_data_len);
   }
-  else if (p->rx_frame_rec_len_ < p->rx_header_size_)
+  else if (p->internal.rx_frame_rec_len_ < p->rx_header_size_)
   {
     // ヘッダ受信中
     return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
                                                   rx_buffer,
                                                   total_processed_data_len);
   }
-  else if (p->rx_frame_rec_len_ < p->rx_framelength_pos_ + p->rx_framelength_type_size_)
+  else if (p->internal.rx_frame_rec_len_ < p->rx_framelength_pos_ + p->rx_framelength_type_size_)
   {
     // フレームサイズ探索中
     // ここは高速化のために一括処理
     uint16_t pickup_data_len;
 
     // ヘッダなしの場合は，ここがフレーム先頭
-    if (p->rx_frame_rec_len_ == 0)
+    if (p->internal.rx_frame_rec_len_ == 0)
     {
-      p->rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
+      p->internal.rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
     }
 
-    pickup_data_len = (uint16_t)(p->rx_framelength_pos_ + p->rx_framelength_type_size_ - p->rx_frame_rec_len_);
+    pickup_data_len = (uint16_t)(p->rx_framelength_pos_ + p->rx_framelength_type_size_ - p->internal.rx_frame_rec_len_);
 
     // 今回で全部受信しきらない場合
     if (pickup_data_len > unprocessed_data_len)
@@ -911,15 +911,15 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->rx_frame_[p->rx_frame_rec_len_]),
+    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
-    p->rx_frame_rec_len_ += pickup_data_len;
+    p->internal.rx_frame_rec_len_ += pickup_data_len;
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH;
 
     // フレーム長を受信し終わった場合，チェックする
-    if (p->rx_frame_rec_len_ >= p->rx_framelength_pos_ + p->rx_framelength_type_size_)
+    if (p->internal.rx_frame_rec_len_ >= p->rx_framelength_pos_ + p->rx_framelength_type_size_)
     {
       rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);
 
@@ -927,7 +927,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       if (rx_frame_size > DS_RX_FRAME_SIZE_MAX)
       {
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
-        p->rx_frame_rec_len_ = 0;
+        p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too long\n");
 #endif
@@ -938,7 +938,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       if (rx_frame_size < p->rx_header_size_ + p->rx_footer_size_)
       {
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT;
-        p->rx_frame_rec_len_ = 0;
+        p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too short\n");
 #endif
@@ -948,12 +948,12 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
 
     return pickup_data_len;
   }
-  else if (p->rx_frame_rec_len_ < rx_frame_size - p->rx_footer_size_)
+  else if (p->internal.rx_frame_rec_len_ < rx_frame_size - p->rx_footer_size_)
   {
     // データ受信中
     // ここは高速化のために一括処理
 
-    uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->rx_footer_size_ - p->rx_frame_rec_len_);    // TODO: 現在，フレーム長がuint16_tを超えることは想定していない！
+    uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->rx_footer_size_ - p->internal.rx_frame_rec_len_);    // TODO: 現在，フレーム長がuint16_tを超えることは想定していない！
 
     // 今回で全部受信しきらない場合
     if (pickup_data_len > unprocessed_data_len)
@@ -961,19 +961,19 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->rx_frame_[p->rx_frame_rec_len_]),
+    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
-    p->rx_frame_rec_len_ += pickup_data_len;
+    p->internal.rx_frame_rec_len_ += pickup_data_len;
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
     // フッタがなく，data受信仕切った場合はフレーム確定
     // これがないと，DS_analyze_rx_buffer_fixed_ で今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
-    if (p->rx_footer_size_ == 0 && p->rx_frame_rec_len_ == rx_frame_size)
+    if (p->rx_footer_size_ == 0 && p->internal.rx_frame_rec_len_ == rx_frame_size)
     {
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-      p->rx_frame_rec_len_ = 0;
+      p->internal.rx_frame_rec_len_ = 0;
     }
 
     return pickup_data_len;
@@ -997,7 +997,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
   uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // このキャストは若干危ない（コードが論理的に正しければ問題ないが）
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列indexなどがみずらいので...
 
-  if (p->rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
+  if (p->internal.rx_frame_rec_len_ == 0 && p->rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
     return DS_analyze_rx_buffer_finding_header_(p_stream_config,
@@ -1005,7 +1005,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
                                                 total_processed_data_len,
                                                 rec_data_len);
   }
-  else if (p->rx_frame_rec_len_ < p->rx_header_size_)
+  else if (p->internal.rx_frame_rec_len_ < p->rx_header_size_)
   {
     // ヘッダ受信中
     return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
@@ -1023,53 +1023,53 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
     uint16_t pickup_data_len;
 
     // ヘッダなしの場合は，ここがフレーム先頭
-    if (p->rx_frame_rec_len_ == 0)
+    if (p->internal.rx_frame_rec_len_ == 0)
     {
-      p->rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
+      p->internal.rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
     }
 
     // 届いているデータを受信フレームバッファに格納する
     // ここは高速化のために一括処理
     pickup_data_len = unprocessed_data_len;
     // 永遠にフッタを受信しない場合にバッファーオーバーランすることを防ぐ
-    if (p->rx_frame_rec_len_ + pickup_data_len > DS_RX_FRAME_SIZE_MAX)
+    if (p->internal.rx_frame_rec_len_ + pickup_data_len > DS_RX_FRAME_SIZE_MAX)
     {
-      if (p->rx_frame_rec_len_ >= DS_RX_FRAME_SIZE_MAX)
+      if (p->internal.rx_frame_rec_len_ >= DS_RX_FRAME_SIZE_MAX)
       {
         // これ以上受信できないため，フッタ探索失敗として，リセットする
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
-        p->rx_frame_rec_len_ = 0;
+        p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame is too long\n");
 #endif
         return 0;   // 処理済みデータもなし
       }
-      pickup_data_len = (uint16_t)(DS_RX_FRAME_SIZE_MAX - p->rx_frame_rec_len_);
+      pickup_data_len = (uint16_t)(DS_RX_FRAME_SIZE_MAX - p->internal.rx_frame_rec_len_);
     }
-    memcpy(&(p->rx_frame_[p->rx_frame_rec_len_]),
+    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
     // フッタ最終文字を探す
-    p_footer_last = (uint8_t*)memchr(&(rx_buffer[p->rx_frame_rec_len_]),
+    p_footer_last = (uint8_t*)memchr(&(rx_buffer[p->internal.rx_frame_rec_len_]),
                                      (int)(p->rx_footer_[p->rx_footer_size_ - 1]),
                                      (size_t)pickup_data_len);
 
     if (p_footer_last == NULL)
     {
       // まだまだ受信する
-      p->rx_frame_rec_len_ += pickup_data_len;
+      p->internal.rx_frame_rec_len_ += pickup_data_len;
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return pickup_data_len;
     }
 
-    processed_data_len = (uint16_t)(p_footer_last - &(rx_buffer[p->rx_frame_rec_len_]) + 1);
+    processed_data_len = (uint16_t)(p_footer_last - &(rx_buffer[p->internal.rx_frame_rec_len_]) + 1);
     body_data_len = (p_footer_last - rx_buffer + 1) - p->rx_header_size_ - p->rx_footer_size_;
     if (body_data_len < 0)
     {
       // これはフッタではないので受信続行
       // まだまだ受信する
-      p->rx_frame_rec_len_ += pickup_data_len;
+      p->internal.rx_frame_rec_len_ += pickup_data_len;
       p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return pickup_data_len;
     }
@@ -1083,7 +1083,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
       {
         // これはフッタではないので受信続行
         // まだまだ受信する
-        p->rx_frame_rec_len_ += pickup_data_len;
+        p->internal.rx_frame_rec_len_ += pickup_data_len;
         p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
         return pickup_data_len;
       }
@@ -1092,7 +1092,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
     // フッタ確定 → フレーム確定
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
     p->rec_status_.fixed_frame_len = estimated_rx_frame_size;
-    p->rx_frame_rec_len_ = 0;
+    p->internal.rx_frame_rec_len_ = 0;
     return processed_data_len;
   }
 }
@@ -1136,11 +1136,11 @@ static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_c
   processed_data_len = (uint16_t)(p_header - &(rx_buffer[total_processed_data_len]) + 1);
 
   // ヘッダコピー．ホントはbufferからコピるべきだけど，ちょっとアドレスいじっていて怖いので．．．
-  p->rx_frame_[p->rx_frame_rec_len_] = p->rx_header_[0];
-  p->rx_frame_rec_len_++;
+  p->rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_header_[0];
+  p->internal.rx_frame_rec_len_++;
 
   p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
-  p->rx_frame_head_pos_of_frame_candidate_ = (uint16_t)(total_processed_data_len + processed_data_len - 1);
+  p->internal.rx_frame_head_pos_of_frame_candidate_ = (uint16_t)(total_processed_data_len + processed_data_len - 1);
   return processed_data_len;
 }
 
@@ -1155,10 +1155,10 @@ static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream
   // 受信が細切れのときなどの処理分岐がめんどくさいので，1byteずつ処理させる
 
   // ヘッダが正しいか？
-  if (rx_buffer[total_processed_data_len] == p->rx_header_[p->rx_frame_rec_len_])
+  if (rx_buffer[total_processed_data_len] == p->rx_header_[p->internal.rx_frame_rec_len_])
   {
-    p->rx_frame_[p->rx_frame_rec_len_] = p->rx_header_[p->rx_frame_rec_len_];
-    p->rx_frame_rec_len_++;
+    p->rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_header_[p->internal.rx_frame_rec_len_];
+    p->internal.rx_frame_rec_len_++;
 
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
     return 1;
@@ -1169,7 +1169,7 @@ static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream
     // DS_STREAM_REC_STATUS_HEADER_MISMATCH になり，再びバッファを巻き戻してヘッダ探索を始める
     // その後 DS_STREAM_REC_STATUS_FINDING_HEADER に戻る
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_HEADER_MISMATCH;
-    p->rx_frame_rec_len_ = 0;
+    p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
     Printf("DS: RX header is mismatch\n");
 #endif
@@ -1191,14 +1191,14 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
   {
     // フッタなし
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->rec_status_.fixed_frame_len = p->rx_frame_rec_len_;
-    p->rx_frame_rec_len_ = 0;
+    p->rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
+    p->internal.rx_frame_rec_len_ = 0;
     return 0;   // 処理済みデータもなし
   }
 
   // フッタ受信
   // ここも条件分岐がめんどくさいので，1byteずつ処理する
-  rec_footer_pos = (uint16_t)(p->rx_frame_rec_len_ - (rx_frame_size - p->rx_footer_size_));
+  rec_footer_pos = (uint16_t)(p->internal.rx_frame_rec_len_ - (rx_frame_size - p->rx_footer_size_));
 
   // 期待されているフッタが受信できたか？
   // 受信できなかった場合， DS_STREAM_REC_STATUS_FOOTER_MISMATCH になり，再びバッファを巻き戻してヘッダ探索を始める
@@ -1206,7 +1206,7 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
   if (rx_buffer[total_processed_data_len] != p->rx_footer_[rec_footer_pos])
   {
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FOOTER_MISMATCH;
-    p->rx_frame_rec_len_ = 0;
+    p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
     Printf("DS: RX footer is mismatch\n");
 #endif
@@ -1214,15 +1214,15 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
   }
 
   // ここまできたら正しいフッタが受信されている
-  p->rx_frame_[p->rx_frame_rec_len_] = p->rx_footer_[rec_footer_pos];
-  p->rx_frame_rec_len_++;
+  p->rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_footer_[rec_footer_pos];
+  p->internal.rx_frame_rec_len_++;
 
-  if (p->rx_frame_rec_len_ == rx_frame_size)
+  if (p->internal.rx_frame_rec_len_ == rx_frame_size)
   {
     // フレーム確定
     p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->rec_status_.fixed_frame_len = p->rx_frame_rec_len_;
-    p->rx_frame_rec_len_ = 0;
+    p->rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
+    p->internal.rx_frame_rec_len_ = 0;
   }
   else
   {
@@ -1290,22 +1290,9 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->should_monitor_for_tlm_disruption_ = 0;
   p_stream_config->time_threshold_for_tlm_disruption_ = 60 * 1000;      // この値はよく考えること
 
-  p_stream_config->is_validation_needed_for_send_ = 0;
-  p_stream_config->is_validation_needed_for_rec_  = 0;
-
-  p_stream_config->rx_frame_rec_len_ = 0;
-  p_stream_config->rx_frame_head_pos_of_frame_candidate_ = 0;
-
   memset(p_stream_config->rx_frame_,
          0x00,
          sizeof(p_stream_config->rx_frame_));
-
-  p_stream_config->is_rx_buffer_carry_over_ = 0;
-  p_stream_config->carry_over_buffer_size_ = 0;
-  p_stream_config->carry_over_buffer_next_pos_ = 0;
-  memset(p_stream_config->rx_buffer_for_carry_over_,
-         0x00,
-         sizeof(p_stream_config->rx_buffer_for_carry_over_));
 
   // DS_StreamSendStatus の初期化
   p_stream_config->send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
@@ -1316,6 +1303,19 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->rec_status_.fixed_frame_len              = 0;
   p_stream_config->rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
   p_stream_config->rec_status_.count_of_carry_over_failures = 0;
+
+  p_stream_config->internal.is_validation_needed_for_send_ = 0;
+  p_stream_config->internal.is_validation_needed_for_rec_  = 0;
+
+  p_stream_config->internal.rx_frame_rec_len_ = 0;
+  p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ = 0;
+
+  p_stream_config->internal.is_rx_buffer_carry_over_ = 0;
+  p_stream_config->internal.carry_over_buffer_size_ = 0;
+  p_stream_config->internal.carry_over_buffer_next_pos_ = 0;
+  memset(p_stream_config->internal.rx_buffer_for_carry_over_,
+         0x00,
+         sizeof(p_stream_config->internal.rx_buffer_for_carry_over_));
 
   return DS_ERR_CODE_OK;
 }
@@ -1371,8 +1371,8 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
     if (p_stream_config->rx_header_size_ == 0) return DS_ERR_CODE_ERR;
   }
 
-  p_stream_config->is_validation_needed_for_send_ = 0;
-  p_stream_config->is_validation_needed_for_rec_ = 0;
+  p_stream_config->internal.is_validation_needed_for_send_ = 0;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 0;
   return DS_ERR_CODE_OK;
 }
 
@@ -1457,8 +1457,8 @@ uint8_t DSSC_get_is_enable(const DS_StreamConfig* p_stream_config)
 void DSSC_enable(DS_StreamConfig* p_stream_config)
 {
   p_stream_config->is_enabled_ = 1;
-  p_stream_config->is_validation_needed_for_send_ = 1;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_send_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_disable(DS_StreamConfig* p_stream_config)
@@ -1474,7 +1474,7 @@ uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config)
 void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config)
 {
   p_stream_config->is_strict_frame_search_ = 1;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config)
@@ -1531,7 +1531,7 @@ void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
                        uint8_t* tx_frame)
 {
   p_stream_config->tx_frame_ = tx_frame;
-  p_stream_config->is_validation_needed_for_send_ = 1;
+  p_stream_config->internal.is_validation_needed_for_send_ = 1;
 }
 
 const uint8_t* DSSC_get_tx_frame(DS_StreamConfig* p_stream_config)
@@ -1548,7 +1548,7 @@ void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
                             const uint16_t tx_frame_size)
 {
   p_stream_config->tx_frame_size_ = tx_frame_size;
-  p_stream_config->is_validation_needed_for_send_ = 1;
+  p_stream_config->internal.is_validation_needed_for_send_ = 1;
 }
 
 uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config)
@@ -1560,7 +1560,7 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size)
 {
   p_stream_config->tx_frame_buffer_size_ = tx_frame_buffer_size;
-  p_stream_config->is_validation_needed_for_send_ = 1;
+  p_stream_config->internal.is_validation_needed_for_send_ = 1;
 }
 
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config)
@@ -1579,7 +1579,7 @@ void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
 {
   p_stream_config->rx_header_ = rx_header;
   p_stream_config->rx_header_size_ = rx_header_size;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_set_rx_footer(DS_StreamConfig* p_stream_config,
@@ -1588,14 +1588,14 @@ void DSSC_set_rx_footer(DS_StreamConfig* p_stream_config,
 {
   p_stream_config->rx_footer_ = rx_footer;
   p_stream_config->rx_footer_size_ = rx_footer_size;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
                             const int16_t rx_frame_size)
 {
   p_stream_config->rx_frame_size_ = rx_frame_size;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config)
@@ -1617,21 +1617,21 @@ void DSSC_set_rx_framelength_pos(DS_StreamConfig* p_stream_config,
                                  const int16_t rx_framelength_pos)
 {
   p_stream_config->rx_framelength_pos_ = rx_framelength_pos;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_set_rx_framelength_type_size(DS_StreamConfig* p_stream_config,
                                        const uint16_t rx_framelength_type_size)
 {
   p_stream_config->rx_framelength_type_size_ = rx_framelength_type_size;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
                                     const uint16_t rx_framelength_offset)
 {
   p_stream_config->rx_framelength_offset_ = rx_framelength_offset;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
@@ -1642,13 +1642,13 @@ uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stre
 void DSSC_enable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config)
 {
   p_stream_config->should_monitor_for_tlm_disruption_ = 1;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_disable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config)
 {
   p_stream_config->should_monitor_for_tlm_disruption_ = 0;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 uint32_t DSSC_get_time_threshold_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
@@ -1660,7 +1660,7 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
                                                 const uint32_t time_threshold_for_tlm_disruption)
 {
   p_stream_config->time_threshold_for_tlm_disruption_ = time_threshold_for_tlm_disruption;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
@@ -1672,7 +1672,7 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver))
 {
   p_stream_config->data_analyzer_ = data_analyzer;
-  p_stream_config->is_validation_needed_for_rec_ = 1;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config)
