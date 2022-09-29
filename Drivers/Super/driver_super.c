@@ -242,8 +242,8 @@ DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_in
 
   p_super->if_config = if_config;
 
-  p_super->config.load_init_setting = load_init_setting;
-  if (p_super->config.load_init_setting(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
+  p_super->config.internal.load_init_setting = load_init_setting;
+  if (p_super->config.internal.load_init_setting(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
 
   if (DS_validate_config(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
 
@@ -262,19 +262,19 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) の様な使い方をするのでセグフォが起こる可能性があり
   p_super->if_config = NULL;        // FIXME: NULLポインタはこの関数がReset単体で使われるとマズい
 
-  memset(p_super->config.rx_buffer_, 0x00, sizeof(p_super->config.rx_buffer_));
+  memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
 
-  p_super->config.load_init_setting = DS_load_init_setting_dummy_;
+  p_super->config.internal.load_init_setting = DS_load_init_setting_dummy_;
 
-  p_super->config.rec_status_.ret_from_if_rx       = 0;
-  p_super->config.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_OK;
+  p_super->config.info.rec_status_.ret_from_if_rx       = 0;
+  p_super->config.info.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_OK;
 
-  p_super->config.rx_count_      = 0;
-  p_super->config.rx_call_count_ = 0;
-  p_super->config.rx_time_       = TMGR_get_master_clock();
+  p_super->config.info.rx_count_      = 0;
+  p_super->config.info.rx_call_count_ = 0;
+  p_super->config.info.rx_time_       = TMGR_get_master_clock();
 
-  p_super->config.should_monitor_for_rx_disruption_ = 0;
-  p_super->config.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
+  p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
+  p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -307,7 +307,7 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
 
   // 以下，各種 buffer を memsetで念の為0クリアしておくが，
   // 情報は carry_over_buffer_size_ にあるので，動作上意味はない．
-  memset(p_super->config.rx_buffer_, 0x00, sizeof(p_super->config.rx_buffer_));
+  memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -333,31 +333,31 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
   uint16_t rec_data_len;
   int      ret_rx;
 
-  p_super->config.rx_call_count_++;
+  p_super->config.info.rx_call_count_++;
 
   // 各Driverで物理的に接続されている wire は１本なので，それをここで受信する．
   // 後段の stream では，その受信したビット列に対して，複数のフレーム種類に対して，フレーム探索，確定処理を走らす．
   ret_rx = DS_rx_(p_super);
-  p_super->config.rec_status_.ret_from_if_rx = ret_rx;
+  p_super->config.info.rec_status_.ret_from_if_rx = ret_rx;
 
   if (ret_rx > 0)
   {
     // なにかしらの受信データあり
-    p_super->config.rx_count_++;
-    p_super->config.rx_time_ = TMGR_get_master_clock();
+    p_super->config.info.rx_count_++;
+    p_super->config.info.rx_time_ = TMGR_get_master_clock();
   }
 
   // 受信途絶判定
   // テレメなどで見るときにノイズになるので，判定しないときは OK にしておく
-  p_super->config.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_OK;
-  if (p_super->config.should_monitor_for_rx_disruption_)
+  p_super->config.info.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_OK;
+  if (p_super->config.settings.should_monitor_for_rx_disruption_)
   {
     ObcTime now = TMGR_get_master_clock();
-    uint32_t last_rx_ago = OBCT_diff_in_msec(&p_super->config.rx_time_, &now);
+    uint32_t last_rx_ago = OBCT_diff_in_msec(&p_super->config.info.rx_time_, &now);
 
-    if (last_rx_ago > p_super->config.time_threshold_for_rx_disruption_)
+    if (last_rx_ago > p_super->config.settings.time_threshold_for_rx_disruption_)
     {
-      p_super->config.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_LOST;
+      p_super->config.info.rec_status_.rx_disruption_status = DS_RX_DISRUPTION_STATUS_LOST;
     }
   }
 
@@ -581,7 +581,7 @@ static int DS_rx_(DriverSuper* p_super)
   if (flag == 0) return 0;
 
   rec_data_len = (*IF_RX[p_super->interface])(p_super->if_config,
-                                              p_super->config.rx_buffer_,
+                                              p_super->config.internal.rx_buffer_,
                                               DS_RX_BUFFER_SIZE_MAX);
 
 #ifdef DS_DEBUG
@@ -594,7 +594,7 @@ static int DS_rx_(DriverSuper* p_super)
   Printf("DS: Receive data size is %d bytes, as follow:\n", rec_data_len);
   for (i = 0; i < rec_data_len; i++)
   {
-    Printf("%02x ", p_super->config.rx_buffer_[i]);
+    Printf("%02x ", p_super->config.internal.rx_buffer_[i]);
     if (i % 4 == 3) Printf("   ");
   }
   Printf("\n");
@@ -641,7 +641,7 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
 
   // 今回受信分のとりこみ
   memcpy(&(rx_buffer[buffer_offset]),
-         p_super->config.rx_buffer_,
+         p_super->config.internal.rx_buffer_,
          (size_t)rec_data_len);
 
   if (p_stream_config->is_rx_buffer_carry_over_)
@@ -1391,58 +1391,61 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 }
 
 
-// ###### DS_Config Getter/Setter ######
+// ###### DS_Config Getter/Setter of Settings ######
 // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
 const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
 {
-  return &p_super->config.rec_status_;
+  return &p_super->config.info.rec_status_;
 }
 
 uint32_t DSC_get_rx_count(const DriverSuper* p_super)
 {
-  return (uint32_t)p_super->config.rx_count_;
+  return (uint32_t)p_super->config.info.rx_count_;
 }
 
 uint32_t DSC_get_rx_call_count(const DriverSuper* p_super)
 {
-  return (uint32_t)p_super->config.rx_call_count_;
+  return (uint32_t)p_super->config.info.rx_call_count_;
 }
 
 const ObcTime* DSC_get_rx_time(const DriverSuper* p_super)
 {
-  return &p_super->config.rx_time_;
+  return &p_super->config.info.rx_time_;
 }
 
+DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
+{
+  return (DS_RX_DISRUPTION_STATUS_CODE)p_super->config.info.rec_status_.rx_disruption_status;
+}
+
+
+// ###### DS_Config Getter/Setter of Info ######
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
-  return (uint8_t)p_super->config.should_monitor_for_rx_disruption_;
+  return (uint8_t)p_super->config.settings.should_monitor_for_rx_disruption_;
 }
 
 void DSC_enable_monitor_for_rx_disruption(DriverSuper* p_super)
 {
-  p_super->config.should_monitor_for_rx_disruption_ = 1;
+  p_super->config.settings.should_monitor_for_rx_disruption_ = 1;
 }
 
 void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super)
 {
-  p_super->config.should_monitor_for_rx_disruption_ = 0;
+  p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
 }
 
 uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super)
 {
-  return (uint32_t)p_super->config.time_threshold_for_rx_disruption_;
+  return (uint32_t)p_super->config.settings.time_threshold_for_rx_disruption_;
 }
 
 void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
                                               const uint32_t time_threshold_for_rx_disruption)
 {
-  p_super->config.time_threshold_for_rx_disruption_ = time_threshold_for_rx_disruption;
+  p_super->config.settings.time_threshold_for_rx_disruption_ = time_threshold_for_rx_disruption;
 }
 
-DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
-{
-  return (DS_RX_DISRUPTION_STATUS_CODE)p_super->config.rec_status_.rx_disruption_status;
-}
 
 // ###### DS_StreamConfig Getter/Setter ######
 // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある

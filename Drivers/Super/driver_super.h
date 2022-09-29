@@ -203,31 +203,41 @@ typedef struct
  * @brief  DriverSuper の設定
  *
  *         各IFはこれを継承してつかう．
+ *         DS_Config のメンバはすべての Driver から非公開とし， getter / setter でアクセスする
  */
 typedef struct
 {
-  // 【ユーザー設定／取得値】（DS_Configの変数はすべてのDriverから非公開とする）
-  DS_RecStatus rec_status_;                                 //!< IF受信状況
+  struct
+  {
+    uint8_t  should_monitor_for_rx_disruption_;               /*!< 受信途絶判定をするか？
+                                                                   初期値: 0 */
+    uint32_t time_threshold_for_rx_disruption_;               /*!< 受信途絶判定の閾値 [ms]
+                                                                   初期値: 60 * 1000 */
+  } settings;       //!< 設定値
+  struct
+  {
+    DS_RecStatus rec_status_;                                 //!< IF受信状況
 
-  uint32_t rx_count_;                                       //!< なにかしらのデータの受信回数
-  uint32_t rx_call_count_;                                  //!< DS_receive 呼び出し回数
+    uint32_t rx_count_;                                       //!< なにかしらのデータの受信回数
+    uint32_t rx_call_count_;                                  //!< DS_receive 呼び出し回数
 
-  ObcTime  rx_time_;                                        //!< なにかしらのデータの受信時刻
+    ObcTime  rx_time_;                                        //!< なにかしらのデータの受信時刻
+  } info;           //!< 取得値
+  struct
+  {
+    uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< データ受信バッファ
 
-  uint8_t  should_monitor_for_rx_disruption_;               //!< 受信途絶判定をするか？
-  uint32_t time_threshold_for_rx_disruption_;               //!< 受信途絶判定の閾値 [ms]
-
-  // 【内部処理で用いる値】
-  uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< データ受信バッファ
-
-  DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init でロードする，ドライバの初期設定の設定関数
-                                                                 DS_reset_config での設定をオーバーロードする
-                                                                 返り値は DS_ERR_CODE */
+    DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init でロードする，ドライバの初期設定の設定関数
+                                                                  DS_reset_config での設定をオーバーロードする
+                                                                  返り値は DS_ERR_CODE */
+  } internal;       //!< 内部処理用
 } DS_Config;
 
 /**
  * @struct DS_StreamConfig
  * @brief  DriverSuperStreamの設定
+ *
+ *         DS_StreamConfig のメンバはすべての Driver から非公開とし， getter / setter でアクセスする
  */
 struct DS_StreamConfig
 {
@@ -235,7 +245,7 @@ struct DS_StreamConfig
   // 現状なし
   // setter/getterで操作する
 
-  // 【ユーザー設定／取得値】（DS_StreamConfigの変数はすべてのDriverから非公開とする）
+  // 【ユーザー設定／取得値】（DS_StreamConfigのメンバはすべてのDriverから非公開とする）
   uint8_t  is_enabled_;                                     //!< 有効か？
 
   uint8_t  is_strict_frame_search_;                         /*!< 厳格なフレーム探索が有効か？
@@ -455,18 +465,20 @@ DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
  */
 DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
 
-// ###### DS_Config Getter/Setter ######
-const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super);
-uint32_t DSC_get_rx_count(const DriverSuper* p_super);
-uint32_t DSC_get_rx_call_count(const DriverSuper* p_super);
-const ObcTime* DSC_get_rx_time(const DriverSuper* p_super);
-
+// ###### DS_Config Getter/Setter of Settings ######
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super);
 void DSC_enable_monitor_for_rx_disruption(DriverSuper* p_super);
 void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super);
 uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super);
 void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
                                               const uint32_t time_threshold_for_rx_disruption);
+
+// ###### DS_Config Getter/Setter of Info ######
+const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super);
+uint32_t DSC_get_rx_count(const DriverSuper* p_super);
+uint32_t DSC_get_rx_call_count(const DriverSuper* p_super);
+const ObcTime* DSC_get_rx_time(const DriverSuper* p_super);
+
 DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super);
 
 // ###### DS_StreamConfig Getter/Setter ######
