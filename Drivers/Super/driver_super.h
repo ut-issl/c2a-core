@@ -309,6 +309,9 @@ struct DS_StreamConfig
                                                                    その場合のサイズ調整のために使う
                                                                    フレームサイズデータが「フレームの全サイズ」を示している場合には0に設定する
                                                                    初期値: 0 */
+    ENDIAN_TYPE rx_framelength_endian_;                       /*!< フレームサイズデータのエンディアン
+                                                                   受信データが可変長の場合のみ使用される
+                                                                   初期値: ENDIAN_TYPE_BIG */
 
     uint8_t  should_monitor_for_tlm_disruption_;              /*!< テレメ途絶判定をするか？
                                                                    初期値: 0 */
@@ -539,6 +542,8 @@ void DSSC_set_rx_framelength_type_size(DS_StreamConfig* p_stream_config,
                                        const uint16_t rx_framelength_type_size);
 void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
                                     const uint16_t rx_framelength_offset);
+void DSSC_set_rx_framelength_endian(DS_StreamConfig* p_stream_config,
+                                    const ENDIAN_TYPE rx_framelength_endian);
 
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
