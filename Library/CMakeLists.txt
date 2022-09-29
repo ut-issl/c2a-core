@@ -8,6 +8,7 @@ set(C2A_SRCS
   crc.c
   endian_conv.c
   endian_memcpy.c
+  endian.c
   majority_vote_for3.c
 )
 
