@@ -262,6 +262,9 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) の様な使い方をするのでセグフォが起こる可能性があり
   p_super->if_config = NULL;        // FIXME: NULLポインタはこの関数がReset単体で使われるとマズい
 
+  p_super->config.settings.rx_buffer_      = NULL;
+  p_super->config.settings.rx_buffer_size_ = 0;
+
   p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
   p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
 
@@ -272,8 +275,6 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->config.info.rx_call_count_ = 0;
   p_super->config.info.rx_time_       = TMGR_get_master_clock();
 
-  memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
-
   p_super->config.internal.load_init_setting = DS_load_init_setting_dummy_;
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
@@ -281,6 +282,11 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
     DS_ERR_CODE ret = DS_reset_stream_config_(&p_super->stream_config[stream]);
     if (ret != DS_ERR_CODE_OK) return ret;
   }
+
+  // FIXME: 最後にバッファクリア周りを確認
+  // memset(p_super->config.settings.rx_buffer_, 0x00, sizeof(p_super->config.settings.rx_buffer_));
+  DS_clear_rx_buffer(p_super);
+
   return DS_ERR_CODE_OK;
 }
 
@@ -307,7 +313,10 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
 
   // 以下，各種 buffer を memsetで念の為0クリアしておくが，
   // 情報は internal.carry_over_buffer_size_ にあるので，動作上意味はない．
-  memset(p_super->config.internal.rx_buffer_, 0x00, sizeof(p_super->config.internal.rx_buffer_));
+  if (p_super->config.settings.rx_buffer_ != NULL)
+  {
+    memset(p_super->config.settings.rx_buffer_, 0x00, p_super->config.settings.rx_buffer_size_);
+  }
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -581,8 +590,8 @@ static int DS_rx_(DriverSuper* p_super)
   if (flag == 0) return 0;
 
   rec_data_len = (*IF_RX[p_super->interface])(p_super->if_config,
-                                              p_super->config.internal.rx_buffer_,
-                                              DS_RX_BUFFER_SIZE_MAX);
+                                              p_super->config.settings.rx_buffer_,
+                                              p_super->config.settings.rx_buffer_size_);
 
 #ifdef DS_DEBUG
   Printf("DS: rx_\n");
@@ -594,7 +603,7 @@ static int DS_rx_(DriverSuper* p_super)
   Printf("DS: Receive data size is %d bytes, as follow:\n", rec_data_len);
   for (i = 0; i < rec_data_len; i++)
   {
-    Printf("%02x ", p_super->config.internal.rx_buffer_[i]);
+    Printf("%02x ", p_super->config.settings.rx_buffer_[i]);
     if (i % 4 == 3) Printf("   ");
   }
   Printf("\n");
@@ -641,7 +650,7 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
 
   // 今回受信分のとりこみ
   memcpy(&(rx_buffer[buffer_offset]),
-         p_super->config.internal.rx_buffer_,
+         p_super->config.settings.rx_buffer_,
          (size_t)rec_data_len);
 
   if (p_stream_config->internal.is_rx_buffer_carry_over_)
@@ -1403,6 +1412,8 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_ = 0;
   return DS_ERR_CODE_OK;
+
+  // FIXME: buffer size チェック
 }
 
 
@@ -1421,6 +1432,21 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 
 
 // ###### DS_Config Getter/Setter of Settings ######
+void DSC_set_rx_buffer(DriverSuper* p_super,
+                       uint8_t* rx_buffer,
+                       const uint16_t rx_buffer_size)
+{
+  uint8_t stream;
+
+  p_super->config.settings.rx_buffer_ = rx_buffer;
+  p_super->config.settings.rx_buffer_size_ = rx_buffer_size;
+
+  for (stream = 0; stream < DS_STREAM_MAX; ++stream)
+  {
+    p_super->stream_config[stream].internal.is_validation_needed_for_rec_ = 1;
+  }
+}
+
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
   return (uint8_t)p_super->config.settings.should_monitor_for_rx_disruption_;

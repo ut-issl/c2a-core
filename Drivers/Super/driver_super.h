@@ -7,24 +7,24 @@
  *         初期化，コマンド発行，テレメトリリクエスト，テレメトリ受信，テレメトリ解析などを行う，ドライバ群のスーパークラスです．
  *         個々の機器のインターフェースドライバに継承させて使用します．
  * @note   バッファのサイズ設定について
- *         rx_buffer_size:
+ *         rx_buffer_size_:
  *           - IF_RX から受信できる最大数を規定する
  *           - OBC の物理的な信号ラインのバッファサイズと同サイズにしておくともっともパフォーマンスが出る
  *           - Driver ごとに定義
- *         rx_frame_buffer_size:
+ *         rx_frame_buffer_size_:
  *           - 受信フレームバッファサイズ
  *           - 受信フレームはこのサイズよりも小さくないといけない（TODO: 将来的にこの制約を無くす可能性はある）
  *           - Driver Stream ごとに定義
- *         rx_frame_carry_over_buffer_size:
+ *         rx_frame_carry_over_buffer_size_:
  *           - フレーム確定中に次のフレームが受信された時などの繰越用バッファ
- *           - rx_frame_buffer_size 以上を要求
+ *           - rx_frame_buffer_size_ 以上を要求
  *           - 大きければ大きいほど，バースト的なテレメ受信への耐性が大きくなる
  *           - このサイズが溢れた時，このバッファは一旦全てクリアされる（バッファが詰まってるため，古いものが削除される）
  *           - Driver Stream ごとに定義
  *         DS_RX_PROCESSING_BUFFER_SIZE:
  *           - 様々なバッファをハンドリングするための一次メモリ
  *           - すべての Driver Stream で以下を満たす必要がある
- *             - rx_buffer_size + rx_frame_carry_over_buffer_size < DS_RX_PROCESSING_BUFFER_SIZE
+ *             - rx_buffer_size_ + rx_frame_carry_over_buffer_size_ < DS_RX_PROCESSING_BUFFER_SIZE
  *           - C2A 全体で 1 つ定義
  */
 #ifndef DRIVER_SUPER_H_
@@ -38,6 +38,10 @@
 #define DS_STREAM_MAX                 (3)         /*!< DS_StreamConfigの最大数
                                                        uint8_t を想定          */
 #define DS_RX_PROCESSING_BUFFER_SIZE  (1024 * 2)  //!< DS 内での処理のためのバッファサイズ．@note 参照
+
+// FIXME: 消す
+#define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< 受信データバッファの最大長
+#define DS_RX_FRAME_SIZE_MAX   (1024)      //!< 受信データフレームの最大長
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
@@ -228,11 +232,19 @@ typedef struct
 {
   struct
   {
+    uint8_t* rx_buffer_;                                      /*!< データ受信バッファ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: NULL */
+    uint16_t rx_buffer_size_;                                 /*!< データ受信バッファサイズ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: 0 */
+
     uint8_t  should_monitor_for_rx_disruption_;               /*!< 受信途絶判定をするか？
                                                                    初期値: 0 */
     uint32_t time_threshold_for_rx_disruption_;               /*!< 受信途絶判定の閾値 [ms]
                                                                    初期値: 60 * 1000 */
   } settings;       //!< 設定値
+
   struct
   {
     DS_RecStatus rec_status_;                                 //!< IF受信状況
@@ -242,10 +254,9 @@ typedef struct
 
     ObcTime  rx_time_;                                        //!< なにかしらのデータの受信時刻
   } info;           //!< 取得値（メトリクス）
+
   struct
   {
-    uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< データ受信バッファ
-
     DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init でロードする，ドライバの初期設定の設定関数
                                                                    DS_reset_config での設定をオーバーロードする
                                                                    返り値は DS_ERR_CODE */
@@ -508,6 +519,10 @@ DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
 DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
 
 // ###### DS_Config Getter/Setter of Settings ######
+void DSC_set_rx_buffer(DriverSuper* p_super,
+                       uint8_t* rx_buffer,
+                       const uint16_t rx_buffer_size);
+
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super);
 void DSC_enable_monitor_for_rx_disruption(DriverSuper* p_super);
 void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super);
