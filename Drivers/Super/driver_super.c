@@ -1394,34 +1394,6 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 
 
 // ###### DS_Config Getter/Setter of Settings ######
-// FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
-const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
-{
-  return &p_super->config.info.rec_status_;
-}
-
-uint32_t DSC_get_rx_count(const DriverSuper* p_super)
-{
-  return (uint32_t)p_super->config.info.rx_count_;
-}
-
-uint32_t DSC_get_rx_call_count(const DriverSuper* p_super)
-{
-  return (uint32_t)p_super->config.info.rx_call_count_;
-}
-
-const ObcTime* DSC_get_rx_time(const DriverSuper* p_super)
-{
-  return &p_super->config.info.rx_time_;
-}
-
-DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
-{
-  return (DS_RX_DISRUPTION_STATUS_CODE)p_super->config.info.rec_status_.rx_disruption_status;
-}
-
-
-// ###### DS_Config Getter/Setter of Info ######
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
   return (uint8_t)p_super->config.settings.should_monitor_for_rx_disruption_;
@@ -1449,9 +1421,37 @@ void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
 }
 
 
-// ###### DS_StreamConfig Getter/Setter ######
+// ###### DS_Config Getter/Setter of Info ######
 // FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
-uint8_t DSSC_get_is_enable(const DS_StreamConfig* p_stream_config)
+const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
+{
+  return &p_super->config.info.rec_status_;
+}
+
+uint32_t DSC_get_rx_count(const DriverSuper* p_super)
+{
+  return (uint32_t)p_super->config.info.rx_count_;
+}
+
+uint32_t DSC_get_rx_call_count(const DriverSuper* p_super)
+{
+  return (uint32_t)p_super->config.info.rx_call_count_;
+}
+
+const ObcTime* DSC_get_rx_time(const DriverSuper* p_super)
+{
+  return &p_super->config.info.rx_time_;
+}
+
+DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super)
+{
+  return (DS_RX_DISRUPTION_STATUS_CODE)p_super->config.info.rec_status_.rx_disruption_status;
+}
+
+
+// ###### DS_StreamConfig Getter/Setter of Settings ######
+// FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
+uint8_t DSSC_get_is_enabled(const DS_StreamConfig* p_stream_config)
 {
   return (uint8_t)p_stream_config->settings.is_enabled_;
 }
@@ -1482,51 +1482,6 @@ void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config)
 void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config)
 {
   p_stream_config->settings.is_strict_frame_search_ = 0;
-}
-
-const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config)
-{
-  return &p_stream_config->info.send_status_;
-}
-
-const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config)
-{
-  return &p_stream_config->info.rec_status_;
-}
-
-uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config)
-{
-  return (uint32_t)p_stream_config->info.general_cmd_tx_count_;
-}
-
-uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config)
-{
-  return (uint32_t)p_stream_config->info.req_tlm_cmd_tx_count_;
-}
-
-uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config)
-{
-  return (uint32_t)p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_;
-}
-
-uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config)
-{
-  return (uint32_t)p_stream_config->info.rx_frame_fix_count_;
-}
-
-const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config)
-{
-  return &p_stream_config->info.general_cmd_tx_time_;
-}
-
-const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config)
-{
-  return &p_stream_config->info.req_tlm_cmd_tx_time_;
-}
-
-const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config)
-{
-  return &p_stream_config->info.rx_frame_fix_time_;
 }
 
 void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
@@ -1568,11 +1523,6 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config)
 {
   return (int16_t)p_stream_config->settings.tx_frame_buffer_size_;
-}
-
-const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
-{
-  return p_stream_config->info.rx_frame_;
 }
 
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
@@ -1665,16 +1615,68 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
-DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
-{
-  return (DS_STREAM_TLM_DISRUPTION_STATUS_CODE)p_stream_config->info.rec_status_.tlm_disruption_status;
-}
-
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver))
 {
   p_stream_config->settings.data_analyzer_ = data_analyzer;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
+}
+
+
+// ###### DS_StreamConfig Getter/Setter of Info ######
+const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config)
+{
+  return &p_stream_config->info.send_status_;
+}
+
+const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config)
+{
+  return &p_stream_config->info.rec_status_;
+}
+
+uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config)
+{
+  return (uint32_t)p_stream_config->info.general_cmd_tx_count_;
+}
+
+uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config)
+{
+  return (uint32_t)p_stream_config->info.req_tlm_cmd_tx_count_;
+}
+
+uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config)
+{
+  return (uint32_t)p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_;
+}
+
+uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config)
+{
+  return (uint32_t)p_stream_config->info.rx_frame_fix_count_;
+}
+
+const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config)
+{
+  return &p_stream_config->info.general_cmd_tx_time_;
+}
+
+const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config)
+{
+  return &p_stream_config->info.req_tlm_cmd_tx_time_;
+}
+
+const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config)
+{
+  return &p_stream_config->info.rx_frame_fix_time_;
+}
+
+const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
+{
+  return p_stream_config->info.rx_frame_;
+}
+
+DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
+{
+  return (DS_STREAM_TLM_DISRUPTION_STATUS_CODE)p_stream_config->info.rec_status_.tlm_disruption_status;
 }
 
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config)
