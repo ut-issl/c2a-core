@@ -241,8 +241,8 @@ typedef struct
  */
 struct DS_StreamConfig
 {
-  // struct
-  // {
+  struct
+  {
     uint8_t  is_enabled_;                                     //!< 有効か？
 
     uint8_t  is_strict_frame_search_;                         /*!< 厳格なフレーム探索が有効か？
@@ -304,7 +304,7 @@ struct DS_StreamConfig
                                                               /*!< 受信データの解析関数
                                                                   p_driver は継承先機器のドライバ構造体など
                                                                   返り値は DS_ERR_CODE */
-  // } settings;       //!< 設定値
+  } settings;       //!< 設定値
 
   struct
   {
