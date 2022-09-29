@@ -1706,6 +1706,16 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
+void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
+                        uint8_t* rx_frame_buffer,
+                        const uint16_t rx_frame_buffer_size,
+                        uint8_t* rx_carry_over_buffer,
+                        const uint16_t rx_carry_over_buffer_size)
+{
+  DSSC_set_rx_frame_buffer(p_stream_config, rx_frame_buffer, rx_frame_buffer_size);
+  DSSC_set_rx_carry_over_buffer(p_stream_config, rx_carry_over_buffer, rx_carry_over_buffer_size);
+}
+
 
 // ###### DS_StreamConfig Getter/Setter of Info ######
 const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config)

@@ -605,6 +605,13 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver));
 
+// DSSC_set_rx_frame_buffer と DSSC_set_rx_carry_over_buffer のセット
+void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
+                        uint8_t* rx_frame_buffer,
+                        const uint16_t rx_frame_buffer_size,
+                        uint8_t* rx_carry_over_buffer,
+                        const uint16_t rx_carry_over_buffer_size);
+
 // ###### DS_StreamConfig Getter/Setter of Info ######
 const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config);
 const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config);
