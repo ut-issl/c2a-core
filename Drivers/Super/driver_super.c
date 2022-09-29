@@ -740,7 +740,8 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
     if (p_stream_config->is_strict_frame_search_)
     {
       // 確定フレームの先頭 + 1 バイト目以降を次回に引き継ぐ
-      p_stream_config->internal.carry_over_buffer_size_ = (uint16_t)(rec_data_len - p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ - 1);
+      p_stream_config->internal.carry_over_buffer_size_ =
+          (uint16_t)(rec_data_len - p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ - 1);
       // 次回は，引き継いだデータの先頭から再びフレーム探索
       p_stream_config->internal.carry_over_buffer_next_pos_ = 0;
     }
