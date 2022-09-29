@@ -171,7 +171,7 @@ DS_REC_ERR_CODE GS_rec_tctf(GS_Driver* gs_driver)
 
     // TODO: これはエラー情報をきちんと把握したいので，アノマリ発行を入れる
     gs_driver->info[i].rx.rec_status = DS_receive(ds);
-    gs_driver->info[i].rx.ret_from_if_rx = ds->config.rec_status_.ret_from_if_rx;
+    gs_driver->info[i].rx.ret_from_if_rx = DSC_get_rec_status(ds)->ret_from_if_rx;
 
     if (gs_driver->info[i].rx.rec_status != DS_ERR_CODE_OK) continue;
 
