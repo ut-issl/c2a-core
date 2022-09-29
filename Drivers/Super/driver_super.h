@@ -15,7 +15,7 @@
  *           - 受信フレームバッファサイズ
  *           - 受信フレームはこのサイズよりも小さくないといけない（TODO: 将来的にこの制約を無くす可能性はある）
  *           - Driver Stream ごとに定義
- *         rx_frame_carry_over_buffer_size_:
+ *         rx_carry_over_buffer_size_:
  *           - フレーム確定中に次のフレームが受信された時などの繰越用バッファ
  *           - rx_frame_buffer_size_ 以上を要求
  *           - 大きければ大きいほど，バースト的なテレメ受信への耐性が大きくなる
@@ -24,7 +24,7 @@
  *         DS_RX_PROCESSING_BUFFER_SIZE:
  *           - 様々なバッファをハンドリングするための一次メモリ
  *           - すべての Driver Stream で以下を満たす必要がある
- *             - rx_buffer_size_ + rx_frame_carry_over_buffer_size_ < DS_RX_PROCESSING_BUFFER_SIZE
+ *             - rx_buffer_size_ + rx_carry_over_buffer_size_ < DS_RX_PROCESSING_BUFFER_SIZE
  *           - C2A 全体で 1 つ定義
  */
 #ifndef DRIVER_SUPER_H_
@@ -289,6 +289,7 @@ struct DS_StreamConfig
                                                                    初期値: 0 (OFF) */
 
     uint8_t* tx_frame_;                                       /*!< コマンドフレーム
+                                                                   FIXME: tx_frame_buffer_ に rename する？
                                                                    初期値: NULL */
     uint16_t tx_frame_size_;                                  /*!< コマンドフレームサイズ
                                                                    tx_frame_ のうち実際に送信するバイト数
@@ -349,6 +350,14 @@ struct DS_StreamConfig
                                                                    受信データが可変長の場合のみ使用される
                                                                    初期値: ENDIAN_TYPE_BIG */
 
+    uint8_t* rx_carry_over_buffer_;                           /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
+                                                                   次の受信時にまとめて処理させる
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: NULL */
+    uint16_t rx_carry_over_buffer_size_;                      /*!< 繰越しバッファサイズ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: 0 */
+
     uint8_t  should_monitor_for_tlm_disruption_;              /*!< テレメ途絶判定をするか？
                                                                    初期値: 0 */
     uint32_t time_threshold_for_tlm_disruption_;              /*!< テレメ途絶判定の閾値 [ms]
@@ -393,9 +402,6 @@ struct DS_StreamConfig
     uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
     uint16_t carry_over_buffer_size_;                         //!< 繰越する受信データのサイズ
     uint16_t carry_over_buffer_next_pos_;                     //!< 次回探索を始めるバッファ位置（0 起算）
-    uint8_t  rx_buffer_for_carry_over_[DS_RX_BUFFER_SIZE_MAX];
-                                                              /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
-                                                                   次の受信時にまとめて処理させる */
   } internal;       //!< 内部処理用
 };
 // TODO: Protocol 用に data_link_layer_ を追加
@@ -584,6 +590,10 @@ void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
                                     const uint16_t rx_framelength_offset);
 void DSSC_set_rx_framelength_endian(DS_StreamConfig* p_stream_config,
                                     const ENDIAN_TYPE rx_framelength_endian);
+
+void DSSC_set_rx_carry_over_buffer(DS_StreamConfig* p_stream_config,
+                                   uint8_t* rx_carry_over_buffer,
+                                   const uint16_t rx_carry_over_buffer_size);
 
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
