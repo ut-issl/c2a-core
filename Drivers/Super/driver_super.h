@@ -222,7 +222,7 @@ typedef struct
     uint32_t rx_call_count_;                                  //!< DS_receive 呼び出し回数
 
     ObcTime  rx_time_;                                        //!< なにかしらのデータの受信時刻
-  } info;           //!< 取得値
+  } info;           //!< 取得値（メトリクス）
   struct
   {
     uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< データ受信バッファ
@@ -342,7 +342,7 @@ struct DS_StreamConfig
                                                                    対応させる場合，この配列変数を外部の大きな配列のポインタに上書きする必要がある． */
 
     DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ の返り値
-  } info;           //!< 取得値
+  } info;           //!< 取得値（メトリクス）
 
   struct
   {
