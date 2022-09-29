@@ -683,7 +683,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
   if (p_stream_config->settings.rx_frame_size_ == 0) return 0;
 
   // TODO: ビッグデータ対応
-  if (p_stream_config->settings.rx_frame_size_ > 0 && p_stream_config->settings.rx_frame_size_ < DS_RX_FRAME_SIZE_MAX)
+  if (p_stream_config->settings.rx_frame_size_ > 0 && p_stream_config->settings.rx_frame_size_ < p_stream_config->settings.rx_frame_buffer_size_)
   {
     pickup_func = DS_analyze_rx_buffer_fixed_pickup_;
   }
@@ -751,61 +751,62 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
                                                     uint16_t total_processed_data_len,
                                                     uint16_t rec_data_len)
 {
-  p_stream_config->internal.rx_carry_over_size_ = 0;
-  if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
+  DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列indexなどがみずらいので...
+  p->internal.rx_carry_over_size_ = 0;
+
+  if (p->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
-    if (p_stream_config->settings.is_strict_frame_search_)
+    if (p->settings.is_strict_frame_search_)
     {
       // 確定フレームの先頭 + 1 バイト目以降を次回に引き継ぐ
-      p_stream_config->internal.rx_carry_over_size_ =
-          (uint16_t)(rec_data_len - p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ - 1);
+      p->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - p->internal.rx_frame_head_pos_of_frame_candidate_ - 1);
       // 次回は，引き継いだデータの先頭から再びフレーム探索
-      p_stream_config->internal.rx_carry_over_buffer_next_pos_ = 0;
+      p->internal.rx_carry_over_buffer_next_pos_ = 0;
     }
     else
     {
       // フレーム確定して，解析できなかった受信データがある場合，次回に引き継ぐ
-      p_stream_config->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - total_processed_data_len);
+      p->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - total_processed_data_len);
       // 次回は，引き継いだデータの先頭から再びフレーム探索
-      p_stream_config->internal.rx_carry_over_buffer_next_pos_ = 0;
+      p->internal.rx_carry_over_buffer_next_pos_ = 0;
     }
   }
   else
   {
-    if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
+    if (p->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
     {
       // 引き継ぎデータはなし
-      p_stream_config->internal.rx_carry_over_size_ = 0;
+      p->internal.rx_carry_over_size_ = 0;
       // 次回は，先頭から再びフレーム探索
-      p_stream_config->internal.rx_carry_over_buffer_next_pos_ = 0;
+      p->internal.rx_carry_over_buffer_next_pos_ = 0;
     }
     else
     {
       // 確定フレームの先頭以降を次回に引き継ぐ
-      p_stream_config->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_);
+      p->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - p->internal.rx_frame_head_pos_of_frame_candidate_);
       // 次回は，引き継いだデータはスキップし，受信したものの先頭からフレーム
-      p_stream_config->internal.rx_carry_over_buffer_next_pos_ = p_stream_config->internal.rx_carry_over_size_;
+      p->internal.rx_carry_over_buffer_next_pos_ = p->internal.rx_carry_over_size_;
     }
   }
 
-  if (p_stream_config->internal.rx_carry_over_size_ > 0 && p_stream_config->internal.rx_carry_over_size_ <= DS_RX_BUFFER_SIZE_MAX)
+  if (p->internal.rx_carry_over_size_ > 0 && p->internal.rx_carry_over_size_ <= p->settings.rx_carry_over_buffer_size_)
   {
-    uint16_t pos = (uint16_t)(rec_data_len - p_stream_config->internal.rx_carry_over_size_);
-    p_stream_config->internal.is_rx_buffer_carry_over_ = 1;
-    memcpy(p_stream_config->settings.rx_carry_over_buffer_,
+    uint16_t pos = (uint16_t)(rec_data_len - p->internal.rx_carry_over_size_);
+    p->internal.is_rx_buffer_carry_over_ = 1;
+    memcpy(p->settings.rx_carry_over_buffer_,
            &(rx_buffer[pos]),
-           (size_t)p_stream_config->internal.rx_carry_over_size_);
+           (size_t)p->internal.rx_carry_over_size_);
   }
   else
   {
-    // 引き継ぐサイズが DS_RX_BUFFER_SIZE_MAX を超えた場合，処理のキャパを超えてしまっているので，リセット．
-    if (p_stream_config->internal.rx_carry_over_size_ > 0)
+    // 引き継ぐサイズが rx_carry_over_buffer_size_ を超えた場合，処理のキャパを超えてしまっているので，リセット．
+    if (p->internal.rx_carry_over_size_ > 0)
     {
-      p_stream_config->info.rec_status_.count_of_carry_over_failures++;
+      p->info.rec_status_.count_of_carry_over_failures++;
     }
-    p_stream_config->internal.is_rx_buffer_carry_over_       = 0;
-    p_stream_config->internal.rx_carry_over_size_            = 0;
-    p_stream_config->internal.rx_carry_over_buffer_next_pos_ = 0;
+    p->internal.is_rx_buffer_carry_over_       = 0;
+    p->internal.rx_carry_over_size_            = 0;
+    p->internal.rx_carry_over_buffer_next_pos_ = 0;
   }
 
   return;
@@ -942,7 +943,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);
 
       // バッファー超えはエラーを出す！
-      if (rx_frame_size > DS_RX_FRAME_SIZE_MAX)
+      if (rx_frame_size > p->settings.rx_frame_buffer_size_)
       {
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
         p->internal.rx_frame_rec_len_ = 0;
@@ -1050,9 +1051,9 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
     // ここは高速化のために一括処理
     pickup_data_len = unprocessed_data_len;
     // 永遠にフッタを受信しない場合にバッファーオーバーランすることを防ぐ
-    if (p->internal.rx_frame_rec_len_ + pickup_data_len > DS_RX_FRAME_SIZE_MAX)
+    if (p->internal.rx_frame_rec_len_ + pickup_data_len > p->settings.rx_frame_buffer_size_)
     {
-      if (p->internal.rx_frame_rec_len_ >= DS_RX_FRAME_SIZE_MAX)
+      if (p->internal.rx_frame_rec_len_ >= p->settings.rx_frame_buffer_size_)
       {
         // これ以上受信できないため，フッタ探索失敗として，リセットする
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
@@ -1062,7 +1063,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
 #endif
         return 0;   // 処理済みデータもなし
       }
-      pickup_data_len = (uint16_t)(DS_RX_FRAME_SIZE_MAX - p->internal.rx_frame_rec_len_);
+      pickup_data_len = (uint16_t)(p->settings.rx_frame_buffer_size_ - p->internal.rx_frame_rec_len_);
     }
     memcpy(&(p->settings.rx_frame_buffer_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
@@ -1368,7 +1369,7 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
   if (p_stream_config->settings.rx_header_size_ != 0 && p_stream_config->settings.rx_header_ == NULL) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_footer_size_ != 0 && p_stream_config->settings.rx_footer_ == NULL) return DS_ERR_CODE_ERR;
 
-  if (p_stream_config->settings.rx_frame_size_ > DS_RX_FRAME_SIZE_MAX) return DS_ERR_CODE_ERR;   // [TODO] 現在はBigData未実装（詳細はヘッダファイル参照）のため，ここで弾く
+  if (p_stream_config->settings.rx_frame_size_ > p_stream_config->settings.rx_frame_buffer_size_) return DS_ERR_CODE_ERR;   // [TODO] 現在はBigData未実装（詳細はヘッダファイル参照）のため，ここで弾く
 
   if (p_stream_config->settings.tx_frame_buffer_size_ >= 0)
   {

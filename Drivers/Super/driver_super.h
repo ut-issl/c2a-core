@@ -39,10 +39,6 @@
                                                        uint8_t を想定          */
 #define DS_RX_PROCESSING_BUFFER_SIZE  (1024 * 2)  //!< DS 内での処理のためのバッファサイズ．@note 参照
 
-// FIXME: 消す
-#define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< 受信データバッファの最大長
-#define DS_RX_FRAME_SIZE_MAX   (1024)      //!< 受信データフレームの最大長
-
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
 typedef struct DriverSuper DriverSuper;
