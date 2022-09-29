@@ -13,6 +13,7 @@
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
 #include "../../Library/stdint.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 #define GS_RX_HEADER_SIZE (2)
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
@@ -27,6 +28,9 @@
 // それぞれ AD, BD, BC
 static uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE];
 static uint8_t GS_tx_frame_[VCDU_LEN];
+
+// バッファ
+static uint8_t GS_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
 
 /**
  * @brief CCSDS 側 Driver の DS 上での初期化設定
@@ -134,6 +138,8 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
 {
   DS_StreamConfig* p_stream_config;
   int stream;
+
+  DSC_set_rx_buffer(p_super, GS_rx_buffer_, DS_RX_BUFFER_SIZE_MAX);
 
   for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
   {

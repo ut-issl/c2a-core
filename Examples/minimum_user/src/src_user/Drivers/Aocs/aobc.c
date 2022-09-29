@@ -12,17 +12,20 @@
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
 #include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include <string.h>
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 #define AOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
-
-static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super);
-static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
-                                          void* p_driver);
 
 static uint8_t AOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               CTCP_MAX_LEN +
                               EB90_FRAME_FOOTER_SIZE];
 
+// バッファ
+static uint8_t AOBC_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
+
+static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super);
+static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
+                                          void* p_driver);
 
 DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
 {
@@ -50,6 +53,8 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   DS_StreamConfig* p_stream_config;
 
   p_super->interface = UART;
+
+  DSC_set_rx_buffer(p_super, AOBC_rx_buffer_, DS_RX_BUFFER_SIZE_MAX);
 
   // stream は 0 のみ
   p_stream_config = &(p_super->stream_config[AOBC_STREAM_TLM_CMD]);

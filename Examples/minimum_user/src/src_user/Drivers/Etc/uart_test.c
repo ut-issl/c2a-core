@@ -10,12 +10,12 @@
 #include "../../Settings/sils_define.h"
 #include "string.h"   // for memcpy
 #include <stdio.h>    // SILSでのprint
-
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 // ヘッダーフッター
-#define UART_TEST_HEADER_SIZE        8
-#define UART_TEST_FOOTER_SIZE        2
-#define UART_TEST_TX_FRAME_SIZE_MAX  16
+#define UART_TEST_HEADER_SIZE        (8)
+#define UART_TEST_FOOTER_SIZE        (2)
+#define UART_TEST_TX_FRAME_SIZE_MAX  (16)
 
 
 static const uint8_t UART_TEST_header_[UART_TEST_HEADER_SIZE] = {0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7};
@@ -24,12 +24,13 @@ static const uint8_t UART_TEST_footer_[UART_TEST_FOOTER_SIZE] = {0xBF, 0xBE};
 #define UART_TEST_STREAM_FIX   (0)   //!< 固定長
 #define UART_TEST_STREAM_VAR   (1)   //!< 可変長
 
+static uint8_t UART_TEST_tx_frame_[UART_TEST_TX_FRAME_SIZE_MAX];
+
+// バッファ
+static uint8_t UART_TEST_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
 
 static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
-
-static uint8_t UART_TEST_tx_frame_[UART_TEST_TX_FRAME_SIZE_MAX];
-
 
 
 DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, unsigned char ch)
@@ -53,6 +54,8 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
   DS_StreamConfig* p_stream_config;
 
   p_super->interface = UART;
+
+    DSC_set_rx_buffer(p_super, UART_TEST_rx_buffer_, DS_RX_BUFFER_SIZE_MAX);
 
   // stream0の設定
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_FIX]);
