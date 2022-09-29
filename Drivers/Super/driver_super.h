@@ -300,6 +300,12 @@ struct DS_StreamConfig
                                                                    未指定の場合は負数とする
                                                                    初期値: -1 */
 
+    uint8_t* rx_frame_buffer_;                                /*!< データ受信フレームバッファ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: NULL */
+    uint16_t rx_frame_buffer_size_;                           /*!< データ受信フレームバッファサイズ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: 0 */
     const uint8_t* rx_header_;                                /*!< 受信データのヘッダ
                                                                    初期値: NULL */
     uint16_t rx_header_size_;                                 /*!< 受信データのヘッダサイズ
@@ -369,10 +375,6 @@ struct DS_StreamConfig
     ObcTime  general_cmd_tx_time_;                            //!< 通常コマンド最終送信時刻
     ObcTime  req_tlm_cmd_tx_time_;                            //!< テレメ要求コマンド最終送信時刻
     ObcTime  rx_frame_fix_time_;                              //!< フレーム確定時刻
-
-    uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< データ受信フレームバッファ
-                                                                   DS_RX_FRAME_SIZE_MAX を超えるような巨大なフレーム（ビッグデータ）には未対応（将来実装予定）
-                                                                   対応させる場合，この配列変数を外部の大きな配列のポインタに上書きする必要がある． */
 
     DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ の返り値
   } info;           //!< 取得値（メトリクス）
@@ -558,6 +560,10 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size);
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
+void DSSC_set_rx_frame_buffer(DS_StreamConfig* p_stream_config,
+                              uint8_t* rx_frame_buffer,
+                              const uint16_t rx_frame_buffer_size);
+const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_header,
                         const uint16_t rx_header_size);
@@ -601,8 +607,6 @@ uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config);
-
-const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 
 DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config);
 
