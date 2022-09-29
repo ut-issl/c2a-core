@@ -54,8 +54,8 @@ CCP_CmdRet Cmd_AL_ADD_ANOMALY(const CommonCmdPacket* packet)
   int ret;
 
   // パラメータを抽出
-  endian_memcpy(&group, param, 4);
-  endian_memcpy(&local, param + 4, 4);
+  ENDIAN_memcpy(&group, param, 4);
+  ENDIAN_memcpy(&local, param + 4, 4);
 
   // パラメータを登録
   ret = AL_add_anomaly(group, local);
@@ -198,7 +198,7 @@ CCP_CmdRet Cmd_AL_ENABLE_LOGGING(const CommonCmdPacket* packet)
   int ret;
 
   // パラメータを抽出
-  endian_memcpy(&group, param, 4);
+  ENDIAN_memcpy(&group, param, 4);
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
   {
@@ -224,7 +224,7 @@ CCP_CmdRet Cmd_AL_DISABLE_LOGGING(const CommonCmdPacket* packet)
   int ret;
 
   // パラメータを抽出
-  endian_memcpy(&group, param, 4);
+  ENDIAN_memcpy(&group, param, 4);
 
   if ( !(0 <= group && group < AL_GROUP_MAX) )
   {
@@ -317,7 +317,7 @@ CCP_CmdRet Cmd_AL_SET_THRES_OF_NEARLY_FULL(const CommonCmdPacket* packet)
   uint16_t thres;
 
   // パラメータを抽出
-  endian_memcpy(&thres, param, 2);
+  ENDIAN_memcpy(&thres, param, 2);
 
   anomaly_logger_.threshold_of_nearly_full = thres;
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);

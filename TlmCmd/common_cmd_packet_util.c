@@ -396,7 +396,7 @@ uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t 
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -416,7 +416,7 @@ uint16_t* CCP_get_2byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -436,7 +436,7 @@ uint32_t* CCP_get_4byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -456,7 +456,7 @@ uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -659,7 +659,7 @@ static CCP_UTIL_ACK CCP_prepare_param_for_packet_(void* param, uint8_t byte)
   }
   if (p_pg->len != offset) return CCP_raise_err_at_param_generator_();
 
-  endian_memcpy((void*)(CCP_get_param_head(&(p_pg->packet)) + offset), param, byte);   // const_cast
+  ENDIAN_memcpy((void*)(CCP_get_param_head(&(p_pg->packet)) + offset), param, byte);   // const_cast
   p_pg->len += byte;
   p_pg->param_idx++;
   return CCP_UTIL_ACK_OK;

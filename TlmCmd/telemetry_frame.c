@@ -66,12 +66,12 @@ void TF_copy_u8(uint8_t* ptr, uint8_t data)
 
 void TF_copy_u16(uint8_t* ptr, uint16_t data)
 {
-  endian_memcpy(ptr, &data, 2);
+  ENDIAN_memcpy(ptr, &data, 2);
 }
 
 void TF_copy_u32(uint8_t* ptr, uint32_t data)
 {
-  endian_memcpy(ptr, &data, 4);
+  ENDIAN_memcpy(ptr, &data, 4);
 }
 
 void TF_copy_i8(uint8_t* ptr, int8_t data)
@@ -81,22 +81,22 @@ void TF_copy_i8(uint8_t* ptr, int8_t data)
 
 void TF_copy_i16(uint8_t* ptr, int16_t data)
 {
-  endian_memcpy(ptr, &data, 2);
+  ENDIAN_memcpy(ptr, &data, 2);
 }
 
 void TF_copy_i32(uint8_t* ptr, int32_t data)
 {
-  endian_memcpy(ptr, &data, 4);
+  ENDIAN_memcpy(ptr, &data, 4);
 }
 
 void TF_copy_float(uint8_t* ptr, float data)
 {
-  endian_memcpy(ptr, &data, sizeof(float));
+  ENDIAN_memcpy(ptr, &data, sizeof(float));
 }
 
 void TF_copy_double(uint8_t* ptr, double data)
 {
-  endian_memcpy(ptr, &data, sizeof(double));
+  ENDIAN_memcpy(ptr, &data, sizeof(double));
 }
 
 CCP_CmdRet Cmd_TF_INIT(const CommonCmdPacket* packet)

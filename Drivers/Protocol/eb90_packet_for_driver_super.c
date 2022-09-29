@@ -41,7 +41,7 @@ uint32_t EB90_PACKET_get_id_from_dssc(const DS_StreamConfig* p_stream_config)
   if (version == 1)
   {
     uint16_t id;
-    endian_memcpy(&id, &(EB90_FRAME_get_packet_head_from_dssc(p_stream_config)[2]), sizeof(uint16_t));
+    ENDIAN_memcpy(&id, &(EB90_FRAME_get_packet_head_from_dssc(p_stream_config)[2]), sizeof(uint16_t));
     return (uint32_t)id;
   }
   else

@@ -158,61 +158,61 @@ void BCL_tool_register_app(cycle_t ti, AR_APP_ID app_id)
 // TODO: prepare_param系の関数にidx超過のassertionを入れる
 void BCL_tool_prepare_param_uint8(uint8_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int8(int8_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_uint16(uint16_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int16(int16_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_uint32(uint32_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int32(int32_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_float(float val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_uint64(uint64_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_int64(int64_t val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 
 void BCL_tool_prepare_param_double(double val)
 {
-  endian_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
+  ENDIAN_memcpy(&block_command_loader_.params[block_command_loader_.param_idx], &val, sizeof(val));
   block_command_loader_.param_idx += sizeof(val);
 }
 

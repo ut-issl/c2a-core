@@ -157,7 +157,7 @@ CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
   ack = BCE_activate_block_by_id(block);
 
   return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
@@ -174,7 +174,7 @@ CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   ack = BCE_inactivate_block_by_id(block);
 
@@ -218,7 +218,7 @@ CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   return BCE_rotate_block_cmd_(block);
 }
@@ -264,7 +264,7 @@ CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   return BCE_combine_block_cmd_(block);
 }
@@ -312,7 +312,7 @@ CCP_CmdRet Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, param, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, param, SIZE_OF_BCT_ID_T);
   limit_step = param[SIZE_OF_BCT_ID_T];
 
   return BCE_timelimit_combine_block_cmd_(block, limit_step);
@@ -473,7 +473,7 @@ CCP_CmdRet Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   return BCT_convert_bct_ack_to_ccp_cmd_ret(BCE_reset_rotator_info(block));
 }
@@ -489,7 +489,7 @@ CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   return BCT_convert_bct_ack_to_ccp_cmd_ret(BCE_reset_combiner_info(block));
 }
@@ -508,8 +508,8 @@ CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, param, SIZE_OF_BCT_ID_T);
-  endian_memcpy(&interval, param + SIZE_OF_BCT_ID_T, 2);
+  ENDIAN_memcpy(&block, param, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&interval, param + SIZE_OF_BCT_ID_T, 2);
 
   if (interval == 0 || block >= BCT_MAX_BLOCKS)
   {

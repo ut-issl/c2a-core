@@ -281,7 +281,7 @@ CCP_CmdRet Cmd_AH_REGISTER_RULE(const CommonCmdPacket* packet)
   ahr.code.local = (uint32_t)param[LOCAL];
   ahr.cond       = (AH_CONDITION)param[COND];
   ahr.threshold  = (size_t)param[THRESHOLD];
-  endian_memcpy(&(ahr.bc_id), &(param[BC]), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&(ahr.bc_id), &(param[BC]), SIZE_OF_BCT_ID_T);
 
   AH_add_rule_((size_t)param[ID], &ahr);
 
