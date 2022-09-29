@@ -297,6 +297,9 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super)
   if (p_super->interface < 0 || p_super->interface >= IF_LIST_MAX) return DS_ERR_CODE_ERR;
   if (p_super->if_config == NULL) return DS_ERR_CODE_ERR;
 
+  if (p_super->config.settings.rx_buffer_ == NULL) return DS_ERR_CODE_ERR;
+  if (p_super->config.settings.rx_buffer_size_ == 0) return DS_ERR_CODE_ERR;
+
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
     DS_ERR_CODE ret = DS_validate_stream_config_(p_super, &p_super->stream_config[stream]);
@@ -1418,6 +1421,10 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
   }
 
   // バッファ
+  if (p_stream_config->settings.rx_frame_buffer_ == NULL) return DS_ERR_CODE_ERR;
+  if (p_stream_config->settings.rx_frame_buffer_size_ == 0) return DS_ERR_CODE_ERR;
+  if (p_stream_config->settings.rx_carry_over_buffer_ == NULL) return DS_ERR_CODE_ERR;
+  if (p_stream_config->settings.rx_carry_over_buffer_size_ == 0) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_carry_over_buffer_size_ < p_stream_config->settings.rx_frame_buffer_size_) return DS_ERR_CODE_ERR;
   if (p_super->config.settings.rx_buffer_size_ + p_stream_config->settings.rx_carry_over_buffer_size_ > DS_RX_PROCESSING_BUFFER_SIZE)
   {
