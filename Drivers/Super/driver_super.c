@@ -1239,17 +1239,37 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
 {
   uint32_t len = 0;
   uint8_t  i;
+  const uint16_t pos = p_stream_config->settings.rx_framelength_pos_;
+  const uint16_t size = p_stream_config->settings.rx_framelength_type_size_;
 
-  for (i = 0; i < p_stream_config->settings.rx_framelength_type_size_; ++i)
+  if (p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG)
   {
-    if (i == 0)
+    for (i = 0; i < size; ++i)
     {
-      len = p_stream_config->info.rx_frame_[p_stream_config->settings.rx_framelength_pos_];
+      if (i == 0)
+      {
+        len = p_stream_config->info.rx_frame_[pos];
+      }
+      else
+      {
+        len <<= 8;
+        len |= p_stream_config->info.rx_frame_[pos + i];
+      }
     }
-    else
+  }
+  else
+  {
+    for (i = 0; i < size; ++i)
     {
-      len <<= 8;
-      len |= p_stream_config->info.rx_frame_[p_stream_config->settings.rx_framelength_pos_ + i];
+      if (i == 0)
+      {
+        len = p_stream_config->info.rx_frame_[pos + size - 1];
+      }
+      else
+      {
+        len <<= 8;
+        len |= p_stream_config->info.rx_frame_[pos + size - 1 - i];
+      }
     }
   }
 
