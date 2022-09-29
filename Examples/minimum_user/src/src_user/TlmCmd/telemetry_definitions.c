@@ -3432,14 +3432,14 @@ static TF_TLM_FUNC_ACK Tlm_UART_TEST_(uint8_t* packet, uint16_t* len, uint16_t m
 #ifndef BUILD_SETTINGS_FAST_BUILD
   TF_copy_u8(&packet[26], (uint8_t)(uart_test_instance->driver.super.config.info.rec_status_.ret_from_if_rx));
   TF_copy_u32(&packet[27], uart_test_instance->driver.super.config.info.rx_count_);
-  TF_copy_u8(&packet[31], (uint8_t)(uart_test_instance->driver.super.stream_config[0].rec_status_.status_code));
-  TF_copy_u16(&packet[32], uart_test_instance->driver.super.stream_config[0].rec_status_.fixed_frame_len);
-  TF_copy_u32(&packet[34], uart_test_instance->driver.super.stream_config[0].rx_frame_fix_count_);
+  TF_copy_u8(&packet[31], (uint8_t)(uart_test_instance->driver.super.stream_config[0].info.rec_status_.status_code));
+  TF_copy_u16(&packet[32], uart_test_instance->driver.super.stream_config[0].info.rec_status_.fixed_frame_len);
+  TF_copy_u32(&packet[34], uart_test_instance->driver.super.stream_config[0].info.rx_frame_fix_count_);
   TF_copy_u16(&packet[38], uart_test_instance->driver.super.stream_config[0].internal.rx_frame_rec_len_);
   TF_copy_u8(&packet[40], uart_test_instance->driver.super.stream_config[0].internal.is_rx_buffer_carry_over_);
-  TF_copy_u8(&packet[41], (uint8_t)(uart_test_instance->driver.super.stream_config[1].rec_status_.status_code));
-  TF_copy_u16(&packet[42], uart_test_instance->driver.super.stream_config[1].rec_status_.fixed_frame_len);
-  TF_copy_u32(&packet[44], uart_test_instance->driver.super.stream_config[1].rx_frame_fix_count_);
+  TF_copy_u8(&packet[41], (uint8_t)(uart_test_instance->driver.super.stream_config[1].info.rec_status_.status_code));
+  TF_copy_u16(&packet[42], uart_test_instance->driver.super.stream_config[1].info.rec_status_.fixed_frame_len);
+  TF_copy_u32(&packet[44], uart_test_instance->driver.super.stream_config[1].info.rx_frame_fix_count_);
   TF_copy_u16(&packet[48], uart_test_instance->driver.super.stream_config[1].internal.rx_frame_rec_len_);
   TF_copy_u8(&packet[50], uart_test_instance->driver.super.stream_config[1].internal.is_rx_buffer_carry_over_);
 #endif

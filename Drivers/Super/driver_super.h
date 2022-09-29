@@ -306,8 +306,8 @@ struct DS_StreamConfig
                                                                   返り値は DS_ERR_CODE */
   // } settings;       //!< 設定値
 
-  // struct
-  // {
+  struct
+  {
     DS_StreamSendStatus send_status_;                         //!< フレーム送信状況
     DS_StreamRecStatus  rec_status_;                          //!< フレーム受信状況
 
@@ -326,7 +326,7 @@ struct DS_StreamConfig
                                                                   対応させる場合，この配列変数を外部の大きな配列のポインタに上書きする必要がある． */
 
     DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ の返り値
-  // } info;           //!< 取得値
+  } info;           //!< 取得値
 
   struct
   {
@@ -490,25 +490,9 @@ uint8_t DSSC_get_is_enabled(const DS_StreamConfig* p_stream_config);
 void DSSC_enable(DS_StreamConfig* p_stream_config);
 void DSSC_disable(DS_StreamConfig* p_stream_config);
 
-
-// ###### DS_StreamConfig Getter/Setter of Info ######
-
-
 uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config);
 void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config);
-
-const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config);
-const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config);
-
-uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config);
-uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config);
-uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config);
-uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config);
-
-const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config);
-const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config);
-const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config);
 
 void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
                        uint8_t* tx_frame);
@@ -521,7 +505,6 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size);
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
-const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_header,
                         const uint16_t rx_header_size);
@@ -547,12 +530,28 @@ void DSSC_disable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
 uint32_t DSSC_get_time_threshold_for_tlm_disruption(const DS_StreamConfig* p_stream_config);
 void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config,
                                                 const uint32_t time_threshold_for_tlm_disruption);
-DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config);
 
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver));
-DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config);
 
+// ###### DS_StreamConfig Getter/Setter of Info ######
+const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config);
+const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config);
+
+uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config);
+uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config);
+uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config);
+uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config);
+
+const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config);
+const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config);
+const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config);
+
+const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
+
+DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config);
+
+DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config);
 
 // ###### Driver汎用Util関数 ######
 

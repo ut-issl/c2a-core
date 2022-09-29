@@ -315,9 +315,9 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
     p_super->stream_config[stream].internal.is_rx_buffer_carry_over_ = 0;
     p_super->stream_config[stream].internal.carry_over_buffer_size_  = 0;
 
-    memset(p_super->stream_config[stream].rx_frame_,
+    memset(p_super->stream_config[stream].info.rx_frame_,
            0x00,
-           sizeof(p_super->stream_config[stream].rx_frame_));
+           sizeof(p_super->stream_config[stream].info.rx_frame_));
     memset(p_super->stream_config[stream].internal.rx_buffer_for_carry_over_,
            0x00,
            sizeof(p_super->stream_config[stream].internal.rx_buffer_for_carry_over_));
@@ -366,7 +366,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
     if (!p_stream_config->is_enabled_)
     {
-      p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_DISABLE;
+      p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_DISABLE;
       continue;
     }
 
@@ -377,7 +377,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
       DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
       if (ret != DS_ERR_CODE_OK)
       {
-        p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_VALIDATE_ERR;
+        p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_VALIDATE_ERR;
         continue;
       }
     }
@@ -385,7 +385,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     if (ret_rx < 0)     // この共通処理が for の中にあるの，若干キモい．．．
     {
       // RX失敗
-      p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_ERR;
+      p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_ERR;
       // [TODO] ここに DriverSuper としての共通のアノマリ発行を入れるかは要議論
       //        個別対応なので， Driver に実装する，ないしは， IF 側に実装するのが自然か？
       continue;
@@ -402,9 +402,9 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
       {
         // rec_status_.status_code 基本は更新せず
         // FIXED の場合はリセット
-        if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
+        if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
         {
-          p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
+          p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
         }
         continue;
       }
@@ -420,11 +420,11 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     DS_analyze_rx_buffer_(p_super, stream, rec_data_len);
 
     // フレーム確定処理
-    if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
+    if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
     {
-      p_stream_config->rx_frame_fix_count_++;
-      p_stream_config->rx_frame_fix_time_ = TMGR_get_master_clock();
-      p_stream_config->req_tlm_cmd_tx_count_after_last_tx_ = 0;
+      p_stream_config->info.rx_frame_fix_count_++;
+      p_stream_config->info.rx_frame_fix_time_ = TMGR_get_master_clock();
+      p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_ = 0;
     }
   }
 
@@ -436,7 +436,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     uint32_t last_tlm_fix_ago;
 
     // テレメなどで見るときにノイズになるので，判定しないときは OK にしておく
-    p_stream_config->rec_status_.tlm_disruption_status = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
+    p_stream_config->info.rec_status_.tlm_disruption_status = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
 
     if (!p_stream_config->is_enabled_ || !p_stream_config->should_monitor_for_tlm_disruption_)
     {
@@ -444,11 +444,11 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     }
 
     now = TMGR_get_master_clock();
-    last_tlm_fix_ago = OBCT_diff_in_msec(&p_stream_config->rx_frame_fix_time_, &now);
+    last_tlm_fix_ago = OBCT_diff_in_msec(&p_stream_config->info.rx_frame_fix_time_, &now);
 
     if (last_tlm_fix_ago > p_stream_config->time_threshold_for_tlm_disruption_)
     {
-      p_stream_config->rec_status_.tlm_disruption_status = DS_STREAM_TLM_DISRUPTION_STATUS_LOST;
+      p_stream_config->info.rec_status_.tlm_disruption_status = DS_STREAM_TLM_DISRUPTION_STATUS_LOST;
     }
   }
 
@@ -460,9 +460,9 @@ DS_ERR_CODE DS_analyze_rec_data(DriverSuper* p_super, uint8_t stream, void* p_dr
 {
   DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
 
-  p_stream_config->ret_from_data_analyzer_ = p_stream_config->data_analyzer_(p_stream_config, p_driver);
+  p_stream_config->info.ret_from_data_analyzer_ = p_stream_config->data_analyzer_(p_stream_config, p_driver);
 
-  return p_stream_config->ret_from_data_analyzer_;
+  return p_stream_config->info.ret_from_data_analyzer_;
 }
 
 
@@ -472,12 +472,12 @@ DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream)
 
   if (!p_stream_config->is_enabled_)
   {
-    p_stream_config->send_status_.status_code = DS_STREAM_SEND_STATUS_DISABLE;
+    p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_DISABLE;
     return DS_ERR_CODE_OK;
   }
 
-  p_stream_config->general_cmd_tx_count_++;
-  p_stream_config->general_cmd_tx_time_ = TMGR_get_master_clock();
+  p_stream_config->info.general_cmd_tx_count_++;
+  p_stream_config->info.general_cmd_tx_time_ = TMGR_get_master_clock();
 
 #ifdef DS_DEBUG
   Printf("DS: send_general_cmd\n");
@@ -493,13 +493,13 @@ DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream)
 
   if (!p_stream_config->is_enabled_)
   {
-    p_stream_config->send_status_.status_code = DS_STREAM_SEND_STATUS_DISABLE;
+    p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_DISABLE;
     return DS_ERR_CODE_OK;
   }
 
-  p_stream_config->req_tlm_cmd_tx_count_++;
-  p_stream_config->req_tlm_cmd_tx_count_after_last_tx_++;
-  p_stream_config->req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
+  p_stream_config->info.req_tlm_cmd_tx_count_++;
+  p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_++;
+  p_stream_config->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
 
 #ifdef DS_DEBUG
   Printf("DS: send_req_tlm_cmd\n");
@@ -520,20 +520,20 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
     DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
     if (ret != DS_ERR_CODE_OK)
     {
-      p_stream_config->send_status_.status_code = DS_STREAM_SEND_STATUS_VALIDATE_ERR;
+      p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_VALIDATE_ERR;
       return DS_ERR_CODE_ERR;
     }
   }
 
-  p_stream_config->send_status_.ret_from_if_tx = DS_tx_(p_super, stream);
+  p_stream_config->info.send_status_.ret_from_if_tx = DS_tx_(p_super, stream);
 
-  if (p_stream_config->send_status_.ret_from_if_tx != 0)
+  if (p_stream_config->info.send_status_.ret_from_if_tx != 0)
   {
-    p_stream_config->send_status_.status_code = DS_STREAM_SEND_STATUS_TX_ERR;
+    p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_TX_ERR;
     return DS_ERR_CODE_ERR;
   }
 
-  p_stream_config->send_status_.status_code = DS_STREAM_SEND_STATUS_OK;
+  p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_OK;
   return DS_ERR_CODE_OK;
 }
 
@@ -705,21 +705,21 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config,
                                               rec_data_len);
     total_processed_data_len += processed_data_len;
 
-    if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
+    if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
     {
       break;
     }
 
     // 不整合が起きたら，現在のframe候補の先頭 + 1バイト目に走査場所を戻す
-    if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_HEADER_MISMATCH ||
-        p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FOOTER_MISMATCH ||
-        p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG ||
-        p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT)
+    if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_HEADER_MISMATCH ||
+        p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FOOTER_MISMATCH ||
+        p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG ||
+        p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT)
     {
       total_processed_data_len = (uint16_t)(p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ + 1);
 
       // 他の部分での条件分岐のために，詳細エラー情報を現在のステータスに上書きする
-      p_stream_config->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
+      p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
     }
 
     // processed_data_len > rec_data_lenなることはありえないが，念の為チャックする？？
@@ -735,7 +735,7 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
                                                     uint16_t rec_data_len)
 {
   p_stream_config->internal.carry_over_buffer_size_ = 0;
-  if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
+  if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
     if (p_stream_config->is_strict_frame_search_)
     {
@@ -755,7 +755,7 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
   }
   else
   {
-    if (p_stream_config->rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
+    if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
     {
       // 引き継ぎデータはなし
       p_stream_config->internal.carry_over_buffer_size_ = 0;
@@ -784,7 +784,7 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
     // 引き継ぐサイズが DS_RX_BUFFER_SIZE_MAX を超えた場合，処理のキャパを超えてしまっているので，リセット．
     if (p_stream_config->internal.carry_over_buffer_size_ > 0)
     {
-      p_stream_config->rec_status_.count_of_carry_over_failures++;
+      p_stream_config->info.rec_status_.count_of_carry_over_failures++;
     }
     p_stream_config->internal.is_rx_buffer_carry_over_    = 0;
     p_stream_config->internal.carry_over_buffer_size_     = 0;
@@ -838,20 +838,20 @@ static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_con
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
+    memcpy(&(p->info.rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
     p->internal.rx_frame_rec_len_ += pickup_data_len;
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
     // フッタがなく，data受信仕切った場合はフレーム確定
     // これがないと，DS_analyze_rx_buffer_fixed_ で
     // 今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
     if (p->rx_footer_size_ == 0 && p->internal.rx_frame_rec_len_ == p->rx_frame_size_)
     {
-      p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-      p->rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
+      p->info.rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
       p->internal.rx_frame_rec_len_ = 0;
     }
 
@@ -912,12 +912,12 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
+    memcpy(&(p->info.rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
     p->internal.rx_frame_rec_len_ += pickup_data_len;
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH;
 
     // フレーム長を受信し終わった場合，チェックする
     if (p->internal.rx_frame_rec_len_ >= p->rx_framelength_pos_ + p->rx_framelength_type_size_)
@@ -927,7 +927,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       // バッファー超えはエラーを出す！
       if (rx_frame_size > DS_RX_FRAME_SIZE_MAX)
       {
-        p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
+        p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
         p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too long\n");
@@ -938,7 +938,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       // bodyサイズがは0以上を要請
       if (rx_frame_size < p->rx_header_size_ + p->rx_footer_size_)
       {
-        p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT;
+        p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT;
         p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too short\n");
@@ -962,18 +962,18 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
+    memcpy(&(p->info.rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
     p->internal.rx_frame_rec_len_ += pickup_data_len;
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
     // フッタがなく，data受信仕切った場合はフレーム確定
     // これがないと，DS_analyze_rx_buffer_fixed_ で今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
     if (p->rx_footer_size_ == 0 && p->internal.rx_frame_rec_len_ == rx_frame_size)
     {
-      p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
       p->internal.rx_frame_rec_len_ = 0;
     }
 
@@ -1038,7 +1038,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
       if (p->internal.rx_frame_rec_len_ >= DS_RX_FRAME_SIZE_MAX)
       {
         // これ以上受信できないため，フッタ探索失敗として，リセットする
-        p->rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
+        p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
         p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame is too long\n");
@@ -1047,7 +1047,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
       }
       pickup_data_len = (uint16_t)(DS_RX_FRAME_SIZE_MAX - p->internal.rx_frame_rec_len_);
     }
-    memcpy(&(p->rx_frame_[p->internal.rx_frame_rec_len_]),
+    memcpy(&(p->info.rx_frame_[p->internal.rx_frame_rec_len_]),
            &(rx_buffer[total_processed_data_len]),
            (size_t)pickup_data_len);
 
@@ -1060,7 +1060,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
     {
       // まだまだ受信する
       p->internal.rx_frame_rec_len_ += pickup_data_len;
-      p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return pickup_data_len;
     }
 
@@ -1071,7 +1071,7 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
       // これはフッタではないので受信続行
       // まだまだ受信する
       p->internal.rx_frame_rec_len_ += pickup_data_len;
-      p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return pickup_data_len;
     }
 
@@ -1085,14 +1085,14 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfi
         // これはフッタではないので受信続行
         // まだまだ受信する
         p->internal.rx_frame_rec_len_ += pickup_data_len;
-        p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+        p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
         return pickup_data_len;
       }
     }
 
     // フッタ確定 → フレーム確定
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->rec_status_.fixed_frame_len = estimated_rx_frame_size;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
+    p->info.rec_status_.fixed_frame_len = estimated_rx_frame_size;
     p->internal.rx_frame_rec_len_ = 0;
     return processed_data_len;
   }
@@ -1115,7 +1115,7 @@ static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_c
 #ifdef DS_DEBUG
     Printf("DS: RX header is invalid\n");
 #endif
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_OTHER_ERR;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_OTHER_ERR;
     return unprocessed_data_len;
   }
 
@@ -1130,17 +1130,17 @@ static uint16_t DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_c
 #ifdef DS_DEBUG
     Printf("DS: RX header not found\n");
 #endif
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
     return unprocessed_data_len;
   }
 
   processed_data_len = (uint16_t)(p_header - &(rx_buffer[total_processed_data_len]) + 1);
 
   // ヘッダコピー．ホントはbufferからコピるべきだけど，ちょっとアドレスいじっていて怖いので．．．
-  p->rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_header_[0];
+  p->info.rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_header_[0];
   p->internal.rx_frame_rec_len_++;
 
-  p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
+  p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
   p->internal.rx_frame_head_pos_of_frame_candidate_ = (uint16_t)(total_processed_data_len + processed_data_len - 1);
   return processed_data_len;
 }
@@ -1158,10 +1158,10 @@ static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream
   // ヘッダが正しいか？
   if (rx_buffer[total_processed_data_len] == p->rx_header_[p->internal.rx_frame_rec_len_])
   {
-    p->rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_header_[p->internal.rx_frame_rec_len_];
+    p->info.rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_header_[p->internal.rx_frame_rec_len_];
     p->internal.rx_frame_rec_len_++;
 
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
     return 1;
   }
   else
@@ -1169,7 +1169,7 @@ static uint16_t DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream
     // ヘッダが正しくなかった
     // DS_STREAM_REC_STATUS_HEADER_MISMATCH になり，再びバッファを巻き戻してヘッダ探索を始める
     // その後 DS_STREAM_REC_STATUS_FINDING_HEADER に戻る
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_HEADER_MISMATCH;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_HEADER_MISMATCH;
     p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
     Printf("DS: RX header is mismatch\n");
@@ -1191,8 +1191,8 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
   if (p->rx_footer_size_ == 0)
   {
     // フッタなし
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
+    p->info.rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
     p->internal.rx_frame_rec_len_ = 0;
     return 0;   // 処理済みデータもなし
   }
@@ -1206,7 +1206,7 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
   // その後 DS_STREAM_REC_STATUS_FINDING_HEADER に戻る
   if (rx_buffer[total_processed_data_len] != p->rx_footer_[rec_footer_pos])
   {
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_FOOTER_MISMATCH;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FOOTER_MISMATCH;
     p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
     Printf("DS: RX footer is mismatch\n");
@@ -1215,20 +1215,20 @@ static uint16_t DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream
   }
 
   // ここまできたら正しいフッタが受信されている
-  p->rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_footer_[rec_footer_pos];
+  p->info.rx_frame_[p->internal.rx_frame_rec_len_] = p->rx_footer_[rec_footer_pos];
   p->internal.rx_frame_rec_len_++;
 
   if (p->internal.rx_frame_rec_len_ == rx_frame_size)
   {
     // フレーム確定
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
+    p->info.rec_status_.fixed_frame_len = p->internal.rx_frame_rec_len_;
     p->internal.rx_frame_rec_len_ = 0;
   }
   else
   {
     // フレーム確定せず
-    p->rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FOOTER;
+    p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FOOTER;
   }
 
   return 1;
@@ -1244,12 +1244,12 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
   {
     if (i == 0)
     {
-      len = p_stream_config->rx_frame_[p_stream_config->rx_framelength_pos_];
+      len = p_stream_config->info.rx_frame_[p_stream_config->rx_framelength_pos_];
     }
     else
     {
       len <<= 8;
-      len |= p_stream_config->rx_frame_[p_stream_config->rx_framelength_pos_ + i];
+      len |= p_stream_config->info.rx_frame_[p_stream_config->rx_framelength_pos_ + i];
     }
   }
 
@@ -1263,14 +1263,14 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->is_enabled_ = 0;
   p_stream_config->is_strict_frame_search_ = 0;
 
-  p_stream_config->general_cmd_tx_count_               = 0;
-  p_stream_config->req_tlm_cmd_tx_count_               = 0;
-  p_stream_config->req_tlm_cmd_tx_count_after_last_tx_ = 0;
-  p_stream_config->rx_frame_fix_count_                 = 0;
+  p_stream_config->info.general_cmd_tx_count_               = 0;
+  p_stream_config->info.req_tlm_cmd_tx_count_               = 0;
+  p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_ = 0;
+  p_stream_config->info.rx_frame_fix_count_                 = 0;
 
-  p_stream_config->general_cmd_tx_time_ = TMGR_get_master_clock();
-  p_stream_config->req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
-  p_stream_config->rx_frame_fix_time_   = TMGR_get_master_clock();
+  p_stream_config->info.general_cmd_tx_time_ = TMGR_get_master_clock();
+  p_stream_config->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
+  p_stream_config->info.rx_frame_fix_time_   = TMGR_get_master_clock();
 
   p_stream_config->tx_frame_             = NULL;
   p_stream_config->tx_frame_size_        = 0;
@@ -1286,24 +1286,24 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->rx_framelength_offset_    = 0;
 
   p_stream_config->data_analyzer_ = DS_data_analyzer_dummy_;
-  p_stream_config->ret_from_data_analyzer_ = DS_ERR_CODE_OK;
+  p_stream_config->info.ret_from_data_analyzer_ = DS_ERR_CODE_OK;
 
   p_stream_config->should_monitor_for_tlm_disruption_ = 0;
   p_stream_config->time_threshold_for_tlm_disruption_ = 60 * 1000;      // この値はよく考えること
 
-  memset(p_stream_config->rx_frame_,
+  memset(p_stream_config->info.rx_frame_,
          0x00,
-         sizeof(p_stream_config->rx_frame_));
+         sizeof(p_stream_config->info.rx_frame_));
 
   // DS_StreamSendStatus の初期化
-  p_stream_config->send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
-  p_stream_config->send_status_.ret_from_if_tx = 0;
+  p_stream_config->info.send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
+  p_stream_config->info.send_status_.ret_from_if_tx = 0;
 
   // DS_StreamRecStatus の初期化
-  p_stream_config->rec_status_.status_code                  = DS_STREAM_REC_STATUS_DISABLE;
-  p_stream_config->rec_status_.fixed_frame_len              = 0;
-  p_stream_config->rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
-  p_stream_config->rec_status_.count_of_carry_over_failures = 0;
+  p_stream_config->info.rec_status_.status_code                  = DS_STREAM_REC_STATUS_DISABLE;
+  p_stream_config->info.rec_status_.fixed_frame_len              = 0;
+  p_stream_config->info.rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
+  p_stream_config->info.rec_status_.count_of_carry_over_failures = 0;
 
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_  = 0;
@@ -1485,47 +1485,47 @@ void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config)
 
 const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config)
 {
-  return &p_stream_config->send_status_;
+  return &p_stream_config->info.send_status_;
 }
 
 const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config)
 {
-  return &p_stream_config->rec_status_;
+  return &p_stream_config->info.rec_status_;
 }
 
 uint32_t DSSC_get_general_cmd_tx_count(const DS_StreamConfig* p_stream_config)
 {
-  return (uint32_t)p_stream_config->general_cmd_tx_count_;
+  return (uint32_t)p_stream_config->info.general_cmd_tx_count_;
 }
 
 uint32_t DSSC_get_req_tlm_cmd_tx_count(const DS_StreamConfig* p_stream_config)
 {
-  return (uint32_t)p_stream_config->req_tlm_cmd_tx_count_;
+  return (uint32_t)p_stream_config->info.req_tlm_cmd_tx_count_;
 }
 
 uint32_t DSSC_get_req_tlm_cmd_tx_count_after_last_tx(const DS_StreamConfig* p_stream_config)
 {
-  return (uint32_t)p_stream_config->req_tlm_cmd_tx_count_after_last_tx_;
+  return (uint32_t)p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_;
 }
 
 uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config)
 {
-  return (uint32_t)p_stream_config->rx_frame_fix_count_;
+  return (uint32_t)p_stream_config->info.rx_frame_fix_count_;
 }
 
 const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config)
 {
-  return &p_stream_config->general_cmd_tx_time_;
+  return &p_stream_config->info.general_cmd_tx_time_;
 }
 
 const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config)
 {
-  return &p_stream_config->req_tlm_cmd_tx_time_;
+  return &p_stream_config->info.req_tlm_cmd_tx_time_;
 }
 
 const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config)
 {
-  return &p_stream_config->rx_frame_fix_time_;
+  return &p_stream_config->info.rx_frame_fix_time_;
 }
 
 void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
@@ -1571,7 +1571,7 @@ int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config)
 
 const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
 {
-  return p_stream_config->rx_frame_;
+  return p_stream_config->info.rx_frame_;
 }
 
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
@@ -1666,7 +1666,7 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
 
 DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config)
 {
-  return (DS_STREAM_TLM_DISRUPTION_STATUS_CODE)p_stream_config->rec_status_.tlm_disruption_status;
+  return (DS_STREAM_TLM_DISRUPTION_STATUS_CODE)p_stream_config->info.rec_status_.tlm_disruption_status;
 }
 
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
@@ -1678,7 +1678,7 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
 
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config)
 {
-  return (DS_ERR_CODE)p_stream_config->ret_from_data_analyzer_;
+  return (DS_ERR_CODE)p_stream_config->info.ret_from_data_analyzer_;
 }
 
 
