@@ -16,7 +16,7 @@
 
 #define GS_RX_HEADER_SIZE (2)
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
-#define GS_TX_stream (0) // どれでも良いがとりあえず 0 で
+#define GS_TX_STREAM (0) // どれでも良いがとりあえず 0 で
 
 #define GS_RX_HEADER_NUM (3)
 
@@ -253,14 +253,14 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   // パディングが無ければ元を GS_tx_frame_ にコピーさせる (444Byte) のコピーが無駄
   if (vcdu_size == VCDU_LEN)
   {
-    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_stream], (uint8_t*)vcdu);
-    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_stream], (uint8_t*)vcdu);
+    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_STREAM], (uint8_t*)vcdu);
+    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_STREAM], (uint8_t*)vcdu);
   }
   else
   {
     VCDU_generate_byte_stream(vcdu, GS_tx_frame_); // 送信元にセット 消したいなぁ...
-    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_stream], GS_tx_frame_);
-    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_stream], GS_tx_frame_);
+    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_STREAM], GS_tx_frame_);
+    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_STREAM], GS_tx_frame_);
   }
 
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
@@ -280,11 +280,11 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
     // DS 側の名称が cmd なだけで送信しているのは TLM
     if (i == GS_PORT_TYPE_CCSDS)
     {
-      ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_stream);
+      ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_STREAM);
     }
     else
     {
-      ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_stream);
+      ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_STREAM);
     }
   }
 
