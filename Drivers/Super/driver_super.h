@@ -26,6 +26,9 @@
  *           - すべての Driver Stream で以下を満たす必要がある
  *             - rx_buffer_size_ + rx_carry_over_buffer_size_ <= DS_RX_PROCESSING_BUFFER_SIZE
  *           - C2A 全体で 1 つ定義
+ * めも
+ * IF_RX での最大サイズは規定したとして， DS ごとに小さくすることは可能にする
+ * で，小さくしたものよりも rx_buffer がデカくないとだめにする！！！
  */
 #ifndef DRIVER_SUPER_H_
 #define DRIVER_SUPER_H_
@@ -221,18 +224,20 @@ typedef struct
   // 今後詳細情報を拡張するなら，ここに入れる（ref. EQU Driver Super の DRIVE_Super_rec など）
 } DS_StreamRecStatus;
 
-// /**
-//  * @struct DS_StreamRecBuffer
-//  * @brief  フレーム受信バッファ
-//  */
-// typedef struct
-// {
-//   uint8_t* buffer;                        //!< バッファ本体となる uint8_t 配列．外部から与える
-//   uint16_t capacity;                      //!< buffer のメモリ確保量
-//   uint16_t size;                          //!< 現在使われているサイズ
-//   uint16_t pos_of_frame_head_candidate;   //!< フレーム開始点の候補
-//   uint16_t pos_of_last_rec;               // 最後に受信したデータを格納した位置
-// } DS_StreamRecBuffer;
+/**
+ * @struct DS_StreamRecBuffer
+ * @brief  フレーム受信バッファ
+ */
+typedef struct
+{
+  uint8_t* buffer;                        //!< バッファ本体となる uint8_t 配列．外部から与える
+  uint16_t capacity;                      //!< buffer のメモリ確保量
+  uint16_t size;                          //!< 現在使われているサイズ
+  uint16_t pos_of_frame_head_candidate;   //!< フレーム開始点の候補
+  uint16_t confirm_frame_len;             //!< 受信フレームとして受理された長さ（フレーム確定後，これがフレーム長になる）
+  uint8_t  is_frame_fixed;                //!< このバッファ上でフレームが確定してるか？
+  uint16_t pos_of_last_rec;               //!< 最後に受信したデータを格納した位置
+} DS_StreamRecBuffer;
 
 /**
  * @struct DS_Config
@@ -307,6 +312,10 @@ struct DS_StreamConfig
                                                                    未指定の場合は負数とする
                                                                    初期値: -1 */
 
+    DS_StreamRecBuffer* rx_buffer_;                           /*!< 受信バッファ
+                                                                   stream 初期化時に user がメモリを割り当て，設定する
+                                                                   初期値: NULL */
+    // FIXME: 消す x 2
     uint8_t* rx_frame_buffer_;                                /*!< データ受信フレームバッファ
                                                                    driver_super.h の @note 参照
                                                                    初期値: NULL */
@@ -399,12 +408,14 @@ struct DS_StreamConfig
     uint8_t  is_validation_needed_for_send_;                  //!< 送信前に設定値の Validation が必要か？
     uint8_t  is_validation_needed_for_rec_;                   //!< 受信前に設定値の Validation が必要か？
 
+    // FIXME: 消す x 2
     uint16_t rx_frame_rec_len_;                               //!< 受信データフレームの受信済みByte．rx_frame_ に対する操作ポインタになる
     uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< 受信バッファ解析時に，フレーム候補としたフレームの先頭位置（0 起算）
                                                                    DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ から呼ばれる関数で，
                                                                    フレーム候補がロジカルなエラー（フッタの不一致やフレーム長の不整合）等が起きた時に，
                                                                    再度フレームを探索できるようにするために使う */
 
+    // FIXME: 消す x 3
     uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
     uint16_t rx_carry_over_size_;                             //!< 繰越する受信データのサイズ
     uint16_t rx_carry_over_buffer_next_pos_;                  //!< 次回探索を始めるバッファ位置（0 起算）
@@ -568,6 +579,11 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size);
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
+void DSSC_set_rx_buffer_(DS_StreamConfig* p_stream_config,
+                         DS_StreamRecBuffer* rx_buffer);
+// FIXME: 2つ
+  // rx_buffer には，前回確定したフレームも残っているので，それは除く
+  // したがって， DS の DSSC_get_rx_frame した frame へのポインタは，次回受信時までしか有効ではない
 void DSSC_set_rx_frame_buffer(DS_StreamConfig* p_stream_config,
                               uint8_t* rx_frame_buffer,
                               const uint16_t rx_frame_buffer_size);
@@ -632,6 +648,20 @@ DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_Str
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config);
 
 // ###### Driver汎用Util関数 ######
+
+/**
+ * @brief DS_StreamRecBuffer に確保したメモリを与えて初期化する
+ * @param[out] stream_rec_buffer: 初期化する DS_StreamRecBuffer
+ * @param[in]  buffer:            与えるメモリ領域
+ * @param[in]  buffer_capacity:   与えるメモリサイズ
+ * @return void
+ */
+void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
+                               uint8_t* buffer,
+                               const uint16_t buffer_capacity);
+
+// FIXME: rx frame 取得， rx size 取得
+
 
 /**
  * @brief  DS_DRIVER_ERR_CODE から CCP_CmdRet への変換関数
