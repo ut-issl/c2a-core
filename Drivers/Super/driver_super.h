@@ -409,7 +409,7 @@ struct DS_StreamConfig
     uint8_t  is_validation_needed_for_rec_;                   //!< 受信前に設定値の Validation が必要か？
 
     // FIXME: 消す x 2
-    uint16_t rx_frame_rec_len_;                               //!< 受信データフレームの受信済みByte．rx_frame_ に対する操作ポインタになる
+    // uint16_t rx_frame_rec_len_;                               //!< 受信データフレームの受信済みByte．rx_frame_ に対する操作ポインタになる
     uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< 受信バッファ解析時に，フレーム候補としたフレームの先頭位置（0 起算）
                                                                    DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ から呼ばれる関数で，
                                                                    フレーム候補がロジカルなエラー（フッタの不一致やフレーム長の不整合）等が起きた時に，
