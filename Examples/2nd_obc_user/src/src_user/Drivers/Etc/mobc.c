@@ -55,7 +55,8 @@ static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super)
 
   p_super->interface = UART;
 
-  DSC_set_rx_buffer(p_super, MOBC_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
+  // FIXME
+  // DSC_set_rx_buffer(p_super, MOBC_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
 
   // stream は 0 のみ
   p_stream_config = &(p_super->stream_config[MOBC_STREAM_TLM_CMD]);

@@ -59,7 +59,8 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
 
   p_super->interface = UART;
 
-  DSC_set_rx_buffer(p_super, UART_TEST_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
+  // FIXME
+  // DSC_set_rx_buffer(p_super, UART_TEST_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
 
   // stream0の設定
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_FIX]);

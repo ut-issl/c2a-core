@@ -18,6 +18,8 @@
 // #define DS_DEBUG                       // 適切なときにコメントアウトする
 // #define DS_DEBUG_SHOW_REC_DATA         // 適切なときにコメントアウトする
 
+static uint8_t DS_if_rx_buffer_[DS_IF_RX_BUFFER_SIZE];    //!< IF_RX で受信するときの一次バッファ
+
 /**
  * @brief  コマンド送信処理
  *
@@ -263,9 +265,6 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) の様な使い方をするのでセグフォが起こる可能性があり
   p_super->if_config = NULL;        // FIXME: NULLポインタはこの関数がReset単体で使われるとマズい
 
-  p_super->config.settings.rx_buffer_      = NULL;
-  p_super->config.settings.rx_buffer_size_ = 0;
-
   p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
   p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
 
@@ -297,9 +296,6 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super)
   if (p_super->interface < 0 || p_super->interface >= IF_LIST_MAX) return DS_ERR_CODE_ERR;
   if (p_super->if_config == NULL) return DS_ERR_CODE_ERR;
 
-  if (p_super->config.settings.rx_buffer_ == NULL) return DS_ERR_CODE_ERR;
-  if (p_super->config.settings.rx_buffer_size_ == 0) return DS_ERR_CODE_ERR;
-
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
     DS_ERR_CODE ret = DS_validate_stream_config_(p_super, &p_super->stream_config[stream]);
@@ -315,11 +311,6 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
 
   // 以下，各種 buffer を memsetで念の為0クリアしておくが，
   // 情報は internal.rx_carry_over_size_ にあるので，動作上意味はない．
-  if (p_super->config.settings.rx_buffer_ != NULL)
-  {
-    memset(p_super->config.settings.rx_buffer_, 0x00, p_super->config.settings.rx_buffer_size_);
-  }
-
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
     p_super->stream_config[stream].internal.rx_frame_rec_len_ = 0;
@@ -599,8 +590,8 @@ static int DS_rx_(DriverSuper* p_super)
   if (flag == 0) return 0;
 
   rec_data_len = (*IF_RX[p_super->interface])(p_super->if_config,
-                                              p_super->config.settings.rx_buffer_,
-                                              p_super->config.settings.rx_buffer_size_);
+                                              DS_if_rx_buffer_,
+                                              DS_IF_RX_BUFFER_SIZE);
 
 #ifdef DS_DEBUG
   Printf("DS: rx_\n");
@@ -612,7 +603,7 @@ static int DS_rx_(DriverSuper* p_super)
   Printf("DS: Receive data size is %d bytes, as follow:\n", rec_data_len);
   for (i = 0; i < rec_data_len; i++)
   {
-    Printf("%02x ", p_super->config.settings.rx_buffer_[i]);
+    Printf("%02x ", DS_if_rx_buffer_[i]);
     if (i % 4 == 3) Printf("   ");
   }
   Printf("\n");
@@ -659,7 +650,7 @@ static uint16_t DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
 
   // 今回受信分のとりこみ
   memcpy(&(rx_buffer[buffer_offset]),
-         p_super->config.settings.rx_buffer_,
+         DS_if_rx_buffer_,
          (size_t)rec_data_len);
 
   if (p_stream_config->internal.is_rx_buffer_carry_over_)
@@ -1426,10 +1417,10 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
   if (p_stream_config->settings.rx_carry_over_buffer_ == NULL) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_carry_over_buffer_size_ == 0) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_carry_over_buffer_size_ < p_stream_config->settings.rx_frame_buffer_size_) return DS_ERR_CODE_ERR;
-  if (p_super->config.settings.rx_buffer_size_ + p_stream_config->settings.rx_carry_over_buffer_size_ > DS_RX_PROCESSING_BUFFER_SIZE)
-  {
-    return DS_ERR_CODE_ERR;
-  }
+  // if (DS_IF_RX_BUFFER_SIZE + p_stream_config->settings.rx_carry_over_buffer_size_ > DS_RX_PROCESSING_BUFFER_SIZE)
+  // {
+  //   return DS_ERR_CODE_ERR;
+  // }
 
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_ = 0;
@@ -1453,21 +1444,6 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 
 
 // ###### DS_Config Getter/Setter of Settings ######
-void DSC_set_rx_buffer(DriverSuper* p_super,
-                       uint8_t* rx_buffer,
-                       const uint16_t rx_buffer_size)
-{
-  uint8_t stream;
-
-  p_super->config.settings.rx_buffer_ = rx_buffer;
-  p_super->config.settings.rx_buffer_size_ = rx_buffer_size;
-
-  for (stream = 0; stream < DS_STREAM_MAX; ++stream)
-  {
-    p_super->stream_config[stream].internal.is_validation_needed_for_rec_ = 1;
-  }
-}
-
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
   return (uint8_t)p_super->config.settings.should_monitor_for_rx_disruption_;
