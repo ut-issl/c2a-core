@@ -13,7 +13,7 @@
 #include "../TlmCmd/block_command_executor.h"
 #include "../TlmCmd/command_analyze.h"
 #include "../Library/print.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
@@ -557,7 +557,7 @@ CCP_CmdRet Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 
   BCT_make_pos(&bc_register_pos, master_bc_id, bc_cmd_pos);
   param[0] = TLCD_ID_DEPLOY_TLM;
-  endian_memcpy(&param[1], &master_bc_id, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&param[1], &master_bc_id, SIZE_OF_BCT_ID_T);
 
   CCP_form_tlc(&TLM_MGR_packet_,
                TLM_MGR_USE_BC_NUM,

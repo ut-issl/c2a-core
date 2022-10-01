@@ -6,7 +6,6 @@
 
 #include "uart_test.h"
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include <src_core/Library/endian_memcpy.h>
 #include <src_core/Library/print.h>
 #include "../../Settings/sils_define.h"
 #include "string.h"   // for memcpy

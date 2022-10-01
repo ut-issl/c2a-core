@@ -16,7 +16,7 @@
 #include "command_analyze.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include "common_cmd_packet_util.h"
 
@@ -427,7 +427,7 @@ CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   // 指定されたブロック番号のクリアを実行。
   ack = BCT_clear_block(block);
@@ -461,7 +461,7 @@ CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet)
   }
 
   // パラメータを読み出し
-  endian_memcpy(&pos.block, param, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&pos.block, param, SIZE_OF_BCT_ID_T);
   pos.cmd = param[SIZE_OF_BCT_ID_T];
 
   ack = BCT_set_position_(&pos);
@@ -476,8 +476,8 @@ CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet)
   BCT_ACK ack;
 
   if (CCP_get_param_len(packet) != 2 * SIZE_OF_BCT_ID_T) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
-  endian_memcpy(&dst_block, param, SIZE_OF_BCT_ID_T);
-  endian_memcpy(&src_block, param + SIZE_OF_BCT_ID_T, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&dst_block, param, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&src_block, param + SIZE_OF_BCT_ID_T, SIZE_OF_BCT_ID_T);
 
   ack = BCT_copy_bct(dst_block, src_block);
   return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);

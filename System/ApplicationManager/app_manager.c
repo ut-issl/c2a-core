@@ -11,7 +11,7 @@
 #include "../WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../Library/print.h"   // for Printf
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
 
 static AM_ACK AM_initialize_app_(size_t id);
@@ -66,9 +66,9 @@ CCP_CmdRet Cmd_AM_REGISTER_APP(const CommonCmdPacket* packet)
   AppInfo ai;
 
   // パラメータを読み出し。
-  endian_memcpy(&id, param, 4);
-  endian_memcpy(&ai.initializer, param + 4, 4);
-  endian_memcpy(&ai.entry_point, param + 8, 4);
+  ENDIAN_memcpy(&id, param, 4);
+  ENDIAN_memcpy(&ai.initializer, param + 4, 4);
+  ENDIAN_memcpy(&ai.entry_point, param + 8, 4);
 
   ai.name = "SPECIAL";
   ai.prev = 0;
@@ -91,7 +91,7 @@ CCP_CmdRet Cmd_AM_INITIALIZE_APP(const CommonCmdPacket* packet)
   size_t id = AM_MAX_APPS;
 
   // パラメータ読み出し。
-  endian_memcpy(&id, CCP_get_param_head(packet), 4);
+  ENDIAN_memcpy(&id, CCP_get_param_head(packet), 4);
 
   switch (AM_initialize_app_(id))
   {
@@ -145,7 +145,7 @@ CCP_CmdRet Cmd_AM_EXECUTE_APP(const CommonCmdPacket* packet)
   size_t id = AM_MAX_APPS;
 
   // パラメータ読み出し。
-  endian_memcpy(&id, CCP_get_param_head(packet), 4);
+  ENDIAN_memcpy(&id, CCP_get_param_head(packet), 4);
 
   switch (AM_execute_app_(id))
   {

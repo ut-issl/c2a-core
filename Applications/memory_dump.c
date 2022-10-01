@@ -5,7 +5,7 @@
 
 #include "../System/TimeManager/time_manager.h"
 #include "../TlmCmd/packet_handler.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
 
 static MemoryDump memory_dump_;
@@ -65,8 +65,8 @@ CCP_CmdRet Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
   uint32_t begin, end, span;
 
   // パラメータを読み出し
-  endian_memcpy(&begin, param, 4);
-  endian_memcpy(&end,   param + 4, 4);
+  ENDIAN_memcpy(&begin, param, 4);
+  ENDIAN_memcpy(&end,   param + 4, 4);
 
   if (begin > end)
   {
@@ -135,7 +135,7 @@ CCP_CmdRet Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  endian_memcpy(&adu_seq, param + 2, 2);
+  ENDIAN_memcpy(&adu_seq, param + 2, 2);
 
   rp = memory_dump_.begin + (adu_seq * MEM_DUMP_WIDTH);
 
@@ -173,7 +173,7 @@ CCP_CmdRet Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  endian_memcpy(&start_addr, param + 2, 4);
+  ENDIAN_memcpy(&start_addr, param + 2, 4);
 
   // 要検討: 指定アドレス値が異常な場合の処理をすべきか？
   // Segmentation Faultとか起こる？
@@ -214,7 +214,7 @@ CCP_CmdRet Cmd_MEM_LOAD(const CommonCmdPacket* packet)
   data_len = param_len - 4;
 
   // 書き込みアドレス読み出し
-  endian_memcpy(&start_addr, param, 4);
+  ENDIAN_memcpy(&start_addr, param, 4);
 
   // 指定した開始アドレスから始まる領域にデータを書き込み
   memcpy((void*)start_addr, &(param[4]), data_len);
@@ -226,7 +226,7 @@ CCP_CmdRet Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t dest;
 
-  endian_memcpy(&dest, param, 4);
+  ENDIAN_memcpy(&dest, param, 4);
 
   if ((dest >= memory_dump_.begin) && (dest < memory_dump_.end))
   {
@@ -254,7 +254,7 @@ CCP_CmdRet Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
   }
 
   // パラメータ読み出し。
-  endian_memcpy(&copy_width, param, 4);
+  ENDIAN_memcpy(&copy_width, param, 4);
 
   if ((memory_dump_.rp + copy_width) > memory_dump_.end)
   {

@@ -16,7 +16,7 @@
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../TlmCmd/packet_handler.h"
 #include "../../Applications/timeline_command_dispatcher_id_define.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 
 /**
  * @brief Cmd_MM_START_TRANSITIONの実体
@@ -97,7 +97,7 @@ CCP_CmdRet Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
 
   // どのモードにどのブロックコマンドを登録するかを引数から読み出す
   mode = (MD_MODEID)param[0];
-  endian_memcpy(&bc_index, param + 1, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&bc_index, param + 1, SIZE_OF_BCT_ID_T);
 
   mode_manager_.mm_ack = MM_set_mode_list(mode, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
@@ -150,7 +150,7 @@ CCP_CmdRet Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   // どのモード遷移にどのブロックコマンドを登録するかを引数から読み出す
   from = param[0];
   to   = param[1];
-  endian_memcpy(&bc_index, param + 2, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&bc_index, param + 2, SIZE_OF_BCT_ID_T);
 
   mode_manager_.mm_ack = MM_set_transition_table((MD_MODEID)from, (MD_MODEID)to, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
