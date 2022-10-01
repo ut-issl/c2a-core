@@ -1239,17 +1239,37 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
 {
   uint32_t len = 0;
   uint8_t  i;
+  const uint16_t pos = p_stream_config->settings.rx_framelength_pos_;
+  const uint16_t size = p_stream_config->settings.rx_framelength_type_size_;
 
-  for (i = 0; i < p_stream_config->settings.rx_framelength_type_size_; ++i)
+  if (p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG)
   {
-    if (i == 0)
+    for (i = 0; i < size; ++i)
     {
-      len = p_stream_config->info.rx_frame_[p_stream_config->settings.rx_framelength_pos_];
+      if (i == 0)
+      {
+        len = p_stream_config->info.rx_frame_[pos];
+      }
+      else
+      {
+        len <<= 8;
+        len |= p_stream_config->info.rx_frame_[pos + i];
+      }
     }
-    else
+  }
+  else
+  {
+    for (i = 0; i < size; ++i)
     {
-      len <<= 8;
-      len |= p_stream_config->info.rx_frame_[p_stream_config->settings.rx_framelength_pos_ + i];
+      if (i == 0)
+      {
+        len = p_stream_config->info.rx_frame_[pos + size - 1];
+      }
+      else
+      {
+        len <<= 8;
+        len |= p_stream_config->info.rx_frame_[pos + size - 1 - i];
+      }
     }
   }
 
@@ -1275,6 +1295,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->settings.rx_framelength_pos_       = -1;
   p_stream_config->settings.rx_framelength_type_size_ = 0;
   p_stream_config->settings.rx_framelength_offset_    = 0;
+  p_stream_config->settings.rx_framelength_endian_    = ENDIAN_TYPE_BIG;
 
   p_stream_config->settings.data_analyzer_ = DS_data_analyzer_dummy_;
 
@@ -1355,6 +1376,8 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
             p_stream_config->settings.rx_framelength_type_size_ == 2 ||
             p_stream_config->settings.rx_framelength_type_size_ == 3 ||
             p_stream_config->settings.rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // 現在はuint8 to uint32のみ対応
+      if (!(p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG ||
+            p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_LITTLE )) return DS_ERR_CODE_ERR;
     }
   }
   else if (p_stream_config->settings.rx_frame_size_ == 0)
@@ -1587,6 +1610,13 @@ void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
                                     const uint16_t rx_framelength_offset)
 {
   p_stream_config->settings.rx_framelength_offset_ = rx_framelength_offset;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
+}
+
+void DSSC_set_rx_framelength_endian(DS_StreamConfig* p_stream_config,
+                                    const ENDIAN_TYPE rx_framelength_endian)
+{
+  p_stream_config->settings.rx_framelength_endian_ = rx_framelength_endian;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
