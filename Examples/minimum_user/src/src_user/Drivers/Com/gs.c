@@ -109,7 +109,7 @@ DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   }
 
   gs_driver->ccsds_info.buffer_num = 8;
-  gs_driver->is_uart_tlm_on = 1;
+  gs_driver->driver_uart.is_tlm_on = 1;
 
   return DS_INIT_OK;
 }
@@ -275,7 +275,7 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   }
 
   // UART
-  if (gs_driver->is_uart_tlm_on)
+  if (gs_driver->driver_uart.is_tlm_on)
   {
     gs_driver->info[GS_PORT_TYPE_UART].tx.send_cycle = TMGR_get_master_total_cycle();
     gs_driver->info[GS_PORT_TYPE_UART].tx.vcid = VCDU_get_vcid(vcdu);

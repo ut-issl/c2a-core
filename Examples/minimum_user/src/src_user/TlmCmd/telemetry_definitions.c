@@ -3170,7 +3170,7 @@ static TF_TLM_FUNC_ACK Tlm_GS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u32(&packet[74], (uint32_t)gs_driver->info[1].tx.send_cycle);
   TF_copy_u8(&packet[78], (uint8_t)gs_driver->info[1].tx.vcid);
   TF_copy_u32(&packet[79], gs_driver->info[1].tx.vcdu_counter);
-  TF_copy_u8(&packet[83], gs_driver->is_uart_tlm_on);
+  TF_copy_u8(&packet[83], gs_driver->driver_uart.is_tlm_on);
   TF_copy_u8(&packet[84], gs_validate_info->type_a_counter);
   TF_copy_u8(&packet[85], gs_validate_info->type_b_counter);
   TF_copy_u8(&packet[86], gs_validate_info->lockout_flag);
