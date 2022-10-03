@@ -21,9 +21,8 @@ static uint8_t AOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               EB90_FRAME_FOOTER_SIZE];
 
 // バッファ
-static uint8_t AOBC_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
-static uint8_t AOBC_rx_frame_buffer_[DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
-static uint8_t AOBC_rx_carry_over_buffer_[DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT];
+static uint8_t AOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static DS_StreamRecBuffer AOBC_rx_buffer_;
 
 static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
@@ -63,9 +62,10 @@ static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   p_stream_config = &(p_super->stream_config[AOBC_STREAM_TLM_CMD]);
 
   CTCP_init_dssc(p_stream_config, AOBC_tx_frame_, sizeof(AOBC_tx_frame_), AOBC_analyze_rec_data_);
-  DSSC_set_rx_buffer(p_stream_config,
-                     AOBC_rx_frame_buffer_, DS_RX_FRAME_BUFFER_SIZE_DEFAULT,
-                     AOBC_rx_carry_over_buffer_, DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT);
+  DS_init_stream_rec_buffer(&AOBC_rx_buffer_,
+                            AOBC_rx_buffer_allocation_,
+                            sizeof(AOBC_rx_buffer_allocation_));
+  DSSC_set_rx_buffer(p_stream_config, &AOBC_rx_buffer_);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
 
