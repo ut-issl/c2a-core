@@ -271,6 +271,7 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
     gs_driver->info[GS_PORT_TYPE_CCSDS].tx.vcid = VCDU_get_vcid(vcdu);
     gs_driver->info[GS_PORT_TYPE_CCSDS].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
 
+    // DS 側の名称が cmd なだけで送信しているのは TLM
     ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_STREAM);
   }
 
@@ -281,6 +282,7 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
     gs_driver->info[GS_PORT_TYPE_UART].tx.vcid = VCDU_get_vcid(vcdu);
     gs_driver->info[GS_PORT_TYPE_UART].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
 
+    // DS 側の名称が cmd なだけで送信しているのは TLM
     ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_STREAM);
   }
 
