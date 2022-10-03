@@ -302,13 +302,6 @@ struct DS_StreamConfig
     DS_StreamRecBuffer* rx_buffer_;                           /*!< 受信バッファ
                                                                    stream 初期化時に user がメモリを割り当て，設定する
                                                                    初期値: NULL */
-    // // FIXME: 消す x 2
-    // uint8_t* rx_frame_buffer_;                                /*!< データ受信フレームバッファ
-    //                                                                driver_super.h の @note 参照
-    //                                                                初期値: NULL */
-    // uint16_t rx_frame_buffer_size_;                           /*!< データ受信フレームバッファサイズ
-    //                                                                driver_super.h の @note 参照
-    //                                                                初期値: 0 */
     const uint8_t* rx_header_;                                /*!< 受信データのヘッダ
                                                                    初期値: NULL */
     uint16_t rx_header_size_;                                 /*!< 受信データのヘッダサイズ
@@ -394,18 +387,6 @@ struct DS_StreamConfig
   {
     uint8_t  is_validation_needed_for_send_;                  //!< 送信前に設定値の Validation が必要か？
     uint8_t  is_validation_needed_for_rec_;                   //!< 受信前に設定値の Validation が必要か？
-
-    // FIXME: 消す x 2
-    // uint16_t rx_frame_rec_len_;                               //!< 受信データフレームの受信済みByte．rx_frame_ に対する操作ポインタになる
-    // uint16_t rx_frame_head_pos_of_frame_candidate_;           /*!< 受信バッファ解析時に，フレーム候補としたフレームの先頭位置（0 起算）
-    //                                                                DS_analyze_rx_buffer_fixed_, DS_analyze_rx_buffer_variable_ から呼ばれる関数で，
-    //                                                                フレーム候補がロジカルなエラー（フッタの不一致やフレーム長の不整合）等が起きた時に，
-    //                                                                再度フレームを探索できるようにするために使う */
-
-    // FIXME: 消す x 3
-    // uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
-    // uint16_t rx_carry_over_size_;                             //!< 繰越する受信データのサイズ
-    // uint16_t rx_carry_over_buffer_next_pos_;                  //!< 次回探索を始めるバッファ位置（0 起算）
   } internal;       //!< 内部処理用
 };
 // TODO: Protocol 用に data_link_layer_ を追加

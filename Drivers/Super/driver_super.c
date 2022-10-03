@@ -11,7 +11,7 @@
 
 #include "driver_super.h"
 #include "../../Library/print.h"
-#include <string.h>     // for memsetなどのmem系
+#include <string.h>     // for memset などの mem 系
 #include <stddef.h>     // for NULL
 #include "../../TlmCmd/common_cmd_packet_util.h"
 
@@ -278,31 +278,14 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
 {
   uint8_t stream;
 
-  // 以下，各種 buffer を memsetで念の為0クリアしておくが，
-  // 情報は internal.rx_carry_over_size_ にあるので，動作上意味はない．
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
-    // p_super->stream_config[stream].internal.rx_frame_rec_len_ = 0;   // FIXME
-    p_super->stream_config[stream].internal.is_rx_buffer_carry_over_ = 0;
-    p_super->stream_config[stream].internal.rx_carry_over_size_ = 0;
-    p_super->stream_config[stream].internal.rx_carry_over_buffer_next_pos_ = 0;
-
     DS_clear_stream_rec_buffer_(p_super->stream_config[stream].settings.rx_buffer_);
-
-    // FIXME
-    // if (p_super->stream_config[stream].settings.rx_frame_buffer_ != NULL)
-    // {
-    //   memset(p_super->stream_config[stream].settings.rx_frame_buffer_,
-    //          0x00,
-    //          p_super->stream_config[stream].settings.rx_frame_buffer_size_);
-    // }
-    // if (p_super->stream_config[stream].settings.rx_carry_over_buffer_ != NULL)
-    // {
-    //   memset(p_super->stream_config[stream].settings.rx_carry_over_buffer_,
-    //          0x00,
-    //          p_super->stream_config[stream].settings.rx_carry_over_buffer_size_);
-    // }
   }
+
+  memset(DS_if_rx_buffer_,
+         0x00,
+         sizeof(DS_if_rx_buffer_));
 
   return DS_ERR_CODE_OK;
 }
@@ -1137,8 +1120,6 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->settings.tx_frame_buffer_size_ = -1;
 
   p_stream_config->settings.rx_buffer_            = NULL;
-  p_stream_config->settings.rx_frame_buffer_      = NULL;
-  p_stream_config->settings.rx_frame_buffer_size_ = 0;
   p_stream_config->settings.rx_header_            = NULL;
   p_stream_config->settings.rx_header_size_       = 0;
   p_stream_config->settings.rx_footer_            = NULL;
@@ -1182,14 +1163,6 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
 
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_  = 0;
-
-  // FIXME
-  // p_stream_config->internal.rx_frame_rec_len_ = 0;
-  p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ = 0;
-
-  p_stream_config->internal.is_rx_buffer_carry_over_       = 0;
-  p_stream_config->internal.rx_carry_over_size_            = 0;
-  p_stream_config->internal.rx_carry_over_buffer_next_pos_ = 0;
 
   return DS_ERR_CODE_OK;
 }
