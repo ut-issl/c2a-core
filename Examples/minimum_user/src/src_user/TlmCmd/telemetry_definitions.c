@@ -3436,15 +3436,15 @@ static TF_TLM_FUNC_ACK Tlm_UART_TEST_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[31], (uint8_t)(uart_test_instance->driver.super.stream_config[0].info.rec_status_.status_code));
   TF_copy_u16(&packet[32], uart_test_instance->driver.super.stream_config[0].info.rec_status_.fixed_frame_len);
   TF_copy_u32(&packet[34], uart_test_instance->driver.super.stream_config[0].info.rx_frame_fix_count_);
-  TF_copy_u16(&packet[38], uart_test_instance->driver.super.stream_config[0].settings.rx_buffer_.size);
-  TF_copy_u16(&packet[40], uart_test_instance->driver.super.stream_config[0].settings.rx_buffer_.confirmed_frame_len);
-  TF_copy_u8(&packet[42], uart_test_instance->driver.super.stream_config[0].settings.rx_buffer_.is_frame_fixed);
+  TF_copy_u16(&packet[38], uart_test_instance->driver.super.stream_config[0].settings.rx_buffer_->size);
+  TF_copy_u16(&packet[40], uart_test_instance->driver.super.stream_config[0].settings.rx_buffer_->confirmed_frame_len);
+  TF_copy_u8(&packet[42], uart_test_instance->driver.super.stream_config[0].settings.rx_buffer_->is_frame_fixed);
   TF_copy_u8(&packet[43], (uint8_t)(uart_test_instance->driver.super.stream_config[1].info.rec_status_.status_code));
   TF_copy_u16(&packet[44], uart_test_instance->driver.super.stream_config[1].info.rec_status_.fixed_frame_len);
   TF_copy_u32(&packet[46], uart_test_instance->driver.super.stream_config[1].info.rx_frame_fix_count_);
-  TF_copy_u16(&packet[50], uart_test_instance->driver.super.stream_config[1].settings.rx_buffer_.size);
-  TF_copy_u16(&packet[52], uart_test_instance->driver.super.stream_config[1].settings.rx_buffer_.confirmed_frame_len);
-  TF_copy_u8(&packet[54], uart_test_instance->driver.super.stream_config[1].settings.rx_buffer_.is_frame_fixed);
+  TF_copy_u16(&packet[50], uart_test_instance->driver.super.stream_config[1].settings.rx_buffer_->size);
+  TF_copy_u16(&packet[52], uart_test_instance->driver.super.stream_config[1].settings.rx_buffer_->confirmed_frame_len);
+  TF_copy_u8(&packet[54], uart_test_instance->driver.super.stream_config[1].settings.rx_buffer_->is_frame_fixed);
 #endif
 
   *len = 55;
