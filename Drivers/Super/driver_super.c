@@ -1381,8 +1381,8 @@ int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config)
   return (int16_t)p_stream_config->settings.tx_frame_buffer_size_;
 }
 
-void DSSC_set_rx_buffer_(DS_StreamConfig* p_stream_config,
-                         DS_StreamRecBuffer* rx_buffer)
+void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
+                        DS_StreamRecBuffer* rx_buffer)
 {
   p_stream_config->settings.rx_buffer_ = rx_buffer;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;

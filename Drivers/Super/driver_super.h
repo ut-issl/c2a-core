@@ -536,8 +536,8 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size);
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
-void DSSC_set_rx_buffer_(DS_StreamConfig* p_stream_config,
-                         DS_StreamRecBuffer* rx_buffer);
+void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
+                        DS_StreamRecBuffer* rx_buffer);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_header,
                         const uint16_t rx_header_size);
