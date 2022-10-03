@@ -53,26 +53,22 @@ static int DS_rx_(DriverSuper* p_super);
 
 /**
  * @brief  受信フレーム解析関数
- * @param  p_super:      DriverSuper 構造体へのポインタ
- * @param  stream:       どの config を使用するか．stream は 0-MAX なので，継承先で ENUM など宣言して使いやすくすればいいと思う．
- * @param  rec_data_len: 今回新規に受信したデータ長
+ * @param[in]  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @param[in]  rec_data_len:    今回新規に受信したデータ長
  * @return void 詳細は DS_StreamRecStatus
  */
-static void DS_analyze_rx_buffer_(DriverSuper* p_super,
-                                  uint8_t stream,
+static void DS_analyze_rx_buffer_(DS_StreamConfig* p_stream_config,
                                   uint16_t rec_data_len);
 
 /**
  * @brief  解析用受信バッファの準備
  *
  *         繰り越されたデータと今回受信したデータの結合を行い，受信データ解析の準備をする
- * @param[in]  p_super:      DriverSuper 構造体へのポインタ
- * @param[in]  stream:       どの config を使用するか．stream は 0-MAX なので，継承先で ENUM など宣言して使いやすくすればいいと思う．
- * @param[in]  rec_data_len: 今回新規に受信したデータ長
+ * @param[in]  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @param[in]  rec_data_len:    今回新規に受信したデータ長
  * @return void
  */
-static void DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
-                                                 uint8_t stream,
+static void DS_analyze_rx_buffer_prepare_buffer_(DS_StreamConfig* p_stream_config,
                                                  uint16_t rec_data_len);
 
 /**
@@ -80,9 +76,9 @@ static void DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
  *
  *         受信バッファを走査し，バイト単位でフレーム内データを確認していく
  * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
- * @return 今回の呼び出しで走査したバイト長さ．その他の詳細は DS_StreamRecStatus
+ * @return void その他の詳細は DS_StreamRecStatus
  */
-static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config);
+static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  フレーム解析関数後のデータ繰越関数
@@ -435,7 +431,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
 
     rec_data_len = (uint16_t)ret_rx;      // ここまでくれば非負数
     // 受信データ処理
-    DS_analyze_rx_buffer_(p_super, stream, rec_data_len);
+    DS_analyze_rx_buffer_(p_stream_config, rec_data_len);
 
     // フレーム確定処理
     if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
@@ -623,8 +619,7 @@ static int DS_rx_(DriverSuper* p_super)
 }
 
 
-static void DS_analyze_rx_buffer_(DriverSuper* p_super,
-                                  uint8_t stream,
+static void DS_analyze_rx_buffer_(DS_StreamConfig* p_stream_config,
                                   uint16_t rec_data_len)
 {
   // 解析用受信バッファ
@@ -635,21 +630,19 @@ static void DS_analyze_rx_buffer_(DriverSuper* p_super,
   DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
   uint16_t total_processed_data_len;
 
-  DS_analyze_rx_buffer_prepare_buffer_(p_super, stream, rec_data_len);
+  DS_analyze_rx_buffer_prepare_buffer_(p_stream_config, rec_data_len);
 
-  total_processed_data_len = DS_analyze_rx_buffer_pickup_(p_stream_config);
+  DS_analyze_rx_buffer_pickup_(p_stream_config);
 
   DS_analyze_rx_buffer_carry_over_buffer_(p_stream_config, rx_buffer, total_processed_data_len, rec_data_len);
 }
 
 
-static void DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
-                                                 uint8_t stream,
+static void DS_analyze_rx_buffer_prepare_buffer_(DS_StreamConfig* p_stream_config,
                                                  uint16_t rec_data_len)
 {
-  // rx_buffer には，前回確定したフレームも残っているので，それは除く
+  // rx_buffer_ には，前回確定したフレームも残っているので，それは除く
   // したがって， DS の DSSC_get_rx_frame した frame へのポインタは，次回受信時までしか有効ではない
-  DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
   DS_StreamRecBuffer* buffer = p_stream_config->settings.rx_buffer_;
   DS_ERR_CODE ret;
 
@@ -675,25 +668,17 @@ static void DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
 }
 
 
-static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
+static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
 {
   DS_StreamRecBuffer* buffer = p_stream_config->settings.rx_buffer_;
   // 受信バッファのデータを走査し，必要なデータをフレームとして pickup する関数
   void (*pickup_func)(DS_StreamConfig* p_stream_config);
-  p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ = 0;
 
   if (p_stream_config->settings.rx_frame_size_ == 0) return 0;
 
-  // TODO: ビッグデータ対応
-  if (p_stream_config->settings.rx_frame_size_ > 0 && p_stream_config->settings.rx_frame_size_ < p_stream_config->settings.rx_frame_buffer_size_)
+  if (p_stream_config->settings.rx_frame_size_ > 0)
   {
     pickup_func = DS_analyze_rx_buffer_fixed_pickup_;
-  }
-  else if (p_stream_config->settings.rx_frame_size_ > 0)
-  {
-    // DS_analyze_rx_buffer_fixed_bigdata_(void)
-    pickup_func = NULL;
-    return;
   }
   else if (p_stream_config->settings.rx_frame_size_ < 0)
   {
@@ -709,7 +694,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
   }
   else
   {
-    // DS_analyze_rx_buffer_variable_bigdata_(void)
+    // TODO: ビッグデータ対応
     pickup_func = NULL;
     return;
   }
@@ -735,8 +720,6 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
       // 他の部分での条件分岐のために，詳細エラー情報を現在のステータスに上書きする
       p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FINDING_HEADER;
     }
-
-    // processed_data_len > rec_data_lenなることはありえないが，念の為チャックする？？
   }
 
   if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
@@ -747,7 +730,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
     // FIXME: confirm_frame_len と fixed_frame_len も？（これはまあ最後のを残すという意味ではよさそう）
   }
 
-  return total_processed_data_len;
+  return;
 }
 
 
@@ -1298,6 +1281,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
 }
 
 
+// FIXME: p_super 不要で不要では？
 static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config)
 {
   if (!p_stream_config->settings.is_enabled_) return DS_ERR_CODE_OK;
