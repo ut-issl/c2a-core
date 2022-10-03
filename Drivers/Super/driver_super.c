@@ -172,7 +172,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config);
 static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config);
 
 // ダミー関数
-// EQUだと関数ポインタの初期値をNULLにしていたためにぬるぽで事故ったので
+// EQU だと関数ポインタの初期値を NULL にしていたためにぬるぽで事故ったので
 static DS_ERR_CODE DS_load_init_setting_dummy_(DriverSuper* p_super);
 static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, void* p_driver);
 
@@ -645,7 +645,7 @@ static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
   // 受信バッファのデータを走査し，必要なデータをフレームとして pickup する関数
   void (*pickup_func)(DS_StreamConfig* p_stream_config);
 
-  if (p_stream_config->settings.rx_frame_size_ == 0) return 0;
+  if (p_stream_config->settings.rx_frame_size_ == 0) return;
 
   if (p_stream_config->settings.rx_frame_size_ > 0)
   {
@@ -696,7 +696,7 @@ static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
   if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
     buffer->is_frame_fixed = 1;
-    p->info.rec_status_.fixed_frame_len = buffer->confirm_frame_len;
+    p_stream_config->info.rec_status_.fixed_frame_len = buffer->confirm_frame_len;
     // FIXME: is_frame_fixed と DS_STREAM_REC_STATUS_FIXED_FRAME あたいの混在がだるいので直す？
     // FIXME: confirm_frame_len と fixed_frame_len も？（これはまあ最後のを残すという意味ではよさそう）
   }
