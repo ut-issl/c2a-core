@@ -559,10 +559,6 @@ void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
 void DSSC_set_rx_framelength_endian(DS_StreamConfig* p_stream_config,
                                     const ENDIAN_TYPE rx_framelength_endian);
 
-void DSSC_set_rx_carry_over_buffer(DS_StreamConfig* p_stream_config,
-                                   uint8_t* rx_carry_over_buffer,
-                                   const uint16_t rx_carry_over_buffer_size);
-
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
 void DSSC_disable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
@@ -572,13 +568,6 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
 
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver));
-
-// DSSC_set_rx_frame_buffer と DSSC_set_rx_carry_over_buffer のセット
-void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
-                        uint8_t* rx_frame_buffer,
-                        const uint16_t rx_frame_buffer_size,
-                        uint8_t* rx_carry_over_buffer,
-                        const uint16_t rx_carry_over_buffer_size);
 
 
 // ###### DS_StreamConfig Getter/Setter of Info ######

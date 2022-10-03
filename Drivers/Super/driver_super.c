@@ -1481,15 +1481,6 @@ void DSSC_set_rx_framelength_endian(DS_StreamConfig* p_stream_config,
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
-void DSSC_set_rx_carry_over_buffer(DS_StreamConfig* p_stream_config,
-                                   uint8_t* rx_carry_over_buffer,
-                                   const uint16_t rx_carry_over_buffer_size)
-{
-  p_stream_config->settings.rx_carry_over_buffer_ = rx_carry_over_buffer;
-  p_stream_config->settings.rx_carry_over_buffer_size_ = rx_carry_over_buffer_size;
-  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
-}
-
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config)
 {
   return (uint8_t)p_stream_config->settings.should_monitor_for_tlm_disruption_;
@@ -1524,16 +1515,6 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
 {
   p_stream_config->settings.data_analyzer_ = data_analyzer;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
-}
-
-void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
-                        uint8_t* rx_frame_buffer,
-                        const uint16_t rx_frame_buffer_size,
-                        uint8_t* rx_carry_over_buffer,
-                        const uint16_t rx_carry_over_buffer_size)
-{
-  DSSC_set_rx_frame_buffer(p_stream_config, rx_frame_buffer, rx_frame_buffer_size);
-  DSSC_set_rx_carry_over_buffer(p_stream_config, rx_carry_over_buffer, rx_carry_over_buffer_size);
 }
 
 
