@@ -774,8 +774,9 @@ static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config)
   else
   {
     // フッタ受信中 or フッタなしの場合はフレーム確定
-    return DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
-                                                  (uint16_t)(p->settings.rx_frame_size_));
+    DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
+                                           (uint16_t)(p->settings.rx_frame_size_));
+    return;
   }
 }
 
@@ -872,8 +873,9 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
   else
   {
     // フッタ受信中 or フッタなしの場合はフレーム確定
-    return DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
-                                                  (uint16_t)rx_frame_size);
+    DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
+                                           (uint16_t)rx_frame_size);
+    return;
   }
 }
 
