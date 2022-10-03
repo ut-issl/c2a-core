@@ -6,18 +6,10 @@
  *         各制御センサ・アクチュエータ等とのインターフェースを実現し，
  *         初期化，コマンド発行，テレメトリリクエスト，テレメトリ受信，テレメトリ解析などを行う，ドライバ群のスーパークラスです．
  *         個々の機器のインターフェースドライバに継承させて使用します．
- * @note   バッファのサイズ設定について FIXME: 直す
- *         rx_buffer_size_:
- *           - IF_RX から受信できる最大数を規定する
- *           - OBC の物理的な信号ラインのバッファサイズと同サイズにしておくともっともパフォーマンスが出る
- *           - Driver ごとに定義
- *         rx_frame_buffer_size_:
- *           - 受信フレームバッファサイズ
- *           - 受信フレームはこのサイズよりも小さくないといけない（TODO: 将来的にこの制約を無くす可能性はある）
- *           - Driver Stream ごとに定義
- * めも
- * IF_RX での最大サイズは規定したとして， DS ごとに小さくすることは可能にする
- * で，小さくしたものよりも rx_buffer がデカくないとだめにする！！！
+ * @note   バッファのサイズ設定について FIXME: 直す．DS_IF_RX_BUFFER_SIZE の可変化など
+ *           めも
+ *           IF_RX での最大サイズは規定したとして， DS ごとに小さくすることは可能にする
+ *           で，小さくしたものよりも rx_buffer がデカくないとだめにする！！！
  */
 #ifndef DRIVER_SUPER_H_
 #define DRIVER_SUPER_H_
@@ -345,14 +337,6 @@ struct DS_StreamConfig
                                                                    受信データが可変長の場合のみ使用される
                                                                    初期値: ENDIAN_TYPE_BIG */
 
-    uint8_t* rx_carry_over_buffer_;                           /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
-                                                                   次の受信時にまとめて処理させる
-                                                                   driver_super.h の @note 参照
-                                                                   初期値: NULL */
-    uint16_t rx_carry_over_buffer_size_;                      /*!< 繰越しバッファサイズ
-                                                                   driver_super.h の @note 参照
-                                                                   初期値: 0 */
-
     uint8_t  should_monitor_for_tlm_disruption_;              /*!< テレメ途絶判定をするか？
                                                                    初期値: 0 */
     uint32_t time_threshold_for_tlm_disruption_;              /*!< テレメ途絶判定の閾値 [ms]
@@ -410,6 +394,7 @@ struct DriverSuper
                                                                  使い方例：[0]を定期テレメと一般コマンドで使い，[1]以降を非定期や特殊コマンド・テレメトリで使う
                                                                  が，まあ自由に使ってもらえたら */
 };
+
 
 // ###### DriverSuper基本関数 ######
 
@@ -511,6 +496,7 @@ DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
  */
 DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
 
+
 // FIXME: 追加分を足す
 // ###### DS_Config Getter/Setter of Settings ######
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super);
@@ -520,6 +506,7 @@ uint32_t DSC_get_time_threshold_for_rx_disruption(const DriverSuper* p_super);
 void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
                                               const uint32_t time_threshold_for_rx_disruption);
 
+
 // ###### DS_Config Getter/Setter of Info ######
 const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super);
 uint32_t DSC_get_rx_count(const DriverSuper* p_super);
@@ -527,6 +514,7 @@ uint32_t DSC_get_rx_call_count(const DriverSuper* p_super);
 const ObcTime* DSC_get_rx_time(const DriverSuper* p_super);
 
 DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_super);
+
 
 // ###### DS_StreamConfig Getter/Setter of Settings ######
 uint8_t DSSC_get_is_enabled(const DS_StreamConfig* p_stream_config);
@@ -550,13 +538,6 @@ int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
 void DSSC_set_rx_buffer_(DS_StreamConfig* p_stream_config,
                          DS_StreamRecBuffer* rx_buffer);
-// FIXME: 2つ
-  // rx_buffer には，前回確定したフレームも残っているので，それは除く
-  // したがって， DS の DSSC_get_rx_frame した frame へのポインタは，次回受信時までしか有効ではない
-void DSSC_set_rx_frame_buffer(DS_StreamConfig* p_stream_config,
-                              uint8_t* rx_frame_buffer,
-                              const uint16_t rx_frame_buffer_size);
-const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_header,
                         const uint16_t rx_header_size);
@@ -599,6 +580,7 @@ void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
                         uint8_t* rx_carry_over_buffer,
                         const uint16_t rx_carry_over_buffer_size);
 
+
 // ###### DS_StreamConfig Getter/Setter of Info ######
 const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config);
 const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config);
@@ -616,7 +598,8 @@ DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_Str
 
 DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_config);
 
-// ###### Driver汎用Util関数 ######
+
+// ###### Driver 汎用 Util 関数 ######
 
 /**
  * @brief DS_StreamRecBuffer に確保したメモリを与えて初期化する
@@ -628,9 +611,6 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
                                uint8_t* buffer,
                                const uint16_t buffer_capacity);
-
-// FIXME: rx frame 取得， rx size 取得
-
 
 /**
  * @brief  DS_DRIVER_ERR_CODE から CCP_CmdRet への変換関数
@@ -651,5 +631,28 @@ CCP_CmdRet DS_conv_driver_err_to_ccp_cmd_ret(DS_DRIVER_ERR_CODE code);
  * @return CCP_CmdRet
  */
 CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code);
+
+
+// ###### Driver Stream Config 汎用 Util 関数 ######
+
+/**
+ * @brief  確定したフレームを取得
+ * @param  p_stream_config[in]: DriverSuper 構造体の DS_StreamConfig
+ * @retval フレーム確定時:   受信フレーム先頭ポインタ
+ * @retval フレーム未確定時: NULL
+ * @note   フレームサイズは DSSC_get_fixed_rx_frame_size で取得可能
+ * @note   NULL が返ってくる可能性があることに注意
+ * @note   rx_buffer_ には，前回確定したフレームが入っているが，次回の DS_receive で失われる．
+ *         したがって，次回受信時までに内容を吸い出しておくこと
+ */
+const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
+
+/**
+ * @brief  確定したフレームのサイズを取得
+ * @param  p_stream_config[in]: DriverSuper 構造体の DS_StreamConfig
+ * @retval フレーム確定時:   確定したフレームサイズ
+ * @retval フレーム未確定時: 0
+ */
+uint16_t DSSC_get_fixed_rx_frame_size(const DS_StreamConfig* p_stream_config);
 
 #endif

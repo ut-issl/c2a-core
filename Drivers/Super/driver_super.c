@@ -1161,9 +1161,6 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->settings.rx_framelength_offset_    = 0;
   p_stream_config->settings.rx_framelength_endian_    = ENDIAN_TYPE_BIG;
 
-  p_stream_config->settings.rx_carry_over_buffer_      = NULL;
-  p_stream_config->settings.rx_carry_over_buffer_size_ = 0;
-
   p_stream_config->settings.should_monitor_for_tlm_disruption_ = 0;
   p_stream_config->settings.time_threshold_for_tlm_disruption_ = 60 * 1000;      // この値はよく考えること
 
@@ -1188,7 +1185,6 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p_stream_config->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
   p_stream_config->info.rx_frame_fix_time_   = TMGR_get_master_clock();
 
-
   p_stream_config->info.ret_from_data_analyzer_ = DS_ERR_CODE_OK;
 
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
@@ -1206,8 +1202,6 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
   if (p_stream_config->settings.tx_frame_size_  != 0 && p_stream_config->settings.tx_frame_  == NULL) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_header_size_ != 0 && p_stream_config->settings.rx_header_ == NULL) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_footer_size_ != 0 && p_stream_config->settings.rx_footer_ == NULL) return DS_ERR_CODE_ERR;
-
-  if (p_stream_config->settings.rx_frame_size_ > p_stream_config->settings.rx_frame_buffer_size_) return DS_ERR_CODE_ERR;   // [TODO] 現在はBigData未実装（詳細はヘッダファイル参照）のため，ここで弾く
 
   if (p_stream_config->settings.tx_frame_buffer_size_ >= 0)
   {
@@ -1255,17 +1249,6 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
     if (p_stream_config->settings.rx_header_size_ == 0) return DS_ERR_CODE_ERR;
   }
 
-  // バッファ
-  if (p_stream_config->settings.rx_frame_buffer_ == NULL) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_frame_buffer_size_ == 0) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_carry_over_buffer_ == NULL) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_carry_over_buffer_size_ == 0) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_carry_over_buffer_size_ < p_stream_config->settings.rx_frame_buffer_size_) return DS_ERR_CODE_ERR;
-  // if (DS_IF_RX_BUFFER_SIZE + p_stream_config->settings.rx_carry_over_buffer_size_ > DS_RX_PROCESSING_BUFFER_SIZE)
-  // {
-  //   return DS_ERR_CODE_ERR;
-  // }
-  // FIXME:
   if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_header_size_) return DS_ERR_CODE_ERR;
   if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
@@ -1428,21 +1411,6 @@ void DSSC_set_rx_buffer_(DS_StreamConfig* p_stream_config,
 {
   p_stream_config->settings.rx_buffer_ = rx_buffer;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
-}
-
-void DSSC_set_rx_frame_buffer(DS_StreamConfig* p_stream_config,
-                              uint8_t* rx_frame_buffer,
-                              const uint16_t rx_frame_buffer_size)
-{
-  p_stream_config->settings.rx_frame_buffer_ = rx_frame_buffer;
-  p_stream_config->settings.rx_frame_buffer_size_ = rx_frame_buffer_size;
-  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
-}
-
-// 実体は rx_frame_buffer だが， user からみるとそれは rx_frame そのもの
-const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
-{
-  return p_stream_config->settings.rx_frame_buffer_;
 }
 
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
@@ -1680,6 +1648,33 @@ CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
   }
 }
 
+
+const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
+{
+  DS_StreamRecBuffer* buffer = p_stream_config->settings.rx_buffer_;
+  if (buffer->is_frame_fixed)
+  {
+    return &(buffer->buffer[buffer->pos_of_frame_head_candidate]);
+  }
+  else
+  {
+    return NULL;
+  }
+}
+
+
+uint16_t DSSC_get_fixed_rx_frame_size(const DS_StreamConfig* p_stream_config)
+{
+  DS_StreamRecBuffer* buffer = p_stream_config->settings.rx_buffer_;
+  if (buffer->is_frame_fixed)
+  {
+    return buffer->confirm_frame_len;
+  }
+  else
+  {
+    return 0;
+  }
+}
 
 void DS_clear_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer)
 {
