@@ -945,23 +945,6 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
     return;
   }
-
-    // FIXME: 不要？
-//     // 永遠にフッタを受信しない場合にバッファーオーバーランすることを防ぐ
-//     if (buffer->confirmed_frame_len + pickup_data_len > p->settings.rx_frame_buffer_size_)
-//     {
-//       if (buffer->confirmed_frame_len >= p->settings.rx_frame_buffer_size_)
-//       {
-//         // これ以上受信できないため，フッタ探索失敗として，リセットする
-//         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
-//         buffer->confirmed_frame_len = 0;
-// #ifdef DS_DEBUG
-//         Printf("DS: RX frame is too long\n");
-// #endif
-//         return 0;   // 処理済みデータもなし
-//       }
-//       pickup_data_len = (uint16_t)(p->settings.rx_frame_buffer_size_ - buffer->confirmed_frame_len);
-//     }
 }
 
 
@@ -1005,14 +988,6 @@ static void DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_confi
   DS_confirm_stream_rec_buffer_(buffer, 1);     // ヘッダ 1 byte 目が見つかった
   p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
   return;
-
-  // FIXME
-  // processed_data_len = (uint16_t)(p_header - &buffer->buffer[buffer->pos_of_frame_head_candidate] + 1);
-  // // ヘッダコピー．ホントはbufferからコピるべきだけど，ちょっとアドレスいじっていて怖いので．．．
-  // p->settings.rx_frame_buffer_[p->internal.rx_frame_rec_len_] = p->settings.rx_header_[0];
-  // p->internal.rx_frame_rec_len_++;
-  // p->internal.rx_frame_head_pos_of_frame_candidate_ = (uint16_t)(total_processed_data_len + processed_data_len - 1);
-  // return processed_data_len;
 }
 
 
