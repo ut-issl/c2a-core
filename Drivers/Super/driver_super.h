@@ -416,9 +416,9 @@ struct DS_StreamConfig
     //                                                                再度フレームを探索できるようにするために使う */
 
     // FIXME: 消す x 3
-    uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
-    uint16_t rx_carry_over_size_;                             //!< 繰越する受信データのサイズ
-    uint16_t rx_carry_over_buffer_next_pos_;                  //!< 次回探索を始めるバッファ位置（0 起算）
+    // uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
+    // uint16_t rx_carry_over_size_;                             //!< 繰越する受信データのサイズ
+    // uint16_t rx_carry_over_buffer_next_pos_;                  //!< 次回探索を始めるバッファ位置（0 起算）
   } internal;       //!< 内部処理用
 };
 // TODO: Protocol 用に data_link_layer_ を追加

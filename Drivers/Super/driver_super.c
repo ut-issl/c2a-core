@@ -67,6 +67,7 @@ static void DS_analyze_rx_buffer_(DS_StreamConfig* p_stream_config,
  * @param[in]  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @param[in]  rec_data_len:    今回新規に受信したデータ長
  * @return void
+ * @note   厳格なフレーム探索が有効かどうかで処理が変わることに注意
  */
 static void DS_analyze_rx_buffer_prepare_buffer_(DS_StreamConfig* p_stream_config,
                                                  uint16_t rec_data_len);
@@ -81,30 +82,11 @@ static void DS_analyze_rx_buffer_prepare_buffer_(DS_StreamConfig* p_stream_confi
 static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config);
 
 /**
- * @brief  フレーム解析関数後のデータ繰越関数
- * @param  p_stream_config:          DriverSuper 構造体の DS_StreamConfig
- * @param  rx_buffer:                受信データのバッファ（配列）
- * @param  total_processed_data_len: 受信データのバッファのうち，すでに処理されたバイト数
- * @param  rec_data_len:             受信データのバッファの長さ
+ * @brief  フレーム解析関数後の繰越データの頭出し
+ * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @return void
- * @note   受信データを次回呼び出しに引き継ぐ（いくつかのパターンあり）
- *         フレーム確定した場合（未解析受信データがある可能性がある）
- *             厳格なフレーム探索が無効
- *                  --> フレーム確定したデータはOKとし，それ以後の解析できなかった受信データのみを次回に引き継ぐ
- *             厳格なフレーム探索が有効
- *                  --> 確定フレームがユーザー側で弾かれる可能性を考慮し，確定フレームの先頭 + 1 バイト目以降を次回に引き継ぐ
- *                      次回のヘッダ探索はそこから始まる
- *         フレーム確定しなかった場合（未解析受信データはなし）
- *             DS_STREAM_REC_STATUS_FINDING_HEADER のとき
- *                  --> ヘッダがなかったということなので，引き継ぎデータはなし
- *             DS_STREAM_REC_STATUS_FINDING_HEADER でないとき
- *                  --> フレーム候補のフレーム先頭以降を次回に引き継ぐ
- *                      これにより，フッタ不一致などの不整合が発生した場合にフレーム探索をやり直せる
  */
-static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_config,
-                                                    uint8_t* rx_buffer,
-                                                    uint16_t total_processed_data_len,
-                                                    uint16_t rec_data_len);
+static void DS_analyze_rx_buffer_cueing_buffer_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  固定長フレーム解析関数（バイト列処理）
@@ -627,14 +609,12 @@ static void DS_analyze_rx_buffer_(DS_StreamConfig* p_stream_config,
   // FIXME: 消す
   static uint8_t rx_buffer[DS_RX_PROCESSING_BUFFER_SIZE];
 
-  DS_StreamConfig* p_stream_config = &(p_super->stream_config[stream]);
-  uint16_t total_processed_data_len;
-
   DS_analyze_rx_buffer_prepare_buffer_(p_stream_config, rec_data_len);
 
   DS_analyze_rx_buffer_pickup_(p_stream_config);
 
-  DS_analyze_rx_buffer_carry_over_buffer_(p_stream_config, rx_buffer, total_processed_data_len, rec_data_len);
+  // 次回のデータ受信に備えて，バッファの頭出し
+  DS_analyze_rx_buffer_cueing_buffer_(p_stream_config);
 }
 
 
@@ -649,8 +629,18 @@ static void DS_analyze_rx_buffer_prepare_buffer_(DS_StreamConfig* p_stream_confi
   if (buffer->is_frame_fixed)
   {
     // ユーザー側ですでにデータを取得したと判断して，バッファから下ろす
-    DS_drop_from_stream_rec_buffer_(buffer, buffer->pos_of_frame_head_candidate);
-    DS_drop_from_stream_rec_buffer_(buffer, buffer->confirm_frame_len);
+    DS_drop_from_stream_rec_buffer_(buffer, buffer->pos_of_frame_head_candidate);   // 念のため
+
+    if (p_stream_config->settings.is_strict_frame_search_)
+    {
+      // 厳格なフレーム探索なので，１つの可能性も受信漏らさないように
+      DS_drop_from_stream_rec_buffer_(buffer, 1);
+    }
+    else
+    {
+      DS_drop_from_stream_rec_buffer_(buffer, buffer->confirm_frame_len);
+    }
+
     buffer->is_frame_fixed = 0;
   }
 
@@ -734,70 +724,13 @@ static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
 }
 
 
-static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_config,
-                                                    uint8_t* rx_buffer,
-                                                    uint16_t total_processed_data_len,
-                                                    uint16_t rec_data_len)
+static void DS_analyze_rx_buffer_cueing_buffer_(DS_StreamConfig* p_stream_config)
 {
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列 index などがみずらいので...
-  p->internal.rx_carry_over_size_ = 0;
+  DS_StreamRecBuffer* buffer = p->settings.rx_buffer_;
 
-  if (p->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
-  {
-    if (p->settings.is_strict_frame_search_)
-    {
-      // 確定フレームの先頭 + 1 バイト目以降を次回に引き継ぐ
-      p->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - p->internal.rx_frame_head_pos_of_frame_candidate_ - 1);
-      // 次回は，引き継いだデータの先頭から再びフレーム探索
-      p->internal.rx_carry_over_buffer_next_pos_ = 0;
-    }
-    else
-    {
-      // フレーム確定して，解析できなかった受信データがある場合，次回に引き継ぐ
-      p->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - total_processed_data_len);
-      // 次回は，引き継いだデータの先頭から再びフレーム探索
-      p->internal.rx_carry_over_buffer_next_pos_ = 0;
-    }
-  }
-  else
-  {
-    if (p->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FINDING_HEADER)
-    {
-      // 引き継ぎデータはなし
-      p->internal.rx_carry_over_size_ = 0;
-      // 次回は，先頭から再びフレーム探索
-      p->internal.rx_carry_over_buffer_next_pos_ = 0;
-    }
-    else
-    {
-      // 確定フレームの先頭以降を次回に引き継ぐ
-      p->internal.rx_carry_over_size_ = (uint16_t)(rec_data_len - p->internal.rx_frame_head_pos_of_frame_candidate_);
-      // 次回は，引き継いだデータはスキップし，受信したものの先頭からフレーム
-      p->internal.rx_carry_over_buffer_next_pos_ = p->internal.rx_carry_over_size_;
-    }
-  }
-
-  if (p->internal.rx_carry_over_size_ > 0 && p->internal.rx_carry_over_size_ <= p->settings.rx_carry_over_buffer_size_)
-  {
-    uint16_t pos = (uint16_t)(rec_data_len - p->internal.rx_carry_over_size_);
-    p->internal.is_rx_buffer_carry_over_ = 1;
-    memcpy(p->settings.rx_carry_over_buffer_,
-           &(rx_buffer[pos]),
-           (size_t)p->internal.rx_carry_over_size_);
-  }
-  else
-  {
-    // 引き継ぐサイズが rx_carry_over_buffer_size_ を超えた場合，処理のキャパを超えてしまっているので，リセット．
-    if (p->internal.rx_carry_over_size_ > 0)
-    {
-      p->info.rec_status_.count_of_carry_over_failures++;
-    }
-    p->internal.is_rx_buffer_carry_over_       = 0;
-    p->internal.rx_carry_over_size_            = 0;
-    p->internal.rx_carry_over_buffer_next_pos_ = 0;
-  }
-
-  return;
+  // pos_of_frame_head_candidate の頭出しをしておけば OK
+  DS_drop_from_stream_rec_buffer_(buffer, buffer->pos_of_frame_head_candidate);
 }
 
 
@@ -1814,13 +1747,14 @@ void DS_drop_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
     stream_rec_buffer->size = 0;
   }
 
-  if (stream_rec_buffer->pos_of_frame_head_candidate > size)
+  if (stream_rec_buffer->pos_of_frame_head_candidate >= size)
   {
     stream_rec_buffer->pos_of_frame_head_candidate -= size;
   }
   else
   {
     stream_rec_buffer->pos_of_frame_head_candidate = 0;
+    stream_rec_buffer->is_frame_fixed = 0;
   }
 
   if (stream_rec_buffer->pos_of_last_rec > size)
@@ -1831,8 +1765,6 @@ void DS_drop_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
   {
     stream_rec_buffer->pos_of_last_rec = 0;
   }
-
-  stream_rec_buffer->is_frame_fixed = 0;
 }
 
 
