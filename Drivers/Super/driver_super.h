@@ -213,7 +213,7 @@ typedef struct
   uint16_t capacity;                      //!< buffer のメモリ確保量
   uint16_t size;                          //!< 現在使われているサイズ
   uint16_t pos_of_frame_head_candidate;   //!< フレーム開始点の候補
-  uint16_t confirm_frame_len;             //!< 受信フレームとして受理された長さ（フレーム確定後，これがフレーム長になる）
+  uint16_t confirmed_frame_len;           //!< 受信フレームとして受理された長さ（フレーム確定後，これがフレーム長になる）
   uint8_t  is_frame_fixed;                //!< このバッファ上でフレームが確定してるか？
   uint16_t pos_of_last_rec;               //!< 最後に受信したデータを格納した位置
 } DS_StreamRecBuffer;
