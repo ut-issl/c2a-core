@@ -15,17 +15,6 @@
  *           - 受信フレームバッファサイズ
  *           - 受信フレームはこのサイズよりも小さくないといけない（TODO: 将来的にこの制約を無くす可能性はある）
  *           - Driver Stream ごとに定義
- *         rx_carry_over_buffer_size_:
- *           - フレーム確定中に次のフレームが受信された時などの繰越用バッファ
- *           - rx_frame_buffer_size_ 以上を要求
- *           - 大きければ大きいほど，バースト的なテレメ受信への耐性が大きくなる
- *           - このサイズが溢れた時，このバッファは一旦全てクリアされる（バッファが詰まってるため，古いものが削除される）
- *           - Driver Stream ごとに定義
- *         DS_RX_PROCESSING_BUFFER_SIZE:
- *           - 様々なバッファをハンドリングするための一次メモリ
- *           - すべての Driver Stream で以下を満たす必要がある
- *             - rx_buffer_size_ + rx_carry_over_buffer_size_ <= DS_RX_PROCESSING_BUFFER_SIZE
- *           - C2A 全体で 1 つ定義
  * めも
  * IF_RX での最大サイズは規定したとして， DS ごとに小さくすることは可能にする
  * で，小さくしたものよりも rx_buffer がデカくないとだめにする！！！
@@ -40,8 +29,6 @@
 
 #define DS_STREAM_MAX                 (3)         /*!< DS_StreamConfigの最大数
                                                        uint8_t を想定          */
-// FIXME: 消す
-#define DS_RX_PROCESSING_BUFFER_SIZE  (1024 * 2)  //!< DS 内での処理のためのバッファサイズ．@note 参照
 #define DS_IF_RX_BUFFER_SIZE          (1024)      /*!< IF_RX で受信するときの一次バッファ
                                                        IF_RX から受信できる最大数を規定する
                                                        OBC の物理的な信号ラインのバッファサイズ以上とするともっともパフォーマンスが出る */

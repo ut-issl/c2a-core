@@ -604,11 +604,6 @@ static int DS_rx_(DriverSuper* p_super)
 static void DS_analyze_rx_buffer_(DS_StreamConfig* p_stream_config,
                                   uint16_t rec_data_len)
 {
-  // 解析用受信バッファ
-  // 巨大なデータなので，staticで予め確保しておき，実行時のスタック枯渇を避ける
-  // FIXME: 消す
-  static uint8_t rx_buffer[DS_RX_PROCESSING_BUFFER_SIZE];
-
   DS_analyze_rx_buffer_prepare_buffer_(p_stream_config, rec_data_len);
 
   DS_analyze_rx_buffer_pickup_(p_stream_config);
