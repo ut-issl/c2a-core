@@ -80,6 +80,7 @@ typedef struct
   const GS_Info* latest_info;
   CCSDS_Info ccsds_info;
   GS_PORT_TYPE tlm_tx_port_type;
+  uint8_t is_uart_tlm_on;         //!< UART に TLM を流すかどうか, CCSDS では許容でも UART に TLM を送りすぎると詰まってしまうため
 } GS_Driver;
 
 /**
