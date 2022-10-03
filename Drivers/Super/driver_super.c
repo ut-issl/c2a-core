@@ -206,6 +206,35 @@ DS_ERR_CODE DS_push_to_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
                                           const uint8_t* buffer,
                                           uint16_t size);
 
+/**
+ * @brief DS_StreamRecBuffer の未処理バッファサイズの取得
+ * @note stream_rec_buffer は NULL でないことを仮定する
+ * @param[in] stream_rec_buffer: DS_StreamRecBuffer
+ * @return 未処理バッファサイズ
+ */
+uint16_t DS_get_unprocessed_size_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer);
+
+/**
+ * @brief DS_StreamRecBuffer で指定サイズだけバッファを確定させる
+ * @note stream_rec_buffer は NULL でないことを仮定する
+ * @param[in,out] stream_rec_buffer: 確定させる DS_StreamRecBuffer
+ * @param[in]     size:              確定させるバッファサイズ
+ * @return void
+ */
+void DS_confirm_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
+                                   uint16_t size);
+
+/**
+ * @brief DS_StreamRecBuffer で指定サイズだけフレーム開始点を前進させる
+ * @note stream_rec_buffer は NULL でないことを仮定する
+ * @param[in,out] stream_rec_buffer: 前進させる DS_StreamRecBuffer
+ * @param[in]     size:              前進させるバッファサイズ
+ * @return void
+ */
+void DS_move_forward_frame_head_candidate_of_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
+                                                                uint16_t size);
+
+
 // ###### DriverSuper基本関数 ######
 
 DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
@@ -1738,7 +1767,6 @@ DS_ERR_CODE DS_push_to_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
 }
 
 
-// FIXME: 宣言
 uint16_t DS_get_unprocessed_size_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer)
 {
   int32_t len = stream_rec_buffer->size - stream_rec_buffer->pos_of_frame_head_candidate - stream_rec_buffer->confirm_frame_len;
@@ -1747,7 +1775,6 @@ uint16_t DS_get_unprocessed_size_from_stream_rec_buffer_(DS_StreamRecBuffer* str
 }
 
 
-// FIXME: 宣言
 void DS_confirm_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
                                    uint16_t size)
 {
@@ -1759,7 +1786,6 @@ void DS_confirm_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
 }
 
 
-// FIXME: 宣言
 void DS_move_forward_frame_head_candidate_of_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
                                                                 uint16_t size)
 {
