@@ -735,12 +735,14 @@ static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config)
   if (buffer->confirmed_frame_len == 0 && p->settings.rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
-    return DS_analyze_rx_buffer_finding_header_(p_stream_config);
+    DS_analyze_rx_buffer_finding_header_(p_stream_config);
+    return;
   }
   else if (buffer->confirmed_frame_len < p->settings.rx_header_size_)
   {
     // ヘッダ受信中
-    return DS_analyze_rx_buffer_receiving_header_(p_stream_config);
+    DS_analyze_rx_buffer_receiving_header_(p_stream_config);
+    return;
   }
   else if (buffer->confirmed_frame_len < p->settings.rx_frame_size_ - p->settings.rx_footer_size_)
   {
@@ -788,12 +790,14 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
   if (buffer->confirmed_frame_len == 0 && p->settings.rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
-    return DS_analyze_rx_buffer_finding_header_(p_stream_config);
+    DS_analyze_rx_buffer_finding_header_(p_stream_config);
+    return;
   }
   else if (buffer->confirmed_frame_len < p->settings.rx_header_size_)
   {
     // ヘッダ受信中
-    return DS_analyze_rx_buffer_receiving_header_(p_stream_config);
+    DS_analyze_rx_buffer_receiving_header_(p_stream_config);
+    return;
   }
   else if (buffer->confirmed_frame_len < p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_)
   {
@@ -882,12 +886,14 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
   if (buffer->confirmed_frame_len == 0 && p->settings.rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
-    return DS_analyze_rx_buffer_finding_header_(p_stream_config);
+    DS_analyze_rx_buffer_finding_header_(p_stream_config);
+    return;
   }
   else if (buffer->confirmed_frame_len < p->settings.rx_header_size_)
   {
     // ヘッダ受信中
-    return DS_analyze_rx_buffer_receiving_header_(p_stream_config);
+    DS_analyze_rx_buffer_receiving_header_(p_stream_config);
+    return;
   }
   else
   {
