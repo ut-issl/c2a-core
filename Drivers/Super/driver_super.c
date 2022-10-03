@@ -1098,23 +1098,24 @@ static void DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream_con
 
 static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_config)
 {
+  DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列 index などがみずらいので...
   uint32_t len = 0;
   uint8_t  i;
-  const uint16_t pos = p_stream_config->settings.rx_framelength_pos_;
-  const uint16_t size = p_stream_config->settings.rx_framelength_type_size_;
+  const uint16_t pos = p->settings.rx_framelength_pos_ + p->settings.rx_buffer_->pos_of_frame_head_candidate;
+  const uint16_t size = p->settings.rx_framelength_type_size_;
 
-  if (p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG)
+  if (p->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG)
   {
     for (i = 0; i < size; ++i)
     {
       if (i == 0)
       {
-        len = p_stream_config->settings.rx_frame_buffer_[pos];
+        len = p->settings.rx_buffer_->buffer[pos];
       }
       else
       {
         len <<= 8;
-        len |= p_stream_config->settings.rx_frame_buffer_[pos + i];
+        len |= p->settings.rx_buffer_->buffer[pos + i];
       }
     }
   }
@@ -1124,17 +1125,17 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
     {
       if (i == 0)
       {
-        len = p_stream_config->settings.rx_frame_buffer_[pos + size - 1];
+        len = p->settings.rx_buffer_->buffer[pos + size - 1];
       }
       else
       {
         len <<= 8;
-        len |= p_stream_config->settings.rx_frame_buffer_[pos + size - 1 - i];
+        len |= p->settings.rx_buffer_->buffer[pos + size - 1 - i];
       }
     }
   }
 
-  len += p_stream_config->settings.rx_framelength_offset_;
+  len += p->settings.rx_framelength_offset_;
   return len;
 }
 
