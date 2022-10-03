@@ -113,51 +113,33 @@ static void DS_analyze_rx_buffer_carry_over_buffer_(DS_StreamConfig* p_stream_co
 /**
  * @brief  固定長フレーム解析関数（バイト列処理）
  *
- *         受信バッファのデータを走査し，必要なデータをフレームとしてpickupする
- * @param  p_stream_config:          DriverSuper 構造体の DS_StreamConfig
- * @param  rx_buffer:                受信データのバッファ（配列）
- * @param  total_processed_data_len: 受信データのバッファのうち，すでに処理されたバイト数
- * @param  rec_data_len:             受信データのバッファの長さ
- * @return 今回の呼び出しで走査したバイト長さ．その他の詳細は DS_StreamRecStatus
+ *         受信バッファのデータを走査し，必要なデータをフレームとして pickup する
+ * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @return void その他の詳細は DS_StreamRecStatus
  */
-static uint16_t DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config,
-                                                   uint8_t* rx_buffer,
-                                                   uint16_t total_processed_data_len,
-                                                   uint16_t rec_data_len);
+static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  可変フレーム解析関数（バイト列処理）
  *
- *         受信バッファのデータを走査し，必要なデータをフレームとしてpickupする
+ *         受信バッファのデータを走査し，必要なデータをフレームとして pickup する
  * @note   受信フレームにフレーム長データが存在していることを前提とする
- * @param  p_stream_config:          DriverSuper 構造体の DS_StreamConfig
- * @param  rx_buffer:                受信データのバッファ（配列）
- * @param  total_processed_data_len: 受信データのバッファのうち，すでに処理されたバイト数
- * @param  rec_data_len:             受信データのバッファの長さ
- * @return 今回の呼び出しで走査したバイト長さ．その他の詳細は DS_StreamRecStatus
+ * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @return void その他の詳細は DS_StreamRecStatus
  */
-static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamConfig* p_stream_config,
-                                                                         uint8_t* rx_buffer,
-                                                                         uint16_t total_processed_data_len,
-                                                                         uint16_t rec_data_len);
+static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  可変フレーム解析関数（バイト列処理）
  *
- *         受信バッファのデータを走査し，必要なデータをフレームとしてpickupする
+ *         受信バッファのデータを走査し，必要なデータをフレームとして pickup する
  * @note   DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_ との違いは，テレメ長データがフレームに含まれるか否か
  * @note   フッタが存在していることを前提とする
  * @note   ヘッダなしは認める．ただし，受信データ先頭からフレームとみなすので，ヘッダありを強く推奨する
- * @param  p_stream_config:          DriverSuper 構造体の DS_StreamConfig
- * @param  rx_buffer:                受信データのバッファ（配列）
- * @param  total_processed_data_len: 受信データのバッファのうち，すでに処理されたバイト数
- * @param  rec_data_len:             受信データのバッファの長さ
- * @return 今回の呼び出しで走査したバイト長さ．その他の詳細は DS_StreamRecStatus
+ * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
+ * @return void その他の詳細は DS_StreamRecStatus
  */
-static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p_stream_config,
-                                                                  uint8_t* rx_buffer,
-                                                                  uint16_t total_processed_data_len,
-                                                                  uint16_t rec_data_len);
+static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  フレーム解析関数（ヘッダ探索）
@@ -696,7 +678,7 @@ static void DS_analyze_rx_buffer_prepare_buffer_(DriverSuper* p_super,
 static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
 {
   DS_StreamRecBuffer* buffer = p_stream_config->settings.rx_buffer_;
-  // 受信バッファのデータを走査し，必要なデータをフレームとしてpickupする関数
+  // 受信バッファのデータを走査し，必要なデータをフレームとして pickup する関数
   void (*pickup_func)(DS_StreamConfig* p_stream_config);
   p_stream_config->internal.rx_frame_head_pos_of_frame_candidate_ = 0;
 
