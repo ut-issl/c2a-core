@@ -983,112 +983,94 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
 }
 
 
-static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p_stream_config,
-                                                                  uint8_t* rx_buffer,
-                                                                  uint16_t total_processed_data_len,
-                                                                  uint16_t rec_data_len)
+static uint16_t DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p_stream_config)
 {
-  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // このキャストは若干危ない（コードが論理的に正しければ問題ないが）
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列 index などがみずらいので...
+  DS_StreamRecBuffer* buffer = p->settings.rx_buffer_;
 
-  if (p->internal.rx_frame_rec_len_ == 0 && p->settings.rx_header_size_ != 0)
+  if (buffer->confirm_frame_len == 0 && p->settings.rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
-    return DS_analyze_rx_buffer_finding_header_(p_stream_config,
-                                                rx_buffer,
-                                                total_processed_data_len,
-                                                rec_data_len);
+    return DS_analyze_rx_buffer_finding_header_(p_stream_config);
   }
-  else if (p->internal.rx_frame_rec_len_ < p->settings.rx_header_size_)
+  else if (buffer->confirm_frame_len < p->settings.rx_header_size_)
   {
     // ヘッダ受信中
-    return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
-                                                  rx_buffer,
-                                                  total_processed_data_len);
+    return DS_analyze_rx_buffer_receiving_header_(p_stream_config);
   }
   else
   {
     // 最後まで受信し，フッタの最終文字を探す．フッタなしはありえない．
+    // ヘッダなしの場合は，ここがフレーム先頭
+    const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
     uint8_t* p_footer_last;     // inclusive
     int32_t  body_data_len;     // サイズ的にはu16でよいが，負数もとりたいのでi32としている
     uint16_t processed_data_len;
     uint16_t i;
     uint16_t estimated_rx_frame_size;
-    uint16_t pickup_data_len;
-
-    // ヘッダなしの場合は，ここがフレーム先頭
-    if (p->internal.rx_frame_rec_len_ == 0)
-    {
-      p->internal.rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
-    }
 
     // 届いているデータを受信フレームバッファに格納する
     // ここは高速化のために一括処理
-    pickup_data_len = unprocessed_data_len;
-    // 永遠にフッタを受信しない場合にバッファーオーバーランすることを防ぐ
-    if (p->internal.rx_frame_rec_len_ + pickup_data_len > p->settings.rx_frame_buffer_size_)
-    {
-      if (p->internal.rx_frame_rec_len_ >= p->settings.rx_frame_buffer_size_)
-      {
-        // これ以上受信できないため，フッタ探索失敗として，リセットする
-        p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
-        p->internal.rx_frame_rec_len_ = 0;
-#ifdef DS_DEBUG
-        Printf("DS: RX frame is too long\n");
-#endif
-        return 0;   // 処理済みデータもなし
-      }
-      pickup_data_len = (uint16_t)(p->settings.rx_frame_buffer_size_ - p->internal.rx_frame_rec_len_);
-    }
-    memcpy(&(p->settings.rx_frame_buffer_[p->internal.rx_frame_rec_len_]),
-           &(rx_buffer[total_processed_data_len]),
-           (size_t)pickup_data_len);
-
     // フッタ最終文字を探す
-    p_footer_last = (uint8_t*)memchr(&(rx_buffer[p->internal.rx_frame_rec_len_]),
+    p_footer_last = (uint8_t*)memchr(&(buffer->buffer[buffer->confirm_frame_len]),
                                      (int)(p->settings.rx_footer_[p->settings.rx_footer_size_ - 1]),
-                                     (size_t)pickup_data_len);
+                                     (size_t)unprocessed_data_len);
 
     if (p_footer_last == NULL)
     {
       // まだまだ受信する
-      p->internal.rx_frame_rec_len_ += pickup_data_len;
+      DS_confirm_stream_rec_buffer_(buffer, unprocessed_data_len);     // unprocessed_data_len byte 確定
       p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
-      return pickup_data_len;
+      return;
     }
 
-    processed_data_len = (uint16_t)(p_footer_last - &(rx_buffer[p->internal.rx_frame_rec_len_]) + 1);
-    body_data_len = (p_footer_last - rx_buffer + 1) - p->settings.rx_header_size_ - p->settings.rx_footer_size_;
+    processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[buffer->confirm_frame_len]) + 1);
+    DS_confirm_stream_rec_buffer_(buffer, processed_data_len);     // processed_data_len byte 確定
+
+    body_data_len = buffer->confirm_frame_len - p->settings.rx_header_size_ - p->settings.rx_footer_size_;
     if (body_data_len < 0)
     {
       // これはフッタではないので受信続行
       // まだまだ受信する
-      p->internal.rx_frame_rec_len_ += pickup_data_len;
       p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
-      return pickup_data_len;
+      return;
     }
 
     // フッタ候補発見
     // フッタチェックする
-    estimated_rx_frame_size = (uint16_t)(p->settings.rx_header_size_ + body_data_len + p->settings.rx_footer_size_);
+    estimated_rx_frame_size = buffer->confirm_frame_len;
     for (i = 0; i < p->settings.rx_footer_size_; i++)
     {
-      if (rx_buffer[estimated_rx_frame_size - i - 1] != p->settings.rx_footer_[p->settings.rx_footer_size_ - i - 1])
+      if (buffer->buffer[estimated_rx_frame_size - i - 1] != p->settings.rx_footer_[p->settings.rx_footer_size_ - i - 1])
       {
         // これはフッタではないので受信続行
         // まだまだ受信する
-        p->internal.rx_frame_rec_len_ += pickup_data_len;
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
-        return pickup_data_len;
+        return;
       }
     }
 
     // フッタ確定 → フレーム確定
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->info.rec_status_.fixed_frame_len = estimated_rx_frame_size;
-    p->internal.rx_frame_rec_len_ = 0;
-    return processed_data_len;
+    return;
   }
+
+    // FIXME: 不要？
+//     // 永遠にフッタを受信しない場合にバッファーオーバーランすることを防ぐ
+//     if (buffer->confirm_frame_len + pickup_data_len > p->settings.rx_frame_buffer_size_)
+//     {
+//       if (buffer->confirm_frame_len >= p->settings.rx_frame_buffer_size_)
+//       {
+//         // これ以上受信できないため，フッタ探索失敗として，リセットする
+//         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
+//         buffer->confirm_frame_len = 0;
+// #ifdef DS_DEBUG
+//         Printf("DS: RX frame is too long\n");
+// #endif
+//         return 0;   // 処理済みデータもなし
+//       }
+//       pickup_data_len = (uint16_t)(p->settings.rx_frame_buffer_size_ - buffer->confirm_frame_len);
+//     }
 }
 
 
@@ -1113,7 +1095,7 @@ static void DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_confi
 
   // まだヘッダの先頭すら未発見の場合
   // ここは高速化のために一括処理
-  p_header = (uint8_t*)memchr(&buffer[buffer->pos_of_frame_head_candidate],
+  p_header = (uint8_t*)memchr(&buffer->buffer[buffer->pos_of_frame_head_candidate],
                               (int)(p->settings.rx_header_[0]),
                               (size_t)unprocessed_data_len);
 
@@ -1127,14 +1109,14 @@ static void DS_analyze_rx_buffer_finding_header_(DS_StreamConfig* p_stream_confi
     return;
   }
 
-  found_header_offset = (uint16_t)(p_header - &buffer[buffer->pos_of_frame_head_candidate]);
+  found_header_offset = (uint16_t)(p_header - &buffer->buffer[buffer->pos_of_frame_head_candidate]);
   DS_move_forward_frame_head_candidate_of_stream_rec_buffer_(buffer, found_header_offset);
   DS_confirm_stream_rec_buffer_(buffer, 1);     // ヘッダ 1 byte 目が見つかった
   p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_HEADER;
   return;
 
   // FIXME
-  // processed_data_len = (uint16_t)(p_header - &buffer[buffer->pos_of_frame_head_candidate] + 1);
+  // processed_data_len = (uint16_t)(p_header - &buffer->buffer[buffer->pos_of_frame_head_candidate] + 1);
   // // ヘッダコピー．ホントはbufferからコピるべきだけど，ちょっとアドレスいじっていて怖いので．．．
   // p->settings.rx_frame_buffer_[p->internal.rx_frame_rec_len_] = p->settings.rx_header_[0];
   // p->internal.rx_frame_rec_len_++;
