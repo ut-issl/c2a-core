@@ -616,6 +616,7 @@ static int DS_rx_(DriverSuper* p_super)
   }
   if (flag == 0) return 0;
 
+  // FIXME: DS_IF_RX_BUFFER_SIZE を可変に
   rec_data_len = (*IF_RX[p_super->interface])(p_super->if_config,
                                               DS_if_rx_buffer_,
                                               DS_IF_RX_BUFFER_SIZE);
@@ -710,7 +711,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
   {
     // DS_analyze_rx_buffer_fixed_bigdata_(void)
     pickup_func = NULL;
-    return rec_data_len;
+    return;
   }
   else if (p_stream_config->settings.rx_frame_size_ < 0)
   {
@@ -728,7 +729,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
   {
     // DS_analyze_rx_buffer_variable_bigdata_(void)
     pickup_func = NULL;
-    return rec_data_len;
+    return;
   }
 
   // 受信バッファからデータをピックアップしていく
@@ -759,6 +760,7 @@ static uint16_t DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
   if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
     buffer->is_frame_fixed = 1;
+    p->info.rec_status_.fixed_frame_len = buffer->confirm_frame_len;
     // FIXME: is_frame_fixed と DS_STREAM_REC_STATUS_FIXED_FRAME あたいの混在がだるいので直す？
     // FIXME: confirm_frame_len と fixed_frame_len も？（これはまあ最後のを残すという意味ではよさそう）
   }
@@ -838,7 +840,6 @@ static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config)
 {
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列 index などがみずらいので...
   DS_StreamRecBuffer* buffer = p->settings.rx_buffer_;
-  const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
 
   if (buffer->confirm_frame_len == 0 && p->settings.rx_header_size_ != 0)
   {
@@ -855,6 +856,7 @@ static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config)
     // データ受信中
     // ここは高速化のために一括処理
     // ヘッダなしの場合は，ここがフレーム先頭であることに注意
+    const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
     uint16_t pickup_data_len = (uint16_t)(p->settings.rx_frame_size_ - p->settings.rx_footer_size_ - buffer->confirm_frame_len);
 
     // 今回で全部受信しきらない場合
@@ -866,13 +868,12 @@ static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config)
     DS_confirm_stream_rec_buffer_(buffer, pickup_data_len);     // pickup_data_len byte 確定
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
-    // フッタがなく，data受信仕切った場合はフレーム確定
+    // フッタがなく，data 受信仕切った場合はフレーム確定
     // これがないと，DS_analyze_rx_buffer_fixed_ で
     // 今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
     if (p->settings.rx_footer_size_ == 0 && buffer->confirm_frame_len == p->settings.rx_frame_size_)
     {
       p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-      p->info.rec_status_.fixed_frame_len = buffer->confirm_frame_len;
     }
 
     return;
@@ -886,43 +887,29 @@ static void DS_analyze_rx_buffer_fixed_pickup_(DS_StreamConfig* p_stream_config)
 }
 
 
-static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamConfig* p_stream_config,
-                                                                         uint8_t* rx_buffer,
-                                                                         uint16_t total_processed_data_len,
-                                                                         uint16_t rec_data_len)
+static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamConfig* p_stream_config)
 {
-  uint16_t unprocessed_data_len = (uint16_t)(rec_data_len - total_processed_data_len);      // このキャストは若干危ない（コードが論理的に正しければ問題ないが）
   DS_StreamConfig* p = p_stream_config;  // ちょっと変数名が長すぎて配列 index などがみずらいので...
+  DS_StreamRecBuffer* buffer = p->settings.rx_buffer_;
+  const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
   uint32_t rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);      // まだ受信していない場合は不定値が入ることに留意すること！！
 
-  if (p->internal.rx_frame_rec_len_ == 0 && p->settings.rx_header_size_ != 0)
+  if (buffer->confirm_frame_len == 0 && p->settings.rx_header_size_ != 0)
   {
     // まだヘッダの先頭すら未発見の場合（ヘッダなし時はここはスキップ）
-    return DS_analyze_rx_buffer_finding_header_(p_stream_config,
-                                                rx_buffer,
-                                                total_processed_data_len,
-                                                rec_data_len);
+    return DS_analyze_rx_buffer_finding_header_(p_stream_config);
   }
-  else if (p->internal.rx_frame_rec_len_ < p->settings.rx_header_size_)
+  else if (buffer->confirm_frame_len < p->settings.rx_header_size_)
   {
     // ヘッダ受信中
-    return DS_analyze_rx_buffer_receiving_header_(p_stream_config,
-                                                  rx_buffer,
-                                                  total_processed_data_len);
+    return DS_analyze_rx_buffer_receiving_header_(p_stream_config);
   }
-  else if (p->internal.rx_frame_rec_len_ < p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_)
+  else if (buffer->confirm_frame_len < p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_)
   {
     // フレームサイズ探索中
     // ここは高速化のために一括処理
-    uint16_t pickup_data_len;
-
-    // ヘッダなしの場合は，ここがフレーム先頭
-    if (p->internal.rx_frame_rec_len_ == 0)
-    {
-      p->internal.rx_frame_head_pos_of_frame_candidate_ = total_processed_data_len;
-    }
-
-    pickup_data_len = (uint16_t)(p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_ - p->internal.rx_frame_rec_len_);
+    // ヘッダなしの場合は，ここがフレーム先頭であることに注意
+    uint16_t pickup_data_len = (uint16_t)(p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_ - buffer->confirm_frame_len);
 
     // 今回で全部受信しきらない場合
     if (pickup_data_len > unprocessed_data_len)
@@ -930,49 +917,43 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->settings.rx_frame_buffer_[p->internal.rx_frame_rec_len_]),
-           &(rx_buffer[total_processed_data_len]),
-           (size_t)pickup_data_len);
-
-    p->internal.rx_frame_rec_len_ += pickup_data_len;
+    DS_confirm_stream_rec_buffer_(buffer, pickup_data_len);     // pickup_data_len byte 確定
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_FRAMELENGTH;
 
     // フレーム長を受信し終わった場合，チェックする
-    if (p->internal.rx_frame_rec_len_ >= p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_)
+    if (buffer->confirm_frame_len >= p->settings.rx_framelength_pos_ + p->settings.rx_framelength_type_size_)
     {
       rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);
 
       // バッファー超えはエラーを出す！
-      if (rx_frame_size > p->settings.rx_frame_buffer_size_)
+      if (rx_frame_size > buffer->capacity)
       {
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
-        p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too long\n");
 #endif
-        return 0;       // TODO: ここで何を返すかはもうすこし考えても良いかも？
+        return;
       }
 
       // bodyサイズがは0以上を要請
       if (rx_frame_size < p->settings.rx_header_size_ + p->settings.rx_footer_size_)
       {
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT;
-        p->internal.rx_frame_rec_len_ = 0;
 #ifdef DS_DEBUG
         Printf("DS: RX frame size is too short\n");
 #endif
-        return 0;       // TODO: ここで何を返すかはもうすこし考えても良いかも？
+        return;
       }
     }
 
-    return pickup_data_len;
+    return;
   }
-  else if (p->internal.rx_frame_rec_len_ < rx_frame_size - p->settings.rx_footer_size_)
+  else if (buffer->confirm_frame_len < rx_frame_size - p->settings.rx_footer_size_)
   {
     // データ受信中
     // ここは高速化のために一括処理
-
-    uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->settings.rx_footer_size_ - p->internal.rx_frame_rec_len_);    // TODO: 現在，フレーム長がuint16_tを超えることは想定していない！
+    // TODO: 現在，フレーム長がuint16_tを超えることは想定していない！
+    uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->settings.rx_footer_size_ - buffer->confirm_frame_len);
 
     // 今回で全部受信しきらない場合
     if (pickup_data_len > unprocessed_data_len)
@@ -980,29 +961,23 @@ static uint16_t DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_Stre
       pickup_data_len = unprocessed_data_len;
     }
 
-    memcpy(&(p->settings.rx_frame_buffer_[p->internal.rx_frame_rec_len_]),
-           &(rx_buffer[total_processed_data_len]),
-           (size_t)pickup_data_len);
-
-    p->internal.rx_frame_rec_len_ += pickup_data_len;
+    DS_confirm_stream_rec_buffer_(buffer, pickup_data_len);     // pickup_data_len byte 確定
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
 
-    // フッタがなく，data受信仕切った場合はフレーム確定
-    // これがないと，DS_analyze_rx_buffer_fixed_ で今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
-    if (p->settings.rx_footer_size_ == 0 && p->internal.rx_frame_rec_len_ == rx_frame_size)
+    // フッタがなく，data 受信仕切った場合はフレーム確定
+    // これがないと，DS_analyze_rx_buffer_fixed_ で
+    // 今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
+    if (p->settings.rx_footer_size_ == 0 && buffer->confirm_frame_len == rx_frame_size)
     {
       p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-      p->internal.rx_frame_rec_len_ = 0;
     }
 
-    return pickup_data_len;
+    return;
   }
   else
   {
     // フッタ受信中 or フッタなしの場合はフレーム確定
     return DS_analyze_rx_buffer_receiving_footer_(p_stream_config,
-                                                  rx_buffer,
-                                                  total_processed_data_len,
                                                   (uint16_t)rx_frame_size);
   }
 }
@@ -1190,7 +1165,6 @@ static void DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream_con
     // DS_STREAM_REC_STATUS_HEADER_MISMATCH になり，再びバッファを巻き戻してヘッダ探索を始める
     // その後 DS_STREAM_REC_STATUS_FINDING_HEADER に戻る
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_HEADER_MISMATCH;
-    buffer->confirm_frame_len = 0;
 #ifdef DS_DEBUG
     Printf("DS: RX header is mismatch\n");
 #endif
@@ -1212,7 +1186,6 @@ static void DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream_con
   {
     // フッタなし
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->info.rec_status_.fixed_frame_len = buffer->confirm_frame_len;
     return;
   }
 
@@ -1226,7 +1199,6 @@ static void DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream_con
   if (buffer->buffer[buffer_offset] != p->settings.rx_footer_[rec_footer_pos])
   {
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FOOTER_MISMATCH;
-    buffer->confirm_frame_len = 0;
 #ifdef DS_DEBUG
     Printf("DS: RX footer is mismatch\n");
 #endif
@@ -1240,7 +1212,6 @@ static void DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream_con
   {
     // フレーム確定
     p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
-    p->info.rec_status_.fixed_frame_len = buffer->confirm_frame_len;
   }
   else
   {
@@ -1431,6 +1402,8 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
   // }
   // FIXME:
   if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
+  if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_header_size_) return DS_ERR_CODE_ERR;
+  if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
 
   p_stream_config->internal.is_validation_needed_for_send_ = 0;
   p_stream_config->internal.is_validation_needed_for_rec_ = 0;

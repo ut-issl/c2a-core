@@ -315,13 +315,13 @@ struct DS_StreamConfig
     DS_StreamRecBuffer* rx_buffer_;                           /*!< 受信バッファ
                                                                    stream 初期化時に user がメモリを割り当て，設定する
                                                                    初期値: NULL */
-    // FIXME: 消す x 2
-    uint8_t* rx_frame_buffer_;                                /*!< データ受信フレームバッファ
-                                                                   driver_super.h の @note 参照
-                                                                   初期値: NULL */
-    uint16_t rx_frame_buffer_size_;                           /*!< データ受信フレームバッファサイズ
-                                                                   driver_super.h の @note 参照
-                                                                   初期値: 0 */
+    // // FIXME: 消す x 2
+    // uint8_t* rx_frame_buffer_;                                /*!< データ受信フレームバッファ
+    //                                                                driver_super.h の @note 参照
+    //                                                                初期値: NULL */
+    // uint16_t rx_frame_buffer_size_;                           /*!< データ受信フレームバッファサイズ
+    //                                                                driver_super.h の @note 参照
+    //                                                                初期値: 0 */
     const uint8_t* rx_header_;                                /*!< 受信データのヘッダ
                                                                    初期値: NULL */
     uint16_t rx_header_size_;                                 /*!< 受信データのヘッダサイズ
