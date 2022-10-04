@@ -196,4 +196,20 @@ CCP_CmdRet Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+CCP_CmdRet Cmd_DI_GS_UART_TLM_ON(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  gs_driver_.driver_uart.is_tlm_on = 1;
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+CCP_CmdRet Cmd_DI_GS_UART_TLM_OFF(const CommonCmdPacket* packet)
+{
+  (void)packet;
+  gs_driver_.driver_uart.is_tlm_on = 0;
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
 #pragma section

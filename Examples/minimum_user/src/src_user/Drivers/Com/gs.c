@@ -109,6 +109,7 @@ DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   }
 
   gs_driver->ccsds_info.buffer_num = 8;
+  gs_driver->driver_uart.is_tlm_on = 1;
 
   return DS_INIT_OK;
 }
@@ -245,7 +246,6 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
 
 DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
 {
-  int i;
   DS_ERR_CODE ret_ccsds = DS_ERR_CODE_OK;
   DS_ERR_CODE ret_uart  = DS_ERR_CODE_OK;
   size_t vcdu_size = sizeof(VCDU);
@@ -263,29 +263,27 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
     DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_STREAM], GS_tx_frame_);
   }
 
-  for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
+  // CCSDS
+  gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
+  if (gs_driver->ccsds_info.buffer_num)
   {
-    if (i == GS_PORT_TYPE_CCSDS)
-    {
-      // バッファー空きが無い場合は 下の処理は端折る
-      // FIXME: 一杯だった時の処理
-      gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
-      if (gs_driver->ccsds_info.buffer_num == 0) continue;
-    }
-
-    gs_driver->info[i].tx.send_cycle = TMGR_get_master_total_cycle();
-    gs_driver->info[i].tx.vcid = VCDU_get_vcid(vcdu);
-    gs_driver->info[i].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
+    gs_driver->info[GS_PORT_TYPE_CCSDS].tx.send_cycle = TMGR_get_master_total_cycle();
+    gs_driver->info[GS_PORT_TYPE_CCSDS].tx.vcid = VCDU_get_vcid(vcdu);
+    gs_driver->info[GS_PORT_TYPE_CCSDS].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
 
     // DS 側の名称が cmd なだけで送信しているのは TLM
-    if (i == GS_PORT_TYPE_CCSDS)
-    {
-      ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_STREAM);
-    }
-    else
-    {
-      ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_STREAM);
-    }
+    ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_STREAM);
+  }
+
+  // UART
+  if (gs_driver->driver_uart.is_tlm_on)
+  {
+    gs_driver->info[GS_PORT_TYPE_UART].tx.send_cycle = TMGR_get_master_total_cycle();
+    gs_driver->info[GS_PORT_TYPE_UART].tx.vcid = VCDU_get_vcid(vcdu);
+    gs_driver->info[GS_PORT_TYPE_UART].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
+
+    // DS 側の名称が cmd なだけで送信しているのは TLM
+    ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_STREAM);
   }
 
   if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK)

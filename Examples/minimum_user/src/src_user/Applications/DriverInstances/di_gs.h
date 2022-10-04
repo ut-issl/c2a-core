@@ -41,4 +41,7 @@ CCP_CmdRet Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_GS_CCSDS_GET_BUFFER(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_GS_CCSDS_SET_RATE(const CommonCmdPacket* packet);
 
+CCP_CmdRet Cmd_DI_GS_UART_TLM_ON(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_GS_UART_TLM_OFF(const CommonCmdPacket* packet);
+
 #endif

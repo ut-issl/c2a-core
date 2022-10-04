@@ -74,6 +74,7 @@ typedef struct
   {
     DriverSuper super;
     UART_Config uart_config;
+    uint8_t is_tlm_on;            //!< UART に TLM を流すかどうか, CCSDS では許容でも UART に TLM を送りすぎると詰まってしまうため
   } driver_uart;
 
   GS_Info info[GS_PORT_TYPE_NUM]; //!< CCSDS 用と UART 用 2 つ
