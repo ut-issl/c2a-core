@@ -178,4 +178,3 @@ int SCIComPort::Receive(unsigned char* buffer, size_t offset, size_t count)
 #endif
 
 #pragma section
-
