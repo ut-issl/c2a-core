@@ -22,6 +22,7 @@ typedef CmdSpacePacket CommonCmdPacket;
  * @brief  コマンドの解釈の宛先を規定
  * @note   TO_ME: 自分自身 → 自分自身の TLC や BC として解釈．コマンド実行時に必要に応じて別 OBC へ配送 （この定義は C2A Core で使うため，どんな C2A でも必須）
  * @note   TO_*:  転送先の TL や BC として解釈 （直接指定 OBC へ配送． GS から来たコマンドを自身のキューにいれない）
+ *         なお，自分自身宛だった場合は，キューに入れる
  * @note   4bit を想定
  */
 typedef enum
