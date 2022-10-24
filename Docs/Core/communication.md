@@ -148,20 +148,20 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
 - コマンドの最終的な配送先，つまり実行されるボードは APID によって規定される
     - https://github.com/ut-issl/c2a-core/blob/5d7a9d9b878cf5ddcad4de919e77dcae13df7407/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/Ccsds/apid_define.h#L9-L13
 - 一方で， BC や TLC などでのキューイングは， Destination Type によって決定される
-    - https://github.com/ut-issl/c2a-core/blob/5d7a9d9b878cf5ddcad4de919e77dcae13df7407/Examples/minimum_user_for_s2e/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h#L19-L25
-- 具体例
-    - APID: MOBC, Destination Type: TO_ME
+    - https://github.com/ut-issl/c2a-core/blob/6d71249dcdb3aefa1d67ffe8ce946e8d8d8b2a33/Examples/minimum_user/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h#L20-L27
+- 具体例（GS と接続される OBC は MOBC とし，AOBC は MOBC にぶら下がってるものとする）
+    - APID: MOBC, Destination Type: TO_ME or MOBC
         - GSC: GS から MOBC に届き， MOBC で GSC としてエンキューされる．デキューした後， MOBC 内で GSC として実行される．
         - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， MOBC 内で RTC として実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， MOBC 内で RTC として実行される．
-    - APID: AOBC, Destination Type: TO_ME
-        - GSC: GS から MOBC に届き， MOBC で GSC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で GSC としてキューイング & 実行される．
-        - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
-        - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
+    - APID: AOBC, Destination Type: TO_ME or MOBC
+        - GSC: GS から MOBC に届き， MOBC で GSC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で RTC としてキューイング & 実行される．
+        - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で RTC としてキューイング & 実行される．
+        - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で RTC としてキューイング & 実行される．
     - APID: AOBC, Destination Type: AOBC
-        - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で RTC としてキューイング & 実行される．
-        - TLC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で TLC としてキューイング & 実行される．
-        - BC: GS から MOBC に届き， MOBC で BC 登録されずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛に上書きされ， AOBC で BC として登録 & 実行される．
+        - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で GSC としてキューイング & 実行される．
+        - TLC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で TLC としてキューイング & 実行される．
+        - BC: GS から MOBC に届き， MOBC で BC 登録されずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で BC として登録 & 実行される．
 - 地上局 SW での実装まとめ
     - MOBC 宛
         - APID: APID_MOBC_CMD

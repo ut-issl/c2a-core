@@ -129,6 +129,13 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return ack;
   }
 
+  // ここまで来たら自分宛て
+  // 例えば以下のどちらか
+  //   - CCP_DEST_TYPE_TO_ME
+  //   - CCP_DEST_TYPE_TO_MOBC （自分）
+  // 統一するため上書きする
+  CCP_set_dest_type((CommonCmdPacket*)packet, CCP_DEST_TYPE_TO_ME);   // const_cast
+
   switch (CCP_get_exec_type(packet))
   {
   case CCP_EXEC_TYPE_GS:
