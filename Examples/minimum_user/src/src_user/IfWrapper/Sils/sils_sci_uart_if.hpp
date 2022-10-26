@@ -1,11 +1,11 @@
 /**
  * @file
- * @brief   uart_sils_sci_if
+ * @brief   sils_sci_uart_if
  * @details SILSでDriverのテストをするように作った
-            ccsds_sils_sci_if.c/hのほぼコピー
+            sils_sci_ccsds_if.c/hのほぼコピー
  */
-#ifndef UART_SILS_SCI_IF_HPP_
-#define UART_SILS_SCI_IF_HPP_
+#ifndef SILS_SCI_UART_IF_HPP_
+#define SILS_SCI_UART_IF_HPP_
 
 #include "sils_sci_if.hpp"
 

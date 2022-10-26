@@ -14,7 +14,7 @@
 #include "../ccsds_user.h"
 
 #ifdef USE_SCI_COM_WINGS
-#include "ccsds_sils_sci_if.hpp"
+#include "sils_sci_ccsds_if.hpp"
 #endif
 
 #define CCSDS_TX_VALID_SIZE (444)
@@ -26,7 +26,7 @@ int CCSDS_init(void* my_ccsds_v)
   CCSDS_set_rate(0xAD,  my_ccsds); // 初期値 230.4 [kbps]
 
 #ifdef USE_SCI_COM_WINGS
-  SILS_SIC_IF_init();
+  SILS_SCI_CCSDS_IF_init();
 #endif
   return CCSDS_ERR_OK;
 }
@@ -37,7 +37,7 @@ int CCSDS_rx(void* my_ccsds_v, void* data_v, int buffer_size)
   (CCSDS_Config*)my_ccsds_v;
 
 #ifdef USE_SCI_COM_WINGS
-  return SILS_SIC_IF_RX(data, buffer_size);
+  return SILS_SCI_CCSDS_IF_RX(data, buffer_size);
 #endif
 
   return 0;
@@ -53,7 +53,7 @@ int CCSDS_tx(void* my_ccsds_v, void* data_v, int data_size)
   if (!CCSDS_get_buffer_num()) return CCSDS_ERR_TX_NO_BUFFER;
 
 #ifdef USE_SCI_COM_WINGS
-  ret = SILS_SIC_IF_TX(data, data_size);
+  ret = SILS_SCI_CCSDS_IF_TX(data, data_size);
 #endif
   if (ret == 0) return CCSDS_ERR_TX_INVALID;
 

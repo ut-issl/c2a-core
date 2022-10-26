@@ -6,7 +6,7 @@
 #ifndef SILS_SCI_IF_HPP_
 #define SILS_SCI_IF_HPP_
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <Windows.h>
 #else
 #include <fcntl.h>
@@ -27,7 +27,7 @@ public:
   int Receive(unsigned char* buffer, size_t length, size_t offset);
 
 private:
-#ifdef WIN32
+#ifdef _WIN32
   HANDLE myHComPort_;
   DCB config_;
 #else

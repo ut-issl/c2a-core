@@ -3,7 +3,7 @@
 #include "../../Settings/port_config.h"
 
 #ifdef USE_SCI_COM_UART
-#include "uart_sils_sci_if.hpp"
+#include "sils_sci_urat_if.hpp"
 #endif
 
 int OBC_C2A_SendFromObc(int port_id, unsigned char* buffer, int offset, int count);

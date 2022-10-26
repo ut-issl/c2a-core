@@ -7,12 +7,12 @@
 
 #include "sils_sci_if.hpp"
 
-#ifdef WIN32
+#ifdef _WIN32
 SCIComPort::SCIComPort(int port)
 {
-  char port_settings[15];
-  snprintf(port_settings, 15, "%s%d", "\\\\.\\COM", port);
-  myHComPort_ = CreateFile(port_settings, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  char port_name[15];
+  snprintf(port_name, 15, "%s%d", "\\\\.\\COM", port);
+  myHComPort_ = CreateFile(port_name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
   if ((int)myHComPort_ == -1)
   {
@@ -97,9 +97,9 @@ int SCIComPort::Receive(unsigned char* buffer, size_t offset, size_t count)
 
 SCIComPort::SCIComPort(int port)
 {
-  char port_settings[13];
-  snprintf(port_settings, 13, "%s%d", "/dev/tnt", port);
-  if ((myHComPort_ = open(port_settings, O_RDWR | O_NOCTTY | O_NONBLOCK)) < 0)
+  char port_name[13];
+  snprintf(port_name, 13, "%s%d", "/dev/tnt", port);
+  if ((myHComPort_ = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK)) < 0)
   {
     close(myHComPort_);
     init_success = false;

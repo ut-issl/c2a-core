@@ -32,7 +32,7 @@ if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
   #target_sources(${PROJECT_NAME} PUBLIC
   list(APPEND C2A_SRCS
     Sils/sils_sci_if.cpp
-    Sils/ccsds_sils_sci_if.cpp
+    Sils/sils_sci_ccsds_if.cpp
   )
   message("USE SCI_COM_WINGS")
 endif()
@@ -42,7 +42,7 @@ if(USE_SCI_COM_UART AND NOT USE_SILS_MOCKUP)
   #target_sources(${PROJECT_NAME} PUBLIC
   list(APPEND C2A_SRCS
     Sils/sils_sci_if.cpp
-    Sils/uart_sils_sci_if.cpp
+    Sils/sils_sci_uart_if.cpp
   )
   message("USE SCI_COM_UART")
 endif()
