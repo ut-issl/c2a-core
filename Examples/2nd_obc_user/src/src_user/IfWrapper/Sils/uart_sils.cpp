@@ -3,7 +3,7 @@
 #include "../../Settings/port_config.h"
 
 #ifdef USE_SCI_COM_WINGS
-#include "uart_sils_sci_if.hpp"
+#include "sils_sci_urat_if.hpp"
 #endif
 
 int OBC_C2A_SendFromObc(int port_id, unsigned char* buffer, int offset, int count);
@@ -24,7 +24,7 @@ int UART_rx(void* my_uart_v, void* data_v, int buffer_size)
   }
 
 #ifdef USE_SCI_COM_WINGS
-  return SILS_SCI_UART_IF_RX((unsigned char*)data_v, buffer_size);
+  return SILS_SCI_UART_IF_rx((unsigned char*)data_v, buffer_size);
 #else
   return OBC_C2A_ReceivedByObc(my_uart->ch, (unsigned char*)data_v, 0, buffer_size);
 #endif
@@ -46,7 +46,7 @@ int UART_tx(void* my_uart_v, void* data_v, int data_size)
     }
   }
 #ifdef USE_SCI_COM_WINGS
-  SILS_SCI_UART_IF_TX((unsigned char*)data_v, data_size);
+  SILS_SCI_UART_IF_tx((unsigned char*)data_v, data_size);
 #else
   if (OBC_C2A_SendFromObc(my_uart->ch, (unsigned char*)data_v, 0, data_size) < 0)
   {
