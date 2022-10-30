@@ -17,7 +17,7 @@ public:
 };
 
 int SILS_SCI_UART_IF_init();
-int SILS_SCI_UART_IF_TX(unsigned char* data_v, int count);
-int SILS_SCI_UART_IF_RX(unsigned char* data_v, int count);
+int SILS_SCI_UART_IF_tx(unsigned char* data_v, int count);
+int SILS_SCI_UART_IF_rx(unsigned char* data_v, int count);
 
 #endif

@@ -37,7 +37,7 @@ int CCSDS_rx(void* my_ccsds_v, void* data_v, int buffer_size)
   (CCSDS_Config*)my_ccsds_v;
 
 #ifdef USE_SCI_COM_WINGS
-  return SILS_SCI_CCSDS_IF_RX(data, buffer_size);
+  return SILS_SCI_CCSDS_IF_rx(data, buffer_size);
 #endif
 
   return 0;
@@ -53,7 +53,7 @@ int CCSDS_tx(void* my_ccsds_v, void* data_v, int data_size)
   if (!CCSDS_get_buffer_num()) return CCSDS_ERR_TX_NO_BUFFER;
 
 #ifdef USE_SCI_COM_WINGS
-  ret = SILS_SCI_CCSDS_IF_TX(data, data_size);
+  ret = SILS_SCI_CCSDS_IF_tx(data, data_size);
 #endif
   if (ret == 0) return CCSDS_ERR_TX_INVALID;
 
