@@ -388,8 +388,9 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     else if (ret_rx == 0)
     {
       // 受信データなし
-      // バッファ内部に未処理データがあれば処理する
-      if (p_stream_config->settings.rx_buffer_->size > 0)
+
+      // 今回の受信はなくとも，バッファ内部に未処理データがあれば処理する
+      if (DS_get_unprocessed_size_from_stream_rec_buffer_(p_stream_config->settings.rx_buffer_) > 0)
       {
         // 繰越があるので，ここで continue せずへ次へ
       }
@@ -1676,14 +1677,17 @@ void DS_drop_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
   }
 
   // データ整合
-  confirmed_frame_len = stream_rec_buffer->confirmed_frame_len - size + stream_rec_buffer->pos_of_frame_head_candidate;
-  if (confirmed_frame_len > 0)
+  if (stream_rec_buffer->pos_of_frame_head_candidate < size)
   {
-    stream_rec_buffer->confirmed_frame_len = confirmed_frame_len;
-  }
-  else
-  {
-    stream_rec_buffer->confirmed_frame_len = 0;
+    confirmed_frame_len = stream_rec_buffer->confirmed_frame_len - (size - stream_rec_buffer->pos_of_frame_head_candidate);
+    if (confirmed_frame_len > 0)
+    {
+      stream_rec_buffer->confirmed_frame_len = confirmed_frame_len;
+    }
+    else
+    {
+      stream_rec_buffer->confirmed_frame_len = 0;
+    }
   }
 
   if (stream_rec_buffer->size > size)
