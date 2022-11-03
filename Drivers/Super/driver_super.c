@@ -165,16 +165,17 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  DS_StreamConfig 構造体のバリデーション
- * @param  p_super:         DriverSuper 構造体へのポインタ
  * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @return DS_ERR_CODE
  */
-static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config);
+static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config);
 
 // ダミー関数
 // EQU だと関数ポインタの初期値を NULL にしていたためにぬるぽで事故ったので
 static DS_ERR_CODE DS_load_init_setting_dummy_(DriverSuper* p_super);
 static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, void* p_driver);
+
+// ###### DS_StreamRecBuffer 関連関数 ######
 
 /**
  * @brief DS_StreamRecBuffer のクリア
@@ -248,8 +249,8 @@ DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_in
 
   if (DS_validate_config(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
 
-  // IFの初期化
-  // 一旦シンプルにIF_initのエラーコードは無視する（実機でここでエラー出る場合はコードがおかしいので．必要があれば将来実装．）
+  // IF の初期化
+  // 一旦シンプルに IF_init のエラーコードは無視する（実機でここでエラー出る場合はコードがおかしいので．必要があれば将来実装．）
   if ( (*IF_init[p_super->interface])(p_super->if_config) != 0 ) return DS_ERR_CODE_ERR;
 
   return DS_ERR_CODE_OK;
@@ -261,7 +262,7 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   uint8_t stream;
 
   p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) の様な使い方をするのでセグフォが起こる可能性があり
-  p_super->if_config = NULL;        // FIXME: NULLポインタはこの関数がReset単体で使われるとマズい
+  p_super->if_config = NULL;        // FIXME: NULL ポインタはこの関数が Reset 単体で使われるとマズい
 
   p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
   p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
@@ -296,7 +297,7 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super)
 
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
-    DS_ERR_CODE ret = DS_validate_stream_config_(p_super, &p_super->stream_config[stream]);
+    DS_ERR_CODE ret = DS_validate_stream_config_(&p_super->stream_config[stream]);
     if (ret != DS_ERR_CODE_OK) return ret;
   }
 
@@ -312,6 +313,7 @@ DS_ERR_CODE DS_clear_rx_buffer(DriverSuper* p_super)
     DS_clear_stream_rec_buffer_(p_super->stream_config[stream].settings.rx_buffer_);
   }
 
+  // FIXME: すべての Driver の初期化で呼ばれ，無駄
   memset(DS_if_rx_buffer_,
          0x00,
          sizeof(DS_if_rx_buffer_));
@@ -367,7 +369,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     // そもそもこの validation は打ち上げ時というよりむしろ地上試験時に有用なので，ここに置く
     if (p_stream_config->internal.is_validation_needed_for_rec_)
     {
-      DS_ERR_CODE ret = DS_validate_stream_config_(p_super, p_stream_config);
+      DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
       if (ret != DS_ERR_CODE_OK)
       {
         p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_VALIDATE_ERR;
@@ -511,7 +513,7 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
   // そもそもこの validation は打ち上げじというよりむしろ地上試験時に有用なので，ここに置く
   if (p_stream_config->internal.is_validation_needed_for_send_)
   {
-    DS_ERR_CODE ret = DS_validate_stream_config_(p_super, p_stream_config);
+    DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
     if (ret != DS_ERR_CODE_OK)
     {
       p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_VALIDATE_ERR;
@@ -1125,119 +1127,122 @@ static uint32_t DS_analyze_rx_buffer_get_framelength_(DS_StreamConfig* p_stream_
 
 static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
 {
-  p_stream_config->settings.is_enabled_ = 0;
-  p_stream_config->settings.is_strict_frame_search_ = 0;
+  DS_StreamConfig* p = p_stream_config;
 
-  p_stream_config->settings.tx_frame_             = NULL;
-  p_stream_config->settings.tx_frame_size_        = 0;
-  p_stream_config->settings.tx_frame_buffer_size_ = -1;
+  p->settings.is_enabled_ = 0;
+  p->settings.is_strict_frame_search_ = 0;
 
-  p_stream_config->settings.rx_buffer_            = NULL;
-  p_stream_config->settings.rx_header_            = NULL;
-  p_stream_config->settings.rx_header_size_       = 0;
-  p_stream_config->settings.rx_footer_            = NULL;
-  p_stream_config->settings.rx_footer_size_       = 0;
-  p_stream_config->settings.rx_frame_size_        = 0;
+  p->settings.tx_frame_             = NULL;
+  p->settings.tx_frame_size_        = 0;
+  p->settings.tx_frame_buffer_size_ = -1;
 
-  p_stream_config->settings.rx_framelength_pos_       = -1;
-  p_stream_config->settings.rx_framelength_type_size_ = 0;
-  p_stream_config->settings.rx_framelength_offset_    = 0;
-  p_stream_config->settings.rx_framelength_endian_    = ENDIAN_TYPE_BIG;
+  p->settings.rx_buffer_            = NULL;
+  p->settings.rx_header_            = NULL;
+  p->settings.rx_header_size_       = 0;
+  p->settings.rx_footer_            = NULL;
+  p->settings.rx_footer_size_       = 0;
+  p->settings.rx_frame_size_        = 0;
 
-  p_stream_config->settings.should_monitor_for_tlm_disruption_ = 0;
-  p_stream_config->settings.time_threshold_for_tlm_disruption_ = 60 * 1000;      // この値はよく考えること
+  p->settings.rx_framelength_pos_       = -1;
+  p->settings.rx_framelength_type_size_ = 0;
+  p->settings.rx_framelength_offset_    = 0;
+  p->settings.rx_framelength_endian_    = ENDIAN_TYPE_BIG;
 
-  p_stream_config->settings.data_analyzer_ = DS_data_analyzer_dummy_;
+  p->settings.should_monitor_for_tlm_disruption_ = 0;
+  p->settings.time_threshold_for_tlm_disruption_ = 60 * 1000;      // この値はよく考えること
+
+  p->settings.data_analyzer_ = DS_data_analyzer_dummy_;
 
   // DS_StreamSendStatus の初期化
-  p_stream_config->info.send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
-  p_stream_config->info.send_status_.ret_from_if_tx = 0;
+  p->info.send_status_.status_code    = DS_STREAM_SEND_STATUS_DISABLE;
+  p->info.send_status_.ret_from_if_tx = 0;
 
   // DS_StreamRecStatus の初期化
-  p_stream_config->info.rec_status_.status_code                  = DS_STREAM_REC_STATUS_DISABLE;
-  p_stream_config->info.rec_status_.fixed_frame_len              = 0;
-  p_stream_config->info.rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
-  p_stream_config->info.rec_status_.count_of_carry_over_failures = 0;
+  p->info.rec_status_.status_code                  = DS_STREAM_REC_STATUS_DISABLE;
+  p->info.rec_status_.fixed_frame_len              = 0;
+  p->info.rec_status_.tlm_disruption_status        = DS_STREAM_TLM_DISRUPTION_STATUS_OK;
+  p->info.rec_status_.count_of_carry_over_failures = 0;
 
-  p_stream_config->info.general_cmd_tx_count_               = 0;
-  p_stream_config->info.req_tlm_cmd_tx_count_               = 0;
-  p_stream_config->info.req_tlm_cmd_tx_count_after_last_tx_ = 0;
-  p_stream_config->info.rx_frame_fix_count_                 = 0;
+  p->info.general_cmd_tx_count_               = 0;
+  p->info.req_tlm_cmd_tx_count_               = 0;
+  p->info.req_tlm_cmd_tx_count_after_last_tx_ = 0;
+  p->info.rx_frame_fix_count_                 = 0;
 
-  p_stream_config->info.general_cmd_tx_time_ = TMGR_get_master_clock();
-  p_stream_config->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
-  p_stream_config->info.rx_frame_fix_time_   = TMGR_get_master_clock();
+  p->info.general_cmd_tx_time_ = TMGR_get_master_clock();
+  p->info.req_tlm_cmd_tx_time_ = TMGR_get_master_clock();
+  p->info.rx_frame_fix_time_   = TMGR_get_master_clock();
 
-  p_stream_config->info.ret_from_data_analyzer_ = DS_ERR_CODE_OK;
+  p->info.ret_from_data_analyzer_ = DS_ERR_CODE_OK;
 
-  p_stream_config->internal.is_validation_needed_for_send_ = 0;
-  p_stream_config->internal.is_validation_needed_for_rec_  = 0;
+  p->internal.is_validation_needed_for_send_ = 0;
+  p->internal.is_validation_needed_for_rec_  = 0;
 
   return DS_ERR_CODE_OK;
 }
 
 
-// FIXME: p_super 不要で不要では？
-static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config)
+static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
 {
-  if (!p_stream_config->settings.is_enabled_) return DS_ERR_CODE_OK;
+  DS_StreamConfig* p = p_stream_config;
 
-  if (p_stream_config->settings.tx_frame_size_  != 0 && p_stream_config->settings.tx_frame_  == NULL) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_header_size_ != 0 && p_stream_config->settings.rx_header_ == NULL) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_footer_size_ != 0 && p_stream_config->settings.rx_footer_ == NULL) return DS_ERR_CODE_ERR;
+  if (!p->settings.is_enabled_) return DS_ERR_CODE_OK;
 
-  if (p_stream_config->settings.tx_frame_buffer_size_ >= 0)
+  if (p->settings.tx_frame_size_  != 0 && p->settings.tx_frame_  == NULL) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_header_size_ != 0 && p->settings.rx_header_ == NULL) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_footer_size_ != 0 && p->settings.rx_footer_ == NULL) return DS_ERR_CODE_ERR;
+
+  if (p->settings.tx_frame_buffer_size_ >= 0)
   {
-    if (p_stream_config->settings.tx_frame_size_ > p_stream_config->settings.tx_frame_buffer_size_) return DS_ERR_CODE_ERR;
+    if (p->settings.tx_frame_size_ > p->settings.tx_frame_buffer_size_) return DS_ERR_CODE_ERR;
   }
 
-  if (p_stream_config->settings.rx_frame_size_ < 0)
+  if (p->settings.rx_frame_size_ < 0)
   {
     // テレメトリ可変長
-    if (p_stream_config->settings.rx_framelength_pos_ < 0)
+    if (p->settings.rx_framelength_pos_ < 0)
     {
       // フレームサイズデータがない場合
       // フッタの存在が必須
-      if (p_stream_config->settings.rx_footer_size_ == 0) return DS_ERR_CODE_ERR;
+      if (p->settings.rx_footer_size_ == 0) return DS_ERR_CODE_ERR;
     }
     else
     {
-      if (p_stream_config->settings.rx_header_size_ == 0) return DS_ERR_CODE_ERR;       // 可変長かつヘッダなしは対応しない（固定長のようにして回避する．詳細はヘッダファイル参照）
-      if (p_stream_config->settings.rx_framelength_pos_ < p_stream_config->settings.rx_header_size_) return DS_ERR_CODE_ERR;    // フレームサイズがヘッダ（つまり固定値）に含まれることはありえないので
-      if (!(p_stream_config->settings.rx_framelength_type_size_ == 1 ||
-            p_stream_config->settings.rx_framelength_type_size_ == 2 ||
-            p_stream_config->settings.rx_framelength_type_size_ == 3 ||
-            p_stream_config->settings.rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // 現在はuint8 to uint32のみ対応
-      if (!(p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG ||
-            p_stream_config->settings.rx_framelength_endian_ == ENDIAN_TYPE_LITTLE )) return DS_ERR_CODE_ERR;
+      if (p->settings.rx_header_size_ == 0) return DS_ERR_CODE_ERR;       // 可変長かつヘッダなしは対応しない（固定長のようにして回避する．詳細はヘッダファイル参照）
+      if (p->settings.rx_framelength_pos_ < p->settings.rx_header_size_) return DS_ERR_CODE_ERR;    // フレームサイズがヘッダ（つまり固定値）に含まれることはありえないので
+      if (!(p->settings.rx_framelength_type_size_ == 1 ||
+            p->settings.rx_framelength_type_size_ == 2 ||
+            p->settings.rx_framelength_type_size_ == 3 ||
+            p->settings.rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // 現在はuint8 to uint32のみ対応
+      if (!(p->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG ||
+            p->settings.rx_framelength_endian_ == ENDIAN_TYPE_LITTLE )) return DS_ERR_CODE_ERR;
     }
   }
-  else if (p_stream_config->settings.rx_frame_size_ == 0)
+  else if (p->settings.rx_frame_size_ == 0)
   {
     // テレメなし
   }
   else
   {
     // テレメトリ固定長
-    if ( p_stream_config->settings.rx_frame_size_ <
-        (p_stream_config->settings.rx_header_size_ + p_stream_config->settings.rx_footer_size_) )
+    if ( p->settings.rx_frame_size_ <
+        (p->settings.rx_header_size_ + p->settings.rx_footer_size_) )
     {
       return DS_ERR_CODE_ERR;
     }
   }
 
-  if (p_stream_config->settings.is_strict_frame_search_)
+  if (p->settings.is_strict_frame_search_)
   {
     // ヘッダがあることが前提
-    if (p_stream_config->settings.rx_header_size_ == 0) return DS_ERR_CODE_ERR;
+    if (p->settings.rx_header_size_ == 0) return DS_ERR_CODE_ERR;
   }
 
-  if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_header_size_) return DS_ERR_CODE_ERR;
-  if (p_stream_config->settings.rx_buffer_->capacity < p_stream_config->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_buffer_ == NULL) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_buffer_->capacity < p->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_buffer_->capacity < p->settings.rx_header_size_ + p->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
 
-  p_stream_config->internal.is_validation_needed_for_send_ = 0;
-  p_stream_config->internal.is_validation_needed_for_rec_ = 0;
+  p->internal.is_validation_needed_for_send_ = 0;
+  p->internal.is_validation_needed_for_rec_ = 0;
 
   return DS_ERR_CODE_OK;
 }

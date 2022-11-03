@@ -7,7 +7,7 @@
  *         初期化，コマンド発行，テレメトリリクエスト，テレメトリ受信，テレメトリ解析などを行う，ドライバ群のスーパークラスです．
  *         個々の機器のインターフェースドライバに継承させて使用します．
  * @note   バッファのサイズ設定について FIXME: 直す．DS_IF_RX_BUFFER_SIZE の可変化など
- *           めも
+ *           メモ
  *           IF_RX での最大サイズは規定したとして， DS ごとに小さくすることは可能にする
  *           で，小さくしたものよりも rx_buffer がデカくないとだめにする！！！
  */
@@ -206,6 +206,8 @@ typedef struct
 /**
  * @struct DS_StreamRecBuffer
  * @brief  フレーム受信バッファ
+ * @note   FIXME: DS_StreamRecStatus.status_code と is_frame_fixed の棲み分けを考える
+ *         現状， is_frame_fixed は， DS_receive 後に降りるフラグになってる
  */
 typedef struct
 {
