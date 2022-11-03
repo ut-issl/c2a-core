@@ -1665,7 +1665,6 @@ void DS_drop_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
                                      uint16_t size)
 {
   int32_t move_size = stream_rec_buffer->size - size;
-  int32_t confirmed_frame_len;
 
   if (size == 0) return;
 
@@ -1679,15 +1678,7 @@ void DS_drop_from_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer,
   // データ整合
   if (stream_rec_buffer->pos_of_frame_head_candidate < size)
   {
-    confirmed_frame_len = stream_rec_buffer->confirmed_frame_len - (size - stream_rec_buffer->pos_of_frame_head_candidate);
-    if (confirmed_frame_len > 0)
-    {
-      stream_rec_buffer->confirmed_frame_len = confirmed_frame_len;
-    }
-    else
-    {
-      stream_rec_buffer->confirmed_frame_len = 0;
-    }
+    stream_rec_buffer->confirmed_frame_len = 0;
   }
 
   if (stream_rec_buffer->size > size)
