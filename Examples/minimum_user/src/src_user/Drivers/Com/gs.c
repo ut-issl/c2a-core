@@ -140,9 +140,6 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
   DS_StreamConfig* p_stream_config;
   int stream;
 
-  // FIXME
-  // DSC_set_rx_buffer(p_super, GS_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
-
   for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
   {
     p_stream_config = &(p_super->stream_config[stream]);
