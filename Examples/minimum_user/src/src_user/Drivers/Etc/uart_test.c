@@ -27,11 +27,10 @@ static const uint8_t UART_TEST_footer_[UART_TEST_FOOTER_SIZE] = {0xBF, 0xBE};
 static uint8_t UART_TEST_tx_frame_[UART_TEST_TX_FRAME_SIZE_MAX];
 
 // バッファ
-static uint8_t UART_TEST_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
-static uint8_t UART_TEST_rx_frame_buffer0_[DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
-static uint8_t UART_TEST_rx_frame_buffer1_[DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
-static uint8_t UART_TEST_rx_carry_over_buffer0_[DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT];
-static uint8_t UART_TEST_rx_carry_over_buffer1_[DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT];
+static uint8_t UART_TEST_rx_buffer_allocation_0_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t UART_TEST_rx_buffer_allocation_1_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static DS_StreamRecBuffer UART_TEST_rx_buffer_0_;
+static DS_StreamRecBuffer UART_TEST_rx_buffer_1_;
 
 static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
@@ -59,8 +58,6 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
 
   p_super->interface = UART;
 
-  DSC_set_rx_buffer(p_super, UART_TEST_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
-
   // stream0の設定
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_FIX]);
   DSSC_enable(p_stream_config);
@@ -76,9 +73,10 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
   DSSC_set_rx_frame_size(p_stream_config, 12);
   DSSC_set_data_analyzer(p_stream_config, UART_TEST_analyze_rec_data_);
 
-  DSSC_set_rx_buffer(p_stream_config,
-                     UART_TEST_rx_frame_buffer0_, DS_RX_FRAME_BUFFER_SIZE_DEFAULT,
-                     UART_TEST_rx_carry_over_buffer0_, DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT);
+  DS_init_stream_rec_buffer(&UART_TEST_rx_buffer_0_,
+                            UART_TEST_rx_buffer_allocation_0_,
+                            sizeof(UART_TEST_rx_buffer_allocation_0_));
+  DSSC_set_rx_buffer(p_stream_config, &UART_TEST_rx_buffer_0_);
 
   // stream1の設定
   p_stream_config = &(p_super->stream_config[UART_TEST_STREAM_VAR]);
@@ -96,9 +94,10 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
   DSSC_set_rx_framelength_offset(p_stream_config, UART_TEST_HEADER_SIZE + UART_TEST_FOOTER_SIZE);
   DSSC_set_data_analyzer(p_stream_config, UART_TEST_analyze_rec_data_);
 
-  DSSC_set_rx_buffer(p_stream_config,
-                     UART_TEST_rx_frame_buffer1_, DS_RX_FRAME_BUFFER_SIZE_DEFAULT,
-                     UART_TEST_rx_carry_over_buffer1_, DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT);
+  DS_init_stream_rec_buffer(&UART_TEST_rx_buffer_1_,
+                            UART_TEST_rx_buffer_allocation_1_,
+                            sizeof(UART_TEST_rx_buffer_allocation_1_));
+  DSSC_set_rx_buffer(p_stream_config, &UART_TEST_rx_buffer_1_);
 
   // 定期TLMの監視機能の有効化しない → ので設定上書きなし
 
