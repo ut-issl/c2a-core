@@ -629,11 +629,12 @@ CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code);
  * @brief  確定したフレームを取得
  * @param  p_stream_config[in]: DriverSuper 構造体の DS_StreamConfig
  * @retval フレーム確定時:   受信フレーム先頭ポインタ
- * @retval フレーム未確定時: NULL
+ * @retval フレーム未確定時: rx_buffer_.pos_of_frame_head_candidate
  * @note   フレームサイズは DSSC_get_fixed_rx_frame_size で取得可能
- * @note   NULL が返ってくる可能性があることに注意
- * @note   rx_buffer_ には，前回確定したフレームが入っているが，次回の DS_receive で失われる．
+ * @note   rx_buffer_ (DS_StreamRecBuffer) には，前回確定したフレームが入っているが，次回の DS_receive 呼び出しで失われる．
  *         したがって，次回の DS_receive 呼び出し時までに内容を吸い出しておくこと
+ * @note   基本的には， rx_buffer_.pos_of_frame_head_candidate は rx_buffer_.buffer 先頭に頭出しされているはず．
+ *         したがって，ここで取得したポインタを rx_buffer_.capacity 以上読み込まない場合は，問題ない．
  */
 const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 

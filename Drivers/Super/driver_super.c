@@ -1622,14 +1622,7 @@ CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
 const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config)
 {
   DS_StreamRecBuffer* buffer = p_stream_config->settings.rx_buffer_;
-  if (buffer->is_frame_fixed)
-  {
-    return &(buffer->buffer[buffer->pos_of_frame_head_candidate]);
-  }
-  else
-  {
-    return NULL;
-  }
+  return &(buffer->buffer[buffer->pos_of_frame_head_candidate]);
 }
 
 
