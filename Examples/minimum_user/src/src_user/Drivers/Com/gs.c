@@ -13,6 +13,7 @@
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
 #include "../../Library/stdint.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 #define GS_RX_HEADER_SIZE (2)
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
@@ -27,6 +28,11 @@
 // それぞれ AD, BD, BC
 static uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE];
 static uint8_t GS_tx_frame_[VCDU_LEN];
+
+// バッファ
+static uint8_t GS_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
+static uint8_t GS_rx_frame_buffer_[GS_RX_HEADER_NUM][DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
+static uint8_t GS_rx_carry_over_buffer_[GS_RX_HEADER_NUM][DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT];
 
 /**
  * @brief CCSDS 側 Driver の DS 上での初期化設定
@@ -135,6 +141,8 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
   DS_StreamConfig* p_stream_config;
   int stream;
 
+  DSC_set_rx_buffer(p_super, GS_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
+
   for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
   {
     p_stream_config = &(p_super->stream_config[stream]);
@@ -150,6 +158,10 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
     DSSC_set_rx_framelength_type_size(p_stream_config, GS_RX_FRAMELENGTH_TYPE_SIZE);
     DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCTF の framelength は 0 起算
     DSSC_set_data_analyzer(p_stream_config, GS_analyze_rec_data_);
+
+    DSSC_set_rx_buffer(p_stream_config,
+                       GS_rx_frame_buffer_[stream], DS_RX_FRAME_BUFFER_SIZE_DEFAULT,
+                       GS_rx_carry_over_buffer_[stream], DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT);
   }
 }
 

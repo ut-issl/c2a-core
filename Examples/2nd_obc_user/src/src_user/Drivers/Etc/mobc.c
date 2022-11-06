@@ -11,12 +11,18 @@
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
 #include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include <string.h>
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 #define MOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
 
 static uint8_t MOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               CTCP_MAX_LEN +
                               EB90_FRAME_FOOTER_SIZE];
+
+// バッファ
+static uint8_t MOBC_rx_buffer_[DS_RX_BUFFER_SIZE_UART];
+static uint8_t MOBC_rx_frame_buffer_[DS_RX_FRAME_BUFFER_SIZE_DEFAULT];
+static uint8_t MOBC_rx_carry_over_buffer_[DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT];
 
 static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
@@ -49,10 +55,15 @@ static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super)
 
   p_super->interface = UART;
 
+  DSC_set_rx_buffer(p_super, MOBC_rx_buffer_, DS_RX_BUFFER_SIZE_UART);
+
   // stream は 0 のみ
   p_stream_config = &(p_super->stream_config[MOBC_STREAM_TLM_CMD]);
 
   CTCP_init_dssc(p_stream_config, MOBC_tx_frame_, sizeof(MOBC_tx_frame_), MOBC_analyze_rec_data_);
+  DSSC_set_rx_buffer(p_stream_config,
+                     MOBC_rx_frame_buffer_, DS_RX_FRAME_BUFFER_SIZE_DEFAULT,
+                     MOBC_rx_carry_over_buffer_, DS_RX_CARRY_OVER_BUFFER_SIZE_DEFAULT);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
 

@@ -6,6 +6,26 @@
  *         各制御センサ・アクチュエータ等とのインターフェースを実現し，
  *         初期化，コマンド発行，テレメトリリクエスト，テレメトリ受信，テレメトリ解析などを行う，ドライバ群のスーパークラスです．
  *         個々の機器のインターフェースドライバに継承させて使用します．
+ * @note   バッファのサイズ設定について
+ *         rx_buffer_size_:
+ *           - IF_RX から受信できる最大数を規定する
+ *           - OBC の物理的な信号ラインのバッファサイズと同サイズにしておくともっともパフォーマンスが出る
+ *           - Driver ごとに定義
+ *         rx_frame_buffer_size_:
+ *           - 受信フレームバッファサイズ
+ *           - 受信フレームはこのサイズよりも小さくないといけない（TODO: 将来的にこの制約を無くす可能性はある）
+ *           - Driver Stream ごとに定義
+ *         rx_carry_over_buffer_size_:
+ *           - フレーム確定中に次のフレームが受信された時などの繰越用バッファ
+ *           - rx_frame_buffer_size_ 以上を要求
+ *           - 大きければ大きいほど，バースト的なテレメ受信への耐性が大きくなる
+ *           - このサイズが溢れた時，このバッファは一旦全てクリアされる（バッファが詰まってるため，古いものが削除される）
+ *           - Driver Stream ごとに定義
+ *         DS_RX_PROCESSING_BUFFER_SIZE:
+ *           - 様々なバッファをハンドリングするための一次メモリ
+ *           - すべての Driver Stream で以下を満たす必要がある
+ *             - rx_buffer_size_ + rx_carry_over_buffer_size_ <= DS_RX_PROCESSING_BUFFER_SIZE
+ *           - C2A 全体で 1 つ定義
  */
 #ifndef DRIVER_SUPER_H_
 #define DRIVER_SUPER_H_
@@ -15,10 +35,9 @@
 #include "../../Library/endian.h"        // パスが不定な自動生成コード類で使えるように
 #include "../../System/TimeManager/time_manager.h"
 
-#define DS_STREAM_MAX          (3)         /*!< DS_StreamConfigの最大数
-                                                uint8_t を想定          */
-#define DS_RX_BUFFER_SIZE_MAX  (1024)      //!< 受信データバッファの最大長
-#define DS_RX_FRAME_SIZE_MAX   (1024)      //!< 受信データフレームの最大長
+#define DS_STREAM_MAX                 (3)         /*!< DS_StreamConfigの最大数
+                                                       uint8_t を想定          */
+#define DS_RX_PROCESSING_BUFFER_SIZE  (1024 * 2)  //!< DS 内での処理のためのバッファサイズ．@note 参照
 
 #include <src_user/Settings/DriverSuper/driver_super_params.h>
 
@@ -209,11 +228,19 @@ typedef struct
 {
   struct
   {
+    uint8_t* rx_buffer_;                                      /*!< データ受信バッファ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: NULL */
+    uint16_t rx_buffer_size_;                                 /*!< データ受信バッファサイズ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: 0 */
+
     uint8_t  should_monitor_for_rx_disruption_;               /*!< 受信途絶判定をするか？
                                                                    初期値: 0 */
     uint32_t time_threshold_for_rx_disruption_;               /*!< 受信途絶判定の閾値 [ms]
                                                                    初期値: 60 * 1000 */
   } settings;       //!< 設定値
+
   struct
   {
     DS_RecStatus rec_status_;                                 //!< IF受信状況
@@ -223,10 +250,9 @@ typedef struct
 
     ObcTime  rx_time_;                                        //!< なにかしらのデータの受信時刻
   } info;           //!< 取得値（メトリクス）
+
   struct
   {
-    uint8_t rx_buffer_[DS_RX_BUFFER_SIZE_MAX];                //!< データ受信バッファ
-
     DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super);   /*!< DS_init でロードする，ドライバの初期設定の設定関数
                                                                    DS_reset_config での設定をオーバーロードする
                                                                    返り値は DS_ERR_CODE */
@@ -259,6 +285,7 @@ struct DS_StreamConfig
                                                                    初期値: 0 (OFF) */
 
     uint8_t* tx_frame_;                                       /*!< コマンドフレーム
+                                                                   FIXME: tx_frame_buffer_ に rename する？
                                                                    初期値: NULL */
     uint16_t tx_frame_size_;                                  /*!< コマンドフレームサイズ
                                                                    tx_frame_ のうち実際に送信するバイト数
@@ -270,6 +297,12 @@ struct DS_StreamConfig
                                                                    未指定の場合は負数とする
                                                                    初期値: -1 */
 
+    uint8_t* rx_frame_buffer_;                                /*!< データ受信フレームバッファ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: NULL */
+    uint16_t rx_frame_buffer_size_;                           /*!< データ受信フレームバッファサイズ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: 0 */
     const uint8_t* rx_header_;                                /*!< 受信データのヘッダ
                                                                    初期値: NULL */
     uint16_t rx_header_size_;                                 /*!< 受信データのヘッダサイズ
@@ -313,6 +346,14 @@ struct DS_StreamConfig
                                                                    受信データが可変長の場合のみ使用される
                                                                    初期値: ENDIAN_TYPE_BIG */
 
+    uint8_t* rx_carry_over_buffer_;                           /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
+                                                                   次の受信時にまとめて処理させる
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: NULL */
+    uint16_t rx_carry_over_buffer_size_;                      /*!< 繰越しバッファサイズ
+                                                                   driver_super.h の @note 参照
+                                                                   初期値: 0 */
+
     uint8_t  should_monitor_for_tlm_disruption_;              /*!< テレメ途絶判定をするか？
                                                                    初期値: 0 */
     uint32_t time_threshold_for_tlm_disruption_;              /*!< テレメ途絶判定の閾値 [ms]
@@ -340,10 +381,6 @@ struct DS_StreamConfig
     ObcTime  req_tlm_cmd_tx_time_;                            //!< テレメ要求コマンド最終送信時刻
     ObcTime  rx_frame_fix_time_;                              //!< フレーム確定時刻
 
-    uint8_t  rx_frame_[DS_RX_FRAME_SIZE_MAX];                 /*!< データ受信フレームバッファ
-                                                                   DS_RX_FRAME_SIZE_MAX を超えるような巨大なフレーム（ビッグデータ）には未対応（将来実装予定）
-                                                                   対応させる場合，この配列変数を外部の大きな配列のポインタに上書きする必要がある． */
-
     DS_ERR_CODE ret_from_data_analyzer_;                      //!< data_analyzer_ の返り値
   } info;           //!< 取得値（メトリクス）
 
@@ -359,11 +396,8 @@ struct DS_StreamConfig
                                                                    再度フレームを探索できるようにするために使う */
 
     uint8_t  is_rx_buffer_carry_over_;                        //!< 繰越する受信データがあるか？
-    uint16_t carry_over_buffer_size_;                         //!< 繰越する受信データのサイズ
-    uint16_t carry_over_buffer_next_pos_;                     //!< 次回探索を始めるバッファ位置（0 起算）
-    uint8_t  rx_buffer_for_carry_over_[DS_RX_BUFFER_SIZE_MAX];
-                                                              /*!< フレーム確定したときに，その後に続いていた受信データを繰越すための保存用バッファ
-                                                                   次の受信時にまとめて処理させる */
+    uint16_t rx_carry_over_size_;                             //!< 繰越する受信データのサイズ
+    uint16_t rx_carry_over_buffer_next_pos_;                  //!< 次回探索を始めるバッファ位置（0 起算）
   } internal;       //!< 内部処理用
 };
 // TODO: Protocol 用に data_link_layer_ を追加
@@ -489,6 +523,10 @@ DS_ERR_CODE DS_send_general_cmd(DriverSuper* p_super, uint8_t stream);
 DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
 
 // ###### DS_Config Getter/Setter of Settings ######
+void DSC_set_rx_buffer(DriverSuper* p_super,
+                       uint8_t* rx_buffer,
+                       const uint16_t rx_buffer_size);
+
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super);
 void DSC_enable_monitor_for_rx_disruption(DriverSuper* p_super);
 void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super);
@@ -524,6 +562,10 @@ void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size);
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
+void DSSC_set_rx_frame_buffer(DS_StreamConfig* p_stream_config,
+                              uint8_t* rx_frame_buffer,
+                              const uint16_t rx_frame_buffer_size);
+const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_header,
                         const uint16_t rx_header_size);
@@ -545,6 +587,10 @@ void DSSC_set_rx_framelength_offset(DS_StreamConfig* p_stream_config,
 void DSSC_set_rx_framelength_endian(DS_StreamConfig* p_stream_config,
                                     const ENDIAN_TYPE rx_framelength_endian);
 
+void DSSC_set_rx_carry_over_buffer(DS_StreamConfig* p_stream_config,
+                                   uint8_t* rx_carry_over_buffer,
+                                   const uint16_t rx_carry_over_buffer_size);
+
 uint8_t DSSC_get_should_monitor_for_tlm_disruption(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
 void DSSC_disable_monitor_for_tlm_disruption(DS_StreamConfig* p_stream_config);
@@ -554,6 +600,13 @@ void DSSC_set_time_threshold_for_tlm_disruption(DS_StreamConfig* p_stream_config
 
 void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver));
+
+// DSSC_set_rx_frame_buffer と DSSC_set_rx_carry_over_buffer のセット
+void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
+                        uint8_t* rx_frame_buffer,
+                        const uint16_t rx_frame_buffer_size,
+                        uint8_t* rx_carry_over_buffer,
+                        const uint16_t rx_carry_over_buffer_size);
 
 // ###### DS_StreamConfig Getter/Setter of Info ######
 const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config);
@@ -567,8 +620,6 @@ uint32_t DSSC_get_rx_frame_fix_count(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_general_cmd_tx_time(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_req_tlm_cmd_tx_time(const DS_StreamConfig* p_stream_config);
 const ObcTime* DSSC_get_rx_frame_fix_time(const DS_StreamConfig* p_stream_config);
-
-const uint8_t* DSSC_get_rx_frame(const DS_StreamConfig* p_stream_config);
 
 DS_STREAM_TLM_DISRUPTION_STATUS_CODE DSSC_get_tlm_disruption_status(const DS_StreamConfig* p_stream_config);
 

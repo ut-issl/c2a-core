@@ -19,6 +19,7 @@ call :sync_file ".\src\src_user\IfWrapper\Sils\wdt_sils.cpp" "..\minimum_user\sr
 call :sync_file ".\src\src_user\IfWrapper\SilsMockup\README.md" "..\minimum_user\src\src_user\IfWrapper\SilsMockup\README.md"
 call :sync_file ".\src\src_user\IfWrapper\SilsMockup\uart_sils.c" "..\minimum_user\src\src_user\IfWrapper\SilsMockup\uart_sils.c"
 call :sync_file ".\src\src_user\IfWrapper\SilsMockup\wdt_sils.c" "..\minimum_user\src\src_user\IfWrapper\SilsMockup\wdt_sils.c"
+call :sync_file ".\src\src_user\Settings\DriverSuper\driver_buffer_define.h" "..\minimum_user\src\src_user\Settings\DriverSuper\driver_buffer_define.h"
 call :sync_file ".\src\src_user\Settings\TlmCmd\common_cmd_packet_define.c" "..\minimum_user\src\src_user\Settings\TlmCmd\common_cmd_packet_define.c"
 call :sync_file ".\src\src_user\Settings\TlmCmd\common_tlm_cmd_packet_define.h" "..\minimum_user\src\src_user\Settings\TlmCmd\common_tlm_cmd_packet_define.h"
 call :sync_file ".\src\src_user\TlmCmd\block_command_user_settings.c" "..\minimum_user\src\src_user\TlmCmd\block_command_user_settings.c"
