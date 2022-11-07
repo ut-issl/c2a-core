@@ -43,7 +43,7 @@ typedef enum
   I2C_ALREADY_ERR     = -3,   //!< チャンネルオープン済み
   I2C_FREQUENCY_ERR   = -2,   //!< 周波数異常
   I2C_CH_ERR          = -1,   //!< チャンネル異常 (Port_configに無い)
-  I2C_OK              = 0,    //!< OKは0を踏襲
+  I2C_OK              = 0     //!< OKは0を踏襲
 } I2C_ERR_CODE;
 
 /**
