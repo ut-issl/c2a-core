@@ -5,6 +5,7 @@
  * @note  common_tlm_cmd_packet.h などから include されることを前提
  */
 #include "apid_define.h"
+#include "../common_tlm_packet_define.h"
 
 APID APID_get_apid_from_uint16(uint16_t apid)
 {
@@ -30,12 +31,11 @@ int APID_is_other_obc_tlm_apid(APID apid)
 {
   switch (apid)
   {
-  case APID_AOBC_TLM:   // FALLTHROUGH
-  case APID_TOBC_TLM:
-    return 1;
+  case CTP_APID_FROM_ME:
+    return 0;
 
   default:
-    return 0;
+    return 1;
   }
 }
 
