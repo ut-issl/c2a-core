@@ -14,11 +14,9 @@ option(USE_SILS_MOCKUP "Use SILS mockup for build C2A with minimal user in C89 o
 
 option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
 
-# default config
 set(USE_ALL_C2A_CORE_APPS OFF)
 # Core App のターゲット追加は src_user/Applications/CMakeLists.txt で行う
 set(USE_ALL_C2A_CORE_TEST_APPS OFF)
-
 
 if(USE_SILS_MOCKUP)
   set(BUILD_C2A_AS_CXX OFF)
