@@ -32,7 +32,7 @@ void *bsearch(const void* key, const void* base, size_t nmemb, size_t size, comp
     else if (result < 0)
     {
       // key < current
-      max = index - 1;
+      max = index;
     }
     else // result > 0
     {
