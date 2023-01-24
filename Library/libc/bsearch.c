@@ -21,7 +21,7 @@ void *bsearch(const void* key, const void* base, size_t nmemb, size_t size, comp
   while (min < max)
   {
     size_t index = (min + max) / 2;
-    void* current = (void*) (base + (size * index));
+    void* current = (void*) ((char*)base + (size * index));
 
     int result = compr(key, current);
     if (result == 0)
