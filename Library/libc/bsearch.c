@@ -6,21 +6,22 @@
 // key < b: compr_func(key, b) < 0
 // key = b: compr_func(key, b) = 0
 // key > b: compr_func(key, b) > 0
-typedef int (* compr_func)(const void *, const void *);
+typedef int (*compr_func)(const void*, const void*);
 
-void *bsearch(const void *key, const void *base, size_t nmemb, size_t size, compr_func compr)
+void *bsearch(const void* key, const void* base, size_t nmemb, size_t size, compr_func compr)
 {
   size_t min = 0;
   size_t max = nmemb;
 
-  if (nmemb == 0 || size == 0){
+  if (nmemb == 0 || size == 0)
+  {
     return NULL;
   }
 
-  while(min < max)
+  while (min < max)
   {
     size_t index = (min + max) / 2;
-    void *current = (void*) (base + (size * index));
+    void* current = (void*) (base + (size * index));
 
     int result = compr(key, current);
     if (result == 0)
