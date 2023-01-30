@@ -46,7 +46,6 @@ I2C_ERR_CODE I2C_read_2bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v)
 static I2C_ERR_CODE I2C_read_bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size)
 {
   I2C_ERR_CODE ret = I2C_OK;
-  I2C_Config* my_i2c = (I2C_Config*)my_i2c_v;
 
   // read setting
   I2C_set_rx_length(my_i2c_v, buffer_size);
