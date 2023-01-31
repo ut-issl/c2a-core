@@ -30,7 +30,7 @@ static I2C_ERR_CODE I2C_write_bytes(void* my_i2c_v, uint8_t cmd_byte, void* data
   tx_data[0] = cmd_byte;
   memcpy(tx_data + sizeof(cmd_byte), data_v, buffer_size);
   I2C_set_stop_flag(my_i2c_v, 1);
-  return (I2C_ERR_CODE)I2C_tx(my_i2c_v, tx_data, buffer_size);
+  return (I2C_ERR_CODE)I2C_tx(my_i2c_v, tx_data, sizeof(cmd_byte) + buffer_size);
 }
 
 I2C_ERR_CODE I2C_read_byte(void* my_i2c_v, uint8_t cmd_byte, void* data_v)
