@@ -100,38 +100,38 @@ void I2C_set_rx_length(void* my_i2c_v, const uint32_t rx_length);
 
 /**
  * @brief I2C_Config 構造体にて指定されたchから1バイトデータを書き込みます
- * @param[in] my_i2c_v    : 対象とする I2C_Config 構造体へのポインタ
- * @param[in] cmd_byte    : コマンド
- * @param[in] data_v      : 受信データ格納先へのポインタ
+ * @param[in] my_i2c_v : 対象とする I2C_Config 構造体へのポインタ
+ * @param[in] cmd_byte : コマンド
+ * @param[in] data     : 書き込むデータ
  * @retval I2C_ERR_CODE
  */
-I2C_ERR_CODE I2C_write_byte(void* my_i2c_v, uint8_t cmd_byte, void* data_v);
+I2C_ERR_CODE I2C_write_byte(void* my_i2c_v, uint8_t cmd_byte, uint8_t data);
 
 /**
  * @brief I2C_Config 構造体にて指定されたchから2バイトデータを書き込みます
- * @param[in] my_i2c_v    : 対象とする I2C_Config 構造体へのポインタ
- * @param[in] cmd_byte    : コマンド
- * @param[in] data_v      : 受信データ格納先へのポインタ
+ * @param[in] my_i2c_v : 対象とする I2C_Config 構造体へのポインタ
+ * @param[in] cmd_byte : コマンド
+ * @param[in] data     : 書き込むデータ
  * @retval I2C_ERR_CODE
  */
-I2C_ERR_CODE I2C_write_2bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v);
+I2C_ERR_CODE I2C_write_2bytes(void* my_i2c_v, uint8_t cmd_byte, uint16_t data);
 
 /**
  * @brief I2C_Config 構造体にて指定されたchから1バイトデータを読み込みます
- * @param[in] my_i2c_v    : 対象とする I2C_Config 構造体へのポインタ
- * @param[in] cmd_byte    : コマンド
- * @param[out] data_v     : データ格納先へのポインタ
+ * @param[in] my_i2c_v : 対象とする I2C_Config 構造体へのポインタ
+ * @param[in] cmd_byte : コマンド
+ * @param[out] data_v  : データ格納先へのポインタ
  * @retval I2C_ERR_CODE
  */
-I2C_ERR_CODE I2C_read_byte(void* my_i2c_v, uint8_t cmd_byte, void* data_v);
+I2C_ERR_CODE I2C_read_byte(void* my_i2c_v, uint8_t cmd_byte, uint8_t* data_v);
 
 /**
  * @brief I2C_Config 構造体にて指定されたchから2バイトデータを読み込みます
- * @param[in] my_i2c_v    : 対象とする I2C_Config 構造体へのポインタ
- * @param[in] cmd_byte    : コマンド
- * @param[out] data_v     : データ格納先へのポインタ
+ * @param[in] my_i2c_v : 対象とする I2C_Config 構造体へのポインタ
+ * @param[in] cmd_byte : コマンド
+ * @param[out] data_v  : データ格納先へのポインタ
  * @retval I2C_ERR_CODE
  */
-I2C_ERR_CODE I2C_read_2bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v);
+I2C_ERR_CODE I2C_read_2bytes(void* my_i2c_v, uint8_t cmd_byte, uint16_t* data_v);
 
 #endif

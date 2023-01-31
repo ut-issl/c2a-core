@@ -7,40 +7,45 @@
 
 #include "../i2c.h"
 #include <string.h>
-
-#define I2C_MAX_TX_BYTE_COUNT (3)
+#include <src_core/Library/endian.h>
 
 static I2C_ERR_CODE I2C_write_bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size);
 static I2C_ERR_CODE I2C_read_bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size);
 
-I2C_ERR_CODE I2C_write_byte(void* my_i2c_v, uint8_t cmd_byte, void* data_v)
+I2C_ERR_CODE I2C_write_byte(void* my_i2c_v, uint8_t cmd_byte, uint8_t data)
 {
-  return I2C_write_bytes(my_i2c_v, cmd_byte, data_v, 1);
+  return I2C_write_bytes(my_i2c_v, cmd_byte, &data, sizeof(data));
 }
 
-I2C_ERR_CODE I2C_write_2bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v)
+I2C_ERR_CODE I2C_write_2bytes(void* my_i2c_v, uint8_t cmd_byte, uint16_t data)
 {
-  return I2C_write_bytes(my_i2c_v, cmd_byte, data_v, 2);
+  return I2C_write_bytes(my_i2c_v, cmd_byte, &data, sizeof(data));
 }
 
 static I2C_ERR_CODE I2C_write_bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size)
 {
-  uint8_t tx_data[I2C_MAX_TX_BYTE_COUNT];
+  uint8_t tx_data[sizeof(cmd_byte) + sizeof(uint16_t)];
 
   tx_data[0] = cmd_byte;
-  memcpy(tx_data + sizeof(cmd_byte), data_v, buffer_size);
+  ENDIAN_memcpy(tx_data + sizeof(cmd_byte), data_v, buffer_size);
   I2C_set_stop_flag(my_i2c_v, 1);
   return (I2C_ERR_CODE)I2C_tx(my_i2c_v, tx_data, sizeof(cmd_byte) + buffer_size);
 }
 
-I2C_ERR_CODE I2C_read_byte(void* my_i2c_v, uint8_t cmd_byte, void* data_v)
+I2C_ERR_CODE I2C_read_byte(void* my_i2c_v, uint8_t cmd_byte, uint8_t* data)
 {
-  return I2C_read_bytes(my_i2c_v, cmd_byte, data_v, 1);
+  return I2C_read_bytes(my_i2c_v, cmd_byte, data, sizeof(uint8_t));
 }
 
-I2C_ERR_CODE I2C_read_2bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v)
+I2C_ERR_CODE I2C_read_2bytes(void* my_i2c_v, uint8_t cmd_byte, uint16_t* data)
 {
-  return I2C_read_bytes(my_i2c_v, cmd_byte, data_v, 2);
+  uint8_t rx_data[sizeof(uint16_t)];
+  I2C_ERR_CODE ret = I2C_OK;
+
+  ret = I2C_read_bytes(my_i2c_v, cmd_byte, rx_data, sizeof(uint16_t));
+  ENDIAN_memcpy(data, rx_data, sizeof(uint16_t));
+
+  return ret;
 }
 
 static I2C_ERR_CODE I2C_read_bytes(void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size)
