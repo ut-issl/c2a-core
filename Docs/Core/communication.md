@@ -76,7 +76,7 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
     - `0x01`: Version 1
 - Board Time
     - テレメトリが生成されたボード (OBC など) の時刻 (TI など)
-- Tlemetry ID
+- Telemetry ID
     - テレメトリID
     - APID 内でユニークであればいい
 - Global Time
