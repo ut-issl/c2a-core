@@ -1,52 +1,58 @@
 #pragma section REPRO
 /**
-* @file
-* @brief I2C通信関連の一般 IO 以外の公開関数
-* @note  レジスタの読み書き等，ハードウェアに依存しない関数群を定義する
-*/
+ * @file
+ * @brief I2C 通信関連の一般 IO 以外の公開関数
+ * @note  レジスタの読み書き等，ハードウェアに依存しない関数群を定義する
+ */
 
 #include "i2c_common.h"
 #include "../../Library/endian.h"
 #include <string.h>
 
-static DS_ERR_CODE I2C_write_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size);
-static DS_ERR_CODE I2C_read_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size);
+static DS_ERR_CODE I2C_write_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v,
+                                    uint8_t register_address, void* data_v, uint8_t buffer_size);
+static DS_ERR_CODE I2C_read_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v,
+                                   uint8_t register_address, void* data_v, uint8_t buffer_size);
 
-DS_ERR_CODE I2C_write_byte(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, uint8_t data)
+DS_ERR_CODE I2C_write_byte(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t register_address, uint8_t data)
 {
-  return I2C_write_bytes_(p_super, stream, my_i2c_v, cmd_byte, &data, sizeof(data));
+  return I2C_write_bytes_(p_super, stream, my_i2c_v, register_address, &data, sizeof(data));
 }
 
-DS_ERR_CODE I2C_write_2bytes(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, uint16_t data)
+DS_ERR_CODE I2C_write_2bytes(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t register_address, uint16_t data)
 {
-  return I2C_write_bytes_(p_super, stream, my_i2c_v, cmd_byte, &data, sizeof(data));
+  return I2C_write_bytes_(p_super, stream, my_i2c_v, register_address, &data, sizeof(data));
 }
 
-static DS_ERR_CODE I2C_write_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size)
+static DS_ERR_CODE I2C_write_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v,
+                                    uint8_t register_address, void* data_v, uint8_t buffer_size)
 {
-  uint8_t tx_data[sizeof(cmd_byte) + sizeof(uint16_t)];
+  uint8_t tx_data[sizeof(register_address) + sizeof(uint16_t)];
   DS_StreamConfig* stream_config = &(p_super->stream_config[stream]);
 
-  tx_data[0] = cmd_byte;
-  ENDIAN_memcpy(tx_data + sizeof(cmd_byte), data_v, buffer_size);
+  tx_data[0] = register_address;
+  ENDIAN_memcpy(tx_data + sizeof(register_address), data_v, buffer_size);
   I2C_set_stop_flag(my_i2c_v, 1);
   DSSC_set_tx_frame(stream_config, tx_data);
-  DSSC_set_tx_frame_size(stream_config, sizeof(cmd_byte) + buffer_size);
+  DSSC_set_tx_frame_size(stream_config, sizeof(register_address) + buffer_size);
 
   return DS_send_general_cmd(p_super, stream);
 }
 
-DS_ERR_CODE I2C_read_byte(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, uint8_t* data)
+DS_ERR_CODE I2C_read_byte(DriverSuper* p_super, uint8_t stream, void* my_i2c_v,
+                          uint8_t register_address, uint8_t* data)
 {
-  return I2C_read_bytes_(p_super, stream, my_i2c_v, cmd_byte, data, sizeof(uint8_t));
+  return I2C_read_bytes_(p_super, stream, my_i2c_v, register_address, data, sizeof(uint8_t));
 }
 
-DS_ERR_CODE I2C_read_2bytes(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, uint16_t* data)
+DS_ERR_CODE I2C_read_2bytes(DriverSuper* p_super, uint8_t stream, void* my_i2c_v,
+                            uint8_t register_address, uint16_t* data)
 {
-  return I2C_read_bytes_(p_super, stream, my_i2c_v, cmd_byte, data, sizeof(uint8_t));
+  return I2C_read_bytes_(p_super, stream, my_i2c_v, register_address, data, sizeof(uint8_t));
 }
 
-static DS_ERR_CODE I2C_read_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v, uint8_t cmd_byte, void* data_v, uint8_t buffer_size)
+static DS_ERR_CODE I2C_read_bytes_(DriverSuper* p_super, uint8_t stream, void* my_i2c_v,
+                                   uint8_t register_address, void* data_v, uint8_t buffer_size)
 {
   DS_ERR_CODE ret = DS_ERR_CODE_OK;
   const uint8_t* rx_data;
@@ -58,8 +64,8 @@ static DS_ERR_CODE I2C_read_bytes_(DriverSuper* p_super, uint8_t stream, void* m
   DS_clear_rx_buffer(p_super);
   // send
   I2C_set_stop_flag(my_i2c_v, 0);
-  DSSC_set_tx_frame(stream_config, &cmd_byte);
-  DSSC_set_tx_frame_size(stream_config, sizeof(cmd_byte));
+  DSSC_set_tx_frame(stream_config, &register_address);
+  DSSC_set_tx_frame_size(stream_config, sizeof(register_address));
   ret = DS_send_req_tlm_cmd(p_super, stream);
   if (ret != DS_ERR_CODE_OK) return ret;
   // read
