@@ -30,7 +30,7 @@ static DS_ERR_CODE I2C_write_bytes_(DriverSuper* p_super, uint8_t stream, I2C_Co
  * @param[in] register_address : 読み込むレジスタのアドレス
  * @param[out] data_v  : データ格納先へのポインタ
  * @param[in] buffer_size : 読み込むデータの長さ．
- * @retval DS_ERR_CODE (DS_send_general_cmd の返り値)
+ * @retval DS_ERR_CODE
  */
 static DS_ERR_CODE I2C_read_bytes_(DriverSuper* p_super, uint8_t stream, I2C_Config* p_i2c_config,
                                    uint8_t register_address, void* data_v, uint8_t buffer_size);
