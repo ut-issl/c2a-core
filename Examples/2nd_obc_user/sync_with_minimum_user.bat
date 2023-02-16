@@ -29,7 +29,6 @@ call :sync_file ".\src\src_user\TlmCmd\common_tlm_cmd_packet.c" "..\minimum_user
 call :sync_file ".\src\src_user\TlmCmd\common_tlm_packet.c" "..\minimum_user\src\src_user\TlmCmd\common_tlm_packet.c"
 
 call :sync_file ".\src\src_user\Test\utils\wings_utils.py" "..\minimum_user\src\src_user\Test\utils\wings_utils.py"
-call :sync_file ".\src\src_user\Test\authorization.json.temp" "..\minimum_user\src\src_user\Test\authorization.json.temp"
 call :sync_file ".\src\src_user\Test\pytest.ini" "..\minimum_user\src\src_user\Test\pytest.ini"
 
 

@@ -60,8 +60,6 @@ dkms.conf
 # for c2a user sample
 Examples/minimum_user/src/src_core
 Examples/minimum_user/build
-Examples/minimum_user/src/src_user/Test/authorization.json
 Examples/2nd_obc_user/src/src_core
 Examples/2nd_obc_user/build
-Examples/2nd_obc_user/src/src_user/Test/authorization.json
 *.pyc
