@@ -23,7 +23,6 @@ def increase_hk_frequency():
 
 
 def _increase_hk_frequency():
-
     ope.send_rt_cmd(
         mobc_c2a_enum.Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE,
         (2,),
