@@ -31,7 +31,8 @@ int APID_is_other_obc_tlm_apid(APID apid)
 {
   switch (apid)
   {
-  case APID_MOBC_TLM:   // FALLTHROUGH
+  // FIXME: 2nd obc の場合は変更しなければいけないが， https://github.com/ut-issl/c2a-core/issues/489 で消えるので一旦このまま
+  case APID_AOBC_TLM:   // FALLTHROUGH
   case APID_TOBC_TLM:
     return 1;
 
