@@ -31,11 +31,12 @@ int APID_is_other_obc_tlm_apid(APID apid)
 {
   switch (apid)
   {
-  case CTP_APID_FROM_ME:
-    return 0;
+  case APID_MOBC_TLM:   // FALLTHROUGH
+  case APID_TOBC_TLM:
+    return 1;
 
   default:
-    return 1;
+    return 0;
   }
 }
 
