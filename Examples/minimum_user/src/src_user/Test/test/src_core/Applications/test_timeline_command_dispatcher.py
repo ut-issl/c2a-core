@@ -161,7 +161,6 @@ def test_tlcd_set_id_and_page_for_tlm():
 @pytest.mark.sils
 @pytest.mark.real
 def test_tlcd_send_and_clear_tl():
-
     clear_tl_gs_and_tl_mis()
 
     tlm_TL = wings.util.generate_and_receive_tlm(

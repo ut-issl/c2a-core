@@ -28,7 +28,6 @@ TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL = 1577836800.0
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_set_time():
-
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_TMGR_SET_TIME, (0xFFFFFFFF,), c2a_enum.Tlm_CODE_HK
     )
@@ -52,7 +51,6 @@ def test_tmgr_set_time():
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_set_unixtime():
-
     # unixtime_at_ti0 を current_unixtime とランダムな TI で更新
     current_unixtime = time.time()
     ti = random.randrange(1000)
@@ -87,7 +85,6 @@ def test_tmgr_set_unixtime():
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_set_utl_unixtime_epoch():
-
     # 負の値ではコマンドが通らないことを確認
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_TMGR_SET_UTL_UNIXTIME_EPOCH, (-10.0,), c2a_enum.Tlm_CODE_HK
@@ -108,7 +105,6 @@ def test_tmgr_set_utl_unixtime_epoch():
 @pytest.mark.sils
 @pytest.mark.real
 def test_tmgr_set_and_reset_cycle_correction():
-
     # 負の値ではコマンドが通らないことを確認
     assert "PRM" == wings.util.send_rt_cmd_and_confirm(
         ope, c2a_enum.Cmd_CODE_TMGR_SET_CYCLE_CORRECTION, (-0.5,), c2a_enum.Tlm_CODE_HK
