@@ -10,6 +10,6 @@ void C2A_core_main(void);
 #define C2A_CORE_VER_MAJOR (3)
 #define C2A_CORE_VER_MINOR (8)
 #define C2A_CORE_VER_PATCH (0)
-#define C2A_CORE_VER_PRE   ("beta.3")
+#define C2A_CORE_VER_PRE   ("beta.4")
 
 #endif
