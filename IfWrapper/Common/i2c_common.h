@@ -11,7 +11,7 @@
 #include "../i2c.h"
 
 /**
- * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ 1 バイトデータを書き込みます
+ * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ 1 バイトデータを書き込む
  * @param[in] p_super  : DriverSuper 構造体へのポインタ
  * @param[in] stream   : 使用する stream_config の番号
  * @param[in] p_i2c_config : 対象とする I2C_Config 構造体へのポインタ
@@ -23,7 +23,7 @@ DS_ERR_CODE I2C_write_byte(DriverSuper* p_super, uint8_t stream, I2C_Config* p_i
                            uint8_t register_address, uint8_t data);
 
 /**
- * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ 2 バイトデータを書き込みます
+ * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ 2 バイトデータを書き込む
  * @param[in] p_super  : DriverSuper 構造体へのポインタ
  * @param[in] stream   : 使用する stream_config の番号
  * @param[in] p_i2c_config : 対象とする I2C_Config 構造体へのポインタ
@@ -35,7 +35,7 @@ DS_ERR_CODE I2C_write_2bytes(DriverSuper* p_super, uint8_t stream, I2C_Config* p
                              uint8_t register_address, uint16_t data);
 
 /**
- * @brief I2C_Config 構造体にて指定されたデバイスのレジスタから 1 バイトデータを読み込みます
+ * @brief I2C_Config 構造体にて指定されたデバイスのレジスタから 1 バイトデータを読み込む
  * @param[in] p_super  : DriverSuper 構造体へのポインタ
  * @param[in] stream   : 使用する stream_config の番号
  * @param[in] p_i2c_config : 対象とする I2C_Config 構造体へのポインタ
@@ -47,7 +47,7 @@ DS_ERR_CODE I2C_read_byte(DriverSuper* p_super, uint8_t stream, I2C_Config* p_i2
                           uint8_t register_address, uint8_t* data_v);
 
 /**
- * @brief I2C_Config 構造体にて指定されたデバイスのレジスタから 2 バイトデータを読み込みます
+ * @brief I2C_Config 構造体にて指定されたデバイスのレジスタから 2 バイトデータを読み込む
  * @param[in] p_super  : DriverSuper 構造体へのポインタ
  * @param[in] stream   : 使用する stream_config の番号
  * @param[in] p_i2c_config : 対象とする I2C_Config 構造体へのポインタ
