@@ -98,5 +98,4 @@ void I2C_set_stop_flag(void* my_i2c_v, const uint8_t stop_flag);
  */
 void I2C_set_rx_length(void* my_i2c_v, const uint32_t rx_length);
 
-
 #endif
