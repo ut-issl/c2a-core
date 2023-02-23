@@ -10,7 +10,7 @@
 #include <string.h>
 
 /**
- * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ書き込み
+ * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ書き込む
  * @param[in] p_super  : DriverSuper 構造体へのポインタ
  * @param[in] stream   : 使用する stream_config の番号
  * @param[in] p_i2c_config : 対象とする I2C_Config 構造体へのポインタ
@@ -23,7 +23,7 @@ static DS_ERR_CODE I2C_write_bytes_(DriverSuper* p_super, uint8_t stream, I2C_Co
                                     uint8_t register_address, void* data_v, uint8_t data_len);
 
 /**
- * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ読み込み
+ * @brief I2C_Config 構造体にて指定されたデバイスのレジスタへ読み込む
  * @param[in] p_super  : DriverSuper 構造体へのポインタ
  * @param[in] stream   : 使用する stream_config の番号
  * @param[in] p_i2c_config : 対象とする I2C_Config 構造体へのポインタ
