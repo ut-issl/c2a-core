@@ -238,11 +238,37 @@ void DS_move_forward_frame_head_candidate_of_stream_rec_buffer_(DS_StreamRecBuff
 
 // ###### DriverSuper基本関数 ######
 
-DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
+DS_ERR_CODE DS_init(DriverSuper* p_super,
+                    DS_StreamRecBuffer* rx_buffer,
+                    void* if_config,
+                    DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
 {
+  DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX];
+  DS_nullify_stream_rec_buffers(rx_buffers);
+  rx_buffers[0] = rx_buffer;
+  return DS_init_streams(p_super, rx_buffers, if_config, load_init_setting);
+}
+
+
+DS_ERR_CODE DS_init_streams(DriverSuper* p_super,
+                            DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX],
+                            void* if_config,
+                            DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
+{
+  uint8_t stream;
+
   if (DS_reset(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
 
   p_super->if_config = if_config;
+
+  // load_init_setting で上書きできるようにここで設定
+  for (stream = 0; stream < DS_STREAM_MAX; ++stream)
+  {
+    if (rx_buffers[stream] != NULL)
+    {
+      DSSC_set_rx_buffer(&(p_super->stream_config[stream]), rx_buffers[stream]);
+    }
+  }
 
   p_super->config.internal.load_init_setting = load_init_setting;
   if (p_super->config.internal.load_init_setting(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
@@ -1241,6 +1267,7 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
   }
 
   if (p->settings.rx_buffer_ == NULL) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_buffer_->buffer == NULL) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->capacity < p->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->capacity < p->settings.rx_header_size_ + p->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
 
@@ -1576,6 +1603,18 @@ void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
   stream_rec_buffer->buffer = buffer;
   stream_rec_buffer->capacity = buffer_capacity;
   DS_clear_stream_rec_buffer_(stream_rec_buffer);
+}
+
+
+void DS_nullify_stream_rec_buffers(DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX])
+{
+  uint8_t stream;
+  if (rx_buffers == NULL) return;
+
+  for (stream = 0; stream < DS_STREAM_MAX; ++stream)
+  {
+    rx_buffers[stream] = NULL;
+  }
 }
 
 
