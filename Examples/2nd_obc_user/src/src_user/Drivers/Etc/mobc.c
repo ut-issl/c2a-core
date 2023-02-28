@@ -28,7 +28,7 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
                                           void* p_driver);
 
 
-DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch)
+DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
 

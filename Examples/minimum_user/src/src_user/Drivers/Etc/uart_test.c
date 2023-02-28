@@ -36,7 +36,7 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
 static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
 
 
-DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, unsigned char ch)
+DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, uint8_t ch, DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX])
 {
   DS_ERR_CODE ret;
 

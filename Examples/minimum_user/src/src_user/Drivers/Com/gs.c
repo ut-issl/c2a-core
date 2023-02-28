@@ -61,7 +61,7 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super);
  */
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
 
-DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
+DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch, DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX])
 {
   DS_ERR_CODE ret_uart, ret_ccsds;
   int i;
