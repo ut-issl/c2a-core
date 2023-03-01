@@ -246,7 +246,7 @@ DS_ERR_CODE DS_init(DriverSuper* p_super,
   DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX];
   DS_nullify_stream_rec_buffers(rx_buffers);
   rx_buffers[0] = rx_buffer;
-  return DS_init_streams(p_super, rx_buffers, if_config, load_init_setting);
+  return DS_init_streams(p_super, if_config, rx_buffers, load_init_setting);
 }
 
 

@@ -7,9 +7,12 @@
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
+#include <src_core/Library/result.h>
 #include "../../Drivers/Com/gs_validate.h"
 #include "../../Settings/port_config.h"
 #include "../../Settings/DriverSuper/driver_buffer_define.h"
+
+static RESULT DI_GS_init_(void);
 
 // 以下 init と update の定義
 static void DI_GS_cmd_packet_handler_init_(void);
@@ -37,22 +40,7 @@ static DS_StreamRecBuffer DI_GS_uart_rx_buffer_[GS_RX_HEADER_NUM];
 static uint8_t DI_GS_uart_rx_buffer_allocation_[GS_RX_HEADER_NUM][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
 
-AppInfo DI_GS_cmd_packet_handler(void)
-{
-  return AI_create_app_info("GS_CMD", DI_GS_cmd_packet_handler_init_, DI_GS_cmd_packet_handler_);
-}
-
-AppInfo DI_GS_mst_packet_handler(void)
-{
-  return AI_create_app_info("GS_MST", DI_GS_mst_packet_handler_init_, DI_GS_mst_packet_handler_);
-}
-
-AppInfo DI_GS_rpt_packet_handler(void)
-{
-  return AI_create_app_info("GS_RPT", DI_GS_rpt_packet_handler_init_, DI_GS_rpt_packet_handler_);
-}
-
-static void DI_GS_cmd_packet_handler_init_(void)
+static RESULT DI_GS_init_(void)
 {
   int stream;
   DS_INIT_ERR_CODE ret;
@@ -75,7 +63,7 @@ static void DI_GS_cmd_packet_handler_init_(void)
     if (ret1 != DS_ERR_CODE_OK || ret2 != DS_ERR_CODE_OK)
     {
       Printf("GS buffer init Failed ! %d, %d \n", ret1, ret2);
-      return;
+      return RESULT_ERR;
     }
     ccsds_rx_buffers[stream] = &DI_GS_ccsds_rx_buffer_[stream];
     uart_rx_buffers[stream]  = &DI_GS_uart_rx_buffer_[stream];
@@ -86,7 +74,30 @@ static void DI_GS_cmd_packet_handler_init_(void)
   if (ret != DS_INIT_OK)
   {
     Printf("!! GS Init Error %d !!\n", ret);
+    return RESULT_ERR;
   }
+
+  return RESULT_OK;
+}
+
+AppInfo DI_GS_cmd_packet_handler(void)
+{
+  return AI_create_app_info("GS_CMD", DI_GS_cmd_packet_handler_init_, DI_GS_cmd_packet_handler_);
+}
+
+AppInfo DI_GS_mst_packet_handler(void)
+{
+  return AI_create_app_info("GS_MST", DI_GS_mst_packet_handler_init_, DI_GS_mst_packet_handler_);
+}
+
+AppInfo DI_GS_rpt_packet_handler(void)
+{
+  return AI_create_app_info("GS_RPT", DI_GS_rpt_packet_handler_init_, DI_GS_rpt_packet_handler_);
+}
+
+static void DI_GS_cmd_packet_handler_init_(void)
+{
+  DI_GS_init_();
 }
 
 static void DI_GS_cmd_packet_handler_(void)
@@ -167,7 +178,7 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
 CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (DI_GS_init_() != RESULT_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
