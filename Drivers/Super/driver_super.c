@@ -239,8 +239,8 @@ void DS_move_forward_frame_head_candidate_of_stream_rec_buffer_(DS_StreamRecBuff
 // ###### DriverSuper基本関数 ######
 
 DS_ERR_CODE DS_init(DriverSuper* p_super,
-                    DS_StreamRecBuffer* rx_buffer,
                     void* if_config,
+                    DS_StreamRecBuffer* rx_buffer,
                     DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
 {
   DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX];
@@ -251,8 +251,8 @@ DS_ERR_CODE DS_init(DriverSuper* p_super,
 
 
 DS_ERR_CODE DS_init_streams(DriverSuper* p_super,
-                            DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX],
                             void* if_config,
+                            DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX],
                             DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
 {
   uint8_t stream;
@@ -1595,14 +1595,16 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 
 // ###### Driver 汎用 Util 関数 ######
 
-void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
-                               uint8_t* buffer,
-                               const uint16_t buffer_capacity)
+DS_ERR_CODE DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
+                                      uint8_t* buffer,
+                                      const uint16_t buffer_capacity)
 {
-  if (stream_rec_buffer == NULL) return;
+  if (stream_rec_buffer == NULL) return DS_ERR_CODE_ERR;
+  if (buffer == NULL) return DS_ERR_CODE_ERR;
   stream_rec_buffer->buffer = buffer;
   stream_rec_buffer->capacity = buffer_capacity;
   DS_clear_stream_rec_buffer_(stream_rec_buffer);
+  return DS_ERR_CODE_OK;
 }
 
 
@@ -1683,6 +1685,7 @@ uint16_t DSSC_get_fixed_rx_frame_size(const DS_StreamConfig* p_stream_config)
 void DS_clear_stream_rec_buffer_(DS_StreamRecBuffer* stream_rec_buffer)
 {
   if (stream_rec_buffer == NULL) return;
+  if (stream_rec_buffer->buffer == NULL) return;
 
   memset(stream_rec_buffer->buffer,
          0x00,

@@ -9,7 +9,7 @@
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 
-extern const UART_TEST_Driver* uart_test_instance;
+extern const UART_TEST_Driver* const uart_test_instance;
 
 // アプリケーション
 AppInfo UART_TEST_update(void);

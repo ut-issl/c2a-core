@@ -417,14 +417,14 @@ struct DriverSuper
  *         デフォルト値の上書きは load_init_setting で行う
  * @note   DriverSuper を使用する時は起動時に必ず実施すること
  * @param  p_super:           初期化する DriverSuper 構造体へのポインタ
- * @param  rx_buffer:         初期化する DriverSuper の stream 0 で用いられるフレーム受信バッファ
  * @param  if_config:         初期化する Driverで用いられている IF の config 構造体
+ * @param  rx_buffer:         初期化する DriverSuper の stream 0 で用いられるフレーム受信バッファ
  * @param  load_init_setting: DriverSuper の初期設定ロード関数ポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_init(DriverSuper* p_super,
-                    DS_StreamRecBuffer* rx_buffer,
                     void* if_config,
+                    DS_StreamRecBuffer* rx_buffer,
                     DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super));
 
 /**
@@ -435,14 +435,14 @@ DS_ERR_CODE DS_init(DriverSuper* p_super,
  *         デフォルト値の上書きは load_init_setting で行う
  * @note   DriverSuper を使用する時は起動時に必ず実施すること
  * @param  p_super:           初期化する DriverSuper 構造体へのポインタ
- * @param  rx_buffers:        初期化する DriverSuper で用いられるフレーム受信バッファ．使用しない stream は NULL を設定しておく
  * @param  if_config:         初期化する Driverで用いられている IF の config 構造体
+ * @param  rx_buffers:        初期化する DriverSuper で用いられるフレーム受信バッファ．使用しない stream は NULL を設定しておく
  * @param  load_init_setting: DriverSuper の初期設定ロード関数ポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_init_streams(DriverSuper* p_super,
-                            DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX],
                             void* if_config,
+                            DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX],
                             DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super));
 
 /**
@@ -625,11 +625,11 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
  * @param[out] stream_rec_buffer: 初期化する DS_StreamRecBuffer
  * @param[in]  buffer:            与えるメモリ領域
  * @param[in]  buffer_capacity:   与えるメモリサイズ
- * @return void
+ * @return DS_ERR_CODE
  */
-void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
-                               uint8_t* buffer,
-                               const uint16_t buffer_capacity);
+DS_ERR_CODE DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
+                                      uint8_t* buffer,
+                                      const uint16_t buffer_capacity);
 
 /**
  * @brief DS_StreamRecBuffer の要素数 DS_STREAM_MAX の配列を NULL で初期化する
