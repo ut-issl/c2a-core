@@ -547,7 +547,7 @@ void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
                                               const uint32_t time_threshold_for_rx_disruption);
 
 
-// ###### DS_Config Getter/Setter of Info ######
+// ###### DS_Config Getter of Info ######
 const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super);
 uint32_t DSC_get_rx_count(const DriverSuper* p_super);
 uint32_t DSC_get_rx_call_count(const DriverSuper* p_super);
@@ -565,31 +565,30 @@ uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config);
 void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config);
 
-// FIXME: get, set 順番逆？
-void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
-                       uint8_t* tx_frame);
 const uint8_t* DSSC_get_tx_frame(DS_StreamConfig* p_stream_config);
 uint8_t* DSSC_get_tx_frame_as_non_const_pointer(DS_StreamConfig* p_stream_config);
+void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
+                       uint8_t* tx_frame);
+uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config);
 void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
                             const uint16_t tx_frame_size);
-uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config);
+int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
                                    const int16_t tx_frame_buffer_size);
-int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config);
 
 void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
                         DS_StreamRecBuffer* rx_buffer);
 void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_header,
                         const uint16_t rx_header_size);
+uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_footer(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_footer,
                         const uint16_t rx_footer_size);
-void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
-                            const int16_t rx_frame_size);
-uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config);
 uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config);
 int16_t DSSC_get_rx_frame_size(const DS_StreamConfig* p_stream_config);
+void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
+                            const int16_t rx_frame_size);
 
 void DSSC_set_rx_framelength_pos(DS_StreamConfig* p_stream_config,
                                  const int16_t rx_framelength_pos);
