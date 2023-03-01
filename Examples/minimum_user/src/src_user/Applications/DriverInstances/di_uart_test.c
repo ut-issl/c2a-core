@@ -20,7 +20,6 @@ static void UART_TEST_update_(void);
 // static int  UART_TEST_unset_rec_flag_(uint32_t no);
 // static int  UART_TEST_is_rec_flag_up_(uint32_t no);
 
-// FIXME: インスタンス名
 static UART_TEST_Driver uart_test_driver_;
 const UART_TEST_Driver* const uart_test_driver = &uart_test_driver_;
 
