@@ -909,12 +909,13 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
     int32_t  body_data_len;     // サイズ的にはu16でよいが，負数もとりたいのでi32としている
     uint16_t processed_data_len;
     uint16_t i;
-    uint16_t estimated_rx_frame_size;
+    const uint16_t memchr_offset = buffer->pos_of_frame_head_candidate + buffer->confirmed_frame_len;
+    uint16_t estimated_rx_frame_end_pos;
 
     // 届いているデータを受信フレームバッファに格納する
     // ここは高速化のために一括処理
     // フッタ最終文字を探す
-    p_footer_last = (uint8_t*)memchr(&(buffer->buffer[buffer->confirmed_frame_len]),
+    p_footer_last = (uint8_t*)memchr(&(buffer->buffer[memchr_offset]),
                                      (int)(p->settings.rx_footer_[p->settings.rx_footer_size_ - 1]),
                                      (size_t)unprocessed_data_len);
 
@@ -926,7 +927,8 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
       return;
     }
 
-    processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[buffer->confirmed_frame_len]) + 1);
+    processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[memchr_offset]) + 1);
+    // buffer->confirmed_frame_len が更新されることに注意！
     DS_confirm_stream_rec_buffer_(buffer, processed_data_len);     // processed_data_len byte 確定
 
     body_data_len = buffer->confirmed_frame_len - p->settings.rx_header_size_ - p->settings.rx_footer_size_;
@@ -940,10 +942,10 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
 
     // フッタ候補発見
     // フッタチェックする
-    estimated_rx_frame_size = buffer->confirmed_frame_len;
+    estimated_rx_frame_end_pos = buffer->pos_of_frame_head_candidate + buffer->confirmed_frame_len;
     for (i = 0; i < p->settings.rx_footer_size_; i++)
     {
-      if (buffer->buffer[estimated_rx_frame_size - i - 1] != p->settings.rx_footer_[p->settings.rx_footer_size_ - i - 1])
+      if (buffer->buffer[estimated_rx_frame_end_pos - i - 1] != p->settings.rx_footer_[p->settings.rx_footer_size_ - i - 1])
       {
         // これはフッタではないので受信続行
         // まだまだ受信する
