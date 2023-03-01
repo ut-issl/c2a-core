@@ -121,7 +121,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
 
 /**
  * @brief  フレーム解析関数（ヘッダ探索）
- * @note   ヘッダが見つかった場合，最初の1 byte のみ処理する
+ * @note   ヘッダが見つかった場合，最初の 1 byte のみ処理する
  * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @return void その他の詳細は DS_StreamRecStatus
  */
@@ -138,7 +138,7 @@ static void DS_analyze_rx_buffer_receiving_header_(DS_StreamConfig* p_stream_con
 /**
  * @brief  フレーム解析関数（フッタ受信中）
  * @note   1 byte のみ処理する
- * @note   現在，フレーム長がuint16_tを超えることは想定していない！
+ * @note   現在，フレーム長が uint16_t を超えることは想定していない！
  * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @param  rx_frame_size:   フレームサイズ（可変長フレームの場合もあるので，引数に取る）
  * @return void その他の詳細は DS_StreamRecStatus
@@ -330,7 +330,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
 
   p_super->config.info.rx_call_count_++;
 
-  // 各Driverで物理的に接続されている wire は１本なので，それをここで受信する．
+  // 各 Driver で物理的に接続されている wire は１本なので，それをここで受信する．
   // 後段の stream では，その受信したビット列に対して，複数のフレーム種類に対して，フレーム探索，確定処理を走らす．
   ret_rx = DS_rx_(p_super);
   p_super->config.info.rec_status_.ret_from_if_rx = ret_rx;
@@ -565,7 +565,7 @@ static int DS_rx_(DriverSuper* p_super)
   int16_t i;
 #endif
 
-  // 少なくとも１つのstreamが有効でかつ，rx_frame_size_が0以外でないと受信処理はしない
+  // 少なくとも 1 つの stream が有効でかつ，rx_frame_size_ が 0 以外でないと受信処理はしない
   flag = 0;
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
@@ -629,7 +629,7 @@ static void DS_analyze_rx_buffer_prepare_buffer_(DS_StreamConfig* p_stream_confi
 
     if (p_stream_config->settings.is_strict_frame_search_)
     {
-      // 厳格なフレーム探索なので，１つの可能性も受信漏らさないように
+      // 厳格なフレーム探索なので，1 つの可能性も受信漏らさないように
       DS_drop_from_stream_rec_buffer_(buffer, 1);
     }
     else
@@ -695,7 +695,7 @@ static void DS_analyze_rx_buffer_pickup_(DS_StreamConfig* p_stream_config)
       break;
     }
 
-    // 不整合が起きたら，現在のframe候補の先頭 + 1バイト目に走査場所を戻す
+    // 不整合が起きたら，現在の frame 候補の先頭 + 1 バイト目に走査場所を戻す
     if (p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_HEADER_MISMATCH ||
         p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_FOOTER_MISMATCH ||
         p_stream_config->info.rec_status_.status_code == DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG ||
@@ -834,7 +834,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
         return;
       }
 
-      // bodyサイズがは0以上を要請
+      // body サイズがは 0 以上を要請
       if (rx_frame_size < p->settings.rx_header_size_ + p->settings.rx_footer_size_)
       {
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_SHORT;
@@ -851,7 +851,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
   {
     // データ受信中
     // ここは高速化のために一括処理
-    // TODO: 現在，フレーム長がuint16_tを超えることは想定していない！
+    // TODO: 現在，フレーム長が uint16_t を超えることは想定していない！
     uint16_t pickup_data_len = (uint16_t)(rx_frame_size - p->settings.rx_footer_size_ - buffer->confirmed_frame_len);
 
     // 今回で全部受信しきらない場合
@@ -865,7 +865,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
 
     // フッタがなく，data 受信仕切った場合はフレーム確定
     // これがないと，DS_analyze_rx_buffer_fixed_ で
-    // 今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が１周期遅れることになるので
+    // 今まさに受信したデータ長がぴったりフレーム末だった場合に，フレーム確定が 1 周期遅れることになるので
     if (p->settings.rx_footer_size_ == 0 && buffer->confirmed_frame_len == rx_frame_size)
     {
       p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_FIXED_FRAME;
@@ -906,7 +906,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
     // ヘッダなしの場合は，ここがフレーム先頭
     const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
     uint8_t* p_footer_last;     // inclusive
-    int32_t  body_data_len;     // サイズ的にはu16でよいが，負数もとりたいのでi32としている
+    int32_t  body_data_len;     // サイズ的にはu16でよいが，負数もとりたいので i32 としている
     uint16_t processed_data_len;
     uint16_t i;
     const uint16_t memchr_offset = buffer->pos_of_frame_head_candidate + buffer->confirmed_frame_len;
@@ -1051,7 +1051,7 @@ static void DS_analyze_rx_buffer_receiving_footer_(DS_StreamConfig* p_stream_con
   }
 
   // フッタ受信
-  // ここも条件分岐がめんどくさいので，1byteずつ処理する
+  // ここも条件分岐がめんどくさいので，1 byte ずつ処理する
   rec_footer_pos = (uint16_t)(buffer->confirmed_frame_len - (rx_frame_size - p->settings.rx_footer_size_));
 
   // 期待されているフッタが受信できたか？
@@ -1215,7 +1215,7 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
       if (!(p->settings.rx_framelength_type_size_ == 1 ||
             p->settings.rx_framelength_type_size_ == 2 ||
             p->settings.rx_framelength_type_size_ == 3 ||
-            p->settings.rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // 現在はuint8 to uint32のみ対応
+            p->settings.rx_framelength_type_size_ == 4 )) return DS_ERR_CODE_ERR;    // 現在は uint8 to uint32 のみ対応
       if (!(p->settings.rx_framelength_endian_ == ENDIAN_TYPE_BIG ||
             p->settings.rx_framelength_endian_ == ENDIAN_TYPE_LITTLE )) return DS_ERR_CODE_ERR;
     }
@@ -1294,7 +1294,7 @@ void DSC_set_time_threshold_for_rx_disruption(DriverSuper* p_super,
 
 
 // ###### DS_Config Getter/Setter of Info ######
-// FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
+// FIXME: HEW で Warning が出てしまう（gcc ではでない）ので，キャストしている関数がいくつかある
 const DS_RecStatus* DSC_get_rec_status(const DriverSuper* p_super)
 {
   return &p_super->config.info.rec_status_;
@@ -1322,7 +1322,7 @@ DS_RX_DISRUPTION_STATUS_CODE DSC_get_rx_disruption_status(const DriverSuper* p_s
 
 
 // ###### DS_StreamConfig Getter/Setter of Settings ######
-// FIXME: HEWでWarningが出てしまう（gccではでない）ので，キャストしている関数がいくつかある
+// FIXME: HEW で Warning が出てしまう（gcc ではでない）ので，キャストしている関数がいくつかある
 uint8_t DSSC_get_is_enabled(const DS_StreamConfig* p_stream_config)
 {
   return (uint8_t)p_stream_config->settings.is_enabled_;
@@ -1566,7 +1566,7 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 }
 
 
-// ###### Driver汎用Util関数 ######
+// ###### Driver 汎用 Util 関数 ######
 
 void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
                                uint8_t* buffer,
@@ -1610,12 +1610,12 @@ CCP_CmdRet DS_conv_cmd_err_to_ccp_cmd_ret(DS_CMD_ERR_CODE code)
   case DS_CMD_ILLEGAL_LENGTH:
     return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_LENGTH, (uint32_t)code);
   default:
-    // ここに来るのは以下の３つ
+    // ここに来るのは以下の 3 つ
     // DS_CMD_OK
     // DS_CMD_DRIVER_SUPER_ERR
     // DS_CMD_UNKNOWN_ERR
-    // 下２つのエラーはDriver側の問題で，そちらでエラー情報を持つべき
-    // ここでは SUCCESSを返す
+    // 下 2 つのエラーは Driver 側の問題で，そちらでエラー情報を持つべき
+    // ここでは SUCCESS を返す
     return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)code);
   }
 }
