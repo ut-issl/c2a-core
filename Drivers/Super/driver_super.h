@@ -327,9 +327,14 @@ struct DS_StreamConfig
                                                                    ヘッダがない場合は0に設定
                                                                    初期値: 0 */
     int16_t  rx_frame_size_;                                  /*!< 受信データ（テレメトリ）フレームサイズ
-                                                                   受信データがない場合は0に設定
+                                                                   受信データがない場合は 0 に設定
                                                                    受信データが可変の場合は負数に設定
                                                                    初期値: 0 */
+    uint16_t max_rx_frame_size_;                              /*!< 受信データ（テレメトリ）の想定される最大フレームサイズ
+                                                                   これよりも長いフレームが来た（来そうな）場合は，そのフレーム（候補）は破棄される
+                                                                   これにより，ヘッダ内部のフレーム長が巨大な値に化けていた場合などに永遠に受信してしまうことを防ぐことができる
+                                                                   rx_frame_size_ が固定長の場合は無視される
+                                                                   初期値: 0xffff */
     int16_t  rx_framelength_pos_;                             /*!< 受信データ内のフレームサイズデータの存在する場所（先頭から数えて何 byte 目に位置するか．0 起算）
                                                                    受信データが可変長の場合のみ使用される．
                                                                    フレームサイズデータがない場合には負に設定する．
@@ -589,6 +594,9 @@ uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config);
 int16_t DSSC_get_rx_frame_size(const DS_StreamConfig* p_stream_config);
 void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
                             const int16_t rx_frame_size);
+uint16_t DSSC_get_max_rx_frame_size(const DS_StreamConfig* p_stream_config);
+void DSSC_set_max_rx_frame_size(DS_StreamConfig* p_stream_config,
+                            const uint16_t max_rx_frame_size);
 
 void DSSC_set_rx_framelength_pos(DS_StreamConfig* p_stream_config,
                                  const int16_t rx_framelength_pos);
