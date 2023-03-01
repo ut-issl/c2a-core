@@ -28,18 +28,18 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
 static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
 
 
-DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, uint8_t ch, DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX])
+DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX])
 {
   DS_ERR_CODE ret;
 
-  uart_test_instance->driver.uart_config.ch         = ch;
-  uart_test_instance->driver.uart_config.baudrate   = 38400;
-  uart_test_instance->driver.uart_config.parity_settings = PARITY_SETTINGS_NONE;
-  uart_test_instance->driver.uart_config.data_length = UART_DATA_LENGTH_8BIT;
-  uart_test_instance->driver.uart_config.stop_bit = UART_STOP_BIT_1BIT;
+  uart_test_driver->driver.uart_config.ch         = ch;
+  uart_test_driver->driver.uart_config.baudrate   = 38400;
+  uart_test_driver->driver.uart_config.parity_settings = PARITY_SETTINGS_NONE;
+  uart_test_driver->driver.uart_config.data_length = UART_DATA_LENGTH_8BIT;
+  uart_test_driver->driver.uart_config.stop_bit = UART_STOP_BIT_1BIT;
 
-  ret = DS_init_streams(&(uart_test_instance->driver.super),
-                        &(uart_test_instance->driver.uart_config),
+  ret = DS_init_streams(&(uart_test_driver->driver.super),
+                        &(uart_test_driver->driver.uart_config),
                         rx_buffers,
                         UART_TEST_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
@@ -90,25 +90,25 @@ static DS_ERR_CODE UART_TEST_load_driver_super_init_settings_(DriverSuper* p_sup
 }
 
 
-DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance)
+DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_driver)
 {
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
 
-  ret = DS_receive(&(uart_test_instance->driver.super));
+  ret = DS_receive(&(uart_test_driver->driver.super));
 
   if (ret != DS_ERR_CODE_OK) return DS_REC_DS_RECEIVE_ERR;
 
-  p_stream_config = &(uart_test_instance->driver.super.stream_config[UART_TEST_STREAM_FIX]);
+  p_stream_config = &(uart_test_driver->driver.super.stream_config[UART_TEST_STREAM_FIX]);
   if (DSSC_get_rec_status(p_stream_config)->status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
-    ret = DS_analyze_rec_data(&(uart_test_instance->driver.super), UART_TEST_STREAM_FIX, uart_test_instance);
+    ret = DS_analyze_rec_data(&(uart_test_driver->driver.super), UART_TEST_STREAM_FIX, uart_test_driver);
   }
 
-  p_stream_config = &(uart_test_instance->driver.super.stream_config[UART_TEST_STREAM_VAR]);
+  p_stream_config = &(uart_test_driver->driver.super.stream_config[UART_TEST_STREAM_VAR]);
   if (DSSC_get_rec_status(p_stream_config)->status_code == DS_STREAM_REC_STATUS_FIXED_FRAME)
   {
-    ret = DS_analyze_rec_data(&(uart_test_instance->driver.super), UART_TEST_STREAM_VAR, uart_test_instance);
+    ret = DS_analyze_rec_data(&(uart_test_driver->driver.super), UART_TEST_STREAM_VAR, uart_test_driver);
   }
 
   // 返り値ぐだぐだだけど，まあテストコードなので．．．
@@ -120,10 +120,10 @@ DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance)
 
 static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver)
 {
-  UART_TEST_Driver* uart_test_instance = (UART_TEST_Driver*)p_driver;
+  UART_TEST_Driver* uart_test_driver = (UART_TEST_Driver*)p_driver;
   uint16_t i;
 
-  (void)(uart_test_instance);
+  (void)(uart_test_driver);
 
 #ifndef SILS_FW
   Printf("DEC DATA: %d\n", DSSC_get_rec_status(p_stream_config)->fixed_frame_len);
@@ -144,12 +144,12 @@ static DS_ERR_CODE UART_TEST_analyze_rec_data_(DS_StreamConfig* p_stream_config,
 }
 
 
-DS_CMD_ERR_CODE UART_TEST_send(UART_TEST_Driver* uart_test_instance, uint8_t id)
+DS_CMD_ERR_CODE UART_TEST_send(UART_TEST_Driver* uart_test_driver, uint8_t id)
 {
   DS_ERR_CODE ret;
   DS_StreamConfig* p_stream_config;
 
-  p_stream_config = &(uart_test_instance->driver.super.stream_config[UART_TEST_STREAM_FIX]);
+  p_stream_config = &(uart_test_driver->driver.super.stream_config[UART_TEST_STREAM_FIX]);
 
   switch (id)
   {
@@ -195,7 +195,7 @@ DS_CMD_ERR_CODE UART_TEST_send(UART_TEST_Driver* uart_test_instance, uint8_t id)
     break;
   }
 
-  ret = DS_send_general_cmd(&(uart_test_instance->driver.super), UART_TEST_STREAM_FIX);
+  ret = DS_send_general_cmd(&(uart_test_driver->driver.super), UART_TEST_STREAM_FIX);
   if (ret == DS_ERR_CODE_OK)
   {
     return DS_CMD_OK;
