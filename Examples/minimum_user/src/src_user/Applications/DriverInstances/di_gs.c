@@ -45,8 +45,8 @@ static RESULT DI_GS_init_(void)
   int stream;
   DS_INIT_ERR_CODE ret;
   DS_StreamRecBuffer* ccsds_rx_buffers[DS_STREAM_MAX];
-  DS_nullify_stream_rec_buffers(ccsds_rx_buffers);
   DS_StreamRecBuffer* uart_rx_buffers[DS_STREAM_MAX];
+  DS_nullify_stream_rec_buffers(ccsds_rx_buffers);
   DS_nullify_stream_rec_buffers(uart_rx_buffers);
 
   // GS_RX_HEADER_NUM > DS_STREAM_MAX のアサーションは gs.c でやっているのでここではしない
