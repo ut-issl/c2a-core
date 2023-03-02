@@ -91,7 +91,7 @@ DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch);
 DS_REC_ERR_CODE AOBC_rec(AOBC_Driver* aobc_driver);
 
 /**
- * @brief  AOB Cへのコマンド送信
+ * @brief  AOBC へのコマンド送信
  * @param  aobc_driver: AOBC_Driver 構造体へのポインタ
  * @param  packet     : 送信する packet
  * @return DS_CMD_ERR_CODE
