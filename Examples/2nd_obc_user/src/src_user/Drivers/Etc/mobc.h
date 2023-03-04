@@ -95,7 +95,7 @@ DS_REC_ERR_CODE MOBC_rec(MOBC_Driver* mobc_driver);
 
 /**
  * @brief  MOBC へのデータ（MOBC → AOBCのテレメ）送信
- * @param  mobc_driver: MOBC_Drive r構造体へのポインタ
+ * @param  mobc_driver: MOBC_Driver 構造体へのポインタ
  * @param  packet: 送信する CTP packet
  * @return DS_CMD_ERR_CODE
  */

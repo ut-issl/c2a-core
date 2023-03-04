@@ -412,7 +412,7 @@ struct DriverSuper
 /**
  * @brief  継承先の機器より DriverSuper を初期化する（stream 0 のみの使用の場合）
  *
- *         DriverSuper 構造体を継承先 Drive 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
+ *         DriverSuper 構造体を継承先 Driver 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
  *         そして，構造体内の初期化が必要な変数を初期化する．
  *         デフォルト値の上書きは load_init_setting で行う
  * @note   DriverSuper を使用する時は起動時に必ず実施すること
@@ -430,7 +430,7 @@ DS_ERR_CODE DS_init(DriverSuper* p_super,
 /**
  * @brief  継承先の機器より DriverSuper を初期化する（複数の stream を使用する場合）
  *
- *         DriverSuper 構造体を継承先 Drive 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
+ *         DriverSuper 構造体を継承先 Driver 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
  *         そして，構造体内の初期化が必要な変数を初期化する．
  *         デフォルト値の上書きは load_init_setting で行う
  * @note   DriverSuper を使用する時は起動時に必ず実施すること

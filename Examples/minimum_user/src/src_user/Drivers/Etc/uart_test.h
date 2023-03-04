@@ -47,7 +47,7 @@ DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, uint8_t ch
 
 /**
  * @brief  UART_TESTのデータ（テレメ）受信
- * @param  *uart_test_instance: UART_TEST_Driver構造体へのポインタ
+ * @param  uart_test_instance: UART_TEST_Driver構造体へのポインタ
  * @return DS_REC_ERR_CODE
  */
 DS_REC_ERR_CODE UART_TEST_rec(UART_TEST_Driver* uart_test_instance);
