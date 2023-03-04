@@ -77,16 +77,17 @@ typedef struct
  * @brief  MOBC初期化
  *
  *         MOBC_Driver 構造体のポインタを渡すことでポートを初期化し， MOBC_Driver の各メンバも初期化する
- * @param  *mobc_driver : 初期化する MOBC_Driver 構造体へのポインタ
- * @param  ch           : MOBCが接続されている UART ポート番号
+ * @param  mobc_driver: 初期化する MOBC_Driver 構造体へのポインタ
+ * @param  ch:          MOBC が接続されている UART ポート番号
+ * @param  rx_buffer:   受信バッファ
  * @return DS_INIT_ERR_CODE
  */
-DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch);
+DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer);
 
 
 /**
  * @brief  MOBC からのデータ（ MOBC → AOBC のコマンド）受信
- * @param  *mobc_driver : MOBC_Driver 構造体へのポインタ
+ * @param  mobc_driver: MOBC_Driver 構造体へのポインタ
  * @return DS_REC_ERR_CODE
  */
 DS_REC_ERR_CODE MOBC_rec(MOBC_Driver* mobc_driver);
@@ -94,8 +95,8 @@ DS_REC_ERR_CODE MOBC_rec(MOBC_Driver* mobc_driver);
 
 /**
  * @brief  MOBC へのデータ（MOBC → AOBCのテレメ）送信
- * @param  *mobc_driver : MOBC_Drive r構造体へのポインタ
- * @param  *packet : 送信する CTP packet
+ * @param  mobc_driver: MOBC_Driver 構造体へのポインタ
+ * @param  packet: 送信する CTP packet
  * @return DS_CMD_ERR_CODE
  */
 DS_CMD_ERR_CODE MOBC_send(MOBC_Driver* mobc_driver, const CommonTlmPacket* packet);

@@ -78,10 +78,11 @@ struct AOBC_Driver
  *
  *         AOBC_Driver 構造体のポインタを渡すことでポートを初期化し， AOBC_Driver の各メンバも初期化する
  * @param  aobc_driver: 初期化する AOBC_Driver 構造体へのポインタ
- * @param  ch         : AOBC が接続されている UART ポート番号
+ * @param  ch:          AOBC が接続されている UART ポート番号
+ * @param  rx_buffer:   受信バッファ
  * @return DS_INIT_ERR_CODE
  */
-DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch);
+DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer);
 
 /**
  * @brief  AOBC のデータ（テレメ）受信
@@ -93,7 +94,7 @@ DS_REC_ERR_CODE AOBC_rec(AOBC_Driver* aobc_driver);
 /**
  * @brief  AOBC へのコマンド送信
  * @param  aobc_driver: AOBC_Driver 構造体へのポインタ
- * @param  packet     : 送信する packet
+ * @param  packet:      送信する packet
  * @return DS_CMD_ERR_CODE
  * @note   これを受信した AOBC C2A は， packet をそのまま PH_analyze_cmd_packet に流せばよい．
  */

@@ -3,22 +3,16 @@
  * @file
  * @brief GS Driver のインスタンス化
  */
-
 #include "di_gs.h"
-
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/Library/print.h>
+#include <src_core/Library/result.h>
 #include "../../Drivers/Com/gs_validate.h"
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
-static GS_Driver gs_driver_;
-const GS_Driver* const gs_driver = &gs_driver_;
-
-static DI_GS_TlmPacketHandler DI_GS_ms_tlm_packet_handler_; // mission
-const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler = &DI_GS_ms_tlm_packet_handler_;
-static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_; // replay tlm
-const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler = &DI_GS_rp_tlm_packet_handler_;
+static RESULT DI_GS_init_(void);
 
 // 以下 init と update の定義
 static void DI_GS_cmd_packet_handler_init_(void);
@@ -30,6 +24,61 @@ static void DI_GS_rpt_packet_handler_init_(void);
 static void DI_GS_rpt_packet_handler_(void);
 
 static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacketHandler* gs_tlm_packet_handler);
+
+static GS_Driver gs_driver_;
+const GS_Driver* const gs_driver = &gs_driver_;
+
+static DI_GS_TlmPacketHandler DI_GS_ms_tlm_packet_handler_; // mission
+const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler = &DI_GS_ms_tlm_packet_handler_;
+static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_; // replay tlm
+const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler = &DI_GS_rp_tlm_packet_handler_;
+
+// バッファ
+static DS_StreamRecBuffer DI_GS_ccsds_rx_buffer_[GS_RX_HEADER_NUM];
+static uint8_t DI_GS_ccsds_rx_buffer_allocation_[GS_RX_HEADER_NUM][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static DS_StreamRecBuffer DI_GS_uart_rx_buffer_[GS_RX_HEADER_NUM];
+static uint8_t DI_GS_uart_rx_buffer_allocation_[GS_RX_HEADER_NUM][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+
+
+static RESULT DI_GS_init_(void)
+{
+  int stream;
+  DS_INIT_ERR_CODE ret;
+  DS_StreamRecBuffer* ccsds_rx_buffers[DS_STREAM_MAX];
+  DS_StreamRecBuffer* uart_rx_buffers[DS_STREAM_MAX];
+  DS_nullify_stream_rec_buffers(ccsds_rx_buffers);
+  DS_nullify_stream_rec_buffers(uart_rx_buffers);
+
+  // GS_RX_HEADER_NUM > DS_STREAM_MAX のアサーションは gs.c でやっているのでここではしない
+  for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
+  {
+    DS_ERR_CODE ret1;
+    DS_ERR_CODE ret2;
+    ret1 = DS_init_stream_rec_buffer(&DI_GS_ccsds_rx_buffer_[stream],
+                                     DI_GS_ccsds_rx_buffer_allocation_[stream],
+                                     sizeof(DI_GS_ccsds_rx_buffer_allocation_[stream]));
+    ret2 = DS_init_stream_rec_buffer(&DI_GS_uart_rx_buffer_[stream],
+                                     DI_GS_uart_rx_buffer_allocation_[stream],
+                                     sizeof(DI_GS_uart_rx_buffer_allocation_[stream]));
+    if (ret1 != DS_ERR_CODE_OK || ret2 != DS_ERR_CODE_OK)
+    {
+      Printf("GS buffer init Failed ! %d, %d \n", ret1, ret2);
+      return RESULT_ERR;
+    }
+    ccsds_rx_buffers[stream] = &DI_GS_ccsds_rx_buffer_[stream];
+    uart_rx_buffers[stream]  = &DI_GS_uart_rx_buffer_[stream];
+  }
+
+  ret = GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT, ccsds_rx_buffers, uart_rx_buffers);
+
+  if (ret != DS_INIT_OK)
+  {
+    Printf("!! GS Init Error %d !!\n", ret);
+    return RESULT_ERR;
+  }
+
+  return RESULT_OK;
+}
 
 AppInfo DI_GS_cmd_packet_handler(void)
 {
@@ -48,12 +97,7 @@ AppInfo DI_GS_rpt_packet_handler(void)
 
 static void DI_GS_cmd_packet_handler_init_(void)
 {
-  int ret = GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT);
-
-  if (ret != 0)
-  {
-    Printf("!! GS Init Error %d !!\n", ret);
-  }
+  DI_GS_init_();
 }
 
 static void DI_GS_cmd_packet_handler_(void)
@@ -134,7 +178,7 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
 CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (GS_init(&gs_driver_, PORT_CH_RS422_MOBC_EXT)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (DI_GS_init_() != RESULT_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }

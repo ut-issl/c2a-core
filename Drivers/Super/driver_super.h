@@ -410,20 +410,40 @@ struct DriverSuper
 // ###### DriverSuper 基本関数 ######
 
 /**
- * @brief  継承先の機器より DriverSuper を初期化する
+ * @brief  継承先の機器より DriverSuper を初期化する（stream 0 のみの使用の場合）
  *
- *         DriverSuper 構造体を継承先 Drive 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
+ *         DriverSuper 構造体を継承先 Driver 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
  *         そして，構造体内の初期化が必要な変数を初期化する．
  *         デフォルト値の上書きは load_init_setting で行う
- * @note   DriverSuperを使用する時は起動時に必ず実施すること
+ * @note   DriverSuper を使用する時は起動時に必ず実施すること
  * @param  p_super:           初期化する DriverSuper 構造体へのポインタ
  * @param  if_config:         初期化する Driverで用いられている IF の config 構造体
+ * @param  rx_buffer:         初期化する DriverSuper の stream 0 で用いられるフレーム受信バッファ
  * @param  load_init_setting: DriverSuper の初期設定ロード関数ポインタ
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_init(DriverSuper* p_super,
                     void* if_config,
+                    DS_StreamRecBuffer* rx_buffer,
                     DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super));
+
+/**
+ * @brief  継承先の機器より DriverSuper を初期化する（複数の stream を使用する場合）
+ *
+ *         DriverSuper 構造体を継承先 Driver 構造体のメンバとして定義（継承）し，ポインタを渡すことでポートを初期化する．
+ *         そして，構造体内の初期化が必要な変数を初期化する．
+ *         デフォルト値の上書きは load_init_setting で行う
+ * @note   DriverSuper を使用する時は起動時に必ず実施すること
+ * @param  p_super:           初期化する DriverSuper 構造体へのポインタ
+ * @param  if_config:         初期化する Driverで用いられている IF の config 構造体
+ * @param  rx_buffers:        初期化する DriverSuper で用いられるフレーム受信バッファ．使用しない stream は NULL を設定しておく
+ * @param  load_init_setting: DriverSuper の初期設定ロード関数ポインタ
+ * @return DS_ERR_CODE
+ */
+DS_ERR_CODE DS_init_streams(DriverSuper* p_super,
+                            void* if_config,
+                            DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX],
+                            DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super));
 
 /**
  * @brief  DriverSuper のリセット
@@ -436,7 +456,7 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super);
 /**
  * @brief  DriverSuper の設定に不整合が生じていないかチェックする
  *
- *         Driverの 設定を変えた場合は毎回呼び出すことを推奨する
+ *         Driver の設定を変えた場合は毎回呼び出すことを推奨する
  * @note   DS_init 内で呼ばれている．
  * @note   内部の管理フラグを変更しているので， p_super に厳密な const 性はない
  * @param  p_super: DriverSuper 構造体へのポインタ
@@ -448,7 +468,7 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super);
  * @brief  受信バッファをクリアする
  *
  *         例えば，ヘッダなしテレメの場合，途中でゴミデータが入ると以後すべてのフレームがずれてしまう．
- *         そのようなとき（ CRC エラーがでるとか，受信データが明らかにおかしい場合）に，buffer を一度クリアし，
+ *         そのようなとき（CRC エラーがでるとか，受信データが明らかにおかしい場合）に，buffer を一度クリアし，
  *         次に届くデータからフレーム解析を先頭から行うようにするために用いる．
  * @param  p_super: DriverSuper 構造体へのポインタ
  * @return DS_ERR_CODE
@@ -605,11 +625,19 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
  * @param[out] stream_rec_buffer: 初期化する DS_StreamRecBuffer
  * @param[in]  buffer:            与えるメモリ領域
  * @param[in]  buffer_capacity:   与えるメモリサイズ
+ * @return DS_ERR_CODE
+ */
+DS_ERR_CODE DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
+                                      uint8_t* buffer,
+                                      const uint16_t buffer_capacity);
+
+/**
+ * @brief DS_StreamRecBuffer の要素数 DS_STREAM_MAX の配列を NULL で初期化する
+ * @note  DS_init_streams の引数を作るのに使う
+ * @param[out] rx_buffers: 初期化する DS_StreamRecBuffer の配列
  * @return void
  */
-void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
-                               uint8_t* buffer,
-                               const uint16_t buffer_capacity);
+void DS_nullify_stream_rec_buffers(DS_StreamRecBuffer* rx_buffers[DS_STREAM_MAX]);
 
 /**
  * @brief  DS_DRIVER_ERR_CODE から CCP_CmdRet への変換関数

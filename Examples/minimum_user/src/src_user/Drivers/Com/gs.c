@@ -13,13 +13,11 @@
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
 #include "../../Library/stdint.h"
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
+
 
 #define GS_RX_HEADER_SIZE (2)
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
 #define GS_TX_STREAM (0) // どれでも良いがとりあえず 0 で
-
-#define GS_RX_HEADER_NUM (3)
 
 #if GS_RX_HEADER_NUM > DS_STREAM_MAX
 #error GS RX HEADER NUM TOO MANY
@@ -28,10 +26,6 @@
 // それぞれ AD, BD, BC
 static uint8_t GS_rx_header_[GS_RX_HEADER_NUM][GS_RX_HEADER_SIZE];
 static uint8_t GS_tx_frame_[VCDU_LEN];
-
-// バッファ
-static uint8_t GS_rx_buffer_allocation_[GS_RX_HEADER_NUM][DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
-static DS_StreamRecBuffer GS_rx_buffer_[GS_RX_HEADER_NUM];
 
 /**
  * @brief CCSDS 側 Driver の DS 上での初期化設定
@@ -61,10 +55,14 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super);
  */
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
 
-DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
+DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver,
+                         uint8_t uart_ch,
+                         DS_StreamRecBuffer* ccsds_rx_buffers[DS_STREAM_MAX],
+                         DS_StreamRecBuffer* uart_rx_buffers[DS_STREAM_MAX])
 {
   DS_ERR_CODE ret_uart, ret_ccsds;
   int i;
+  int stream;
 
   memset(gs_driver, 0x00, sizeof(GS_Driver));
 
@@ -83,14 +81,20 @@ DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   GS_rx_header_[0][0] |= (uint8_t)((TCTF_TYPE_AD & 0x0f) << 4);
   GS_rx_header_[1][0] |= (uint8_t)((TCTF_TYPE_BD & 0x0f) << 4);
   GS_rx_header_[2][0] |= (uint8_t)((TCTF_TYPE_BC & 0x0f) << 4);
-  for (i = 0; i < GS_RX_HEADER_NUM; ++i)
+  for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
   {
-    GS_rx_header_[i][0] |= (uint8_t)((TCTF_SCID_SAMPLE_SATELLITE & 0x3ff) >> 8);
-    GS_rx_header_[i][1] |= (uint8_t)(TCTF_SCID_SAMPLE_SATELLITE & 0xff);
+    GS_rx_header_[stream][0] |= (uint8_t)((TCTF_SCID_SAMPLE_SATELLITE & 0x3ff) >> 8);
+    GS_rx_header_[stream][1] |= (uint8_t)(TCTF_SCID_SAMPLE_SATELLITE & 0xff);
   }
 
-  ret_ccsds = DS_init(&gs_driver->driver_ccsds.super, &gs_driver->driver_ccsds.ccsds_config, GS_load_ccsds_driver_super_init_settings_);
-  ret_uart  = DS_init(&gs_driver->driver_uart.super, &gs_driver->driver_uart.uart_config, GS_load_uart_driver_super_init_settings_);
+  ret_ccsds = DS_init_streams(&gs_driver->driver_ccsds.super,
+                              &gs_driver->driver_ccsds.ccsds_config,
+                              ccsds_rx_buffers,
+                              GS_load_ccsds_driver_super_init_settings_);
+  ret_uart  = DS_init_streams(&gs_driver->driver_uart.super,
+                              &gs_driver->driver_uart.uart_config,
+                              uart_rx_buffers,
+                              GS_load_uart_driver_super_init_settings_);
   if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
   gs_driver->latest_info = &gs_driver->info[GS_PORT_TYPE_CCSDS];
   gs_driver->tlm_tx_port_type = GS_PORT_TYPE_CCSDS;
@@ -155,11 +159,6 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super)
     DSSC_set_rx_framelength_type_size(p_stream_config, GS_RX_FRAMELENGTH_TYPE_SIZE);
     DSSC_set_rx_framelength_offset(p_stream_config, 1); // TCTF の framelength は 0 起算
     DSSC_set_data_analyzer(p_stream_config, GS_analyze_rec_data_);
-
-    DS_init_stream_rec_buffer(&GS_rx_buffer_[stream],
-                              GS_rx_buffer_allocation_[stream],
-                              sizeof(GS_rx_buffer_allocation_[stream]));
-    DSSC_set_rx_buffer(p_stream_config, &GS_rx_buffer_[stream]);
   }
 }
 

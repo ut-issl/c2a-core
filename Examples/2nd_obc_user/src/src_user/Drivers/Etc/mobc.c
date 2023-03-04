@@ -11,7 +11,6 @@
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
 #include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include <string.h>
-#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
 #define MOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
 
@@ -19,16 +18,12 @@ static uint8_t MOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               CTCP_MAX_LEN +
                               EB90_FRAME_FOOTER_SIZE];
 
-// バッファ
-static uint8_t MOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
-static DS_StreamRecBuffer MOBC_rx_buffer_;
-
 static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super);
 static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
                                           void* p_driver);
 
 
-DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch)
+DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
 
@@ -42,6 +37,7 @@ DS_INIT_ERR_CODE MOBC_init(MOBC_Driver* mobc_driver, uint8_t ch)
 
   ret = DS_init(&(mobc_driver->driver.super),
                 &(mobc_driver->driver.uart_config),
+                rx_buffer,
                 MOBC_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
   return DS_INIT_OK;
@@ -58,10 +54,6 @@ static DS_ERR_CODE MOBC_load_driver_super_init_settings_(DriverSuper* p_super)
   p_stream_config = &(p_super->stream_config[MOBC_STREAM_TLM_CMD]);
 
   CTCP_init_dssc(p_stream_config, MOBC_tx_frame_, sizeof(MOBC_tx_frame_), MOBC_analyze_rec_data_);
-  DS_init_stream_rec_buffer(&MOBC_rx_buffer_,
-                            MOBC_rx_buffer_allocation_,
-                            sizeof(MOBC_rx_buffer_allocation_));
-  DSSC_set_rx_buffer(p_stream_config, &MOBC_rx_buffer_);
 
   // 定期 TLM の監視機能の有効化しない → ので設定上書きなし
 
