@@ -20,9 +20,8 @@ static void UART_TEST_update_(void);
 // static int  UART_TEST_unset_rec_flag_(uint32_t no);
 // static int  UART_TEST_is_rec_flag_up_(uint32_t no);
 
-// FIXME: インスタンス名
-static UART_TEST_Driver uart_test_instance_;
-const UART_TEST_Driver* const uart_test_instance = &uart_test_instance_;
+static UART_TEST_Driver uart_test_driver_;
+const UART_TEST_Driver* const uart_test_driver = &uart_test_driver_;
 
 // バッファ
 static DS_StreamRecBuffer DI_UART_TEST_rx_buffer_0_;
@@ -77,7 +76,7 @@ static void UART_TEST_init_(void)
   rx_buffers[0] = &DI_UART_TEST_rx_buffer_0_;
   rx_buffers[1] = &DI_UART_TEST_rx_buffer_1_;
 
-  ret2 = UART_TEST_init(&uart_test_instance_, PORT_CH_UART_TEST, rx_buffers);
+  ret2 = UART_TEST_init(&uart_test_driver_, PORT_CH_UART_TEST, rx_buffers);
   if (ret2 != DS_INIT_OK)
   {
     Printf("UART_TEST init Failed! Err:%d \n", ret2);
@@ -93,7 +92,7 @@ static void UART_TEST_update_(void)
 {
   DS_REC_ERR_CODE ret;
 
-  ret = UART_TEST_rec(&uart_test_instance_);
+  ret = UART_TEST_rec(&uart_test_driver_);
 
   // TODO: エラー処理
   (void)ret;
@@ -128,7 +127,7 @@ CCP_CmdRet Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet)
 
   id = param[0];
 
-  ret = UART_TEST_send(&uart_test_instance_, id);
+  ret = UART_TEST_send(&uart_test_driver_, id);
   return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
