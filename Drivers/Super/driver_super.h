@@ -13,12 +13,12 @@
  *           - 同期通信の場合:   受信フレーム最大長 以上
  *         が望ましい．
  *         メモリに余力がある場合，さらに
- *           - DS_IF_RX_BUFFER_SIZE x 2 以上 FIXME: これは可変になるので直す
+ *           - rx_buffer_size_in_if_rx_ (or DS_IF_RX_BUFFER_SIZE) x 2 以上
  *         があると，さらに受信漏れを防ぐことができる．
- * @note   バッファのサイズ設定について FIXME: 直す．DS_IF_RX_BUFFER_SIZE の可変化など
- *           メモ
- *           IF_RX での最大サイズは規定したとして， DS ごとに小さくすることは可能にする
- *           で，小さくしたものよりも rx_buffer がデカくないとだめにする！！！
+ * @note   バッファのサイズ設定について
+ *           - DS_StreamRecBuffer のサイズは rx_buffer_size_in_if_rx_ よりも大きい必要がある
+ *           - rx_buffer_size_in_if_rx_ のサイズは，実際の OBC のハードウェアバッファサイズと等しくすると最も効率が良い
+ *           - DS_IF_RX_BUFFER_SIZE はすべてのドライバの rx_buffer_size_in_if_rx_ 以上の値にする（最大値にすると良い）
  */
 #ifndef DRIVER_SUPER_H_
 #define DRIVER_SUPER_H_
@@ -240,6 +240,13 @@ typedef struct
 {
   struct
   {
+    uint16_t rx_buffer_size_in_if_rx_;                        /*!< IF_RX で受信するときの一次バッファのサイズ
+                                                                   DS ではまず IF_RX を全 Driver 共通の一次バッファにコピーした後，
+                                                                   DS_StreamRecBuffer に push して解析していく．
+                                                                   IF_RX で読み込む量が多すぎると，DS_StreamRecBuffer に収まりきらないことがあるので，
+                                                                   DS_StreamRecBuffer のサイズが小さい場合は，IF_RX で読み込むサイズも小さくする必要がある．
+                                                                   最大値: DS_IF_RX_BUFFER_SIZE
+                                                                   初期値: DS_IF_RX_BUFFER_SIZE */
     uint8_t  should_monitor_for_rx_disruption_;               /*!< 受信途絶判定をするか？
                                                                    初期値: 0 */
     uint32_t time_threshold_for_rx_disruption_;               /*!< 受信途絶判定の閾値 [ms]
@@ -529,6 +536,9 @@ DS_ERR_CODE DS_send_req_tlm_cmd(DriverSuper* p_super, uint8_t stream);
 
 
 // ###### DS_Config Getter/Setter of Settings ######
+uint16_t DSC_get_rx_buffer_size_in_if_rx(const DriverSuper* p_super);
+DS_ERR_CODE DSC_set_rx_buffer_size_in_if_rx(DriverSuper* p_super,
+                                            const uint16_t rx_buffer_size_in_if_rx);
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super);
 void DSC_enable_monitor_for_rx_disruption(DriverSuper* p_super);
 void DSC_disable_monitor_for_rx_disruption(DriverSuper* p_super);
@@ -555,6 +565,7 @@ uint8_t DSSC_get_is_strict_frame_search(const DS_StreamConfig* p_stream_config);
 void DSSC_enable_strict_frame_search(DS_StreamConfig* p_stream_config);
 void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config);
 
+// FIXME: get, set 順番逆？
 void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
                        uint8_t* tx_frame);
 const uint8_t* DSSC_get_tx_frame(DS_StreamConfig* p_stream_config);
@@ -600,7 +611,7 @@ void DSSC_set_data_analyzer(DS_StreamConfig* p_stream_config,
                             DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver));
 
 
-// ###### DS_StreamConfig Getter/Setter of Info ######
+// ###### DS_StreamConfig Getter of Info ######
 const DS_StreamSendStatus* DSSC_get_send_status(const DS_StreamConfig* p_stream_config);
 const DS_StreamRecStatus* DSSC_get_rec_status(const DS_StreamConfig* p_stream_config);
 

@@ -165,10 +165,11 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config);
 
 /**
  * @brief  DS_StreamConfig 構造体のバリデーション
+ * @param  p_super:         DriverSuper 構造体へのポインタ
  * @param  p_stream_config: DriverSuper 構造体の DS_StreamConfig
  * @return DS_ERR_CODE
  */
-static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config);
+static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config);
 
 // ダミー関数
 // EQU だと関数ポインタの初期値を NULL にしていたためにぬるぽで事故ったので
@@ -290,6 +291,7 @@ DS_ERR_CODE DS_reset(DriverSuper* p_super)
   p_super->interface = IF_LIST_MAX; // FIXME: (*IF_init[p_super->interface])(p_super->if_config) の様な使い方をするのでセグフォが起こる可能性があり
   p_super->if_config = NULL;        // FIXME: NULL ポインタはこの関数が Reset 単体で使われるとマズい
 
+  p_super->config.settings.rx_buffer_size_in_if_rx_          = DS_IF_RX_BUFFER_SIZE;
   p_super->config.settings.should_monitor_for_rx_disruption_ = 0;
   p_super->config.settings.time_threshold_for_rx_disruption_ = 60 * 1000;      // この値はよく考えること
 
@@ -321,9 +323,11 @@ DS_ERR_CODE DS_validate_config(DriverSuper* p_super)
   if (p_super->interface < 0 || p_super->interface >= IF_LIST_MAX) return DS_ERR_CODE_ERR;
   if (p_super->if_config == NULL) return DS_ERR_CODE_ERR;
 
+  if (p_super->config.settings.rx_buffer_size_in_if_rx_ > DS_IF_RX_BUFFER_SIZE) return DS_ERR_CODE_ERR;
+
   for (stream = 0; stream < DS_STREAM_MAX; ++stream)
   {
-    DS_ERR_CODE ret = DS_validate_stream_config_(&p_super->stream_config[stream]);
+    DS_ERR_CODE ret = DS_validate_stream_config_(p_super, &p_super->stream_config[stream]);
     if (ret != DS_ERR_CODE_OK) return ret;
   }
 
@@ -395,7 +399,7 @@ DS_ERR_CODE DS_receive(DriverSuper* p_super)
     // そもそもこの validation は打ち上げ時というよりむしろ地上試験時に有用なので，ここに置く
     if (p_stream_config->internal.is_validation_needed_for_rec_)
     {
-      DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
+      DS_ERR_CODE ret = DS_validate_stream_config_(p_super, p_stream_config);
       if (ret != DS_ERR_CODE_OK)
       {
         p_stream_config->info.rec_status_.status_code = DS_STREAM_REC_STATUS_VALIDATE_ERR;
@@ -540,7 +544,7 @@ static DS_ERR_CODE DS_send_cmd_(DriverSuper* p_super, uint8_t stream)
   // そもそもこの validation は打ち上げじというよりむしろ地上試験時に有用なので，ここに置く
   if (p_stream_config->internal.is_validation_needed_for_send_)
   {
-    DS_ERR_CODE ret = DS_validate_stream_config_(p_stream_config);
+    DS_ERR_CODE ret = DS_validate_stream_config_(p_super, p_stream_config);
     if (ret != DS_ERR_CODE_OK)
     {
       p_stream_config->info.send_status_.status_code = DS_STREAM_SEND_STATUS_VALIDATE_ERR;
@@ -603,10 +607,9 @@ static int DS_rx_(DriverSuper* p_super)
   }
   if (flag == 0) return 0;
 
-  // FIXME: DS_IF_RX_BUFFER_SIZE を可変に
   rec_data_len = (*IF_RX[p_super->interface])(p_super->if_config,
                                               DS_if_rx_buffer_,
-                                              DS_IF_RX_BUFFER_SIZE);
+                                              p_super->config.settings.rx_buffer_size_in_if_rx_);
 
 #ifdef DS_DEBUG
   Printf("DS: rx_\n");
@@ -1210,7 +1213,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
 }
 
 
-static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
+static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_StreamConfig* p_stream_config)
 {
   DS_StreamConfig* p = p_stream_config;
 
@@ -1268,6 +1271,7 @@ static DS_ERR_CODE DS_validate_stream_config_(DS_StreamConfig* p_stream_config)
 
   if (p->settings.rx_buffer_ == NULL) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->buffer == NULL) return DS_ERR_CODE_ERR;
+  if (p->settings.rx_buffer_->capacity < p_super->config.settings.rx_buffer_size_in_if_rx_) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->capacity < p->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->capacity < p->settings.rx_header_size_ + p->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
 
@@ -1293,6 +1297,19 @@ static DS_ERR_CODE DS_data_analyzer_dummy_(DS_StreamConfig* p_stream_config, voi
 
 
 // ###### DS_Config Getter/Setter of Settings ######
+uint16_t DSC_get_rx_buffer_size_in_if_rx(const DriverSuper* p_super)
+{
+  return (uint16_t)p_super->config.settings.rx_buffer_size_in_if_rx_;
+}
+
+DS_ERR_CODE DSC_set_rx_buffer_size_in_if_rx(DriverSuper* p_super,
+                                            const uint16_t rx_buffer_size_in_if_rx)
+{
+  if (rx_buffer_size_in_if_rx > DS_IF_RX_BUFFER_SIZE) return DS_ERR_CODE_ERR;
+  p_super->config.settings.rx_buffer_size_in_if_rx_ = rx_buffer_size_in_if_rx;
+  return DS_ERR_CODE_OK;
+}
+
 uint8_t DSC_get_should_monitor_for_rx_disruption(const DriverSuper* p_super)
 {
   return (uint8_t)p_super->config.settings.should_monitor_for_rx_disruption_;
