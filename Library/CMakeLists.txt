@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.13)
 
 project(C2A_CORE_LIB)
 
-option(C2A_USE_SIMPLE_LIBC "use C2A-core hosted simple libc implementation" OFF)
-
 if(C2A_USE_SIMPLE_LIBC)
   message("use simple libc!!!")
   set(C2A_LIBC_SRC
