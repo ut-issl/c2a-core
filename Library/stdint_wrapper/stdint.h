@@ -1,4 +1,4 @@
-#ifdef C2A_STDINT_H_
+#ifndef C2A_STDINT_H_
 #define C2A_STDINT_H_
 
 // C99 stdint.h ないしはそれと同等のヘッダへのラッパー用ヘッダ
