@@ -1,5 +1,5 @@
-#ifndef C2A_STDINT_H_
-#define C2A_STDINT_H_
+#ifndef STDINT_H_
+#define STDINT_H_
 
 // C99 stdint.h ないしはそれと同等のヘッダへのラッパー用ヘッダ
 // 実機向けのコンパイラが C89 であるときのみ使用すること（CMake では C2A_USE_C99_STDINT=OFF すること）
@@ -10,4 +10,4 @@
 #include <src_user/Library/stdint_impl.h>   // 真に C89 環境下では C2A user で C99 stdint.h と同等の型を提供する
 #endif // SILS_FW
 
-#endif // C2A_STDINT_H_
+#endif // STDINT_H_
