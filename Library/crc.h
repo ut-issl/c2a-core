@@ -6,7 +6,7 @@
 #define CRC_H_
 
 #include <stddef.h>   // for size_t
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 /**
  * @brief CRC-16-IBM

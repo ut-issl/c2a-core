@@ -10,7 +10,7 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
  /**
   * @enum  SPI_MODE

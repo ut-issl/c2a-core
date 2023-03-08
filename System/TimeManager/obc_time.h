@@ -5,7 +5,7 @@
 #ifndef OBC_TIME_H_
 #define OBC_TIME_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 // step, cycleについてはTimeManagerを参照のこと
 #define OBCT_STEP_IN_MSEC (1)                                                    //!< 1 step で何 ms か

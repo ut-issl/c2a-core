@@ -12,7 +12,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 /**
  * @enum  PARITY_SETTINGS

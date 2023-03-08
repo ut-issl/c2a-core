@@ -5,7 +5,7 @@
 #ifndef BLOCK_COMMAND_TABLE_H_
 #define BLOCK_COMMAND_TABLE_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 #define BCT_CMD_MAX_LENGTH (64)  /*!< BCTに保存するパケットのパケットサイズの上限
                                     TCPの最大長はかなり大きいので，ここではそれより小さくしてメモリを節約するのが通例

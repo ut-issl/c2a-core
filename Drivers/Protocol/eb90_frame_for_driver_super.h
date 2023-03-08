@@ -34,7 +34,7 @@
 #ifndef EB90_FRAME_FOR_DRIVER_SUPER_H_
 #define EB90_FRAME_FOR_DRIVER_SUPER_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "../Super/driver_super.h"
 
 #define EB90_FRAME_STX_SIZE     (2)           //!< EB90 Frame の STX のサイズ

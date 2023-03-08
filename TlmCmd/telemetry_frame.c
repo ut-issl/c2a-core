@@ -5,7 +5,7 @@
  */
 #include "telemetry_frame.h"
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "../Library/print.h"
 #include "../Library/endian.h"
 #include "./common_cmd_packet_util.h"

@@ -5,7 +5,7 @@
 #pragma section REPRO
 #include "endian.h"
 #include <src_user/Settings/build_settings.h>
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 void* ENDIAN_memcpy(void* dest, const void* src, size_t size)
 {
