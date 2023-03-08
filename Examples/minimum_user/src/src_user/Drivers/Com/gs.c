@@ -7,12 +7,13 @@
 #include "gs.h"
 
 #include <string.h>
+#include <stdint.h>
+
 #include "../../IfWrapper/ccsds_user.h"
 #include "../../TlmCmd/Ccsds/tc_transfer_frame.h"
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
-#include "../../Library/stdint.h"
 
 
 #define GS_RX_HEADER_SIZE (2)

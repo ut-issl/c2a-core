@@ -5,10 +5,11 @@
 #ifndef DI_GS_H_
 #define DI_GS_H_
 
+#include <stdint.h>
+
 #include "../../Drivers/Com/gs.h"
 #include "../../TlmCmd/Ccsds/tcp_to_m_pdu.h"
 #include "../../TlmCmd/Ccsds/vcdu.h"
-#include "../../Library/stdint.h"
 #include <src_core/System/ApplicationManager/app_info.h>
 
 /**
