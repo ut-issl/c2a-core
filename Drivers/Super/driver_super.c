@@ -1400,13 +1400,6 @@ void DSSC_disable_strict_frame_search(DS_StreamConfig* p_stream_config)
   p_stream_config->settings.is_strict_frame_search_ = 0;
 }
 
-void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
-                       uint8_t* tx_frame)
-{
-  p_stream_config->settings.tx_frame_ = tx_frame;
-  p_stream_config->internal.is_validation_needed_for_send_ = 1;
-}
-
 const uint8_t* DSSC_get_tx_frame(DS_StreamConfig* p_stream_config)
 {
   return p_stream_config->settings.tx_frame_;
@@ -1417,10 +1410,10 @@ uint8_t* DSSC_get_tx_frame_as_non_const_pointer(DS_StreamConfig* p_stream_config
   return p_stream_config->settings.tx_frame_;
 }
 
-void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
-                            const uint16_t tx_frame_size)
+void DSSC_set_tx_frame(DS_StreamConfig* p_stream_config,
+                       uint8_t* tx_frame)
 {
-  p_stream_config->settings.tx_frame_size_ = tx_frame_size;
+  p_stream_config->settings.tx_frame_ = tx_frame;
   p_stream_config->internal.is_validation_needed_for_send_ = 1;
 }
 
@@ -1429,16 +1422,23 @@ uint16_t DSSC_get_tx_frame_size(const DS_StreamConfig* p_stream_config)
   return (uint16_t)p_stream_config->settings.tx_frame_size_;
 }
 
-void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
-                                   const int16_t tx_frame_buffer_size)
+void DSSC_set_tx_frame_size(DS_StreamConfig* p_stream_config,
+                            const uint16_t tx_frame_size)
 {
-  p_stream_config->settings.tx_frame_buffer_size_ = tx_frame_buffer_size;
+  p_stream_config->settings.tx_frame_size_ = tx_frame_size;
   p_stream_config->internal.is_validation_needed_for_send_ = 1;
 }
 
 int16_t DSSC_get_tx_frame_buffer_size(DS_StreamConfig* p_stream_config)
 {
   return (int16_t)p_stream_config->settings.tx_frame_buffer_size_;
+}
+
+void DSSC_set_tx_frame_buffer_size(DS_StreamConfig* p_stream_config,
+                                   const int16_t tx_frame_buffer_size)
+{
+  p_stream_config->settings.tx_frame_buffer_size_ = tx_frame_buffer_size;
+  p_stream_config->internal.is_validation_needed_for_send_ = 1;
 }
 
 void DSSC_set_rx_buffer(DS_StreamConfig* p_stream_config,
@@ -1457,6 +1457,11 @@ void DSSC_set_rx_header(DS_StreamConfig* p_stream_config,
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
+uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config)
+{
+  return (uint16_t)p_stream_config->settings.rx_header_size_;
+}
+
 void DSSC_set_rx_footer(DS_StreamConfig* p_stream_config,
                         const uint8_t* rx_footer,
                         const uint16_t rx_footer_size)
@@ -1464,18 +1469,6 @@ void DSSC_set_rx_footer(DS_StreamConfig* p_stream_config,
   p_stream_config->settings.rx_footer_ = rx_footer;
   p_stream_config->settings.rx_footer_size_ = rx_footer_size;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
-}
-
-void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
-                            const int16_t rx_frame_size)
-{
-  p_stream_config->settings.rx_frame_size_ = rx_frame_size;
-  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
-}
-
-uint16_t DSSC_get_rx_header_size(const DS_StreamConfig* p_stream_config)
-{
-  return (uint16_t)p_stream_config->settings.rx_header_size_;
 }
 
 uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config)
@@ -1486,6 +1479,13 @@ uint16_t DSSC_get_rx_footer_size(const DS_StreamConfig* p_stream_config)
 int16_t DSSC_get_rx_frame_size(const DS_StreamConfig* p_stream_config)
 {
   return (int16_t)p_stream_config->settings.rx_frame_size_;
+}
+
+void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
+                            const int16_t rx_frame_size)
+{
+  p_stream_config->settings.rx_frame_size_ = rx_frame_size;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 
 void DSSC_set_rx_framelength_pos(DS_StreamConfig* p_stream_config,
