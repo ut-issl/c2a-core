@@ -935,7 +935,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
     // ヘッダなしの場合は，ここがフレーム先頭
     const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
     uint8_t* p_footer_last;     // inclusive
-    int32_t  body_data_len;     // サイズ的にはu16でよいが，負数もとりたいので i32 としている
+    int32_t  body_data_len;     // サイズ的には u16 でよいが，負数もとりたいので i32 としている
     uint16_t processed_data_len;
     uint16_t i;
     const uint16_t memchr_offset = buffer->pos_of_frame_head_candidate + buffer->confirmed_frame_len;
@@ -950,22 +950,16 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
 
     if (p_footer_last == NULL)
     {
-      // まだまだ受信する
-      DS_confirm_stream_rec_buffer_(buffer, unprocessed_data_len);     // unprocessed_data_len byte 確定
-      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
-
-      if (buffer->confirmed_frame_len > p->settings.max_rx_frame_size_)
-      {
-        p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
-#ifdef DS_DEBUG
-        Printf("DS: RX frame size is too long\n");
-#endif
-      }
-      return;
+      // まだフッタまで候補まで受信していない → 受信データはすべて今回のフレームとして確定
+      processed_data_len = unprocessed_data_len;
+    }
+    else
+    {
+      // フッタ候補発見 → フッタ候補までフレーム確定
+      processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[memchr_offset]) + 1);
     }
 
-    processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[memchr_offset]) + 1);
-    // buffer->confirmed_frame_len が更新されることに注意！
+    // ↓ buffer->confirmed_frame_len が更新されることに注意！
     DS_confirm_stream_rec_buffer_(buffer, processed_data_len);     // processed_data_len byte 確定
     if (buffer->confirmed_frame_len > p->settings.max_rx_frame_size_)
     {
@@ -973,6 +967,13 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
 #ifdef DS_DEBUG
       Printf("DS: RX frame size is too long\n");
 #endif
+      return;
+    }
+
+    // フッタ候補未発見の場合はここで処理を返す
+    if (p_footer_last == NULL)
+    {
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
       return;
     }
 
