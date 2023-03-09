@@ -950,7 +950,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
 
     if (p_footer_last == NULL)
     {
-      // まだフッタまで候補まで受信していない → 受信データはすべて今回のフレームとして確定
+      // まだフッタ候補まで受信していない → 受信データはすべて今回のフレームとして確定
       processed_data_len = unprocessed_data_len;
     }
     else
