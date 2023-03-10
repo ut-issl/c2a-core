@@ -1289,7 +1289,9 @@ static DS_ERR_CODE DS_validate_stream_config_(const DriverSuper* p_super, DS_Str
 
   if (p->settings.rx_buffer_ == NULL) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->buffer == NULL) return DS_ERR_CODE_ERR;
-  if (p->settings.rx_buffer_->capacity < p_super->config.settings.rx_buffer_size_in_if_rx_) return DS_ERR_CODE_ERR;
+  // ↓ rx_buffer_size_in_if_rx_ が初期値の場合，大抵の場合ここで ERR となってしまう．
+  // rx_buffer_size_in_if_rx_ は通信中のビット反転で len の情報がおかしくなったときなど用なので， capacity との比較は一旦なしに
+  // if (p->settings.rx_buffer_->capacity < p_super->config.settings.rx_buffer_size_in_if_rx_) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->capacity < p->settings.rx_frame_size_) return DS_ERR_CODE_ERR;
   if (p->settings.rx_buffer_->capacity < p->settings.rx_header_size_ + p->settings.rx_footer_size_) return DS_ERR_CODE_ERR;
 
