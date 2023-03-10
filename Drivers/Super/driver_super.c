@@ -853,8 +853,8 @@ static void DS_analyze_rx_buffer_variable_pickup_with_rx_frame_size_(DS_StreamCo
     {
       rx_frame_size = DS_analyze_rx_buffer_get_framelength_(p_stream_config);
 
-      // バッファー超えはエラーを出す！
-      if (rx_frame_size > buffer->capacity)
+      // バッファー超え or 上限値超えはエラーを出す！
+      if (rx_frame_size > buffer->capacity || rx_frame_size > p->settings.max_rx_frame_size_)
       {
         p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
 #ifdef DS_DEBUG
@@ -935,7 +935,7 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
     // ヘッダなしの場合は，ここがフレーム先頭
     const uint16_t unprocessed_data_len = DS_get_unprocessed_size_from_stream_rec_buffer_(buffer);
     uint8_t* p_footer_last;     // inclusive
-    int32_t  body_data_len;     // サイズ的にはu16でよいが，負数もとりたいので i32 としている
+    int32_t  body_data_len;     // サイズ的には u16 でよいが，負数もとりたいので i32 としている
     uint16_t processed_data_len;
     uint16_t i;
     const uint16_t memchr_offset = buffer->pos_of_frame_head_candidate + buffer->confirmed_frame_len;
@@ -950,15 +950,32 @@ static void DS_analyze_rx_buffer_variable_pickup_with_footer_(DS_StreamConfig* p
 
     if (p_footer_last == NULL)
     {
-      // まだまだ受信する
-      DS_confirm_stream_rec_buffer_(buffer, unprocessed_data_len);     // unprocessed_data_len byte 確定
-      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+      // まだフッタ候補まで受信していない → 受信データはすべて今回のフレームとして確定
+      processed_data_len = unprocessed_data_len;
+    }
+    else
+    {
+      // フッタ候補発見 → フッタ候補までフレーム確定
+      processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[memchr_offset]) + 1);
+    }
+
+    // ↓ buffer->confirmed_frame_len が更新されることに注意！
+    DS_confirm_stream_rec_buffer_(buffer, processed_data_len);     // processed_data_len byte 確定
+    if (buffer->confirmed_frame_len > p->settings.max_rx_frame_size_)
+    {
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RX_FRAME_TOO_LONG;
+#ifdef DS_DEBUG
+      Printf("DS: RX frame size is too long\n");
+#endif
       return;
     }
 
-    processed_data_len = (uint16_t)(p_footer_last - &(buffer->buffer[memchr_offset]) + 1);
-    // buffer->confirmed_frame_len が更新されることに注意！
-    DS_confirm_stream_rec_buffer_(buffer, processed_data_len);     // processed_data_len byte 確定
+    // フッタ候補未発見の場合はここで処理を返す
+    if (p_footer_last == NULL)
+    {
+      p->info.rec_status_.status_code = DS_STREAM_REC_STATUS_RECEIVING_DATA;
+      return;
+    }
 
     body_data_len = buffer->confirmed_frame_len - p->settings.rx_header_size_ - p->settings.rx_footer_size_;
     if (body_data_len < 0)
@@ -1174,6 +1191,7 @@ static DS_ERR_CODE DS_reset_stream_config_(DS_StreamConfig* p_stream_config)
   p->settings.rx_footer_            = NULL;
   p->settings.rx_footer_size_       = 0;
   p->settings.rx_frame_size_        = 0;
+  p->settings.max_rx_frame_size_    = 0xffff;
 
   p->settings.rx_framelength_pos_       = -1;
   p->settings.rx_framelength_type_size_ = 0;
@@ -1485,6 +1503,18 @@ void DSSC_set_rx_frame_size(DS_StreamConfig* p_stream_config,
                             const int16_t rx_frame_size)
 {
   p_stream_config->settings.rx_frame_size_ = rx_frame_size;
+  p_stream_config->internal.is_validation_needed_for_rec_ = 1;
+}
+
+uint16_t DSSC_get_max_rx_frame_size(const DS_StreamConfig* p_stream_config)
+{
+  return (uint16_t)p_stream_config->settings.max_rx_frame_size_;
+}
+
+void DSSC_set_max_rx_frame_size(DS_StreamConfig* p_stream_config,
+                            const uint16_t max_rx_frame_size)
+{
+  p_stream_config->settings.max_rx_frame_size_ = max_rx_frame_size;
   p_stream_config->internal.is_validation_needed_for_rec_ = 1;
 }
 

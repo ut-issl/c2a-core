@@ -59,7 +59,10 @@ DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
                            int16_t tx_frame_buffer_size,
                            DS_ERR_CODE (*data_analyzer)(DS_StreamConfig* p_stream_config, void* p_driver))
 {
-  if (tx_frame_buffer_size < EB90_FRAME_HEADER_SIZE + CTCP_MAX_LEN + EB90_FRAME_FOOTER_SIZE)
+  // MOBC か 2nd OBC かによって，送信側 (tx 側) が CTP になるか CCP になるかは不明なため，ひとまず CTCP に
+  // メモリが苦しい OBC もあるので，考えてもいいかも
+  const uint16_t max_frame_size = EB90_FRAME_HEADER_SIZE + CTCP_MAX_LEN + EB90_FRAME_FOOTER_SIZE;
+  if (tx_frame_buffer_size < max_frame_size)
   {
     return DS_ERR_CODE_ERR;
   }
@@ -73,6 +76,7 @@ DS_ERR_CODE CTCP_init_dssc(DS_StreamConfig* p_stream_config,
   DSSC_set_rx_header(p_stream_config, EB90_FRAME_kStx, EB90_FRAME_STX_SIZE);
   DSSC_set_rx_footer(p_stream_config, EB90_FRAME_kEtx, EB90_FRAME_ETX_SIZE);
   DSSC_set_rx_frame_size(p_stream_config, -1);          // 可変
+  DSSC_set_max_rx_frame_size(p_stream_config, max_frame_size);
   DSSC_set_rx_framelength_pos(p_stream_config, EB90_FRAME_STX_SIZE);
   DSSC_set_rx_framelength_type_size(p_stream_config, 2);
   DSSC_set_rx_framelength_offset(p_stream_config,
