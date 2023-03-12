@@ -153,9 +153,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_UTIL_CMD_ADD].cmd_func = Cmd_UTIL_CMD_ADD;
   cmd_table[Cmd_CODE_UTIL_CMD_SEND].cmd_func = Cmd_UTIL_CMD_SEND;
   cmd_table[Cmd_CODE_UTIL_CMD_RESET].cmd_func = Cmd_UTIL_CMD_RESET;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_INCREMENT].cmd_func = Cmd_UTIL_COUNTER_INCREMENT;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_RESET].cmd_func = Cmd_UTIL_COUNTER_RESET;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].cmd_func = Cmd_UTIL_COUNTER_SET_PARAM;
 
   cmd_table[Cmd_CODE_TMGR_SET_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_TMGR_UPDATE_UNIXTIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_8BYTE;
@@ -305,11 +302,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_UTIL_CMD_ADD].param_size_infos[2].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_UTIL_CMD_ADD].param_size_infos[2].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_UTIL_CMD_SEND].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_INCREMENT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_RESET].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
 }
 
 #pragma section
