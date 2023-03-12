@@ -83,7 +83,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
     dest_flags = CTP_DEST_FLAG_RP;
   }
   TSP_set_dest_flags(&ctp_, dest_flags);
-  TSP_set_dr_partition(&ctp_, dr_partition);
+  TSP_set_dest_info(&ctp_, dr_partition);   // FIXME: もはや dr partition ですらない
   TSP_set_tlm_id(&ctp_, id);
 
   // 生成したパケットを指定された回数配送処理へ渡す
