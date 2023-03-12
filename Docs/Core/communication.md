@@ -101,8 +101,8 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
         - `0b00100000`: 将来拡張用の確保領域
         - `0b01000000`: 将来拡張用の確保領域
         - `0b10000000`: 将来拡張用の確保領域
-- Data Recorder Partition
-    - Stored Telemetry 時にどのパーティションに配送されるかを規定
+- Destination Info
+    - 例えば，Stored Telemetry 時には Data Recorder のどのパーティションに配送されるかを規定する
     - 将来拡張の可能性あり
 
 

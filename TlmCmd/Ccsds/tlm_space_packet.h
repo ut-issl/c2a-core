@@ -28,7 +28,7 @@
  *        |      20 |     0 |    32 | On-Board         |
  *        |         |       |       |  Subnetwork Time |
  *        |      24 |     0 |     8 | Dest Flags       |
- *        |      25 |     0 |     8 | DR Partition     |
+ *        |      25 |     0 |     8 | Dest Info        |
  *        |---------+-------+-------+------------------|
  *        | === User Data Field ====================== |
  *        |---------+-------+-------+------------------|
@@ -289,19 +289,19 @@ ctp_dest_flags_t TSP_get_dest_flags(const TlmSpacePacket* tsp);
 void TSP_set_dest_flags(TlmSpacePacket* tsp, ctp_dest_flags_t flags);
 
 /**
- * @brief  DR Partition を取得
+ * @brief  Dest Info を取得
  * @param  tsp: TlmSpacePacket
- * @return DR Partition
+ * @return Dest Info
  */
-uint8_t TSP_get_dr_partition(const TlmSpacePacket* tsp);
+uint8_t TSP_get_dest_info(const TlmSpacePacket* tsp);
 
 /**
- * @brief  DR Partition を設定
- * @param[in,out] tsp: TlmSpacePacket
- * @param[in]     ptn: DR Partition
+ * @brief  Dest Info を設定
+ * @param[in,out] tsp:  TlmSpacePacket
+ * @param[in]     info: Dest Info
  * @return void
  */
-void TSP_set_dr_partition(TlmSpacePacket* tsp, uint8_t ptn);
+void TSP_set_dest_info(TlmSpacePacket* tsp, uint8_t info);
 
 
 // ******************
