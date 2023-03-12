@@ -19,7 +19,7 @@ Comment,TLM Entry,Onboard Software Info.,,Extraction Info.,,,,Conversion Info.,,
 ,SH.GLOBAL_TIME,double,,PACKET,12,0,64,NONE,,,,,,,,,
 ,SH.ON_BOARD_SUBNET_TIME,uint32_t,,PACKET,20,0,32,NONE,,,,,,,,,
 ,SH.DEST_FLAGS,uint8_t,,PACKET,24,0,8,HEX,,,,,,,,,
-,SH.DR_PARTITION,uint8_t,,PACKET,25,0,8,NONE,,,,,,,,,
+,SH.DEST_INFO,uint8_t,,PACKET,25,0,8,NONE,,,,,,,,,
 ,MEM.BEGIN,uint32_t,memory_dump->begin,PACKET,26,0,32,HEX,,,,,,,,メモリ操作領域開始アドレス,
 ,MEM.END,uint32_t,memory_dump->end,PACKET,30,0,32,HEX,,,,,,,,メモリ操作領域終端アドレス,
 ,MEM.ADU_SIZE,uint32_t,memory_dump->adu_size,PACKET,34,0,32,NONE,,,,,,,,メモリ操作領域サイズ = ADUサイズ,CCSDSパケットヘッダに設定される
