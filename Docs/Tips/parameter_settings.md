@@ -243,7 +243,7 @@ Event Logger 全体のメモリ使用量は以下Byte.
 
 #### 定義
 - core: [`/src_core/System/EventManager/event_logger.h`](https://github.com/ut-issl/c2a-core/blob/develop/System/EventManager/event_logger.h)
-- user: `/src_user/Settings/System/anomaly_logger_params.h`
+- user: `/src_user/Settings/System/event_handler_params.h`
 
 #### 詳細説明
 [`/src_core/System/EventManager/event_logger.h`](https://github.com/ut-issl/c2a-core/blob/develop/System/EventManager/event_logger.h) を参照．

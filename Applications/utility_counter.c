@@ -1,6 +1,6 @@
 #pragma section REPRO
 #include "utility_counter.h"
-#ifdef 0
+#if 0
 
 #include "../TlmCmd/packet_handler.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"
