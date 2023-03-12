@@ -9,7 +9,6 @@
 
 #include "../TimeManager/time_manager.h"
 #include "../TaskManager/task_dispatcher.h"
-#include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
 #include "../../TlmCmd/block_command_executor.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
@@ -213,18 +212,12 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
   if (id >= MD_MODEID_MODE_MAX)
   {
     // 定義されていないモード番号が指定された場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_BAD_ID);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_BAD_ID, EL_ERROR_LEVEL_LOW, (uint32_t)id);
     return MM_BAD_ID;
   }
   else if (mode_manager_.stat != MM_STATUS_FINISHED)
   {
     // 別のモード遷移を実行中の場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_OVERWRITE);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_OVERWRITE, EL_ERROR_LEVEL_LOW, (uint32_t)mode_manager_.current_id);
     return MM_OVERWRITE;
   }
@@ -235,9 +228,6 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
   if (bc_index == MM_NOT_DEFINED)
   {
     // 実行したいモード遷移に対応するブロックコマンドが登録されていない場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_ILLEGAL_MOVE);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_ILLEGAL_MOVE, EL_ERROR_LEVEL_LOW, (uint32_t)bc_index);
     return MM_ILLEGAL_MOVE;
   }
@@ -277,9 +267,6 @@ static MM_ACK MM_finish_transition_(void)
   if (mode_manager_.stat != MM_STATUS_IN_PROGRESS)
   {
     // モード遷移が実行中でない場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_NOT_IN_PROGRESS);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_NOT_IN_PROGRESS, EL_ERROR_LEVEL_HIGH, (uint32_t)mode_manager_.current_id);
     return MM_NOT_IN_PROGRESS;
   }
@@ -295,9 +282,6 @@ static MM_ACK MM_finish_transition_(void)
     break;
 
   default:
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_TL_LOAD_FAILED);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_TL_LOAD_FAILED, EL_ERROR_LEVEL_HIGH, (uint32_t)ack);
     break;
   }

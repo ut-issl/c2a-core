@@ -5,7 +5,6 @@
 #include <string.h> // for memcpy
 
 #include "../../Applications/nop.h"
-#include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
 #include "../TimeManager/time_manager.h"
 #include "../WatchdogTimer/watchdog_timer.h"
@@ -38,9 +37,6 @@ AM_ACK AM_register_ai(size_t id,
 {
   if (id >= AM_MAX_APPS)
   {
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_APP_MANAGER, AM_INVALID_ID);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_APP_MANAGER, AM_INVALID_ID, EL_ERROR_LEVEL_LOW, (uint32_t)id);
     return AM_INVALID_ID;
   }
@@ -113,9 +109,6 @@ static AM_ACK AM_initialize_app_(size_t id)
 
   if (id >= AM_MAX_APPS)
   {
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_APP_MANAGER, AM_INVALID_ID);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_APP_MANAGER, AM_INVALID_ID, EL_ERROR_LEVEL_LOW, (uint32_t)id);
     return AM_INVALID_ID;
   }
@@ -167,17 +160,11 @@ static AM_ACK AM_execute_app_(size_t id)
 
   if (id >= AM_MAX_APPS)
   {
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_APP_MANAGER, AM_INVALID_ID);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_APP_MANAGER, AM_INVALID_ID, EL_ERROR_LEVEL_LOW, (uint32_t)id);
     return AM_INVALID_ID;
   }
   else if (app_manager_.ais[id].entry_point == NULL)
   {
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_APP_MANAGER, AM_NOT_REGISTERED);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_APP_MANAGER, AM_NOT_REGISTERED, EL_ERROR_LEVEL_LOW, (uint32_t)id);
     return AM_NOT_REGISTERED;
   }
