@@ -68,7 +68,7 @@ https://github.com/ut-issl/c2a-core/blob/217c3156a07ec503cd60fc7b75978a3234ec2c5
 ### Secondary Header (Telemetry)
 Secondary Header は CCSDS Space Packet 定義において，ユーザー定義部分であるため，ここで定義する．
 本ドキュメント更新時の実装は，以下である．ヘッダ構造は以下を参照すること．  
-https://github.com/ut-issl/c2a-core/blob/f88838db756728d58d97aeadb99a18b215cb63ee/TlmCmd/Ccsds/tlm_space_packet.h#L1-L51
+https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae292/TlmCmd/Ccsds/tlm_space_packet.h#L1-L51
 
 #### 各フィールドの説明
 - Secondary Header Version
