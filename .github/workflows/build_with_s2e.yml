@@ -54,6 +54,7 @@ jobs:
 
       - name: Install ccache
         id: install-ccache
+        shell: bash
         run: |
           choco install ccache
           ccache --show-stats --verbose
