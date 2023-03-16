@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief C89 環境用 stdint.h
+ * @note  真に C89 で，stdint.h が提供されない環境では，このパスを include path に追加し， src_user/Library/stdint_impl.h を自前で用意すること
+ */
 #ifndef STDINT_H_
 #define STDINT_H_
 
