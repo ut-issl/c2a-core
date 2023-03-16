@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  minimum_user:
+    name: minimum user
+    uses: arkedge/workflows-c2a/.github/workflows/c2a-build.yml@v1.0.0
+    with:
+      c2a_dir: Examples/minimum_user
+      c2a_custom_setup: |
+        cd $GITHUB_WORKSPACE
+        ls -l
+        cd ./repo
+        pwd
+        ls -l
+        if [ $RUNNER_OS = 'Windows' ]; then
+          cmd "/C setup.bat"
+        else
+          ./setup.sh
+        fi
+
+  second_obc_user:
+    name: 2nd obc user
+    uses: arkedge/workflows-c2a/.github/workflows/c2a-build.yml@v1.0.0
+    with:
+      c2a_dir: Examples/2nd_obc_user
+      c2a_custom_setup: |
+        cd $GITHUB_WORKSPACE
+        ls -l
+        cd ./repo
+        pwd
+        ls -l
+        if [ $RUNNER_OS = 'Windows' ]; then
+          cmd "/C setup.bat"
+        else
+          ./setup.sh
+        fi
