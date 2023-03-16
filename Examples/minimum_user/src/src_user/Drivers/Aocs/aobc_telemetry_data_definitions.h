@@ -28,7 +28,7 @@ typedef struct
       double global_time;
       uint32_t on_board_subnet_time;
       uint8_t dest_flags;
-      uint8_t dr_partition;
+      uint8_t dest_info;
     } sh;
     uint32_t tm_mode_time;
     double tm_utl_unixtime_epoch;
@@ -188,7 +188,7 @@ typedef struct
       double global_time;
       uint32_t on_board_subnet_time;
       uint8_t dest_flags;
-      uint8_t dr_partition;
+      uint8_t dest_info;
     } sh;
     struct
     {

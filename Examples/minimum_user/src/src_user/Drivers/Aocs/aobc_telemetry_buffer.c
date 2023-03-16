@@ -96,7 +96,7 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(const CommonTlmPacket* packet, AO
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.sh.global_time), &(f[12]), 8);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.sh.on_board_subnet_time), &(f[20]), 4);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.sh.dest_flags), &(f[24]), 1);
-  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.sh.dr_partition), &(f[25]), 1);
+  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.sh.dest_info), &(f[25]), 1);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tm_mode_time), &(f[26]), 4);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tm_utl_unixtime_epoch), &(f[30]), 8);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.tm_cycles_per_sec_fix_ratio), &(f[38]), 8);
@@ -244,7 +244,7 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_hk_(const CommonTlmPacket* packet, AOBC
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.sh.global_time), &(f[12]), 8);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.sh.on_board_subnet_time), &(f[20]), 4);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.sh.dest_flags), &(f[24]), 1);
-  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.sh.dr_partition), &(f[25]), 1);
+  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.sh.dest_info), &(f[25]), 1);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc.tm_mode_time), &(f[26]), 4);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc.tm_unixtime_at_ti0), &(f[30]), 8);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_hk.obc.mm_opsmode), &(f[38]), 1);

@@ -19,7 +19,7 @@ static const SP_ParamExtractionInfo TSP_pei_tlm_id_      = {11, 0xff, 0, 1};  //
 static const SP_ParamExtractionInfo TSP_pei_global_time_ = {12, 0xff, 0, 8};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_ob_sn_time_  = {20, 0xff, 0, 4};  // 11111111b
 static const SP_ParamExtractionInfo TSP_pei_dest_flags_  = {24, 0xff, 0, 1};  // 11111111b
-static const SP_ParamExtractionInfo TSP_pei_dr_ptn_      = {25, 0x0f, 0, 1};  // 11111111b
+static const SP_ParamExtractionInfo TSP_pei_dest_info_   = {25, 0x0f, 0, 1};  // 11111111b
 
 
 // ******************************
@@ -215,18 +215,18 @@ void TSP_set_dest_flags(TlmSpacePacket* tsp, ctp_dest_flags_t flags)
 }
 
 
-uint8_t TSP_get_dr_partition(const TlmSpacePacket* tsp)
+uint8_t TSP_get_dest_info(const TlmSpacePacket* tsp)
 {
-  uint8_t ptn;
+  uint8_t info;
 
-  SP_extract_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_dr_ptn_, &ptn);
-  return ptn;
+  SP_extract_param_from_packet(TSP_CAST_TO_SP(tsp), &TSP_pei_dest_info_, &info);
+  return info;
 }
 
 
-void TSP_set_dr_partition(TlmSpacePacket* tsp, uint8_t ptn)
+void TSP_set_dest_info(TlmSpacePacket* tsp, uint8_t info)
 {
-  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dr_ptn_, &ptn);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_dest_info_, &info);
 }
 
 
