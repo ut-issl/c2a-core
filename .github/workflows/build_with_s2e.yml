@@ -52,6 +52,23 @@ jobs:
         with:
           arch: amd64_x86
 
+      - name: Install ccache
+        id: install-ccache
+        shell: bash
+        run: |
+          choco install ccache
+          ccache --show-stats --verbose
+          CACHE_DIR=$(ccache -k cache_dir)
+          echo "cache_dir=${CACHE_DIR}" >> "$GITHUB_OUTPUT"
+
+      - name: cache by ccache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ steps.install-ccache.outputs.cache_dir }}
+          key: ccache-${{ runner.os }}-${{ hashFiles('./c2a-core/**', './s2e-user/**', './s2e-core/**') }}
+          restore-keys: ccache-${{ runner.os }}-
+
       - name: cache extlib
         id: cache-extlib
         uses: actions/cache@v3
@@ -95,5 +112,5 @@ jobs:
         run: |
           cl.exe
           cmake --version
-          cmake -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../c2a-core -DC2A_NAME=Examples/${{ matrix.example }} -DUSE_C2A=ON
+          cmake -A Win32 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../c2a-core -DC2A_NAME=Examples/${{ matrix.example }} -DUSE_C2A=ON
           cmake --build . --clean-first
