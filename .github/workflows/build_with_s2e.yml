@@ -108,5 +108,5 @@ jobs:
         run: |
           cl.exe
           cmake --version
-          cmake -A Win32 -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../c2a-core -DC2A_NAME=Examples/${{ matrix.example }} -DUSE_C2A=ON
+          cmake -A Win32 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CONFIGURATION_TYPES:STRING="Debug" -DEXT_LIB_DIR=../s2e-core/ExtLibraries -DFLIGHT_SW_DIR=../c2a-core -DC2A_NAME=Examples/${{ matrix.example }} -DUSE_C2A=ON
           cmake --build . --clean-first
