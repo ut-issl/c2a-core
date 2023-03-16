@@ -6,7 +6,7 @@
 #define MAJORITY_VOTE_FOR3_H_
 
 #include <stdio.h>
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 typedef enum
 {

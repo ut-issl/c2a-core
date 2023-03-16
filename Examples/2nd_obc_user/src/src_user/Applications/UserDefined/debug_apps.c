@@ -2,6 +2,7 @@
 #include "debug_apps.h"
 
 #include <stddef.h> // for NULL
+#include <stdint.h>
 
 #include <src_core/Library/print.h>
 #include <src_core/System/TimeManager/time_manager.h>
@@ -20,7 +21,6 @@
 // #include <src_core/TlmCmd/telemetry_generator.h>
 #include "../../Library/git_revision.h"
 #include "../../Library/vt100.h"
-#include "../../Library/stdint.h"
 
 void APP_DBG_flush_screen_(void);
 void APP_DBG_print_time_stamp_(void);

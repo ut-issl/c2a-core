@@ -36,7 +36,7 @@
 #ifndef SPACE_PACKET_H_
 #define SPACE_PACKET_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "space_packet_typedef.h"
 #include "../common_tlm_cmd_packet.h"
 

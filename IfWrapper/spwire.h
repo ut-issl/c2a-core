@@ -17,7 +17,7 @@
 #ifndef SPWIRE_H_
 #define SPWIRE_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 /**
  * @class SPWIRE_Config

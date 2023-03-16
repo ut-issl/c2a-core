@@ -12,8 +12,9 @@
 #ifndef GS_VALIDATE_H_
 #define GS_VALIDATE_H_
 
+#include <stdint.h>
+
 #include "../../TlmCmd/Ccsds/tc_transfer_frame.h"
-#include "../../Library/stdint.h"
 
 /**
  * @enum GS_VALIDATE_ERR

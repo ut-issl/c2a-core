@@ -41,7 +41,7 @@
 // TODO: ObcTime の初期化が OBCT_clear ではなく memset 0x00 である（現状問題ないが，今後問題になるかも）
 
 #include <stddef.h>
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "../../TlmCmd/common_cmd_packet.h"
 #include "../TimeManager/obc_time.h"
 

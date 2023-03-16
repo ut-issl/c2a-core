@@ -9,6 +9,7 @@ option(USE_ALL_C2A_CORE_LIB         "use C2A-core all Library" ON)
 option(USE_32BIT_COMPILER           "use 32bit compiler" OFF)
 
 option(C2A_USE_SIMPLE_LIBC          "use C2A-core hosted simple libc implementation" OFF)
+option(C2A_USE_C99_STDINT           "use C99 standard stdint.h" ON)
 
 option(BUILD_C2A_AS_SILS_FW         "build C2A as SILS firmware" ON)
 option(BUILD_C2A_AS_CXX             "build C2A as C++" OFF)
@@ -49,6 +50,11 @@ set(C2A_SRCS
   TlmCmd/Ccsds/space_packet.c
   TlmCmd/Ccsds/tlm_space_packet.c
 )
+
+if(NOT C2A_USE_C99_STDINT)
+  message("Use stdint.h wrapper")
+  include_directories(Library/stdint_wrapper)
+endif()
 
 if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++

@@ -11,7 +11,7 @@
 #ifndef I2C_H_
 #define I2C_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
  /**
   * @struct I2cConfig

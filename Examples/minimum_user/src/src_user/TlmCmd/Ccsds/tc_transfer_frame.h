@@ -29,8 +29,8 @@
 #define TC_TRANSFER_FRAME_H_
 
 #include <stddef.h>
+#include <stdint.h>
 
-#include "../../Library/stdint.h"
 #include "tc_segment.h"
 
 #define TCTF_MAX_LEN     (1024)

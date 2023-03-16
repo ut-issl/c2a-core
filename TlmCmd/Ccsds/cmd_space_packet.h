@@ -59,7 +59,7 @@ typedef enum
 #include <src_user/Settings/TlmCmd/Ccsds/cmd_space_packet_params.h>
 
 // 相互参照問題があるので，この順番で include
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "space_packet_typedef.h"
 #include "space_packet.h"
 #include "../common_cmd_packet.h"

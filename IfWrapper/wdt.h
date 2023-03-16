@@ -5,7 +5,7 @@
 #ifndef WDT_H_
 #define WDT_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 typedef struct
 {
