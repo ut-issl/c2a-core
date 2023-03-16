@@ -53,15 +53,18 @@ jobs:
           arch: amd64_x86
 
       - name: Install ccache
+        id: install-ccache
         run: |
           choco install ccache
           ccache --show-stats --verbose
+          CACHE_DIR=$(ccache -k cache_dir)
+          echo "cache_dir=${CACHE_DIR}" >> "$GITHUB_OUTPUT"
 
       - name: cache by ccache
         uses: actions/cache@v3
         with:
           path: |
-            C:\Users\runneradmin\AppData\Local\ccache
+            ${{ steps.install-ccache.outputs.cache_dir }}
           key: ccache-${{ runner.os }}-${{ hashFiles('./c2a-core/**', './s2e-user/**', './s2e-core/**') }}
           restore-keys: ccache-${{ runner.os }}-
 
