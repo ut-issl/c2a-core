@@ -52,6 +52,19 @@ jobs:
         with:
           arch: amd64_x86
 
+      - name: Install ccache
+        run: |
+          choco install ccache
+          ccache --show-stats --verbose
+
+      - name: cache by ccache
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\Users\runneradmin\AppData\Local\ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('./c2a-core/**', './s2e-user/**', './s2e-core/**') }}
+          restore-keys: ccache-${{ runner.os }}-
+
       - name: cache extlib
         id: cache-extlib
         uses: actions/cache@v3
