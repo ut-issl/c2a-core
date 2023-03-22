@@ -37,7 +37,7 @@
 #define EVENT_LOGGER_H_
 
 // TODO: FALSHメモリ等の大容量不揮発ボリュームへの書き込み
-// TODO: AL や EL そのもの全体をビルドする，しないをえらべる ifdef を追加（メモリのため）
+// TODO: EL そのもの全体をビルドする，しないをえらべる ifdef を追加（メモリのため）
 // TODO: ObcTime の初期化が OBCT_clear ではなく memset 0x00 である（現状問題ないが，今後問題になるかも）
 
 #include <stddef.h>
