@@ -275,7 +275,7 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
                     (uint32_t)ack,
                     EL_ERROR_LEVEL_LOW,
-                    (uint32_t)block_no);
+                    (uint32_t)( ((0x000000ff & id) << 24) | (0x00ffffff & block_no) ));
     if (ack == PL_BC_TIME_ADJUSTED)
     {
       return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
