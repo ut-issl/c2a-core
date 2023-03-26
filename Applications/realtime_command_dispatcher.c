@@ -1,7 +1,7 @@
 #pragma section REPRO
 #include "realtime_command_dispatcher.h"
-
 #include "../TlmCmd/packet_handler.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static CommandDispatcher realtime_command_dispatcher_;
 const CommandDispatcher* const realtime_command_dispatcher = &realtime_command_dispatcher_;
@@ -24,20 +24,20 @@ static void RTCD_dispatch_(void)
   CDIS_dispatch_command(&realtime_command_dispatcher_);
 }
 
-CCP_EXEC_STS Cmd_RTCD_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_RTCD_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   CDIS_clear_command_list(&realtime_command_dispatcher_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_RTCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_RTCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   // 記録されたエラー情報を解除。
   CDIS_clear_error_status(&realtime_command_dispatcher_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #pragma section

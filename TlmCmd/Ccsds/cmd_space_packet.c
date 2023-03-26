@@ -271,7 +271,7 @@ uint16_t CSP_get_param_len(const CmdSpacePacket* csp)
 void CSP_set_param(CmdSpacePacket* csp, const uint8_t* param, uint16_t len)
 {
   // パラメータをパケットにコピー
-  // paramは既に成形されているのでここは endian_memcpy ではなく memcpy (paramの数, 種類などがこの関数からは不明)
+  // paramは既に成形されているのでここは ENDIAN_memcpy ではなく memcpy (paramの数, 種類などがこの関数からは不明)
   // const ではダメなので， CSP_get_param_head が使えない
   memcpy(&(csp->packet[SP_PRM_HDR_LEN + CSP_SND_HDR_LEN]), param, (size_t)len);
 

@@ -8,34 +8,6 @@ on:
   pull_request:
 
 jobs:
-  build_example_user_as_cxx:
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        example:
-          - minimum_user
-          - 2nd_obc_user
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: setup
-        shell: cmd
-        run: ./setup.bat
-
-      - name: cmake
-        working-directory: ./Examples/${{ matrix.example }}
-        run: |
-          mkdir build
-          cd build
-          cmake --version
-          cmake .. -A Win32
-
-      - name: build
-        working-directory: ./Examples/${{ matrix.example }}/build
-        run: cmake --build .
-
   build_s2e_mockup:
     runs-on: windows-latest
     strategy:

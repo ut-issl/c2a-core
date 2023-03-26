@@ -8,7 +8,7 @@
  */
 #include "eb90_packet_for_driver_super.h"
 #include "eb90_frame_for_driver_super.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 
 // FIXME: DS_StreamConfig.data_link_layer_ をちゃんと見る！
 
@@ -41,7 +41,7 @@ uint32_t EB90_PACKET_get_id_from_dssc(const DS_StreamConfig* p_stream_config)
   if (version == 1)
   {
     uint16_t id;
-    endian_memcpy(&id, &(EB90_FRAME_get_packet_head_from_dssc(p_stream_config)[2]), sizeof(uint16_t));
+    ENDIAN_memcpy(&id, &(EB90_FRAME_get_packet_head_from_dssc(p_stream_config)[2]), sizeof(uint16_t));
     return (uint32_t)id;
   }
   else

@@ -34,7 +34,6 @@ PARAMS_LIST = [
 @pytest.mark.sils
 @pytest.mark.real
 def test_bcl_prepare_param():
-
     # BC_TEST_BCL を BLテレメに降ろしてくる
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,

@@ -2,12 +2,12 @@
 #include "debug_apps.h"
 
 #include <stddef.h> // for NULL
+#include <stdint.h>
 
 #include <src_core/Library/print.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>
-#include <src_core/System/AnomalyLogger/anomaly_logger.h>
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/System/EventManager/event_handler.h>
 #include <src_core/TlmCmd/packet_handler.h>
@@ -21,7 +21,6 @@
 // #include <src_core/TlmCmd/telemetry_generator.h>
 #include "../../Library/git_revision.h"
 #include "../../Library/vt100.h"
-#include "../../Library/stdint.h"
 
 void APP_DBG_flush_screen_(void);
 void APP_DBG_print_time_stamp_(void);
@@ -89,10 +88,13 @@ void APP_DBG_print_time_stamp_(void)
 void APP_DBG_print_cmd_status_(void)
 {
   VT100_erase_line();
-  Printf("CMD: GS %3d, RT %3d, Ack %3d, Code 0x%02x, Sts %3d\n",
+  Printf("CMD: GS %3d, RT %3d, Ack %2d, ID 0x%02x, Sts %1d, EC %d\n",
          (PL_count_executed_nodes(&PH_gs_cmd_list) & 0xff),
          (PL_count_executed_nodes(&PH_rt_cmd_list) & 0xff),
-         gs_driver->info[gs_driver->tlm_tx_port_type].rx.cmd_ack, gs_command_dispatcher->prev.code, gs_command_dispatcher->prev.sts);
+         gs_driver->info[gs_driver->tlm_tx_port_type].rx.cmd_ack,
+         gs_command_dispatcher->prev.code,
+         gs_command_dispatcher->prev.cmd_ret.exec_sts,
+         gs_command_dispatcher->prev.cmd_ret.err_code);
 }
 
 void APP_DBG_print_event_logger0_(void)

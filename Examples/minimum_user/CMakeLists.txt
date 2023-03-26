@@ -16,7 +16,6 @@ option(USE_SCI_COM_WINGS "Use SCI_COM_WINGS" ON)
 # そちらのバッファが詰まってSILSの動作が止まることがあるので注意すること！
 option(USE_SCI_COM_UART "Use SCI_COM_UART" OFF)
 
-
 option(USE_SILS_MOCKUP "Use SILS mockup for build C2A with minimal user in C89 only" OFF)
 
 option(BUILD_C2A_AS_SILS_FW "Build C2A as SILS firmware" ON)
@@ -53,7 +52,6 @@ add_subdirectory(${C2A_USER_DIR}/TlmCmd)
 
 set(C2A_SRCS
   ${C2A_USER_DIR}/c2a_main.c
-  ${C2A_CORE_DIR}/System/AnomalyLogger/anomaly_logger.c   # ここでは保守のため， deprecated だがビルドする
 )
 
 if(BUILD_C2A_AS_CXX)

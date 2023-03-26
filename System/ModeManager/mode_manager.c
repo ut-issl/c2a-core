@@ -9,14 +9,13 @@
 
 #include "../TimeManager/time_manager.h"
 #include "../TaskManager/task_dispatcher.h"
-#include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
 #include "../../TlmCmd/block_command_executor.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../../TlmCmd/packet_handler.h"
-#include "../../Applications/timeline_command_dispatcher.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Applications/timeline_command_dispatcher_id_define.h"
+#include "../../Library/endian.h"
 
 /**
  * @brief Cmd_MM_START_TRANSITIONの実体
@@ -83,7 +82,7 @@ void MM_clear_transition_table_(void)
  * @brief
  * モード遷移後にタスクリストとして実行するブロックコマンドを設定するコマンド
  */
-CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
 {
   MD_MODEID mode;
   bct_id_t  bc_index;
@@ -92,19 +91,19 @@ CCP_EXEC_STS Cmd_MM_SET_MODE_LIST(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (1 + SIZE_OF_BCT_ID_T))
   {
     // パラメータはパケットヘッダとuint8_t 2個（mode, index)。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // どのモードにどのブロックコマンドを登録するかを引数から読み出す
   mode = (MD_MODEID)param[0];
-  endian_memcpy(&bc_index, param + 1, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&bc_index, param + 1, SIZE_OF_BCT_ID_T);
 
   mode_manager_.mm_ack = MM_set_mode_list(mode, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
@@ -135,7 +134,7 @@ MM_ACK MM_set_mode_list(MD_MODEID mode, bct_id_t  bc_index)
  * @brief
  * モード遷移時に実行するブロックコマンドを設定するコマンド
  */
-CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
 {
   unsigned char from, to;
   bct_id_t bc_index;
@@ -144,20 +143,20 @@ CCP_EXEC_STS Cmd_MM_SET_TRANSITION_TABLE(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != 1 + 1 + SIZE_OF_BCT_ID_T)
   {
     // コマンドはパケットヘッダとuint8_t 3個（from, to, index)。
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // どのモード遷移にどのブロックコマンドを登録するかを引数から読み出す
   from = param[0];
   to   = param[1];
-  endian_memcpy(&bc_index, param + 2, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&bc_index, param + 2, SIZE_OF_BCT_ID_T);
 
   mode_manager_.mm_ack = MM_set_transition_table((MD_MODEID)from, (MD_MODEID)to, bc_index);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 MM_ACK MM_set_transition_table(MD_MODEID from,
@@ -190,7 +189,7 @@ MM_ACK MM_set_transition_table(MD_MODEID from,
  * @brief
  * モード遷移を開始するコマンド
  */
-CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
 {
   MD_MODEID id;
 
@@ -201,9 +200,9 @@ CCP_EXEC_STS Cmd_MM_START_TRANSITION(const CommonCmdPacket* packet)
   mode_manager_.mm_ack = MM_start_transition_(id);
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static MM_ACK MM_start_transition_(MD_MODEID id)
@@ -213,18 +212,12 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
   if (id >= MD_MODEID_MODE_MAX)
   {
     // 定義されていないモード番号が指定された場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_BAD_ID);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_BAD_ID, EL_ERROR_LEVEL_LOW, (uint32_t)id);
     return MM_BAD_ID;
   }
   else if (mode_manager_.stat != MM_STATUS_FINISHED)
   {
     // 別のモード遷移を実行中の場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_OVERWRITE);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_OVERWRITE, EL_ERROR_LEVEL_LOW, (uint32_t)mode_manager_.current_id);
     return MM_OVERWRITE;
   }
@@ -235,9 +228,6 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
   if (bc_index == MM_NOT_DEFINED)
   {
     // 実行したいモード遷移に対応するブロックコマンドが登録されていない場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_ILLEGAL_MOVE);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_ILLEGAL_MOVE, EL_ERROR_LEVEL_LOW, (uint32_t)bc_index);
     return MM_ILLEGAL_MOVE;
   }
@@ -258,16 +248,16 @@ static MM_ACK MM_start_transition_(MD_MODEID id)
  * モード遷移のブロックコマンドの最後に入れて使う
  * 入っていない場合、タスクリストが遷移先のモードに置き換わらないので注意
  */
-CCP_EXEC_STS Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_FINISH_TRANSITION(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   mode_manager_.mm_ack = MM_finish_transition_();
   if (mode_manager_.mm_ack != MM_SUCCESS)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static MM_ACK MM_finish_transition_(void)
@@ -277,9 +267,6 @@ static MM_ACK MM_finish_transition_(void)
   if (mode_manager_.stat != MM_STATUS_IN_PROGRESS)
   {
     // モード遷移が実行中でない場合
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_NOT_IN_PROGRESS);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_NOT_IN_PROGRESS, EL_ERROR_LEVEL_HIGH, (uint32_t)mode_manager_.current_id);
     return MM_NOT_IN_PROGRESS;
   }
@@ -295,9 +282,6 @@ static MM_ACK MM_finish_transition_(void)
     break;
 
   default:
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_MODE_MANAGER, MM_TL_LOAD_FAILED);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_MODE_MANAGER, MM_TL_LOAD_FAILED, EL_ERROR_LEVEL_HIGH, (uint32_t)ack);
     break;
   }
@@ -312,12 +296,12 @@ static void MM_deploy_block_cmd_(bct_id_t bc_index)
   CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, bc_index);
 }
 
-CCP_EXEC_STS Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MM_UPDATE_TRANSITION_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
   MM_update_transition_table_for_tlm();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 uint16_t MM_update_transition_table_for_tlm(void)

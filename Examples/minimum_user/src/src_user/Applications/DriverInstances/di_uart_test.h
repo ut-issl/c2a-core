@@ -9,16 +9,16 @@
 #include <src_core/System/ApplicationManager/app_info.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
 
-extern const UART_TEST_Driver* uart_test_instance;
+extern const UART_TEST_Driver* const uart_test_driver;
 
 // アプリケーション
 AppInfo UART_TEST_update(void);
 
-CCP_EXEC_STS Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UART_TEST_INIT_DI(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UART_TEST_UPDATE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_UART_TEST_SEND_TEST(const CommonCmdPacket* packet);
 
 
 #endif

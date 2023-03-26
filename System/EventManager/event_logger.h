@@ -37,11 +37,11 @@
 #define EVENT_LOGGER_H_
 
 // TODO: FALSHメモリ等の大容量不揮発ボリュームへの書き込み
-// TODO: AL や EL そのもの全体をビルドする，しないをえらべる ifdef を追加（メモリのため）
+// TODO: EL そのもの全体をビルドする，しないをえらべる ifdef を追加（メモリのため）
 // TODO: ObcTime の初期化が OBCT_clear ではなく memset 0x00 である（現状問題ないが，今後問題になるかも）
 
 #include <stddef.h>
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "../../TlmCmd/common_cmd_packet.h"
 #include "../TimeManager/obc_time.h"
 
@@ -216,7 +216,8 @@ typedef enum
   EL_CORE_GROUP_EH_RESPOND_WITH_HIGHER_LEVEL_RULE,  //!< EH_Rule でマッチしたが，そのルールで対応せずに，上位のルールで対応させた（詳細は event_handler.h 参照）
   EL_CORE_GROUP_COMMAND_ANALYZE,
   EL_CORE_GROUP_CDIS_INTERNAL_ERR,
-  EL_CORE_GROUP_CDIS_EXEC_ERR,
+  EL_CORE_GROUP_CDIS_EXEC_ERR_STS,
+  EL_CORE_GROUP_CDIS_EXEC_ERR_CODE,
   // TODO: Driver Super
 #ifdef EL_IS_ENABLE_EL_ERROR_LEVEL
   EL_CORE_GROUP_EL_DROP_CLOG1,        //!< EL CLogs で古いエラーを上書きするとき (group, err_level を保存)
@@ -511,50 +512,50 @@ int EL_is_tlog_overwrite_enable(EL_ERROR_LEVEL err_level);
 const EL_Event* EL_get_the_nth_tlog_from_the_latest(EL_ERROR_LEVEL err_level, uint16_t n);
 #endif
 
-CCP_EXEC_STS Cmd_EL_INIT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_INIT(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_CLEAR_LOG_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_CLEAR_STATISTICS(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_CLEAR_TLOG(const CommonCmdPacket* packet);
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_CLEAR_CLOG(const CommonCmdPacket* packet);
 #endif
 
-CCP_EXEC_STS Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_RECORD_EVENT(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_TLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 #endif
 
 #ifdef EL_IS_ENABLE_CLOG
-CCP_EXEC_STS Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_CLOG_SET_PAGE_FOR_TLM(const CommonCmdPacket* packet);
 #endif
 
-CCP_EXEC_STS Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_INIT_LOGGING_SETTINGS(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_ENABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_DISABLE_LOGGING(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_ENABLE_LOGGING_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_DISABLE_LOGGING_ALL(const CommonCmdPacket* packet);
 
 #ifdef EL_IS_ENABLE_TLOG
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_ENABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_DISABLE_TLOG_OVERWRITE(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_ENABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_EL_DISABLE_TLOG_OVERWRITE_ALL(const CommonCmdPacket* packet);
 #endif
 
 #endif

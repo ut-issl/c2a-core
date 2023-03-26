@@ -12,7 +12,7 @@
 #ifndef PA_H_
 #define PA_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 /**
  * @class PA_Config

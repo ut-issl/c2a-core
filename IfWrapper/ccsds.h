@@ -12,7 +12,7 @@
 #ifndef CCSDS_H_
 #define CCSDS_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 /**
  * @struct CCSDS_Config

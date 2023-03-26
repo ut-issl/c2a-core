@@ -58,20 +58,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_MEM_LOAD].cmd_func = Cmd_MEM_LOAD;
   cmd_table[Cmd_CODE_MEM_SET_DESTINATION].cmd_func = Cmd_MEM_SET_DESTINATION;
   cmd_table[Cmd_CODE_MEM_COPY_REGION_SEQ].cmd_func = Cmd_MEM_COPY_REGION_SEQ;
-  cmd_table[Cmd_CODE_AL_ADD_ANOMALY].cmd_func = Cmd_AL_ADD_ANOMALY;
-  cmd_table[Cmd_CODE_AL_CLEAR_LIST].cmd_func = Cmd_AL_CLEAR_LIST;
-  cmd_table[Cmd_CODE_AL_SET_PAGE_FOR_TLM].cmd_func = Cmd_AL_SET_PAGE_FOR_TLM;
-  cmd_table[Cmd_CODE_AL_INIT_LOGGING_ENA_FLAG].cmd_func = Cmd_AL_INIT_LOGGING_ENA_FLAG;
-  cmd_table[Cmd_CODE_AL_ENABLE_LOGGING].cmd_func = Cmd_AL_ENABLE_LOGGING;
-  cmd_table[Cmd_CODE_AL_DISABLE_LOGGING].cmd_func = Cmd_AL_DISABLE_LOGGING;
-  cmd_table[Cmd_CODE_AL_SET_THRES_OF_NEARLY_FULL].cmd_func = Cmd_AL_SET_THRES_OF_NEARLY_FULL;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].cmd_func = Cmd_AH_REGISTER_RULE;
-  cmd_table[Cmd_CODE_AH_ACTIVATE_RULE].cmd_func = Cmd_AH_ACTIVATE_RULE;
-  cmd_table[Cmd_CODE_AH_INACTIVATE_RULE].cmd_func = Cmd_AH_INACTIVATE_RULE;
-  cmd_table[Cmd_CODE_AH_CLEAR_LOG].cmd_func = Cmd_AH_CLEAR_LOG;
-  cmd_table[Cmd_CODE_AH_SET_PAGE_FOR_TLM].cmd_func = Cmd_AH_SET_PAGE_FOR_TLM;
-  cmd_table[Cmd_CODE_AHRES_LOG_CLEAR].cmd_func = Cmd_AHRES_LOG_CLEAR;
-  cmd_table[Cmd_CODE_AHRES_LOG_SET_PAGE_FOR_TLM].cmd_func = Cmd_AHRES_LOG_SET_PAGE_FOR_TLM;
   cmd_table[Cmd_CODE_EL_INIT].cmd_func = Cmd_EL_INIT;
   cmd_table[Cmd_CODE_EL_CLEAR_LOG_ALL].cmd_func = Cmd_EL_CLEAR_LOG_ALL;
   cmd_table[Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL].cmd_func = Cmd_EL_CLEAR_LOG_BY_ERR_LEVEL;
@@ -147,8 +133,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DCU_CLEAR_LOG].cmd_func = Cmd_DCU_CLEAR_LOG;
   cmd_table[Cmd_CODE_TEST_CCP_REGISTER_TLC_ASAP].cmd_func = Cmd_TEST_CCP_REGISTER_TLC_ASAP;
   cmd_table[Cmd_CODE_TEST_CCP_GET_RAW_PARAM_INFO].cmd_func = Cmd_TEST_CCP_GET_RAW_PARAM_INFO;
-  cmd_table[Cmd_CODE_DI_GS_CCSDS_TX_START].cmd_func = Cmd_DI_GS_CCSDS_TX_START;
-  cmd_table[Cmd_CODE_DI_GS_CCSDS_TX_STOP].cmd_func = Cmd_DI_GS_CCSDS_TX_STOP;
   cmd_table[Cmd_CODE_DI_GS_DRIVER_RESET].cmd_func = Cmd_DI_GS_DRIVER_RESET;
   cmd_table[Cmd_CODE_DI_GS_SET_MS_FLUSH_INTERVAL].cmd_func = Cmd_DI_GS_SET_MS_FLUSH_INTERVAL;
   cmd_table[Cmd_CODE_DI_GS_SET_RP_FLUSH_INTERVAL].cmd_func = Cmd_DI_GS_SET_RP_FLUSH_INTERVAL;
@@ -156,6 +140,8 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_DI_GS_SET_INFO].cmd_func = Cmd_DI_GS_SET_INFO;
   cmd_table[Cmd_CODE_DI_GS_CCSDS_GET_BUFFER].cmd_func = Cmd_DI_GS_CCSDS_GET_BUFFER;
   cmd_table[Cmd_CODE_DI_GS_CCSDS_SET_RATE].cmd_func = Cmd_DI_GS_CCSDS_SET_RATE;
+  cmd_table[Cmd_CODE_DI_GS_UART_TLM_ON].cmd_func = Cmd_DI_GS_UART_TLM_ON;
+  cmd_table[Cmd_CODE_DI_GS_UART_TLM_OFF].cmd_func = Cmd_DI_GS_UART_TLM_OFF;
   cmd_table[Cmd_CODE_WDT_INIT].cmd_func = Cmd_WDT_INIT;
   cmd_table[Cmd_CODE_WDT_ENABLE].cmd_func = Cmd_WDT_ENABLE;
   cmd_table[Cmd_CODE_WDT_DISABLE].cmd_func = Cmd_WDT_DISABLE;
@@ -167,9 +153,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_UTIL_CMD_ADD].cmd_func = Cmd_UTIL_CMD_ADD;
   cmd_table[Cmd_CODE_UTIL_CMD_SEND].cmd_func = Cmd_UTIL_CMD_SEND;
   cmd_table[Cmd_CODE_UTIL_CMD_RESET].cmd_func = Cmd_UTIL_CMD_RESET;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_INCREMENT].cmd_func = Cmd_UTIL_COUNTER_INCREMENT;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_RESET].cmd_func = Cmd_UTIL_COUNTER_RESET;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].cmd_func = Cmd_UTIL_COUNTER_SET_PARAM;
 
   cmd_table[Cmd_CODE_TMGR_SET_TIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_TMGR_UPDATE_UNIXTIME].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_8BYTE;
@@ -230,22 +213,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_MEM_LOAD].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_RAW;
   cmd_table[Cmd_CODE_MEM_SET_DESTINATION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_MEM_COPY_REGION_SEQ].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_AL_ADD_ANOMALY].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_AL_ADD_ANOMALY].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_AL_SET_PAGE_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AL_ENABLE_LOGGING].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_AL_DISABLE_LOGGING].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_AL_SET_THRES_OF_NEARLY_FULL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].param_size_infos[2].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_REGISTER_RULE].param_size_infos[2].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
-  cmd_table[Cmd_CODE_AH_ACTIVATE_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_INACTIVATE_RULE].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AH_SET_PAGE_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_AHRES_LOG_SET_PAGE_FOR_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EL_CLEAR_LOG_BY_ERR_LEVEL].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EL_CLEAR_TLOG].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_EL_CLEAR_CLOG].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
@@ -335,11 +302,6 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_UTIL_CMD_ADD].param_size_infos[2].packed_info.bit.first = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_UTIL_CMD_ADD].param_size_infos[2].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
   cmd_table[Cmd_CODE_UTIL_CMD_SEND].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_INCREMENT].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_RESET].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_4BYTE;
-  cmd_table[Cmd_CODE_UTIL_COUNTER_SET_PARAM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
 }
 
 #pragma section

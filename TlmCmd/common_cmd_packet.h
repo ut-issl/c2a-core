@@ -43,8 +43,8 @@ typedef enum
   CCP_EXEC_ILLEGAL_LENGTH,      //!< コマンド実行時のコマンド引数長エラー
   CCP_EXEC_ILLEGAL_PARAMETER,   //!< コマンド実行時のパラメタエラー
   CCP_EXEC_ILLEGAL_CONTEXT,     //!< コマンド実行時のその他のエラー
-  CCP_EXEC_CMD_NOT_DEFINED,     //!< cmdExec で用いる
-  CCP_EXEC_ROUTING_FAILED,      //!< command router で用いる
+  CCP_EXEC_CMD_NOT_DEFINED,     //!< CA_execute_cmd で用いる
+  CCP_EXEC_ROUTING_FAILED,      //!< PH_dispatch_command, PH_user_cmd_router で用いる
   CCP_EXEC_PACKET_FMT_ERR,      //!< packet handler, ccp util で用いる
   CCP_EXEC_UNKNOWN              //!< 内部処理用．使わない．
 } CCP_EXEC_STS;
@@ -70,6 +70,16 @@ typedef enum
 #endif
   CCP_EXEC_TYPE_UNKNOWN
 } CCP_EXEC_TYPE;
+
+/**
+ * @struct CCP_CmdRet
+ * @brief  コマンド返り値
+ */
+typedef struct
+{
+  CCP_EXEC_STS exec_sts;    //!< CCP_EXEC_STS．Cmd の統一的なエラーコード
+  uint32_t     err_code;    //!< 各 Cmd ユニークなエラーコード．各 App で定義する enum などを入れることを想定．
+} CCP_CmdRet;
 
 
 /**

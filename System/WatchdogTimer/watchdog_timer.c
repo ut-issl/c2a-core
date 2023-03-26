@@ -6,6 +6,7 @@
  */
 #include "watchdog_timer.h"
 #include "../../Library/print.h"
+#include "../../TlmCmd/common_cmd_packet_util.h"
 
 static WDT_Config wdt_config_;
 const WDT_Config* const wdt_config = &wdt_config_;
@@ -43,15 +44,15 @@ void WDT_clear_wdt(void)
 // ここからリプロ対象内！！
 
 
-CCP_EXEC_STS Cmd_WDT_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   wdt_init_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
 {
   int ret;
   (void)packet;
@@ -61,13 +62,13 @@ CCP_EXEC_STS Cmd_WDT_ENABLE(const CommonCmdPacket* packet)
 
   if (ret != 0)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
 {
   int ret;
   (void)packet;
@@ -77,28 +78,28 @@ CCP_EXEC_STS Cmd_WDT_DISABLE(const CommonCmdPacket* packet)
 
   if (ret != 0)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_STOP_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   wdt_config_.is_clear_enable = 0;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_WDT_START_CLEAR(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   wdt_config_.is_clear_enable = 1;
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

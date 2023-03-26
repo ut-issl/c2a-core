@@ -284,35 +284,35 @@ DCU_LOG_ACK DCU_search_and_get_log(CMD_CODE cmd_code, const DCU_ExecStatus* exec
 }
 
 
-CCP_EXEC_STS Cmd_DCU_ABORT_CMD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DCU_ABORT_CMD(const CommonCmdPacket* packet)
 {
   // CMD_CODE は u16 と想定する
   CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_abort_cmd(target_cmd);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_DCU_DOWN_ABORT_FLAG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DCU_DOWN_ABORT_FLAG(const CommonCmdPacket* packet)
 {
   // CMD_CODE は u16 と想定する
   CMD_CODE target_cmd = (CMD_CODE)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   DCU_donw_abort_flag(target_cmd);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_DCU_CLEAR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DCU_CLEAR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   DCU_clear_log_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

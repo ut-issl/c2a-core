@@ -2,9 +2,8 @@
 #define M_PDU_H_
 
 
-#include "stddef.h"
-
-#include "../../Library/stdint.h"
+#include <stddef.h>
+#include <stdint.h>
 
 
 #define M_PDU_HEADER_SIZE (2u)

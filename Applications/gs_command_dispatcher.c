@@ -6,6 +6,7 @@
 
 #include "gs_command_dispatcher.h"
 #include "../TlmCmd/packet_handler.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static CommandDispatcher gs_command_dispatcher_;
 const CommandDispatcher* const gs_command_dispatcher = &gs_command_dispatcher_;
@@ -43,13 +44,13 @@ static void GSCD_dispatch_(void)
   CDIS_dispatch_command(&gs_command_dispatcher_);
 }
 
-CCP_EXEC_STS Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_GSCD_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   // 記録されたエラー情報をクリア
   CDIS_clear_error_status(&gs_command_dispatcher_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

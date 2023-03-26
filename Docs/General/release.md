@@ -58,6 +58,7 @@
     - release には以下を含める．
         - 非互換となった Tools の新しい バージョン (Release) へのリンク
         - `develop` にマージしたときの PR のリンク
+1. Bug fix や 大きな機能更新などで，本 Release 前に User サイドで最新の Core が必要になった際にも， Pre-release を行うことができる．
 
 
 ## バージョニング

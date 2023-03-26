@@ -3,6 +3,6 @@
 
 #include "common_cmd_packet.h"
 
-CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet);
 
 #endif

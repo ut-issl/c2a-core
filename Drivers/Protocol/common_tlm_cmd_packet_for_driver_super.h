@@ -8,7 +8,7 @@
 #ifndef COMMON_TLM_CMD_PACKET_FOR_DRIVER_SUPER_H_
 #define COMMON_TLM_CMD_PACKET_FOR_DRIVER_SUPER_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 #include "../Super/driver_super.h"
 #include "../../TlmCmd/common_tlm_cmd_packet.h"
 

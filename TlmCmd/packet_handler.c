@@ -129,6 +129,13 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
     return ack;
   }
 
+  // ここまで来たら自分宛て
+  // 例えば以下のどちらか
+  //   - CCP_DEST_TYPE_TO_ME
+  //   - CCP_DEST_TYPE_TO_MOBC （自分）
+  // 統一するため上書きする
+  CCP_set_dest_type((CommonCmdPacket*)packet, CCP_DEST_TYPE_TO_ME);   // const_cast
+
   switch (CCP_get_exec_type(packet))
   {
   case CCP_EXEC_TYPE_GS:
@@ -219,9 +226,12 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 }
 
 
-CCP_EXEC_STS PH_dispatch_command(const CommonCmdPacket* packet)
+CCP_CmdRet PH_dispatch_command(const CommonCmdPacket* packet)
 {
-  if (!CCP_is_valid_packet(packet)) return CCP_EXEC_UNKNOWN;    // FIXME: 返り値変えたい
+  if (!CCP_is_valid_packet(packet))
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);    // FIXME: 返り値変えたい
+  }
 
   // FIXME: CTCP, SpacePacket 整理で直す
   if (CCP_get_apid(packet) == CCP_APID_TO_ME)

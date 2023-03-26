@@ -6,7 +6,7 @@
 #define EVENT_HANDLER_RULES_H_
 
 /**
- * @enum  AH_RULE_ID
+ * @enum  EH_RULE_ID
  * @brief EH_Rule の ID
  * @note  最大数は EH_RULE_MAX で規定
  * @note  uint16_t を想定

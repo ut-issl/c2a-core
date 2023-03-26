@@ -6,7 +6,8 @@
 #define COMMON_CMD_PACKET_UTIL_H_
 
 #include "common_cmd_packet.h"
-#include "../Applications/timeline_command_dispatcher.h" // for TLCD_ID
+#include "packet_handler.h"
+#include "../Applications/timeline_command_dispatcher_id_define.h"
 #include "block_command_table.h" // for bct_id
 #include <src_user/Applications/app_registry.h>
 
@@ -20,6 +21,23 @@ typedef enum
   CCP_UTIL_ACK_OK = 0,       //!< 正常終了
   CCP_UTIL_ACK_PARAM_ERR     //!< パラメタエラー
 } CCP_UTIL_ACK;
+
+
+/**
+ * @brief コマンド返り値である CCP_CmdRet を作成
+ * @note  err_code を使わないときはそれを明示するために CCP_make_cmd_ret_without_err_code をつかうこと
+ * @param[in] exec_sts: コマンド実行結果 (CCP_EXEC_STS)
+ * @param[in] err_code: ユーザー定義エラーコード
+ * @return CCP_CmdRet
+ */
+CCP_CmdRet CCP_make_cmd_ret(CCP_EXEC_STS exec_sts, uint32_t err_code);
+
+/**
+ * @brief コマンド返り値である CCP_CmdRet を作成（エラーコード不使用版）
+ * @param[in] exec_sts: コマンド実行結果 (CCP_EXEC_STS)
+ * @return CCP_CmdRet
+ */
+CCP_CmdRet CCP_make_cmd_ret_without_err_code(CCP_EXEC_STS exec_sts);
 
 /**
  * @brief App 実行 TL コマンドを生成
@@ -140,19 +158,19 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
  * @param[in]     cmd_id: CMD_CODE
  * @param[in]     param:  パラメタ
  * @param[in]     len:    パラメタ長
- * @retval CCP_EXEC_PACKET_FMT_ERR: 引数が不正なとき
+ * @retval CCP_CmdRet{CCP_EXEC_PACKET_FMT_ERR, *}: 引数が不正なとき
  * @retval それ以外: PH_dispatch_command の返り値
  */
-CCP_EXEC_STS CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+CCP_CmdRet CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief BC展開 command を生成し，即時実行する
  * @param[in]     tl_no:    Timeline no
  * @param[in]     block_no: BC ID
- * @retval CCP_EXEC_PACKET_FMT_ERR: 引数が不正なとき
+ * @retval CCP_CmdRet{CCP_EXEC_PACKET_FMT_ERR, *}: 引数が不正なとき
  * @retval それ以外: PH_dispatch_command の返り値
  */
-CCP_EXEC_STS CCP_form_and_exec_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no);
+CCP_CmdRet CCP_form_and_exec_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no);
 
 /**
  * @brief TLCD ID から CCP_EXEC_TYPE を取得する

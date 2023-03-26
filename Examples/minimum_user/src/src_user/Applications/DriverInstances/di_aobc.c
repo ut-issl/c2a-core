@@ -9,8 +9,15 @@
 #include "../../Drivers/Aocs/aobc.h"
 #include "../../TlmCmd/user_packet_handler.h"
 #include <src_core/Library/print.h>
+#include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
+static void DI_AOBC_init_(void);
+static void DI_AOBC_update_(void);
+
+static void DI_AOBC_cmd_dispatcher_init_(void);
+static void DI_AOBC_cmd_dispatcher_(void);
 
 static AOBC_Driver aobc_driver_;
 const AOBC_Driver* const aobc_driver = &aobc_driver_;
@@ -18,11 +25,9 @@ const AOBC_Driver* const aobc_driver = &aobc_driver_;
 static CommandDispatcher DI_AOBC_cdis_;
 const CommandDispatcher* const DI_AOBC_cdis = &DI_AOBC_cdis_;
 
-static void DI_AOBC_init_(void);
-static void DI_AOBC_update_(void);
-
-static void DI_AOBC_cmd_dispatcher_init_(void);
-static void DI_AOBC_cmd_dispatcher_(void);
+// バッファ
+static DS_StreamRecBuffer DI_AOBC_rx_buffer_;
+static uint8_t DI_AOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
 
 AppInfo DI_AOBC_update(void)
@@ -33,11 +38,21 @@ AppInfo DI_AOBC_update(void)
 
 static void DI_AOBC_init_(void)
 {
-  int ret = AOBC_init(&aobc_driver_, PORT_CH_RS422_AOBC);
+  DS_ERR_CODE ret1;
+  DS_INIT_ERR_CODE ret2;
 
-  if (ret != 0)
+  ret1 = DS_init_stream_rec_buffer(&DI_AOBC_rx_buffer_,
+                                   DI_AOBC_rx_buffer_allocation_,
+                                   sizeof(DI_AOBC_rx_buffer_allocation_));
+  if (ret1 != DS_ERR_CODE_OK)
   {
-    Printf("AOBC init Failed ! %d \n", ret);
+    Printf("AOBC buffer init Failed ! %d \n", ret1);
+  }
+
+  ret2 = AOBC_init(&aobc_driver_, PORT_CH_RS422_AOBC, &DI_AOBC_rx_buffer_);
+  if (ret2 != DS_INIT_OK)
+  {
+    Printf("AOBC init Failed ! %d \n", ret2);
   }
 }
 
@@ -73,7 +88,7 @@ static void DI_AOBC_cmd_dispatcher_(void)
 }
 
 
-CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
+CCP_CmdRet DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
 {
   DS_CMD_ERR_CODE ret;
   CommonCmdPacket* pckt = (CommonCmdPacket*)packet; // const_cast
@@ -95,26 +110,27 @@ CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
   CCP_set_dest_type(pckt, CCP_DEST_TYPE_TO_ME);
 
   ret = AOBC_send_cmd(&aobc_driver_, pckt);
-  return DS_conv_cmd_err_to_ccp_exec_sts(ret);
+  // FIXME: ここも一旦握りつぶす（後で直す）
+  return DS_conv_cmd_err_to_ccp_cmd_ret(ret);
 }
 
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   CDIS_clear_command_list(&DI_AOBC_cdis_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
 
   // 記録されたエラー情報を解除
   CDIS_clear_error_status(&DI_AOBC_cdis_);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

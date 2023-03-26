@@ -12,7 +12,7 @@
 
 #include "block_command_executor.h"
 #include "packet_handler.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../System/TimeManager/time_manager.h"
 #include "common_cmd_packet_util.h"
 
@@ -36,28 +36,28 @@ static void BCE_set_bc_exe_params_(const bct_id_t block, const BCE_Params* bc_ex
 /**
  * @brief rotator の実行主体
  * @param[in] block: BC の idx
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  * @note  rotator はひたすらその BC に含まれる Cmd をループで実行し続ける
  *        interval[cycle] ごとに 1つの Cmd が実行される.
  */
-static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block);
+static CCP_CmdRet BCE_rotate_block_cmd_(bct_id_t block);
 
 /**
  * @brief BC をまとめて一括で実行する
  * @param[in] block: BC の idx
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  * @note  BC の内部で BC を実行する時など
  */
-static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block);
+static CCP_CmdRet BCE_combine_block_cmd_(bct_id_t block);
 
 /**
  * @brief BC をまとめて一括で実行する
  * @param[in] block: BC の idx
  * @param[in] limit_step: 実行制限時間 [step]
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  * @note 時間を制限を設けてBCを実行したい時など
  */
-static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step);
+static CCP_CmdRet BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step);
 
 /**
  * @brief 時間制限付きの combiner
@@ -115,14 +115,14 @@ BCT_ACK BCE_clear_block(const bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK(const CommonCmdPacket* packet)
 {
   BCT_ACK ack;
   (void)packet;
 
   ack = BCE_activate_block();
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 BCT_ACK BCE_activate_block(void)
@@ -146,7 +146,7 @@ BCT_ACK BCE_activate_block(void)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -154,16 +154,16 @@ CCP_EXEC_STS Cmd_BCE_ACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
   ack = BCE_activate_block_by_id(block);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
-CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
 {
   bct_id_t block;
   BCT_ACK ack;
@@ -171,14 +171,14 @@ CCP_EXEC_STS Cmd_BCE_INACTIVATE_BLOCK_BY_ID(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   ack = BCE_inactivate_block_by_id(block);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(ack);
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(ack);
 }
 
 BCT_ACK BCE_activate_block_by_id(bct_id_t block)
@@ -207,39 +207,38 @@ BCT_ACK BCE_inactivate_block_by_id(bct_id_t block)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_ROTATE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   return BCE_rotate_block_cmd_(block);
 }
 
-static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
+static CCP_CmdRet BCE_rotate_block_cmd_(bct_id_t block)
 {
-  CCP_EXEC_STS ack;
   BCE_Params* bc_exe_params;
   BCT_Pos pos;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
-  if (!bc_exe_params->is_active) return CCP_EXEC_ILLEGAL_CONTEXT;
-  if (bc_exe_params->rotate.interval == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!bc_exe_params->is_active) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  if (bc_exe_params->rotate.interval == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   ++bc_exe_params->rotate.counter;
   if (bc_exe_params->rotate.counter < bc_exe_params->rotate.interval)
   {
     BCE_set_bc_exe_params_(block, bc_exe_params);
-    return CCP_EXEC_SUCCESS; // スキップ
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS); // スキップ
   }
 
   bc_exe_params->rotate.counter = 0;
@@ -251,57 +250,56 @@ static CCP_EXEC_STS BCE_rotate_block_cmd_(bct_id_t block)
 
   BCT_make_pos(&pos, block, bc_exe_params->rotate.next_cmd);
   BCT_load_cmd(&pos, &BCE_packet_);
-  ack = PH_dispatch_command(&BCE_packet_);
-
-  return ack;
+  return PH_dispatch_command(&BCE_packet_);
 }
 
-CCP_EXEC_STS Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
   return BCE_combine_block_cmd_(block);
 }
 
-static CCP_EXEC_STS BCE_combine_block_cmd_(bct_id_t block)
+static CCP_CmdRet BCE_combine_block_cmd_(bct_id_t block)
 {
   uint8_t cmd;
-  CCP_EXEC_STS ack;
   uint8_t length;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
 
   length = BCT_get_bc_length(block);
 
-  if (!BCE_is_active(block)) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!BCE_is_active(block)) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   for (cmd = 0; cmd < length; ++cmd)
   {
+    CCP_CmdRet cmd_ret;
     BCT_Pos pos;
+
     pos.block = block;
     pos.cmd = cmd;
     BCT_load_cmd(&pos, &BCE_packet_);
-    ack = PH_dispatch_command(&BCE_packet_);
+    cmd_ret = PH_dispatch_command(&BCE_packet_);
 
-    if (ack != CCP_EXEC_SUCCESS) return ack;
+    if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS) return cmd_ret;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // 2019/10/01 追加
 // 時間制限付きコンバイナ
 // （時間が来たら打ち切り．したがって，必ず設定時間はすぎる）
-CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   bct_id_t block;
@@ -310,31 +308,30 @@ CCP_EXEC_STS Cmd_BCE_TIMELIMIT_COMBINE_BLOCK(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T + 1)
   {
     // パラメータはブロック番号 + 制限時間 [step]
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, param, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, param, SIZE_OF_BCT_ID_T);
   limit_step = param[SIZE_OF_BCT_ID_T];
 
   return BCE_timelimit_combine_block_cmd_(block, limit_step);
 }
 
-static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step)
+static CCP_CmdRet BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limit_step)
 {
   uint8_t cmd;
   uint8_t length;
-  CCP_EXEC_STS ack;
   BCE_Params* bc_exe_params;
 
   ObcTime start = TMGR_get_master_clock();
   ObcTime finish;
   step_t diff;
 
-  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_exec_sts(BCT_INVALID_BLOCK_NO);
+  if (block >= BCT_MAX_BLOCKS) return BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_INVALID_BLOCK_NO);
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
-  if (!bc_exe_params->is_active) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (!bc_exe_params->is_active) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   ++bc_exe_params->timelimit_combine.call_num;
   length = BCT_get_bc_length(block);
@@ -350,15 +347,18 @@ static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
 
   for (cmd = 0; cmd < length; ++cmd)
   {
+    CCP_CmdRet cmd_ret;
     BCT_Pos pos;
+
     pos.block = block;
     pos.cmd = cmd;
     BCT_load_cmd(&pos, &BCE_packet_);
-    ack = PH_dispatch_command(&BCE_packet_);
-    if (ack != CCP_EXEC_SUCCESS)
+    cmd_ret = PH_dispatch_command(&BCE_packet_);
+
+    if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
     {
       BCE_set_bc_exe_params_(block, bc_exe_params);
-      return ack;
+      return cmd_ret;
     }
 
     // 時間判定
@@ -375,14 +375,14 @@ static CCP_EXEC_STS BCE_timelimit_combine_block_cmd_(bct_id_t block, step_t limi
       }
 
       BCE_set_bc_exe_params_(block, bc_exe_params);
-      return CCP_EXEC_SUCCESS;    // 異常ではないのでこれを返す
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);    // 異常ではないのでこれを返す
     }
   }
 
   BCE_set_bc_exe_params_(block, bc_exe_params);
 
   // 最後まで実行できた
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 BCT_ACK BCE_reset_rotator_info(const bct_id_t block)
@@ -462,39 +462,39 @@ BCT_ACK BCE_swap_contents(const bct_id_t block_a, const bct_id_t block_b)
   return BCT_SUCCESS;
 }
 
-CCP_EXEC_STS Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_RESET_ROTATOR_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_rotator_info(block));
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(BCE_reset_rotator_info(block));
 }
 
-CCP_EXEC_STS Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_RESET_COMBINER_INFO(const CommonCmdPacket* packet)
 {
   bct_id_t block;
 
   if (CCP_get_param_len(packet) != SIZE_OF_BCT_ID_T)
   {
     // パラメータはブロック番号
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&block, CCP_get_param_head(packet), SIZE_OF_BCT_ID_T);
 
-  return BCT_convert_bct_ack_to_ccp_exec_sts(BCE_reset_combiner_info(block));
+  return BCT_convert_bct_ack_to_ccp_cmd_ret(BCE_reset_combiner_info(block));
 }
 
-CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
 {
   const unsigned char* param = CCP_get_param_head(packet);
   bct_id_t block;
@@ -504,24 +504,24 @@ CCP_EXEC_STS Cmd_BCE_SET_ROTATE_INTERVAL(const CommonCmdPacket* packet)
   if (CCP_get_param_len(packet) != (SIZE_OF_BCT_ID_T + 2))
   {
     // パラメータはブロック番号2Byte＋周期2Byte = 4Bytes
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   // パラメータを読み出し。
-  endian_memcpy(&block, param, SIZE_OF_BCT_ID_T);
-  endian_memcpy(&interval, param + SIZE_OF_BCT_ID_T, 2);
+  ENDIAN_memcpy(&block, param, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&interval, param + SIZE_OF_BCT_ID_T, 2);
 
   if (interval == 0 || block >= BCT_MAX_BLOCKS)
   {
     // 0で割りに行くのでここではじく
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   bc_exe_params = BCE_get_bc_exe_params_(block);
   bc_exe_params->rotate.interval = interval;
   BCE_set_bc_exe_params_(block, bc_exe_params);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

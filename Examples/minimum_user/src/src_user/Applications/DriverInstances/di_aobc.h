@@ -35,13 +35,13 @@ AppInfo DI_AOBC_cmd_dispatcher(void);
  * @note   AOBC が自身のコマンドと解釈できるよう，Execution Type を上書きするため， packet を const cast する．[TODO] const cast やめたい
  * @note   この関数を呼んでも良いのは，user_packet_handler のみ！
  * @param  packet: CommonCmdPacket packet
- * @retval CCP_EXEC_SUCCESS: 無事に転送された
+ * @retval CCP_CmdRet{CCP_EXEC_SUCCESS, *}: 無事に転送された
  * @retval それ以外: 転送失敗（DS_CMD_ERR_CODE を CCP_EXEC_STS に変換して返す．詳細エラーは DriverSuper を参照）
  */
-CCP_EXEC_STS DI_AOBC_dispatch_command(const CommonCmdPacket* packet);
+CCP_CmdRet DI_AOBC_dispatch_command(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ALL_REALTIME(const CommonCmdPacket* packet);
 
-CCP_EXEC_STS Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_AOBC_CDIS_CLEAR_ERR_LOG(const CommonCmdPacket* packet);
 
 #endif

@@ -13,6 +13,8 @@
 #include "../../TlmCmd/Ccsds/vcdu.h"
 #include "gs_validate.h"
 
+#define GS_RX_HEADER_NUM (3)
+
 /**
  * @enum  GS_PORT_TYPE
  * @brief GS の通信ポートは CCSDS と UART の 2 つある
@@ -74,21 +76,27 @@ typedef struct
   {
     DriverSuper super;
     UART_Config uart_config;
+    uint8_t is_tlm_on;            //!< UART に TLM を流すかどうか, CCSDS では許容でも UART に TLM を送りすぎると詰まってしまうため
   } driver_uart;
 
   GS_Info info[GS_PORT_TYPE_NUM]; //!< CCSDS 用と UART 用 2 つ
   const GS_Info* latest_info;
   CCSDS_Info ccsds_info;
   GS_PORT_TYPE tlm_tx_port_type;
-  uint8_t is_ccsds_tx_valid;      //!< CCSDS TX が有効になっているか (地上試験で突然電波を出すと危険なので)
 } GS_Driver;
 
 /**
  * @brief Driver の初期化
- * @param[in] uart_ch: 有線通信時の CH
+ * @param[in] gs_driver:        ドライバー
+ * @param[in] uart_ch:          有線通信時の CH
+ * @param[in] ccsds_rx_buffers: CCSDS 用受信バッファ
+ * @param[in] uart_rx_buffers:  UART 用受信バッファ
  * @return DS_INIT_ERR_CODE
  */
-DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch);
+DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver,
+                         uint8_t uart_ch,
+                         DS_StreamRecBuffer* ccsds_rx_buffers[DS_STREAM_MAX],
+                         DS_StreamRecBuffer* uart_rx_buffers[DS_STREAM_MAX]);
 
 /**
  * @brief 地上から CMD を受信する. 形式は TC Transer Frame
@@ -102,7 +110,7 @@ DS_REC_ERR_CODE GS_rec_tctf(GS_Driver* gs_driver);
  * @note  DS_send_general_cmd が使われているが, これは DS は MOBC コンポ間を想定しているため, MOBC から見るとコンポに cmd を送信している様に見える, が 今回は MOBC から地上に TLM を送信している
  * @note TLM 送信, 形式は VCDU
  * @param[in] gs_driver: ドライバー
- * @param[in] vcdu: 送信する VCDU. 場合によってはそのまま DS に渡すので， local変数ではなくstaticな変数を渡すこと
+ * @param[in] vcdu:      送信する VCDU. 場合によってはそのまま DS に渡すので， local変数ではなくstaticな変数を渡すこと
  * @return DS_CMD_ERR_CODE: 送信結果
  */
 DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu);

@@ -5,7 +5,7 @@
  */
 #include "common_cmd_packet_util.h"
 #include "command_analyze.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include <stddef.h>     // for NULL
 #include <string.h>
 
@@ -68,6 +68,21 @@ static CCP_UTIL_ACK CCP_raise_err_at_param_generator_(void);
  * @return CCP_UTIL_ACK
  */
 static CCP_UTIL_ACK CCP_prepare_param_for_packet_(void* param, uint8_t byte);
+
+
+CCP_CmdRet CCP_make_cmd_ret(CCP_EXEC_STS exec_sts, uint32_t err_code)
+{
+  CCP_CmdRet ret;
+  ret.exec_sts = exec_sts;
+  ret.err_code = err_code;
+  return ret;
+}
+
+
+CCP_CmdRet CCP_make_cmd_ret_without_err_code(CCP_EXEC_STS exec_sts)
+{
+  return CCP_make_cmd_ret(exec_sts, 0);
+}
 
 
 void CCP_form_nop_rtc_(CommonCmdPacket* packet)
@@ -318,21 +333,25 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
 }
 
 
-CCP_EXEC_STS CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
+CCP_CmdRet CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len)
 {
-  CCP_UTIL_ACK ret;
-  ret = CCP_form_rtc(&CCP_util_packet_, cmd_id, param, len);
-  if (ret != CCP_UTIL_ACK_OK) return CCP_EXEC_PACKET_FMT_ERR;
+  CCP_UTIL_ACK ret = CCP_form_rtc(&CCP_util_packet_, cmd_id, param, len);
+  if (ret != CCP_UTIL_ACK_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_PACKET_FMT_ERR);
+  }
 
   return PH_dispatch_command(&CCP_util_packet_);
 }
 
 
-CCP_EXEC_STS CCP_form_and_exec_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no)
+CCP_CmdRet CCP_form_and_exec_block_deploy_cmd(TLCD_ID tl_no, bct_id_t block_no)
 {
-  CCP_UTIL_ACK ret;
-  ret = CCP_form_block_deploy_cmd(&CCP_util_packet_, tl_no, block_no);
-  if (ret != CCP_UTIL_ACK_OK) return CCP_EXEC_PACKET_FMT_ERR;
+  CCP_UTIL_ACK ret = CCP_form_block_deploy_cmd(&CCP_util_packet_, tl_no, block_no);
+  if (ret != CCP_UTIL_ACK_OK)
+  {
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_PACKET_FMT_ERR);
+  }
 
   return PH_dispatch_command(&CCP_util_packet_);
 }
@@ -377,7 +396,7 @@ uint8_t* CCP_get_1byte_param_from_packet(const CommonCmdPacket* packet, uint8_t 
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -397,7 +416,7 @@ uint16_t* CCP_get_2byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -417,7 +436,7 @@ uint32_t* CCP_get_4byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -437,7 +456,7 @@ uint64_t* CCP_get_8byte_param_from_packet(const CommonCmdPacket* packet, uint8_t
 
   if (CA_get_cmd_param_size(cmd_id, n) != param_size) return &ret;
 
-  endian_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
+  ENDIAN_memcpy(&ret, CCP_get_param_head(packet) + offset, (size_t)param_size);
   return &ret;
 }
 
@@ -640,7 +659,7 @@ static CCP_UTIL_ACK CCP_prepare_param_for_packet_(void* param, uint8_t byte)
   }
   if (p_pg->len != offset) return CCP_raise_err_at_param_generator_();
 
-  endian_memcpy((void*)(CCP_get_param_head(&(p_pg->packet)) + offset), param, byte);   // const_cast
+  ENDIAN_memcpy((void*)(CCP_get_param_head(&(p_pg->packet)) + offset), param, byte);   // const_cast
   p_pg->len += byte;
   p_pg->param_idx++;
   return CCP_UTIL_ACK_OK;

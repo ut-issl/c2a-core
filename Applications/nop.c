@@ -7,6 +7,7 @@
  */
 #include "nop.h"
 #include <stddef.h>
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static void NOP_nop_(void);
 
@@ -19,10 +20,10 @@ static void NOP_nop_() {
   // no operation
 }
 
-CCP_EXEC_STS Cmd_NOP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_NOP(const CommonCmdPacket* packet)
 {
   (void)packet;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

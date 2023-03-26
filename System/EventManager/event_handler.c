@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../../TlmCmd/common_cmd_packet_util.h"
-#include "../../Applications/timeline_command_dispatcher.h"
+#include "../../Applications/timeline_command_dispatcher_id_define.h"
 #include "../TimeManager/time_manager.h"
 
 #ifdef EL_IS_ENABLE_TLOG
@@ -23,7 +23,7 @@ typedef enum
   EH_EL_LOCAL_ID_EL_TOTAL_COUNTER_ERR = 0,  //!< ELとEHのカウンタの不整合エラー (counter_total)
   EH_EL_LOCAL_ID_EL_COUNTER_ERR,            //!< ELとEHのカウンタの不整合エラー (counters)
   EH_EL_LOCAL_ID_TOO_MANY_EVENT,            //!< イベントが発生しすぎて，TLogが失われている
-  EH_EL_LOCAL_ID_FAIL_FORM_CTCP,            //!< BC 展開 Cmd の生成に失敗
+  EH_EL_LOCAL_ID_FAIL_TO_RESPOND,           //!< EH 対応時に BC 展開に失敗
   EH_EL_LOCAL_ID_LOG_TABLE_FULL,            //!< EH_LogTable が満杯になり， wp が 0 に戻った
   EH_EL_LOCAL_ID_SEARCH_ERR,                //!< EH_search_rule_table_index_ の返り値不正
   EH_EL_LOCAL_ID_RECURSION_ERR,             //!< 多段対応時に再帰呼び出し回数が設定値を超えた
@@ -648,23 +648,35 @@ static EH_CKECK_RULE_ACK EH_check_cumulative_rule_(EH_RULE_ID rule_id, const EL_
 static void EH_respond_(EH_RULE_ID rule_id)
 {
   EH_Rule* rule = &event_handler_.rule_table.rules[rule_id];
-  CCP_EXEC_STS ack;
+  CCP_CmdRet cmd_ret;
 
-  ack = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
-  if (ack != CCP_EXEC_SUCCESS)
+  cmd_ret = CCP_form_and_exec_block_deploy_cmd(TLCD_ID_DEPLOY_BC, rule->settings.deploy_bct_id);
+  if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
   {
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
-                    EH_EL_LOCAL_ID_FAIL_FORM_CTCP,
-                    EL_ERROR_LEVEL_HIGH,
-                    ack);
+    uint32_t note = ((0x0000ffff & cmd_ret.exec_sts) << 16) | (0x0000ffff & cmd_ret.err_code);
+    if ((PL_ACK)cmd_ret.err_code == PL_BC_TIME_ADJUSTED)
+    {
+      EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                      EH_EL_LOCAL_ID_FAIL_TO_RESPOND,
+                      EL_ERROR_LEVEL_LOW,
+                      note);
+    }
+    else
+    {
+      EL_record_event((EL_GROUP)EL_CORE_GROUP_EVENT_HANDLER,
+                      EH_EL_LOCAL_ID_FAIL_TO_RESPOND,
+                      EL_ERROR_LEVEL_HIGH,
+                      note);
+    }
   }
 
   EH_inactivate_rule_for_multi_level(rule_id);
 
-  EH_record_responded_log_(rule_id, ack);
+  EH_record_responded_log_(rule_id, cmd_ret.exec_sts);
 }
 
 
+// FIXME: CCP_EXEC_STS -> CCP_CmdRet にしてもいいかも？
 static void EH_record_responded_log_(EH_RULE_ID rule_id, CCP_EXEC_STS deploy_cmd_ack)
 {
   EH_LogTable* log_table = &event_handler_.log_table;
@@ -1449,31 +1461,31 @@ const EH_Log* EH_get_the_nth_log_from_the_latest(uint16_t n)
 }
 
 
-CCP_EXEC_STS Cmd_EH_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INIT(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_initialize();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_ALL_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_CLEAR_ALL_RULE(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_clear_rules_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_LOAD_DEFAULT_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_LOAD_DEFAULT_RULE(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_load_default_rules();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet)
 {
   // 登録する瞬間にしかわからないので，ここでは値のアサーションはせず，
   // Cmd_EH_REGISTER_RULE でアサーションする
@@ -1484,11 +1496,11 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_EVENT_PARAM(const CommonCmdPacket* packet)
   event_handler_.reg_from_cmd.settings.should_match_err_level = CCP_get_param_from_packet(packet, 4, uint8_t);
   event_handler_.reg_from_cmd.settings.deploy_bct_id = CCP_get_param_from_packet(packet, 5, bct_id_t);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* packet)
 {
   // 登録する瞬間にしかわからないので，ここでは値のアサーションはせず，
   // Cmd_EH_REGISTER_RULE でアサーションする
@@ -1497,11 +1509,11 @@ CCP_EXEC_STS Cmd_EH_SET_REGISTER_RULE_CONDITION_PARAM(const CommonCmdPacket* pac
   event_handler_.reg_from_cmd.settings.condition.time_threshold_ms = CCP_get_param_from_packet(packet, 2, uint32_t);
   event_handler_.reg_from_cmd.settings.is_active = CCP_get_param_from_packet(packet, 3, uint8_t);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
 {
   (void)packet;
   event_handler_.reg_from_cmd.register_ack =
@@ -1510,7 +1522,7 @@ CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
   switch (event_handler_.reg_from_cmd.register_ack)
   {
   case EH_REGISTER_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_REGISTER_ACK_ILLEGAL_RULE_ID:
   case EH_REGISTER_ACK_ILLEGAL_GROUP:
   case EH_REGISTER_ACK_ILLEGAL_ERROR_LEVEL:
@@ -1520,19 +1532,19 @@ CCP_EXEC_STS Cmd_EH_REGISTER_RULE(const CommonCmdPacket* packet)
   case EH_REGISTER_ACK_ILLEGAL_BCT_ID:
   case EH_REGISTER_ACK_ILLEGAL_ACTIVE_FLAG:
   case EH_REGISTER_ACK_ILLEGAL_MULTI_LEVEL:
-    return CCP_EXEC_ILLEGAL_PARAMETER;    // 正確にはこのコマンドのパラメタではないが．．．
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);    // 正確にはこのコマンドのパラメタではないが．．．
   case EH_REGISTER_ACK_ERR_FULL:
   case EH_REGISTER_ACK_ERR_RULE_OVERWRITE:
   case EH_REGISTER_ACK_ERR_DUPLICATE_FULL:
   case EH_REGISTER_ACK_UNKNOWN_ERR:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_RULE_SORTED_INDEX_ACK ack = EH_delete_rule_table_(rule_id);
@@ -1540,18 +1552,18 @@ CCP_EXEC_STS Cmd_EH_DELETE_RULE(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_RULE_SORTED_INDEX_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_RULE_SORTED_INDEX_ACK_ILLEGAL_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_RULE_SORTED_INDEX_ACK_NOT_FOUND:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_init_rule(rule_id);
@@ -1559,18 +1571,18 @@ CCP_EXEC_STS Cmd_EH_INIT_RULE(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_init_rule_for_multi_level(rule_id);
@@ -1578,18 +1590,18 @@ CCP_EXEC_STS Cmd_EH_INIT_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_activate_rule(rule_id);
@@ -1597,18 +1609,18 @@ CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule(rule_id);
@@ -1616,18 +1628,18 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_activate_rule_for_multi_level(rule_id);
@@ -1635,18 +1647,18 @@ CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_inactivate_rule_for_multi_level(rule_id);
@@ -1654,18 +1666,18 @@ CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_FOR_MULTI_LEVEL(const CommonCmdPacket* packe
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   uint16_t counter = CCP_get_param_from_packet(packet, 1, uint16_t);
@@ -1674,18 +1686,18 @@ CCP_EXEC_STS Cmd_EH_SET_RULE_COUNTER(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
   EH_CHECK_RULE_ACK ack = EH_clear_rule_counter(rule_id);
@@ -1693,151 +1705,151 @@ CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER(const CommonCmdPacket* packet)
   switch (ack)
   {
   case EH_CHECK_RULE_ACK_OK:
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   case EH_CHECK_RULE_ACK_INVALID_RULE_ID:
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   case EH_CHECK_RULE_ACK_UNREGISTERED:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_CLEAR_RULE_COUNTER_BY_EVENT(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   uint32_t local = (EL_GROUP)CCP_get_param_from_packet(packet, 1, uint32_t);
   EL_ERROR_LEVEL err_level = (EL_ERROR_LEVEL)CCP_get_param_from_packet(packet, 2, uint8_t);
 
   EH_clear_rule_counter_by_event(group, local, err_level);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_CLEAR_LOG(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_clear_log_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_MAX_RESPONSE_NUM(const CommonCmdPacket* packet)
 {
   event_handler_.exec_settings.max_response_num = CCP_get_param_from_packet(packet, 0, uint8_t);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_MAX_CHECK_EVENT_NUM(const CommonCmdPacket* packet)
 {
   event_handler_.exec_settings.max_check_event_num = CCP_get_param_from_packet(packet, 0, uint16_t);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_MAX_MULTI_LEVEL_NUM(const CommonCmdPacket* packet)
 {
   event_handler_.exec_settings.max_multi_level_num = CCP_get_param_from_packet(packet, 0, uint8_t);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   event_handler_.tlm_info.rule.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_PAGE_OF_RULE_SORTED_IDX_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (page >= EH_RULE_TLM_PAGE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   event_handler_.tlm_info.rule_sorted_index.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_PAGE_OF_LOG_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   uint8_t page = CCP_get_param_from_packet(packet, 0, uint8_t);
-  if (page >= EH_LOG_TLM_PAGE_MAX) return CCP_EXEC_ILLEGAL_PARAMETER;
+  if (page >= EH_LOG_TLM_PAGE_MAX) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   event_handler_.tlm_info.log.page_no = page;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_SET_TARGET_ID_OF_RULE_TABLE_FOR_TLM(const CommonCmdPacket* packet)
 {
   EH_RULE_ID rule_id = (EH_RULE_ID)CCP_get_param_from_packet(packet, 0, uint16_t);
 
   if (EH_check_rule_id_(rule_id) == EH_CHECK_RULE_ACK_INVALID_RULE_ID)
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   event_handler_.tlm_info.rule.target_rule_id = rule_id;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_MATCH_EVENT_COUNTER_TO_EL(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_match_event_counter_to_el();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INIT_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   EH_init_rule_by_event_group(group);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INIT_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   EH_init_rule_by_event_group_for_multi_level(group);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   EH_activate_rule_by_event_group(group);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   EH_inactivate_rule_by_event_group(group);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_ACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   EH_activate_rule_by_event_group_for_multi_level(group);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EH_INACTIVATE_RULE_BY_EVENT_GROUP_FOR_MULTI_LEVEL(const CommonCmdPacket* packet)
 {
   EL_GROUP group = (EL_GROUP)CCP_get_param_from_packet(packet, 0, uint32_t);
   EH_inactivate_rule_by_event_group_for_multi_level(group);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #endif  // EL_IS_ENABLE_TLOG

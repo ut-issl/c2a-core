@@ -4,6 +4,7 @@
 #include "../IfWrapper/uart.h"
 #include <src_user/Settings/port_config.h>
 #include <string.h>                     // for memcpy
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 
 static UtilityCommand utility_command_;
@@ -77,13 +78,13 @@ static int UTIL_CMD_send_(unsigned char ch)
   return ret;
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
 {
   unsigned char size = CCP_get_param_head(packet)[0];
   if (CCP_get_param_len(packet) != 21)
   {
     // パラメータ長確認(21Bytes)
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
   if (size <= 20)
   {
@@ -94,17 +95,17 @@ CCP_EXEC_STS Cmd_UTIL_CMD_ADD(const CommonCmdPacket* packet)
     }
      else
       {
-        return CCP_EXEC_ILLEGAL_PARAMETER;
+        return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
       }
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
 {
   unsigned char uart_ch = CCP_get_param_head(packet)[0];
   int ret;
@@ -115,21 +116,21 @@ CCP_EXEC_STS Cmd_UTIL_CMD_SEND(const CommonCmdPacket* packet)
     ret = UTIL_CMD_send_(uart_ch);
     if (ret != 0)
     {
-      return CCP_EXEC_ILLEGAL_CONTEXT;
+      return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
     }
   }
   else
   {
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_UTIL_CMD_RESET(const CommonCmdPacket* packet)
 {
   (void)packet;
   UTIL_CMD_reset_();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

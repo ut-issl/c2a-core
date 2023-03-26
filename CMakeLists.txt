@@ -8,6 +8,9 @@ option(USE_ALL_C2A_CORE_TEST_APPS   "use C2A-core all Test Applications" ON)
 option(USE_ALL_C2A_CORE_LIB         "use C2A-core all Library" ON)
 option(USE_32BIT_COMPILER           "use 32bit compiler" OFF)
 
+option(C2A_USE_SIMPLE_LIBC          "use C2A-core hosted simple libc implementation" OFF)
+option(C2A_USE_C99_STDINT           "use C99 standard stdint.h" ON)
+
 option(BUILD_C2A_AS_SILS_FW         "build C2A as SILS firmware" ON)
 option(BUILD_C2A_AS_CXX             "build C2A as C++" OFF)
 option(BUILD_C2A_AS_UTF8            "build C2A as UTF-8" ON)
@@ -20,7 +23,7 @@ set(C2A_SRCS
   Drivers/Protocol/eb90_frame_for_driver_super.c
   Drivers/Protocol/eb90_packet_for_driver_super.c
   Drivers/Super/driver_super.c
-  # System/AnomalyLogger/anomaly_logger.c    # deprecated. 使いたい場合は， user 側でビルドターゲットに入れる．
+  IfWrapper/Common/i2c_common.c
   System/ApplicationManager/app_info.c
   System/ApplicationManager/app_manager.c
   System/EventManager/event_manager.c
@@ -46,6 +49,11 @@ set(C2A_SRCS
   TlmCmd/Ccsds/space_packet.c
   TlmCmd/Ccsds/tlm_space_packet.c
 )
+
+if(NOT C2A_USE_C99_STDINT)
+  message("Use stdint.h wrapper")
+  include_directories(Library/stdint_wrapper)
+endif()
 
 if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++

@@ -26,12 +26,11 @@ void AR_load_initial_settings(void)
   add_application_(AR_DI_AOBC, DI_AOBC_update);
   add_application_(AR_DI_AOBC_CDIS, DI_AOBC_cmd_dispatcher);
   add_application_(AR_EVENT_UTILITY, EVENT_UTIL_create_app);
-  add_application_(AR_ANOMALY_HANDLER, AH_create_app);
   add_application_(AR_MEM_DUMP, MEM_create_app);
   add_application_(AR_TELEMETRY_MANAGER, TLM_MGR_create_app);
   add_application_(AR_DIVIDED_CMD_UTILITY, DCU_create_app);
   add_application_(AR_UTILITY_CMD, UTIL_CMD_create_app);
-  add_application_(AR_UTILITY_COUNTER, UTIL_COUNTER_create_app);
+  // add_application_(AR_UTILITY_COUNTER, UTIL_COUNTER_create_app);
   add_application_(AR_APP_DBG_FLUSH_SCREEN, APP_DBG_flush_screen);
   add_application_(AR_APP_DBG_PRINT_TIMESTAMP, APP_DBG_print_time_stamp);
   add_application_(AR_APP_DBG_PRINT_CMD_STATUS, APP_DBG_print_cmd_status);

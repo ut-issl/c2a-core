@@ -4,7 +4,6 @@
  * @brief 各種コマンドの実行管理
  */
 #include "command_dispatcher.h"
-
 #include <src_user/TlmCmd/command_definitions.h>
 #include "../System/TimeManager/time_manager.h"
 #include "../System/EventManager/event_logger.h"
@@ -80,7 +79,7 @@ static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info)
 {
   OBCT_clear(&(exec_info->time));
   exec_info->code = (CMD_CODE)0;
-  exec_info->sts = CCP_EXEC_SUCCESS;
+  exec_info->cmd_ret = CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
@@ -95,7 +94,7 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   if (cdis->pl == NULL) return;       // TODO: PL 側で NULL チェックに対応したら消す
   if (PL_is_empty(cdis->pl)) return;
 
-  if (cdis->prev.sts != CCP_EXEC_SUCCESS)
+  if (cdis->prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
   {
     // 直前コマンドが異常終了した場合は実行前に情報を保存
     // 実行前にコピーすることで次コマンドが異常終了した場合は
@@ -119,18 +118,24 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   */
 
   // 実行時情報を記録しつつコマンドを実行
-  cdis->prev.time = TMGR_get_master_clock();
-  cdis->prev.code = CCP_get_id(&packet_);
-  cdis->prev.sts  = PH_dispatch_command(&packet_);
+  cdis->prev.time    = TMGR_get_master_clock();
+  cdis->prev.code    = CCP_get_id(&packet_);
+  cdis->prev.cmd_ret = PH_dispatch_command(&packet_);
 
   // 実行したコマンドをリストから破棄
   PL_drop_executed(cdis->pl);
 
-  if (cdis->prev.sts != CCP_EXEC_SUCCESS)
+  if (cdis->prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
   {
+    uint32_t note;
     // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
-    uint32_t note = ((0x0000ffff & cdis->prev.code) << 16) | (0x0000ffff & cdis->prev.sts);
-    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR,
+    // より重要な EL_CORE_GROUP_CDIS_EXEC_ERR_STS があとに来るように EL 発行
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR_CODE,
+                    (uint32_t)cdis,
+                    EL_ERROR_LEVEL_LOW,
+                    cdis->prev.cmd_ret.err_code);
+    note = ((0x0000ffff & cdis->prev.code) << 16) | (0x0000ffff & cdis->prev.cmd_ret.exec_sts);
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR_STS,
                     (uint32_t)cdis,
                     EL_ERROR_LEVEL_LOW,
                     note);

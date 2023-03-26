@@ -9,7 +9,7 @@
 #ifndef DC_H_
 #define DC_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 /**
  * @class DC_Config

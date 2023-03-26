@@ -7,18 +7,18 @@
 #include "gs.h"
 
 #include <string.h>
+#include <stdint.h>
+
 #include "../../IfWrapper/ccsds_user.h"
 #include "../../TlmCmd/Ccsds/tc_transfer_frame.h"
 #include <src_core/Drivers/Super/driver_super.h>
 #include <src_core/TlmCmd/packet_handler.h>
 #include <src_core/TlmCmd/Ccsds/space_packet_typedef.h>
-#include "../../Library/stdint.h"
+
 
 #define GS_RX_HEADER_SIZE (2)
 #define GS_RX_FRAMELENGTH_TYPE_SIZE (2)
-#define GS_TX_stream (0) // どれでも良いがとりあえず 0 で
-
-#define GS_RX_HEADER_NUM (3)
+#define GS_TX_STREAM (0) // どれでも良いがとりあえず 0 で
 
 #if GS_RX_HEADER_NUM > DS_STREAM_MAX
 #error GS RX HEADER NUM TOO MANY
@@ -56,10 +56,14 @@ static void GS_load_default_driver_super_init_settings_(DriverSuper* p_super);
  */
 static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* p_driver);
 
-DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
+DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver,
+                         uint8_t uart_ch,
+                         DS_StreamRecBuffer* ccsds_rx_buffers[DS_STREAM_MAX],
+                         DS_StreamRecBuffer* uart_rx_buffers[DS_STREAM_MAX])
 {
   DS_ERR_CODE ret_uart, ret_ccsds;
   int i;
+  int stream;
 
   memset(gs_driver, 0x00, sizeof(GS_Driver));
 
@@ -78,22 +82,23 @@ DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   GS_rx_header_[0][0] |= (uint8_t)((TCTF_TYPE_AD & 0x0f) << 4);
   GS_rx_header_[1][0] |= (uint8_t)((TCTF_TYPE_BD & 0x0f) << 4);
   GS_rx_header_[2][0] |= (uint8_t)((TCTF_TYPE_BC & 0x0f) << 4);
-  for (i = 0; i < GS_RX_HEADER_NUM; ++i)
+  for (stream = 0; stream < GS_RX_HEADER_NUM; ++stream)
   {
-    GS_rx_header_[i][0] |= (uint8_t)((TCTF_SCID_SAMPLE_SATELLITE & 0x3ff) >> 8);
-    GS_rx_header_[i][1] |= (uint8_t)(TCTF_SCID_SAMPLE_SATELLITE & 0xff);
+    GS_rx_header_[stream][0] |= (uint8_t)((TCTF_SCID_SAMPLE_SATELLITE & 0x3ff) >> 8);
+    GS_rx_header_[stream][1] |= (uint8_t)(TCTF_SCID_SAMPLE_SATELLITE & 0xff);
   }
 
-  ret_ccsds = DS_init(&gs_driver->driver_ccsds.super, &gs_driver->driver_ccsds.ccsds_config, GS_load_ccsds_driver_super_init_settings_);
-  ret_uart  = DS_init(&gs_driver->driver_uart.super, &gs_driver->driver_uart.uart_config, GS_load_uart_driver_super_init_settings_);
+  ret_ccsds = DS_init_streams(&gs_driver->driver_ccsds.super,
+                              &gs_driver->driver_ccsds.ccsds_config,
+                              ccsds_rx_buffers,
+                              GS_load_ccsds_driver_super_init_settings_);
+  ret_uart  = DS_init_streams(&gs_driver->driver_uart.super,
+                              &gs_driver->driver_uart.uart_config,
+                              uart_rx_buffers,
+                              GS_load_uart_driver_super_init_settings_);
   if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
   gs_driver->latest_info = &gs_driver->info[GS_PORT_TYPE_CCSDS];
   gs_driver->tlm_tx_port_type = GS_PORT_TYPE_CCSDS;
-  gs_driver->is_ccsds_tx_valid = 0;
-
-#ifdef SILS_FW
-  gs_driver->is_ccsds_tx_valid = 1; // SILS でこれが最初から ON になってないと何も降りてこない
-#endif
 
   for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
   {
@@ -114,6 +119,7 @@ DS_INIT_ERR_CODE GS_init(GS_Driver* gs_driver, uint8_t uart_ch)
   }
 
   gs_driver->ccsds_info.buffer_num = 8;
+  gs_driver->driver_uart.is_tlm_on = 1;
 
   return DS_INIT_OK;
 }
@@ -176,7 +182,7 @@ DS_REC_ERR_CODE GS_rec_tctf(GS_Driver* gs_driver)
 
     // TODO: これはエラー情報をきちんと把握したいので，アノマリ発行を入れる
     gs_driver->info[i].rx.rec_status = DS_receive(ds);
-    gs_driver->info[i].rx.ret_from_if_rx = ds->config.rec_status_.ret_from_if_rx;
+    gs_driver->info[i].rx.ret_from_if_rx = DSC_get_rec_status(ds)->ret_from_if_rx;
 
     if (gs_driver->info[i].rx.rec_status != DS_ERR_CODE_OK) continue;
 
@@ -250,7 +256,6 @@ static DS_ERR_CODE GS_analyze_rec_data_(DS_StreamConfig* p_stream_config, void* 
 
 DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
 {
-  int i;
   DS_ERR_CODE ret_ccsds = DS_ERR_CODE_OK;
   DS_ERR_CODE ret_uart  = DS_ERR_CODE_OK;
   size_t vcdu_size = sizeof(VCDU);
@@ -258,39 +263,37 @@ DS_CMD_ERR_CODE GS_send_vcdu(GS_Driver* gs_driver, const VCDU* vcdu)
   // パディングが無ければ元を GS_tx_frame_ にコピーさせる (444Byte) のコピーが無駄
   if (vcdu_size == VCDU_LEN)
   {
-    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_stream], (uint8_t*)vcdu);
-    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_stream], (uint8_t*)vcdu);
+    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_STREAM], (uint8_t*)vcdu);
+    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_STREAM], (uint8_t*)vcdu);
   }
   else
   {
     VCDU_generate_byte_stream(vcdu, GS_tx_frame_); // 送信元にセット 消したいなぁ...
-    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_stream], GS_tx_frame_);
-    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_stream], GS_tx_frame_);
+    DSSC_set_tx_frame(&gs_driver->driver_ccsds.super.stream_config[GS_TX_STREAM], GS_tx_frame_);
+    DSSC_set_tx_frame(&gs_driver->driver_uart.super.stream_config[GS_TX_STREAM], GS_tx_frame_);
   }
 
-  for (i = 0; i < GS_PORT_TYPE_NUM; ++i)
+  // CCSDS
+  gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
+  if (gs_driver->ccsds_info.buffer_num)
   {
-    if (i == GS_PORT_TYPE_CCSDS)
-    {
-      // CCSDS 無効, 又は バッファー空きが無いで下の処理は端折る
-      // FIXME: 一杯だった時の処理
-      gs_driver->ccsds_info.buffer_num = CCSDS_get_buffer_num();
-      if (!gs_driver->is_ccsds_tx_valid || !gs_driver->ccsds_info.buffer_num) continue;
-    }
-
-    gs_driver->info[i].tx.send_cycle = TMGR_get_master_total_cycle();
-    gs_driver->info[i].tx.vcid = VCDU_get_vcid(vcdu);
-    gs_driver->info[i].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
+    gs_driver->info[GS_PORT_TYPE_CCSDS].tx.send_cycle = TMGR_get_master_total_cycle();
+    gs_driver->info[GS_PORT_TYPE_CCSDS].tx.vcid = VCDU_get_vcid(vcdu);
+    gs_driver->info[GS_PORT_TYPE_CCSDS].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
 
     // DS 側の名称が cmd なだけで送信しているのは TLM
-    if (i == GS_PORT_TYPE_CCSDS)
-    {
-      ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_stream);
-    }
-    else
-    {
-      ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_stream);
-    }
+    ret_ccsds = DS_send_general_cmd(&gs_driver->driver_ccsds.super, GS_TX_STREAM);
+  }
+
+  // UART
+  if (gs_driver->driver_uart.is_tlm_on)
+  {
+    gs_driver->info[GS_PORT_TYPE_UART].tx.send_cycle = TMGR_get_master_total_cycle();
+    gs_driver->info[GS_PORT_TYPE_UART].tx.vcid = VCDU_get_vcid(vcdu);
+    gs_driver->info[GS_PORT_TYPE_UART].tx.vcdu_counter = VCDU_get_vcdu_counter(vcdu);
+
+    // DS 側の名称が cmd なだけで送信しているのは TLM
+    ret_uart  = DS_send_general_cmd(&gs_driver->driver_uart.super,  GS_TX_STREAM);
   }
 
   if (ret_ccsds != DS_ERR_CODE_OK || ret_uart != DS_ERR_CODE_OK)

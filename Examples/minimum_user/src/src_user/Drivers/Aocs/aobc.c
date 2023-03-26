@@ -9,23 +9,21 @@
 #include "./aobc_telemetry_buffer.h"
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/TlmCmd/common_cmd_packet.h>
-#include <src_core/Library/endian_memcpy.h>
 #include <src_core/Drivers/Protocol/eb90_frame_for_driver_super.h>
 #include <src_core/Drivers/Protocol/common_tlm_cmd_packet_for_driver_super.h>
 #include <string.h>
 
 #define AOBC_STREAM_TLM_CMD   (0)   //!< テレコマで使うストリーム
 
-static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super);
-static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
-                                          void* p_driver);
-
 static uint8_t AOBC_tx_frame_[EB90_FRAME_HEADER_SIZE +
                               CTCP_MAX_LEN +
                               EB90_FRAME_FOOTER_SIZE];
 
+static DS_ERR_CODE AOBC_load_driver_super_init_settings_(DriverSuper* p_super);
+static DS_ERR_CODE AOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config,
+                                          void* p_driver);
 
-DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
+DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch, DS_StreamRecBuffer* rx_buffer)
 {
   DS_ERR_CODE ret;
 
@@ -40,6 +38,7 @@ DS_INIT_ERR_CODE AOBC_init(AOBC_Driver* aobc_driver, uint8_t ch)
 
   ret = DS_init(&(aobc_driver->driver.super),
                 &(aobc_driver->driver.uart_config),
+                rx_buffer,
                 AOBC_load_driver_super_init_settings_);
   if (ret != DS_ERR_CODE_OK) return DS_INIT_DS_INIT_ERR;
   return DS_INIT_OK;

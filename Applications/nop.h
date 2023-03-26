@@ -12,6 +12,6 @@
 
 AppInfo NOP_create_app(void);
 
-CCP_EXEC_STS Cmd_NOP(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_NOP(const CommonCmdPacket* packet);
 
 #endif

@@ -5,7 +5,7 @@
  * @note  詳細は space_packet.h を参照
  */
 #include "space_packet.h"
-#include "../../Library/endian_memcpy.h"
+#include "../../Library/endian.h"
 #include <string.h>
 
 
@@ -200,7 +200,7 @@ void SP_extract_param_from_packet(const SpacePacket* sp,
     }
   }
 
-  endian_memcpy(dst, buffer, pei->byte_len);
+  ENDIAN_memcpy(dst, buffer, pei->byte_len);
 }
 
 
@@ -215,7 +215,7 @@ void SP_insert_param_to_packet(SpacePacket* sp,
   if (pei->byte_len > 8) return;
   if (pei->offset > 7) return;
 
-  endian_memcpy(buffer, src, pei->byte_len);
+  ENDIAN_memcpy(buffer, src, pei->byte_len);
 
   // offset あり
   if (pei->offset)

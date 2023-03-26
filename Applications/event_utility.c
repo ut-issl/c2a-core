@@ -6,6 +6,7 @@
  */
 #include "event_utility.h"
 #include "../System/EventManager/event_handler.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 #include <stddef.h> // for NULL
 
@@ -33,25 +34,25 @@ static void EVENT_UTIL_update_()
   }
 }
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EVENT_UTIL_ENABLE_EH_EXEC(const CommonCmdPacket* packet)
 {
   (void)packet;
   event_utility_.is_enabled_eh_execution = 1;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EVENT_UTIL_DISABLE_EH_EXEC(const CommonCmdPacket* packet)
 {
   (void)packet;
   event_utility_.is_enabled_eh_execution = 0;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_EVENT_UTIL_EXEC_EH(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_EVENT_UTIL_EXEC_EH(const CommonCmdPacket* packet)
 {
   (void)packet;
   EH_execute();
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section

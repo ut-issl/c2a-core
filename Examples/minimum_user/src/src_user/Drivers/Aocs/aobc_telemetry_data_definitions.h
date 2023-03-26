@@ -28,7 +28,7 @@ typedef struct
       double global_time;
       uint32_t on_board_subnet_time;
       uint8_t dest_flags;
-      uint8_t dr_partition;
+      uint8_t dest_info;
     } sh;
     uint32_t tm_mode_time;
     double tm_utl_unixtime_epoch;
@@ -36,37 +36,77 @@ typedef struct
     uint8_t mm_sts;
     uint8_t mm_opsmode;
     uint8_t mm_opsmode_prev;
-    uint8_t tdsp_current_id;
-    uint32_t tdsp_cmd_last_err_time_master;
-    uint8_t tdsp_cmd_last_err_time_step;
-    uint16_t tdsp_cmd_last_err_id;
-    int32_t tdsp_cmd_last_err_sts;
-    uint32_t gs_cmd_counter;
-    uint32_t gs_cmd_last_exec_time;
-    uint16_t gs_cmd_last_exec_id;
-    int32_t gs_cmd_last_exec_sts;
-    uint32_t gs_cmd_last_err_time;
-    uint16_t gs_cmd_last_err_id;
-    int32_t gs_cmd_last_err_sts;
-    uint32_t gs_cmd_err_counter;
-    uint32_t rt_cmd_counter;
-    uint32_t rt_cmd_last_exec_time;
-    uint16_t rt_cmd_last_exec_id;
-    int32_t rt_cmd_last_exec_sts;
-    uint32_t rt_cmd_last_err_time;
-    uint16_t rt_cmd_last_err_id;
-    int32_t rt_cmd_last_err_sts;
-    uint32_t rt_cmd_err_counter;
+    struct
+    {
+      uint8_t current_id;
+      struct
+      {
+        struct
+        {
+          uint32_t total_cycle;
+          uint8_t step;
+        } time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_err;
+    } tdsp;
+    struct
+    {
+      uint32_t counter;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_exec;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_err;
+      uint32_t err_counter;
+    } gs_cmd;
+    struct
+    {
+      uint32_t counter;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_exec;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_err;
+      uint32_t err_counter;
+    } rt_cmd;
     struct
     {
       uint32_t counter;
       uint8_t queued;
-      uint32_t last_exec_time;
-      uint16_t last_exec_id;
-      int32_t last_exec_sts;
-      uint32_t last_err_time;
-      uint16_t last_err_id;
-      int32_t last_err_sts;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_exec;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_err;
       uint32_t err_counter;
       uint8_t soe_flag;
       uint8_t lockout_flag;
@@ -77,12 +117,20 @@ typedef struct
     {
       uint32_t counter;
       uint8_t queued;
-      uint32_t last_exec_time;
-      uint16_t last_exec_id;
-      int32_t last_exec_sts;
-      uint32_t last_err_time;
-      uint16_t last_err_id;
-      int32_t last_err_sts;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_exec;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_err;
       uint32_t err_counter;
       uint8_t soe_flag;
       uint8_t lockout_flag;
@@ -93,12 +141,20 @@ typedef struct
     {
       uint32_t counter;
       uint8_t queued;
-      uint32_t last_exec_time;
-      uint16_t last_exec_id;
-      int32_t last_exec_sts;
-      uint32_t last_err_time;
-      uint16_t last_err_id;
-      int32_t last_err_sts;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_exec;
+      struct
+      {
+        uint32_t time;
+        uint16_t id;
+        uint8_t exec_sts;
+        uint32_t err_code;
+      } last_err;
       uint32_t err_counter;
       uint8_t soe_flag;
       uint8_t lockout_flag;
@@ -132,67 +188,106 @@ typedef struct
       double global_time;
       uint32_t on_board_subnet_time;
       uint8_t dest_flags;
-      uint8_t dr_partition;
+      uint8_t dest_info;
     } sh;
-    uint32_t obc_tm_mode_time;
-    double obc_tm_unixtime_at_ti0;
-    uint8_t obc_mm_opsmode;
-    uint8_t obc_mm_sts;
-    uint8_t obc_mm_opsmode_prev;
-    uint16_t obc_tdsp_current_id;
-    uint32_t obc_gs_cmd_counter;
-    uint32_t obc_gs_cmd_last_exec_time;
-    uint16_t obc_gs_cmd_last_exec_id;
-    int8_t obc_gs_cmd_last_exec_sts;
-    uint32_t obc_gs_cmd_last_err_time;
-    uint16_t obc_gs_cmd_last_err_id;
-    int8_t obc_gs_cmd_last_err_sts;
-    uint32_t obc_rt_cmd_counter;
-    uint32_t obc_rt_cmd_last_exec_time;
-    uint16_t obc_rt_cmd_last_exec_id;
-    int32_t obc_rt_cmd_last_exec_sts;
-    uint32_t obc_rt_cmd_last_err_time;
-    uint16_t obc_rt_cmd_last_err_id;
-    int32_t obc_rt_cmd_last_err_sts;
     struct
     {
-      uint32_t counter;
-      uint8_t queued;
-      uint32_t last_exec_time;
-      uint16_t last_exec_id;
-      int8_t last_exec_sts;
-      uint32_t last_err_time;
-      uint16_t last_err_id;
-      int8_t last_err_sts;
-      uint32_t next_time;
-      uint16_t next_id;
-      uint8_t soe_flag;
-      uint8_t lockout_flag;
-    } obc_tlc_gs;
-    struct
-    {
-      uint32_t counter;
-      uint8_t queued;
-      uint8_t soe_flag;
-      uint8_t lockout_flag;
-    } obc_tlc_bc;
-    struct
-    {
-      uint32_t counter;
-      uint8_t queued;
-      uint8_t soe_flag;
-      uint8_t lockout_flag;
-    } obc_tlc_tlm;
+      uint32_t tm_mode_time;
+      double tm_unixtime_at_ti0;
+      uint8_t mm_opsmode;
+      uint8_t mm_sts;
+      uint8_t mm_opsmode_prev;
+      struct
+      {
+        uint16_t current_id;
+      } tdsp;
+      struct
+      {
+        uint32_t counter;
+        struct
+        {
+          uint32_t time;
+          uint16_t id;
+          uint8_t exec_sts;
+          uint32_t err_code;
+        } last_exec;
+        struct
+        {
+          uint32_t time;
+          uint16_t id;
+          uint8_t exec_sts;
+          uint32_t err_code;
+        } last_err;
+        uint32_t err_counter;
+      } gs_cmd;
+      struct
+      {
+        uint32_t counter;
+        struct
+        {
+          uint32_t time;
+          uint16_t id;
+          uint8_t exec_sts;
+          uint32_t err_code;
+        } last_exec;
+        struct
+        {
+          uint32_t err_code;
+          uint32_t time;
+          uint16_t id;
+          uint8_t exec_sts;
+        } last_err;
+        uint32_t err_counter;
+      } rt_cmd;
+      struct
+      {
+        uint32_t counter;
+        uint8_t queued;
+        struct
+        {
+          uint32_t time;
+          uint16_t id;
+          uint8_t exec_sts;
+          uint32_t err_code;
+        } last_exec;
+        struct
+        {
+          uint32_t time;
+          uint16_t id;
+          uint8_t exec_sts;
+          uint32_t err_code;
+        } last_err;
+        uint8_t err_counter;
+        uint32_t next_time;
+        uint16_t next_id;
+        uint8_t soe_flag;
+        uint8_t lockout_flag;
+      } tlc_gs;
+      struct
+      {
+        uint32_t counter;
+        uint8_t queued;
+        uint8_t soe_flag;
+        uint8_t lockout_flag;
+      } tlc_bc;
+      struct
+      {
+        uint32_t counter;
+        uint8_t queued;
+        uint8_t soe_flag;
+        uint8_t lockout_flag;
+      } tlc_tlm;
+      uint16_t bct_blk_ptr;
+      uint8_t bct_cmd_ptr;
+      uint32_t bct_regd_time;
+      uint16_t bct_regd_id;
+    } obc;
     struct
     {
       uint8_t is_enable;
       uint8_t is_clear_enable;
     } wdt;
     uint8_t dummy_data0;
-    uint16_t obc_bct_blk_ptr;
-    uint8_t obc_bct_cmd_ptr;
-    uint32_t obc_bct_regd_time;
-    uint16_t obc_bct_regd_id;
     struct
     {
       struct
@@ -235,7 +330,6 @@ typedef struct
         uint32_t respond_counter;
       } log_table;
     } eh;
-    uint8_t obc_gs_cmd_err_counter;
     uint32_t git_rev_core;
     uint32_t git_rev_user;
     uint8_t bct_blk_ptr;
@@ -293,15 +387,6 @@ typedef struct
     uint32_t dummy_data49;
     uint32_t dummy_data50;
     uint32_t dummy_data51;
-    uint32_t dummy_data52;
-    uint32_t dummy_data53;
-    uint32_t dummy_data54;
-    uint32_t dummy_data55;
-    uint32_t dummy_data56;
-    uint32_t dummy_data57;
-    uint32_t dummy_data58;
-    uint32_t dummy_data59;
-    uint32_t dummy_data60;
   } aobc_hk;
 } AOBC_TlmData;
 

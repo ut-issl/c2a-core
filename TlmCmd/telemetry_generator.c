@@ -17,7 +17,7 @@ static uint8_t TG_get_next_adu_counter_(void);
 
 // FIXME: 現在のコードは，MOBC と 2nd OBC の Tlm id がユニークであることを想定している
 //        本来被っても良いはず
-CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
 {
   static CommonTlmPacket ctp_;
   uint8_t category = CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -35,7 +35,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // ctp の ヘッダ部分の APID をクリア
@@ -51,8 +51,8 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
                              TSP_MAX_LEN);
 
   // 範囲外のTLM IDを除外
-  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_EXEC_ILLEGAL_PARAMETER;
-  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
+  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // Header
   if (APID_is_other_obc_tlm_apid(CTP_get_apid(&ctp_)))
@@ -83,7 +83,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
     dest_flags = CTP_DEST_FLAG_RP;
   }
   TSP_set_dest_flags(&ctp_, dest_flags);
-  TSP_set_dr_partition(&ctp_, dr_partition);
+  TSP_set_dest_info(&ctp_, dr_partition);   // FIXME: もはや dr partition ですらない
   TSP_set_tlm_id(&ctp_, id);
 
   // 生成したパケットを指定された回数配送処理へ渡す
@@ -93,7 +93,7 @@ CCP_EXEC_STS Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
     --num_dumps;
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // FIXME: space packet 大工事でビット幅が変わってるので直す！

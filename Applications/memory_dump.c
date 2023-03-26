@@ -5,7 +5,8 @@
 
 #include "../System/TimeManager/time_manager.h"
 #include "../TlmCmd/packet_handler.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 static MemoryDump memory_dump_;
 const MemoryDump* const memory_dump = &memory_dump_;
@@ -58,19 +59,19 @@ static void MEM_init_(void)
   memory_dump_.adu_counter = 0;
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t begin, end, span;
 
   // パラメータを読み出し
-  endian_memcpy(&begin, param, 4);
-  endian_memcpy(&end,   param + 4, 4);
+  ENDIAN_memcpy(&begin, param, 4);
+  ENDIAN_memcpy(&end,   param + 4, 4);
 
   if (begin > end)
   {
     // 領域の開始と終了の大小関係が逆の場合は異常終了
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   span = end - begin;
@@ -78,7 +79,7 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
   if (span > MEM_MAX_SPAN)
   {
     // 指定ダンプ幅が最大量を超えている場合は異常終了。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   memory_dump_.begin = begin;
@@ -89,13 +90,13 @@ CCP_EXEC_STS Cmd_MEM_SET_REGION(const CommonCmdPacket* packet)
   // 領域設定1回毎に独立したADUカウント値を割り当てる。
   memory_dump_.adu_counter = MEM_get_next_adu_counter_();
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 // FIXME: CTCP 大改修が終わったら直す
 // https://github.com/ut-issl/c2a-core/pull/217
 #if 0
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -109,13 +110,13 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_SEQ(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   return MEM_dump_region_(category, num_dumps);
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -131,10 +132,10 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  endian_memcpy(&adu_seq, param + 2, 2);
+  ENDIAN_memcpy(&adu_seq, param + 2, 2);
 
   rp = memory_dump_.begin + (adu_seq * MEM_DUMP_WIDTH);
 
@@ -149,11 +150,11 @@ CCP_EXEC_STS Cmd_MEM_DUMP_REGION_RND(const CommonCmdPacket* packet)
   else
   {
     // 指定されたADU Sequence Counterが領域外であれば異常終了
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 }
 
-CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint8_t category, num_dumps;
@@ -169,10 +170,10 @@ CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
     // パケット生成回数の上限は8回とする。
     // 32kbpsでのDL時に8VCDU/secで1秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
-  endian_memcpy(&start_addr, param + 2, 4);
+  ENDIAN_memcpy(&start_addr, param + 2, 4);
 
   // 要検討: 指定アドレス値が異常な場合の処理をすべきか？
   // Segmentation Faultとか起こる？
@@ -197,11 +198,11 @@ CCP_EXEC_STS Cmd_MEM_DUMP_SINGLE(const CommonCmdPacket* packet)
   // 生成したパケットを送出
   MEM_send_packet_(&MEM_ctp_, num_dumps);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 #endif
 
-CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_LOAD(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   size_t param_len = CCP_get_param_len(packet);
@@ -213,34 +214,34 @@ CCP_EXEC_STS Cmd_MEM_LOAD(const CommonCmdPacket* packet)
   data_len = param_len - 4;
 
   // 書き込みアドレス読み出し
-  endian_memcpy(&start_addr, param, 4);
+  ENDIAN_memcpy(&start_addr, param, 4);
 
   // 指定した開始アドレスから始まる領域にデータを書き込み
   memcpy((void*)start_addr, &(param[4]), data_len);
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_SET_DESTINATION(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t dest;
 
-  endian_memcpy(&dest, param, 4);
+  ENDIAN_memcpy(&dest, param, 4);
 
   if ((dest >= memory_dump_.begin) && (dest < memory_dump_.end))
   {
     // 宛先アドレスが領域内部に含まれる場合。
     // これを認めると処理が複雑になるので禁止する。
-    return CCP_EXEC_ILLEGAL_PARAMETER;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   // 宛先アドレスを設定し、RPを領域先頭に合わせる。
   memory_dump_.dest = dest;
   memory_dump_.rp = memory_dump_.begin;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   uint32_t copy_width, wp;
@@ -249,11 +250,11 @@ CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
   {
     // 既に領域全体の読み出しが完了している場合。
     // 処理は行わず正常終了する。
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 
   // パラメータ読み出し。
-  endian_memcpy(&copy_width, param, 4);
+  ENDIAN_memcpy(&copy_width, param, 4);
 
   if ((memory_dump_.rp + copy_width) > memory_dump_.end)
   {
@@ -268,7 +269,7 @@ CCP_EXEC_STS Cmd_MEM_COPY_REGION_SEQ(const CommonCmdPacket* packet)
   // 指定されたコピー幅だけ領域をコピーし、RPを更新。
   memcpy((uint8_t*)wp, (const uint8_t*)memory_dump_.rp, copy_width);
   memory_dump_.rp += copy_width;
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 static uint8_t MEM_get_next_adu_counter_(void)
@@ -295,15 +296,15 @@ static CCP_EXEC_STS MEM_dump_region_(uint8_t category,
     // 生成したパケットを送出し、ADU Sequence Counterの値を更新
     MEM_send_packet_(&MEM_ctp_, num_dumps);
     ++memory_dump_.adu_seq;
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   case MEM_NO_DATA:
     // すでに全領域ダンプ済みなら何もせず終了
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 
   default:
     // それ以外のエラーはないはず
-    return CCP_EXEC_UNKNOWN;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_UNKNOWN);
   }
 }
 

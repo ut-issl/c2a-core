@@ -5,7 +5,7 @@
 #ifndef BLOCK_COMMAND_TABLE_H_
 #define BLOCK_COMMAND_TABLE_H_
 
-#include <src_user/Library/stdint.h>
+#include <stdint.h>
 
 #define BCT_CMD_MAX_LENGTH (64)  /*!< BCTに保存するパケットのパケットサイズの上限
                                     TCPの最大長はかなり大きいので，ここではそれより小さくしてメモリを節約するのが通例
@@ -268,7 +268,7 @@ const uint8_t* BCT_get_param_head(const bct_id_t block, const uint8_t cmd);
  * @param[in] block_a: 入れ替える BC
  * @param[in] block_b: 入れ替える BC
  * @return BCT_ACK 実行結果
- * @note ID1:HK:SRAM, ID2:AH:MRAM があった時に ID1:AH:MRAM, ID2:HK:SRAM が出来る
+ * @note ID1:HK:SRAM, ID2:EH:MRAM があった時に ID1:EH:MRAM, ID2:HK:SRAM が出来る
  *       `BCT_swap_contents` と組み合わせることで番号 - 中身はそのままで RAM だけを切り替えることが出来る
  *       必ず `BCE_swap_address` と共に使用すること
  */
@@ -279,7 +279,7 @@ BCT_ACK BCT_swap_address(const bct_id_t block_a, const bct_id_t block_b);
  * @param[in] block_a: 入れ替える BC
  * @param[in] block_b: 入れ替える BC
  * @return BCT_ACK 実行結果
- * @note ID1:AH:MRAM, ID2:HK:SRAM があった時に ID1:HK:MRAM, ID2:AH:SRAM が出来る
+ * @note ID1:EH:MRAM, ID2:HK:SRAM があった時に ID1:HK:MRAM, ID2:EH:SRAM が出来る
  *       `BCT_swap_ram` と組み合わせることで番号 - 中身はそのままで RAM だけを切り替えることが出来る
  *       必ず `BCE_swap_contents` と共に使用すること
  */
@@ -288,14 +288,14 @@ BCT_ACK BCT_swap_contents(const bct_id_t block_a, const bct_id_t block_b);
 /**
  * @brief  返り値用 enum 変換用関数
  * @param  ack: BCT_ACK
- * @return CCP_EXEC_STS
+ * @return CCP_CmdRet
  */
-CCP_EXEC_STS BCT_convert_bct_ack_to_ccp_exec_sts(BCT_ACK ack);
+CCP_CmdRet BCT_convert_bct_ack_to_ccp_cmd_ret(BCT_ACK ack);
 
-CCP_EXEC_STS Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet);
-CCP_EXEC_STS Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_CLEAR_BLOCK(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_SET_BLOCK_POSITION(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_COPY_BCT(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_OVERWRITE_CMD(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_BCT_FILL_NOP(const CommonCmdPacket* packet);
 
 #endif

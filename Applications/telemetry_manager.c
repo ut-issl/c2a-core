@@ -13,10 +13,11 @@
 #include "../TlmCmd/block_command_executor.h"
 #include "../TlmCmd/command_analyze.h"
 #include "../Library/print.h"
-#include "../Library/endian_memcpy.h"
+#include "../Library/endian.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
+#include "../TlmCmd/common_cmd_packet_util.h"
 
 /**
  * @brief  App初期化関数
@@ -389,7 +390,7 @@ static void TLM_MGR_load_nop_bc_(void)
 
 // FIXME: 実行時間やばい： 21ms
 // 適当に分割しないと
-CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 {
   uint8_t ret;
   uint16_t exec_counter;
@@ -404,7 +405,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
     // DCU_STATUS_ABORTED_BY_ERR
     // DCU_STATUS_ABORTED_BY_CMD
     // がここに
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   switch (exec_counter)
@@ -422,79 +423,79 @@ CCP_EXEC_STS Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
     ret = TLM_MGR_init_4_();
     break;
   default:
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   if (ret != 0)
   {
     DCU_report_err(Cmd_CODE_TLM_MGR_INIT, CCP_EXEC_ILLEGAL_CONTEXT);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   if (exec_counter == 3)
   {
     DCU_report_finish(Cmd_CODE_TLM_MGR_INIT, CCP_EXEC_SUCCESS);
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 
   // 再帰実行
   if (DCU_register_next(Cmd_CODE_TLM_MGR_INIT, NULL, 0) != DCU_ACK_OK)
   {
     DCU_report_err(Cmd_CODE_TLM_MGR_INIT, CCP_EXEC_ILLEGAL_CONTEXT);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
 {
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // TODO: TLM_MGR_calc_register_info_from_bc_info_ は入れなくていいか検討する
   //       とりあえずはなくていい気がする
 
   BCL_load_bc(telemetry_manager_.master_bc_id, TLM_MGR_load_master_bc_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.hk_tlm);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.system_tlm);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
 // FIXME: 実行時間チェック :9ms
 // 結局，NOP BC作るのが重い
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
 {
   uint16_t exec_counter;
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   switch (DCU_check_in(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, &exec_counter))
   {
@@ -505,7 +506,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
     // DCU_STATUS_ABORTED_BY_ERR
     // DCU_STATUS_ABORTED_BY_CMD
     // がここに
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   switch (exec_counter)
@@ -519,21 +520,21 @@ CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
   default:
     TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.reserve);     // 便宜上ここで
     DCU_report_finish(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_SUCCESS);
-    return CCP_EXEC_SUCCESS;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
   }
 
   // 再帰実行
   if (DCU_register_next(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, NULL, 0) != DCU_ACK_OK)
   {
     DCU_report_err(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_ILLEGAL_CONTEXT);
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -542,12 +543,12 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // master BC が 1つでないのは何かがおかしい
   if (telemetry_manager_.register_info.master.bc_info_idx_used_num != 1)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   // master bc の末尾の nop を deploy に差し替える
@@ -556,7 +557,7 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 
   BCT_make_pos(&bc_register_pos, master_bc_id, bc_cmd_pos);
   param[0] = TLCD_ID_DEPLOY_TLM;
-  endian_memcpy(&param[1], &master_bc_id, SIZE_OF_BCT_ID_T);
+  ENDIAN_memcpy(&param[1], &master_bc_id, SIZE_OF_BCT_ID_T);
 
   CCP_form_tlc(&TLM_MGR_packet_,
                TLM_MGR_USE_BC_NUM,
@@ -569,11 +570,11 @@ CCP_EXEC_STS Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
   CCP_form_block_deploy_cmd(&TLM_MGR_packet_, TLCD_ID_DEPLOY_TLM, master_bc_id);
   PH_analyze_cmd_packet(&TLM_MGR_packet_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
   bct_id_t master_bc_id;
@@ -581,12 +582,12 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // master BC が 1つでないのは何かがおかしい
   if (telemetry_manager_.register_info.master.bc_info_idx_used_num != 1)
   {
-    return CCP_EXEC_ILLEGAL_CONTEXT;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
   // master bc の末尾の deploy を nop に差し替えることで止める
@@ -601,98 +602,98 @@ CCP_EXEC_STS Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
                0);
   BCT_overwrite_cmd(&bc_register_pos, &TLM_MGR_packet_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_EXEC_STS Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 {
   uint8_t param[1];
 
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   param[0] = TLCD_ID_DEPLOY_TLM;
   CCP_form_rtc(&TLM_MGR_packet_, Cmd_CODE_TLCD_CLEAR_ALL_TIMELINE, param, 1);
   PH_analyze_cmd_packet(&TLM_MGR_packet_);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   if (CA_ckeck_cmd_param_len(Cmd_CODE_GENERATE_TLM, CCP_get_param_len(packet)) != CA_ACK_OK)
   {
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   ret = TLM_MGR_register_generate_tlm_(&telemetry_manager_.register_info.hk_tlm, param);
-  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   if (CA_ckeck_cmd_param_len(Cmd_CODE_GENERATE_TLM, CCP_get_param_len(packet)) != CA_ACK_OK)
   {
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   ret = TLM_MGR_register_generate_tlm_(&telemetry_manager_.register_info.system_tlm, param);
-  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   if (CA_ckeck_cmd_param_len(Cmd_CODE_GENERATE_TLM, CCP_get_param_len(packet)) != CA_ACK_OK)
   {
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   ret = TLM_MGR_register_generate_tlm_(&telemetry_manager_.register_info.high_freq_tlm, param);
-  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-CCP_EXEC_STS Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
   TLM_MGR_ERR_CODE ret;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   if (CA_ckeck_cmd_param_len(Cmd_CODE_GENERATE_TLM, CCP_get_param_len(packet)) != CA_ACK_OK)
   {
-    return CCP_EXEC_ILLEGAL_LENGTH;
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   ret = TLM_MGR_register_generate_tlm_(&telemetry_manager_.register_info.low_freq_tlm, param);
-  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_EXEC_ILLEGAL_CONTEXT;
+  if (ret != TLM_MGR_ERR_CODE_OK) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  return CCP_EXEC_SUCCESS;
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 #pragma section
