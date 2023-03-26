@@ -2,7 +2,6 @@
 #include "timeline_command_dispatcher.h"
 #include "../TlmCmd/packet_handler.h"
 #include "../System/TimeManager/time_manager.h"
-#include "../System/AnomalyLogger/anomaly_logger.h"
 #include "../System/EventManager/event_logger.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
 
@@ -129,9 +128,6 @@ static void TLCD_tlc_dispatcher_(TLCD_ID id)
     {
       // Lockout無効の場合はアノマリーを記録。
       // Lockout有効の場合はアノマリーの連続生成を防ぐため時刻超過状態でもアノマリーを記録しない。
-#ifndef AL_DISALBE_AT_C2A_CORE
-      AL_add_anomaly(AL_CORE_GROUP_TLCD, (uint32_t)id);
-#endif
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_PAST_TIME,
                       (uint32_t)id,
                       EL_ERROR_LEVEL_LOW,

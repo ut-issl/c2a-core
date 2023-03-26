@@ -20,8 +20,6 @@ FIXME: 2021/12/04現在，だいぶ情報が古いので更新する．
     - [telemetry_frame_params](#telemetry_frame_params)
     - [event_logger_params](#event_logger_params)
     - [event_handler_params](#event_handler_params)
-    - [anomaly_logger_params](#anomaly_logger_params)
-    - [anomaly_handler_params](#anomaly_handler_params)
     - [app_manager_params](#app_manager_params)
     - [obc_time_params](#obc_time_params)
 
@@ -245,7 +243,7 @@ Event Logger 全体のメモリ使用量は以下Byte.
 
 #### 定義
 - core: [`/src_core/System/EventManager/event_logger.h`](https://github.com/ut-issl/c2a-core/blob/develop/System/EventManager/event_logger.h)
-- user: `/src_user/Settings/System/anomaly_logger_params.h`
+- user: `/src_user/Settings/System/event_handler_params.h`
 
 #### 詳細説明
 [`/src_core/System/EventManager/event_logger.h`](https://github.com/ut-issl/c2a-core/blob/develop/System/EventManager/event_logger.h) を参照．
@@ -254,61 +252,6 @@ Event Logger 全体のメモリ使用量は以下Byte.
 - - -
 ### event_handler_params
 TBW
-
-
-- - -
-### anomaly_logger_params
-AnomalyLoggerのログ保存テーブルサイズを制御する．
-
-この値によって影響を受けるメモリ使用量は，現時点では以下Byte．
-```
-  (sizeof(ObcTime) + sizeof(size_t) + 8) * AL_RECORD_MAX
-
-  sizeof(ObcTime): 時刻に関わり，完全に環境依存だが，3 * sizeof(size_t) となる環境が多いのでは？
-```
-NOTE: この値が関わる部分を抽出しているため，AnomalyLoggerの他の機能のためのメモリは含まない．
-
-たとえば，以下の設定，環境では，およそ0.8 KB．
-```cpp
-#define AL_RECORD_MAX    (32)
-sizeof(size_t):          4
-```
-
-#### 定義
-- core: [`/src_core/System/AnomalyLogger/AnomalyLogger.h`](https://github.com/ut-issl/c2a-core/blob/develop/System/AnomalyLogger/AnomalyLogger.h)
-- user: `/src_user/Settings/System/anomaly_logger_params.h`
-
-#### 詳細説明
-[`/src_core/System/AnomalyLogger/AnomalyLogger.h`](https://github.com/ut-issl/c2a-core/blob/develop/System/AnomalyLogger/AnomalyLogger.h) を参照．
-
-
-- - -
-### anomaly_handler_params
-AnomalyHandler関連テーブルサイズを制御する．  
-テーブルは以下の２つある．
-- AH_Element: AnomalyHandlerのルール（アノマリ - イベント対応）テーブル
-- AH_AnomalyRespond: イベントの発動ログ
-
-この値によって影響を受けるメモリ使用量は，現時点では以下Byte．
-```
-  (sizeof(bc_id) + 4 * sizeof(size_t) + 8) * AH_MAX_RULES + 2 * sizeof(size_t) * AH_LOG_MAX
-```
-NOTE: この値が関わる部分を抽出しているため，AnomalyHandlerの他の機能のためのメモリは含まない．
-
-たとえば，以下の設定，環境では，およそ3.8 KB．
-```cpp
-#define AH_MAX_RULES    (128)
-#define AH_LOG_MAX      (64)
-sizeof(size_t):          4
-sizeof(bc_id):           2
-```
-
-#### 定義
-- core: [`/src_core/Applications/AnomalyHandler.h`](https://github.com/ut-issl/c2a-core/blob/develop/Applications/AnomalyHandler.h)
-- user: `/src_user/Settings/anomaly_handler_params.h`
-
-#### 詳細説明
-[`/src_core/Applications/AnomalyHandler.h`](https://github.com/ut-issl/c2a-core/blob/develop/Applications/AnomalyHandler.h) を参照．
 
 
 - - -

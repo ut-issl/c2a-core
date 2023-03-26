@@ -1,6 +1,14 @@
 #pragma section REPRO
 #include "utility_counter.h"
-#ifdef AL_ENABLE
+
+// FIXME
+// error: ISO C requires a translation unit to contain at least one declaration [-Werror,-Wempty-translation-unit]
+// 対策のために，適当に宣言しておく
+int UTIL_COUNTER_dummy(void)
+{
+  return 0;
+}
+#if 0
 
 #include "../TlmCmd/packet_handler.h"
 #include "../System/AnomalyLogger/anomaly_logger.h"

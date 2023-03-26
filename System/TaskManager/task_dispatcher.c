@@ -15,7 +15,6 @@
 #include "../../TlmCmd/common_cmd_packet_util.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
-#include "../AnomalyLogger/anomaly_logger.h"
 #include "../EventManager/event_logger.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
@@ -82,9 +81,6 @@ static void TDSP_deploy_block_as_task_list_(void)
 
   if (ack != PL_SUCCESS)
   {
-#ifndef AL_DISALBE_AT_C2A_CORE
-    AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_DEPLOY_FAILED);
-#endif
     EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                     TDSP_DEPLOY_FAILED,
                     EL_ERROR_LEVEL_HIGH,
@@ -110,9 +106,6 @@ void TDSP_execute_pl_as_task_list(void)
     {
     case PL_TLC_PAST_TIME:
       // 実行時刻が過ぎていた場合は実行前にアノマリを登録。
-#ifndef AL_DISALBE_AT_C2A_CORE
-      AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_STEP_OVERRUN);
-#endif
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_STEP_OVERRUN,
                       EL_ERROR_LEVEL_LOW,
@@ -127,9 +120,6 @@ void TDSP_execute_pl_as_task_list(void)
       if (task_dispathcer_.tskd.prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
       {
         // コマンド実行時に異常が発生した場合はアノマリを登録。
-#ifndef AL_DISALBE_AT_C2A_CORE
-        AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_TASK_EXEC_FAILED);
-#endif
         EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_TASK_EXEC_FAILED,
                       EL_ERROR_LEVEL_HIGH,
@@ -154,9 +144,6 @@ void TDSP_execute_pl_as_task_list(void)
 
     default:
       // 基本ここには来ない
-#ifndef AL_DISALBE_AT_C2A_CORE
-      AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_UNKNOWN);
-#endif
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_UNKNOWN,
                       EL_ERROR_LEVEL_HIGH,
@@ -180,9 +167,6 @@ void TDSP_execute_pl_as_task_list(void)
     else
     {
       // 1サイクル以内に全てのコマンドを実行し終えなかった場合ここに来る
-#ifndef AL_DISALBE_AT_C2A_CORE
-      AL_add_anomaly(AL_CORE_GROUP_TASK_DISPATCHER, TDSP_CYCLE_OVERRUN);
-#endif
       EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_CYCLE_OVERRUN,
                       EL_ERROR_LEVEL_HIGH,
