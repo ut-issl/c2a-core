@@ -15,6 +15,8 @@ else()
         set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
       endif()
     endif()
+  else()
+    set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99) # C99
   endif()
 endif()
 
