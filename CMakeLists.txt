@@ -12,6 +12,7 @@ option(C2A_USE_SIMPLE_LIBC          "use C2A-core hosted simple libc implementat
 option(C2A_USE_C99_STDINT           "use C99 standard stdint.h" ON)
 
 option(BUILD_C2A_AS_SILS_FW         "build C2A as SILS firmware" ON)
+option(BUILD_C2A_AS_C89             "build C2A as C89" ON)
 option(BUILD_C2A_AS_CXX             "build C2A as C++" OFF)
 option(BUILD_C2A_AS_UTF8            "build C2A as UTF-8" ON)
 

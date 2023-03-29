@@ -2,16 +2,18 @@ if(BUILD_C2A_AS_CXX)
   # memo: set_source_files_properties() must be set before add_library/add_executable on Visual Studio CMake
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++
 else()
-  if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    # TODO: remove this!
-    # -Wno-commentが`std=c90`の後に来る必要があるのでC89のうちはこうするしかない
-    target_compile_options(${PROJECT_NAME} PUBLIC "-std=c90")
-  else()
-    set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
-    # TODO: set always!
-    # GNU拡張を禁止すると1行コメントがエラーになる
-    if(NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
-      set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
+  if(BUILD_C2A_AS_C89)
+    if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+      # TODO: remove this!
+      # -Wno-commentが`std=c90`の後に来る必要があるのでC89のうちはこうするしかない
+      target_compile_options(${PROJECT_NAME} PUBLIC "-std=c90")
+    else()
+      set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 90) # C89
+      # TODO: set always!
+      # GNU拡張を禁止すると1行コメントがエラーになる
+      if(NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        set_target_properties(${PROJECT_NAME} PROPERTIES C_EXTENSIONS FALSE) # no extensions(GNU)
+      endif()
     endif()
   endif()
 endif()
