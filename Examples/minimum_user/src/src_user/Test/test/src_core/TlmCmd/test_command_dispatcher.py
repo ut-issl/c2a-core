@@ -21,7 +21,7 @@ ope = wings_utils.get_wings_operation()
 @pytest.mark.real
 def test_cdis_exec_err():
     # ===== 以下の 2 コマンドでチェックする =====
-    # それぞれについて RT/TL で実行する
+    # それぞれを RT/TL で実行する
     # 送信するコマンドと想定されるエラーは以下
     #
     # Cmd_TMGR_UPDATE_UNIXTIME
@@ -86,8 +86,8 @@ def check_cdis_exec_err(cmd_id, params, exec_sts_expected, err_code_expected):
     assert tlm_EL["EL.TLOGS.LOW.EVENTS3.NOTE"] == err_code_expected
     assert tlm_EL["EL.TLOGS.LOW.EVENTS2.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS
     assert tlm_EL["EL.TLOGS.LOW.EVENTS2.LOCAL"] == cmd_id
-    idx_gs, r = divmod(tlm_EL["EL.TLOGS.LOW.EVENTS2.NOTE"], 2 ** 24)  # 上位 8bit
-    exec_sts, err_code = divmod(r, 2 ** 16)  # 次の 8bit と下位 16bit
+    idx_gs, r = divmod(tlm_EL["EL.TLOGS.LOW.EVENTS2.NOTE"], 2**24)  # 上位 8bit
+    exec_sts, err_code = divmod(r, 2**16)  # 次の 8bit と下位 16bit
     assert exec_sts == exec_sts_expected
     assert err_code == err_code_expected
 
@@ -97,8 +97,8 @@ def check_cdis_exec_err(cmd_id, params, exec_sts_expected, err_code_expected):
     assert tlm_EL["EL.TLOGS.LOW.EVENTS1.NOTE"] == err_code_expected
     assert tlm_EL["EL.TLOGS.LOW.EVENTS0.GROUP"] == c2a_enum.EL_CORE_GROUP_CDIS_EXEC_ERR_STS
     assert tlm_EL["EL.TLOGS.LOW.EVENTS0.LOCAL"] == cmd_id
-    idx_tl, r = divmod(tlm_EL["EL.TLOGS.LOW.EVENTS0.NOTE"], 2 ** 24)  # 上位 8bit
-    exec_sts, err_code = divmod(r, 2 ** 16)  # 次の 8bit と下位 16bit
+    idx_tl, r = divmod(tlm_EL["EL.TLOGS.LOW.EVENTS0.NOTE"], 2**24)  # 上位 8bit
+    exec_sts, err_code = divmod(r, 2**16)  # 次の 8bit と下位 16bit
     assert exec_sts == exec_sts_expected
     assert err_code == err_code_expected
 
