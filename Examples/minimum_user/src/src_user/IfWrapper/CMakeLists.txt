@@ -25,24 +25,24 @@ else()
     Sils/uart_sils.cpp
     Sils/wdt_sils.cpp
   )
-endif()
 
-if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
-  add_definitions(-DUSE_SCI_COM_WINGS)
-  #target_sources(${PROJECT_NAME} PUBLIC
-  list(APPEND C2A_SRCS
-    Sils/ccsds_sils_sci_if.cpp
-  )
-  message("USE SCI_COM_WINGS")
-endif()
+  if(USE_SCI_COM_WINGS)
+    add_definitions(-DUSE_SCI_COM_WINGS)
+    #target_sources(${PROJECT_NAME} PUBLIC
+    list(APPEND C2A_SRCS
+      Sils/ccsds_sils_sci_if.cpp
+    )
+    message("USE SCI_COM_WINGS")
+  endif()
 
-if(USE_SCI_COM_UART AND NOT USE_SILS_MOCKUP)
-  add_definitions(-DUSE_SCI_COM_UART)
-  #target_sources(${PROJECT_NAME} PUBLIC
-  list(APPEND C2A_SRCS
-    Sils/uart_sils_sci_if.cpp
-  )
-  message("USE SCI_COM_UART")
+  if(USE_SCI_COM_UART)
+    add_definitions(-DUSE_SCI_COM_UART)
+    #target_sources(${PROJECT_NAME} PUBLIC
+    list(APPEND C2A_SRCS
+      Sils/uart_sils_sci_if.cpp
+    )
+    message("USE SCI_COM_UART")
+  endif()
 endif()
 
 if(BUILD_C2A_AS_CXX)
