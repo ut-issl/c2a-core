@@ -28,6 +28,7 @@ typedef struct
  */
 typedef struct
 {
+  uint8_t idx;              //!< CDIS のインデックス. EL で用いる
   CDIS_ExecInfo prev;       //!< 前回のコマンド実行情報
   CDIS_ExecInfo prev_err;   //!< 最後にエラーが出たコマンド実行情報
   uint32_t error_counter;   //!< エラーカウンタ
