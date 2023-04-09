@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  S2E_CORE_VERSION: v5.0.0
+  S2E_CORE_VERSION: v6.0.0
 
 jobs:
   build_s2e_win:
