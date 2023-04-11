@@ -28,6 +28,22 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
                                    uint8_t num_dumps);
 
 /**
+ * @brief 2nd OBC のテレメを転送
+ * @note  自身の OBC のテレメは転送できない
+ * @param[in] apid:       転送する 2nd OBC tlm の APID
+ * @param[in] tlm_id:     Tlm ID
+ * @param[in] dest_flags: Dest Flags
+ * @param[in] dest_info:  Dest Info
+ * @param[in] dump_num:   テレメ送出回数
+ * @return CCP_CmdRet
+ */
+static CCP_CmdRet TG_foward_tlm_(APID apid,
+                                 TLM_CODE tlm_id,
+                                 ctp_dest_flags_t dest_flags,
+                                 uint8_t dest_info,
+                                 uint8_t dump_num)
+
+/**
  * @brief 次のパケットで用いる Sequence Count を取得
  * @param  void
  * @return Sequence Count
@@ -155,6 +171,49 @@ CCP_CmdRet Cmd_TG_GENERATE_ST_TLM(const CommonCmdPacket* packet)
 }
 
 
+CCP_CmdRet Cmd_TG_FOWARD_TLM(const CommonCmdPacket* packet)
+{
+  APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+  ctp_dest_flags_t dest_flags = (ctp_dest_flags_t)CCP_get_param_from_packet(packet, 2, uint8_t);
+  uint8_t dest_info = CCP_get_param_from_packet(packet, 3, uint8_t);
+  uint8_t dump_num = CCP_get_param_from_packet(packet, 4, uint8_t);
+
+  return TG_foward_tlm_(apid, tlm_id, dest_flags, dest_info, dump_num);
+}
+
+
+CCP_CmdRet Cmd_TG_FOWARD_TLM_TO_HK_TLM(const CommonCmdPacket* packet)
+{
+  APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+  uint8_t dump_num = CCP_get_param_from_packet(packet, 2, uint8_t);
+
+  return TG_foward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HK, 0, dump_num);
+}
+
+
+CCP_CmdRet Cmd_TG_FOWARD_TLM_TO_MS_TLM(const CommonCmdPacket* packet)
+{
+  APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+  uint8_t dump_num = CCP_get_param_from_packet(packet, 2, uint8_t);
+
+  return TG_foward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_MS, 0, dump_num);
+}
+
+
+CCP_CmdRet Cmd_TG_FOWARD_TLM_TO_ST_TLM(const CommonCmdPacket* packet)
+{
+  APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+  uint8_t dr_partition = CCP_get_param_from_packet(packet, 2, uint8_t);
+  uint8_t dump_num = CCP_get_param_from_packet(packet, 3, uint8_t);
+
+  return TG_foward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_ST, dr_partition, dump_num);
+}
+
+
 static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
                                    ctp_dest_flags_t dest_flags,
                                    uint8_t dest_info,
@@ -212,7 +271,62 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
 }
 
 
-static uint16_t TG_get_next_seq_count_(void)
+static CCP_CmdRet TG_foward_tlm_(APID apid,
+                                 TLM_CODE tlm_id,
+                                 ctp_dest_flags_t dest_flags,
+                                 uint8_t dest_info,
+                                 uint8_t dump_num)
+{
+  TF_TLM_FUNC_ACK ack;
+  uint16_t packet_len;
+
+  if (dump_num >= 8)
+  {
+    // FIXME: TG_generate_tlm_ とともに要検討
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 0);
+  }
+
+  // ack = TF_generate_contents(tlm_id,
+  //                            TG_ctp_.packet,
+  //                            &packet_len,
+  //                            TSP_MAX_LEN);
+
+  // // 範囲外のTLM IDを除外
+  // if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 1);
+  // if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
+
+  // 2nd OBC なので， Header は可能な限り維持
+  // Primary Header → 維持
+  (void)ack;
+  (void)apid;
+  (void)tlm_id;
+  (void)packet_len;
+
+  // Secondary Header
+  if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffff)
+  {
+    CTP_set_global_time(&TG_ctp_);
+  }
+  if (TSP_get_on_board_subnet_time(&TG_ctp_) == 0xffffffff)
+  {
+    TSP_set_on_board_subnet_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
+  }
+
+  TSP_set_dest_flags(&TG_ctp_, dest_flags);
+  TSP_set_dest_info(&TG_ctp_, dest_info);
+
+  // 生成したパケットを指定された回数配送処理へ渡す
+  while (dump_num != 0)
+  {
+    PH_analyze_tlm_packet(&TG_ctp_);
+    --dump_num;
+  }
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
+
+
+static uint8_t TG_get_next_seq_count_(void)
 {
   // インクリメントした値を返すため初期値は 0xffff とする
   static uint16_t adu_counter_ = 0xffff;
