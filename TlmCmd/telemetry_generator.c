@@ -41,7 +41,7 @@ static CCP_CmdRet TG_foward_tlm_(APID apid,
                                  TLM_CODE tlm_id,
                                  ctp_dest_flags_t dest_flags,
                                  uint8_t dest_info,
-                                 uint8_t dump_num)
+                                 uint8_t dump_num);
 
 /**
  * @brief 次のパケットで用いる Sequence Count を取得
