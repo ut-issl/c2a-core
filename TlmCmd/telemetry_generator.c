@@ -303,7 +303,7 @@ static CCP_CmdRet TG_foward_tlm_(APID apid,
   (void)packet_len;
 
   // Secondary Header
-  if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffff)
+  if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffffULL)
   {
     CTP_set_global_time(&TG_ctp_);
   }
