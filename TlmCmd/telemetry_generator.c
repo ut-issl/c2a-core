@@ -19,14 +19,20 @@
  * @param[in] tlm_id:     Tlm ID
  * @param[in] dest_flags: Dest Flags
  * @param[in] dest_info:  Dest Info
- * @param[in] num_dumps:  テレメ送出回数
+ * @param[in] dump_num:   テレメ送出回数
  * @return CCP_CmdRet
  */
 static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
                                    ctp_dest_flags_t dest_flags,
                                    uint8_t dest_info,
                                    uint8_t num_dumps);
-static uint8_t TG_get_next_adu_counter_(void);
+
+/**
+ * @brief 次のパケットで用いる Sequence Count を取得
+ * @param  void
+ * @return Sequence Count
+ */
+static uint8_t TG_get_next_seq_count_(void);
 
 static CommonTlmPacket TG_ctp_;
 
@@ -79,8 +85,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   {
     // Primary Header
     // FIXME: Space Packet 依存を直す
-    TSP_setup_primary_hdr(&TG_ctp_, CTP_APID_FROM_ME, len);
-    TSP_set_seq_count(&TG_ctp_, TG_get_next_adu_counter_());
+    TSP_setup_primary_hdr(&TG_ctp_, CTP_APID_FROM_ME, TG_get_next_seq_count_(), len);
 
     // Secondary Header
     TSP_set_board_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
@@ -101,6 +106,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   TSP_set_dest_flags(&TG_ctp_, dest_flags);
   TSP_set_dest_info(&TG_ctp_, dr_partition);   // FIXME: もはや dr partition ですらない
   TSP_set_tlm_id(&TG_ctp_, id);
+  TSP_set_2nd_hdr_ver(&TG_ctp_, TSP_2ND_HDR_VER_1);
 
   // 生成したパケットを指定された回数配送処理へ渡す
   while (num_dumps != 0)
@@ -159,20 +165,65 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
                                    uint8_t dest_info,
                                    uint8_t dump_num)
 {
+  TF_TLM_FUNC_ACK ack;
+  uint16_t packet_len;
 
+  if (dump_num >= 8)
+  {
+    // FIXME: 要検討？
+    // パケット生成回数の上限は 8 回とする。
+    // 32 kbpsでの DL 時に 8 VCDU / sec で 1 秒分の通信量。
+    // これを超える場合は複数回コマンドを送信して対応する。
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 0);
+  }
 
+  // ADU 生成
+  // ADU 分割が発生しない場合に限定したコードになっている
+  // TLM 定義シート上で定義する ADU は ADU 長を ADU 分割が発生しない長さに制限する
+  // FIXME: ↑ ADU，今の TSP では存在しない？ 文面見直してなおす
+  //          https://github.com/ut-issl/c2a-core/issues/222
+  ack = TF_generate_contents(tlm_id,
+                             TG_ctp_.packet,
+                             &packet_len,
+                             TSP_MAX_LEN);
 
+  // 範囲外のTLM IDを除外
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 1);
+  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
+
+  // 自身の OBC のテレメ生成を前提としているので， Cmd_GENERATE_TLM のように 2nd OBC 判定はいれない
+
+  // Primary Header
+  TSP_setup_primary_hdr(&TG_ctp_, CTP_APID_FROM_ME, TG_get_next_seq_count_(), packet_len);
+
+  // Secondary Header
+  TSP_set_2nd_hdr_ver(&TG_ctp_, TSP_2ND_HDR_VER_1);
+  TSP_set_board_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
+  TSP_set_tlm_id(&TG_ctp_, tlm_id);
+  // FIXME: 他の時刻も入れる
+  CTP_set_global_time(&TG_ctp_);
+  TSP_set_on_board_subnet_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
+  TSP_set_dest_flags(&TG_ctp_, dest_flags);
+  TSP_set_dest_info(&TG_ctp_, dest_info);
+
+  // 生成したパケットを指定された回数配送処理へ渡す
+  while (dump_num != 0)
+  {
+    PH_analyze_tlm_packet(&TG_ctp_);
+    --dump_num;
+  }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
-// FIXME: space packet 大工事でビット幅が変わってるので直す！
-static uint8_t TG_get_next_adu_counter_(void)
+static uint8_t TG_get_next_seq_count_(void)
 {
-  // インクリメントした値を返すため初期値は0xffとする
-  static uint8_t adu_counter_ = 0xff;
-  return ++adu_counter_;
+  // インクリメントした値を返すため初期値は 0xffff とする
+  static uint16_t adu_counter_ = 0xffff;
+  ++adu_counter_;
+  // Sequence Count は 14 bit
+  return 0x3fff & adu_counter_;
 }
 
 #pragma section

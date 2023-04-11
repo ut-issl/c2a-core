@@ -260,10 +260,11 @@ uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp)
 
 // FIXME: TCP 時代の len と変わってることに注意！！！！！！
 // これを呼ぶ関数でなおす！！！！
-void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_len)
+void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t seq_count, uint16_t packet_len)
 {
   TSP_set_common_hdr(tsp);
   TSP_set_apid(tsp, apid);
+  TSP_set_seq_count(tsp, seq_count);
   TSP_set_packet_len(tsp, packet_len);
 }
 
@@ -278,9 +279,6 @@ void TSP_set_common_hdr(TlmSpacePacket* tsp)
   TSP_set_2nd_hdr_flag(tsp, SP_2ND_HDR_FLAG_PRESENT);
   // ここでは Sequence Flag は Standalone Packet に固定     // FIXME: きちんとやる
   TSP_set_seq_flag(tsp, SP_SEQ_FLAG_SINGLE);
-  // FIXME: 一時的に Cmd_GENERATE_TLM で適当にやってるので，後で直す
-  // // ここでは Sequence Count は 0 固定     // FIXME: きちんとやる
-  // TSP_set_seq_count(tsp, 0);
 }
 
 
@@ -295,6 +293,7 @@ void TSP_setup_fill_packet(TlmSpacePacket* tsp, uint16_t fill_size)
     // Fill領域に ピッタリハマる Fill Packet を生成する
     TSP_setup_primary_hdr(tsp,
                           APID_FILL_PKT,
+                          0,        // FIXME: これでいいのか確認
                           (uint16_t)fill_size);
   }
   else
@@ -303,6 +302,7 @@ void TSP_setup_fill_packet(TlmSpacePacket* tsp, uint16_t fill_size)
     // 領域ピッタリの Fill Packet の生成は不可能なので，データ長 1 のFill Packetを生成する。
     TSP_setup_primary_hdr(tsp,
                           APID_FILL_PKT,
+                          0,        // FIXME: これでいいのか確認
                           SP_PRM_HDR_LEN + 1);
   }
 }
