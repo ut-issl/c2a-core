@@ -66,6 +66,22 @@ CCP_CmdRet PH_user_cmd_router(const CommonCmdPacket* packet)
 }
 
 
+TF_TLM_FUNC_ACK PH_user_telemetry_router(APID apid,
+                                         TLM_CODE tlm_id,
+                                         uint8_t* packet,
+                                         uint16_t* len,
+                                         uint16_t max_len)
+{
+  switch (apid)
+  {
+    case APID_AOBC_TLM:
+      return AOBC_pick_up_tlm_buffer(aobc_driver, (AOBC_TLM_CODE)tlm_id, packet, len, max_len);
+    default:
+      return TF_TLM_FUNC_ACK_NOT_DEFINED;
+  }
+}
+
+
 static PH_ACK PH_add_aobc_cmd_(const CommonCmdPacket* packet)
 {
   PL_ACK ack = PL_push_back(&PH_aobc_cmd_list, packet);

@@ -286,21 +286,17 @@ static CCP_CmdRet TG_foward_tlm_(APID apid,
     return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 0);
   }
 
-  // ack = TF_generate_contents(tlm_id,
-  //                            TG_ctp_.packet,
-  //                            &packet_len,
-  //                            TSP_MAX_LEN);
+  ack = PH_user_telemetry_router(apid,
+                                 tlm_id,
+                                 TG_ctp_.packet,
+                                 &packet_len,
+                                 TSP_MAX_LEN);
 
-  // // 範囲外のTLM IDを除外
-  // if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 1);
-  // if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 1);
+  if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
 
   // 2nd OBC なので， Header は可能な限り維持
   // Primary Header → 維持
-  (void)ack;
-  (void)apid;
-  (void)tlm_id;
-  (void)packet_len;
 
   // Secondary Header
   if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffffULL)

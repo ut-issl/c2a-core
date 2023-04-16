@@ -37,4 +37,23 @@ CCP_CmdRet PH_user_cmd_router(const CommonCmdPacket* packet)
   }
 }
 
+
+TF_TLM_FUNC_ACK PH_user_telemetry_router(APID apid,
+                                         TLM_CODE tlm_id,
+                                         uint8_t* packet,
+                                         uint16_t* len,
+                                         uint16_t max_len)
+{
+  (void)tlm_id;
+  (void)packet;
+  (void)len;
+  (void)max_len;
+
+  switch (apid)
+  {
+    default:
+      return TF_TLM_FUNC_ACK_NOT_DEFINED;
+  }
+}
+
 #pragma section
