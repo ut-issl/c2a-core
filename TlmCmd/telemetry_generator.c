@@ -9,6 +9,7 @@
 #include "common_cmd_packet.h"
 #include "common_cmd_packet_util.h"
 #include <src_user/TlmCmd/telemetry_definitions.h>
+#include <src_user/TlmCmd/user_packet_handler.h>
 #include <src_user/Settings/TlmCmd/common_tlm_packet_define.h>
 #include "./Ccsds/tlm_space_packet.h"   // FIXME: TSP 依存性はNGなので， TCP → SP 大工事終わったら直す
 
