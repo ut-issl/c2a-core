@@ -300,10 +300,11 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
   // Primary Header → 維持
 
   // Secondary Header
-  if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffffULL)
-  {
-    CTP_set_global_time(&TG_ctp_);
-  }
+  // FIXME: 方針を決めて直す
+  // if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffffULL)
+  // {
+  //   CTP_set_global_time(&TG_ctp_);
+  // }
   if (TSP_get_on_board_subnet_time(&TG_ctp_) == 0xffffffff)
   {
     TSP_set_on_board_subnet_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
