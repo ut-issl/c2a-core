@@ -11,7 +11,8 @@
     "src_core/Script"
   ],
   "ignore_files" : [
-    "src_user/TlmCmd/telemetry_definitions.c"
+    "src_user/TlmCmd/telemetry_definitions.c",
+    "src_user/IfWrapper/Sils/sils_sci_if.hpp"
   ],
   "ignore_rules" : [
   ],
