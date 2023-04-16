@@ -300,7 +300,7 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
   // Primary Header → 維持
 
   // Secondary Header
-  // FIXME: 方針を決めて直す
+  // FIXME: 方針を決めて直す（また， `(uint64_t)` へのキャストは不適切そう）
   // if ((uint64_t)TSP_get_global_time(&TG_ctp_) == 0xffffffffffffffffULL)
   // {
   //   CTP_set_global_time(&TG_ctp_);
