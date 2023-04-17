@@ -71,11 +71,15 @@ Secondary Header は CCSDS Space Packet 定義において，ユーザー定義�
 https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae292/TlmCmd/Ccsds/tlm_space_packet.h#L1-L51
 
 #### 各フィールドの説明
+##### バージョン共通
 - Secondary Header Version
     - `0x00`: バージョン不定
     - `0x01`: Version 1
+    - `0x02`: Version 2
 - Board Time
     - テレメトリが生成されたボード (OBC など) の時刻 (TI など)
+
+##### Version 1
 - Telemetry ID
     - テレメトリID
     - APID 内でユニークであればいい
@@ -104,6 +108,20 @@ https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae29
 - Destination Info
     - 例えば，Stored Telemetry 時には Data Recorder のどのパーティションに配送されるかを規定する
     - 将来拡張の可能性あり
+
+##### Version 2
+- On-Board Subnetwork Time （将来拡張）
+    - 各ボードで作られたパケットの時刻を統一的に管理するために，オンボードサブネットワークで共通の時刻体系に基づくテレメトリ生成時刻
+    - `0xFFFFFFFF` の場合， パケット中継中に MOBC (地上局とつながる OBC) で，上書き設定される
+        - On-Board Subnetwork Time を取得できない機器向け
+
+#### バージョンの使い分け
+- Version 1
+    - 主に，Telemetry ID で区別される，パケットごとに構造化され定義されたテレメトリに使う
+    - 基本的にはパケット分割されない（Sequence Flag が Standalone Packet である）
+- Version 2
+    - 主に，画像などのミッションデータを送信するときに使う
+    - パケット分割は許容される
 
 
 ### Secondary Header (Command)
