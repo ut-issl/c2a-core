@@ -125,6 +125,36 @@ https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae29
     - パケット分割は許容される
 
 
+
+メモ
+
+| offset [byte] | Ver. 1<br>(deprecated) | Ver. 2 | Ver. 3 |
+| -- | -- | -- | -- |
+|  0 | Sec. HDR Ver | Sec. HDR Ver | Sec. HDR Ver |
+|  1 | Board Time | Board Time | Board Time |
+|  2 | \| | \| | \| |
+|  3 | \| | \| | \| |
+|  4 | \| | \| | \| |
+|  5 | Tlm ID | On-Board<br>Subnetwork Time | On-Board<br>Subnetwork Time |
+|  6 | Global Time | \| | \| |
+|  7 | \| | \| | \| |
+|  8 | \| | \| | \| |
+|  9 | \| | Global Time | --- |
+| 10 | \| | \| |  |
+| 11 | \| | \| |  |
+| 12 | \| | \| |  |
+| 13 | \| | \| |  |
+| 14 | On-Board<br>Subnetwork Time | \| |  |
+| 15 |  \| | \| |  |
+| 16 |  \| | \| |  |
+| 17 |  \| | Tlm ID |  |
+| 18 | Dest Flags | Dest Flags |  |
+| 19 | Dest Info | Dest Info |  |
+
+
+
+
+
 ### Secondary Header (Command)
 Secondary Header は CCSDS Space Packet 定義において，ユーザー定義部分であるため，ここで定義する．
 本ドキュメント更新時の実装は，以下である．ヘッダ構造は以下を参照すること．  
