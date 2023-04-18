@@ -117,10 +117,11 @@ https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae29
 
 #### バージョンの使い分け
 - Version 1
-    - 主に，Telemetry ID で区別される，パケットごとに構造化され定義されたテレメトリに使う
+    - 主に，Telemetry ID で区別される，パケットごとに構造化され定義されたテレメトリ (Character Tlm Packet) に使う
+    - C2A では，Tlm Cmd DB の Tlm DB によってスキーマが定義され，時系列データベースなどに格納されることが一般的である
     - 基本的にはパケット分割されない（Sequence Flag が Standalone Packet である）
 - Version 2
-    - 主に，画像などのミッションデータを送信するときに使う
+    - 主に，画像などのミッションデータやメモリダンプ (Binary Tlm Packet) を送信するときに使う
     - パケット分割は許容される
 
 
