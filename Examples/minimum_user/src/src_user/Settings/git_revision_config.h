@@ -1,5 +1,5 @@
-#ifndef C2A_USER_GIT_REVISION_H_
-#define C2A_USER_GIT_REVISION_H_
+#ifndef GIT_REVISION_CONFIG_H_
+#define GIT_REVISION_CONFIG_H_
 
 /**
  * このファイルは自動生成される場合と設定だけを書く場合があります．
@@ -41,4 +41,4 @@
 #define C2A_GIT_REVISION_IGNORE
 #endif
 
-#endif // C2A_USER_GIT_REVISION_H_
+#endif // GIT_REVISION_CONFIG_H_
