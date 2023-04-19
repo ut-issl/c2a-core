@@ -290,7 +290,7 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
                                  &packet_len,
                                  TSP_MAX_LEN);
 
-  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 1);
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, ( ((uint16_t)apid << 16) | (0x0000ffff & tlm_id) ));
   if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
 
   // 2nd OBC なので， Header は可能な限り維持
