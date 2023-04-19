@@ -32,7 +32,7 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
  * @param  void
  * @return Sequence Count
  */
-static uint8_t TG_get_next_seq_count_(void);
+static uint16_t TG_get_next_seq_count_(void);
 
 static CommonTlmPacket TG_ctp_;
 
@@ -169,7 +169,7 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
     // パケット生成回数の上限は 8 回とする。
     // 32 kbpsでの DL 時に 8 VCDU / sec で 1 秒分の通信量。
     // これを超える場合は複数回コマンドを送信して対応する。
-    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 0);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, TLM_CODE_MAX);
   }
 
   // ADU 生成
@@ -183,7 +183,7 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
                              TSP_MAX_LEN);
 
   // 範囲外のTLM IDを除外
-  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, 1);
+  if (ack == TF_TLM_FUNC_ACK_NOT_DEFINED) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_PARAMETER, tlm_id);
   if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
 
   // 自身の OBC のテレメ生成を前提としているので， Cmd_GENERATE_TLM のように 2nd OBC 判定はいれない
@@ -212,7 +212,7 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
 }
 
 
-static uint8_t TG_get_next_seq_count_(void)
+static uint16_t TG_get_next_seq_count_(void)
 {
   // インクリメントした値を返すため初期値は 0xffff とする
   static uint16_t adu_counter_ = 0xffff;
