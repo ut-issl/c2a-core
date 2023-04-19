@@ -321,7 +321,7 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
 }
 
 
-static uint8_t TG_get_next_seq_count_(void)
+static uint16_t TG_get_next_seq_count_(void)
 {
   // インクリメントした値を返すため初期値は 0xffff とする
   static uint16_t adu_counter_ = 0xffff;
