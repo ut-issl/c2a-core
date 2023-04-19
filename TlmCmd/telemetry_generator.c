@@ -184,7 +184,7 @@ CCP_CmdRet Cmd_TG_FORWARD_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_FORWARD_TLM_TO_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_FORWARD_AS_HK_TLM(const CommonCmdPacket* packet)
 {
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -193,7 +193,7 @@ CCP_CmdRet Cmd_TG_FORWARD_TLM_TO_HK_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_FORWARD_TLM_TO_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
 {
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -202,7 +202,7 @@ CCP_CmdRet Cmd_TG_FORWARD_TLM_TO_MS_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_FORWARD_TLM_TO_ST_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet)
 {
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
