@@ -110,9 +110,7 @@ def test_c2a_comm_tlm_buffer():
         (TLM_APID_2ND_OBC, c2a_enum.Tlm_CODE_AOBC_AOBC),
         mobc_c2a_enum.Tlm_CODE_HK,
     )
-    send_2nd_obc_gsc_directly(
-        c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, (c2a_enum.Tlm_CODE_AOBC_AOBC)
-    )
+    send_2nd_obc_gsc_directly(c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, (c2a_enum.Tlm_CODE_AOBC_AOBC))
     time.sleep(2)
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
