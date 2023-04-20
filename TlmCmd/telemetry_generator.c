@@ -39,8 +39,8 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   }
 
   // ctp の ヘッダ部分の APID をクリア
-  // この後で， APID_is_other_obc_tlm_apid で配送元 OBC を割り出せるように
-  CTP_set_apid(&ctp_, APID_UNKNOWN);
+  // この後で， 配送元 OBC が自身か 2nd obc かを割り出せるように
+  CTP_set_apid(&ctp_, (APID)(APID_UNKNOWN & 0x7ff));    // FIXME: APID_UNKNOWN = APID_FILL_PKT + 1 だと 11 bit から溢れてる...
 
   // ADU生成
   // ADU分割が発生しない場合に限定したコードになっている。
@@ -55,7 +55,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   if (ack != TF_TLM_FUNC_ACK_SUCCESS) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // Header
-  if (APID_is_other_obc_tlm_apid(CTP_get_apid(&ctp_)))
+  if ((APID)(CTP_get_apid(&ctp_) & 0x7ff) != (APID)(APID_UNKNOWN & 0x7ff))    // FIXME: APID_UNKNOWN = APID_FILL_PKT + 1 だと 11 bit から溢れてる...
   {
     // 2nd OBC で生成された TLM の primary header, secondary header の board time はそのまま維持
   }
