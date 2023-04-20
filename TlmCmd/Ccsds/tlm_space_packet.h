@@ -345,10 +345,11 @@ uint8_t* TSP_get_user_data_head(const TlmSpacePacket* tsp);
  * @brief  Primary Header を構築
  * @param[in,out] tsp:        TlmSpacePacket
  * @param[in]     apid:       APID
+ * @param[in]     seq_count:  Sequence Count
  * @param[in]     packet_len: Packet Length
  * @return void
  */
-void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t packet_len);
+void TSP_setup_primary_hdr(TlmSpacePacket* tsp, APID apid, uint16_t seq_count, uint16_t packet_len);
 
 /**
  * @brief  共通部分の Header を構築

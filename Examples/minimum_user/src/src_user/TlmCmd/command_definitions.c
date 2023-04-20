@@ -37,6 +37,10 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TLCD_SET_ID_FOR_TLM].cmd_func = Cmd_TLCD_SET_ID_FOR_TLM;
   cmd_table[Cmd_CODE_TLCD_SET_PAGE_FOR_TLM].cmd_func = Cmd_TLCD_SET_PAGE_FOR_TLM;
   cmd_table[Cmd_CODE_GENERATE_TLM].cmd_func = Cmd_GENERATE_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].cmd_func = Cmd_TG_GENERATE_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_HK_TLM].cmd_func = Cmd_TG_GENERATE_HK_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_MS_TLM].cmd_func = Cmd_TG_GENERATE_MS_TLM;
+  cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].cmd_func = Cmd_TG_GENERATE_ST_TLM;
   cmd_table[Cmd_CODE_BCT_CLEAR_BLOCK].cmd_func = Cmd_BCT_CLEAR_BLOCK;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].cmd_func = Cmd_BCT_SET_BLOCK_POSITION;
   cmd_table[Cmd_CODE_BCT_COPY_BCT].cmd_func = Cmd_BCT_COPY_BCT;
@@ -188,6 +192,14 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_GENERATE_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_GENERATE_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_GENERATE_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_TLM].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_HK_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_MS_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TG_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_BCT_CLEAR_BLOCK].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_BCT_SET_BLOCK_POSITION].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
