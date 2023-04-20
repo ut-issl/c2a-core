@@ -22,6 +22,7 @@ ope = wings_utils.get_wings_operation()
 
 SECOND_OBC = "AOBC"
 Tlm_CODE_2ND_OBC_HK = c2a_enum.Tlm_CODE_AOBC_HK
+TLM_APID_2ND_OBC = c2a_enum.APID_AOBC_TLM
 USE_BCT_ID = 100
 
 # NOP だと id が 0x00 なのでちがうのを
@@ -105,18 +106,16 @@ def test_c2a_comm_tlm_buffer():
     # MOBC の tlm buffer が空なのでエラー
     assert "CNT" == wings.util.send_rt_cmd_and_confirm(
         ope,
-        mobc_c2a_enum.Cmd_CODE_GENERATE_TLM,
-        (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1),
+        mobc_c2a_enum.Cmd_CODE_TG_FORWARD_AS_MS_TLM,
+        (TLM_APID_2ND_OBC, c2a_enum.Tlm_CODE_AOBC_AOBC),
         mobc_c2a_enum.Tlm_CODE_HK,
     )
-    send_2nd_obc_gsc_directly(
-        c2a_enum.Cmd_CODE_GENERATE_TLM, (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1)
-    )
+    send_2nd_obc_gsc_directly(c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, (c2a_enum.Tlm_CODE_AOBC_AOBC,))
     time.sleep(2)
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
-        mobc_c2a_enum.Cmd_CODE_GENERATE_TLM,
-        (0x40, mobc_c2a_enum.Tlm_CODE_AOBC_AOBC, 1),
+        mobc_c2a_enum.Cmd_CODE_TG_FORWARD_AS_MS_TLM,
+        (TLM_APID_2ND_OBC, c2a_enum.Tlm_CODE_AOBC_AOBC),
         mobc_c2a_enum.Tlm_CODE_HK,
     )
 
@@ -254,8 +253,8 @@ def get_2nd_obc_hk_tlm():
     global g_mobc_gsc_cnt
     g_mobc_gsc_cnt += 1
 
-    tlm_2ND_HK = wings.util.generate_and_receive_tlm(
-        ope, mobc_c2a_enum.Cmd_CODE_GENERATE_TLM, Tlm_CODE_2ND_OBC_HK
+    tlm_2ND_HK = wings.util.forward_and_receive_tlm(
+        ope, mobc_c2a_enum.Cmd_CODE_TG_FORWARD_TLM, TLM_APID_2ND_OBC, Tlm_CODE_2ND_OBC_HK
     )
     return tlm_2ND_HK
 

@@ -9,6 +9,9 @@
 #include <src_core/TlmCmd/common_tlm_cmd_packet.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include <src_core/TlmCmd/packet_handler.h>
+#include <src_core/TlmCmd/telemetry_frame.h>
+#include "telemetry_definitions.h"
+#include "../Settings/TlmCmd/Ccsds/apid_define.h"
 
 extern PacketList PH_aobc_cmd_list;
 extern PacketList PH_tobc_cmd_list;
@@ -47,5 +50,20 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet);
  * @retval CCP_CmdRet{CCP_EXEC_ROUTING_FAILED, *}: 転送失敗（詳細エラーは DriverSuper を参照）
  */
 CCP_CmdRet PH_user_cmd_router(const CommonCmdPacket* packet);
+
+/**
+ * @brief 2nd OBC のテレメを転送するために， APID からテレメを判定してルーティングする  // FIXME: 命名， router ではない？
+ * @param[in]  apid:    2nd OBC の Tlm APID
+ * @param[in]  tlm_id:  2nd OBC の Tlm ID
+ * @param[out] packet:  テレメを作る uint8_t にシリアライズされた packet へのポインタ
+ * @param[out] len:     転送するテレメのパケット長
+ * @param[in]  max_len: 許容できる最大テレメパケット長
+ * @return TF_TLM_FUNC_ACK
+ */
+TF_TLM_FUNC_ACK PH_user_telemetry_router(APID apid,
+                                         TLM_CODE tlm_id,
+                                         uint8_t* packet,
+                                         uint16_t* len,
+                                         uint16_t max_len);
 
 #endif
