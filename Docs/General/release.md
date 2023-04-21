@@ -73,6 +73,7 @@ Tool のリリースには，以下に注意する．
 - release には以下を含める．
     - Release Note として簡潔な更新差分の箇条書き
     - 対応する最小 C2A Core バージョン
+      - [c2a-tlm-cmd-code-generator](https://github.com/ut-issl/c2a-tlm-cmd-code-generator) については，依存関係が逆なので除外
     - この Tool に適合させたときの C2A Core の PR へのリンク
 
 例:
