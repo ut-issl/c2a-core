@@ -415,7 +415,7 @@ void EL_initialize(void);
  * @note   C2A 上の任意の場所から発行可能
  * @param  group: EL_Event.group
  * @param  local: EL_Event.local
- * @param  err_level: EL_Event.err_level EL_ERROR_LEVEL_EL は禁止
+ * @param  err_level: EL_Event.err_level (EL_ERROR_LEVEL_EL は禁止)
  * @param  note: EL_Event.note
  * @return EL_ACK
  */
