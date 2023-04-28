@@ -39,7 +39,7 @@ jobs:
           exit "${status}"
 
       - name: install reviewdog
-        uses: reviewdog/action-setup@v1.0.3
+        uses: reviewdog/action-setup@v1.0.4
 
       - name: fix error log source file path
         run: |
