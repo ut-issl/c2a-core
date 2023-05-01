@@ -13,7 +13,7 @@ for /f "usebackq" %%a in (`"git log --pretty=format:%%h -1"`) do set git_rev_use
 REM cd ..\..\src_core
 
 REM generate header
-if exist ..\Settings\git_revision_config.h del ..\Settings\git_revision_config.h
+if exist ..\..\Settings\git_revision_config.h del ..\..\Settings\git_revision_config.h
 
 REM MEMO: このヒアドキュメントもどきの書き方はwineのcmd.exe(Windows 6.1.7601)だと動かない？
 (
