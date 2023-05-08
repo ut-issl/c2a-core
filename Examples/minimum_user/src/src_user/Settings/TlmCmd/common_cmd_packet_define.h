@@ -20,18 +20,17 @@ typedef CmdSpacePacket CommonCmdPacket;
 /**
  * @enum   CCP_DEST_TYPE
  * @brief  コマンドの解釈の宛先を規定
- * @note   TO_ME: 自分自身 → 自分自身の TLC や BC として解釈．コマンド実行時に必要に応じて別 OBC へ配送 （この定義は C2A Core で使うため，どんな C2A でも必須）
- * @note   TO_*:  転送先の TL や BC として解釈 （直接指定 OBC へ配送． GS から来たコマンドを自身のキューにいれない）
- *         なお，自分自身宛だった場合は，キューに入れる
+ * @note   詳細は https://github.com/ut-issl/c2a-core/blob/develop/Docs/Core/communication.md を参照
  * @note   4bit を想定
  */
 typedef enum
 {
-  CCP_DEST_TYPE_TO_ME     = 0,
-  CCP_DEST_TYPE_TO_MOBC   = 1,
-  CCP_DEST_TYPE_TO_AOBC   = 2,
-  CCP_DEST_TYPE_TO_TOBC   = 3,
-  CCP_DEST_TYPE_TO_UNKOWN = 4
+  CCP_DEST_TYPE_TO_ME     = 0x0,
+  CCP_DEST_TYPE_TO_MOBC   = 0x1,    // CCP_DEST_TYPE_TO_APID の追加に伴い deprecated
+  CCP_DEST_TYPE_TO_AOBC   = 0x2,    // CCP_DEST_TYPE_TO_APID の追加に伴い deprecated
+  CCP_DEST_TYPE_TO_TOBC   = 0x3,    // CCP_DEST_TYPE_TO_APID の追加に伴い deprecated
+  CCP_DEST_TYPE_TO_UNKOWN = 0xe,
+  CCP_DEST_TYPE_TO_APID   = 0xf
 } CCP_DEST_TYPE;
 
 /**

@@ -10,15 +10,19 @@
 #include <src_user/TlmCmd/command_definitions.h>
 
 // ここで CCP_DEST_TYPE を定義する
-// 詳細は /Examples/minimum_user/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h 参照
+// 詳細は
+// - /Examples/minimum_user/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h
+// - https://github.com/ut-issl/c2a-core/blob/develop/Docs/Core/communication.md
+// を参照
 /* 例
 typedef enum
 {
-  CCP_DEST_TYPE_TO_ME     = 0,
-  CCP_DEST_TYPE_TO_MOBC   = 1,
-  CCP_DEST_TYPE_TO_AOBC   = 2,
-  CCP_DEST_TYPE_TO_TOBC   = 3,
-  CCP_DEST_TYPE_TO_UNKOWN = 4
+  CCP_DEST_TYPE_TO_ME     = 0x0,
+  CCP_DEST_TYPE_TO_MOBC   = 0x1,
+  CCP_DEST_TYPE_TO_AOBC   = 0x2,
+  CCP_DEST_TYPE_TO_TOBC   = 0x3,
+  CCP_DEST_TYPE_TO_UNKOWN = 0xe,
+  CCP_DEST_TYPE_TO_APID   = 0xf
 } CCP_DEST_TYPE;
 */
 // さらに， CCP_APID_TO_ME, CCP_MAX_LEN, CommonCmdPacket として使うパケット型を指定する
