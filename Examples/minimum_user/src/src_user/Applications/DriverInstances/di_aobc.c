@@ -105,6 +105,7 @@ CCP_CmdRet DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
   default:
     // MOBC のキューに入らず直接転送
     // そのままの EXEC_TYPE で転送．なにもしない
+    break;
   }
 
   // 配送先 OBC が最終到達地なので
