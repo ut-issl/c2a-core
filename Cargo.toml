@@ -1,6 +1,6 @@
 [package]
 name = "c2a-core"
-version = "3.9.0-beta.2"
+version = "3.9.0-beta.3"
 edition = "2021"
 
 description = "Core of Command Centric Architecture"
