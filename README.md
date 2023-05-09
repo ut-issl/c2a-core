@@ -67,6 +67,7 @@ C2A Core の採用実績のある衛星 OBC や動作実績のあるボードの
 - https://github.com/ut-issl/c2a-enum-loader
 - https://github.com/ut-issl/s2e-user-for-c2a-core
 - https://github.com/arkedge/c2a-tlmcmddb
+- https://github.com/arkedge/workflows-c2a
 
 
 ### User 実装例
