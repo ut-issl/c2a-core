@@ -17,7 +17,9 @@
 
 ### 本 Release
 
-1. [c2a_core_main.h](https://github.com/ut-issl/c2a-core/blob/develop/c2a_core_main.h) 内の `C2A_CORE_VER_*` をインクリメントする PR (Pull Request) を発行し， `develop` ブランチへマージする．
+1. バージョン番号をインクリメントする PR (Pull Request) を発行し，`develop` ブランチへマージする
+    - [c2a_core_main.h](https://github.com/ut-issl/c2a-core/blob/develop/c2a_core_main.h) 内の `C2A_CORE_VER_*` をインクリメントする
+    - [Cargo.toml](https://github.com/ut-issl/c2a-core/blob/develop/Cargo.toml) 内の `package.version` をインクリメントする
     - この後リリースを控えるので，念の為すべてのテストを再度回す．
     - `#define C2A_CORE_VER_PRE` は `("")` とする．
     - PR 名は `Update version (v3.4.0)` のようにする．
@@ -34,6 +36,7 @@
     - release には以下を含める．
         - Release Note として簡潔な更新差分の箇条書き
         - `main` にマージしたときの PR のリンク
+1. `cargo publish` する
 
 
 これを，だいたい以下のような粒度で行う．
@@ -49,6 +52,7 @@
     - 対応する Tools の PR のリンクを貼る．
     - `#define C2A_CORE_VER_PRE` に `("beta.0")` などをセットする．
     - 本 Release 後最初の Pre-release の場合， `C2A_CORE_VER_*` をインクリメントする．
+    - [Cargo.toml](https://github.com/ut-issl/c2a-core/blob/develop/Cargo.toml) 内の `package.version` をインクリメントする
     - PR 名は以下のようにする．
         - `Pre Release (v3.5.0-beta.0): 通常のPRのタイトル`
     - 例: https://github.com/ut-issl/c2a-core/pulls?q=is%3Apr+Pre+Release
@@ -58,6 +62,7 @@
     - release には以下を含める．
         - 非互換となった Tools の新しい バージョン (Release) へのリンク
         - `develop` にマージしたときの PR のリンク
+1. `cargo publish` する
 1. Bug fix や 大きな機能更新などで，本 Release 前に User サイドで最新の Core が必要になった際にも， Pre-release を行うことができる．
 
 
