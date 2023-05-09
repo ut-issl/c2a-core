@@ -38,7 +38,6 @@
         - `main` にマージしたときの PR のリンク
 1. `cargo publish` する．
 
-
 これを，だいたい以下のような粒度で行う．
 
 - 最後のリリースからおおよそ１ヶ月程度が経過した場合（更新が少ない場合を除く）
@@ -52,7 +51,7 @@
     - 対応する Tools の PR のリンクを貼る．
     - `#define C2A_CORE_VER_PRE` に `("beta.0")` などをセットする．
     - 本 Release 後最初の Pre-release の場合， `C2A_CORE_VER_*` をインクリメントする．
-    - [Cargo.toml](https://github.com/ut-issl/c2a-core/blob/develop/Cargo.toml) 内の `package.version` をインクリメントする．
+    - [Cargo.toml](https://github.com/ut-issl/c2a-core/blob/develop/Cargo.toml) 内の `package.version` を同様にインクリメントする．
     - PR 名は以下のようにする．
         - `Pre Release (v3.5.0-beta.0): 通常のPRのタイトル`
     - 例: https://github.com/ut-issl/c2a-core/pulls?q=is%3Apr+Pre+Release
@@ -63,7 +62,8 @@
         - 非互換となった Tools の新しい バージョン (Release) へのリンク
         - `develop` にマージしたときの PR のリンク
 1. `cargo publish` する．
-1. Bug fix や 大きな機能更新などで，本 Release 前に User サイドで最新の Core が必要になった際にも， Pre-release を行うことができる．
+
+なお，Bug fix や 大きな機能更新などで，本 Release 前に User サイドで最新の Core が必要になった際にも， Pre-release を行うことができる．
 
 
 ## バージョニング
