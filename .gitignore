@@ -64,8 +64,6 @@ Examples/2nd_obc_user/src/src_core
 Examples/2nd_obc_user/build
 *.pyc
 
-
 # Added by cargo
-
 /target
 /Cargo.lock
