@@ -17,10 +17,7 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
   switch (CCP_get_dest_type(packet))
   {
   default:
-    // CCP_DEST_TYPE_TO_ME
-    // CCP_DEST_TYPE_TO_MOBC （自分）
-    // 宛先不明
-    // はここに
+    // 2nd OBC なので，自分宛て以外のパケットはないはず
     return PH_ACK_UNKNOWN;
   }
 }

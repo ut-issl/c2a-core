@@ -131,9 +131,10 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   }
 
   // ここまで来たら自分宛て
-  // 例えば以下のどちらか
-  //   - CCP_DEST_TYPE_TO_ME
-  //   - CCP_DEST_TYPE_TO_MOBC （自分）
+  // 例えば以下のどれか
+  // - CCP_DEST_TYPE_TO_ME
+  // - CCP_DEST_TYPE_TO_APID でかつ， APID が自分宛てのもの
+  // - CCP_DEST_TYPE_TO_MOBC などの自分宛
   // 統一するため上書きする
   CCP_set_dest_type((CommonCmdPacket*)packet, CCP_DEST_TYPE_TO_ME);   // const_cast
 
