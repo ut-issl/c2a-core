@@ -64,6 +64,7 @@ static PH_ACK PH_add_tl_cmd_(TLCD_ID id,
  * @return PH_ACK
  */
 static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet);
+static PH_ACK PH_add_tlm_to_pl(const CommonTlmPacket* packet, PacketList* pl, CTP_DEST_FLAG dest_flag);
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
@@ -311,24 +312,34 @@ static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet)
 }
 
 
-static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
+static PH_ACK PH_add_tlm_to_pl(const CommonTlmPacket* packet, PacketList* pl, CTP_DEST_FLAG dest_flag)
 {
-  PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
+  PL_Node* tail;
+  PL_ACK ack = PL_push_back(pl, packet);
 
   if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
+  // 複数の配送先に配送されるパケットの分岐は終わっているため， dest flag を配送先のもののみにする．
+  // こうすることで， GS SW 側でのデータベース格納の処理がシンプルになる．
+  // PL_SUCCESS の場合，かならず tail に格納した packet がある．
+  // TODO: メモリコピーをなくすためにだいぶやんちゃな実装なので，ぱっといい方法が思いつくなら直す
+  tail = (PL_Node*)PL_get_tail(pl);      // const_cast
+  CTP_set_dest_flags((CommonTlmPacket*)(tail->packet), (ctp_dest_flags_t)dest_flag);
+
   return PH_ACK_SUCCESS;
+}
+
+
+static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
+{
+  return PH_add_tlm_to_pl(packet, &PH_ms_tlm_list, CTP_DEST_FLAG_MS);
 }
 
 
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
-  PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
-
-  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
-
-  return PH_ACK_SUCCESS;
+  return PH_add_tlm_to_pl(packet, &PH_st_tlm_list, CTP_DEST_FLAG_ST);
 }
 #endif
 
@@ -336,11 +347,7 @@ static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 #ifdef DR_ENABLE
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
-  PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
-
-  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
-
-  return PH_ACK_SUCCESS;
+  return PH_add_tlm_to_pl(packet, &PH_rp_tlm_list, CTP_DEST_FLAG_RP);
 }
 #endif
 
