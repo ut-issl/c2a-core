@@ -6,7 +6,6 @@ edition = "2021"
 description = "Core of Command Centric Architecture"
 readme = "README.md"
 license = "MIT"
-license-file = "LICENSE"
 
 repository = "https://github.com/ut-issl/c2a-core"
 documentation = "https://ut-issl.github.io/c2a-reference/c2a-core"
