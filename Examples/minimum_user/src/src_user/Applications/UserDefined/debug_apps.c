@@ -4,6 +4,7 @@
 #include <stddef.h> // for NULL
 #include <stdint.h>
 
+#include <src_core/Library/git_revision.h>
 #include <src_core/Library/print.h>
 #include <src_core/System/TimeManager/time_manager.h>
 #include <src_core/System/ModeManager/mode_manager.h>
@@ -19,7 +20,6 @@
 #include <src_core/Applications/timeline_command_dispatcher.h>
 #include "../../Applications/DriverInstances/di_gs.h"
 // #include <src_core/TlmCmd/telemetry_generator.h>
-#include "../../Library/git_revision.h"
 #include "../../Library/vt100.h"
 
 void APP_DBG_flush_screen_(void);
