@@ -14,3 +14,7 @@ documentation = "https://ut-issl.github.io/c2a-reference/c2a-core"
 [features]
 std = []
 export-src = ["std"]
+
+[build-dependencies]
+semver = "1.0.17"
+clang = "2.0.0"
