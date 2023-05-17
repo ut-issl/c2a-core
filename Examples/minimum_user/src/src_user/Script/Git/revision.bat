@@ -1,10 +1,10 @@
 @ECHO OFF
 REM generate C header for Git revision
 
-REM current directoryã«ç§»å‹•(src_user/Script/Git)
+REM current directory‚ÉˆÚ“®(src_user/Script/Git)
 cd /d %~dp0
 
-REM src_userã«ç§»å‹•
+REM src_user‚ÉˆÚ“®
 cd ..\..
 
 for /f "usebackq" %%a in (`"git log --pretty=format:%%H -1"`) do set git_rev_user=%%a
@@ -15,7 +15,7 @@ REM cd ..\..\src_core
 REM generate header
 if exist ..\..\Settings\git_revision_config.h del ..\..\Settings\git_revision_config.h
 
-REM MEMO: ã“ã®ãƒ’ã‚¢ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚‚ã©ãã®æ›¸ãæ–¹ã¯wineã®cmd.exe(Windows 6.1.7601)ã ã¨å‹•ã‹ãªã„ï¼Ÿ
+REM MEMO: ‚±‚ÌƒqƒAƒhƒLƒ…ƒƒ“ƒg‚à‚Ç‚«‚Ì‘‚«•û‚Íwine‚Ìcmd.exe(Windows 6.1.7601)‚¾‚Æ“®‚©‚È‚¢H
 (
 echo.#ifndef C2A_USER_GIT_REVISION_H_
 echo.#define C2A_USER_GIT_REVISION_H_
