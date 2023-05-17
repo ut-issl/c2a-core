@@ -63,10 +63,8 @@ static void C2A_init_(void)
   Printf("C2A_init: user revision = %s\n", GIT_REV_USER);
 
   WDT_init();
-
   TMGR_init();                // Time Manager
                               // AM_initialize_all_apps での時間計測のためにここで初期化
-
   Printf("C2A_init: TMGR_init done.\n");
   timer_setting_();           // Timer 割り込み開始
   Printf("C2A_init: timer_setting_ done.\n");
