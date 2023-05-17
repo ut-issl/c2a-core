@@ -26,3 +26,6 @@ echo.#define GIT_REVISION_C2A_USER_SHORT 0x%git_rev_user_short%
 echo.
 echo.#endif // C2A_USER_GIT_REVISION_H_
 ) > Settings\git_revision_config.h
+
+REM current directory‚ÉˆÚ“®(src_user/Script/Git)
+cd /d %~dp0
