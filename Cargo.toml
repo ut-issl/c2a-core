@@ -11,6 +11,7 @@ repository = "https://github.com/ut-issl/c2a-core"
 documentation = "https://ut-issl.github.io/c2a-reference/c2a-core"
 
 [features]
+default = ["clang-runtime"]
 std = []
 export-src = ["std"]
 clang-runtime = ["clang/runtime"]
