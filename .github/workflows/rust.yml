@@ -34,7 +34,7 @@ jobs:
       - name: reviewdog / clippy
         uses: sksat/action-clippy@v0.2.1
         with:
-          reporter: github-pr-review
+          reporter: ${{ github.event_name == 'pull_request' && 'github-pr-review' || 'github-check' }}
           clippy_flags: --all-features
 
       - name: unit test
