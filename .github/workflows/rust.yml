@@ -1,0 +1,36 @@
+name: Rust
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+env:
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+
+      - name: cache dependencies
+        uses: Swatinem/rust-cache@v2.3.0
+
+      - name: reviewdog / clippy
+        uses: sksat/action-clippy@v0.2.1
+        with:
+          reporter: github-pr-review
+          clippy_flags: --all-features
+
+      - name: unit test
+        run: cargo test
