@@ -8,7 +8,7 @@
  */
 
 #if 1 // このuserはCMakeでビルドするのでこれを使う
-/*! @brief CMakeでビルドする時など，コマンドラインオプションからcommit hashを流し込む場合の設定
+/*!< @brief CMakeでビルドする時など，コマンドラインオプションからcommit hashを流し込む場合の設定
  * この場合，以下の定数をコマンドラインオプション(-D)などで設定してください
  *   GIT_REVISION_C2A_CORE          C2A coreのcommit hash(文字列)
  *   GIT_REVISION_C2A_CORE_SHORT    C2A coreのcommit hash short(0xから始まる数値)
@@ -20,7 +20,7 @@
 #endif // from option
 
 #if 0
-/*! @brief このファイルを自動生成する場合
+/*!< @brief このファイルを自動生成する場合
  * src_user/Script/Git/revision.sh/batが以下のような内容でこのファイルを生成します
  */
 
@@ -34,7 +34,7 @@
 #endif // generated version
 
 #if 0
-/*! @brief commit hashを埋め込まない場合の設定
+/*!< @brief commit hashを埋め込まない場合の設定
  * 実際には0が埋め込まれます
  */
 

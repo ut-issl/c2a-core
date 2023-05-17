@@ -9,7 +9,7 @@
 
 #include <src_user/Settings/git_revision_config.h> //!< 設定ないしcommit hashを読み込む
 
-/*! @brief コンパイルオプションないしuserの設定で定義されたcommit hashを読み込んで埋め込みます
+/*!< @brief コンパイルオプションないしuserの設定で定義されたcommit hashを読み込んで埋め込みます
  * git revisionの埋め込みは，以下の定数を通して行われます(経緯: #82)．
  *   GIT_REVISION_C2A_CORE          C2A coreのcommit hash(文字列)
  *   GIT_REVISION_C2A_CORE_SHORT    C2A coreのcommit hash short(0xから始まる数値)
