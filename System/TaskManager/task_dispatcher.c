@@ -15,6 +15,7 @@
 #include "../../TlmCmd/common_cmd_packet_util.h"
 #include "../ModeManager/mode_manager.h"
 #include "../TimeManager/time_manager.h"
+#include "../TimeManager/obc_time_config.h"
 #include "../EventManager/event_logger.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
