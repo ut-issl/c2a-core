@@ -77,7 +77,7 @@ def check_cdis_exec_err(cmd_id, params, exec_sts_expected, err_code_expected):
 
     # === ELのチェック ===
     tlm_EL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_EL
     )
 
     # GS_cmd_dispatcher
