@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include "../../Library/endian.h"        // パスが不定な自動生成コード類で使えるように
 #include "../../System/TimeManager/time_manager.h"
+#include "../../TlmCmd/common_cmd_packet.h"
 
 #define DS_STREAM_MAX                 (3)         /*!< DS_StreamConfig の最大数
                                                        uint8_t を想定          */
