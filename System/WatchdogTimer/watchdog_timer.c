@@ -5,6 +5,7 @@
  *        なお，CMDはリプロ対象内！！
  */
 #include "watchdog_timer.h"
+#include "watchdog_timer_cmd.h"
 #include "../../Library/print.h"
 #include "../../TlmCmd/common_cmd_packet_util.h"
 
