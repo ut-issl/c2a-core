@@ -4,6 +4,7 @@
  * @brief OBCの時刻情報の定義と演算
  */
 #include "obc_time.h"
+#include "obc_time_config.h"
 #include "../../Library/print.h"
 
 ObcTime OBCT_create(cycle_t total_cycle,
