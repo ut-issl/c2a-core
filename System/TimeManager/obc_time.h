@@ -7,14 +7,6 @@
 
 #include <stdint.h>
 
-// step, cycleについてはTimeManagerを参照のこと
-#define OBCT_STEP_IN_MSEC (1)                                                    //!< 1 step で何 ms か
-#define OBCT_STEPS_PER_CYCLE (100)                                               //!< 何 step で 1 cycle か
-#define OBCT_CYCLES_PER_SEC (1000 / OBCT_STEP_IN_MSEC / OBCT_STEPS_PER_CYCLE)    //!< 1 s で何 cycle か
-#define OBCT_MAX_CYCLE (0xfffffff0u)                                             //!< 最大 cycle 数．つまり TI がいくつでオーバーフローするか
-
-#include <src_user/Settings/System/obc_time_params.h>
-
 typedef uint32_t cycle_t;
 typedef uint32_t step_t;
 
