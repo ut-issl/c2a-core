@@ -4,6 +4,7 @@
  * @brief OBC時刻のカウントアップと，各種衛星時刻関連処理
  */
 #include "time_manager.h"
+#include "obc_time_config.h"
 #include <string.h>
 #include "../../Library/c2a_round.h"
 #include "../TaskManager/task_dispatcher.h"
