@@ -158,8 +158,8 @@ def test_tmgr_utl_cmd():
     wings.util.send_utl_cmd(
         ope,
         time.time() + 3,
-        c2a_enum.Cmd_CODE_GENERATE_TLM,
-        (0x40, c2a_enum.Tlm_CODE_GS, 1),
+        c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM,
+        (c2a_enum.Tlm_CODE_GS,),
     )
     wings.util.send_utl_cmd(
         ope,
