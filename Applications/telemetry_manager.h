@@ -74,7 +74,7 @@ typedef struct
   uint8_t bc_info_idx[TLM_MGR_USE_BC_NUM];             //!< bc_info のどの idx の BC を使うか．static確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
   uint8_t bc_info_idx_used_num;                        //!< 使用している BC 数
   uint8_t tlm_register_pointer_to_idx_of_bc_info_idx;  //!< 次にテレメ生成コマンドを登録した場合に使用される bc_info_idx の配列 idx
-  uint8_t tlm_register_pointer_to_bc_cmd_idx;          //!< 次にテレメ生成コマンドを登録した場合に登録するBC pos.cmd
+  uint8_t tlm_register_pointer_to_bct_cmd_pos;         //!< 次にテレメ生成コマンドを登録した場合に登録する BCT_Pos.cmd
 } TLM_MGR_RegisterInfo;
 
 

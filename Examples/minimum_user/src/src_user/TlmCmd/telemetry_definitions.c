@@ -239,7 +239,7 @@ static TF_TLM_FUNC_ACK Tlm_TLM_MGR_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[67], telemetry_manager->register_info.master.bc_info_idx[9]);
   TF_copy_u8(&packet[68], telemetry_manager->register_info.master.bc_info_idx_used_num);
   TF_copy_u8(&packet[69], telemetry_manager->register_info.master.tlm_register_pointer_to_idx_of_bc_info_idx);
-  TF_copy_u8(&packet[70], telemetry_manager->register_info.master.tlm_register_pointer_to_bc_cmd_idx);
+  TF_copy_u8(&packet[70], telemetry_manager->register_info.master.tlm_register_pointer_to_bct_cmd_pos);
   TF_copy_u8(&packet[71], telemetry_manager->register_info.hk_tlm.bc_info_idx[0]);
   TF_copy_u8(&packet[72], telemetry_manager->register_info.hk_tlm.bc_info_idx[1]);
   TF_copy_u8(&packet[73], telemetry_manager->register_info.hk_tlm.bc_info_idx[2]);
@@ -252,7 +252,7 @@ static TF_TLM_FUNC_ACK Tlm_TLM_MGR_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[80], telemetry_manager->register_info.hk_tlm.bc_info_idx[9]);
   TF_copy_u8(&packet[81], telemetry_manager->register_info.hk_tlm.bc_info_idx_used_num);
   TF_copy_u8(&packet[82], telemetry_manager->register_info.hk_tlm.tlm_register_pointer_to_idx_of_bc_info_idx);
-  TF_copy_u8(&packet[83], telemetry_manager->register_info.hk_tlm.tlm_register_pointer_to_bc_cmd_idx);
+  TF_copy_u8(&packet[83], telemetry_manager->register_info.hk_tlm.tlm_register_pointer_to_bct_cmd_pos);
   TF_copy_u8(&packet[84], telemetry_manager->register_info.system_tlm.bc_info_idx[0]);
   TF_copy_u8(&packet[85], telemetry_manager->register_info.system_tlm.bc_info_idx[1]);
   TF_copy_u8(&packet[86], telemetry_manager->register_info.system_tlm.bc_info_idx[2]);
@@ -265,7 +265,7 @@ static TF_TLM_FUNC_ACK Tlm_TLM_MGR_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[93], telemetry_manager->register_info.system_tlm.bc_info_idx[9]);
   TF_copy_u8(&packet[94], telemetry_manager->register_info.system_tlm.bc_info_idx_used_num);
   TF_copy_u8(&packet[95], telemetry_manager->register_info.system_tlm.tlm_register_pointer_to_idx_of_bc_info_idx);
-  TF_copy_u8(&packet[96], telemetry_manager->register_info.system_tlm.tlm_register_pointer_to_bc_cmd_idx);
+  TF_copy_u8(&packet[96], telemetry_manager->register_info.system_tlm.tlm_register_pointer_to_bct_cmd_pos);
   TF_copy_u8(&packet[97], telemetry_manager->register_info.high_freq_tlm.bc_info_idx[0]);
   TF_copy_u8(&packet[98], telemetry_manager->register_info.high_freq_tlm.bc_info_idx[1]);
   TF_copy_u8(&packet[99], telemetry_manager->register_info.high_freq_tlm.bc_info_idx[2]);
@@ -278,7 +278,7 @@ static TF_TLM_FUNC_ACK Tlm_TLM_MGR_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[106], telemetry_manager->register_info.high_freq_tlm.bc_info_idx[9]);
   TF_copy_u8(&packet[107], telemetry_manager->register_info.high_freq_tlm.bc_info_idx_used_num);
   TF_copy_u8(&packet[108], telemetry_manager->register_info.high_freq_tlm.tlm_register_pointer_to_idx_of_bc_info_idx);
-  TF_copy_u8(&packet[109], telemetry_manager->register_info.high_freq_tlm.tlm_register_pointer_to_bc_cmd_idx);
+  TF_copy_u8(&packet[109], telemetry_manager->register_info.high_freq_tlm.tlm_register_pointer_to_bct_cmd_pos);
   TF_copy_u8(&packet[110], telemetry_manager->register_info.low_freq_tlm.bc_info_idx[0]);
   TF_copy_u8(&packet[111], telemetry_manager->register_info.low_freq_tlm.bc_info_idx[1]);
   TF_copy_u8(&packet[112], telemetry_manager->register_info.low_freq_tlm.bc_info_idx[2]);
@@ -291,7 +291,7 @@ static TF_TLM_FUNC_ACK Tlm_TLM_MGR_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[119], telemetry_manager->register_info.low_freq_tlm.bc_info_idx[9]);
   TF_copy_u8(&packet[120], telemetry_manager->register_info.low_freq_tlm.bc_info_idx_used_num);
   TF_copy_u8(&packet[121], telemetry_manager->register_info.low_freq_tlm.tlm_register_pointer_to_idx_of_bc_info_idx);
-  TF_copy_u8(&packet[122], telemetry_manager->register_info.low_freq_tlm.tlm_register_pointer_to_bc_cmd_idx);
+  TF_copy_u8(&packet[122], telemetry_manager->register_info.low_freq_tlm.tlm_register_pointer_to_bct_cmd_pos);
   TF_copy_u8(&packet[123], telemetry_manager->register_info.reserve.bc_info_idx[0]);
   TF_copy_u8(&packet[124], telemetry_manager->register_info.reserve.bc_info_idx[1]);
   TF_copy_u8(&packet[125], telemetry_manager->register_info.reserve.bc_info_idx[2]);
@@ -304,7 +304,7 @@ static TF_TLM_FUNC_ACK Tlm_TLM_MGR_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_u8(&packet[132], telemetry_manager->register_info.reserve.bc_info_idx[9]);
   TF_copy_u8(&packet[133], telemetry_manager->register_info.reserve.bc_info_idx_used_num);
   TF_copy_u8(&packet[134], telemetry_manager->register_info.reserve.tlm_register_pointer_to_idx_of_bc_info_idx);
-  TF_copy_u8(&packet[135], telemetry_manager->register_info.reserve.tlm_register_pointer_to_bc_cmd_idx);
+  TF_copy_u8(&packet[135], telemetry_manager->register_info.reserve.tlm_register_pointer_to_bct_cmd_pos);
   TF_copy_u8(&packet[136], telemetry_manager->is_inited);
 #endif
 

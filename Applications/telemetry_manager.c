@@ -308,7 +308,7 @@ static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_in
     TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_info[bc_info_idx].bc_id);
   }
   register_info->tlm_register_pointer_to_idx_of_bc_info_idx = 0;
-  register_info->tlm_register_pointer_to_bc_cmd_idx = 0;
+  register_info->tlm_register_pointer_to_bct_cmd_pos = 0;
 }
 
 
@@ -316,7 +316,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
 {
   uint8_t  bc_info_idx = register_info->bc_info_idx[register_info->tlm_register_pointer_to_idx_of_bc_info_idx];
   bct_id_t bc_id = telemetry_manager_.bc_info[bc_info_idx].bc_id;
-  uint8_t  bc_cmd_pos = register_info->tlm_register_pointer_to_bc_cmd_idx;
+  uint8_t  bc_cmd_pos = register_info->tlm_register_pointer_to_bct_cmd_pos;
   BCT_Pos  bc_register_pos;
   CCP_UTIL_ACK ccp_util_ack;
   BCT_ACK  bct_ack;
@@ -340,7 +340,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
   if (register_info->tlm_register_pointer_to_idx_of_bc_info_idx >= register_info->bc_info_idx_used_num)
   {
     register_info->tlm_register_pointer_to_idx_of_bc_info_idx %= register_info->bc_info_idx_used_num;
-    register_info->tlm_register_pointer_to_bc_cmd_idx++;
+    register_info->tlm_register_pointer_to_bct_cmd_pos++;
   }
 
   return TLM_MGR_ERR_CODE_OK;
