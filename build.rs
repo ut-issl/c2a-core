@@ -6,6 +6,8 @@ use semver::Version;
 use clang::{token::TokenKind::Punctuation, Clang, Index};
 
 fn main() {
+    println!("cargo:source_dir={}", env!("CARGO_MANIFEST_DIR"));
+
     let ver = env!("CARGO_PKG_VERSION");
     let ver = Version::parse(ver).unwrap();
     dbg!(&ver);
