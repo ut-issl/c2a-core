@@ -10,7 +10,7 @@ on:
 jobs:
   minimum_user:
     name: minimum user
-    uses: arkedge/workflows-c2a/.github/workflows/c2a-build.yml@v1.0.0
+    uses: arkedge/workflows-c2a/.github/workflows/c2a-build.yml@v1.2.1
     with:
       c2a_dir: Examples/minimum_user
       c2a_custom_setup: |
@@ -27,7 +27,7 @@ jobs:
 
   second_obc_user:
     name: 2nd obc user
-    uses: arkedge/workflows-c2a/.github/workflows/c2a-build.yml@v1.0.0
+    uses: arkedge/workflows-c2a/.github/workflows/c2a-build.yml@v1.2.1
     with:
       c2a_dir: Examples/2nd_obc_user
       c2a_custom_setup: |
