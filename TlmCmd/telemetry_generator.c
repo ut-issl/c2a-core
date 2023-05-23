@@ -51,6 +51,7 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
  */
 static uint16_t TG_get_next_seq_count_(void);
 
+static CommonCmdPacket TG_ccp_;
 static CommonTlmPacket TG_ctp_;
 
 
@@ -209,6 +210,42 @@ CCP_CmdRet Cmd_TG_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet)
   uint8_t dr_partition = CCP_get_param_from_packet(packet, 2, uint8_t);
 
   return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_ST, dr_partition, 1);
+}
+
+
+CCP_CmdRet Cmd_TG_GENERATE_SUB_OBC_TLM(const CommonCmdPacket* packet)
+{
+  const uint8_t* param;
+  uint16_t len;
+  CCP_CmdRet ret;
+  PH_ACK ret_2;
+
+  APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+
+  cycle_t now = TMGR_get_master_total_cycle();
+
+  // まず sub OBC にテレメ発行させる
+  CCP_init_param_for_packet(Cmd_CODE_TG_GENERATE_MS_TLM);
+  CCP_prepare_uint8_param_for_packet(tlm_id);
+  CCP_get_prepared_param_for_packet(&param, &len);
+  CCP_form_rtc_to_other_obc(&TG_ccp_, apid, Cmd_CODE_TG_GENERATE_MS_TLM, param, len);
+  ret = PH_dispatch_command(&TG_ccp_);
+  if (ret.exec_sts != CCP_EXEC_SUCCESS) return ret;
+
+  // 次に sub OBC のテレメを forward する
+  CCP_init_param_for_packet(Cmd_CODE_TG_FORWARD_AS_MS_TLM);
+  CCP_prepare_uint16_param_for_packet(apid);
+  CCP_prepare_uint8_param_for_packet(tlm_id);
+  CCP_get_prepared_param_for_packet(&param, &len);
+  ret_2 = CCP_register_tlc_asap(now + OBCT_sec2cycle(1), TLCD_ID_DEPLOY_BC, Cmd_CODE_TG_FORWARD_AS_MS_TLM, param, len);
+
+  if (ret_2 != PH_ACK_TLC_SUCCESS)
+  {
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, ret_2);
+  }
+
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
 
