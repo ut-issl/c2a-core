@@ -57,6 +57,6 @@ CCP_CmdRet Cmd_TG_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet);
 /**
  * @brief 2nd OBC のテレメを生成したのち MS テレメとして転送する
  */
-CCP_CmdRet Cmd_TG_GENERATE_SUB_OBC_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TG_GENERATE_2ND_OBC_MS_TLM(const CommonCmdPacket* packet);
 
 #endif

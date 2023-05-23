@@ -51,7 +51,6 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
  */
 static uint16_t TG_get_next_seq_count_(void);
 
-static CommonCmdPacket TG_ccp_;
 static CommonTlmPacket TG_ctp_;
 
 
@@ -213,12 +212,12 @@ CCP_CmdRet Cmd_TG_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_GENERATE_SUB_OBC_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_GENERATE_2ND_OBC_MS_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param;
   uint16_t len;
-  CCP_CmdRet ret;
-  PH_ACK ret_2;
+  CCP_CmdRet cmd_ret;
+  PH_ACK ph_ack;
 
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
@@ -229,20 +228,24 @@ CCP_CmdRet Cmd_TG_GENERATE_SUB_OBC_TLM(const CommonCmdPacket* packet)
   CCP_init_param_for_packet(Cmd_CODE_TG_GENERATE_MS_TLM);
   CCP_prepare_uint8_param_for_packet(tlm_id);
   CCP_get_prepared_param_for_packet(&param, &len);
-  CCP_form_rtc_to_other_obc(&TG_ccp_, apid, Cmd_CODE_TG_GENERATE_MS_TLM, param, len);
-  ret = PH_dispatch_command(&TG_ccp_);
-  if (ret.exec_sts != CCP_EXEC_SUCCESS) return ret;
+  cmd_ret = CCP_form_and_exec_rtc_to_other_obc(apid, Cmd_CODE_TG_GENERATE_MS_TLM, param, len);
+
+  if (cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
+  {
+    cmd_ret.err_code = PH_ACK_UNKNOWN + 1; // 下の forward 次のエラーと区別できるようにするため
+    return cmd_ret;
+  }
 
   // 次に sub OBC のテレメを forward する
   CCP_init_param_for_packet(Cmd_CODE_TG_FORWARD_AS_MS_TLM);
   CCP_prepare_uint16_param_for_packet(apid);
   CCP_prepare_uint8_param_for_packet(tlm_id);
   CCP_get_prepared_param_for_packet(&param, &len);
-  ret_2 = CCP_register_tlc_asap(now + OBCT_sec2cycle(1), TLCD_ID_DEPLOY_BC, Cmd_CODE_TG_FORWARD_AS_MS_TLM, param, len);
+  ph_ack = CCP_register_tlc_asap(now + OBCT_sec2cycle(1), TLCD_ID_DEPLOY_BC, Cmd_CODE_TG_FORWARD_AS_MS_TLM, param, len);
 
-  if (ret_2 != PH_ACK_TLC_SUCCESS)
+  if (ph_ack != PH_ACK_TLC_SUCCESS)
   {
-    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, ret_2);
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, ph_ack);
   }
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
