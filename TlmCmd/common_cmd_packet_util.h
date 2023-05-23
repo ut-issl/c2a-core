@@ -164,6 +164,18 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
 CCP_CmdRet CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
+ * @brief 他の OBC のコマンドを RT として生成し, 即時実行する
+ * @note  生成される command は RTC だが，キューイングされずに即時実行されるため RTC Dispatcher にはログは残らない
+ * @param[in]     apid:   APID
+ * @param[in]     cmd_id: CMD_CODE
+ * @param[in]     param:  パラメタ
+ * @param[in]     len:    パラメタ長
+ * @retval CCP_CmdRet{CCP_EXEC_PACKET_FMT_ERR, *}: 引数が不正なとき
+ * @retval それ以外: PH_dispatch_command の返り値
+ */
+CCP_CmdRet CCP_form_and_exec_rtc_to_other_obc(APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
  * @brief BC展開 command を生成し，即時実行する
  * @param[in]     tl_no:    Timeline no
  * @param[in]     block_no: BC ID
