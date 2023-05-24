@@ -12,11 +12,12 @@
 #include "../TlmCmd/block_command_table.h"
 
 
-#define TLM_MGR_USE_BC_NUM            (10)    //!< 用いるBCの数．基本的に10固定を想定
-#define TLM_MGR_MAX_TLM_NUM_PER_BC    (10)    //!< 1BCに何個のテレメ生成コマンドを登録できるか．基本的に10固定を想定
+// 以下がともに 10 であることで， (10 - 1 (TLM_MGR_BC_TYPE_MASTER)) x 10 x cycle で 10 秒周期に 100 個の tlm を登録できる．
+#define TLM_MGR_USE_BC_NUM            (10)    //!< 用いる BC の数．基本的に 10 固定を想定
+#define TLM_MGR_MAX_TLM_NUM_PER_BC    (10)    //!< 1 BC に何個のテレメ生成コマンドを登録できるか．基本的に 10 固定を想定
 
 
-#if BCT_MAX_CMD_NUM < TLM_MGR_MAX_TLM_NUM_PER_BC       // FIXME: BCT側が直ったらなおす
+#if BCT_MAX_CMD_NUM < TLM_MGR_MAX_TLM_NUM_PER_BC       // FIXME: BCT 側が直ったらなおす
 #error BCT_MAX_CMD_NUM is not enough for TelemetryManager
 #endif
 
@@ -40,22 +41,20 @@ typedef enum
 /**
  * @enum   TLM_MGR_BC_TYPE
  * @note   uint8_t を想定
- * @brief  BCのタイプ．これにて実行種別が変わる
+ * @brief  BC のタイプ．これにて実行種別が変わる
  */
 typedef enum
 {
-  TLM_MGR_BC_TYPE_MASTER,
-  TLM_MGR_BC_TYPE_HK_TLM,
-  TLM_MGR_BC_TYPE_SYSTEM_TLM,
-  TLM_MGR_BC_TYPE_HIGH_FREQ_TLM,
-  TLM_MGR_BC_TYPE_LOW_FREQ_TLM,
-  TLM_MGR_BC_TYPE_RESERVE
+  TLM_MGR_BC_TYPE_MASTER,             //!< 全体の BC を deploy していく BC
+  TLM_MGR_BC_TYPE_HK_TLM,             //!< HK テレメ (or 全系や system で入れておきたい tlm (1 Hz))
+  TLM_MGR_BC_TYPE_HIGH_FREQ_TLM,      //!< User テレメ (1 Hz)
+  TLM_MGR_BC_TYPE_LOW_FREQ_TLM,       //!< User テレメ (1/10 Hz)
 } TLM_MGR_BC_TYPE;
 
 
 /**
  * @struct TLM_MGR_BcInfo
- * @brief  BCの情報
+ * @brief  BC の情報
  */
 typedef struct
 {
@@ -66,15 +65,18 @@ typedef struct
 
 /**
  * @struct TLM_MGR_RegisterInfo
- * @brief  どうBCを管理し，テレメ生成コマンドを登録し，動かしていくかの情報
+ * @brief  どう BC を管理し，テレメ生成コマンドを登録し，動かしていくかの情報
  * @note   TLM_MGR_BcInfo の情報から生成される
  */
 typedef struct
 {
-  uint8_t bc_info_idx[TLM_MGR_USE_BC_NUM];             //!< bc_info のどの idx の BC を使うか．static確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
-  uint8_t bc_info_idx_used_num;                        //!< 使用している BC 数
-  uint8_t tlm_register_pointer_to_idx_of_bc_info_idx;  //!< 次にテレメ生成コマンドを登録した場合に使用される bc_info_idx の配列 idx
-  uint8_t tlm_register_pointer_to_bct_cmd_pos;         //!< 次にテレメ生成コマンドを登録した場合に登録する BCT_Pos.cmd
+  uint8_t bc_info_idxes[TLM_MGR_USE_BC_NUM];    //!< bc_info のどの idx の BC を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
+  uint8_t bc_info_idxes_size;                   //!< bc_info_idxes の配列数
+  struct
+  {
+    uint8_t idx_of_bc_info_idxes;               //!< bc_info_idxes の配列 idx
+    uint8_t bct_cmd_pos;                        //!< BCT_Pos.cmd
+  } tlm_register_pointer;                       //!< 次にテレメ生成コマンドを登録するポインタ
 } TLM_MGR_RegisterInfo;
 
 
@@ -87,17 +89,15 @@ typedef struct
   TLM_MGR_BcInfo bc_info[TLM_MGR_USE_BC_NUM];
   struct
   {
-    TLM_MGR_RegisterInfo master;          //!< BC全体を展開していく master BC
-    TLM_MGR_RegisterInfo hk_tlm;          //!< HK テレメ（1 Hz）
-    TLM_MGR_RegisterInfo system_tlm;      /*!< 全系やsystemで入れておきたいtlm（1 Hz）
+    TLM_MGR_RegisterInfo master;      //!< TLM_MGR_BC_TYPE_MASTER; 全体の BC を deploy していく BC
+    TLM_MGR_RegisterInfo hk;          /*!< TLM_MGR_BC_TYPE_HK_TLM; HK テレメ (or 全系や system で入れておきたい tlm (1 Hz))
                                                userのtlm消去．追加の影響を受けない
                                                これによって，tlmの全体管理が容易になる  */
-    TLM_MGR_RegisterInfo high_freq_tlm;   //!< user テレメ（1 Hz）
-    TLM_MGR_RegisterInfo low_freq_tlm;    //!< user テレメ（1/10 Hz）
-    TLM_MGR_RegisterInfo reserve;         //!< 現状使ってないBC．浮くのが嫌なので，メンバは作るがテレメ生成コマンドは登録されない
+    TLM_MGR_RegisterInfo high_freq;   //!< TLM_MGR_BC_TYPE_HIGH_FREQ_TLM; User テレメ (1 Hz)
+    TLM_MGR_RegisterInfo low_freq;    //!< TLM_MGR_BC_TYPE_LOW_FREQ_TLM; User テレメ (1/10 Hz)
   } register_info;
   bct_id_t master_bc_id;
-  uint8_t is_inited;                      //!< 初期化されているか？
+  uint8_t is_inited;                  //!< 初期化されているか？
 } TelemetryManager;
 
 
@@ -127,7 +127,7 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet);
 
 /**
- * @brief high_freq_tlm, low_freq_tlm を初期化
+ * @brief high_freq, low_freq を初期化
  * @note  便宜上 TLM_MGR_BC_TYPE_RESERVE の BC も初期化してしまう
  */
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet);
@@ -164,12 +164,12 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet);
 
 /**
- * @brief high_freq_tlm を登録
+ * @brief high_freq を登録
  */
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet);
 
 /**
- * @brief low_freq_tlm を登録
+ * @brief low_freq を登録
  */
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet);
 
