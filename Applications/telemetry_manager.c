@@ -135,7 +135,7 @@ static RESULT TLM_MGR_init_2_(void)
 {
   TLM_MGR_ERR_CODE ret;
 
-  // BC設定から内部で使う情報の構築
+  // BC 設定から内部で使う情報の構築
   ret = TLM_MGR_calc_register_info_from_bc_info_();
   if (ret != TLM_MGR_ERR_CODE_OK)
   {
@@ -242,35 +242,29 @@ static void TLM_MGR_clear_bc_to_nop_(bct_id_t bc_id)
 
 static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void)
 {
-  uint8_t bc_info_idxes;
+  uint8_t bc_info_idx;
   TLM_MGR_RegisterInfo* register_info_master;
 
   TLM_MGR_clear_register_info_all_();    // TODO: 高速化のために消してもいいかも？
 
-  for (bc_info_idxes = 0; bc_info_idxes < TLM_MGR_USE_BC_NUM; ++bc_info_idxes)
+  for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
   {
     TLM_MGR_ERR_CODE ret = TLM_MGR_ERR_CODE_OK;
-    switch (telemetry_manager_.bc_info[bc_info_idxes].bc_type)
+    switch (telemetry_manager_.bc_info[bc_info_idx].bc_type)
     {
     case TLM_MGR_BC_TYPE_MASTER:
-      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.master, bc_info_idxes);
+      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.master, bc_info_idx);
       break;
     case TLM_MGR_BC_TYPE_HK_TLM:
-      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.hk, bc_info_idxes);
-      break;
-    case TLM_MGR_BC_TYPE_SYSTEM_TLM:
-      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.system_tlm, bc_info_idxes);
+      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.hk, bc_info_idx);
       break;
     case TLM_MGR_BC_TYPE_HIGH_FREQ_TLM:
-      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.high_freq, bc_info_idxes);
+      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.high_freq, bc_info_idx);
       break;
     case TLM_MGR_BC_TYPE_LOW_FREQ_TLM:
-      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.low_freq, bc_info_idxes);
+      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.low_freq, bc_info_idx);
       break;
-    case TLM_MGR_BC_TYPE_RESERVE:
-      ret = TLM_MGR_add_bc_info_to_register_info_(&telemetry_manager_.register_info.reserve, bc_info_idxes);
-      break;
-    default:
+   default:
       return TLM_MGR_ERR_CODE_OTHER_ERR;
       break;
     }
@@ -282,8 +276,8 @@ static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void)
   if (register_info_master->bc_info_idxes_size == 0) return TLM_MGR_ERR_CODE_MASTER_IS_ABSENT;
   if (register_info_master->bc_info_idxes_size > 1)  return TLM_MGR_ERR_CODE_MASTER_DUPLICATED;
 
-  bc_info_idxes = register_info_master->bc_info_idxes[0];
-  telemetry_manager_.master_bc_id = telemetry_manager_.bc_info[bc_info_idxes].bc_id;
+  bc_info_idx = register_info_master->bc_info_idxes[0];
+  telemetry_manager_.master_bc_id = telemetry_manager_.bc_info[bc_info_idx].bc_id;
   return TLM_MGR_ERR_CODE_OK;
 }
 
