@@ -10,6 +10,7 @@
 #include "../TlmCmd/common_cmd_packet.h"
 #include "../TlmCmd/common_cmd_packet_util.h"
 #include "../TlmCmd/block_command_table.h"
+#include <src_user/TlmCmd/telemetry_definitions.h>
 
 
 // 以下がともに 10 であることで， (10 - 1 (TLM_MGR_BC_TYPE_MASTER)) x 10 x cycle で 10 秒周期に 100 個の tlm を登録できる．
@@ -72,11 +73,12 @@ typedef struct
 {
   uint8_t bc_info_idxes[TLM_MGR_USE_BC_NUM];    //!< bc_info のどの idx の BC を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
   uint8_t bc_info_idxes_size;                   //!< bc_info_idxes の配列数
-  struct
-  {
-    uint8_t idx_of_bc_info_idxes;               //!< bc_info_idxes の配列 idx
-    uint8_t bct_cmd_pos;                        //!< BCT_Pos.cmd
-  } tlm_register_pointer;                       //!< 次にテレメ生成コマンドを登録するポインタ
+  uint8_t registered_tlm_num;                   //!< すでに登録されているテレメ数
+  // struct
+  // {
+  //   uint8_t idx_of_bc_info_idxes;               //!< bc_info_idxes の配列 idx
+  //   uint8_t bct_cmd_pos;                        //!< BCT_Pos.cmd
+  // } tlm_register_pointer;                       //!< 次にテレメ生成コマンドを登録するポインタ
 } TLM_MGR_RegisterInfo;
 
 
@@ -96,8 +98,9 @@ typedef struct
     TLM_MGR_RegisterInfo high_freq;   //!< TLM_MGR_BC_TYPE_HIGH_FREQ_TLM; User テレメ (1 Hz)
     TLM_MGR_RegisterInfo low_freq;    //!< TLM_MGR_BC_TYPE_LOW_FREQ_TLM; User テレメ (1/10 Hz)
   } register_info;
-  bct_id_t master_bc_id;
-  uint8_t is_inited;                  //!< 初期化されているか？
+  bct_id_t master_bc_id;              //!< TLM_MGR_BC_TYPE_MASTER に登録されている BC ID
+  TLM_CODE registered_tlm_table[TLM_MGR_USE_BC_NUM][TLM_MGR_MAX_TLM_NUM_PER_BC];    //!< 現在登録されているテレメ一覧テーブル
+  uint8_t  is_inited;                 //!< 初期化されているか？
 } TelemetryManager;
 
 

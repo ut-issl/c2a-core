@@ -36,32 +36,32 @@ static uint8_t TLM_MGR_init_2_(void);
 static uint8_t TLM_MGR_init_3_(void);
 static uint8_t TLM_MGR_init_4_(void);
 /**
- * @brief  AppInfo構造体のクリア
+ * @brief  AppInfo 構造体のクリア
  * @param  void
  * @return void
  */
 static void TLM_MGR_clear_info_(void);
 /**
- * @brief  すべてのTLM_MGR_RegisterInfoのクリア
+ * @brief  すべての TLM_MGR_RegisterInfo のクリア
  * @param  void
  * @return void
  */
 static void TLM_MGR_clear_register_info_all_(void);
 /**
- * @brief  TLM_MGR_RegisterInfoのクリア
+ * @brief  TLM_MGR_RegisterInfo のクリア
  * @param  register_info: クリアしたい TLM_MGR_RegisterInfo
  * @return void
  */
 static void TLM_MGR_clear_register_info_(TLM_MGR_RegisterInfo* register_info);
 /**
- * @brief  すべてのBCを NOP x TLM_MGR_MAX_TLM_NUM_PER_BC で埋める
+ * @brief  すべての BC を NOP x TLM_MGR_MAX_TLM_NUM_PER_BC で埋める
  * @param  void
  * @return void
  */
 static void TLM_MGR_clear_bc_to_nop_all_(void);
 /**
- * @brief  指定したBCを NOP x TLM_MGR_MAX_TLM_NUM_PER_BC で埋める
- * @param  bc_id: NOPでうめるBC ID
+ * @brief  指定した BC を NOP x TLM_MGR_MAX_TLM_NUM_PER_BC で埋める
+ * @param  bc_id: NOP でうめる BC ID
  * @return void
  */
 static void TLM_MGR_clear_bc_to_nop_(bct_id_t bc_id);
@@ -91,13 +91,13 @@ static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_in
  */
 static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* register_info, const uint8_t* param);
 /**
- * @brief  BC全体を展開していくmaster BCの構築
+ * @brief  BC 全体を展開していく master BC の構築
  * @param  void
  * @return void
  */
 static void TLM_MGR_load_master_bc_(void);
 /**
- * @brief  NOP で埋められた BCの構築
+ * @brief  NOP で埋められた BC の構築
  * @param  void
  * @return void
  */
@@ -122,36 +122,10 @@ static void TLM_MGR_init_by_am_(void)
 
 
 // FIXME: 実行時間やばい． Cmd_TLM_MGR_INIT を直す時に直す
-// BCTの初期化より前なので，AppInitにできない．
+// BCT の初期化より前なので，AppInit にできない．
 static uint8_t TLM_MGR_init_1_(void)
 {
-  telemetry_manager_.is_inited = 0;
-
   TLM_MGR_clear_info_();
-
-  // BCの設定
-  telemetry_manager_.bc_info[0].bc_id = BC_TLM_MGR0;
-  telemetry_manager_.bc_info[1].bc_id = BC_TLM_MGR1;
-  telemetry_manager_.bc_info[2].bc_id = BC_TLM_MGR2;
-  telemetry_manager_.bc_info[3].bc_id = BC_TLM_MGR3;
-  telemetry_manager_.bc_info[4].bc_id = BC_TLM_MGR4;
-  telemetry_manager_.bc_info[5].bc_id = BC_TLM_MGR5;
-  telemetry_manager_.bc_info[6].bc_id = BC_TLM_MGR6;
-  telemetry_manager_.bc_info[7].bc_id = BC_TLM_MGR7;
-  telemetry_manager_.bc_info[8].bc_id = BC_TLM_MGR8;
-  telemetry_manager_.bc_info[9].bc_id = BC_TLM_MGR9;
-  telemetry_manager_.bc_info[0].bc_type = TLM_MGR_BC_TYPE_MASTER;
-  telemetry_manager_.bc_info[1].bc_type = TLM_MGR_BC_TYPE_HK_TLM;
-  telemetry_manager_.bc_info[2].bc_type = TLM_MGR_BC_TYPE_SYSTEM_TLM;
-  telemetry_manager_.bc_info[3].bc_type = TLM_MGR_BC_TYPE_SYSTEM_TLM;
-  telemetry_manager_.bc_info[4].bc_type = TLM_MGR_BC_TYPE_SYSTEM_TLM;
-  // telemetry_manager_.bc_info[4].bc_type = TLM_MGR_BC_TYPE_RESERVE;       // reserve でうめても良い
-  telemetry_manager_.bc_info[5].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_info[6].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_info[7].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_info[8].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_info[9].bc_type = TLM_MGR_BC_TYPE_LOW_FREQ_TLM;
-
   return 0;
 }
 
@@ -191,14 +165,42 @@ static uint8_t TLM_MGR_init_4_(void)
 
 static void TLM_MGR_clear_info_(void)
 {
-  uint8_t bc_info_idxes;
+  uint8_t i;
+  uint8_t j;
 
-  for (bc_info_idxes = 0; bc_info_idxes < TLM_MGR_USE_BC_NUM; ++bc_info_idxes)
+  telemetry_manager_.is_inited = 0;
+
+  // BC の設定
+  telemetry_manager_.bc_info[0].bc_id = BC_TLM_MGR0;
+  telemetry_manager_.bc_info[1].bc_id = BC_TLM_MGR1;
+  telemetry_manager_.bc_info[2].bc_id = BC_TLM_MGR2;
+  telemetry_manager_.bc_info[3].bc_id = BC_TLM_MGR3;
+  telemetry_manager_.bc_info[4].bc_id = BC_TLM_MGR4;
+  telemetry_manager_.bc_info[5].bc_id = BC_TLM_MGR5;
+  telemetry_manager_.bc_info[6].bc_id = BC_TLM_MGR6;
+  telemetry_manager_.bc_info[7].bc_id = BC_TLM_MGR7;
+  telemetry_manager_.bc_info[8].bc_id = BC_TLM_MGR8;
+  telemetry_manager_.bc_info[9].bc_id = BC_TLM_MGR9;
+  telemetry_manager_.bc_info[0].bc_type = TLM_MGR_BC_TYPE_MASTER;
+  telemetry_manager_.bc_info[1].bc_type = TLM_MGR_BC_TYPE_HK_TLM;
+  telemetry_manager_.bc_info[2].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
+  telemetry_manager_.bc_info[3].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
+  telemetry_manager_.bc_info[4].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
+  telemetry_manager_.bc_info[5].bc_type = TLM_MGR_BC_TYPE_LOW_FREQ_TLM;
+  telemetry_manager_.bc_info[6].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
+  telemetry_manager_.bc_info[7].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
+  telemetry_manager_.bc_info[8].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
+  telemetry_manager_.bc_info[9].bc_type = TLM_MGR_BC_TYPE_LOW_FREQ_TLM;
+
+  telemetry_manager_.master_bc_id = TLM_MGR_BC_TYPE_MASTER;
+
+  for (i = 0; i < TLM_MGR_USE_BC_NUM; ++i)
   {
-    telemetry_manager_.bc_info[bc_info_idxes].bc_id   = BCT_MAX_BLOCKS;
-    telemetry_manager_.bc_info[bc_info_idxes].bc_type = TLM_MGR_BC_TYPE_RESERVE;
+    for (j = 0; j < TLM_MGR_MAX_TLM_NUM_PER_BC; ++j)
+    {
+      telemetry_manager_.registered_tlm_table[i][j] = TLM_CODE_MAX;
+    }
   }
-  telemetry_manager_.master_bc_id = BCT_MAX_BLOCKS;
 
   TLM_MGR_clear_register_info_all_();
 }
@@ -208,10 +210,8 @@ static void TLM_MGR_clear_register_info_all_(void)
 {
   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.master);
   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.hk);
-  TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.system_tlm);
   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.high_freq);
   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.low_freq);
-  TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.reserve);
 }
 
 
