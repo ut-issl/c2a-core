@@ -345,7 +345,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
 
 static void TLM_MGR_load_master_bc_(void)
 {
-  cycle_t ti = 1;   // 1 - 9 までの 9 個登録する． 10 はdeploy
+  cycle_t ti = 1;   // 1 - 9 までの 9 個登録する． 10 は deploy
   uint8_t bc_info_idx;
 
   for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
@@ -353,9 +353,7 @@ static void TLM_MGR_load_master_bc_(void)
     switch (telemetry_manager_.bc_infos[bc_info_idx].bc_type)
     {
     case TLM_MGR_BC_TYPE_HK_TLM:        // FALLTHROUGH
-    case TLM_MGR_BC_TYPE_SYSTEM_TLM:    // FALLTHROUGH
-    case TLM_MGR_BC_TYPE_HIGH_FREQ_TLM: // FALLTHROUGH
-    case TLM_MGR_BC_TYPE_RESERVE:
+    case TLM_MGR_BC_TYPE_HIGH_FREQ_TLM:
       BCL_tool_register_combine(ti, telemetry_manager_.bc_infos[bc_info_idx].bc_id);
       ti++;
       break;
