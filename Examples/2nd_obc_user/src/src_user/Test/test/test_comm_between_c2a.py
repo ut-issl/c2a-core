@@ -229,7 +229,7 @@ def ckeck_mobc_bct_ack(ti, exec_cmd, bct_id):
 
     g_mobc_gsc_cnt += 1
     tlm_MOBC = wings.util.generate_and_receive_tlm(
-        ope, mobc_c2a_enum.Cmd_CODE_GENERATE_TLM, mobc_c2a_enum.Tlm_CODE_MOBC
+        ope, mobc_c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, mobc_c2a_enum.Tlm_CODE_MOBC
     )
     assert tlm_MOBC["MOBC.BCT_BLK_PTR"] == bct_id
     assert tlm_MOBC["MOBC.BCT_CMD_PTR"] == 1

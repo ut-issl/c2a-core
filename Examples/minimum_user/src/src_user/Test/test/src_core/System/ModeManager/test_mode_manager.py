@@ -92,7 +92,7 @@ def test_mm_nop():
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 
 #     tlm_MM = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MM
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_MM
 #     )
 #     assert tlm_MM["MM.MODE_LIST_15"] == valid_bc - 0x100  # FIXME: 0x17Eで動くようにする
 
@@ -168,7 +168,7 @@ def test_mm_nop():
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 
 #     tlm_MM = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MM
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_MM
 #     )
 #     # assert tlm_MM["MM.MODE_LIST_15"] == 0x17E
 #     assert (
@@ -194,7 +194,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
@@ -206,7 +206,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "ERR"
 
@@ -230,7 +230,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 #     assert tlm_HK["HK.OBC.MM_OPSMODE"] == "RESERVE_3"
@@ -238,7 +238,7 @@ def test_mm_nop():
 
 #     time.sleep(5)
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.MM_STS"] == "FINISHED"
 
@@ -256,7 +256,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 #     assert tlm_HK["HK.OBC.MM_OPSMODE"] == "INITIAL"
@@ -264,7 +264,7 @@ def test_mm_nop():
 
 #     time.sleep(5)
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.MM_STS"] == "FINISHED"
 
@@ -275,7 +275,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 #     wings.util.send_cmd_and_confirm(
@@ -285,7 +285,7 @@ def test_mm_nop():
 #         c2a_enum.Tlm_CODE_HK,
 #     )
 #     tlm_HK = wings.util.generate_and_receive_tlm(
-#         ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+#         ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_HK
 #     )
 #     assert tlm_HK["HK.OBC.GS_CMD.LAST_EXEC.EXEC_STS"] == "SUC"
 

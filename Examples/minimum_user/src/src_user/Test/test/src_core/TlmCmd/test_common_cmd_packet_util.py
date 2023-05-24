@@ -168,7 +168,7 @@ def clear_tl_gs():
 
 def get_latest_tl_tlm():
     return wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_TL
     )
 
 
