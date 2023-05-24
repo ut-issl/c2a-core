@@ -8,4 +8,4 @@ for /f "usebackq" %%a in (`"git log --pretty=format:%%H -1"`) do set git_rev_cor
 for /f "usebackq" %%a in (`"git log --pretty=format:%%h -1"`) do set git_rev_core_short=%%a
 
 echo #define GIT_REVISION_C2A_CORE "%git_rev_core%"
-echo #define GIT_REVISION_C2A_CORE_SHORT "%git_rev_core_short%"
+echo #define GIT_REVISION_C2A_CORE_SHORT 0x%git_rev_core_short%
