@@ -71,7 +71,7 @@ typedef struct
  */
 typedef struct
 {
-  uint8_t bc_info_idxes[TLM_MGR_USE_BC_NUM];    //!< bc_info のどの idx の BC を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
+  uint8_t bc_info_idxes[TLM_MGR_USE_BC_NUM];    //!< bc_infos のどの idx の BC を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
   uint8_t bc_info_idxes_size;                   //!< bc_info_idxes の配列数
   uint8_t registered_tlm_num;                   //!< すでに登録されているテレメ数
   // struct
@@ -88,7 +88,7 @@ typedef struct
  */
 typedef struct
 {
-  TLM_MGR_BcInfo bc_info[TLM_MGR_USE_BC_NUM];
+  TLM_MGR_BcInfo bc_infos[TLM_MGR_USE_BC_NUM];  //!< TLM_MGR_BcInfo 配列．利用する BC の情報．
   struct
   {
     TLM_MGR_RegisterInfo master;      //!< TLM_MGR_BC_TYPE_MASTER; 全体の BC を deploy していく BC
