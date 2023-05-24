@@ -14,6 +14,7 @@
 #include "../TlmCmd/command_analyze.h"
 #include "../Library/print.h"
 #include "../Library/endian.h"
+#include "../Library/result.h"
 #include "../System/WatchdogTimer/watchdog_timer.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
@@ -27,14 +28,14 @@
 static void TLM_MGR_init_by_am_(void);
 /**
  * @brief  初期化
- * @note   実行時間の問題からし分割している
+ * @note   実行時間の問題から分割している
  * @param  void
- * @return 0:OK, 1:NG
+ * @return RESULT
  */
-static uint8_t TLM_MGR_init_1_(void);
-static uint8_t TLM_MGR_init_2_(void);
-static uint8_t TLM_MGR_init_3_(void);
-static uint8_t TLM_MGR_init_4_(void);
+static RESULT TLM_MGR_init_1_(void);
+static RESULT TLM_MGR_init_2_(void);
+static RESULT TLM_MGR_init_3_(void);
+static RESULT TLM_MGR_init_4_(void);
 /**
  * @brief  AppInfo 構造体のクリア
  * @param  void
@@ -123,14 +124,14 @@ static void TLM_MGR_init_by_am_(void)
 
 // FIXME: 実行時間やばい． Cmd_TLM_MGR_INIT を直す時に直す
 // BCT の初期化より前なので，AppInit にできない．
-static uint8_t TLM_MGR_init_1_(void)
+static RESULT TLM_MGR_init_1_(void)
 {
   TLM_MGR_clear_info_();
-  return 0;
+  return RESULT_OK;
 }
 
 
-static uint8_t TLM_MGR_init_2_(void)
+static RESULT TLM_MGR_init_2_(void)
 {
   TLM_MGR_ERR_CODE ret;
 
@@ -140,26 +141,26 @@ static uint8_t TLM_MGR_init_2_(void)
   {
     // 初期化失敗
     // Printf("TLM MGR init Failed at calc_register_info !\n");
-    return 1;
+    return RESULT_ERR;
   }
 
-  return 0;
+  return RESULT_OK;
 }
 
 
-static uint8_t TLM_MGR_init_3_(void)
+static RESULT TLM_MGR_init_3_(void)
 {
   TLM_MGR_clear_bc_to_nop_all_();
-  return 0;
+  return RESULT_OK;
 }
 
 
-static uint8_t TLM_MGR_init_4_(void)
+static RESULT TLM_MGR_init_4_(void)
 {
   BCL_load_bc(telemetry_manager_.master_bc_id, TLM_MGR_load_master_bc_);
 
   telemetry_manager_.is_inited = 1;
-  return 0;
+  return RESULT_OK;
 }
 
 
@@ -392,7 +393,7 @@ static void TLM_MGR_load_nop_bc_(void)
 // 適当に分割しないと
 CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 {
-  uint8_t ret;
+  RESULT ret;
   uint16_t exec_counter;
   (void)packet;
 
@@ -417,7 +418,7 @@ CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
     ret = TLM_MGR_init_2_();
     break;
   case 2:
-    ret = TLM_MGR_init_3_();    // これが21ms．NOP BCを作るのが重い
+    ret = TLM_MGR_init_3_();    // FIXME これが 21 ms．NOP BC を作るのが重い
     break;
   case 3:
     ret = TLM_MGR_init_4_();
@@ -426,7 +427,7 @@ CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
   }
 
-  if (ret != 0)
+  if (ret != RESULT_OK)
   {
     DCU_report_err(Cmd_CODE_TLM_MGR_INIT, CCP_EXEC_ILLEGAL_CONTEXT);
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
