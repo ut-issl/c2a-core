@@ -75,9 +75,10 @@ static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void);
 /**
  * @brief  TLM_MGR_RegisterInfo に使う BC 情報を登録
  * @param  register_info: 登録先の TLM_MGR_RegisterInfo
+ * @param  bc_info_idx: bc_info の中のつかう BC の配列 idx
  * @return TLM_MGR_ERR_CODE
  */
-static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterInfo* register_info, uint8_t bc_info_idxes);
+static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterInfo* register_info, uint8_t bc_info_idx);
 /**
  * @brief  TLM_MGR_RegisterInfo 登録されている BC をクリアして NOP で埋める
  * @param  register_info: 消す BC が登録されている TLM_MGR_RegisterInfo
@@ -224,11 +225,11 @@ static void TLM_MGR_clear_register_info_(TLM_MGR_RegisterInfo* register_info)
 
 static void TLM_MGR_clear_bc_to_nop_all_(void)
 {
-  uint8_t bc_info_idxes;
+  uint8_t bc_info_idx;
 
-  for (bc_info_idxes = 0; bc_info_idxes < TLM_MGR_USE_BC_NUM; ++bc_info_idxes)
+  for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
   {
-    TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_info[bc_info_idxes].bc_id);
+    TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_info[bc_info_idx].bc_id);
     WDT_clear_wdt();      // TODO: 実行時間を確認して消す
   }
 }
@@ -282,11 +283,11 @@ static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void)
 }
 
 
-static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterInfo* register_info, uint8_t bc_info_idxes)
+static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterInfo* register_info, uint8_t bc_info_idx)
 {
   if (register_info->bc_info_idxes_size >= TLM_MGR_USE_BC_NUM) return TLM_MGR_ERR_CODE_REGISTER_INFO_BC_FULL;
 
-  register_info->bc_info_idxes[register_info->bc_info_idxes_size] = bc_info_idxes;
+  register_info->bc_info_idxes[register_info->bc_info_idxes_size] = bc_info_idx;
   register_info->bc_info_idxes_size++;
 
   return TLM_MGR_ERR_CODE_OK;
@@ -299,8 +300,8 @@ static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_in
 
   for (i = 0; i < register_info->bc_info_idxes_size; ++i)
   {
-    uint8_t bc_info_idxes = register_info->bc_info_idxes[i];
-    TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_info[bc_info_idxes].bc_id);
+    uint8_t bc_info_idx = register_info->bc_info_idxes[i];
+    TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_info[bc_info_idx].bc_id);
   }
   register_info->tlm_register_pointer.idx_of_bc_info_idxes = 0;
   register_info->tlm_register_pointer.bct_cmd_pos = 0;
@@ -309,8 +310,8 @@ static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_in
 
 static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* register_info, const uint8_t* param)
 {
-  uint8_t  bc_info_idxes = register_info->bc_info_idxes[register_info->tlm_register_pointer.idx_of_bc_info_idxes];
-  bct_id_t bc_id = telemetry_manager_.bc_info[bc_info_idxes].bc_id;
+  uint8_t  bc_info_idx = register_info->bc_info_idxes[register_info->tlm_register_pointer.idx_of_bc_info_idxes];
+  bct_id_t bc_id = telemetry_manager_.bc_info[bc_info_idx].bc_id;
   uint8_t  bc_cmd_pos = register_info->tlm_register_pointer.bct_cmd_pos;
   BCT_Pos  bc_register_pos;
   CCP_UTIL_ACK ccp_util_ack;
@@ -345,21 +346,21 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
 static void TLM_MGR_load_master_bc_(void)
 {
   cycle_t ti = 1;   // 1 - 9 までの 9 個登録する． 10 はdeploy
-  uint8_t bc_info_idxes;
+  uint8_t bc_info_idx;
 
-  for (bc_info_idxes = 0; bc_info_idxes < TLM_MGR_USE_BC_NUM; ++bc_info_idxes)
+  for (bc_info_idx = 0; bc_info_idx < TLM_MGR_USE_BC_NUM; ++bc_info_idx)
   {
-    switch (telemetry_manager_.bc_info[bc_info_idxes].bc_type)
+    switch (telemetry_manager_.bc_info[bc_info_idx].bc_type)
     {
     case TLM_MGR_BC_TYPE_HK_TLM:        // FALLTHROUGH
     case TLM_MGR_BC_TYPE_SYSTEM_TLM:    // FALLTHROUGH
     case TLM_MGR_BC_TYPE_HIGH_FREQ_TLM: // FALLTHROUGH
     case TLM_MGR_BC_TYPE_RESERVE:
-      BCL_tool_register_combine(ti, telemetry_manager_.bc_info[bc_info_idxes].bc_id);
+      BCL_tool_register_combine(ti, telemetry_manager_.bc_info[bc_info_idx].bc_id);
       ti++;
       break;
     case TLM_MGR_BC_TYPE_LOW_FREQ_TLM:
-      BCL_tool_register_rotate(ti, telemetry_manager_.bc_info[bc_info_idxes].bc_id);
+      BCL_tool_register_rotate(ti, telemetry_manager_.bc_info[bc_info_idx].bc_id);
       ti++;
       break;
     default:
