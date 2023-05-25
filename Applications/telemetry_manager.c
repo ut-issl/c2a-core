@@ -2,7 +2,7 @@
 /**
  * @file
  * @brief userがテレメトリ詰まりをやTL溢れを防ぎつつ，またCDHなどがテレメトリを管理しやすくするためのApp
- * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 や telemetry_manager.h の最下部を参照（FIXME: あとでdocumentに移す）
+ * @note  利用方法は telemetry_manager.h の最下部を参照（FIXME: あとでdocumentに移す）
  */
 #include "telemetry_manager.h"
 
@@ -15,10 +15,26 @@
 #include "../Library/print.h"
 #include "../Library/endian.h"
 #include "../Library/result.h"
-#include "../System/WatchdogTimer/watchdog_timer.h"
+#include "../TlmCmd/common_cmd_packet_util.h"
 #include <src_user/TlmCmd/block_command_definitions.h>
 #include <src_user/TlmCmd/command_definitions.h>
-#include "../TlmCmd/common_cmd_packet_util.h"
+
+// default 設定
+// BC にどの TLM_MGR_BC_TYPE を割り当てるか
+#define TLM_MGR_BC_TYPE_AT_BC_0   (TLM_MGR_BC_TYPE_MASTER)
+#define TLM_MGR_BC_TYPE_AT_BC_1   (TLM_MGR_BC_TYPE_HK_TLM)
+#define TLM_MGR_BC_TYPE_AT_BC_2   (TLM_MGR_BC_TYPE_LOW_FREQ_TLM)    // TLM_MGR_BC_TYPE_HIGH_FREQ_TLM が固まらないようにここに入れている
+#define TLM_MGR_BC_TYPE_AT_BC_3   (TLM_MGR_BC_TYPE_HIGH_FREQ_TLM)
+#define TLM_MGR_BC_TYPE_AT_BC_4   (TLM_MGR_BC_TYPE_HIGH_FREQ_TLM)
+#define TLM_MGR_BC_TYPE_AT_BC_5   (TLM_MGR_BC_TYPE_HIGH_FREQ_TLM)
+#define TLM_MGR_BC_TYPE_AT_BC_6   (TLM_MGR_BC_TYPE_LOW_FREQ_TLM)    // TLM_MGR_BC_TYPE_HIGH_FREQ_TLM が固まらないようにここに入れている
+#define TLM_MGR_BC_TYPE_AT_BC_7   (TLM_MGR_BC_TYPE_HIGH_FREQ_TLM)
+#define TLM_MGR_BC_TYPE_AT_BC_8   (TLM_MGR_BC_TYPE_HIGH_FREQ_TLM)
+#define TLM_MGR_BC_TYPE_AT_BC_9   (TLM_MGR_BC_TYPE_HIGH_FREQ_TLM)
+
+// user 設定
+#include <src_user/Settings/Applications/telemetry_manager_define.h>
+#include <src_user/Settings/Applications/telemetry_manager_params.h>
 
 /**
  * @brief  App初期化関数
@@ -187,7 +203,6 @@ static void TLM_MGR_clear_info_(void)
   telemetry_manager_.is_inited = 0;
 
   // BC の設定
-  // FIXME: user 定義にする
   telemetry_manager_.bc_infos[0].bc_id = BC_TLM_MGR_0;
   telemetry_manager_.bc_infos[1].bc_id = BC_TLM_MGR_1;
   telemetry_manager_.bc_infos[2].bc_id = BC_TLM_MGR_2;
@@ -198,18 +213,18 @@ static void TLM_MGR_clear_info_(void)
   telemetry_manager_.bc_infos[7].bc_id = BC_TLM_MGR_7;
   telemetry_manager_.bc_infos[8].bc_id = BC_TLM_MGR_8;
   telemetry_manager_.bc_infos[9].bc_id = BC_TLM_MGR_9;
-  telemetry_manager_.bc_infos[0].bc_type = TLM_MGR_BC_TYPE_MASTER;
-  telemetry_manager_.bc_infos[1].bc_type = TLM_MGR_BC_TYPE_HK_TLM;
-  telemetry_manager_.bc_infos[2].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_infos[3].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_infos[4].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_infos[5].bc_type = TLM_MGR_BC_TYPE_LOW_FREQ_TLM;
-  telemetry_manager_.bc_infos[6].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_infos[7].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_infos[8].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
-  telemetry_manager_.bc_infos[9].bc_type = TLM_MGR_BC_TYPE_LOW_FREQ_TLM;
+  telemetry_manager_.bc_infos[0].bc_type = TLM_MGR_BC_TYPE_AT_BC_0;
+  telemetry_manager_.bc_infos[1].bc_type = TLM_MGR_BC_TYPE_AT_BC_1;
+  telemetry_manager_.bc_infos[2].bc_type = TLM_MGR_BC_TYPE_AT_BC_2;
+  telemetry_manager_.bc_infos[3].bc_type = TLM_MGR_BC_TYPE_AT_BC_3;
+  telemetry_manager_.bc_infos[4].bc_type = TLM_MGR_BC_TYPE_AT_BC_4;
+  telemetry_manager_.bc_infos[5].bc_type = TLM_MGR_BC_TYPE_AT_BC_5;
+  telemetry_manager_.bc_infos[6].bc_type = TLM_MGR_BC_TYPE_AT_BC_6;
+  telemetry_manager_.bc_infos[7].bc_type = TLM_MGR_BC_TYPE_AT_BC_7;
+  telemetry_manager_.bc_infos[8].bc_type = TLM_MGR_BC_TYPE_AT_BC_8;
+  telemetry_manager_.bc_infos[9].bc_type = TLM_MGR_BC_TYPE_AT_BC_9;
 
-  telemetry_manager_.master_bc_id = TLM_MGR_BC_TYPE_MASTER;
+  telemetry_manager_.master_bc_id = BCT_MAX_BLOCKS;
 
   // FIXME: pytest でここがちゃんと clear されるかのテストをいれる
   memset(&telemetry_manager_.registered_cmd_table, 0x00, sizeof(telemetry_manager_.registered_cmd_table));
@@ -292,7 +307,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterIn
   return TLM_MGR_ERR_CODE_OK;
 }
 
-
+// FIXME
 static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_info)
 {
   uint8_t i;
@@ -310,7 +325,7 @@ static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_in
   // registerd_table も消去
 }
 
-
+// FIXME
 static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* register_info, const uint8_t* param)
 {
   uint8_t  bc_info_idx = register_info->bc_info_idxes[register_info->tlm_register_pointer.idx_of_bc_info_idxes];
@@ -345,7 +360,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_generate_tlm_(TLM_MGR_RegisterInfo* reg
   return TLM_MGR_ERR_CODE_OK;
 }
 
-
+// FIXME
 static void TLM_MGR_load_master_bc_(void)
 {
   cycle_t ti = 1;   // 1 - 9 までの 9 個登録する． 10 は deploy
@@ -452,7 +467,7 @@ CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
 {
   (void)packet;
@@ -471,7 +486,7 @@ CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
@@ -483,7 +498,7 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 // FIXME: 実行時間チェック
 // 結局，NOP BC作るのが重い
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
@@ -497,7 +512,7 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 // FIXME: 実行時間チェック
 // 結局，NOP BC作るのが重い
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM(const CommonCmdPacket* packet)
@@ -511,53 +526,50 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+// FIXME
+// FIXME: 実行時間チェック :9ms
+// 結局，NOP BC作るのが重い
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
+{
+  uint16_t exec_counter;
+  (void)packet;
 
-// // FIXME: 実行時間チェック :9ms
-// // 結局，NOP BC作るのが重い
-// CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
-// {
-//   uint16_t exec_counter;
-//   (void)packet;
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-//   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  switch (DCU_check_in(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, &exec_counter))
+  {
+  case DCU_STATUS_FINISHED:   // FALLTHROUGH
+  case DCU_STATUS_PROGRESS:
+    break;
+  default:
+    // DCU_STATUS_ABORTED_BY_ERR
+    // DCU_STATUS_ABORTED_BY_CMD
+    // がここに
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
 
-//   switch (DCU_check_in(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, &exec_counter))
-//   {
-//   case DCU_STATUS_FINISHED:   // FALLTHROUGH
-//   case DCU_STATUS_PROGRESS:
-//     break;
-//   default:
-//     // DCU_STATUS_ABORTED_BY_ERR
-//     // DCU_STATUS_ABORTED_BY_CMD
-//     // がここに
-//     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-//   }
+  switch (exec_counter)
+  {
+  case 0:
+    TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.high_freq);
+    break;
+  default:
+    TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.low_freq);
+    DCU_report_finish(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_SUCCESS);
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+  }
 
-//   switch (exec_counter)
-//   {
-//   case 0:
-//     TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.high_freq);
-//     break;
-//   case 1:
-//     TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.low_freq);
-//     break;
-//   default:
-//     TLM_MGR_clear_bc_of_register_info_(&telemetry_manager_.register_info.reserve);     // 便宜上ここで
-//     DCU_report_finish(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_SUCCESS);
-//     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
-//   }
+  // 再帰実行
+  if (DCU_register_next(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, NULL, 0) != DCU_ACK_OK)
+  {
+    DCU_report_err(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_ILLEGAL_CONTEXT);
+    return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+  }
 
-//   // 再帰実行
-//   if (DCU_register_next(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, NULL, 0) != DCU_ACK_OK)
-//   {
-//     DCU_report_err(Cmd_CODE_TLM_MGR_CLEAR_USER_TLM, CCP_EXEC_ILLEGAL_CONTEXT);
-//     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-//   }
+  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+}
 
-//   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
-// }
-
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
@@ -597,7 +609,7 @@ CCP_CmdRet Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 {
   BCT_Pos  bc_register_pos;
@@ -629,6 +641,7 @@ CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
 {
   uint8_t param[1];
@@ -644,7 +657,7 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
@@ -663,7 +676,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
@@ -682,7 +695,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);
@@ -701,7 +714,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-
+// FIXME
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 {
   const uint8_t* param = CCP_get_param_head(packet);

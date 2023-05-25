@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief userがテレメトリ詰まりをやTL溢れを防ぎつつ，またCDHなどがテレメトリを管理しやすくするためのApp
- * @note  https://gitlab.com/ut_issl/c2a/c2a_core_oss/-/issues/81 や telemetry_manager.h の最下部を参照（FIXME: あとでdocumentに移す）
+ * @note  利用方法は telemetry_manager.h の最下部を参照（FIXME: あとでdocumentに移す）
  */
 #ifndef TELEMETRY_MANAGER_H_
 #define TELEMETRY_MANAGER_H_
@@ -17,7 +17,6 @@
 // 以下がともに 10 であることで， (10 - 1 (TLM_MGR_BC_TYPE_MASTER)) x 10 x cycle で 10 秒周期に 100 個の tlm を登録できる．
 #define TLM_MGR_USE_BC_NUM            (10)    //!< 用いる BC の数．基本的に 10 固定を想定
 #define TLM_MGR_MAX_TLM_NUM_PER_BC    (10)    //!< 1 BC に何個のテレメ生成コマンドを登録できるか．基本的に 10 固定を想定
-
 
 #if BCT_MAX_CMD_NUM < TLM_MGR_MAX_TLM_NUM_PER_BC       // FIXME: BCT 側が直ったらなおす
 #error BCT_MAX_CMD_NUM is not enough for TelemetryManager
@@ -92,11 +91,6 @@ typedef struct
   uint8_t bc_info_idxes_size;                   //!< bc_info_idxes の配列数
   uint8_t registered_tlm_num;                   /*!< すでに登録されているテレメ数．この値から一意に次にコマンドを生成する BCT_Pos.cmd が決まる
                                                      コマンドは隙間なく前から詰め込まれている，という想定 */
-  // struct
-  // {
-  //   uint8_t idx_of_bc_info_idxes;               //!< bc_info_idxes の配列 idx
-  //   uint8_t bct_cmd_pos;                        //!< BCT_Pos.cmd
-  // } tlm_register_pointer;                       //!< 次にテレメ生成コマンドを登録するポインタ
 } TLM_MGR_RegisterInfo;
 
 
@@ -136,16 +130,17 @@ typedef struct
   TLM_MGR_BcInfo bc_infos[TLM_MGR_USE_BC_NUM];  //!< TLM_MGR_BcInfo 配列．利用する BC の情報．
   struct
   {
+    // FIXME: master 入らないのでは？ 追加登録されるわけでもないし ということで．消す．
     TLM_MGR_RegisterInfo master;      //!< TLM_MGR_BC_TYPE_MASTER; 全体の BC を deploy していく BC
     TLM_MGR_RegisterInfo hk;          /*!< TLM_MGR_BC_TYPE_HK_TLM; HK テレメ (or 全系や system で入れておきたい tlm (1 Hz))
-                                               userのtlm消去．追加の影響を受けない
-                                               これによって，tlmの全体管理が容易になる  */
+                                           userのtlm消去．追加の影響を受けない
+                                           これによって，tlmの全体管理が容易になる  */
     TLM_MGR_RegisterInfo high_freq;   //!< TLM_MGR_BC_TYPE_HIGH_FREQ_TLM; User テレメ (1 Hz)
     TLM_MGR_RegisterInfo low_freq;    //!< TLM_MGR_BC_TYPE_LOW_FREQ_TLM; User テレメ (1/10 Hz)
   } register_info;
   bct_id_t master_bc_id;              //!< TLM_MGR_BC_TYPE_MASTER に登録されている BC ID
   TLM_MGR_RegisteredCmdTable registered_cmd_table;  //!< 現在 BC に登録された（テレメ生成などの）コマンド
-  uint8_t  is_inited;                 //!< 初期化されているか？
+  uint8_t is_inited;                  //!< 初期化されているか？
 } TelemetryManager;
 
 
@@ -239,7 +234,6 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet);
 4. Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM / Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM にて，1 Hz, 1/10 Hz のユーザーテレメを各人が好きに登録できる
 5. 試験が終わったら Cmd_TLM_MGR_CLEAR_USER_TLM をして，ユーザーテレメを消す
 6. 次に使う人がいたら，4.から繰り返す
-
 */
 
 #endif
