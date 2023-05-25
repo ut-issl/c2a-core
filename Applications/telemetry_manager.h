@@ -11,6 +11,7 @@
 #include "../TlmCmd/common_cmd_packet_util.h"
 #include "../TlmCmd/block_command_table.h"
 #include <src_user/TlmCmd/telemetry_definitions.h>
+#include <src_user/Settings/TlmCmd/Ccsds/apid_define.h>
 
 
 // 以下がともに 10 であることで， (10 - 1 (TLM_MGR_BC_TYPE_MASTER)) x 10 x cycle で 10 秒周期に 100 個の tlm を登録できる．
@@ -49,8 +50,26 @@ typedef enum
   TLM_MGR_BC_TYPE_MASTER,             //!< 全体の BC を deploy していく BC
   TLM_MGR_BC_TYPE_HK_TLM,             //!< HK テレメ (or 全系や system で入れておきたい tlm (1 Hz))
   TLM_MGR_BC_TYPE_HIGH_FREQ_TLM,      //!< User テレメ (1 Hz)
-  TLM_MGR_BC_TYPE_LOW_FREQ_TLM,       //!< User テレメ (1/10 Hz)
+  TLM_MGR_BC_TYPE_LOW_FREQ_TLM        //!< User テレメ (1/10 Hz)
 } TLM_MGR_BC_TYPE;
+
+
+/**
+ * @enum   TLM_MGR_REGISTERED_CMD_TYPE
+ * @note   uint8_t を想定
+ * @brief  BC に登録された（テレメ生成などの）コマンドのタイプ
+ */
+typedef enum
+{
+  TLM_MGR_REGISTERED_CMD_TYPE_UNREGISTERED = 0,   //!< まだ使われていない (これは 0 であることが必要)
+
+  // TODO:
+
+
+  TLM_MGR_REGISTERED_CMD_TYPE_BBB
+
+
+} TLM_MGR_REGISTERED_CMD_TYPE;
 
 
 /**
@@ -73,13 +92,40 @@ typedef struct
 {
   uint8_t bc_info_idxes[TLM_MGR_USE_BC_NUM];    //!< bc_infos のどの idx の BC を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
   uint8_t bc_info_idxes_size;                   //!< bc_info_idxes の配列数
-  uint8_t registered_tlm_num;                   //!< すでに登録されているテレメ数
+  uint8_t registered_tlm_num;                   /*!< すでに登録されているテレメ数．この値から一意に次にコマンドを生成する BCT_Pos.cmd が決まる
+                                                     コマンドは隙間なく前から詰め込まれている，という想定 */
   // struct
   // {
   //   uint8_t idx_of_bc_info_idxes;               //!< bc_info_idxes の配列 idx
   //   uint8_t bct_cmd_pos;                        //!< BCT_Pos.cmd
   // } tlm_register_pointer;                       //!< 次にテレメ生成コマンドを登録するポインタ
 } TLM_MGR_RegisterInfo;
+
+
+/**
+ * @struct TLM_MGR_RegisteredCmdTableInBlock
+ * @brief  BC に登録された（テレメ生成などの）コマンドの情報（BC の block ごと）
+ * @note   コマンドは隙間なく前から詰め込まれている，という想定
+ */
+typedef struct
+{
+  struct
+  {
+    TLM_MGR_REGISTERED_CMD_TYPE cmd_type;   //!< BC に登録された（テレメ生成などの）コマンドのタイプ （未登録は TLM_MGR_REGISTERED_CMD_TYPE_UNREGISTERED (0)）
+    APID apid;                              //!< 登録された tlm 生成コマンドの APID （未登録は 0）
+    TLM_CODE tlm_id;                        //!< 登録された tlm 生成コマンドの生成 tlm id （未登録は 0）
+  } register_infos[TLM_MGR_MAX_TLM_NUM_PER_BC];
+} TLM_MGR_RegisteredCmdTableInBlock;
+
+
+/**
+ * @struct TLM_MGR_RegisteredCmdTable
+ * @brief  BC に登録された（テレメ生成などの）コマンドの情報
+ */
+typedef struct
+{
+  TLM_MGR_RegisteredCmdTableInBlock cmd_infos[TLM_MGR_USE_BC_NUM];      //!< BC の各 Block ごとの情報
+} TLM_MGR_RegisteredCmdTable;
 
 
 /**
@@ -99,7 +145,7 @@ typedef struct
     TLM_MGR_RegisterInfo low_freq;    //!< TLM_MGR_BC_TYPE_LOW_FREQ_TLM; User テレメ (1/10 Hz)
   } register_info;
   bct_id_t master_bc_id;              //!< TLM_MGR_BC_TYPE_MASTER に登録されている BC ID
-  TLM_CODE registered_tlm_table[TLM_MGR_USE_BC_NUM][TLM_MGR_MAX_TLM_NUM_PER_BC];    //!< 現在登録されているテレメ一覧テーブル
+  TLM_MGR_RegisteredCmdTable registered_cmd_table;  //!< 現在 BC に登録された（テレメ生成などの）コマンド
   uint8_t  is_inited;                 //!< 初期化されているか？
 } TelemetryManager;
 
@@ -111,6 +157,7 @@ AppInfo TLM_MGR_create_app(void);
 
 /**
  * @brief 初期化
+ * @note  DCU を使っているので，完了に 1 秒ほどかかる
  */
 CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet);
 
@@ -120,20 +167,19 @@ CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_BC(const CommonCmdPacket* packet);
 
 /**
- * @brief HKテレメを初期化
+ * @brief HK テレメを初期化
  */
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet);
 
 /**
- * @brief systemテレメを初期化
+ * @brief HIGH_FREQ テレメを初期化
  */
-CCP_CmdRet Cmd_TLM_MGR_CLEAR_SYSTEM_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM(const CommonCmdPacket* packet);
 
 /**
- * @brief high_freq, low_freq を初期化
- * @note  便宜上 TLM_MGR_BC_TYPE_RESERVE の BC も初期化してしまう
+ * @brief LOW_FREQ テレメを初期化
  */
-CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief TLM送出開始
@@ -182,6 +228,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet);
 
 
 // *** HOW TO USE ***
+// FIXME
 /*
 1. 初期化：Cmd_TLM_MGR_INIT
   - BCをいじるため，Appの初期化では現時点でできないので，明示的に初期化する必要あり
