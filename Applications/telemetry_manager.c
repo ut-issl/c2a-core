@@ -173,16 +173,17 @@ static void TLM_MGR_clear_info_(void)
   telemetry_manager_.is_inited = 0;
 
   // BC の設定
-  telemetry_manager_.bc_infos[0].bc_id = BC_TLM_MGR0;
-  telemetry_manager_.bc_infos[1].bc_id = BC_TLM_MGR1;
-  telemetry_manager_.bc_infos[2].bc_id = BC_TLM_MGR2;
-  telemetry_manager_.bc_infos[3].bc_id = BC_TLM_MGR3;
-  telemetry_manager_.bc_infos[4].bc_id = BC_TLM_MGR4;
-  telemetry_manager_.bc_infos[5].bc_id = BC_TLM_MGR5;
-  telemetry_manager_.bc_infos[6].bc_id = BC_TLM_MGR6;
-  telemetry_manager_.bc_infos[7].bc_id = BC_TLM_MGR7;
-  telemetry_manager_.bc_infos[8].bc_id = BC_TLM_MGR8;
-  telemetry_manager_.bc_infos[9].bc_id = BC_TLM_MGR9;
+  // FIXME: user 定義にする
+  telemetry_manager_.bc_infos[0].bc_id = BC_TLM_MGR_0;
+  telemetry_manager_.bc_infos[1].bc_id = BC_TLM_MGR_1;
+  telemetry_manager_.bc_infos[2].bc_id = BC_TLM_MGR_2;
+  telemetry_manager_.bc_infos[3].bc_id = BC_TLM_MGR_3;
+  telemetry_manager_.bc_infos[4].bc_id = BC_TLM_MGR_4;
+  telemetry_manager_.bc_infos[5].bc_id = BC_TLM_MGR_5;
+  telemetry_manager_.bc_infos[6].bc_id = BC_TLM_MGR_6;
+  telemetry_manager_.bc_infos[7].bc_id = BC_TLM_MGR_7;
+  telemetry_manager_.bc_infos[8].bc_id = BC_TLM_MGR_8;
+  telemetry_manager_.bc_infos[9].bc_id = BC_TLM_MGR_9;
   telemetry_manager_.bc_infos[0].bc_type = TLM_MGR_BC_TYPE_MASTER;
   telemetry_manager_.bc_infos[1].bc_type = TLM_MGR_BC_TYPE_HK_TLM;
   telemetry_manager_.bc_infos[2].bc_type = TLM_MGR_BC_TYPE_HIGH_FREQ_TLM;
