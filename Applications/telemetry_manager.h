@@ -49,8 +49,8 @@ typedef enum
 {
   TLM_MGR_BC_TYPE_MASTER,             //!< 全体の BC を deploy していく BC
   TLM_MGR_BC_TYPE_HK_TLM,             //!< HK テレメ (or 全系や system で入れておきたい tlm (1 Hz))
-  TLM_MGR_BC_TYPE_HIGH_FREQ_TLM,      //!< User テレメ (1 Hz)
-  TLM_MGR_BC_TYPE_LOW_FREQ_TLM        //!< User テレメ (1/10 Hz)
+  TLM_MGR_BC_TYPE_HIGH_FREQ_TLM,      //!< User (HIGH_FREQ) テレメ (1 Hz)
+  TLM_MGR_BC_TYPE_LOW_FREQ_TLM        //!< User (LOW_FREQ) テレメ (1/10 Hz)
 } TLM_MGR_BC_TYPE;
 
 
@@ -62,13 +62,11 @@ typedef enum
 typedef enum
 {
   TLM_MGR_REGISTERED_CMD_TYPE_UNREGISTERED = 0,   //!< まだ使われていない (これは 0 であることが必要)
-
-  // TODO:
-
-
-  TLM_MGR_REGISTERED_CMD_TYPE_BBB
-
-
+  TLM_MGR_REGISTERED_CMD_TYPE_TG_GENERATE_MS_TLM,
+  TLM_MGR_REGISTERED_CMD_TYPE_TG_GENERATE_ST_TLM,
+  TLM_MGR_REGISTERED_CMD_TYPE_TG_GENERATE_MS_TLM,
+  TLM_MGR_REGISTERED_CMD_TYPE_TG_GENERATE_ST_TLM,
+  TLM_MGR_REGISTERED_CMD_TYPE_DR_REPLAY_TLM
 } TLM_MGR_REGISTERED_CMD_TYPE;
 
 
@@ -113,7 +111,8 @@ typedef struct
   {
     TLM_MGR_REGISTERED_CMD_TYPE cmd_type;   //!< BC に登録された（テレメ生成などの）コマンドのタイプ （未登録は TLM_MGR_REGISTERED_CMD_TYPE_UNREGISTERED (0)）
     APID apid;                              //!< 登録された tlm 生成コマンドの APID （未登録は 0）
-    TLM_CODE tlm_id;                        //!< 登録された tlm 生成コマンドの生成 tlm id （未登録は 0）
+    TLM_CODE tlm_id;                        /*!< 登録された tlm 生成コマンドの生成 tlm id （未登録は 0）
+                                                 なお， DR 再生 Cmd_DR_REPLAY_TLM のときは， dr_partition がはいる */
   } register_infos[TLM_MGR_MAX_TLM_NUM_PER_BC];
 } TLM_MGR_RegisteredCmdTableInBlock;
 
@@ -182,6 +181,12 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM(const CommonCmdPacket* packet);
 
 /**
+ * @brief User テレメ (HIGH_FREQ, LOW_FREQ) を初期化
+ * @note  DCU を使っているので，完了に 0.2 秒ほどかかる
+ */
+CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet);
+
+/**
  * @brief TLM送出開始
  * @note  master bc の末尾を Cmd_TLCD_DEPLOY_BLOCK にして deploy block しているだけ
  */
@@ -202,26 +207,18 @@ CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet);
  */
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_TLM_TL(const CommonCmdPacket* packet);
 
-/**
- * @brief HKテレメを登録
- */
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_HK_TLM(const CommonCmdPacket* packet);
+// 以下，コマンド登録コマンド
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_ST_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_REPLAY_TLM(const CommonCmdPacket* packet);
 
-/**
- * @brief systemテレメを登録
- */
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_SYSTEM_TLM(const CommonCmdPacket* packet);
-
-/**
- * @brief high_freq を登録
- */
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM(const CommonCmdPacket* packet);
-
-/**
- * @brief low_freq を登録
- */
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM(const CommonCmdPacket* packet);
-
+CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_ST_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet);
 
 // TODO: いきなり設定が変わるのではなく，設定変更 → 反映，にしたい．
 // CCP_CmdRet Cmd_TLM_MGR_APPLY(const CommonCmdPacket* packet);
