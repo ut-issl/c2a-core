@@ -78,8 +78,8 @@ CCP_UTIL_ACK CCP_form_tlc(CommonCmdPacket* packet, cycle_t ti, CMD_CODE cmd_id, 
  * @brief 他の OBC のコマンドを RT として生成
  * @note  本OBC で RT として処理されたあと 他の OBC に送られ RT として実行される
  * @note  param チェックは未実装
- * @param[in] apid:   どの OBC かを指定する APID
- * @param[in] cmd_id: CMD_CODE
+ * @param[in] apid:   宛先 OBC のコマンドの APID
+ * @param[in] cmd_id: 宛先 OBC の CMD_CODE
  * @param[in] param:  パラメタ
  * @param[in] len:    パラメタ長
  * @return CCP_UTIL_ACK
@@ -91,8 +91,8 @@ CCP_UTIL_ACK CCP_form_rtc_to_other_obc(CommonCmdPacket* packet, APID apid, CMD_C
  * @note  本OBC で TL として処理されたあと 他の OBC に送られ RT として実行される
  * @note  param チェックは未実装
  * @param[in] ti:     TI
- * @param[in] apid:   どの OBC かを指定する APID
- * @param[in] cmd_id: CMD_CODE
+ * @param[in] apid:   宛先 OBC のコマンドの APID
+ * @param[in] cmd_id: 宛先 OBC の CMD_CODE
  * @param[in] param:  パラメタ
  * @param[in] len:    パラメタ長
  * @return CCP_UTIL_ACK
@@ -162,6 +162,18 @@ PH_ACK CCP_register_tlc_asap(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const
  * @retval それ以外: PH_dispatch_command の返り値
  */
 CCP_CmdRet CCP_form_and_exec_rtc(CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
+
+/**
+ * @brief 他の OBC のコマンドを RT として生成し，即時実行する
+ * @note  生成される command は RTC だが，キューイングされずに即時実行されるため RTC Dispatcher にはログは残らない
+ * @param[in]     apid:   宛先 OBC のコマンドの APID
+ * @param[in]     cmd_id: 宛先 OBC の CMD_CODE
+ * @param[in]     param:  パラメタ
+ * @param[in]     len:    パラメタ長
+ * @retval CCP_CmdRet{CCP_EXEC_PACKET_FMT_ERR, *}: 引数が不正なとき
+ * @retval それ以外: PH_dispatch_command の返り値
+ */
+CCP_CmdRet CCP_form_and_exec_rtc_to_other_obc(APID apid, CMD_CODE cmd_id, const uint8_t* param, uint16_t len);
 
 /**
  * @brief BC展開 command を生成し，即時実行する
