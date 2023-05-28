@@ -323,12 +323,14 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_GENERATE_MS_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_GENERATE_ST_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TLM_MGR_DELETE_GENERATE_ST_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_MS_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_MS_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_MS_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_ST_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_ST_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_2BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_ST_TLM].param_size_infos[1].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
+  cmd_table[Cmd_CODE_TLM_MGR_DELETE_FORWARD_AS_ST_TLM].param_size_infos[1].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_REPLAY_TLM].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_TLM_MGR_DELETE_REPLAY_TLM].param_size_infos[0].packed_info.bit.second = CA_PARAM_SIZE_TYPE_1BYTE;
   cmd_table[Cmd_CODE_DCU_ABORT_CMD].param_size_infos[0].packed_info.bit.first = CA_PARAM_SIZE_TYPE_2BYTE;
