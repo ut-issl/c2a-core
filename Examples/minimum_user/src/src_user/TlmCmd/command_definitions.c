@@ -125,14 +125,13 @@ void CA_load_cmd_table(CA_CmdInfo cmd_table[CA_MAX_CMDS])
   cmd_table[Cmd_CODE_TF_SET_PAGE_FOR_TLM].cmd_func = Cmd_TF_SET_PAGE_FOR_TLM;
   cmd_table[Cmd_CODE_CA_SET_PAGE_FOR_TLM].cmd_func = Cmd_CA_SET_PAGE_FOR_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_INIT].cmd_func = Cmd_TLM_MGR_INIT;
-  cmd_table[Cmd_CODE_TLM_MGR_INIT_MASTER_BC].cmd_func = Cmd_TLM_MGR_INIT_MASTER_BC;
+  cmd_table[Cmd_CODE_TLM_MGR_INIT_MASTER_AND_DEPLOY_BC].cmd_func = Cmd_TLM_MGR_INIT_MASTER_AND_DEPLOY_BC;
   cmd_table[Cmd_CODE_TLM_MGR_CLEAR_HK_TLM].cmd_func = Cmd_TLM_MGR_CLEAR_HK_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_CLEAR_HIGH_FREQ_TLM].cmd_func = Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_CLEAR_LOW_FREQ_TLM].cmd_func = Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_CLEAR_USER_TLM].cmd_func = Cmd_TLM_MGR_CLEAR_USER_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_START_TLM].cmd_func = Cmd_TLM_MGR_START_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_STOP_TLM].cmd_func = Cmd_TLM_MGR_STOP_TLM;
-  cmd_table[Cmd_CODE_TLM_MGR_CLEAR_TLM_TL].cmd_func = Cmd_TLM_MGR_CLEAR_TLM_TL;
   cmd_table[Cmd_CODE_TLM_MGR_REGISTER_GENERATE_MS_TLM].cmd_func = Cmd_TLM_MGR_REGISTER_GENERATE_MS_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_REGISTER_GENERATE_ST_TLM].cmd_func = Cmd_TLM_MGR_REGISTER_GENERATE_ST_TLM;
   cmd_table[Cmd_CODE_TLM_MGR_REGISTER_FORWARD_AS_MS_TLM].cmd_func = Cmd_TLM_MGR_REGISTER_FORWARD_AS_MS_TLM;

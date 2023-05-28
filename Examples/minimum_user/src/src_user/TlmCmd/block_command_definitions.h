@@ -43,6 +43,8 @@ typedef enum
   // ==== 追加領域 ====
 
   // Telemetry Manager
+  BC_TLM_MGR_MASTER = 348,
+  BC_TLM_MGR_DEPLOY = 349,
   BC_TLM_MGR_0 = 350,
   BC_TLM_MGR_1 = 351,
   BC_TLM_MGR_2 = 352,
