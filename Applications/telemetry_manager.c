@@ -95,6 +95,7 @@ static RESULT TLM_MGR_add_bc_settings_to_register_info_(uint8_t cmd_table_idx,
 /**
  * @brief  TLM_MGR_BC_ROLE に応じて TLM_MGR_CmdTable から 1 BC の 1 block から全 cmd を消す (NPO 埋めする)
  * @note   DCU を使っている
+ * @note   cmd_table も消す
  * @param  cmd_code:      DCU を呼び出す元の cmd id
  * @param  bc_role:       TLM_MGR_BC_ROLE
  * @param  register_info: 削除する role の TLM_MGR_RegisterInfo
@@ -478,6 +479,9 @@ static CCP_CmdRet TLM_MGR_clear_cmds_based_on_role_(CMD_CODE cmd_code,
 
   cmd_table_idx = register_info->cmd_table_idxes[exec_counter];
   TLM_MGR_clear_bc_to_nop_(telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id);
+  memset(telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds,
+         0x00,
+         sizeof(TLM_MGR_CmdTableCmdElem) * TLM_MGR_MAX_CMD_NUM_PER_BC);
 
   // 再帰実行
   if (DCU_register_next(cmd_code, NULL, 0) != DCU_ACK_OK)
@@ -868,9 +872,9 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
 
   for (cmd_pos = 0; cmd_pos < TLM_MGR_MAX_CMD_NUM_PER_BC; ++cmd_pos)
   {
+    RESULT ret = RESULT_ERR;
     for (idx_of_cmd_table_idxes = 0; idx_of_cmd_table_idxes < register_info->cmd_table_idxes_size; ++idx_of_cmd_table_idxes)
     {
-      RESULT ret;
       cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
       cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
 
@@ -881,6 +885,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
       count++;
       if (count == register_info->registered_cmd_num) return TLM_MGR_ERR_CODE_CMD_NOT_FOUND;
     }
+    if (ret == RESULT_OK) break;
   }
 
   *found_cmd_elem = cmd_elem;
