@@ -63,12 +63,28 @@ APID CTP_get_apid(const CommonTlmPacket* packet);
 void CTP_set_apid(CommonTlmPacket* packet, APID apid);
 
 /**
+ * @brief  Global Time を取得
+ * @note   何が設定されているかは user 定義
+ * @param  packet: CTP
+ * @return Global Time
+ */
+double CTP_get_global_time(const CommonTlmPacket* packet);
+
+/**
  * @brief  現在の Global Time を設定
  * @note   何を設定するかは user 定義
  * @param[in,out] packet: CTP
  * @return void
  */
 void CTP_set_global_time(CommonTlmPacket* packet);
+
+/**
+ * @brief  On-Board Subnetwork Time を取得
+ * @note   何が設定されているかは user 定義
+ * @param  packet: CTP
+ * @return On-Board Subnetwork Time
+ */
+uint32_t CTP_get_on_board_subnet_time(const CommonTlmPacket* packet);
 
 /**
  * @brief  現在の On-Board Subnetwork Time を設定
