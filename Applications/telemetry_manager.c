@@ -100,6 +100,17 @@ static CCP_CmdRet TLM_MGR_clear_cmds_based_on_role_(CMD_CODE cmd_code,
 
 static TLM_MGR_RegisterInfo* TLM_MGR_get_regitster_info_from_bc_role_(TLM_MGR_BC_ROLE bc_role);
 
+
+static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem,
+                                                  TLM_MGR_CMD_TYPE cmd_type,
+                                                  APID apid,
+                                                  TLM_CODE tlm_id,
+                                                  uint8_t dr_partition);
+
+//  * @note   0x00 埋めでクリアする
+static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem);
+
+
 // ------
 
 /**
@@ -318,40 +329,6 @@ static CCP_CmdRet TLM_MGR_clear_cmds_based_on_role_(CMD_CODE cmd_code,
 }
 
 
-// // FIXME
-// static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_info)
-// {
-//   uint8_t i;
-
-//   for (i = 0; i < register_info->bc_info_idxes_size; ++i)
-//   {
-//     uint8_t bc_info_idx = register_info->bc_info_idxes[i];
-//     TLM_MGR_clear_bc_to_nop_(telemetry_manager_.bc_settings[bc_info_idx].bc_id);
-//   }
-
-//   register_info->registered_tlm_num = 0;
-
-
-//   // FIXME:
-//   // registerd_table も消去
-// }
-
-
-// static void TLM_MGR_clear_register_info_all_(void)
-// {
-//   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.master);
-//   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.hk);
-//   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.high_freq);
-//   TLM_MGR_clear_register_info_(&telemetry_manager_.register_info.low_freq);
-// }
-
-
-// static void TLM_MGR_clear_register_info_(TLM_MGR_RegisterInfo* register_info)
-// {
-//   memset(register_info, 0x00, sizeof(*register_info));
-// }
-
-
 static TLM_MGR_ERR_CODE TLM_MGR_register_(TLM_MGR_BC_ROLE role,
                                           TLM_MGR_CMD_TYPE cmd_type,
                                           APID apid,
@@ -391,35 +368,6 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_(TLM_MGR_BC_ROLE role,
 
   register_info->registered_cmd_num++;
   return TLM_MGR_ERR_CODE_OK;
-}
-
-
-static TLM_MGR_RegisterInfo* TLM_MGR_get_regitster_info_from_bc_role_(TLM_MGR_BC_ROLE bc_role)
-{
-  switch (bc_role)
-  {
-  case TLM_MGR_BC_ROLE_HK_TLM:
-    return &telemetry_manager_.register_info.hk;
-  case TLM_MGR_BC_ROLE_HIGH_FREQ_TLM:
-    return &telemetry_manager_.register_info.high_freq;
-  case TLM_MGR_BC_ROLE_LOW_FREQ_TLM:
-    return &telemetry_manager_.register_info.low_freq;
-  default:
-    return NULL;
-  }
-}
-
-
-static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem,
-                                                  TLM_MGR_CMD_TYPE cmd_type,
-                                                  APID apid,
-                                                  TLM_CODE tlm_id,
-                                                  uint8_t dr_partition)
-{
-  cmd_elem->cmd_type = cmd_type;
-  cmd_elem->apid = apid;
-  cmd_elem->tlm_id = tlm_id;
-  cmd_elem->dr_partition = dr_partition;
 }
 
 
@@ -574,6 +522,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
   BCT_Pos last_pos;
   TLM_MGR_CmdTableCmdElem* delete_cmd_elem;
   TLM_MGR_CmdTableCmdElem* last_cmd_elem;
+  BCT_ACK bct_ack;
 
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(role);
   if (register_info == NULL) return TLM_MGR_ERR_CIDE_INVALID_BC_ROLE;
@@ -591,10 +540,85 @@ static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
                                              register_info);
   if (ret != TLM_MGR_ERR_CODE_OK) return ret;
 
+  if (delete_cmd_elem == last_cmd_elem)
+  {
+    // 消す対象が末端
+    // なにもしない
+  }
+  else
+  {
+    // 消す対象が末端ではない
+    // 末尾で消す対象を上書き
+    bct_ack = BCT_load_cmd(&last_pos, &TLM_MGR_packet_);
+    if (bct_ack != BCT_SUCCESS) return TLM_MGR_ERR_CODE_OTHER_ERR;
+    bct_ack = BCT_overwrite_cmd(&delete_pos, &TLM_MGR_packet_);
+    if (bct_ack != BCT_SUCCESS) return TLM_MGR_ERR_CODE_OTHER_ERR;
 
+    TLM_MGR_update_cmd_elem_of_cmd_table_(delete_cmd_elem,
+                                          last_cmd_elem->cmd_type,
+                                          last_cmd_elem->apid,
+                                          last_cmd_elem->tlm_id,
+                                          last_cmd_elem->dr_partition);
+  }
+
+  // 末尾の削除
+  // TODO: TI が正しいかテストでチェック
+  ret = TLM_MGR_form_nop_tlc_(&TLM_MGR_packet_, (cycle_t)last_pos.cmd);
+  if (ret != TLM_MGR_ERR_CODE_OK) return ret;
+
+  // すでに NOP で埋められており，かつ activate 済なので，直接 BCT にコマンドを挿入できる．
+  bct_ack = BCT_overwrite_cmd(&last_pos, &TLM_MGR_packet_);
+  if (bct_ack != BCT_SUCCESS) return TLM_MGR_ERR_CODE_OTHER_ERR;
+
+  TLM_MGR_clear_cmd_elem_of_cmd_table_(last_cmd_elem);
 
   register_info->registered_cmd_num--;
   return TLM_MGR_ERR_CODE_OK;
+}
+
+
+static TLM_MGR_ERR_CODE TLM_MGR_form_nop_tlc_(CommonCmdPacket* packet, cycle_t ti)
+{
+  CCP_UTIL_ACK ret;
+  ret = CCP_form_tlc(packet, ti, Cmd_CODE_NOP, NULL, 0);
+  if (ret != CCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
+  return TLM_MGR_ERR_CODE_OK;
+}
+
+
+static TLM_MGR_RegisterInfo* TLM_MGR_get_regitster_info_from_bc_role_(TLM_MGR_BC_ROLE bc_role)
+{
+  switch (bc_role)
+  {
+  case TLM_MGR_BC_ROLE_HK_TLM:
+    return &telemetry_manager_.register_info.hk;
+  case TLM_MGR_BC_ROLE_HIGH_FREQ_TLM:
+    return &telemetry_manager_.register_info.high_freq;
+  case TLM_MGR_BC_ROLE_LOW_FREQ_TLM:
+    return &telemetry_manager_.register_info.low_freq;
+  default:
+    return NULL;
+  }
+}
+
+
+static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem,
+                                                  TLM_MGR_CMD_TYPE cmd_type,
+                                                  APID apid,
+                                                  TLM_CODE tlm_id,
+                                                  uint8_t dr_partition)
+{
+  cmd_elem->cmd_type = cmd_type;
+  cmd_elem->apid = apid;
+  cmd_elem->tlm_id = tlm_id;
+  cmd_elem->dr_partition = dr_partition;
+}
+
+
+static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem)
+{
+  // クリアは 0 埋めでよい
+  memset(cmd_elem, 0x00, sizeof(*cmd_elem));
 }
 
 
@@ -1075,23 +1099,57 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_MS_TLM(const CommonCmdPacket* packet)
 
 CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_ST_TLM(const CommonCmdPacket* packet)
 {
-  (void)packet;
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+  TLM_MGR_ERR_CODE err_code;
+  TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
+  uint8_t dr_partition = CCP_get_param_from_packet(packet, 2, uint8_t);
+
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_GENERATE_ST_TLM, APID_UNKNOWN, tlm_id, dr_partition);
+  return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
+
+
 CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
 {
-  (void)packet;
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+  TLM_MGR_ERR_CODE err_code;
+  TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
+  APID apid = (APID)CCP_get_param_from_packet(packet, 1, uint16_t);
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 2, uint8_t);
+
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM, apid, tlm_id, 0);
+  return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
+
+
 CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet)
 {
-  (void)packet;
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+  TLM_MGR_ERR_CODE err_code;
+  TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
+  APID apid = (APID)CCP_get_param_from_packet(packet, 1, uint16_t);
+  TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 2, uint8_t);
+  uint8_t dr_partition = CCP_get_param_from_packet(packet, 3, uint8_t);
+
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_FORWARD_AS_ST_TLM, apid, tlm_id, dr_partition);
+  return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
+
+
 CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet)
 {
-  (void)packet;
-  return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
+  TLM_MGR_ERR_CODE err_code;
+  TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
+  uint8_t dr_partition = CCP_get_param_from_packet(packet, 1, uint8_t);
+
+  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
+
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_DR_REPLAY_TLM, APID_UNKNOWN, 0, dr_partition);
+  return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
 #pragma section
