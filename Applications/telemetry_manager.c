@@ -1082,8 +1082,6 @@ CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_AND_DEPLOY_BC(const CommonCmdPacket* packet)
 {
   (void)packet;
 
-  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
-
   BCL_load_bc(telemetry_manager_.master_bc_id, TLM_MGR_load_master_bc_);
   BCL_load_bc(telemetry_manager_.deploy_bc_id, TLM_MGR_load_deploy_bc_);
 
@@ -1094,7 +1092,6 @@ CCP_CmdRet Cmd_TLM_MGR_INIT_MASTER_AND_DEPLOY_BC(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // DCU を使う
   return TLM_MGR_clear_cmds_based_on_role_(Cmd_CODE_TLM_MGR_CLEAR_HK_TLM,
@@ -1106,7 +1103,6 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_HK_TLM(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // DCU を使う
   return TLM_MGR_clear_cmds_based_on_role_(Cmd_CODE_TLM_MGR_CLEAR_HIGH_FREQ_TLM,
@@ -1118,7 +1114,6 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_HIGH_FREQ_TLM(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // DCU を使う
   return TLM_MGR_clear_cmds_based_on_role_(Cmd_CODE_TLM_MGR_CLEAR_LOW_FREQ_TLM,
@@ -1130,7 +1125,6 @@ CCP_CmdRet Cmd_TLM_MGR_CLEAR_LOW_FREQ_TLM(const CommonCmdPacket* packet)
 CCP_CmdRet Cmd_TLM_MGR_CLEAR_USER_TLM(const CommonCmdPacket* packet)
 {
   (void)packet;
-  if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
   // NOTE: DCU を多重で使っている！ (つまり， DCU_LOG_MAX が 2 以上でないとだめ)
   CCP_form_and_exec_rtc(Cmd_CODE_TLM_MGR_CLEAR_HIGH_FREQ_TLM, NULL, 0);
