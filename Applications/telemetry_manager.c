@@ -870,14 +870,11 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
   {
     for (idx_of_cmd_table_idxes = 0; idx_of_cmd_table_idxes < register_info->cmd_table_idxes_size; ++idx_of_cmd_table_idxes)
     {
+      RESULT ret;
       cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
       cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
 
-      RESULT ret = TLM_MGR_check_same_cmd_(cmd_elem,
-                                           cmd_type,
-                                           apid,
-                                           tlm_id,
-                                           dr_partition);
+      ret = TLM_MGR_check_same_cmd_(cmd_elem, cmd_type, apid, tlm_id, dr_partition);
       // 見つかった！
       if (ret == RESULT_OK) break;
 
