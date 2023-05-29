@@ -34,6 +34,13 @@ void CTP_set_global_time(CommonTlmPacket* packet)
   TSP_set_global_time(packet, 0.0);
 }
 
+void CTP_set_on_board_subnet_time(CommonTlmPacket* packet)
+{
+  // 何を設定するかはユーザー定義
+  // MOBC では主に TI を，2nd OBC では主に 0xffffffff を
+  TSP_set_on_board_subnet_time(packet, 0xffffffff);
+}
+
 ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet)
 {
   return TSP_get_dest_flags(packet);

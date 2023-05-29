@@ -254,7 +254,7 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
   TSP_set_tlm_id(&TG_ctp_, tlm_id);
   // FIXME: 他の時刻も入れる
   CTP_set_global_time(&TG_ctp_);
-  TSP_set_on_board_subnet_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
+  CTP_set_on_board_subnet_time(&TG_ctp_);
   TSP_set_dest_flags(&TG_ctp_, dest_flags);
   TSP_set_dest_info(&TG_ctp_, dest_info);
 
@@ -304,7 +304,7 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
   // }
   if (TSP_get_on_board_subnet_time(&TG_ctp_) == 0xffffffff)
   {
-    TSP_set_on_board_subnet_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 暫定
+    TSP_set_on_board_subnet_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));   // FIXME: 本当は Driver で受信樹に上書きするべき？
   }
 
   TSP_set_dest_flags(&TG_ctp_, dest_flags);
