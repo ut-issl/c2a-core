@@ -258,7 +258,7 @@ static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_el
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos,
-                                                           TLM_MGR_CmdTableCmdElem* next_cmd_elem,
+                                                           TLM_MGR_CmdTableCmdElem** next_cmd_elem,
                                                            const TLM_MGR_RegisterInfo* register_info);
 
 /**
@@ -269,7 +269,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_pos,
-                                                             TLM_MGR_CmdTableCmdElem* last_cmd_elem,
+                                                             TLM_MGR_CmdTableCmdElem** last_cmd_elem,
                                                              const TLM_MGR_RegisterInfo* register_info);
 
 /**
@@ -284,7 +284,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_p
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
-                                                         TLM_MGR_CmdTableCmdElem* found_cmd_elem,
+                                                         TLM_MGR_CmdTableCmdElem** found_cmd_elem,
                                                          const TLM_MGR_RegisterInfo* register_info,
                                                          TLM_MGR_CMD_TYPE cmd_type,
                                                          APID apid,
@@ -505,7 +505,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_(TLM_MGR_BC_ROLE role,
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(role);
   if (register_info == NULL) return TLM_MGR_ERR_CIDE_INVALID_BC_ROLE;
 
-  ret = TLM_MGR_get_next_register_cmd_pos_(&register_pos, register_cmd_elem, register_info);
+  ret = TLM_MGR_get_next_register_cmd_pos_(&register_pos, &register_cmd_elem, register_info);
   if (ret != TLM_MGR_ERR_CODE_OK) return ret;
 
   ret = TLM_MGR_form_register_tlc_(&TLM_MGR_packet_,
@@ -689,7 +689,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
   if (register_info == NULL) return TLM_MGR_ERR_CIDE_INVALID_BC_ROLE;
 
   ret = TLM_MGR_find_registered_cmd_pos_(&delete_pos,
-                                         delete_cmd_elem,
+                                         &delete_cmd_elem,
                                          register_info,
                                          cmd_type,
                                          apid,
@@ -697,7 +697,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
                                          dr_partition);
   if (ret != TLM_MGR_ERR_CODE_OK) return ret;
   ret = TLM_MGR_get_last_registered_cmd_pos_(&last_pos,
-                                             last_cmd_elem,
+                                             &last_cmd_elem,
                                              register_info);
   if (ret != TLM_MGR_ERR_CODE_OK) return ret;
 
@@ -786,7 +786,7 @@ static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_el
 
 
 static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos,
-                                                           TLM_MGR_CmdTableCmdElem* next_cmd_elem,
+                                                           TLM_MGR_CmdTableCmdElem** next_cmd_elem,
                                                            const TLM_MGR_RegisterInfo* register_info)
 {
   uint8_t idx_of_cmd_table_idxes;
@@ -800,12 +800,12 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos
     return TLM_MGR_ERR_CODE_CMD_FULL;
   }
 
-  idx_of_cmd_table_idxes = register_info->registered_cmd_num / register_info->cmd_table_idxes_size;
-  cmd_pos = register_info->registered_cmd_num % register_info->cmd_table_idxes_size;
+  idx_of_cmd_table_idxes = register_info->registered_cmd_num % register_info->cmd_table_idxes_size;
+  cmd_pos = register_info->registered_cmd_num / register_info->cmd_table_idxes_size;
 
   cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
 
-  next_cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
+  *next_cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
 
   block = telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id;
   if (BCT_make_pos(next_cmd_pos, block, cmd_pos) != BCT_SUCCESS)
@@ -817,7 +817,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos
 
 
 static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_pos,
-                                                             TLM_MGR_CmdTableCmdElem* last_cmd_elem,
+                                                             TLM_MGR_CmdTableCmdElem** last_cmd_elem,
                                                              const TLM_MGR_RegisterInfo* register_info)
 {
   uint8_t idx_of_cmd_table_idxes;
@@ -830,12 +830,12 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_p
     return TLM_MGR_ERR_CODE_CMD_NOT_FOUND;
   }
 
-  idx_of_cmd_table_idxes = (register_info->registered_cmd_num - 1) / register_info->cmd_table_idxes_size;
-  cmd_pos = (register_info->registered_cmd_num - 1) % register_info->cmd_table_idxes_size;
+  idx_of_cmd_table_idxes = (register_info->registered_cmd_num - 1) % register_info->cmd_table_idxes_size;
+  cmd_pos = (register_info->registered_cmd_num - 1) / register_info->cmd_table_idxes_size;
 
   cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
 
-  last_cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
+  *last_cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
 
   block = telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id;
   if (BCT_make_pos(last_cmd_pos, block, cmd_pos) != BCT_SUCCESS)
@@ -847,7 +847,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_p
 
 
 static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
-                                                         TLM_MGR_CmdTableCmdElem* found_cmd_elem,
+                                                         TLM_MGR_CmdTableCmdElem** found_cmd_elem,
                                                          const TLM_MGR_RegisterInfo* register_info,
                                                          TLM_MGR_CMD_TYPE cmd_type,
                                                          APID apid,
@@ -883,7 +883,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
     }
   }
 
-  found_cmd_elem = cmd_elem;
+  *found_cmd_elem = cmd_elem;
 
   block = telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id;
   if (BCT_make_pos(found_cmd_pos, block, cmd_pos) != BCT_SUCCESS)
