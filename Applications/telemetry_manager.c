@@ -497,9 +497,9 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_(TLM_MGR_BC_ROLE role,
                                           uint8_t dr_partition)
 {
   TLM_MGR_ERR_CODE ret;
-  TLM_MGR_RegisterInfo* register_info;
+  TLM_MGR_RegisterInfo* register_info = NULL;
   BCT_Pos register_pos;
-  TLM_MGR_CmdTableCmdElem* register_cmd_elem;
+  TLM_MGR_CmdTableCmdElem* register_cmd_elem = NULL;
   BCT_ACK bct_ack;
 
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(role);
@@ -678,11 +678,11 @@ static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
                                         uint8_t dr_partition)
 {
   TLM_MGR_ERR_CODE ret;
-  TLM_MGR_RegisterInfo* register_info;
+  TLM_MGR_RegisterInfo* register_info = NULL;
   BCT_Pos delete_pos;
   BCT_Pos last_pos;
-  TLM_MGR_CmdTableCmdElem* delete_cmd_elem;
-  TLM_MGR_CmdTableCmdElem* last_cmd_elem;
+  TLM_MGR_CmdTableCmdElem* delete_cmd_elem = NULL;
+  TLM_MGR_CmdTableCmdElem* last_cmd_elem = NULL;
   BCT_ACK bct_ack;
 
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(role);
@@ -769,6 +769,7 @@ static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_e
                                                   TLM_CODE tlm_id,
                                                   uint8_t dr_partition)
 {
+  if (cmd_elem == NULL) return;
   cmd_elem->cmd_type = cmd_type;
   cmd_elem->apid = apid;
   cmd_elem->tlm_id = tlm_id;
@@ -778,6 +779,7 @@ static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_e
 
 static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem)
 {
+  if (cmd_elem == NULL) return;
   // クリアは 0 埋めでよい
   memset(cmd_elem, 0x00, sizeof(*cmd_elem));
 }
