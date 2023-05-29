@@ -86,7 +86,7 @@ static RESULT TLM_MGR_add_bc_settings_to_register_info_(uint8_t cmd_table_idx,
                                                         TLM_MGR_RegisterInfo* register_info);
 
 /**
- * @brief  TLM_MGR_BC_ROLE に応じて TLM_MGR_CmdTable から cmd を消す
+ * @brief  TLM_MGR_BC_ROLE に応じて TLM_MGR_CmdTable から 1 BC の 1 block から全 cmd を消す (NPO 埋めする)
  * @note   DCU を使っている
  * @param  cmd_code:      DCU を呼び出す元の cmd id
  * @param  bc_role:       TLM_MGR_BC_ROLE
@@ -97,21 +97,208 @@ static CCP_CmdRet TLM_MGR_clear_cmds_based_on_role_(CMD_CODE cmd_code,
                                                     TLM_MGR_BC_ROLE bc_role,
                                                     TLM_MGR_RegisterInfo* register_info);
 
+/**
+ * @brief  テレメ生成などのコマンドを TLM MGR に登録する
+ * @param  role:         TLM_MGR_BC_ROLE
+ * @param  cmd_type:     TLM_MGR_CMD_TYPE
+ * @param  apid:         APID
+ * @param  tlm_id:       TLM_CODE
+ * @param  dr_partition: dr partition (DR 関連の時だけ)
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_register_(TLM_MGR_BC_ROLE role,
+                                          TLM_MGR_CMD_TYPE cmd_type,
+                                          APID apid,
+                                          TLM_CODE tlm_id,
+                                          uint8_t dr_partition);
 
+/**
+ * @brief  TLM_MGR_CMD_TYPE に応じて， TLM MGR に登録する TLC を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @param[in]   cmd_type:     TLM_MGR_CMD_TYPE
+ * @param[in]   apid:         APID
+ * @param[in]   tlm_id:       TLM_CODE
+ * @param[in]   dr_partition: dr partition (DR 関連の時だけ)
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
+                                                   cycle_t ti,
+                                                   TLM_MGR_CMD_TYPE cmd_type,
+                                                   APID apid,
+                                                   TLM_CODE tlm_id,
+                                                   uint8_t dr_partition);
+
+
+/**
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM) を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @param[in]   tlm_id:       TLM_CODE
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_ms_tlm_(CommonCmdPacket* packet,
+                                                         cycle_t ti,
+                                                         TLM_CODE tlm_id);
+
+/**
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_GENERATE_ST_TLM) を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @param[in]   tlm_id:       TLM_CODE
+ * @param[in]   dr_partition: dr partition (DR 関連の時だけ)
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_st_tlm_(CommonCmdPacket* packet,
+                                                         cycle_t ti,
+                                                         TLM_CODE tlm_id,
+                                                         uint8_t dr_partition);
+
+/**
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM) を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @param[in]   apid:         APID
+ * @param[in]   tlm_id:       TLM_CODE
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_ms_tlm_(CommonCmdPacket* packet,
+                                                           cycle_t ti,
+                                                           APID apid,
+                                                           TLM_CODE tlm_id);
+
+/**
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_FORWARD_AS_ST_TLM) を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @param[in]   apid:         APID
+ * @param[in]   tlm_id:       TLM_CODE
+ * @param[in]   dr_partition: dr partition (DR 関連の時だけ)
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_st_tlm_(CommonCmdPacket* packet,
+                                                           cycle_t ti,
+                                                           APID apid,
+                                                           TLM_CODE tlm_id,
+                                                           uint8_t dr_partition);
+
+/**
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_DR_REPLAY_TLM) を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @param[in]   dr_partition: dr partition (DR 関連の時だけ)
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_dr_replay_tlm_(CommonCmdPacket* packet, cycle_t ti, uint8_t dr_partition);
+
+/**
+ * @brief  テレメ生成などのコマンドを TLM MGR から削除する
+ * @param  role:         TLM_MGR_BC_ROLE
+ * @param  cmd_type:     TLM_MGR_CMD_TYPE
+ * @param  apid:         APID
+ * @param  tlm_id:       TLM_CODE
+ * @param  dr_partition: dr partition (DR 関連の時だけ)
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
+                                        TLM_MGR_CMD_TYPE cmd_type,
+                                        APID apid,
+                                        TLM_CODE tlm_id,
+                                        uint8_t dr_partition);
+
+/**
+ * @brief  TLM MGR に上書きして削除するための NOP TLC を生成する
+ * @param[out]  packet:       TLC packet
+ * @param[in]   ti:           TI
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_form_nop_tlc_(CommonCmdPacket* packet, cycle_t ti);
+
+/**
+ * @brief  TLM_MGR_BC_ROLE に応じた TLM_MGR_RegisterInfo を取得する
+ * @param  bc_role: TLM_MGR_BC_ROLE
+ * @return TLM_MGR_RegisterInfo
+ */
 static TLM_MGR_RegisterInfo* TLM_MGR_get_regitster_info_from_bc_role_(TLM_MGR_BC_ROLE bc_role);
 
-
+/**
+ * @brief  TLM_MGR_CmdTableCmdElem を更新する
+ * @param[in,out]  cmd_elem:     更新する TLM_MGR_CmdTableCmdElem
+ * @param[in]      cmd_type:     TLM_MGR_CMD_TYPE
+ * @param[in]      apid:         APID
+ * @param[in]      tlm_id:       TLM_CODE
+ * @param[in]      dr_partition: dr partition
+ * @return void
+ */
 static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem,
                                                   TLM_MGR_CMD_TYPE cmd_type,
                                                   APID apid,
                                                   TLM_CODE tlm_id,
                                                   uint8_t dr_partition);
 
-//  * @note   0x00 埋めでクリアする
+/**
+ * @brief  TLM_MGR_CmdTableCmdElem をクリアする
+ * @note   0x00 埋めでクリアする
+ * @param[in,out]  cmd_elem: クリアする TLM_MGR_CmdTableCmdElem
+ * @return void
+ */
 static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem);
 
+/**
+ * @brief  次に TLM MGR に登録するコマンドの BCT_Pos と TLM_MGR_CmdTableCmdElem を取得する
+ * @param[out]  next_cmd_pos:  BCT_Pos
+ * @param[out]  next_cmd_elem: TLM_MGR_CmdTableCmdElem
+ * @param[in]   register_info: 登録しようとしている TLM_MGR_RegisterInfo
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos,
+                                                           TLM_MGR_CmdTableCmdElem* next_cmd_elem,
+                                                           const TLM_MGR_RegisterInfo* register_info);
 
-// ------
+/**
+ * @brief  すでに登録されているコマンドのうち，末尾にあるコマンドの BCT_Pos と TLM_MGR_CmdTableCmdElem を取得する
+ * @param[out]  next_cmd_pos:  BCT_Pos
+ * @param[out]  next_cmd_elem: TLM_MGR_CmdTableCmdElem
+ * @param[in]   register_info: 登録しようとしている TLM_MGR_RegisterInfo
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_pos,
+                                                             TLM_MGR_CmdTableCmdElem* last_cmd_elem,
+                                                             const TLM_MGR_RegisterInfo* register_info);
+
+/**
+ * @brief  すでに登録されているコマンドのから，指定したコマンドを検索し，その BCT_Pos と TLM_MGR_CmdTableCmdElem を取得する
+ * @param[out]  next_cmd_pos:  BCT_Pos
+ * @param[out]  next_cmd_elem: TLM_MGR_CmdTableCmdElem
+ * @param[in]   register_info: 検索対象の TLM_MGR_RegisterInfo
+ * @param[in]   cmd_type:      検索対象の TLM_MGR_CMD_TYPE
+ * @param[in]   apid:          検索対象の APID
+ * @param[in]   tlm_id:        検索対象の TLM_CODE
+ * @param[in]   dr_partition:  検索対象の dr partition
+ * @return TLM_MGR_ERR_CODE
+ */
+static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
+                                                         TLM_MGR_CmdTableCmdElem* found_cmd_elem,
+                                                         const TLM_MGR_RegisterInfo* register_info,
+                                                         TLM_MGR_CMD_TYPE cmd_type,
+                                                         APID apid,
+                                                         TLM_CODE tlm_id,
+                                                         uint8_t dr_partition);
+
+/**
+ * @brief  TLM_MGR_CmdTableCmdElem が指定したものと等しいかチェックする
+ * @param  cmd_elem:     等しいかチェックされる TLM_MGR_CmdTableCmdElem
+ * @param  cmd_type:     等しいかチェックする TLM_MGR_CMD_TYPE
+ * @param  apid:         等しいかチェックする APID
+ * @param  tlm_id:       等しいかチェックする TLM_CODE
+ * @param  dr_partition: 等しいかチェックする dr partition
+ * @return RESULT
+ */
+static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdTableCmdElem* cmd_elem,
+                                      TLM_MGR_CMD_TYPE cmd_type,
+                                      APID apid,
+                                      TLM_CODE tlm_id,
+                                      uint8_t dr_partition);
 
 /**
  * @brief  master BC を deploy する BC の構築
@@ -141,44 +328,12 @@ static void TLM_MGR_load_nop_bc_(void);
  */
 static void TLM_MGR_clear_bc_to_nop_(bct_id_t bc_id);
 
-
-// ###########################
-
-// /**
-//  * @brief  すべての TLM_MGR_RegisterInfo のクリア
-//  * @param  void
-//  * @return void
-//  */
-// static void TLM_MGR_clear_register_info_all_(void);
-
-// /**
-//  * @brief  TLM_MGR_RegisterInfo のクリア
-//  * @param  register_info: クリアしたい TLM_MGR_RegisterInfo
-//  * @return void
-//  */
-// static void TLM_MGR_clear_register_info_(TLM_MGR_RegisterInfo* register_info);
-
-// /**
-//  * @brief  設定された TLM_MGR_BcSettings から内部で使う情報 TLM_MGR_RegisterInfo の構築
-//  * @param  void
-//  * @return TLM_MGR_ERR_CODE
-//  */
-// static TLM_MGR_ERR_CODE TLM_MGR_calc_register_info_from_bc_info_(void);
-
-// /**
-//  * @brief  TLM_MGR_RegisterInfo に使う BC 情報を登録
-//  * @param  register_info: 登録先の TLM_MGR_RegisterInfo
-//  * @param  bc_info_idx: bc_settings の中のつかう BC の配列 idx
-//  * @return TLM_MGR_ERR_CODE
-//  */
-// static TLM_MGR_ERR_CODE TLM_MGR_add_bc_info_to_register_info_(TLM_MGR_RegisterInfo* register_info, uint8_t bc_info_idx);
-
-// // /**
-//  * @brief  TLM_MGR_RegisterInfo 登録されている BC をクリアして NOP で埋め，登録情報も初期化する
-//  * @param  register_info: 消す BC が登録されている TLM_MGR_RegisterInfo
-//  * @return void
-//  */
-// static void TLM_MGR_clear_bc_of_register_info_(TLM_MGR_RegisterInfo* register_info);
+/**
+ * @brief  TLM_MGR_ERR_CODE から CCP_CmdRet に変換する
+ * @param  code: TLM_MGR_ERR_CODE
+ * @return CCP_CmdRet
+ */
+static CCP_CmdRet TLM_MGR_conv_err_code_to_ccp_cmd_ret_(TLM_MGR_ERR_CODE code);
 
 
 static TelemetryManager telemetry_manager_;
@@ -485,7 +640,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_st_tlm_(CommonCmdPacket* pack
 }
 
 
-static TLM_MGR_ERR_CODE TLM_MGR_form_dr_replay_tlm_(packet, ti, dr_partition)
+static TLM_MGR_ERR_CODE TLM_MGR_form_dr_replay_tlm_(CommonCmdPacket* packet, cycle_t ti, uint8_t dr_partition)
 {
 #ifdef TLM_MGR_ENABLE_DR_REPLAY_TLM
   CCP_UTIL_ACK ret;
@@ -739,7 +894,6 @@ static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdTableCmdElem* cmd_elem,
                                       APID apid,
                                       TLM_CODE tlm_id,
                                       uint8_t dr_partition)
-{
 {
   switch (cmd_type)
   {
@@ -1079,7 +1233,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_REPLAY_TLM(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  err_code = TLM_MGR_register_(bc_role, TLM_MGR_CMD_TYPE_DR_REPLAY_TLM, APID_UNKNOWN, 0, dr_partition);
+  err_code = TLM_MGR_register_(bc_role, TLM_MGR_CMD_TYPE_DR_REPLAY_TLM, APID_UNKNOWN, TLM_CODE_MAX, dr_partition);
   return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
@@ -1148,7 +1302,7 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_DR_REPLAY_TLM, APID_UNKNOWN, 0, dr_partition);
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_DR_REPLAY_TLM, APID_UNKNOWN, TLM_CODE_MAX, dr_partition);
   return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
