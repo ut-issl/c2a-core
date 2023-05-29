@@ -217,7 +217,6 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet);
 2. 非ユーザーテレメの登録
   - HK TLMを登録しておく ( Cmd_TLM_MGR_REGISTER_HOGE で )
 3. テレメ送出開始
-  - 初回は念の為 Cmd_TLM_MGR_STOP_TLM をして，既存のTL2を消す
   - Cmd_TLM_MGR_START_TLM にてテレメ送出開始
     - 止めるのは Cmd_TLM_MGR_STOP_TLM
 4. Cmd_TLM_MGR_REGISTER_HOGE にて，1 Hz, 1/10 Hz のユーザーテレメを各人が好きに登録できる
