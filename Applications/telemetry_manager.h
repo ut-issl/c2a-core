@@ -210,20 +210,20 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet);
 
 
 // *** HOW TO USE ***
-// FIXME
 /*
 1. 初期化：Cmd_TLM_MGR_INIT
   - BCをいじるため，Appの初期化では現時点でできないので，明示的に初期化する必要あり
-    - initial SLにいれてもいいかも
+    - initial SLにいれてもいいかも． DCU を使ってるので， 1 秒ほどかかる
 2. 非ユーザーテレメの登録
-  - HK, SYSTEM TLMを登録しておく ( Cmd_TLM_MGR_REGISTER_HOGE で )
+  - HK TLMを登録しておく ( Cmd_TLM_MGR_REGISTER_HOGE で )
 3. テレメ送出開始
-  - 初回は念の為 Cmd_TLM_MGR_CLEAR_TLM_TL をして，既存のTL2を消す
+  - 初回は念の為 Cmd_TLM_MGR_STOP_TLM をして，既存のTL2を消す
   - Cmd_TLM_MGR_START_TLM にてテレメ送出開始
     - 止めるのは Cmd_TLM_MGR_STOP_TLM
-4. Cmd_TLM_MGR_REGISTER_HIGH_FREQ_TLM / Cmd_TLM_MGR_REGISTER_LOW_FREQ_TLM にて，1 Hz, 1/10 Hz のユーザーテレメを各人が好きに登録できる
-5. 試験が終わったら Cmd_TLM_MGR_CLEAR_USER_TLM をして，ユーザーテレメを消す
+4. Cmd_TLM_MGR_REGISTER_HOGE にて，1 Hz, 1/10 Hz のユーザーテレメを各人が好きに登録できる
+5. 試験などが終わったら Cmd_TLM_MGR_CLEAR_USER_TLM をして，ユーザーテレメを消す
 6. 次に使う人がいたら，4.から繰り返す
+7. Cmd_TLM_MGR_DELETE_HOGE で登録したコマンドを指定して削除可能
 */
 
 #endif
