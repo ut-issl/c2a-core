@@ -50,12 +50,19 @@
 static void TLM_MGR_init_by_am_(void);
 
 /**
- * @brief  初期化
+ * @brief  初期化（分割 1/2）
  * @note   実行時間の問題から分割している
  * @param  void
  * @return RESULT
  */
 static RESULT TLM_MGR_init_1_(void);
+
+/**
+ * @brief  初期化（分割 2/2）
+ * @note   実行時間の問題から分割している
+ * @param  void
+ * @return RESULT
+ */
 static RESULT TLM_MGR_init_2_(void);
 
 /**
@@ -128,7 +135,6 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
                                                    APID apid,
                                                    TLM_CODE tlm_id,
                                                    uint8_t dr_partition);
-
 
 /**
  * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM) を生成する
