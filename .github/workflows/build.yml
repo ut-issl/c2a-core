@@ -14,9 +14,7 @@ jobs:
     with:
       c2a_dir: Examples/minimum_user
       c2a_custom_setup: |
-        cd $GITHUB_WORKSPACE
-        ls -l
-        cd ./repo
+        cd ../..
         pwd
         ls -l
         if [ $RUNNER_OS = 'Windows' ]; then
@@ -31,9 +29,7 @@ jobs:
     with:
       c2a_dir: Examples/2nd_obc_user
       c2a_custom_setup: |
-        cd $GITHUB_WORKSPACE
-        ls -l
-        cd ./repo
+        cd ../..
         pwd
         ls -l
         if [ $RUNNER_OS = 'Windows' ]; then
