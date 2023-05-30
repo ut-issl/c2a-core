@@ -304,7 +304,7 @@ static CCP_CmdRet TG_forward_tlm_(APID apid,
   // }
   if (CTP_get_on_board_subnet_time(&TG_ctp_) == 0xffffffff)
   {
-    // FIXME: 本当は Driver で受信樹に上書きするべき？ 一応 CTP_get_ctp_from_dssc でも対応
+    // FIXME: 本当は Driver で受信時に上書きするべき？ 一応 CTP_get_ctp_from_dssc でも対応
     // MOBC - 2nd OBC - 3rd OBC というとき， 2nd OBC でも 0xffffffff ができるようにしている
     CTP_set_on_board_subnet_time(&TG_ctp_);
   }
