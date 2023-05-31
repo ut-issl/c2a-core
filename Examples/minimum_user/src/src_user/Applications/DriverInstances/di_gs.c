@@ -133,7 +133,7 @@ static void DI_GS_rt_tlm_packet_handler_app_(void)
     // CLCW が対応する CMD の VCID は CLCW の内部で指定される
     VCDU_set_clcw(&DI_GS_rt_tlm_packet_handler_.vcdu, GS_form_clcw());
 
-    // 完成した VCDU を MS VCDU として送出
+    // 完成した VCDU を RT VCDU として送出
     GS_send_vcdu(&gs_driver_, &DI_GS_rt_tlm_packet_handler_.vcdu);
   }
 }
