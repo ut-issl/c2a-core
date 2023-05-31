@@ -36,6 +36,15 @@ DS_ERR_CODE CTP_get_ctp_from_dssc(const DS_StreamConfig* p_stream_config, Common
   memcpy(&received_packet->packet, EB90_FRAME_get_packet_head_from_dssc(p_stream_config), (size_t)packet_len);
   if (CTP_get_packet_len(received_packet) != packet_len) return DS_ERR_CODE_ERR;
   if (!CTP_is_valid_packet(received_packet)) return DS_ERR_CODE_ERR;
+
+  // On-Board Subnetwork Time を設定
+  if (CTP_get_on_board_subnet_time(received_packet) == 0xffffffff)
+  {
+    // FIXME: TG_forward_tlm_ ではなくてここでいいか検討
+    // 可能な限り正確な時間をいれるには，受信直後のここでいれるべき（←→網羅性）
+    // MOBC - 2nd OBC - 3rd OBC というとき， 2nd OBC でも 0xffffffff ができるようにしている
+    CTP_set_on_board_subnet_time(received_packet);
+  }
   return DS_ERR_CODE_OK;
 }
 

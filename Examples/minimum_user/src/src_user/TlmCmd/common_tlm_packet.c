@@ -6,6 +6,7 @@
  */
 #include <src_core/TlmCmd/common_tlm_packet.h>
 #include <src_core/TlmCmd/Ccsds/tlm_space_packet.h>
+#include <src_core/System/TimeManager/time_manager.h>
 #include <string.h>
 
 
@@ -27,11 +28,28 @@ void CTP_set_apid(CommonTlmPacket* packet, APID apid)
   TSP_set_apid(packet, apid);
 }
 
+double CTP_get_global_time(const CommonTlmPacket* packet)
+{
+  return TSP_get_global_time(packet);
+}
+
 void CTP_set_global_time(CommonTlmPacket* packet)
 {
   // 何を設定するかはユーザー定義
   // TMGR_get_curret_unixtime() で現在の unixtime を入れたり, gps 時刻 を入れたり, など
   TSP_set_global_time(packet, 0.0);
+}
+
+uint32_t CTP_get_on_board_subnet_time(const CommonTlmPacket* packet)
+{
+  return TSP_get_on_board_subnet_time(packet);
+}
+
+void CTP_set_on_board_subnet_time(CommonTlmPacket* packet)
+{
+  // 何を設定するかはユーザー定義
+  // MOBC では主に TI を，2nd OBC では主に 0xffffffff を
+  TSP_set_on_board_subnet_time(packet, (uint32_t)TMGR_get_master_total_cycle());
 }
 
 ctp_dest_flags_t CTP_get_dest_flags(const CommonTlmPacket* packet)
