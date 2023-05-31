@@ -15,13 +15,13 @@
 static RESULT DI_GS_init_(void);
 
 // 以下 init と update の定義
-static void DI_GS_cmd_packet_handler_init_(void);
-static void DI_GS_cmd_packet_handler_(void);
+static void DI_GS_cmd_packet_handler_app_init_(void);
+static void DI_GS_cmd_packet_handler_app_(void);
 
-static void DI_GS_rt_tlm_packet_handler_init_(void);
-static void DI_GS_rt_tlm_packet_handler_(void);
-static void DI_GS_rp_tlm_packet_handler_init_(void);
-static void DI_GS_rp_tlm_packet_handler_(void);
+static void DI_GS_rt_tlm_packet_handler_app_init_(void);
+static void DI_GS_rt_tlm_packet_handler_app_(void);
+static void DI_GS_rp_tlm_packet_handler_app_init_(void);
+static void DI_GS_rp_tlm_packet_handler_app_(void);
 
 static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacketHandler* gs_tlm_packet_handler);
 
@@ -82,36 +82,36 @@ static RESULT DI_GS_init_(void)
 
 AppInfo DI_GS_cmd_packet_handler_app(void)
 {
-  return AI_create_app_info("GS_CMD", DI_GS_cmd_packet_handler_init_, DI_GS_cmd_packet_handler_);
+  return AI_create_app_info("GS_CMD", DI_GS_cmd_packet_handler_app_init_, DI_GS_cmd_packet_handler_app_);
 }
 
 AppInfo DI_GS_rt_tlm_packet_handler_app(void)
 {
-  return AI_create_app_info("GS_MST", DI_GS_rt_tlm_packet_handler_init_, DI_GS_rt_tlm_packet_handler_);
+  return AI_create_app_info("GS_RT_TLM", DI_GS_rt_tlm_packet_handler_app_init_, DI_GS_rt_tlm_packet_handler_app_);
 }
 
 AppInfo DI_GS_rp_tlm_packet_handler_app(void)
 {
-  return AI_create_app_info("GS_RPT", DI_GS_rp_tlm_packet_handler_init_, DI_GS_rp_tlm_packet_handler_);
+  return AI_create_app_info("GS_RP_TLM", DI_GS_rp_tlm_packet_handler_app_init_, DI_GS_rp_tlm_packet_handler_app_);
 }
 
-static void DI_GS_cmd_packet_handler_init_(void)
+static void DI_GS_cmd_packet_handler_app_init_(void)
 {
   DI_GS_init_();
 }
 
-static void DI_GS_cmd_packet_handler_(void)
+static void DI_GS_cmd_packet_handler_app_(void)
 {
   GS_rec_tctf(&gs_driver_);
   // TODO: エラー処理
 }
 
-static void DI_GS_rt_tlm_packet_handler_init_(void)
+static void DI_GS_rt_tlm_packet_handler_app_init_(void)
 {
   T2M_initialize(&DI_GS_rt_tlm_packet_handler_.tc_packet_to_m_pdu);
 }
 
-static void DI_GS_rt_tlm_packet_handler_(void)
+static void DI_GS_rt_tlm_packet_handler_app_(void)
 {
   int i;
 
@@ -138,12 +138,12 @@ static void DI_GS_rt_tlm_packet_handler_(void)
   }
 }
 
-static void DI_GS_rp_tlm_packet_handler_init_(void)
+static void DI_GS_rp_tlm_packet_handler_app_init_(void)
 {
   T2M_initialize(&DI_GS_rp_tlm_packet_handler_.tc_packet_to_m_pdu);
 }
 
-static void DI_GS_rp_tlm_packet_handler_(void)
+static void DI_GS_rp_tlm_packet_handler_app_(void)
 {
   int i;
 
