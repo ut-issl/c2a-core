@@ -28,9 +28,9 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
 static GS_Driver gs_driver_;
 const GS_Driver* const gs_driver = &gs_driver_;
 
-static DI_GS_TlmPacketHandler DI_GS_ms_tlm_packet_handler_; // mission
+static DI_GS_TlmPacketHandler DI_GS_ms_tlm_packet_handler_;
 const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler = &DI_GS_ms_tlm_packet_handler_;
-static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_; // replay tlm
+static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_;
 const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler = &DI_GS_rp_tlm_packet_handler_;
 
 // バッファ

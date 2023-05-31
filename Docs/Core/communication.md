@@ -94,8 +94,8 @@ https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae29
         - ただし，地上局でのパケット保存処理をシンプルにするためなどの理由で，配送の過程でそれぞれのフラグごとにバケットをバラす．つまり，オンボードサブネットワークから地上に送信されるパケットでは， 1 つの flag のみ立っている状態を基本とする．
     - 今後拡張予定あり
     - 現時点では以下
-        - `0b00000001`: Housekeeping Telemetry
-        - `0b00000010`: Mission Telemetry
+        - `0b00000001`: High Priority Realtime Telemetry (現在の C2A Core では使われてない (Realtime Telemetry として処理されている))
+        - `0b00000010`: Realtime Telemetry
         - `0b00000100`: Stored Telemetry
         - `0b00001000`: Replay Telemetry
         - `0b00010000`: 将来拡張用の確保領域
