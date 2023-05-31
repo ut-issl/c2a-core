@@ -183,7 +183,7 @@ CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet)
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
 
-CCP_CmdRet Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_DI_GS_SET_RT_FLUSH_INTERVAL(const CommonCmdPacket* packet)
 {
   cycle_t flush_interval;
   ENDIAN_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));

@@ -34,7 +34,7 @@ AppInfo DI_GS_rt_tlm_packet_handler_app(void);
 AppInfo DI_GS_rp_tlm_packet_handler_app(void);
 
 CCP_CmdRet Cmd_DI_GS_DRIVER_RESET(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_DI_GS_SET_RT_FLUSH_INTERVAL(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_GS_SET_RP_FLUSH_INTERVAL(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_GS_SET_FARM_PW(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_DI_GS_SET_INFO(const CommonCmdPacket* packet);
