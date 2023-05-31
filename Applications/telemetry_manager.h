@@ -61,9 +61,9 @@ typedef enum
 typedef enum
 {
   TLM_MGR_CMD_TYPE_UNREGISTERED = 0,   //!< まだ使われていない (これは 0 であることが必要)
-  TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM,
+  TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM,
   TLM_MGR_CMD_TYPE_TG_GENERATE_ST_TLM,
-  TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM,
+  TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM,
   TLM_MGR_CMD_TYPE_TG_FORWARD_AS_ST_TLM,
   TLM_MGR_CMD_TYPE_DR_REPLAY_TLM
 } TLM_MGR_CMD_TYPE;
@@ -193,15 +193,15 @@ CCP_CmdRet Cmd_TLM_MGR_START_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet);
 
 // 以下，コマンド登録コマンド
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_RT_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_ST_TLM(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_RT_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_REGISTER_REPLAY_TLM(const CommonCmdPacket* packet);
 
-CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_RT_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_ST_TLM(const CommonCmdPacket* packet);
-CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_RT_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet);
 CCP_CmdRet Cmd_TLM_MGR_DELETE_REPLAY_TLM(const CommonCmdPacket* packet);
 

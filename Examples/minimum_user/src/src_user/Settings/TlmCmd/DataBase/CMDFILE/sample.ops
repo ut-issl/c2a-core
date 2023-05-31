@@ -11,10 +11,10 @@
 .# =======================================
  #  テレメダウンリンク
  # =======================================
-.MOBC_RT.TG_GENERATE_MS_TLM 0x00   # MOBC
-.MOBC_RT.TG_GENERATE_MS_TLM 0x56   # EL
-.MOBC_RT.TG_GENERATE_MS_TLM 0x5a   # EH
-.MOBC_RT.TG_GENERATE_MS_TLM 0x46   # App Time
+.MOBC_RT.TG_GENERATE_RT_TLM 0x00   # MOBC
+.MOBC_RT.TG_GENERATE_RT_TLM 0x56   # EL
+.MOBC_RT.TG_GENERATE_RT_TLM 0x5a   # EH
+.MOBC_RT.TG_GENERATE_RT_TLM 0x46   # App Time
 .#
 .#
 .# =======================================
@@ -22,9 +22,9 @@
  # =======================================
 .MOBC_RT.BCT_CLEAR_BLOCK 77     # BCT 77 を使用
  wait_sec 1
- MOBC_BL.TG_GENERATE_MS_TLM 1 0xf0 # HK
+ MOBC_BL.TG_GENERATE_RT_TLM 1 0xf0 # HK
  wait_sec 1
- MOBC_BL.TG_GENERATE_MS_TLM 3 0x56 # EL
+ MOBC_BL.TG_GENERATE_RT_TLM 3 0x56 # EL
  wait_sec 1
  MOBC_BL.TLCD_DEPLOY_BLOCK 10 2 77
  wait_sec 1

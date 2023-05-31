@@ -106,15 +106,15 @@ def test_c2a_comm_tlm_buffer():
     # MOBC の tlm buffer が空なのでエラー
     assert "CNT" == wings.util.send_rt_cmd_and_confirm(
         ope,
-        mobc_c2a_enum.Cmd_CODE_TG_FORWARD_AS_MS_TLM,
+        mobc_c2a_enum.Cmd_CODE_TG_FORWARD_AS_RT_TLM,
         (TLM_APID_2ND_OBC, c2a_enum.Tlm_CODE_AOBC_AOBC),
         mobc_c2a_enum.Tlm_CODE_HK,
     )
-    send_2nd_obc_gsc_directly(c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, (c2a_enum.Tlm_CODE_AOBC_AOBC,))
+    send_2nd_obc_gsc_directly(c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, (c2a_enum.Tlm_CODE_AOBC_AOBC,))
     time.sleep(2)
     assert "SUC" == wings.util.send_rt_cmd_and_confirm(
         ope,
-        mobc_c2a_enum.Cmd_CODE_TG_FORWARD_AS_MS_TLM,
+        mobc_c2a_enum.Cmd_CODE_TG_FORWARD_AS_RT_TLM,
         (TLM_APID_2ND_OBC, c2a_enum.Tlm_CODE_AOBC_AOBC),
         mobc_c2a_enum.Tlm_CODE_HK,
     )
@@ -229,7 +229,7 @@ def ckeck_mobc_bct_ack(ti, exec_cmd, bct_id):
 
     g_mobc_gsc_cnt += 1
     tlm_MOBC = wings.util.generate_and_receive_tlm(
-        ope, mobc_c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, mobc_c2a_enum.Tlm_CODE_MOBC
+        ope, mobc_c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, mobc_c2a_enum.Tlm_CODE_MOBC
     )
     assert tlm_MOBC["MOBC.BCT_BLK_PTR"] == bct_id
     assert tlm_MOBC["MOBC.BCT_CMD_PTR"] == 1

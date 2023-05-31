@@ -21,7 +21,7 @@ CCP_CmdRet Cmd_TG_GENERATE_HP_TLM(const CommonCmdPacket* packet);
  * @brief MS テレメを生成
  * @note  Cmd_TG_GENERATE_TLM の Destination Flags が Realtime Telemetry のエイリアス
  */
-CCP_CmdRet Cmd_TG_GENERATE_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TG_GENERATE_RT_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief ST テレメを生成
@@ -45,7 +45,7 @@ CCP_CmdRet Cmd_TG_FORWARD_AS_HP_TLM(const CommonCmdPacket* packet);
  * @brief MS テレメとして 2nd OBC のテレメを転送
  * @note  Cmd_TG_FORWARD_TLM の Destination Flags が Realtime Telemetry のエイリアス
  */
-CCP_CmdRet Cmd_TG_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet);
+CCP_CmdRet Cmd_TG_FORWARD_AS_RT_TLM(const CommonCmdPacket* packet);
 
 /**
  * @brief ST テレメとして 2nd OBC のテレメを転送

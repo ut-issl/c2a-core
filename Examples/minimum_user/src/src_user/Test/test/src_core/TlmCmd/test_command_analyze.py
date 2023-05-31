@@ -29,7 +29,7 @@ TEST_CMD_ID = CA_MAX_CMDS - CA_TLM_PAGE_SIZE
 @pytest.mark.sils
 def test_command_analyze_set_page():
     tlm_CA = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_CA
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_CA
     )
     assert tlm_CA["CA.PAGE_NO"] == 0
 
@@ -37,7 +37,7 @@ def test_command_analyze_set_page():
         ope, c2a_enum.Cmd_CODE_CA_SET_PAGE_FOR_TLM, (1,), c2a_enum.Tlm_CODE_HK
     )
     tlm_CA = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_CA
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_CA
     )
     assert tlm_CA["CA.PAGE_NO"] == 1
 
@@ -55,7 +55,7 @@ def test_command_analyze_add_cmd():
 
     # これから上書きするので，NULL，つまり使われてないものでないとNG
     tlm_CA = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_CA
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_CA
     )
     assert tlm_CA["CA.CMD0.FUNC"] == "0x00000000"
 
@@ -68,7 +68,7 @@ def test_command_analyze_add_cmd():
     )
 
     tlm_CA = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_CA
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_CA
     )
     assert tlm_CA["CA.CMD0.FUNC"] == test_cmd_adr
     assert tlm_CA["CA.CMD0.PARAM0_SIZE"] == "1BYTE"
@@ -88,7 +88,7 @@ def test_command_analyze_add_cmd():
     )
 
     tlm_CA = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_CA
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_CA
     )
     assert tlm_CA["CA.CMD0.FUNC"] == test_cmd_adr
     assert tlm_CA["CA.CMD0.PARAM0_SIZE"] == "NONE"
@@ -119,7 +119,7 @@ def test_command_analyze_final_check():
         ope, c2a_enum.Cmd_CODE_CA_SET_PAGE_FOR_TLM, (0,), c2a_enum.Tlm_CODE_HK
     )
     tlm_CA = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_CA
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_CA
     )
     assert tlm_CA["CA.PAGE_NO"] == 0
 
