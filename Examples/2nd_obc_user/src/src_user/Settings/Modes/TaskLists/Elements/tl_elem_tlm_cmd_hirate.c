@@ -12,7 +12,7 @@ void BCL_load_tl_elem_tlm_cmd_hirate(void)
   BCL_tool_register_app    (0, AR_RTC_DISPATCHER);
   BCL_tool_register_app    (1, AR_TLC_DISPATCHER_BC);
   BCL_tool_register_app    (2, AR_TLC_DISPATCHER_TLM);
-  BCL_tool_register_app    (3, AR_DI_MOBC_MST_PH);
+  BCL_tool_register_app    (3, AR_DI_MOBC_RT_TLM_PH);
 #ifdef TLCD_ENABLE_MISSION_TL
   BCL_tool_register_app    (5, AR_TLC_DISPATCHER_MIS);
 #endif

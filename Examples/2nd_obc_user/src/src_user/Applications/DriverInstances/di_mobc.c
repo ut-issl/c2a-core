@@ -22,7 +22,7 @@ const MOBC_Driver* const mobc_driver = &mobc_driver_;
 static DS_StreamRecBuffer DI_MOBC_rx_buffer_;
 static uint8_t DI_MOBC_rx_buffer_allocation_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
 
-static const uint8_t DI_MOBC_kMsTlmPhMaxNumOfProc_ = 4;       //!< 一度に送出する最大テレメ数
+static const uint8_t DI_MOBC_kRtTlmPhMaxNumOfProc_ = 4;       //!< 一度に送出する最大テレメ数
 
 
 AppInfo DI_MOBC_update(void)
@@ -80,7 +80,7 @@ static void DI_MOBC_rt_tlm_packet_handler_(void)
                             //        一方でメモリ使用量は増える．
   mobc_driver_.info.c2a.send_tlm_err_code = DS_CMD_OK;
 
-  for (i = 0; i < DI_MOBC_kMsTlmPhMaxNumOfProc_; i++)
+  for (i = 0; i < DI_MOBC_kRtTlmPhMaxNumOfProc_; i++)
   {
     DS_CMD_ERR_CODE ret;
 
