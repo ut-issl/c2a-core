@@ -24,7 +24,7 @@ typedef struct
 } DI_GS_TlmPacketHandler;
 
 extern const GS_Driver* const gs_driver;
-extern const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler;
+extern const DI_GS_TlmPacketHandler* const DI_GS_rt_tlm_packet_handler;
 extern const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler;
 
 // 以下インスタンス化

@@ -12,8 +12,8 @@
 
 static void DI_MOBC_init_(void);
 static void DI_MOBC_update_(void);
-static void DI_MOBC_ms_tlm_packet_handler_init_(void);
-static void DI_MOBC_ms_tlm_packet_handler_(void);
+static void DI_MOBC_rt_tlm_packet_handler_init_(void);
+static void DI_MOBC_rt_tlm_packet_handler_(void);
 
 static MOBC_Driver mobc_driver_;
 const MOBC_Driver* const mobc_driver = &mobc_driver_;
@@ -60,19 +60,19 @@ static void DI_MOBC_update_(void)
 }
 
 
-AppInfo DI_MOBC_ms_tlm_packet_handler(void)
+AppInfo DI_MOBC_rt_tlm_packet_handler(void)
 {
-  return AI_create_app_info("MOBC_ms_tlm_ph",
-                            DI_MOBC_ms_tlm_packet_handler_init_,
-                            DI_MOBC_ms_tlm_packet_handler_);
+  return AI_create_app_info("MOBC_rt_tlm_ph",
+                            DI_MOBC_rt_tlm_packet_handler_init_,
+                            DI_MOBC_rt_tlm_packet_handler_);
 }
 
-static void DI_MOBC_ms_tlm_packet_handler_init_(void)
+static void DI_MOBC_rt_tlm_packet_handler_init_(void)
 {
   // なにもしない
 }
 
-static void DI_MOBC_ms_tlm_packet_handler_(void)
+static void DI_MOBC_rt_tlm_packet_handler_(void)
 {
   uint8_t i;
   CommonTlmPacket packet;   // FIXME: これは static にする？
@@ -87,21 +87,21 @@ static void DI_MOBC_ms_tlm_packet_handler_(void)
     // TODO: ここは一部 MW に入れるべきなのかなぁ．．．？
     //       最近 C2A の MW の扱いが難しい．いっそなくすか？
 
-    // TODO: PH_ms_tlm_list を DI から隠蔽する？それか何かしらの共用構造体でのインスタンスの一部にするか？
-    //       そうすると， ms_tlm の他の tlm ができたときに共通化が容易
+    // TODO: PH_rt_tlm_list を DI から隠蔽する？それか何かしらの共用構造体でのインスタンスの一部にするか？
+    //       そうすると， rt_tlm の他の tlm ができたときに共通化が容易
 
-    if (PL_is_empty(&PH_ms_tlm_list))
+    if (PL_is_empty(&PH_rt_tlm_list))
     {
       // キューが空なら終了
       return;
     }
 
     // 送信するパケットを取得
-    packet = *(const CommonTlmPacket*)PL_get_head(&PH_ms_tlm_list)->packet;
+    packet = *(const CommonTlmPacket*)PL_get_head(&PH_rt_tlm_list)->packet;
 
     // 送信したパケットを消去
     // 以後エラーが出ても，そのパケットは再送しないので，取り出したここで消してしまう．
-    PL_drop_executed(&PH_ms_tlm_list);
+    PL_drop_executed(&PH_rt_tlm_list);
 
     // FIXME: 現状，WINGS の問題から DUMP TLMは考えない．
     //        APID_AOBC_TLM 以外を弾いている．

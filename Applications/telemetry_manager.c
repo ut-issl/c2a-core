@@ -144,7 +144,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
  * @param[in]   tlm_id:       TLM_CODE
  * @return TLM_MGR_ERR_CODE
  */
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_rt_tlm_(CommonCmdPacket* packet,
                                                          cycle_t ti,
                                                          TLM_CODE tlm_id);
 
@@ -169,7 +169,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_st_tlm_(CommonCmdPacket* packet
  * @param[in]   tlm_id:       TLM_CODE
  * @return TLM_MGR_ERR_CODE
  */
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_rt_tlm_(CommonCmdPacket* packet,
                                                            cycle_t ti,
                                                            APID apid,
                                                            TLM_CODE tlm_id);
@@ -544,11 +544,11 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
   switch (cmd_type)
   {
   case TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM:
-    return TLM_MGR_form_tg_generate_ms_tlm_(packet, ti, tlm_id);
+    return TLM_MGR_form_tg_generate_rt_tlm_(packet, ti, tlm_id);
   case TLM_MGR_CMD_TYPE_TG_GENERATE_ST_TLM:
     return TLM_MGR_form_tg_generate_st_tlm_(packet, ti, tlm_id, dr_partition);
   case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM:
-    return TLM_MGR_form_tg_forward_as_ms_tlm_(packet, ti, apid, tlm_id);
+    return TLM_MGR_form_tg_forward_as_rt_tlm_(packet, ti, apid, tlm_id);
   case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_ST_TLM:
     return TLM_MGR_form_tg_forward_as_st_tlm_(packet, ti, apid, tlm_id, dr_partition);
   case TLM_MGR_CMD_TYPE_DR_REPLAY_TLM:
@@ -560,7 +560,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
 }
 
 
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_rt_tlm_(CommonCmdPacket* packet,
                                                          cycle_t ti,
                                                          TLM_CODE tlm_id)
 {
@@ -600,7 +600,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_st_tlm_(CommonCmdPacket* packet
 }
 
 
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_rt_tlm_(CommonCmdPacket* packet,
                                                            cycle_t ti,
                                                            APID apid,
                                                            TLM_CODE tlm_id)

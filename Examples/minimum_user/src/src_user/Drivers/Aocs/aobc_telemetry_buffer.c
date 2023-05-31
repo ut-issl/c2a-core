@@ -178,8 +178,8 @@ static DS_ERR_CODE AOBC_analyze_tlm_aobc_aobc_(const CommonTlmPacket* packet, AO
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.bct_cmd_ptr), &(f[240]), 1);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.bct_regd_time), &(f[241]), 4);
   ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.bct_regd_id), &(f[245]), 2);
-  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.ms_tlm_counter), &(f[247]), 4);
-  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.ms_tlm_queued), &(f[251]), 1);
+  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.rt_tlm_counter), &(f[247]), 4);
+  ENDIAN_memcpy(&(aobc_driver->tlm_data.aobc_aobc.rt_tlm_queued), &(f[251]), 1);
   // TODO: ビットフィールドをつかっている系は，様々なパターンがあり得るので，今後，バグが出ないか注視する
 
   // ワーニング回避

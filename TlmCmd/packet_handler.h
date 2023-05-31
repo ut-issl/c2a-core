@@ -59,7 +59,7 @@ extern PacketList PH_gs_cmd_list;
 extern PacketList PH_rt_cmd_list;
 extern PacketList PH_tl_cmd_list[TLCD_ID_MAX];
 // extern PacketList PH_hp_tlm_list;    // 現在は RT_TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
-extern PacketList PH_ms_tlm_list;
+extern PacketList PH_rt_tlm_list;
 #ifdef DR_ENABLE
 extern PacketList PH_st_tlm_list;
 extern PacketList PH_rp_tlm_list;

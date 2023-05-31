@@ -24,6 +24,6 @@ AppInfo DI_MOBC_update(void);
  * @return AppInfo
  * @note   ひとまずテレメは MST のみ実装する
  */
-AppInfo DI_MOBC_ms_tlm_packet_handler(void);
+AppInfo DI_MOBC_rt_tlm_packet_handler(void);
 
 #endif

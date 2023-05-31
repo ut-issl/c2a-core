@@ -28,8 +28,8 @@ static void DI_GS_set_t2m_flush_interval_(cycle_t flush_interval, DI_GS_TlmPacke
 static GS_Driver gs_driver_;
 const GS_Driver* const gs_driver = &gs_driver_;
 
-static DI_GS_TlmPacketHandler DI_GS_ms_tlm_packet_handler_;
-const DI_GS_TlmPacketHandler* const DI_GS_ms_tlm_packet_handler = &DI_GS_ms_tlm_packet_handler_;
+static DI_GS_TlmPacketHandler DI_GS_rt_tlm_packet_handler_;
+const DI_GS_TlmPacketHandler* const DI_GS_rt_tlm_packet_handler = &DI_GS_rt_tlm_packet_handler_;
 static DI_GS_TlmPacketHandler DI_GS_rp_tlm_packet_handler_;
 const DI_GS_TlmPacketHandler* const DI_GS_rp_tlm_packet_handler = &DI_GS_rp_tlm_packet_handler_;
 
@@ -108,7 +108,7 @@ static void DI_GS_cmd_packet_handler_(void)
 
 static void DI_GS_mst_packet_handler_init_(void)
 {
-  T2M_initialize(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu);
+  T2M_initialize(&DI_GS_rt_tlm_packet_handler_.tc_packet_to_m_pdu);
 }
 
 static void DI_GS_mst_packet_handler_(void)
@@ -118,23 +118,23 @@ static void DI_GS_mst_packet_handler_(void)
   // 本当なら max(今の FIFO の空き, 残り時間で実行可能な数) とかしたい
   for (i = 0; i < CCSDS_FIFO_SIZE; ++i)
   {
-    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_ms_tlm_packet_handler_.tc_packet_to_m_pdu,
-                                 &PH_ms_tlm_list,
-                                 &DI_GS_ms_tlm_packet_handler_.vcdu.m_pdu);
+    T2M_ACK ack = T2M_form_m_pdu(&DI_GS_rt_tlm_packet_handler_.tc_packet_to_m_pdu,
+                                 &PH_rt_tlm_list,
+                                 &DI_GS_rt_tlm_packet_handler_.vcdu.m_pdu);
     if (ack != T2M_SUCCESS) return;
 
     // Realtime VCDU カウンタの設定
-    VCDU_setup_realtime_vcdu_hdr(&DI_GS_ms_tlm_packet_handler_.vcdu, DI_GS_ms_tlm_packet_handler_.vcdu_counter);
-    DI_GS_ms_tlm_packet_handler_.vcdu_counter = VCDU_calc_next_counter(DI_GS_ms_tlm_packet_handler_.vcdu_counter);
+    VCDU_setup_realtime_vcdu_hdr(&DI_GS_rt_tlm_packet_handler_.vcdu, DI_GS_rt_tlm_packet_handler_.vcdu_counter);
+    DI_GS_rt_tlm_packet_handler_.vcdu_counter = VCDU_calc_next_counter(DI_GS_rt_tlm_packet_handler_.vcdu_counter);
 
     // CLCW の設定
     // CMD の VCID と TLM の VCID は独立で関係がない
     // TLM の VCID 種別（Realtime, Replay)によらず CLCW を設定して良い
     // CLCW が対応する CMD の VCID は CLCW の内部で指定される
-    VCDU_set_clcw(&DI_GS_ms_tlm_packet_handler_.vcdu, GS_form_clcw());
+    VCDU_set_clcw(&DI_GS_rt_tlm_packet_handler_.vcdu, GS_form_clcw());
 
     // 完成した VCDU を MS VCDU として送出
-    GS_send_vcdu(&gs_driver_, &DI_GS_ms_tlm_packet_handler_.vcdu);
+    GS_send_vcdu(&gs_driver_, &DI_GS_rt_tlm_packet_handler_.vcdu);
   }
 }
 
@@ -188,7 +188,7 @@ CCP_CmdRet Cmd_DI_GS_SET_MS_FLUSH_INTERVAL(const CommonCmdPacket* packet)
   cycle_t flush_interval;
   ENDIAN_memcpy(&flush_interval, CCP_get_param_head(packet), sizeof(cycle_t));
 
-  DI_GS_set_t2m_flush_interval_(flush_interval, &DI_GS_ms_tlm_packet_handler_);
+  DI_GS_set_t2m_flush_interval_(flush_interval, &DI_GS_rt_tlm_packet_handler_);
 
   return CCP_make_cmd_ret_without_err_code(CCP_EXEC_SUCCESS);
 }
