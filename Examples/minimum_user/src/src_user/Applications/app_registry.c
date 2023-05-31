@@ -11,9 +11,9 @@ static AM_ACK add_application_(size_t id,
 void AR_load_initial_settings(void)
 {
   add_application_(AR_NOP, NOP_create_app);
-  add_application_(AR_DI_GS_CMD_PH, DI_GS_cmd_packet_handler);
-  add_application_(AR_DI_GS_RT_TLM_PH, DI_GS_rt_tlm_packet_handler);
-  add_application_(AR_DI_GS_RP_TLM_PH, DI_GS_rp_tlm_packet_handler);
+  add_application_(AR_DI_GS_CMD_PH, DI_GS_cmd_packet_handler_app);
+  add_application_(AR_DI_GS_RT_TLM_PH, DI_GS_rt_tlm_packet_handler_app);
+  add_application_(AR_DI_GS_RP_TLM_PH, DI_GS_rp_tlm_packet_handler_app);
   add_application_(AR_DI_UART_TEST, UART_TEST_update);
   add_application_(AR_GSC_DISPATCHER, GSCD_create_app);
   add_application_(AR_RTC_DISPATCHER, RTCD_create_app);

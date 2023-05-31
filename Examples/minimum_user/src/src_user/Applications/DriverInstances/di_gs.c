@@ -80,17 +80,17 @@ static RESULT DI_GS_init_(void)
   return RESULT_OK;
 }
 
-AppInfo DI_GS_cmd_packet_handler(void)
+AppInfo DI_GS_cmd_packet_handler_app(void)
 {
   return AI_create_app_info("GS_CMD", DI_GS_cmd_packet_handler_init_, DI_GS_cmd_packet_handler_);
 }
 
-AppInfo DI_GS_rt_tlm_packet_handler(void)
+AppInfo DI_GS_rt_tlm_packet_handler_app(void)
 {
   return AI_create_app_info("GS_MST", DI_GS_rt_tlm_packet_handler_init_, DI_GS_rt_tlm_packet_handler_);
 }
 
-AppInfo DI_GS_rp_tlm_packet_handler(void)
+AppInfo DI_GS_rp_tlm_packet_handler_app(void)
 {
   return AI_create_app_info("GS_RPT", DI_GS_rp_tlm_packet_handler_init_, DI_GS_rp_tlm_packet_handler_);
 }
