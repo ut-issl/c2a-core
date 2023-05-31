@@ -210,17 +210,17 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
   // FIXME: flag の match は関数化したい
 
   // Housekeeping Telemetry
-  if (flags & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
+  if (flags & CTP_DEST_FLAG_HK_TLM) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
 
   // Mission Telemetry
-  if (flags & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_MS_TLM) PH_add_ms_tlm_(packet);
 
 #ifdef DR_ENABLE
   // Stored Telemetry
-  if (flags & CTP_DEST_FLAG_ST) PH_add_st_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_ST_TLM) PH_add_st_tlm_(packet);
 
   // Replay Telemetry
-  if (flags & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_RP_TLM) PH_add_rp_tlm_(packet);
 #endif
 
   // [TODO] 要検討:各Queue毎の登録エラー判定は未実装
@@ -333,14 +333,14 @@ static PH_ACK PH_add_tlm_to_pl(const CommonTlmPacket* packet, PacketList* pl, CT
 
 static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
 {
-  return PH_add_tlm_to_pl(packet, &PH_ms_tlm_list, CTP_DEST_FLAG_MS);
+  return PH_add_tlm_to_pl(packet, &PH_ms_tlm_list, CTP_DEST_FLAG_MS_TLM);
 }
 
 
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
-  return PH_add_tlm_to_pl(packet, &PH_st_tlm_list, CTP_DEST_FLAG_ST);
+  return PH_add_tlm_to_pl(packet, &PH_st_tlm_list, CTP_DEST_FLAG_ST_TLM);
 }
 #endif
 
@@ -348,7 +348,7 @@ static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 #ifdef DR_ENABLE
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
-  return PH_add_tlm_to_pl(packet, &PH_rp_tlm_list, CTP_DEST_FLAG_RP);
+  return PH_add_tlm_to_pl(packet, &PH_rp_tlm_list, CTP_DEST_FLAG_RP_TLM);
 }
 #endif
 
