@@ -210,7 +210,7 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
   // FIXME: flag の match は関数化したい
 
   // High Priority Realtime Telemetry
-  if (flags & CTP_DEST_FLAG_HK_TLM) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
+  if (flags & CTP_DEST_FLAG_HP_TLM) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
 
   // Realtime Telemetry
   if (flags & CTP_DEST_FLAG_MS_TLM) PH_add_ms_tlm_(packet);

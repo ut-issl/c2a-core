@@ -147,11 +147,11 @@ CCP_CmdRet Cmd_TG_GENERATE_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_GENERATE_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_GENERATE_HP_TLM(const CommonCmdPacket* packet)
 {
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HK_TLM, 0, 1);
+  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HP_TLM, 0, 1);
 }
 
 
@@ -184,12 +184,12 @@ CCP_CmdRet Cmd_TG_FORWARD_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_FORWARD_AS_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_FORWARD_AS_HP_TLM(const CommonCmdPacket* packet)
 {
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
 
-  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HK_TLM, 0, 1);
+  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HP_TLM, 0, 1);
 }
 
 
