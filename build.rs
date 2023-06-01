@@ -47,7 +47,7 @@ fn get_core_version_from_header() -> Version {
         .expect("failed to get pre ver")
         .as_ref()
         .unwrap();
-    let pre = semver::Prerelease::new(&pre).expect("failed to parse as pre release");
+    let pre = semver::Prerelease::new(pre).expect("failed to parse as pre release");
 
     Version {
         major,
@@ -94,19 +94,17 @@ fn get_definitions(src_file: &str) -> HashMap<String, Option<String>> {
 
                 let first = token.first().unwrap();
                 let last = token.last().unwrap();
-                if first.get_kind() == Punctuation && last.get_kind() == Punctuation {
-                    if first.get_spelling() == "(" && last.get_spelling() == ")" {
-                        token.remove(0);
-                        token.remove(token.len() - 1);
-                    }
+                if first.get_kind() == Punctuation && last.get_kind() == Punctuation && first.get_spelling() == "(" && last.get_spelling() == ")" {
+                    token.remove(0);
+                    token.remove(token.len() - 1);
                 }
 
                 if token.len() == 1 {
                     let value = token[0].get_spelling();
 
-                    let value = if value.starts_with("\"") && value.ends_with("\"") {
-                        let value = value.strip_prefix("\"").unwrap();
-                        value.strip_suffix("\"").unwrap().to_string()
+                    let value = if value.starts_with('\"') && value.ends_with('\"') {
+                        let value = value.strip_prefix('\"').unwrap();
+                        value.strip_suffix('\"').unwrap().to_string()
                     } else {
                         value
                     };
