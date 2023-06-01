@@ -360,12 +360,10 @@ static void TLM_MGR_init_by_am_(void)
 }
 
 
-// FIXME: 実行時間やばい． Cmd_TLM_MGR_INIT を直す時に直す
 // BCT の初期化より前なので，AppInit にできない．
 static RESULT TLM_MGR_init_1_(void)
 {
-  TLM_MGR_clear_info_();
-  return RESULT_OK;
+  return TLM_MGR_clear_info_();
 }
 
 
