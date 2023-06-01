@@ -421,13 +421,13 @@ static RESULT TLM_MGR_regigster_bc_settings(uint8_t cmd_table_idx,
                                             bct_id_t bc_id,
                                             TLM_MGR_BC_ROLE bc_role)
 {
-  TLM_MGR_CmdTableInBlock* cmds_in_block;
+  TLM_MGR_CmdBlock* cmd_block;
   TLM_MGR_RegisterInfo* register_info;
   if (cmd_table_idx >= TLM_MGR_USE_BC_NUM) return RESULT_ERR;
 
-  cmds_in_block = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx];
-  cmds_in_block->bc_role = bc_role;
-  cmds_in_block->bc_id = bc_id;
+  cmd_block = &telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx];
+  cmd_block->bc_role = bc_role;
+  cmd_block->bc_id = bc_id;
 
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(bc_role);
   if (register_info == NULL) return RESULT_ERR;
@@ -476,8 +476,8 @@ static CCP_CmdRet TLM_MGR_clear_cmds_based_on_role_(CMD_CODE cmd_code,
   }
 
   cmd_table_idx = register_info->cmd_table_idxes[exec_counter];
-  TLM_MGR_clear_bc_to_nop_(telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id);
-  memset(telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds,
+  TLM_MGR_clear_bc_to_nop_(telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].bc_id);
+  memset(telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].cmds,
          0x00,
          sizeof(TLM_MGR_CmdTableCmdElem) * TLM_MGR_MAX_CMD_NUM_PER_BC);
 
@@ -807,9 +807,9 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos
 
   cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
 
-  *next_cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
+  *next_cmd_elem = &telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].cmds[cmd_pos];
 
-  block = telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id;
+  block = telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].bc_id;
   if (BCT_make_pos(next_cmd_pos, block, cmd_pos) != BCT_SUCCESS)
   {
     return TLM_MGR_ERR_CODE_BCT_ERR;
@@ -837,9 +837,9 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_p
 
   cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
 
-  *last_cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
+  *last_cmd_elem = &telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].cmds[cmd_pos];
 
-  block = telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id;
+  block = telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].bc_id;
   if (BCT_make_pos(last_cmd_pos, block, cmd_pos) != BCT_SUCCESS)
   {
     return TLM_MGR_ERR_CODE_BCT_ERR;
@@ -874,7 +874,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
     for (idx_of_cmd_table_idxes = 0; idx_of_cmd_table_idxes < register_info->cmd_table_idxes_size; ++idx_of_cmd_table_idxes)
     {
       cmd_table_idx = register_info->cmd_table_idxes[idx_of_cmd_table_idxes];
-      cmd_elem = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].cmds[cmd_pos];
+      cmd_elem = &telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].cmds[cmd_pos];
 
       ret = TLM_MGR_check_same_cmd_(cmd_elem, cmd_type, apid, tlm_id, dr_partition);
       // 見つかった！
@@ -888,7 +888,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
 
   *found_cmd_elem = cmd_elem;
 
-  block = telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx].bc_id;
+  block = telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].bc_id;
   if (BCT_make_pos(found_cmd_pos, block, cmd_pos) != BCT_SUCCESS)
   {
     return TLM_MGR_ERR_CODE_BCT_ERR;
@@ -953,7 +953,7 @@ static void TLM_MGR_load_deploy_bc_(void)
 {
   BCL_tool_register_deploy(0, telemetry_manager_.master_bc_id, TLCD_ID_DEPLOY_TLM);
   // BC#9 は TLM_MGR_BC_ROLE_LOW_FREQ_TLM なはず
-  BCL_tool_register_rotate(1, telemetry_manager_.cmd_table.cmds_in_block[TLM_MGR_USE_BC_NUM - 1].bc_id);
+  BCL_tool_register_rotate(1, telemetry_manager_.cmd_table.cmd_blocks[TLM_MGR_USE_BC_NUM - 1].bc_id);
 }
 
 
@@ -964,15 +964,15 @@ static void TLM_MGR_load_master_bc_(void)
 
   for (cmd_table_idx = 0; cmd_table_idx < (TLM_MGR_USE_BC_NUM - 1); ++cmd_table_idx)
   {
-    TLM_MGR_CmdTableInBlock* cmds_in_block = &telemetry_manager_.cmd_table.cmds_in_block[cmd_table_idx];
-    switch (cmds_in_block->bc_role)
+    TLM_MGR_CmdBlock* cmd_block = &telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx];
+    switch (cmd_block->bc_role)
     {
     case TLM_MGR_BC_ROLE_HK_TLM:        // FALLTHROUGH
     case TLM_MGR_BC_ROLE_HIGH_FREQ_TLM:
-      BCL_tool_register_combine(cmd_table_idx + 1, cmds_in_block->bc_id);
+      BCL_tool_register_combine(cmd_table_idx + 1, cmd_block->bc_id);
       break;
     case TLM_MGR_BC_ROLE_LOW_FREQ_TLM:
-      BCL_tool_register_rotate(cmd_table_idx + 1, cmds_in_block->bc_id);
+      BCL_tool_register_rotate(cmd_table_idx + 1, cmd_block->bc_id);
       break;
     default:
       break;
@@ -1053,7 +1053,7 @@ CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
   }
   else
   {
-    TLM_MGR_clear_bc_to_nop_(telemetry_manager_.cmd_table.cmds_in_block[exec_counter - exec_counter_offset].bc_id);
+    TLM_MGR_clear_bc_to_nop_(telemetry_manager_.cmd_table.cmd_blocks[exec_counter - exec_counter_offset].bc_id);
     ret = RESULT_OK;
   }
 

@@ -75,7 +75,7 @@ typedef enum
  */
 typedef struct
 {
-  uint8_t cmd_table_idxes[TLM_MGR_USE_BC_NUM];  //!< TLM_MGR_CmdTable.cmds_in_block のどの idx を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
+  uint8_t cmd_table_idxes[TLM_MGR_USE_BC_NUM];  //!< TLM_MGR_CmdTable.cmd_blocks のどの idx を使うか．static 確保のため，最大数 TLM_MGR_USE_BC_NUM の配列を確保
   uint8_t cmd_table_idxes_size;                 //!< cmd_table_idxes の配列数
   uint8_t registered_cmd_num;                   /*!< すでに登録されているテレメ数．この値から一意に次にコマンドを登録する BCT_Pos.cmd が決まる
                                                      コマンドは隙間なく前から詰め込まれている，という想定 */
@@ -84,7 +84,7 @@ typedef struct
 
 /**
  * @struct TLM_MGR_CmdTableCmdElem
- * @brief  TLM_MGR_CmdTableInBlock の 1 cmd の情報
+ * @brief  TLM_MGR_CmdBlock の 1 cmd の情報
  */
 typedef struct
 {
@@ -96,7 +96,7 @@ typedef struct
 
 
 /**
- * @struct TLM_MGR_CmdTableInBlock
+ * @struct TLM_MGR_CmdBlock
  * @brief  BC に登録された（テレメ生成などの）コマンドの情報（BC の block ごと）
  * @note   コマンドは隙間なく前から詰め込まれている，という想定
  */
@@ -105,7 +105,7 @@ typedef struct
   TLM_MGR_CmdTableCmdElem cmds[TLM_MGR_MAX_CMD_NUM_PER_BC];
   bct_id_t        bc_id;            //!< 使う BC ID
   TLM_MGR_BC_ROLE bc_role;          //!< その BC の役割
-} TLM_MGR_CmdTableInBlock;
+} TLM_MGR_CmdBlock;
 
 
 /**
@@ -114,7 +114,7 @@ typedef struct
  */
 typedef struct
 {
-  TLM_MGR_CmdTableInBlock cmds_in_block[TLM_MGR_USE_BC_NUM];      //!< BC の各 Block ごとの情報
+  TLM_MGR_CmdBlock cmd_blocks[TLM_MGR_USE_BC_NUM];      //!< BC の各 Block ごとの情報
 } TLM_MGR_CmdTable;
 
 
