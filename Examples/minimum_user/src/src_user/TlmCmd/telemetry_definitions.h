@@ -10,7 +10,8 @@ typedef enum
 {
   Tlm_CODE_MOBC = 0x00,
   Tlm_CODE_MEM = 0x10,
-  Tlm_CODE_TLM_MGR = 0x19,
+  Tlm_CODE_TLM_MGR1 = 0x18,
+  Tlm_CODE_TLM_MGR2 = 0x19,
   Tlm_CODE_TL = 0x20,
   Tlm_CODE_BL = 0x21,
   Tlm_CODE_CA = 0x25,

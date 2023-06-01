@@ -43,16 +43,18 @@ typedef enum
   // ==== 追加領域 ====
 
   // Telemetry Manager
-  BC_TLM_MGR0 = 350,
-  BC_TLM_MGR1 = 351,
-  BC_TLM_MGR2 = 352,
-  BC_TLM_MGR3 = 353,
-  BC_TLM_MGR4 = 354,
-  BC_TLM_MGR5 = 355,
-  BC_TLM_MGR6 = 356,
-  BC_TLM_MGR7 = 357,
-  BC_TLM_MGR8 = 358,
-  BC_TLM_MGR9 = 359,
+  BC_TLM_MGR_MASTER = 348,
+  BC_TLM_MGR_DEPLOY = 349,
+  BC_TLM_MGR_0 = 350,
+  BC_TLM_MGR_1 = 351,
+  BC_TLM_MGR_2 = 352,
+  BC_TLM_MGR_3 = 353,
+  BC_TLM_MGR_4 = 354,
+  BC_TLM_MGR_5 = 355,
+  BC_TLM_MGR_6 = 356,
+  BC_TLM_MGR_7 = 357,
+  BC_TLM_MGR_8 = 358,
+  BC_TLM_MGR_9 = 359,
 
   // Test
   BC_TEST_EH_RESPOND = 360,
