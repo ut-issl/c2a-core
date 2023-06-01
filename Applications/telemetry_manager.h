@@ -83,7 +83,7 @@ typedef struct
 
 
 /**
- * @struct TLM_MGR_CmdTableCmdElem
+ * @struct TLM_MGR_CmdElem
  * @brief  TLM_MGR_CmdBlock の 1 cmd の情報
  */
 typedef struct
@@ -92,7 +92,7 @@ typedef struct
   APID             apid;          //!< 登録された tlm 生成コマンドの APID （未登録は 0）
   TLM_CODE         tlm_id;        //!< 登録された tlm 生成コマンドの生成 tlm id （未登録は 0）
   uint8_t          dr_partition;  //!< 登録された tlm 生成コマンドの dr_partition （未登録は 0）
-} TLM_MGR_CmdTableCmdElem;
+} TLM_MGR_CmdElem;
 
 
 /**
@@ -102,7 +102,7 @@ typedef struct
  */
 typedef struct
 {
-  TLM_MGR_CmdTableCmdElem cmds[TLM_MGR_MAX_CMD_NUM_PER_BC];
+  TLM_MGR_CmdElem cmds[TLM_MGR_MAX_CMD_NUM_PER_BC];
   bct_id_t        bc_id;            //!< 使う BC ID
   TLM_MGR_BC_ROLE bc_role;          //!< その BC の役割
 } TLM_MGR_CmdBlock;

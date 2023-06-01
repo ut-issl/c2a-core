@@ -229,54 +229,54 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_nop_tlc_(CommonCmdPacket* packet, cycle_t t
 static TLM_MGR_RegisterInfo* TLM_MGR_get_regitster_info_from_bc_role_(TLM_MGR_BC_ROLE bc_role);
 
 /**
- * @brief  TLM_MGR_CmdTableCmdElem を更新する
- * @param[in,out]  cmd_elem:     更新する TLM_MGR_CmdTableCmdElem
+ * @brief  TLM_MGR_CmdElem を更新する
+ * @param[in,out]  cmd_elem:     更新する TLM_MGR_CmdElem
  * @param[in]      cmd_type:     TLM_MGR_CMD_TYPE
  * @param[in]      apid:         APID
  * @param[in]      tlm_id:       TLM_CODE
  * @param[in]      dr_partition: dr partition
  * @return void
  */
-static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem,
+static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdElem* cmd_elem,
                                                   TLM_MGR_CMD_TYPE cmd_type,
                                                   APID apid,
                                                   TLM_CODE tlm_id,
                                                   uint8_t dr_partition);
 
 /**
- * @brief  TLM_MGR_CmdTableCmdElem をクリアする
+ * @brief  TLM_MGR_CmdElem をクリアする
  * @note   0x00 埋めでクリアする
- * @param[in,out]  cmd_elem: クリアする TLM_MGR_CmdTableCmdElem
+ * @param[in,out]  cmd_elem: クリアする TLM_MGR_CmdElem
  * @return void
  */
-static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem);
+static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdElem* cmd_elem);
 
 /**
- * @brief  次に TLM MGR に登録するコマンドの BCT_Pos と TLM_MGR_CmdTableCmdElem を取得する
+ * @brief  次に TLM MGR に登録するコマンドの BCT_Pos と TLM_MGR_CmdElem を取得する
  * @param[out]  next_cmd_pos:  BCT_Pos
- * @param[out]  next_cmd_elem: TLM_MGR_CmdTableCmdElem
+ * @param[out]  next_cmd_elem: TLM_MGR_CmdElem
  * @param[in]   register_info: 登録しようとしている TLM_MGR_RegisterInfo
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos,
-                                                           TLM_MGR_CmdTableCmdElem** next_cmd_elem,
+                                                           TLM_MGR_CmdElem** next_cmd_elem,
                                                            const TLM_MGR_RegisterInfo* register_info);
 
 /**
- * @brief  すでに登録されているコマンドのうち，末尾にあるコマンドの BCT_Pos と TLM_MGR_CmdTableCmdElem を取得する
+ * @brief  すでに登録されているコマンドのうち，末尾にあるコマンドの BCT_Pos と TLM_MGR_CmdElem を取得する
  * @param[out]  next_cmd_pos:  BCT_Pos
- * @param[out]  next_cmd_elem: TLM_MGR_CmdTableCmdElem
+ * @param[out]  next_cmd_elem: TLM_MGR_CmdElem
  * @param[in]   register_info: 登録しようとしている TLM_MGR_RegisterInfo
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_pos,
-                                                             TLM_MGR_CmdTableCmdElem** last_cmd_elem,
+                                                             TLM_MGR_CmdElem** last_cmd_elem,
                                                              const TLM_MGR_RegisterInfo* register_info);
 
 /**
- * @brief  すでに登録されているコマンドのから，指定したコマンドを検索し，その BCT_Pos と TLM_MGR_CmdTableCmdElem を取得する
+ * @brief  すでに登録されているコマンドのから，指定したコマンドを検索し，その BCT_Pos と TLM_MGR_CmdElem を取得する
  * @param[out]  next_cmd_pos:  BCT_Pos
- * @param[out]  next_cmd_elem: TLM_MGR_CmdTableCmdElem
+ * @param[out]  next_cmd_elem: TLM_MGR_CmdElem
  * @param[in]   register_info: 検索対象の TLM_MGR_RegisterInfo
  * @param[in]   cmd_type:      検索対象の TLM_MGR_CMD_TYPE
  * @param[in]   apid:          検索対象の APID
@@ -285,7 +285,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_p
  * @return TLM_MGR_ERR_CODE
  */
 static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
-                                                         TLM_MGR_CmdTableCmdElem** found_cmd_elem,
+                                                         TLM_MGR_CmdElem** found_cmd_elem,
                                                          const TLM_MGR_RegisterInfo* register_info,
                                                          TLM_MGR_CMD_TYPE cmd_type,
                                                          APID apid,
@@ -293,15 +293,15 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
                                                          uint8_t dr_partition);
 
 /**
- * @brief  TLM_MGR_CmdTableCmdElem が指定したものと等しいかチェックする
- * @param  cmd_elem:     等しいかチェックされる TLM_MGR_CmdTableCmdElem
+ * @brief  TLM_MGR_CmdElem が指定したものと等しいかチェックする
+ * @param  cmd_elem:     等しいかチェックされる TLM_MGR_CmdElem
  * @param  cmd_type:     等しいかチェックする TLM_MGR_CMD_TYPE
  * @param  apid:         等しいかチェックする APID
  * @param  tlm_id:       等しいかチェックする TLM_CODE
  * @param  dr_partition: 等しいかチェックする dr partition
  * @return RESULT
  */
-static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdTableCmdElem* cmd_elem,
+static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdElem* cmd_elem,
                                       TLM_MGR_CMD_TYPE cmd_type,
                                       APID apid,
                                       TLM_CODE tlm_id,
@@ -479,7 +479,7 @@ static CCP_CmdRet TLM_MGR_clear_cmds_based_on_role_(CMD_CODE cmd_code,
   TLM_MGR_clear_bc_to_nop_(telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].bc_id);
   memset(telemetry_manager_.cmd_table.cmd_blocks[cmd_table_idx].cmds,
          0x00,
-         sizeof(TLM_MGR_CmdTableCmdElem) * TLM_MGR_MAX_CMD_NUM_PER_BC);
+         sizeof(TLM_MGR_CmdElem) * TLM_MGR_MAX_CMD_NUM_PER_BC);
 
   // 再帰実行
   if (DCU_register_next(cmd_code, NULL, 0) != DCU_ACK_OK)
@@ -501,7 +501,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_register_(TLM_MGR_BC_ROLE role,
   TLM_MGR_ERR_CODE ret;
   TLM_MGR_RegisterInfo* register_info = NULL;
   BCT_Pos register_pos;
-  TLM_MGR_CmdTableCmdElem* register_cmd_elem = NULL;
+  TLM_MGR_CmdElem* register_cmd_elem = NULL;
   BCT_ACK bct_ack;
 
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(role);
@@ -683,8 +683,8 @@ static TLM_MGR_ERR_CODE TLM_MGR_delete_(TLM_MGR_BC_ROLE role,
   TLM_MGR_RegisterInfo* register_info = NULL;
   BCT_Pos delete_pos;
   BCT_Pos last_pos;
-  TLM_MGR_CmdTableCmdElem* delete_cmd_elem = NULL;
-  TLM_MGR_CmdTableCmdElem* last_cmd_elem = NULL;
+  TLM_MGR_CmdElem* delete_cmd_elem = NULL;
+  TLM_MGR_CmdElem* last_cmd_elem = NULL;
   BCT_ACK bct_ack;
 
   register_info = TLM_MGR_get_regitster_info_from_bc_role_(role);
@@ -765,7 +765,7 @@ static TLM_MGR_RegisterInfo* TLM_MGR_get_regitster_info_from_bc_role_(TLM_MGR_BC
 }
 
 
-static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem,
+static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdElem* cmd_elem,
                                                   TLM_MGR_CMD_TYPE cmd_type,
                                                   APID apid,
                                                   TLM_CODE tlm_id,
@@ -779,7 +779,7 @@ static void TLM_MGR_update_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_e
 }
 
 
-static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_elem)
+static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdElem* cmd_elem)
 {
   if (cmd_elem == NULL) return;
   // クリアは 0 埋めでよい
@@ -788,7 +788,7 @@ static void TLM_MGR_clear_cmd_elem_of_cmd_table_(TLM_MGR_CmdTableCmdElem* cmd_el
 
 
 static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos,
-                                                           TLM_MGR_CmdTableCmdElem** next_cmd_elem,
+                                                           TLM_MGR_CmdElem** next_cmd_elem,
                                                            const TLM_MGR_RegisterInfo* register_info)
 {
   uint8_t idx_of_cmd_table_idxes;
@@ -819,7 +819,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_next_register_cmd_pos_(BCT_Pos* next_cmd_pos
 
 
 static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_pos,
-                                                             TLM_MGR_CmdTableCmdElem** last_cmd_elem,
+                                                             TLM_MGR_CmdElem** last_cmd_elem,
                                                              const TLM_MGR_RegisterInfo* register_info)
 {
   uint8_t idx_of_cmd_table_idxes;
@@ -849,7 +849,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_get_last_registered_cmd_pos_(BCT_Pos* last_cmd_p
 
 
 static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
-                                                         TLM_MGR_CmdTableCmdElem** found_cmd_elem,
+                                                         TLM_MGR_CmdElem** found_cmd_elem,
                                                          const TLM_MGR_RegisterInfo* register_info,
                                                          TLM_MGR_CMD_TYPE cmd_type,
                                                          APID apid,
@@ -860,7 +860,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
   bct_id_t block;
   uint8_t cmd_pos;
   uint8_t cmd_table_idx;
-  TLM_MGR_CmdTableCmdElem* cmd_elem;
+  TLM_MGR_CmdElem* cmd_elem;
   uint8_t count = 0;
 
   if (register_info->registered_cmd_num == 0)
@@ -897,7 +897,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_find_registered_cmd_pos_(BCT_Pos* found_cmd_pos,
 }
 
 
-static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdTableCmdElem* cmd_elem,
+static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdElem* cmd_elem,
                                       TLM_MGR_CMD_TYPE cmd_type,
                                       APID apid,
                                       TLM_CODE tlm_id,
