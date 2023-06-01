@@ -33,15 +33,15 @@ typedef enum
   TLM_MGR_ERR_CODE_OK,
   TLM_MGR_ERR_CODE_CMD_FULL,          //!< これ以上テレメ生成コマンドを登録できない
   TLM_MGR_ERR_CODE_CMD_NOT_FOUND,     //!< 登録コマンド消去時に，コマンドが見つからない
-  TLM_MGR_ERR_CIDE_INVALID_BC_ROLE,   //!< 不正な TLM_MGR_BC_ROLE
-  TLM_MGR_ERR_CIDE_INVALID_CMD_TYPE,  //!< 不正な TLM_MGR_CMD_TYPE
-  TLM_MGR_ERR_CIDE_BCT_ERR,           //!< BCT 関連のエラー
+  TLM_MGR_ERR_CODE_INVALID_BC_ROLE,   //!< 不正な TLM_MGR_BC_ROLE
+  TLM_MGR_ERR_CODE_INVALID_CMD_TYPE,  //!< 不正な TLM_MGR_CMD_TYPE
+  TLM_MGR_ERR_CODE_BCT_ERR,           //!< BCT 関連のエラー
   TLM_MGR_ERR_CODE_OTHER_ERR          //!< その他のエラー
 } TLM_MGR_ERR_CODE;
 
 
 /**
- * @enum   TLM_MGR_ROLE
+ * @enum   TLM_MGR_BC_ROLE
  * @note   uint8_t を想定
  * @brief  BC の役割．これにて実行種別が変わる
  */
