@@ -165,8 +165,8 @@ typedef struct
     uint8_t bct_cmd_ptr;
     uint32_t bct_regd_time;
     uint16_t bct_regd_id;
-    uint32_t ms_tlm_counter;
-    uint8_t ms_tlm_queued;
+    uint32_t rt_tlm_counter;
+    uint8_t rt_tlm_queued;
   } aobc_aobc;
   struct
   {

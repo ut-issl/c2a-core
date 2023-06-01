@@ -145,12 +145,12 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
   {
   case AOBC_Cmd_CODE_GENERATE_TLM:            // FALLTHROUGH
   case AOBC_Cmd_CODE_TG_GENERATE_TLM:         // FALLTHROUGH
-  case AOBC_Cmd_CODE_TG_GENERATE_HK_TLM:      // FALLTHROUGH
-  case AOBC_Cmd_CODE_TG_GENERATE_MS_TLM:      // FALLTHROUGH
+  case AOBC_Cmd_CODE_TG_GENERATE_HP_TLM:      // FALLTHROUGH
+  case AOBC_Cmd_CODE_TG_GENERATE_RT_TLM:      // FALLTHROUGH
   case AOBC_Cmd_CODE_TG_GENERATE_ST_TLM:      // FALLTHROUGH
   case AOBC_Cmd_CODE_TG_FORWARD_TLM:          // FALLTHROUGH
-  case AOBC_Cmd_CODE_TG_FORWARD_AS_HK_TLM:    // FALLTHROUGH
-  case AOBC_Cmd_CODE_TG_FORWARD_AS_MS_TLM:    // FALLTHROUGH
+  case AOBC_Cmd_CODE_TG_FORWARD_AS_HP_TLM:    // FALLTHROUGH
+  case AOBC_Cmd_CODE_TG_FORWARD_AS_RT_TLM:    // FALLTHROUGH
   case AOBC_Cmd_CODE_TG_FORWARD_AS_ST_TLM:
     ret = DS_send_req_tlm_cmd(&(aobc_driver->driver.super), AOBC_STREAM_TLM_CMD);
     break;

@@ -26,10 +26,10 @@ typedef uint8_t ctp_dest_flags_t;     //!< CTP_DEST_FLAG の & をとったフ�
  */
 typedef enum
 {
-  CTP_DEST_FLAG_HK       = 0x01,  //!< 00000001b: Housekeeping Telemetry
-  CTP_DEST_FLAG_MS       = 0x02,  //!< 00000010b: Mission Telemetry
-  CTP_DEST_FLAG_ST       = 0x04,  //!< 00000100b: Stored Telemetry
-  CTP_DEST_FLAG_RP       = 0x08,  //!< 00001000b: Replay Telemetry
+  CTP_DEST_FLAG_HP_TLM   = 0x01,  //!< 00000001b: High Priority Realtime Telemetry
+  CTP_DEST_FLAG_RT_TLM   = 0x02,  //!< 00000010b: Realtime Telemetry
+  CTP_DEST_FLAG_ST_TLM   = 0x04,  //!< 00000100b: Stored Telemetry
+  CTP_DEST_FLAG_RP_TLM   = 0x08,  //!< 00001000b: Replay Telemetry
   CTP_DEST_FLAG_RESERVE1 = 0x10,  //!< 00010000b: 将来拡張用の確保領域
   CTP_DEST_FLAG_RESERVE2 = 0x20,  //!< 00100000b: 将来拡張用の確保領域
   CTP_DEST_FLAG_RESERVE3 = 0x40,  //!< 01000000b: 将来拡張用の確保領域

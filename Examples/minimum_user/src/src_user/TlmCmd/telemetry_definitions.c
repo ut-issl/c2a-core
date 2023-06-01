@@ -167,10 +167,10 @@ static TF_TLM_FUNC_ACK Tlm_MOBC_(uint8_t* packet, uint16_t* len, uint16_t max_le
   TF_copy_u32(&packet[292], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u16(&packet[296], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u8(&packet[298], gs_driver->ccsds_info.buffer_num);
-  TF_copy_u32(&packet[299], (uint32_t)(DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
+  TF_copy_u32(&packet[299], (uint32_t)(DI_GS_rt_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
   TF_copy_u32(&packet[303], (uint32_t)(DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval));
-  TF_copy_u32(&packet[307], PL_count_executed_nodes(&PH_ms_tlm_list));
-  TF_copy_u8(&packet[311], (uint8_t)(PL_count_active_nodes(&PH_ms_tlm_list)));
+  TF_copy_u32(&packet[307], PL_count_executed_nodes(&PH_rt_tlm_list));
+  TF_copy_u8(&packet[311], (uint8_t)(PL_count_active_nodes(&PH_rt_tlm_list)));
   TF_copy_u32(&packet[312], PL_count_executed_nodes(&PH_st_tlm_list));
   TF_copy_u8(&packet[316], (uint8_t)(PL_count_active_nodes(&PH_st_tlm_list)));
   TF_copy_u32(&packet[317], PL_count_executed_nodes(&PH_rp_tlm_list));
@@ -3540,9 +3540,9 @@ static TF_TLM_FUNC_ACK Tlm_GS_(uint8_t* packet, uint16_t* len, uint16_t max_len)
   TF_copy_u8(&packet[86], gs_validate_info->lockout_flag);
   TF_copy_u8(&packet[87], gs_validate_info->retransmit_flag);
   TF_copy_u8(&packet[88], gs_validate_info->positive_window_width);
-  TF_copy_u32(&packet[89], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
-  TF_copy_u32(&packet[93], (uint32_t)DI_GS_ms_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
-  TF_copy_u32(&packet[97], (uint32_t)DI_GS_ms_tlm_packet_handler->vcdu_counter);
+  TF_copy_u32(&packet[89], (uint32_t)DI_GS_rt_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
+  TF_copy_u32(&packet[93], (uint32_t)DI_GS_rt_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
+  TF_copy_u32(&packet[97], (uint32_t)DI_GS_rt_tlm_packet_handler->vcdu_counter);
   TF_copy_u32(&packet[101], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.flush_interval);
   TF_copy_u32(&packet[105], (uint32_t)DI_GS_rp_tlm_packet_handler->tc_packet_to_m_pdu.last_updated);
   TF_copy_u32(&packet[109], (uint32_t)DI_GS_rp_tlm_packet_handler->vcdu_counter);

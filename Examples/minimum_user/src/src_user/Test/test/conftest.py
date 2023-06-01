@@ -37,7 +37,7 @@ def _increase_hk_frequency():
     for ti in range(1, 10, 2):
         ope.send_bl_cmd(
             ti,
-            c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM,
+            c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM,
             (c2a_enum.Tlm_CODE_HK,),
         )
         time.sleep(0.1)

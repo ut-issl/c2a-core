@@ -20,7 +20,7 @@ ope = wings_utils.get_wings_operation()
 @pytest.mark.sils
 def test_event_utility():
     tlm_EH = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_EH
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_EH
     )
     assert tlm_EH["EH.EVENT_UTIL.IS_ENABLED_EH_EXECUTION"] == "ENABLE"
 
@@ -28,7 +28,7 @@ def test_event_utility():
         ope, c2a_enum.Cmd_CODE_EVENT_UTIL_DISABLE_EH_EXEC, (), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_EH
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_EH
     )
     assert tlm_EH["EH.EVENT_UTIL.IS_ENABLED_EH_EXECUTION"] == "DISABLE"
 
@@ -36,7 +36,7 @@ def test_event_utility():
         ope, c2a_enum.Cmd_CODE_EVENT_UTIL_ENABLE_EH_EXEC, (), c2a_enum.Tlm_CODE_HK
     )
     tlm_EH = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_TG_GENERATE_MS_TLM, c2a_enum.Tlm_CODE_EH
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_EH
     )
     assert tlm_EH["EH.EVENT_UTIL.IS_ENABLED_EH_EXECUTION"] == "ENABLE"
 

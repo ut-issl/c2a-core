@@ -12,7 +12,7 @@ void AR_load_initial_settings(void)
 {
   add_application_(AR_NOP, NOP_create_app);
   add_application_(AR_DI_MOBC_CMD_PH, DI_MOBC_update);
-  add_application_(AR_DI_MOBC_MST_PH, DI_MOBC_ms_tlm_packet_handler);
+  add_application_(AR_DI_MOBC_RT_TLM_PH, DI_MOBC_rt_tlm_packet_handler);
   add_application_(AR_GSC_DISPATCHER, GSCD_create_app);
   add_application_(AR_RTC_DISPATCHER, RTCD_create_app);
   add_application_(AR_TLC_DISPATCHER_GS, TLCD_gs_create_app);

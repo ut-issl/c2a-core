@@ -7,8 +7,8 @@ typedef enum
 {
   AR_NOP,
   AR_DI_GS_CMD_PH,
-  AR_DI_GS_MST_PH,
-  AR_DI_GS_RPT_PH,
+  AR_DI_GS_RT_TLM_PH,
+  AR_DI_GS_RP_TLM_PH,
   AR_DI_AOBC,
   AR_DI_AOBC_CDIS,
   AR_DI_UART_TEST,

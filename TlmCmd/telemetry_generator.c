@@ -118,7 +118,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   dest_flags = (uint8_t)( (category & dest_flags_mask) >> 5 );
   if (dest_flags == 0)
   {
-    dest_flags = CTP_DEST_FLAG_RP;
+    dest_flags = CTP_DEST_FLAG_RP_TLM;
   }
   TSP_set_dest_flags(&TG_ctp_, dest_flags);
   TSP_set_dest_info(&TG_ctp_, dr_partition);   // FIXME: もはや dr partition ですらない
@@ -147,19 +147,19 @@ CCP_CmdRet Cmd_TG_GENERATE_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_GENERATE_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_GENERATE_HP_TLM(const CommonCmdPacket* packet)
 {
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HK, 0, 1);
+  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HP_TLM, 0, 1);
 }
 
 
-CCP_CmdRet Cmd_TG_GENERATE_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_GENERATE_RT_TLM(const CommonCmdPacket* packet)
 {
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
 
-  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_MS, 0, 1);
+  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_RT_TLM, 0, 1);
 }
 
 
@@ -168,7 +168,7 @@ CCP_CmdRet Cmd_TG_GENERATE_ST_TLM(const CommonCmdPacket* packet)
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 0, uint8_t);
   uint8_t dr_partition = CCP_get_param_from_packet(packet, 1, uint8_t);
 
-  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_ST, dr_partition, 1);
+  return TG_generate_tlm_(tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_ST_TLM, dr_partition, 1);
 }
 
 
@@ -184,21 +184,21 @@ CCP_CmdRet Cmd_TG_FORWARD_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TG_FORWARD_AS_HK_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_FORWARD_AS_HP_TLM(const CommonCmdPacket* packet)
 {
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
 
-  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HK, 0, 1);
+  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_HP_TLM, 0, 1);
 }
 
 
-CCP_CmdRet Cmd_TG_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TG_FORWARD_AS_RT_TLM(const CommonCmdPacket* packet)
 {
   APID apid = APID_get_apid_from_uint16(CCP_get_param_from_packet(packet, 0, uint16_t));
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
 
-  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_MS, 0, 1);
+  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_RT_TLM, 0, 1);
 }
 
 
@@ -208,7 +208,7 @@ CCP_CmdRet Cmd_TG_FORWARD_AS_ST_TLM(const CommonCmdPacket* packet)
   TLM_CODE tlm_id = (TLM_CODE)CCP_get_param_from_packet(packet, 1, uint8_t);
   uint8_t dr_partition = CCP_get_param_from_packet(packet, 2, uint8_t);
 
-  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_ST, dr_partition, 1);
+  return TG_forward_tlm_(apid, tlm_id, (ctp_dest_flags_t)CTP_DEST_FLAG_ST_TLM, dr_partition, 1);
 }
 
 

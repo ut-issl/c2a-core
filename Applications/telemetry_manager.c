@@ -138,13 +138,13 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
                                                    uint8_t dr_partition);
 
 /**
- * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM) を生成する
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM) を生成する
  * @param[out]  packet:       TLC packet
  * @param[in]   ti:           TI
  * @param[in]   tlm_id:       TLM_CODE
  * @return TLM_MGR_ERR_CODE
  */
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_rt_tlm_(CommonCmdPacket* packet,
                                                          cycle_t ti,
                                                          TLM_CODE tlm_id);
 
@@ -162,14 +162,14 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_st_tlm_(CommonCmdPacket* packet
                                                          uint8_t dr_partition);
 
 /**
- * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM) を生成する
+ * @brief  TLM MGR に登録する TLC (TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM) を生成する
  * @param[out]  packet:       TLC packet
  * @param[in]   ti:           TI
  * @param[in]   apid:         APID
  * @param[in]   tlm_id:       TLM_CODE
  * @return TLM_MGR_ERR_CODE
  */
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_rt_tlm_(CommonCmdPacket* packet,
                                                            cycle_t ti,
                                                            APID apid,
                                                            TLM_CODE tlm_id);
@@ -543,12 +543,12 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
 {
   switch (cmd_type)
   {
-  case TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM:
-    return TLM_MGR_form_tg_generate_ms_tlm_(packet, ti, tlm_id);
+  case TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM:
+    return TLM_MGR_form_tg_generate_rt_tlm_(packet, ti, tlm_id);
   case TLM_MGR_CMD_TYPE_TG_GENERATE_ST_TLM:
     return TLM_MGR_form_tg_generate_st_tlm_(packet, ti, tlm_id, dr_partition);
-  case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM:
-    return TLM_MGR_form_tg_forward_as_ms_tlm_(packet, ti, apid, tlm_id);
+  case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM:
+    return TLM_MGR_form_tg_forward_as_rt_tlm_(packet, ti, apid, tlm_id);
   case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_ST_TLM:
     return TLM_MGR_form_tg_forward_as_st_tlm_(packet, ti, apid, tlm_id, dr_partition);
   case TLM_MGR_CMD_TYPE_DR_REPLAY_TLM:
@@ -560,7 +560,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_register_tlc_(CommonCmdPacket* packet,
 }
 
 
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_rt_tlm_(CommonCmdPacket* packet,
                                                          cycle_t ti,
                                                          TLM_CODE tlm_id)
 {
@@ -571,7 +571,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_ms_tlm_(CommonCmdPacket* packet
 
   ret = CCP_form_tlc(packet,
                      ti,
-                     Cmd_CODE_TG_GENERATE_MS_TLM,
+                     Cmd_CODE_TG_GENERATE_RT_TLM,
                      param,
                      1);
   if (ret != CCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
@@ -600,7 +600,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_generate_st_tlm_(CommonCmdPacket* packet
 }
 
 
-static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_ms_tlm_(CommonCmdPacket* packet,
+static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_rt_tlm_(CommonCmdPacket* packet,
                                                            cycle_t ti,
                                                            APID apid,
                                                            TLM_CODE tlm_id)
@@ -615,7 +615,7 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_tg_forward_as_ms_tlm_(CommonCmdPacket* pack
 
   ret = CCP_form_tlc(packet,
                      ti,
-                     Cmd_CODE_TG_FORWARD_AS_MS_TLM,
+                     Cmd_CODE_TG_FORWARD_AS_RT_TLM,
                      param,
                      3);
   if (ret != CCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
@@ -905,8 +905,8 @@ static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdElem* cmd_elem,
 {
   switch (cmd_type)
   {
-  case TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM:
-    if (cmd_elem->cmd_type == TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM &&
+  case TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM:
+    if (cmd_elem->cmd_type == TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM &&
         cmd_elem->tlm_id == tlm_id)
     {
       return RESULT_OK;
@@ -920,8 +920,8 @@ static RESULT TLM_MGR_check_same_cmd_(const TLM_MGR_CmdElem* cmd_elem,
       return RESULT_OK;
     }
     break;
-  case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM:
-    if (cmd_elem->cmd_type == TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM &&
+  case TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM:
+    if (cmd_elem->cmd_type == TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM &&
         cmd_elem->apid == apid &&
         cmd_elem->tlm_id == tlm_id)
     {
@@ -1171,7 +1171,7 @@ CCP_CmdRet Cmd_TLM_MGR_STOP_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_RT_TLM(const CommonCmdPacket* packet)
 {
   TLM_MGR_ERR_CODE err_code;
   TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -1179,7 +1179,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_MS_TLM(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  err_code = TLM_MGR_register_(bc_role, TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM, APID_UNKNOWN, tlm_id, 0);
+  err_code = TLM_MGR_register_(bc_role, TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM, APID_UNKNOWN, tlm_id, 0);
   return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
@@ -1198,7 +1198,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_GENERATE_ST_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_RT_TLM(const CommonCmdPacket* packet)
 {
   TLM_MGR_ERR_CODE err_code;
   TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -1207,7 +1207,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  err_code = TLM_MGR_register_(bc_role, TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM, apid, tlm_id, 0);
+  err_code = TLM_MGR_register_(bc_role, TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM, apid, tlm_id, 0);
   return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
@@ -1240,7 +1240,7 @@ CCP_CmdRet Cmd_TLM_MGR_REGISTER_REPLAY_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_RT_TLM(const CommonCmdPacket* packet)
 {
   TLM_MGR_ERR_CODE err_code;
   TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -1248,7 +1248,7 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_MS_TLM(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_GENERATE_MS_TLM, APID_UNKNOWN, tlm_id, 0);
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_GENERATE_RT_TLM, APID_UNKNOWN, tlm_id, 0);
   return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
@@ -1267,7 +1267,7 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_GENERATE_ST_TLM(const CommonCmdPacket* packet)
 }
 
 
-CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
+CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_RT_TLM(const CommonCmdPacket* packet)
 {
   TLM_MGR_ERR_CODE err_code;
   TLM_MGR_BC_ROLE bc_role = (TLM_MGR_BC_ROLE)CCP_get_param_from_packet(packet, 0, uint8_t);
@@ -1276,7 +1276,7 @@ CCP_CmdRet Cmd_TLM_MGR_DELETE_FORWARD_AS_MS_TLM(const CommonCmdPacket* packet)
 
   if (telemetry_manager_.is_inited == 0) return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_CONTEXT);
 
-  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_FORWARD_AS_MS_TLM, apid, tlm_id, 0);
+  err_code = TLM_MGR_delete_(bc_role, TLM_MGR_CMD_TYPE_TG_FORWARD_AS_RT_TLM, apid, tlm_id, 0);
   return TLM_MGR_conv_err_code_to_ccp_cmd_ret_(err_code);
 }
 
