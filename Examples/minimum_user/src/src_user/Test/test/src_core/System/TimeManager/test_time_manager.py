@@ -34,7 +34,7 @@ def test_tmgr_set_time():
 
     # TL2のテレメループが途切れないように、現在時刻より未来のTIに飛ばす
     tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_HK
     )
     target_ti = tlm_HK["HK.SH.TI"] + 1000
 
@@ -42,7 +42,7 @@ def test_tmgr_set_time():
         ope, c2a_enum.Cmd_CODE_TMGR_SET_TIME, (target_ti,), c2a_enum.Tlm_CODE_HK
     )
     tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_HK
     )
     assert tlm_HK["HK.SH.TI"] > target_ti
     assert tlm_HK["HK.SH.TI"] < target_ti + 50
@@ -63,7 +63,7 @@ def test_tmgr_set_unixtime():
     )
 
     tlm_HK = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_HK
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_HK
     )
     unixtime_at_ti0 = (
         current_unixtime
@@ -97,7 +97,7 @@ def test_tmgr_set_utl_unixtime_epoch():
     )
 
     tlm_MOBC = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_MOBC
     )
     assert tlm_MOBC["MOBC.TM_UTL_UNIXTIME_EPOCH"] == new_epoch
 
@@ -117,7 +117,7 @@ def test_tmgr_set_and_reset_cycle_correction():
     )
 
     tlm_MOBC = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_MOBC
     )
     assert tlm_MOBC["MOBC.TM_CYCLES_PER_SEC_FIX_RATIO"] == set_value
 
@@ -127,7 +127,7 @@ def test_tmgr_set_and_reset_cycle_correction():
     )
 
     tlm_MOBC = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_MOBC
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_MOBC
     )
     assert tlm_MOBC["MOBC.TM_CYCLES_PER_SEC_FIX_RATIO"] == 1.0
 
@@ -158,8 +158,8 @@ def test_tmgr_utl_cmd():
     wings.util.send_utl_cmd(
         ope,
         time.time() + 3,
-        c2a_enum.Cmd_CODE_GENERATE_TLM,
-        (0x40, c2a_enum.Tlm_CODE_GS, 1),
+        c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM,
+        (c2a_enum.Tlm_CODE_GS,),
     )
     wings.util.send_utl_cmd(
         ope,
@@ -244,7 +244,7 @@ def check_utl_cmd_with(utl_unixtime_epoch, cycle_correction):
 
     # TL_gs に正しく登録されているか確認
     tlm_TL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TL
     )
     assert tlm_TL["TL.LINE_NO"] == c2a_enum.TLCD_ID_FROM_GS
     assert tlm_TL["TL.PAGE_NO"] == 0

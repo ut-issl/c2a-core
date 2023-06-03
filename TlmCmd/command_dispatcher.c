@@ -35,6 +35,10 @@ static void CDIS_clear_exec_info_(CDIS_ExecInfo* exec_info);
 CommandDispatcher CDIS_init(PacketList* pl)
 {
   CommandDispatcher cdis;
+  static uint8_t init_counter = 0;
+
+  cdis.idx = init_counter;
+  init_counter++;
 
   // コマンド実行情報を初期化
   CDIS_clear_exec_info_(&cdis.prev);
@@ -128,15 +132,17 @@ void CDIS_dispatch_command(CommandDispatcher* cdis)
   if (cdis->prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
   {
     uint32_t note;
-    // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)はcdisのポインタアドレスで区別
+    // 実行時エラー情報をELにも記録. エラー発生場所(GSCD,TLCDなど)は cdis の idx で区別
     // より重要な EL_CORE_GROUP_CDIS_EXEC_ERR_STS があとに来るように EL 発行
     EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR_CODE,
-                    (uint32_t)cdis,
+                    (uint32_t)cdis->prev.code,
                     EL_ERROR_LEVEL_LOW,
                     cdis->prev.cmd_ret.err_code);
-    note = ((0x0000ffff & cdis->prev.code) << 16) | (0x0000ffff & cdis->prev.cmd_ret.exec_sts);
+    note = ((0X000000ff & cdis->idx) << 24)
+         | ((0x000000ff & cdis->prev.cmd_ret.exec_sts) << 16)
+         | (0x0000ffff & cdis->prev.cmd_ret.err_code);
     EL_record_event((EL_GROUP)EL_CORE_GROUP_CDIS_EXEC_ERR_STS,
-                    (uint32_t)cdis,
+                    (uint32_t)cdis->prev.code,
                     EL_ERROR_LEVEL_LOW,
                     note);
 

@@ -17,10 +17,7 @@ PH_ACK PH_user_analyze_cmd(const CommonCmdPacket* packet)
   switch (CCP_get_dest_type(packet))
   {
   default:
-    // CCP_DEST_TYPE_TO_ME
-    // CCP_DEST_TYPE_TO_MOBC （自分）
-    // 宛先不明
-    // はここに
+    // 2nd OBC なので，自分宛て以外のパケットはないはず
     return PH_ACK_UNKNOWN;
   }
 }
@@ -34,6 +31,25 @@ CCP_CmdRet PH_user_cmd_router(const CommonCmdPacket* packet)
   default:
     // 該当する配送先が定義されていない場合
     return CCP_make_cmd_ret(CCP_EXEC_ROUTING_FAILED, apid);
+  }
+}
+
+
+TF_TLM_FUNC_ACK PH_user_telemetry_router(APID apid,
+                                         TLM_CODE tlm_id,
+                                         uint8_t* packet,
+                                         uint16_t* len,
+                                         uint16_t max_len)
+{
+  (void)tlm_id;
+  (void)packet;
+  (void)len;
+  (void)max_len;
+
+  switch (apid)
+  {
+    default:
+      return TF_TLM_FUNC_ACK_NOT_DEFINED;
   }
 }
 

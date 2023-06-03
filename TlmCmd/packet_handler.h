@@ -19,7 +19,7 @@
 #define PH_TLC_BC_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
 #define PH_TLC_TLM_LIST_MAX (TL_TLM_PAGE_SIZE * 4)
 #define PH_TLC_MIS_LIST_MAX (TL_TLM_PAGE_SIZE * 4)   // とりあえず TL1,2 と同じ長さにした
-#define PH_MS_TLM_LIST_MAX  (16)
+#define PH_RT_TLM_LIST_MAX  (16)
 #define PH_ST_TLM_LIST_MAX  (16)
 #define PH_RP_TLM_LIST_MAX  (16)
 
@@ -45,10 +45,10 @@ typedef enum
   PH_ACK_PL_LIST_FULL,        //!< PL が一杯だった
   PH_ACK_PACKET_NOT_FOUND,    //!< パケットが無い
   PH_ACK_INVALID_PACKET,      //!< 無効な Packet
-  PH_ACK_TLC_SUCCESS,         //!< TL に登録された
-  PH_ACK_TLC_PAST_TIME,       //!< 既に実行時間を過ぎている
+  PH_ACK_TLC_SUCCESS,         //!< TL 登録に成功した
+  PH_ACK_TLC_PAST_TIME,       //!< 既に実行時刻を過ぎている
   PH_ACK_TLC_ALREADY_EXISTS,  //!< 同 TI に既に packet がいる
-  PH_ACK_BC_SUCCESS,          //!< BC 展開に成功した
+  PH_ACK_BC_SUCCESS,          //!< BC 登録に成功した
   PH_ACK_BC_INVALID_BLOCK_NO, //!< 無効な BC 番号だった
   PH_ACK_BC_ISORATED_CMD,     //!< 飛ばして BC 登録しようとした
   PH_ACK_BC_CMD_TOO_LONG,     //!< CMD が BC には長すぎる
@@ -58,8 +58,8 @@ typedef enum
 extern PacketList PH_gs_cmd_list;
 extern PacketList PH_rt_cmd_list;
 extern PacketList PH_tl_cmd_list[TLCD_ID_MAX];
-// extern PacketList PH_hk_tlm_list;    // 現在は MS TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
-extern PacketList PH_ms_tlm_list;
+// extern PacketList PH_hp_tlm_list;    // 現在は RT_TLM に統合されている（ TODO: 今後また分離させても良いかも．要検討）
+extern PacketList PH_rt_tlm_list;
 #ifdef DR_ENABLE
 extern PacketList PH_st_tlm_list;
 extern PacketList PH_rp_tlm_list;

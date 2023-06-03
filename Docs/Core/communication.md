@@ -91,10 +91,11 @@ https://github.com/ut-issl/c2a-core/blob/e84ac663187adb7b9d51939f2228b9ecfa7ae29
 - Destination Flags
     - テレメトリ配送種別
     - 同時に複数配送ができるように， flag で管理
+        - ただし，地上局でのパケット保存処理をシンプルにするためなどの理由で，配送の過程でそれぞれのフラグごとにバケットをバラす．つまり，オンボードサブネットワークから地上に送信されるパケットでは， 1 つの flag のみ立っている状態を基本とする．
     - 今後拡張予定あり
     - 現時点では以下
-        - `0b00000001`: Housekeeping Telemetry
-        - `0b00000010`: Mission Telemetry
+        - `0b00000001`: High Priority Realtime Telemetry (現在の C2A Core では使われてない (Realtime Telemetry として処理されている))
+        - `0b00000010`: Realtime Telemetry
         - `0b00000100`: Stored Telemetry
         - `0b00001000`: Replay Telemetry
         - `0b00010000`: 将来拡張用の確保領域
@@ -123,12 +124,12 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
     - コマンドID
     - APID 内でユニークであればいい
 - Destination Type
-    - `0x0` 以外はユーザー定義
+    - `0x0`, `0xe`, `0xf` 以外はユーザー定義
     - 例えば次のように定義する
-        - `0x0`: 自分宛
-        - `0x1`: MOBC 宛
-        - `0x2`: AOBC 宛
-        - `0x3`: 不明
+        - `0x0`: 自分宛 (`CCP_DEST_TYPE_TO_ME`)
+        - `0x1` - `0xd` : `CCP_DEST_TYPE_TO_ME`, `CCP_DEST_TYPE_TO_APID` では表現できない宛先
+        - `0xe`: 不明 (`CCP_DEST_TYPE_TO_UNKOWN`)
+        - `0xf`: APID で示す宛先宛 (`CCP_DEST_TYPE_TO_APID`)
     - ここで言う，宛先はコマンド実行場所ではなく，キューイングされる先のことである（詳細は後述）
 - Execution Type
     - 現時点では以下（将来拡張予定あり）
@@ -150,7 +151,7 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
 - 一方で， BC や TLC などでのキューイングは， Destination Type によって決定される
     - https://github.com/ut-issl/c2a-core/blob/6d71249dcdb3aefa1d67ffe8ce946e8d8d8b2a33/Examples/minimum_user/src/src_user/Settings/TlmCmd/common_cmd_packet_define.h#L20-L27
 - 具体例（GS と接続される OBC は MOBC とし，AOBC は MOBC にぶら下がってるものとする）
-    - APID: MOBC, Destination Type: TO_ME or MOBC
+    - APID: MOBC, Destination Type: TO_ME or TO_APID or MOBC
         - GSC: GS から MOBC に届き， MOBC で GSC としてエンキューされる．デキューした後， MOBC 内で GSC として実行される．
         - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， MOBC 内で RTC として実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， MOBC 内で RTC として実行される．
@@ -158,7 +159,7 @@ https://github.com/ut-issl/c2a-core/blob/b84c3d051a1e15ab62c8f1a9744957daa4a62a3
         - GSC: GS から MOBC に届き， MOBC で GSC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で RTC としてキューイング & 実行される．
         - TLC: GS から MOBC に届き， MOBC で TLC としてエンキューされる．デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で RTC としてキューイング & 実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録される．BC 展開した後， TL にエンキューされ，デキューした後， APID を元に， AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で RTC としてキューイング & 実行される．
-    - APID: AOBC, Destination Type: AOBC
+    - APID: AOBC, Destination Type: TO_APID or AOBC
         - GSC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で GSC としてキューイング & 実行される．
         - TLC: GS から MOBC に届き， MOBC でエンキューされずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で TLC としてキューイング & 実行される．
         - BC: GS から MOBC に届き， MOBC で BC 登録されずに，そのまま AOBC へ配送される．配送時， Destination Type は自分宛 (TO_ME) に上書きされ， AOBC で BC として登録 & 実行される．

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(C2A_USER_IF_WRAPPER)
 
-set(C2A_SRCS
+set(C2A_COMMON_SRCS
   if_list.c
 )
 
@@ -11,7 +11,7 @@ if(USE_SILS_MOCKUP)
   message("USE SILS_MOCKUP")
 
   #target_sources(${PROJECT_NAME} PRIVATE
-  list(APPEND C2A_SRCS
+  set(C2A_IF_IMPL_SRCS
     SilsMockup/ccsds_sils.c
     SilsMockup/i2c_sils.c
     SilsMockup/uart_sils.c
@@ -19,31 +19,42 @@ if(USE_SILS_MOCKUP)
   )
 else()
   #target_sources(${PROJECT_NAME} PUBLIC
-  list(APPEND C2A_SRCS
+  set(C2A_IF_IMPL_COMMON_SRCS
     Sils/ccsds_sils.cpp
     Sils/i2c_sils.cpp
     Sils/uart_sils.cpp
     Sils/wdt_sils.cpp
   )
+
+  if(USE_SCI_COM_WINGS)
+    add_definitions(-DUSE_SCI_COM_WINGS)
+    #target_sources(${PROJECT_NAME} PUBLIC
+    set(C2A_IF_COM_WINGS_SRCS
+      Sils/ccsds_sils_sci_if.cpp
+    )
+    message("USE SCI_COM_WINGS")
+  endif()
+
+  if(USE_SCI_COM_UART)
+    add_definitions(-DUSE_SCI_COM_UART)
+    #target_sources(${PROJECT_NAME} PUBLIC
+    set(C2A_IF_COM_UART_SRCS
+      Sils/uart_sils_sci_if.cpp
+    )
+    message("USE SCI_COM_UART")
+  endif()
+
+  set(C2A_IF_IMPL_SRCS
+    ${C2A_IF_IMPL_COMMON_SRCS}
+    ${C2A_IF_COM_WINGS_SRCS}
+    ${C2A_IF_COM_UART_SRCS}
+  )
 endif()
 
-if(USE_SCI_COM_WINGS AND NOT USE_SILS_MOCKUP)
-  add_definitions(-DUSE_SCI_COM_WINGS)
-  #target_sources(${PROJECT_NAME} PUBLIC
-  list(APPEND C2A_SRCS
-    Sils/ccsds_sils_sci_if.cpp
-  )
-  message("USE SCI_COM_WINGS")
-endif()
-
-if(USE_SCI_COM_UART AND NOT USE_SILS_MOCKUP)
-  add_definitions(-DUSE_SCI_COM_UART)
-  #target_sources(${PROJECT_NAME} PUBLIC
-  list(APPEND C2A_SRCS
-    Sils/uart_sils_sci_if.cpp
-  )
-  message("USE SCI_COM_UART")
-endif()
+set(C2A_SRCS
+  ${C2A_COMMON_SRCS}
+  ${C2A_IF_IMPL_SRCS}
+)
 
 if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++

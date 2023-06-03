@@ -4,7 +4,7 @@
  * @brief  テレメトリ定義
  * @note   このコードは自動生成されています！
  */
-#include "../../src_core/TlmCmd/telemetry_frame.h"
+#include <src_core/TlmCmd/telemetry_frame.h>
 #include "telemetry_definitions.h"
 #include "telemetry_source.h"
 
@@ -103,8 +103,8 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[240], (uint8_t)(block_command_table->pos.cmd));
   TF_copy_u32(&packet[241], ((block_command_table->pos.cmd == 0) ? 0 : (uint32_t)BCT_get_ti(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
   TF_copy_u16(&packet[245], (uint16_t)((block_command_table->pos.cmd == 0) ? 0 : BCT_get_id(block_command_table->pos.block, (uint8_t)(block_command_table->pos.cmd-1))));
-  TF_copy_u32(&packet[247], PL_count_executed_nodes(&PH_ms_tlm_list));
-  TF_copy_u8(&packet[251], (uint8_t)(PL_count_active_nodes(&PH_ms_tlm_list)));
+  TF_copy_u32(&packet[247], PL_count_executed_nodes(&PH_rt_tlm_list));
+  TF_copy_u8(&packet[251], (uint8_t)(PL_count_active_nodes(&PH_rt_tlm_list)));
 #endif
 
   *len = 252;

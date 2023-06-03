@@ -29,7 +29,7 @@ def test_telemetry_frame_set_page():
     init_tf()
 
     tlm_TF = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TF
     )
     assert tlm_TF["TF.PAGE_NO"] == 0
 
@@ -37,7 +37,7 @@ def test_telemetry_frame_set_page():
         ope, c2a_enum.Cmd_CODE_TF_SET_PAGE_FOR_TLM, (1,), c2a_enum.Tlm_CODE_HK
     )
     tlm_TF = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TF
     )
     assert tlm_TF["TF.PAGE_NO"] == 1
 
@@ -45,7 +45,7 @@ def test_telemetry_frame_set_page():
         ope, c2a_enum.Cmd_CODE_TF_SET_PAGE_FOR_TLM, (TF_TLM_PAGE_MAX,), c2a_enum.Tlm_CODE_HK
     )
     tlm_TF = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TF
     )
     assert tlm_TF["TF.PAGE_NO"] == 1
 
@@ -57,7 +57,7 @@ def test_telemetry_frame_tlm_func():
 
     # 登録されている tlm func の確認
     tlm_TF = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TF
     )
     assert int(tlm_TF["TF.TLM0"], base=16) != 0  # tlm id = 0 は MOBC tlm が普通はある
 
@@ -69,7 +69,7 @@ def test_telemetry_frame_tlm_func():
         ope, c2a_enum.Cmd_CODE_TF_SET_PAGE_FOR_TLM, (page,), c2a_enum.Tlm_CODE_HK
     )
     tlm_TF = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TF
     )
 
     assert tlm_TF["TF.TLM" + str(offset)] == "0x00000000"
@@ -83,7 +83,7 @@ def test_telemetry_frame_tlm_func():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_TF = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TF
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TF
     )
     assert tlm_TF["TF.TLM" + str(offset)] == func_adr
 

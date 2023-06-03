@@ -136,7 +136,7 @@ def test_tlcd_set_id_and_page_for_tlm():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_TL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TL
     )
     assert tlm_TL["TL.LINE_NO"] == target_id
     assert tlm_TL["TL.PAGE_NO"] == target_page
@@ -164,7 +164,7 @@ def test_tlcd_send_and_clear_tl():
     clear_tl_gs_and_tl_mis()
 
     tlm_TL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TL
     )
     ti_now = tlm_TL["TL.SH.TI"]
 
@@ -250,7 +250,7 @@ def check_registered_tl_cmds(line_no, tis, cmd_id, params):
     )
 
     tlm_TL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_TL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_TL
     )
     assert tlm_TL["TL.LINE_NO"] == line_no
 

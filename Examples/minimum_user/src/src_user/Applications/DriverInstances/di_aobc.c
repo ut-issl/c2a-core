@@ -94,16 +94,18 @@ CCP_CmdRet DI_AOBC_dispatch_command(const CommonCmdPacket* packet)
   CommonCmdPacket* pckt = (CommonCmdPacket*)packet; // const_cast
   // ここで CCP_DEST_TYPE を宛先で受理できるように変更（なので const cast が発生している．．．）
 
-  if (CCP_get_dest_type(pckt) != CCP_DEST_TYPE_TO_ME)
+  switch (CCP_get_dest_type(pckt))
   {
-    // MOBC のキューに入らず直接転送
-    // そのままの EXEC_TYPE で転送．なにもしない
-  }
-  else
-  {
+  case CCP_DEST_TYPE_TO_ME:       // FALL THROUGH
+  case CCP_DEST_TYPE_TO_MOBC:     // CCP_DEST_TYPE_TO_APID の追加に伴い deprecated
     // MOBC のキューに溜まった後に実行されたもの
     // 配送先 OBC では MOBC 側の TL などの影響は受けないはずなので RTC へ変換
     CCP_set_exec_type(pckt, CCP_EXEC_TYPE_RT);
+    break;
+  default:
+    // MOBC のキューに入らず直接転送
+    // そのままの EXEC_TYPE で転送．なにもしない
+    break;
   }
 
   // 配送先 OBC が最終到達地なので

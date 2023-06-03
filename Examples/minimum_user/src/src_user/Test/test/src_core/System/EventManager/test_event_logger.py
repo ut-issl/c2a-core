@@ -886,7 +886,7 @@ def update_el_tlm():
     )
 
     el_tlm = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_EL
     )
 
     g_el_tlm = el_tlm
@@ -947,7 +947,7 @@ def update_el_tlog_tlm():
     )
 
     el_tlog_tlm = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL_TLOG
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_EL_TLOG
     )
 
     g_tlog_em_tlm = el_tlog_tlm
@@ -984,7 +984,7 @@ def update_el_clog_tlm():
     )
 
     el_clog_tlm = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_EL_CLOG
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_EL_CLOG
     )
 
     g_clog_em_tlm = el_clog_tlm

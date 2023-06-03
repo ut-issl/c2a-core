@@ -59,17 +59,26 @@ C2A Core の採用実績のある衛星 OBC や動作実績のあるボードの
 [^1]: Ryo Suzumoto, et al. Improvement of C2A (Command-Centric Architecture) Reusability for Multiple Types of OBCs and Development of Continuous Integration Environment for Reliability of Flight Software. _33rd International Symposium on Space Technology and Science_, 2022-f-58, 2022.
 
 
-## 関連リポジトリ
+## 関連リンク
 ### C2A 関連ツール
 - https://github.com/ut-issl/tlm-cmd-db
 - https://github.com/ut-issl/c2a-tlm-cmd-code-generator
 - https://github.com/ut-issl/python-wings-interface
 - https://github.com/ut-issl/c2a-enum-loader
 - https://github.com/ut-issl/s2e-user-for-c2a-core
+- https://github.com/arkedge/c2a-tlmcmddb
+- https://github.com/arkedge/workflows-c2a
 
 
 ### User 実装例
 - https://github.com/arkedge/c2a-user-for-raspi
+
+
+### 関連 crate
+- https://crates.io/crates/c2a-core （本リポジトリを crate 化したもの）
+- https://crates.io/crates/tlmcmddb
+- https://crates.io/crates/tlmcmddb-cli
+- https://crates.io/crates/tlmcmddb-csv
 
 
 ## 協力

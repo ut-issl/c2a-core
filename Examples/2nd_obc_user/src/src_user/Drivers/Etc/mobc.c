@@ -113,7 +113,7 @@ static DS_ERR_CODE MOBC_analyze_rec_data_(DS_StreamConfig* p_stream_config, void
   //      CCP_EXEC_TYPE_MC    <- GS から MOBC のキューに入らず直接転送されたもの
   //      CCP_EXEC_TYPE_RT    <- これが GS → MOBC との違いで， MOBC の TLC/BC キューに溜まって実行されたもの
   // CCP_DEST_TYPE:
-  //      CCP_DEST_TYPE_TO_ME (CCP_DEST_TYPE_TO_AOBC の可能性はなくはないが， ME に上書きされているはず)
+  //      CCP_DEST_TYPE_TO_ME (CCP_DEST_TYPE_TO_APID, CCP_DEST_TYPE_TO_AOBC の可能性はなくはないが， ME に上書きされているはず)
 
   // FIXME: ここで返り値が NG だった場合，なにを return するかは議論の余地あり
   //        通信的には OK なので， OK を返すのでいいという認識

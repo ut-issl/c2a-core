@@ -12,6 +12,7 @@ option(C2A_USE_SIMPLE_LIBC          "use C2A-core hosted simple libc implementat
 option(C2A_USE_C99_STDINT           "use C99 standard stdint.h" ON)
 
 option(BUILD_C2A_AS_SILS_FW         "build C2A as SILS firmware" ON)
+option(BUILD_C2A_AS_C99             "build C2A as C99" OFF)
 option(BUILD_C2A_AS_CXX             "build C2A as C++" OFF)
 option(BUILD_C2A_AS_UTF8            "build C2A as UTF-8" ON)
 
@@ -54,6 +55,21 @@ if(NOT C2A_USE_C99_STDINT)
   message("Use stdint.h wrapper")
   include_directories(Library/stdint_wrapper)
 endif()
+
+execute_process(
+  COMMAND git log -1 --format=%H
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_REVISION_C2A_CORE
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+  COMMAND git log -1 --format=%h
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_REVISION_C2A_CORE_SHORT
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+add_definitions("-DGIT_REVISION_C2A_CORE=\"${GIT_REVISION_C2A_CORE}\"")
+add_definitions("-DGIT_REVISION_C2A_CORE_SHORT=0x${GIT_REVISION_C2A_CORE_SHORT}")
 
 if(BUILD_C2A_AS_CXX)
   set_source_files_properties(${C2A_SRCS} PROPERTIES LANGUAGE CXX)  # C++

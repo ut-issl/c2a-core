@@ -17,7 +17,7 @@
 PacketList PH_gs_cmd_list;
 PacketList PH_rt_cmd_list;
 PacketList PH_tl_cmd_list[TLCD_ID_MAX];
-PacketList PH_ms_tlm_list;
+PacketList PH_rt_tlm_list;
 #ifdef DR_ENABLE
 PacketList PH_st_tlm_list;
 PacketList PH_rp_tlm_list;
@@ -31,7 +31,7 @@ static PL_Node PH_tl_cmd_tlm_stock_[PH_TLC_TLM_LIST_MAX];
 #ifdef TLCD_ENABLE_MISSION_TL
 static PL_Node PH_tl_cmd_mis_stock_[PH_TLC_MIS_LIST_MAX];
 #endif
-static PL_Node PH_ms_tlm_stock_[PH_MS_TLM_LIST_MAX];
+static PL_Node PH_rt_tlm_stock_[PH_RT_TLM_LIST_MAX];
 #ifdef DR_ENABLE
 static PL_Node PH_st_tlm_stock_[PH_ST_TLM_LIST_MAX];
 static PL_Node PH_rp_tlm_stock_[PH_RP_TLM_LIST_MAX];
@@ -45,7 +45,7 @@ static CommonCmdPacket PH_tl_cmd_tlm_ccp_stock_[PH_TLC_TLM_LIST_MAX];
 #ifdef TLCD_ENABLE_MISSION_TL
 static CommonCmdPacket PH_tl_cmd_mis_ccp_stock_[PH_TLC_MIS_LIST_MAX];
 #endif
-static CommonTlmPacket PH_ms_tlm_ctp_stock_[PH_MS_TLM_LIST_MAX];
+static CommonTlmPacket PH_rt_tlm_ctp_stock_[PH_RT_TLM_LIST_MAX];
 #ifdef DR_ENABLE
 static CommonTlmPacket PH_st_tlm_ctp_stock_[PH_ST_TLM_LIST_MAX];
 static CommonTlmPacket PH_rp_tlm_ctp_stock_[PH_RP_TLM_LIST_MAX];
@@ -64,7 +64,8 @@ static PH_ACK PH_add_tl_cmd_(TLCD_ID id,
  * @return PH_ACK
  */
 static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet);
-static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet);
+static PH_ACK PH_add_tlm_to_pl(const CommonTlmPacket* packet, PacketList* pl, CTP_DEST_FLAG dest_flag);
+static PH_ACK PH_add_rt_tlm_(const CommonTlmPacket* packet);
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet);
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet);
@@ -83,7 +84,7 @@ void PH_init(void)
   PL_initialize_with_ccp(PH_tl_cmd_mis_stock_, PH_tl_cmd_mis_ccp_stock_, PH_TLC_TLM_LIST_MAX, &PH_tl_cmd_list[TLCD_ID_FROM_GS_FOR_MISSION]);
 #endif
 
-  PL_initialize_with_ctp(PH_ms_tlm_stock_, PH_ms_tlm_ctp_stock_, PH_MS_TLM_LIST_MAX, &PH_ms_tlm_list);
+  PL_initialize_with_ctp(PH_rt_tlm_stock_, PH_rt_tlm_ctp_stock_, PH_RT_TLM_LIST_MAX, &PH_rt_tlm_list);
 #ifdef DR_ENABLE
   PL_initialize_with_ctp(PH_st_tlm_stock_, PH_st_tlm_ctp_stock_, PH_ST_TLM_LIST_MAX, &PH_st_tlm_list);
   PL_initialize_with_ctp(PH_rp_tlm_stock_, PH_rp_tlm_ctp_stock_, PH_RP_TLM_LIST_MAX, &PH_rp_tlm_list);
@@ -130,9 +131,10 @@ PH_ACK PH_analyze_cmd_packet(const CommonCmdPacket* packet)
   }
 
   // ここまで来たら自分宛て
-  // 例えば以下のどちらか
-  //   - CCP_DEST_TYPE_TO_ME
-  //   - CCP_DEST_TYPE_TO_MOBC （自分）
+  // 例えば以下のどれか
+  // - CCP_DEST_TYPE_TO_ME
+  // - CCP_DEST_TYPE_TO_APID でかつ， APID が自分宛てのもの
+  // - CCP_DEST_TYPE_TO_MOBC などの自分宛
   // 統一するため上書きする
   CCP_set_dest_type((CommonCmdPacket*)packet, CCP_DEST_TYPE_TO_ME);   // const_cast
 
@@ -207,18 +209,18 @@ PH_ACK PH_analyze_tlm_packet(const CommonTlmPacket* packet)
 
   // FIXME: flag の match は関数化したい
 
-  // Housekeeping Telemetry
-  if (flags & CTP_DEST_FLAG_HK) PH_add_ms_tlm_(packet);  // hk_tlm のフラグが立っていても，MS_TLMとして処理する方針にした
+  // High Priority Realtime Telemetry
+  if (flags & CTP_DEST_FLAG_HP_TLM) PH_add_rt_tlm_(packet);  // hp_tlm のフラグが立っていても，RT_TLMとして処理する方針にした
 
-  // Mission Telemetry
-  if (flags & CTP_DEST_FLAG_MS) PH_add_ms_tlm_(packet);
+  // Realtime Telemetry
+  if (flags & CTP_DEST_FLAG_RT_TLM) PH_add_rt_tlm_(packet);
 
 #ifdef DR_ENABLE
   // Stored Telemetry
-  if (flags & CTP_DEST_FLAG_ST) PH_add_st_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_ST_TLM) PH_add_st_tlm_(packet);
 
   // Replay Telemetry
-  if (flags & CTP_DEST_FLAG_RP) PH_add_rp_tlm_(packet);
+  if (flags & CTP_DEST_FLAG_RP_TLM) PH_add_rp_tlm_(packet);
 #endif
 
   // [TODO] 要検討:各Queue毎の登録エラー判定は未実装
@@ -311,24 +313,34 @@ static PH_ACK PH_add_utl_cmd_(TLCD_ID id, const CommonCmdPacket* packet)
 }
 
 
-static PH_ACK PH_add_ms_tlm_(const CommonTlmPacket* packet)
+static PH_ACK PH_add_tlm_to_pl(const CommonTlmPacket* packet, PacketList* pl, CTP_DEST_FLAG dest_flag)
 {
-  PL_ACK ack = PL_push_back(&PH_ms_tlm_list, packet);
+  PL_Node* tail;
+  PL_ACK ack = PL_push_back(pl, packet);
 
   if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
 
+  // 複数の配送先に配送されるパケットの分岐は終わっているため， dest flag を配送先のもののみにする．
+  // こうすることで， GS SW 側でのデータベース格納の処理がシンプルになる．
+  // PL_SUCCESS の場合，かならず tail に格納した packet がある．
+  // TODO: メモリコピーをなくすためにだいぶやんちゃな実装なので，ぱっといい方法が思いつくなら直す
+  tail = (PL_Node*)PL_get_tail(pl);      // const_cast
+  CTP_set_dest_flags((CommonTlmPacket*)(tail->packet), (ctp_dest_flags_t)dest_flag);
+
   return PH_ACK_SUCCESS;
+}
+
+
+static PH_ACK PH_add_rt_tlm_(const CommonTlmPacket* packet)
+{
+  return PH_add_tlm_to_pl(packet, &PH_rt_tlm_list, CTP_DEST_FLAG_RT_TLM);
 }
 
 
 #ifdef DR_ENABLE
 static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 {
-  PL_ACK ack = PL_push_back(&PH_st_tlm_list, packet);
-
-  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
-
-  return PH_ACK_SUCCESS;
+  return PH_add_tlm_to_pl(packet, &PH_st_tlm_list, CTP_DEST_FLAG_ST_TLM);
 }
 #endif
 
@@ -336,11 +348,7 @@ static PH_ACK PH_add_st_tlm_(const CommonTlmPacket* packet)
 #ifdef DR_ENABLE
 static PH_ACK PH_add_rp_tlm_(const CommonTlmPacket* packet)
 {
-  PL_ACK ack = PL_push_back(&PH_rp_tlm_list, packet);
-
-  if (ack != PL_SUCCESS) return PH_ACK_PL_LIST_FULL;
-
-  return PH_ACK_SUCCESS;
+  return PH_add_tlm_to_pl(packet, &PH_rp_tlm_list, CTP_DEST_FLAG_RP_TLM);
 }
 #endif
 

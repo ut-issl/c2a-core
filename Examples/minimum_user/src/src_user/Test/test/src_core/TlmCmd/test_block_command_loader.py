@@ -42,7 +42,7 @@ def test_bcl_prepare_param():
         c2a_enum.Tlm_CODE_HK,
     )
     tlm_BL = wings.util.generate_and_receive_tlm(
-        ope, c2a_enum.Cmd_CODE_GENERATE_TLM, c2a_enum.Tlm_CODE_BL
+        ope, c2a_enum.Cmd_CODE_TG_GENERATE_RT_TLM, c2a_enum.Tlm_CODE_BL
     )
     assert tlm_BL["BL.BLOCK_NO"] == c2a_enum.BC_TEST_BCL
 

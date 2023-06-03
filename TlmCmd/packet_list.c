@@ -147,15 +147,15 @@ int PL_is_full(const PacketList* pl)
 }
 
 
-const PL_Node* PL_get_head(const PacketList* pli)
+const PL_Node* PL_get_head(const PacketList* pl)
 {
-  return pli->active_list_head_;
+  return pl->active_list_head_;
 }
 
 
-const PL_Node* PL_get_tail(const PacketList* pli)
+const PL_Node* PL_get_tail(const PacketList* pl)
 {
-  return pli->active_list_tail_;
+  return pl->active_list_tail_;
 }
 
 
