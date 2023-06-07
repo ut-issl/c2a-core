@@ -140,7 +140,6 @@ DS_CMD_ERR_CODE AOBC_send_cmd(AOBC_Driver* aobc_driver, const CommonCmdPacket* p
 
   // [TODO] ここではコマンドが実際に存在するか，ということはフィルタしない！（でいいよね？）
   // 必要があれば，AOBC 側で弾くべき．
-
   switch (cmd_code)
   {
   case AOBC_Cmd_CODE_GENERATE_TLM:            // FALLTHROUGH
