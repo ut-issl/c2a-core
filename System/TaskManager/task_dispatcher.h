@@ -7,7 +7,6 @@
 #ifndef TASK_DISPATCHER_H_
 #define TASK_DISPATCHER_H_
 
-#include "../../TlmCmd/block_command_table.h"
 #include "../../TlmCmd/command_dispatcher.h"
 #include "../ApplicationManager/app_info.h"
 
@@ -70,11 +69,6 @@ void TDSP_execute_pl_as_task_list(void);
  * @brief タスクリストの展開時サイクル数を現在のサイクル数に強制的に合わせる
  */
 void TDSP_resync_internal_counter(void);
-
-/**
- * @brief 指定したブロックコマンドを、次にタスクリストに展開するものとして登録するコマンド
- */
-CCP_CmdRet Cmd_TDSP_SET_TASK_LIST(const CommonCmdPacket* packet);
 
 // debug_apps にあるべき & 今はつわかないので無効化
 #if 0
