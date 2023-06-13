@@ -1037,6 +1037,8 @@ def test_event_handler_respond_continuous():
 
     download_eh_log_tlm()
 
+    # time_threshold_ms = 30000 = 30秒なので、
+    # イベントの間隔が30秒以上開いていれば EH は反応しないはずである
     for i in range(3):
         assert check_respend_eh() == "not_responded"
         assert "SUC" == wings.util.send_rt_cmd_and_confirm(
@@ -1045,10 +1047,11 @@ def test_event_handler_respond_continuous():
             (EL_GROUP_TEST_EH, 2, EL_ERROR_LEVEL_LOW, 0),
             c2a_enum.Tlm_CODE_HK,
         )
-        time.sleep(28)
+        time.sleep(30) #イベントの間隔を最低30秒(=time_threshold_ms)開ける
     assert check_respend_eh() == "not_responded"
     download_eh_log_tlm()
 
+    # イベントの間隔を開けずに3回イベントを記録すれば EH は反応するはずである
     for i in range(3):
         assert check_respend_eh() == "not_responded"
         assert "SUC" == wings.util.send_rt_cmd_and_confirm(
