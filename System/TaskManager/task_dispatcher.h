@@ -40,7 +40,7 @@ typedef enum
   TDSP_UNKNOWN
 } TDSP_ACK;
 
-extern const TaskDsipatcher* const task_dispathcer;
+extern const TaskDsipatcher* const task_dispatcher;
 
 /**
  * @brief タスク管理を行うTaskDsipatcher構造体(TaskDsipatcher_)の初期化
