@@ -1047,7 +1047,7 @@ def test_event_handler_respond_continuous():
             (EL_GROUP_TEST_EH, 2, EL_ERROR_LEVEL_LOW, 0),
             c2a_enum.Tlm_CODE_HK,
         )
-        time.sleep(30) #イベントの間隔を最低30秒(=time_threshold_ms)開ける
+        time.sleep(30)  # イベントの間隔を最低30秒(=time_threshold_ms)開ける
     assert check_respend_eh() == "not_responded"
     download_eh_log_tlm()
 
