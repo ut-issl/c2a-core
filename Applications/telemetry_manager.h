@@ -146,7 +146,7 @@ AppInfo TLM_MGR_create_app(void);
 
 /**
  * @brief 初期化
- * @note  DCU を使っているので，完了に 1 秒ほどかかる
+ * @note  DCU を使っているので，完了に最大 1.5 秒ほどかかる
  */
 CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet);
 

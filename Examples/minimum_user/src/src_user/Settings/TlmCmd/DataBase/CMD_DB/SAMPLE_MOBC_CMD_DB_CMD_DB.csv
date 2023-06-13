@@ -131,7 +131,7 @@ Comment,,,,,Type,Description,Type,Description,Type,Description,Type,Description,
 ,TF_SET_PAGE_FOR_TLM,OBC,0x0070,1,uint8_t,page_no,,,,,,,,,,,,,テレメトリ定義テーブルページ番号設定,
 ,CA_SET_PAGE_FOR_TLM,OBC,0x0071,1,uint8_t,page_no,,,,,,,,,,,,,コマンド定義テーブルページ番号設定,
 **,Tlm Manager コマンド,,,,,,,,,,,,,,,,,,,
-,TLM_MGR_INIT,OBC,0x0072,0,,,,,,,,,,,,,,,初期化,DCU を使っているので，完了に 1 秒ほどかかる
+,TLM_MGR_INIT,OBC,0x0072,0,,,,,,,,,,,,,,,初期化,DCU を使っているので，完了に最大 1.5 秒ほどかかる
 ,TLM_MGR_INIT_MASTER_AND_DEPLOY_BC,OBC,0x0073,0,,,,,,,,,,,,,,,master bc の初期化,
 ,TLM_MGR_CLEAR_HK_TLM,OBC,0x0074,0,,,,,,,,,,,,,,,HKテレメを初期化,DCU を使っているので，完了に最大 1 秒ほどかかる
 ,TLM_MGR_CLEAR_HIGH_FREQ_TLM,OBC,0x0075,0,,,,,,,,,,,,,,,HIGH_FREQ テレメを初期化,DCU を使っているので，完了に最大 1 秒ほどかかる
