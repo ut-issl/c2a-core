@@ -28,12 +28,12 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_AOBC_(uint8_t* packet, uint16_t* len, uint16_t m
   TF_copy_u8(&packet[46], (uint8_t)(mode_manager->stat));
   TF_copy_u8(&packet[47], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[48], (uint8_t)(mode_manager->previous_id));
-  TF_copy_u8(&packet[49], (uint8_t)(task_dispathcer->task_list_id));
-  TF_copy_u32(&packet[50], (uint32_t)(task_dispathcer->tskd.prev_err.time.total_cycle));
-  TF_copy_u8(&packet[54], (uint8_t)(task_dispathcer->tskd.prev_err.time.step));
-  TF_copy_u16(&packet[55], (uint16_t)(task_dispathcer->tskd.prev_err.code));
-  TF_copy_u8(&packet[57], (uint8_t)(task_dispathcer->tskd.prev_err.cmd_ret.exec_sts));
-  TF_copy_u32(&packet[58], task_dispathcer->tskd.prev_err.cmd_ret.err_code);
+  TF_copy_u8(&packet[49], (uint8_t)(task_dispatcher->task_list_id));
+  TF_copy_u32(&packet[50], (uint32_t)(task_dispatcher->tskd.prev_err.time.total_cycle));
+  TF_copy_u8(&packet[54], (uint8_t)(task_dispatcher->tskd.prev_err.time.step));
+  TF_copy_u16(&packet[55], (uint16_t)(task_dispatcher->tskd.prev_err.code));
+  TF_copy_u8(&packet[57], (uint8_t)(task_dispatcher->tskd.prev_err.cmd_ret.exec_sts));
+  TF_copy_u32(&packet[58], task_dispatcher->tskd.prev_err.cmd_ret.err_code);
   TF_copy_u32(&packet[62], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[66], (uint32_t)(gs_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[70], (uint16_t)(gs_command_dispatcher->prev.code));
@@ -120,7 +120,7 @@ static TF_TLM_FUNC_ACK Tlm_AOBC_HK_(uint8_t* packet, uint16_t* len, uint16_t max
   TF_copy_double(&packet[30], TMGR_get_unixtime_at_ti0());
   TF_copy_u8(&packet[38], (uint8_t)(mode_manager->current_id));
   TF_copy_u8(&packet[39], (uint8_t)( ((uint8_t)(mode_manager->stat) << 7 & 0x80) | ((uint8_t)(mode_manager->previous_id) & 0x7F) ));
-  TF_copy_u16(&packet[40], task_dispathcer->task_list_id);
+  TF_copy_u16(&packet[40], task_dispatcher->task_list_id);
   TF_copy_u32(&packet[42], PL_count_executed_nodes(&PH_gs_cmd_list));
   TF_copy_u32(&packet[46], (uint32_t)(gs_command_dispatcher->prev.time.total_cycle));
   TF_copy_u16(&packet[50], (uint16_t)(gs_command_dispatcher->prev.code));

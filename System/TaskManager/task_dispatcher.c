@@ -22,14 +22,14 @@
 
 #define TDSP_TASK_MAX BCT_MAX_CMD_NUM
 
-static TaskDsipatcher task_dispathcer_;
-const TaskDsipatcher* const task_dispathcer = &task_dispathcer_;
+static TaskDsipatcher task_dispatcher_;
+const TaskDsipatcher* const task_dispatcher = &task_dispatcher_;
 
 // 現在のサイクルで実行すべきタスク一覧を保存したもの
 static PacketList TDSP_task_list_;
 
 /**
- * @brief `task_dispathcer_.task_list_id` に登録された BC を TaskListに展開.
+ * @brief `task_dispatcher_.task_list_id` に登録された BC を TaskListに展開.
  * @note  実際に BC の内容を読み込み、展開しているのは `PL_ACK PL_deploy_block_cmd(args)`
  */
 static void TDSP_deploy_block_as_task_list_(void);
@@ -52,10 +52,10 @@ void TDSP_initialize(void)
   PL_initialize_with_ccp(task_stock_, packet_stock_, TDSP_TASK_MAX, &TDSP_task_list_);
 
   // タスクリストを初期化し、INITIALモードのブロックコマンドを展開する
-  task_dispathcer_.tskd = CDIS_init(&TDSP_task_list_);
-  task_dispathcer_.task_list_id = MM_get_tasklist_id_of_mode(MD_MODEID_START_UP);
+  task_dispatcher_.tskd = CDIS_init(&TDSP_task_list_);
+  task_dispatcher_.task_list_id = MM_get_tasklist_id_of_mode(MD_MODEID_START_UP);
   TDSP_deploy_block_as_task_list_();
-  task_dispathcer_.activated_at = 0;
+  task_dispatcher_.activated_at = 0;
 }
 
 
@@ -65,7 +65,7 @@ TDSP_ACK TDSP_set_task_list_id(bct_id_t id)
   if (!BCE_is_active(id)) return TDSP_INACTIVE_BCT_ID;
   if (BCT_get_bc_length(id) == 0) return TDSP_EMPTY_BC;
 
-  task_dispathcer_.task_list_id = id;
+  task_dispatcher_.task_list_id = id;
   return TDSP_SUCCESS;
 }
 
@@ -76,9 +76,9 @@ static void TDSP_deploy_block_as_task_list_(void)
 
   // 本関数内の処理中にMaster Cycleが変化した場合を検出できるよう、
   // まず次Master Cycleの情報を更新する。
-  task_dispathcer_.activated_at = TMGR_get_master_total_cycle() + 1;
+  task_dispatcher_.activated_at = TMGR_get_master_total_cycle() + 1;
 
-  ack = PL_deploy_block_cmd(&TDSP_task_list_, task_dispathcer_.task_list_id, 0);
+  ack = PL_deploy_block_cmd(&TDSP_task_list_, task_dispatcher_.task_list_id, 0);
 
   if (ack != PL_SUCCESS)
   {
@@ -97,7 +97,7 @@ void TDSP_execute_pl_as_task_list(void)
   // (1) > (2) の時は今回のサイクルで実行すべきコマンドがすべて実行済みである
   // (1) < (2) の時は展開から 1サイクル (100ms) 以上経過してしまっているので強制終了する
 
-  if (task_dispathcer_.activated_at == TMGR_get_master_total_cycle())
+  if (task_dispatcher_.activated_at == TMGR_get_master_total_cycle())
   {
     // タスクリストの先頭コマンド実行予定時刻と現在時刻を比較
     PL_ACK ack = PL_check_tl_cmd(&TDSP_task_list_,
@@ -116,15 +116,15 @@ void TDSP_execute_pl_as_task_list(void)
 
     case PL_TLC_ON_TIME:
       // 実行時刻が過ぎている、もしくは実行時刻ピッタリの場合はコマンドを実行
-      CDIS_dispatch_command(&(task_dispathcer_.tskd));
+      CDIS_dispatch_command(&(task_dispatcher_.tskd));
 
-      if (task_dispathcer_.tskd.prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
+      if (task_dispatcher_.tskd.prev.cmd_ret.exec_sts != CCP_EXEC_SUCCESS)
       {
         // コマンド実行時に異常が発生した場合はアノマリを登録。
         EL_record_event((EL_GROUP)EL_CORE_GROUP_TASK_DISPATCHER,
                       TDSP_TASK_EXEC_FAILED,
                       EL_ERROR_LEVEL_HIGH,
-                      task_dispathcer_.tskd.prev.cmd_ret.exec_sts);
+                      task_dispatcher_.tskd.prev.cmd_ret.exec_sts);
       }
 
       break;
@@ -137,7 +137,7 @@ void TDSP_execute_pl_as_task_list(void)
       if (PL_count_active_nodes(&TDSP_task_list_) == 0)
       {
         // task_listが空なら再度タスクリストを展開
-        // これを行うとtask_dispathcer_.activated_atがインクリメントされるので、"次のサイクル実行待ち状態"になる
+        // これを行うとtask_dispatcher_.activated_atがインクリメントされるので、"次のサイクル実行待ち状態"になる
         TDSP_deploy_block_as_task_list_();
       }
 
@@ -151,18 +151,18 @@ void TDSP_execute_pl_as_task_list(void)
                       (uint32_t)ack);
     }
   }
-  else if (task_dispathcer_.activated_at > TMGR_get_master_total_cycle())
+  else if (task_dispatcher_.activated_at > TMGR_get_master_total_cycle())
   {
     // 次のサイクルの実行待ち状態
     return;
   }
-  else if (task_dispathcer_.activated_at < TMGR_get_master_total_cycle())
+  else if (task_dispatcher_.activated_at < TMGR_get_master_total_cycle())
   {
-    if ((task_dispathcer_.activated_at == 0) && (TMGR_get_master_total_cycle() == OBCT_MAX_CYCLE - 1))
+    if ((task_dispatcher_.activated_at == 0) && (TMGR_get_master_total_cycle() == OBCT_MAX_CYCLE - 1))
     {
       // 次サイクルの実行待ち状態(サイクルオーバーフロー直前)
-      // 本来は task_dispathcer_.activated_at > TMGR_get_master_total_cycle() となるはずが、
-      // task_dispathcer_.activated_atがあふれて0に戻っている場合ここに来る
+      // 本来は task_dispatcher_.activated_at > TMGR_get_master_total_cycle() となるはずが、
+      // task_dispatcher_.activated_atがあふれて0に戻っている場合ここに来る
       return;
     }
     else
@@ -183,7 +183,7 @@ void TDSP_execute_pl_as_task_list(void)
 
 void TDSP_resync_internal_counter(void)
 {
-  task_dispathcer_.activated_at = TMGR_get_master_total_cycle();
+  task_dispatcher_.activated_at = TMGR_get_master_total_cycle();
 }
 
 
@@ -218,11 +218,11 @@ void TDSP_print_tdsp_status_(void)
 {
   VT100_erase_line();
   Printf("TASK: BC %d, ERR (TOTAL, STEP, STS, CODE) = (%10u, %3u, %d, %d)\n",
-         task_dispathcer->task_list_id,
-         task_dispathcer->tskd.prev_err.time.total_cycle,
-         task_dispathcer->tskd.prev_err.time.step,
-         task_dispathcer->tskd.prev_err.cmd_ret.exec_sts,
-         task_dispathcer->tskd.prev_err.cmd_ret.err_code);
+         task_dispatcher->task_list_id,
+         task_dispatcher->tskd.prev_err.time.total_cycle,
+         task_dispatcher->tskd.prev_err.time.step,
+         task_dispatcher->tskd.prev_err.cmd_ret.exec_sts,
+         task_dispatcher->tskd.prev_err.cmd_ret.err_code);
 }
 #endif
 
