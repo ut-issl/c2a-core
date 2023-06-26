@@ -16,7 +16,7 @@ AppInfo NOP_create_app(void)
   return AI_create_app_info("nop", NULL, NOP_nop_);
 }
 
-static void NOP_nop_() {
+static void NOP_nop_(void) {
   // no operation
 }
 
