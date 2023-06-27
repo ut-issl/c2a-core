@@ -34,6 +34,10 @@ if(MSVC)
   if(BUILD_C2A_AS_UTF8)
     target_compile_options(${PROJECT_NAME} PUBLIC "/source-charset:utf-8")
   endif()
+
+  # warning
+  target_compile_options(${PROJECT_NAME} PRIVATE /wd4083) # disable #pragma SECTION REPRO warning
+  target_compile_options(${PROJECT_NAME} PRIVATE /wd4081) # disable #pragma section (EOF)
 else()
   # SJIS
   # if (NOT CMAKE_C_COMPILER_ID STREQUAL "Clang")
