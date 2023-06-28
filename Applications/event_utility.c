@@ -26,7 +26,7 @@ static void EVENT_UTIL_init_(void)
   event_utility_.is_enabled_eh_execution = 1;
 }
 
-static void EVENT_UTIL_update_()
+static void EVENT_UTIL_update_(void)
 {
   if (event_utility_.is_enabled_eh_execution)
   {
