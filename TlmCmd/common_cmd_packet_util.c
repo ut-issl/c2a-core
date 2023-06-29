@@ -266,7 +266,7 @@ PH_ACK CCP_register_tlc(cycle_t ti, TLCD_ID tlcd_id, CMD_CODE cmd_id, const uint
 {
   CCP_EXEC_TYPE type = CCP_get_exec_type_from_tlcd_id(tlcd_id);
 
-  if (type == CCP_EXEC_UNKNOWN)
+  if (type == CCP_EXEC_TYPE_UNKNOWN)
   {
     return PH_ACK_INVALID_PACKET;
   }
