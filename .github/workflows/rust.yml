@@ -24,7 +24,7 @@ jobs:
           components: clippy, rustfmt
 
       - name: cache dependencies
-        uses: Swatinem/rust-cache@v2.5.0
+        uses: Swatinem/rust-cache@v2.5.1
 
       - name: reviewdog / clippy
         uses: sksat/action-clippy@v0.2.1
