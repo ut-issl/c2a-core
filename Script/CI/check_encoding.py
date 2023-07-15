@@ -81,7 +81,7 @@ def check_encoding(path, encoding):
         enc = ret["encoding"]
     # print(enc)
     if encoding == "utf-8":
-        if enc == "utf-8" or enc == "ascii":
+        if enc == "utf-8" or enc == "ascii" or enc == "MacRoman":
             return True
         # なぜか以下のような誤認もあるので
         if enc == "Windows-1252" or enc == "ISO-8859-1" or enc is None:
