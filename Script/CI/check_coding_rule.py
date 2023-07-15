@@ -47,6 +47,7 @@ def main():
         check_operator_space_,
         check_preprocessor_,
         check_include_guard_,
+        check_binary_operator_before_linebreak_,
     ]
     check_funcs = []
 
@@ -676,6 +677,23 @@ def check_include_guard_(path: str, code_lines: list) -> bool:
 
     print_err_(path, 1, "INCLUDE GUARD IS REQUIRED", code_lines[0])
     return False
+
+
+def check_binary_operator_before_linebreak_(path: str, code_lines: list) -> bool:
+    ptn = r'^\s*([+\-*/%]|<<|>>|<=|>=|==|!=|&{1,2}|\|{1,2}|\^)\s+'
+    reptn = re.compile(ptn)
+    for idx, line in enumerate(code_lines):
+        if is_in_comment_context_in_multiline_(path, code_lines, idx):
+            continue
+
+        matched = reptn.match(line)
+        if matched is None:
+            continue
+
+        print_err_(path, idx, f'LINE {idx} HAS STARTED WITH THE OPERATOR {matched.group(1)}.', line)
+        return False
+
+    return True
 
 
 # True: target が含まれる, False: なし
