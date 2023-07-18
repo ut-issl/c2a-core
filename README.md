@@ -3,6 +3,7 @@
 ## C2A
 - Command Centric Architecture
 - OBC 搭載フライトソフトウェアフレームワーク
+- v4 系以降の先行開発は https://github.com/arkedge/c2a-core で行われる
 
 ### C2A core
 - 各 C2A で共通利用される C2A の中核部のコード
