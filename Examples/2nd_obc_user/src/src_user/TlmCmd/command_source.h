@@ -7,7 +7,7 @@
 
 #include <src_core/System/EventManager/event_logger.h>
 #include <src_core/System/EventManager/event_handler.h>
-#include <src_core/System/TimeManager/time_manager.h>
+#include <src_core/System/TimeManager/time_manager_cmd.h>
 #include <src_core/System/ModeManager/mode_manager.h>
 #include <src_core/System/ApplicationManager/app_manager.h>
 #include <src_core/System/TaskManager/task_dispatcher.h>

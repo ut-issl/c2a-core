@@ -6,7 +6,6 @@
 #define TIME_MANAGER_H_
 
 #include "obc_time.h"
-#include "../../TlmCmd/common_cmd_packet.h"
 
 #define TMGR_DEFAULT_UNIXTIME_EPOCH_FOR_UTL (1577836800.0)  /*!< 2020-01-01T00:00:00Z 時点の unixtime.
                                                                  utl_unixtime_epoch のデフォルト値 */
@@ -227,17 +226,5 @@ ObcTime TMGR_get_obc_time_from_unixtime(const double unixtime);
  * @retval TI (total_cycleのこと) : それ以外の場合
  */
 cycle_t TMGR_get_ti_from_utl_unixtime(const cycle_t utl_unixtime);
-
-CCP_CmdRet Cmd_TMGR_SET_TIME(const CommonCmdPacket* packet);
-
-CCP_CmdRet Cmd_TMGR_UPDATE_UNIXTIME(const CommonCmdPacket* packet);
-
-CCP_CmdRet Cmd_TMGR_SET_UTL_UNIXTIME_EPOCH(const CommonCmdPacket* packet);
-
-CCP_CmdRet Cmd_TMGR_SET_CYCLE_CORRECTION(const CommonCmdPacket* packet);
-
-CCP_CmdRet Cmd_TMGR_RESET_CYCLE_CORRECTION(const CommonCmdPacket* packet);
-
-CCP_CmdRet Cmd_TMGR_CLEAR_UNIXTIME_INFO(const CommonCmdPacket* packet);
 
 #endif
