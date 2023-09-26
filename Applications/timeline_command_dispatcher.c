@@ -270,7 +270,15 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
 
   ack = PL_deploy_block_cmd(&(PH_tl_cmd_list[id]), block_no, TMGR_get_master_total_cycle());
 
-  if (ack != PL_SUCCESS)
+  if (ack == PL_BC_LIST_CLEARED)
+  {
+    EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
+                    (uint32_t)PL_BC_LIST_CLEARED,
+                    EL_ERROR_LEVEL_HIGH,
+                    (uint32_t)( ((0x000000ff & id) << 24) | (0x00ffffff & block_no) ));
+    return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
+  }
+  else if (ack != PL_SUCCESS)
   {
     EL_record_event((EL_GROUP)EL_CORE_GROUP_TLCD_DEPLOY_BLOCK,
                     (uint32_t)ack,
