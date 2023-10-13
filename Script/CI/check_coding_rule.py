@@ -47,6 +47,7 @@ def main():
         check_operator_space_,
         check_preprocessor_,
         check_include_guard_,
+        check_filename_snakecase_,
     ]
     check_funcs = []
 
@@ -676,6 +677,15 @@ def check_include_guard_(path: str, code_lines: list) -> bool:
 
     print_err_(path, 1, "INCLUDE GUARD IS REQUIRED", code_lines[0])
     return False
+
+
+# True: path の basename がスネークケースである, False: 非スネークケース
+def check_filename_snakecase_(path: str, _: list) -> bool:
+    basename = path.strip('/')[0]
+
+    re_snake_case = r'[a-z0-9]+[_[a-z0-9]+]*'
+
+    return (re.fullmatch(re_snake_case, basename) is not None)
 
 
 # True: target が含まれる, False: なし
