@@ -18,7 +18,7 @@ jobs:
           - 2nd_obc_user
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: setup
         shell: cmd
