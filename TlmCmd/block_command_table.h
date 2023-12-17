@@ -235,6 +235,14 @@ BCT_ACK BCT_overwrite_cmd(const BCT_Pos* pos, const CommonCmdPacket* packet);
  */
 BCT_ACK BCT_copy_bct(const bct_id_t dst_block, const bct_id_t src_block);
 
+/**
+ * @brief byte 列から BC を復元し BCT に挿入する
+ * @param[in] bc_id コピー先の bct_id
+ * @param[in] data コピー元の byte 列へのポインタ
+ * @return BCT_ACK
+ */
+BCT_ACK BCT_copy_bct_from_bytes(const bct_id_t bc_id, uint8_t* data);
+
 // 以下3つは BCT に登録されている Cmd からその内容を取り出すgetter
 /**
  * @brief BCT 内の Cmd の CMD_CODE の getter

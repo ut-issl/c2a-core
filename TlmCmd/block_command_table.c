@@ -269,6 +269,24 @@ BCT_ACK BCT_copy_bct(const bct_id_t dst_block, const bct_id_t src_block)
   return BCT_SUCCESS;
 }
 
+BCT_ACK BCT_copy_bct_from_bytes(const bct_id_t bc_id, uint8_t* data)
+{
+  BCT_Table temp;
+
+  if (bc_id >= BCT_MAX_BLOCKS) return BCT_INVALID_BLOCK_NO;
+  if (BCE_is_active(bc_id)) return BCT_INVALID_BLOCK_NO;
+
+  // byte 列をいったん BCT_Table の形にして、最低限 cmd 数の確認をする
+  memcpy(&temp, data, sizeof(BCT_Table));
+  if (temp.length == 0 || temp.length > BCT_MAX_CMD_NUM) return BCT_INVALID_CMD_NO;
+
+  // BCT にコピー
+  memcpy(block_command_table_.blocks[bc_id], &temp, sizeof(BCT_Table));
+  BCE_clear_block(bc_id);
+
+  return BCT_SUCCESS;
+}
+
 CMD_CODE BCT_get_id(const bct_id_t block, const uint8_t cmd)
 {
   BCT_Pos pos;
