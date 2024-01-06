@@ -655,14 +655,13 @@ static TLM_MGR_ERR_CODE TLM_MGR_form_dr_replay_tlm_(CommonCmdPacket* packet, cyc
   uint8_t param[2];
 
   param[0] = dr_partition;
-  param[1] = CTP_DEST_FLAG_RP_TLM;
-  param[2] = 1;
+  param[1] = 1;
 
   ret = CCP_form_tlc(packet,
                      ti,
                      Cmd_CODE_DR_REPLAY_TLM,
                      param,
-                     3);
+                     2);
   if (ret != CCP_UTIL_ACK_OK) return TLM_MGR_ERR_CODE_OTHER_ERR;
   return TLM_MGR_ERR_CODE_OK;
 #else
