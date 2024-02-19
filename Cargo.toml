@@ -19,5 +19,5 @@ export-src = ["std"]
 clang-runtime = ["clang/runtime"]
 
 [build-dependencies]
-semver = "1.0.17"
+semver = "1.0.22"
 clang = "2.0.0"
