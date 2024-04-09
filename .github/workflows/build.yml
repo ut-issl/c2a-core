@@ -22,6 +22,8 @@ jobs:
         else
           ./setup.sh
         fi
+      cmake_generator_linux32: Ninja
+      cmake_generator_win32: Ninja
 
   second_obc_user:
     name: 2nd obc user
@@ -37,3 +39,5 @@ jobs:
         else
           ./setup.sh
         fi
+      cmake_generator_linux32: Ninja
+      cmake_generator_win32: Ninja
