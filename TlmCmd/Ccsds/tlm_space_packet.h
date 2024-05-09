@@ -211,7 +211,7 @@ TSP_2ND_HDR_VER TSP_get_2nd_hdr_ver(const TlmSpacePacket* tsp);
  * @param[in]     id:  TSP_2ND_HDR_VER
  * @return void
  */
-void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, TSP_2ND_HDR_VER ver);
+void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, uint8_t ver);
 
 /**
  * @brief  Board Time を取得
