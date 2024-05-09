@@ -132,10 +132,9 @@ TSP_2ND_HDR_VER TSP_get_2nd_hdr_ver(const TlmSpacePacket* tsp)
 }
 
 
-void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, TSP_2ND_HDR_VER ver)
+void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, uint8_t ver)
 {
-  uint8_t tmp = (uint8_t)ver;
-  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_2nd_hdr_ver_, &tmp);
+  SP_insert_param_to_packet(TSP_CAST_TO_NON_CONST_SP(tsp), &TSP_pei_2nd_hdr_ver_, &ver);
 }
 
 
