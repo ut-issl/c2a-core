@@ -27,7 +27,7 @@ jobs:
         uses: Swatinem/rust-cache@v2.5.1
 
       - name: reviewdog / clippy
-        uses: sksat/action-clippy@v0.2.1
+        uses: sksat/action-clippy@v0.8.0
         with:
           reporter: ${{ github.event_name == 'pull_request' && 'github-pr-review' || 'github-check' }}
           clippy_flags: --all-features
