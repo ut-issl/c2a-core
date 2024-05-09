@@ -208,7 +208,7 @@ TSP_2ND_HDR_VER TSP_get_2nd_hdr_ver(const TlmSpacePacket* tsp);
 /**
  * @brief  Secondary Header Version No を設定
  * @param[in,out] tsp: TlmSpacePacket
- * @param[in]     id:  TSP_2ND_HDR_VER
+ * @param[in]     id:  uint8_t
  * @return void
  */
 void TSP_set_2nd_hdr_ver(TlmSpacePacket* tsp, uint8_t ver);
