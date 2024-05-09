@@ -35,8 +35,6 @@ typedef enum
 // TL_MIS を有効にするかどうか
 #include <src_user/Settings/Applications/timeline_command_dispatcher_define.h>
 
-#include <src_user/Applications/UserDefined/Cdh/RecordTi.h>
-
 /**
  * @enum   CCP_EXEC_STS
  * @brief  コマンド実行結果コード
