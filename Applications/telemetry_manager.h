@@ -68,6 +68,17 @@ typedef enum
   TLM_MGR_CMD_TYPE_DR_REPLAY_TLM
 } TLM_MGR_CMD_TYPE;
 
+typedef enum
+{
+  TLM_MGR_MRAM_TLM_PLAN_ID_NOMINAL,
+  TLM_MGR_MRAM_TLM_PLAN_ID_DR,
+  TLM_MGR_MRAM_TLM_PLAN_ID_MAX
+} TLM_MGR_MRAM_TLM_PLAN_ID;
+
+typedef struct
+{
+  bct_id_t mram_bc_ids[TLM_MGR_MAX_CMD_NUM_PER_BC];
+} TLM_MGR_MRAM_TLM_PLAN;
 
 /**
  * @struct TLM_MGR_RegisterInfo
@@ -135,7 +146,11 @@ typedef struct
   TLM_MGR_CmdTable cmd_table;         //!< 現在 BC に登録された（テレメ生成などの）コマンド
   bct_id_t master_bc_id;              //!< TLM_MGR_USE_BC_NUM 個の tlm bc を順次実行していく master BC の ID
   bct_id_t deploy_bc_id;              //!< master BC を deploy する BC の ID
+  bct_id_t bc_ids[TLM_MGR_USE_BC_NUM];
   uint8_t is_inited;                  //!< 初期化されているか？
+  uint8_t is_mram_init_enabled;       //!< MRAMで初期化するかどうか
+  TLM_MGR_MRAM_TLM_PLAN mram_tlm_plan[TLM_MGR_MRAM_TLM_PLAN_ID_MAX];
+  TLM_MGR_MRAM_TLM_PLAN_ID mram_plan_id; 
 } TelemetryManager;
 
 
@@ -143,6 +158,15 @@ extern const TelemetryManager* const telemetry_manager;
 
 AppInfo TLM_MGR_create_app(void);
 
+/**
+ * @brief テレメマネージャーで使うBCをセット
+ */
+CCP_CmdRet Cmd_TLM_MGR_SET_BC_ID_DEFAULT(const CommonCmdPacket* packet);
+
+/**
+ * @brief テレメマネージャーで使うBCをMRAMからセット
+ */
+CCP_CmdRet Cmd_TLM_MGR_SET_BC_ID_MRAM(const CommonCmdPacket* packet);
 
 /**
  * @brief 初期化

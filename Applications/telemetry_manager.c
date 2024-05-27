@@ -363,6 +363,16 @@ static void TLM_MGR_init_by_am_(void)
 // BCT の初期化より前なので，AppInit にできない．
 static RESULT TLM_MGR_init_1_(void)
 {
+  if (telemetry_manager_.is_mram_init_enabled)
+  {
+    CCP_CmdRet ret = CCP_form_and_exec_rtc(Cmd_CODE_TLM_MGR_SET_BC_ID_MRAM, NULL, 0);
+    if (ret.exec_sts != CCP_EXEC_SUCCESS) return RESULT_ERR;
+  }
+  else 
+  {
+    CCP_CmdRet ret = CCP_form_and_exec_rtc(Cmd_CODE_TLM_MGR_SET_BC_ID_DEFAULT, NULL, 0);
+    if (ret.exec_sts != CCP_EXEC_SUCCESS) return RESULT_ERR;
+  }
   return TLM_MGR_clear_info_();
 }
 
@@ -378,30 +388,32 @@ static RESULT TLM_MGR_init_2_(void)
 static RESULT TLM_MGR_clear_info_(void)
 {
   RESULT ret;
+  bct_id_t *bc_ids;
   memset(&telemetry_manager_, 0x00, sizeof(telemetry_manager_));
 
   telemetry_manager_.is_inited = 0;
+  bc_ids = telemetry_manager_.bc_ids;
 
   // TOOD: TLM_MGR_USE_BC_NUM が 10 であることを想定したコードになってる
-  ret = TLM_MGR_regigster_bc_settings(0, BC_TLM_MGR_0, TLM_MGR_BC_ROLE_AT_BC_0);
+  ret = TLM_MGR_regigster_bc_settings(0, bc_ids[0], TLM_MGR_BC_ROLE_AT_BC_0);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(1, BC_TLM_MGR_1, TLM_MGR_BC_ROLE_AT_BC_1);
+  ret = TLM_MGR_regigster_bc_settings(1, bc_ids[1], TLM_MGR_BC_ROLE_AT_BC_1);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(2, BC_TLM_MGR_2, TLM_MGR_BC_ROLE_AT_BC_2);
+  ret = TLM_MGR_regigster_bc_settings(2, bc_ids[2], TLM_MGR_BC_ROLE_AT_BC_2);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(3, BC_TLM_MGR_3, TLM_MGR_BC_ROLE_AT_BC_3);
+  ret = TLM_MGR_regigster_bc_settings(3, bc_ids[3], TLM_MGR_BC_ROLE_AT_BC_3);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(4, BC_TLM_MGR_4, TLM_MGR_BC_ROLE_AT_BC_4);
+  ret = TLM_MGR_regigster_bc_settings(4, bc_ids[4], TLM_MGR_BC_ROLE_AT_BC_4);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(5, BC_TLM_MGR_5, TLM_MGR_BC_ROLE_AT_BC_5);
+  ret = TLM_MGR_regigster_bc_settings(5, bc_ids[5], TLM_MGR_BC_ROLE_AT_BC_5);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(6, BC_TLM_MGR_6, TLM_MGR_BC_ROLE_AT_BC_6);
+  ret = TLM_MGR_regigster_bc_settings(6, bc_ids[6], TLM_MGR_BC_ROLE_AT_BC_6);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(7, BC_TLM_MGR_7, TLM_MGR_BC_ROLE_AT_BC_7);
+  ret = TLM_MGR_regigster_bc_settings(7, bc_ids[7], TLM_MGR_BC_ROLE_AT_BC_7);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(8, BC_TLM_MGR_8, TLM_MGR_BC_ROLE_AT_BC_8);
+  ret = TLM_MGR_regigster_bc_settings(8, bc_ids[8], TLM_MGR_BC_ROLE_AT_BC_8);
   if (ret != RESULT_OK) return RESULT_ERR;
-  ret = TLM_MGR_regigster_bc_settings(9, BC_TLM_MGR_9, TLM_MGR_BC_ROLE_AT_BC_9);
+  ret = TLM_MGR_regigster_bc_settings(9, bc_ids[9], TLM_MGR_BC_ROLE_AT_BC_9);
   if (ret != RESULT_OK) return RESULT_ERR;
 
   // deploy とあわせる最後は LOW であることが必須
@@ -1019,6 +1031,44 @@ static CCP_CmdRet TLM_MGR_conv_err_code_to_ccp_cmd_ret_(TLM_MGR_ERR_CODE code)
   }
 }
 
+CCP_CmdRet Cmd_TLM_MGR_SET_BC_ID_DEFAULT(const CommonCmdPacket* packet)
+{
+  bct_id_t *bc_ids;
+  bc_ids = telemetry_manager_.bc_ids;
+  (void)packet;
+
+  bc_ids[0] = BC_TLM_MGR_0;
+  bc_ids[1] = BC_TLM_MGR_1;
+  bc_ids[2] = BC_TLM_MGR_2;
+  bc_ids[3] = BC_TLM_MGR_3;
+  bc_ids[4] = BC_TLM_MGR_4;
+  bc_ids[5] = BC_TLM_MGR_5;
+  bc_ids[6] = BC_TLM_MGR_6;
+  bc_ids[7] = BC_TLM_MGR_7;
+  bc_ids[8] = BC_TLM_MGR_8;
+  bc_ids[9] = BC_TLM_MGR_9;
+}
+
+CCP_CmdRet Cmd_TLM_MGR_SET_BC_ID_MRAM(const CommonCmdPacket* packet)
+{
+  bct_id_t *bc_ids;
+  TLM_MGR_MRAM_TLM_PLAN_ID plan_id;
+  int i;
+  (void)packet;
+
+  plan_id = telemetry_manager_.mram_plan_id;
+  bc_ids = telemetry_manager_.bc_ids;
+
+  for (i=0; i < TLM_MGR_USE_BC_NUM; i++)
+  {
+    bc_ids[i] = telemetry_manager_.mram_tlm_plan[plan_id].mram_bc_ids[i];
+  }
+}
+
+CCP_CmdRet Cmd_TLM_MGR_SET_BC_ID_MRAM(const CommonCmdPacket* packet)
+{
+  
+}
 
 CCP_CmdRet Cmd_TLM_MGR_INIT(const CommonCmdPacket* packet)
 {
