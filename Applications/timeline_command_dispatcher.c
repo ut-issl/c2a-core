@@ -55,6 +55,15 @@ static void TLCD_gs_init_(void)
   timeline_command_dispatcher_.tlm_info_.page_no = 0;
   timeline_command_dispatcher_.tlm_info_.updated_at = 0;
 
+  bc_exec_status_.last_exec_block_type = TLCD_ID_MAX;
+  bc_exec_status_.last_exec_block = 0;
+  bc_exec_status_.last_exec_time = 0;
+  bc_exec_status_.last_exec_status = CCP_EXEC_SUCCESS;
+  bc_exec_status_.last_err_block_type = TLCD_ID_MAX;
+  bc_exec_status_.last_err_block = 0;
+  bc_exec_status_.last_err_time = 0;
+  bc_exec_status_.last_err_status = CCP_EXEC_SUCCESS;
+
   memset(&TLCD_null_packet_, 0, sizeof(TLCD_null_packet_));
   TLCD_update_tl_list_for_tlm(TLCD_ID_FROM_GS);
 }
@@ -256,18 +265,40 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
   {
     // パラメータはTLライン番号(1Byte)とブロック番号。
     // 一致しない場合は異常判定。
+
+    if (id != TLCD_ID_DEPLOY_TLM)
+    {
+      bc_exec_status_.last_err_block_type = id;
+      bc_exec_status_.last_err_block = block_no;
+      bc_exec_status_.last_err_time = exec_time;
+      bc_exec_status_.last_err_status = CCP_EXEC_ILLEGAL_LENGTH;
+    }
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_LENGTH);
   }
 
   if (id >= TLCD_ID_MAX)
   {
     // 指定されたライン番号が存在しない場合は異常判定
+    if (id != TLCD_ID_DEPLOY_TLM)
+    {
+      bc_exec_status_.last_err_block_type = id;
+      bc_exec_status_.last_err_block = block_no;
+      bc_exec_status_.last_err_time = exec_time;
+      bc_exec_status_.last_err_status = CCP_EXEC_ILLEGAL_PARAMETER;
+    }
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
   if (block_no >= BCT_MAX_BLOCKS)
   {
     // 指定されたブロック番号が存在しない場合は異常判定
+    if (id != TLCD_ID_DEPLOY_TLM)
+    {
+      bc_exec_status_.last_err_block_type = id;
+      bc_exec_status_.last_err_block = block_no;
+      bc_exec_status_.last_err_time = exec_time;
+      bc_exec_status_.last_err_status = CCP_EXEC_ILLEGAL_PARAMETER;
+    }
     return CCP_make_cmd_ret_without_err_code(CCP_EXEC_ILLEGAL_PARAMETER);
   }
 
@@ -279,6 +310,13 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
                     (uint32_t)PL_BC_LIST_CLEARED,
                     EL_ERROR_LEVEL_HIGH,
                     (uint32_t)( ((0x000000ff & id) << 24) | (0x00ffffff & block_no) ));
+    if (id != TLCD_ID_DEPLOY_TLM)
+    {
+      bc_exec_status_.last_exec_block_type = id;
+      bc_exec_status_.last_exec_block = block_no;
+      bc_exec_status_.last_exec_time = exec_time;
+      bc_exec_status_.last_exec_status = CCP_EXEC_ILLEGAL_CONTEXT;
+    }
     return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
   }
   else if (ack != PL_SUCCESS)
@@ -294,11 +332,19 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
         bc_exec_status_.last_exec_block_type = id;
         bc_exec_status_.last_exec_block = block_no;
         bc_exec_status_.last_exec_time = exec_time;
+        bc_exec_status_.last_exec_status = CCP_EXEC_SUCCESS;
       }
       return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
     }
     else
     {
+      if (id != TLCD_ID_DEPLOY_TLM)
+      {
+        bc_exec_status_.last_err_block_type = id;
+        bc_exec_status_.last_err_block = block_no;
+        bc_exec_status_.last_err_time = exec_time;
+        bc_exec_status_.last_err_status = CCP_EXEC_ILLEGAL_CONTEXT;
+      }
       return CCP_make_cmd_ret(CCP_EXEC_ILLEGAL_CONTEXT, (uint32_t)ack);
     }
   }
@@ -308,6 +354,7 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     bc_exec_status_.last_exec_block_type = id;
     bc_exec_status_.last_exec_block = block_no;
     bc_exec_status_.last_exec_time = exec_time;
+    bc_exec_status_.last_exec_status = CCP_EXEC_SUCCESS;
   }
   return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
 }

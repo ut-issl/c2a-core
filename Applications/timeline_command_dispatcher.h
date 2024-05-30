@@ -28,6 +28,12 @@ typedef struct {
   TLCD_ID last_exec_block_type;
   bct_id_t last_exec_block;
   cycle_t last_exec_time;
+  CCP_EXEC_STS last_exec_status;
+  TLCD_ID last_err_block_type;
+  bct_id_t last_err_block;
+  cycle_t last_err_time;
+  CCP_EXEC_STS last_err_status;
+
 } BCExecStatus;
 
 extern const TimelineCommandDispatcher* const timeline_command_dispatcher;
