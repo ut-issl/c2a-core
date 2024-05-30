@@ -23,8 +23,15 @@ typedef struct
   } tlm_info_;
 } TimelineCommandDispatcher;
 
-extern const TimelineCommandDispatcher* const timeline_command_dispatcher;
 
+typedef struct {
+  TLCD_ID last_exec_block_type;
+  bct_id_t last_exec_block;
+  cycle_t last_exec_time;
+} BCExecStatus;
+
+extern const TimelineCommandDispatcher* const timeline_command_dispatcher;
+extern const BCExecStatus* const bc_exec_status;
 /**
  * @brief TL0 (GS から登録されるバス用の Timeline) の実行 App を作成する
  * @param void
