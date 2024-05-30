@@ -289,9 +289,12 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
                     (uint32_t)( ((0x000000ff & id) << 24) | (0x00ffffff & block_no) ));
     if (ack == PL_BC_TIME_ADJUSTED)
     {
-      bc_exec_status_.last_exec_block_type = id;
-      bc_exec_status_.last_exec_block = block_no;
-      bc_exec_status_.last_exec_time = exec_time;
+      if (id != TLCD_ID_DEPLOY_TLM)
+      {
+        bc_exec_status_.last_exec_block_type = id;
+        bc_exec_status_.last_exec_block = block_no;
+        bc_exec_status_.last_exec_time = exec_time;
+      }
       return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
     }
     else
@@ -300,9 +303,12 @@ CCP_CmdRet Cmd_TLCD_DEPLOY_BLOCK(const CommonCmdPacket* packet)
     }
   }
 
-  bc_exec_status_.last_exec_block_type = id;
-  bc_exec_status_.last_exec_block = block_no;
-  bc_exec_status_.last_exec_time = exec_time;
+  if (id != TLCD_ID_DEPLOY_TLM)
+  {
+    bc_exec_status_.last_exec_block_type = id;
+    bc_exec_status_.last_exec_block = block_no;
+    bc_exec_status_.last_exec_time = exec_time;
+  }
   return CCP_make_cmd_ret(CCP_EXEC_SUCCESS, (uint32_t)ack);
 }
 
