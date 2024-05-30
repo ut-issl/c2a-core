@@ -12,6 +12,7 @@
 #include <src_user/TlmCmd/user_packet_handler.h>
 #include <src_user/Settings/TlmCmd/common_tlm_packet_define.h>
 #include "./Ccsds/tlm_space_packet.h"   // FIXME: TSP 依存性はNGなので， TCP → SP 大工事終わったら直す
+#include <src_user/IfWrapper/mram.h>   // FIXME: RTI 依存性はNGなのでいつか直すべき
 
 
 /**
@@ -123,7 +124,7 @@ CCP_CmdRet Cmd_GENERATE_TLM(const CommonCmdPacket* packet)
   TSP_set_dest_flags(&TG_ctp_, dest_flags);
   TSP_set_dest_info(&TG_ctp_, dr_partition);   // FIXME: もはや dr partition ですらない
   TSP_set_tlm_id(&TG_ctp_, id);
-  TSP_set_2nd_hdr_ver(&TG_ctp_, TSP_2ND_HDR_VER_1);
+  TSP_set_2nd_hdr_ver(&TG_ctp_, (uint8_t)(mram->cdh.obc_startup_counter));
 
   // 生成したパケットを指定された回数配送処理へ渡す
   while (num_dumps != 0)
@@ -249,7 +250,7 @@ static CCP_CmdRet TG_generate_tlm_(TLM_CODE tlm_id,
   TSP_setup_primary_hdr(&TG_ctp_, CTP_APID_FROM_ME, TG_get_next_seq_count_(), packet_len);
 
   // Secondary Header
-  TSP_set_2nd_hdr_ver(&TG_ctp_, TSP_2ND_HDR_VER_1);
+  TSP_set_2nd_hdr_ver(&TG_ctp_, (uint8_t)(mram->cdh.obc_startup_counter));
   TSP_set_board_time(&TG_ctp_, (uint32_t)(TMGR_get_master_total_cycle()));
   TSP_set_tlm_id(&TG_ctp_, tlm_id);
   // FIXME: 他の時刻も入れる

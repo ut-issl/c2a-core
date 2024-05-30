@@ -74,6 +74,11 @@ void TF_copy_u32(uint8_t* ptr, uint32_t data)
   ENDIAN_memcpy(ptr, &data, 4);
 }
 
+void TF_copy_u64(uint8_t* ptr, uint64_t data)
+{
+  ENDIAN_memcpy(ptr, &data, 8);
+}
+
 void TF_copy_i8(uint8_t* ptr, int8_t data)
 {
   ptr[0] = (uint8_t)data;
@@ -87,6 +92,11 @@ void TF_copy_i16(uint8_t* ptr, int16_t data)
 void TF_copy_i32(uint8_t* ptr, int32_t data)
 {
   ENDIAN_memcpy(ptr, &data, 4);
+}
+
+void TF_copy_i64(uint8_t* ptr, int64_t data)
+{
+  ENDIAN_memcpy(ptr, &data, 8);
 }
 
 void TF_copy_float(uint8_t* ptr, float data)
